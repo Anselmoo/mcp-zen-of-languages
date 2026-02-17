@@ -1,0 +1,150 @@
+/* ICON COLORS — Split-Complementary harmony for visual interest
+
+   Strategy:
+   - Primary icons (nav, header): Use complementary cool teal for contrast
+   - Interactive icons (hover, active): Use complementary warm pink-coral
+   - Content icons: Use primary accent tone
+   - Muted icons: Use foreground muted color
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Light mode icons ── */
+/* Header icons — continue using --md-primary-bg-color (mapped to --caligo-light-text in light mode) */
+/* Note: .md-header .md-header__button styling takes precedence from earlier rules */
+
+/* Top button and navigation in sidebar */
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-sidebar .md-nav__button.md-icon {
+  color: var(--caligo-light-icon-secondary);
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-sidebar .md-nav__button.md-icon:hover {
+  color: var(--caligo-light-icon-interactive);
+}
+
+/* Content icons (admonitions, code annotations) */
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset .md-icon,
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset svg.md-icon {
+  color: var(--caligo-light-icon-primary);
+}
+
+/* Repository/social icons in footer */
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-footer .md-social__link svg {
+  color: var(--caligo-light-icon-secondary);
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-footer .md-social__link:hover svg {
+  color: var(--caligo-light-icon-interactive);
+}
+
+/* Navigation icons in sidebar */
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-nav__icon {
+  color: var(--caligo-light-icon-muted);
+}
+
+/* Code copy button icon */
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-clipboard {
+  color: var(--caligo-light-icon-muted);
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-clipboard:hover {
+  color: var(--caligo-light-icon-primary);
+}
+
+/* ── Dark mode icons ── */
+/* Header and navigation icons — use cool complementary teal */
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-header__button.md-icon,
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-nav__button.md-icon {
+  color: var(--caligo-icon-secondary);
+}
+
+/* Interactive state — warm complementary pink */
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-header__button.md-icon:hover,
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-nav__button.md-icon:hover {
+  color: var(--caligo-icon-interactive);
+}
+
+/* Content icons (admonitions, code annotations) */
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .md-icon,
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset svg.md-icon {
+  color: var(--caligo-icon-primary);
+}
+
+/* Repository/social icons */
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-source__icon,
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-social__link svg {
+  color: var(--caligo-icon-secondary);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-source:hover .md-source__icon,
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-social__link:hover svg {
+  color: var(--caligo-icon-interactive);
+}
+
+/* Navigation icons */
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-nav__icon {
+  color: var(--caligo-icon-muted);
+}
+
+/* Code copy button icon */
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-clipboard {
+  color: var(--caligo-icon-muted);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-clipboard:hover {
+  color: var(--caligo-icon-primary);
+}
+
+/* ── SVG fill override for Material icons ── */
+.md-icon svg,
+svg.md-icon {
+  fill: currentColor;
+}
+
+/* ── Admonition icons — use semantic colors ── */
+.md-typeset .admonition.note .admonition-title::before,
+.md-typeset details.note summary::before {
+  background-color: var(--caligo-complement-cool);
+}
+
+.md-typeset .admonition.tip .admonition-title::before,
+.md-typeset details.tip summary::before,
+.md-typeset .admonition.success .admonition-title::before {
+  background-color: var(--caligo-accent);
+}
+
+.md-typeset .admonition.warning .admonition-title::before,
+.md-typeset details.warning summary::before {
+  background-color: var(--caligo-syntax-decorator);
+}
+
+.md-typeset .admonition.danger .admonition-title::before,
+.md-typeset details.danger summary::before,
+.md-typeset .admonition.error .admonition-title::before {
+  background-color: var(--caligo-complement-warm);
+}
+
+.md-typeset .admonition.info .admonition-title::before,
+.md-typeset details.info summary::before {
+  background-color: var(--caligo-info);
+}
+
+
+/* Active nav link */
+.md-nav .md-nav__link--active {
+  color: var(--md-typeset-a-color);
+  font-weight: 600;
+}
+
+/* Keep tab labels readable against custom primary backgrounds */
+.md-tabs .md-tabs__link {
+  color: var(--md-primary-bg-color);
+}
+
+/* Tab underline active colour */
+.md-tabs .md-tabs__link--active {
+  color: var(--md-primary-bg-color);
+  opacity: 1;
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-tabs .md-tabs__link--active {
+  color: var(--caligo-accent-light);
+}

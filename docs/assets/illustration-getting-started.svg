@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 320" role="img" aria-labelledby="getting-started-title">
+  <title id="getting-started-title">Getting started — journey from torii gate along a winding stone path to a pagoda destination</title>
+  <defs>
+    <linearGradient id="gs-path" x1="0" x2="1" y1="0.5" y2="0.5">
+      <stop offset="0%" stop-color="#b8bcff" stop-opacity="0.3"/>
+      <stop offset="50%" stop-color="#989cff"/>
+      <stop offset="100%" stop-color="#c9b3ff" stop-opacity="0.4"/>
+    </linearGradient>
+    <linearGradient id="gs-ground" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#e9e4f7"/>
+      <stop offset="100%" stop-color="#dfd8f2"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="320" fill="#f2effb"/>
+
+  <!-- Ground plane -->
+  <path d="M0 260 Q240 240, 480 258 Q720 276, 960 250 L960 320 L0 320Z" fill="url(#gs-ground)" opacity="0.6"/>
+
+  <!-- Torii gate — entrance/beginning -->
+  <g transform="translate(80, 150)" opacity="0.75">
+    <rect x="0" y="0" width="8" height="110" rx="2" fill="#c9b3ff"/>
+    <rect x="72" y="0" width="8" height="110" rx="2" fill="#c9b3ff"/>
+    <path d="M-8 4 Q40 -10, 88 4" fill="none" stroke="#989cff" stroke-width="7" stroke-linecap="round"/>
+    <rect x="6" y="22" width="68" height="4" rx="1" fill="#b8bcff"/>
+    <ellipse cx="4" cy="260" rx="10" ry="4" fill="#989cff" opacity="0.3"/>
+    <ellipse cx="76" cy="260" rx="10" ry="4" fill="#989cff" opacity="0.3"/>
+  </g>
+
+  <!-- Winding path — journey from torii to destination -->
+  <path d="M120 260 C180 240, 220 250, 280 230 C340 210, 380 220, 440 200 C500 180, 560 190, 620 168 C680 148, 720 155, 780 136 C830 120, 860 125, 890 110" fill="none" stroke="url(#gs-path)" stroke-width="8" stroke-linecap="round"/>
+  <!-- Secondary path edge -->
+  <path d="M120 264 C180 244, 220 254, 280 234 C340 214, 380 224, 440 204 C500 184, 560 194, 620 172 C680 152, 720 159, 780 140 C830 124, 860 129, 890 114" fill="none" stroke="#dfd8f2" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+
+  <!-- Stepping stones along the path -->
+  <ellipse cx="200" cy="246" rx="20" ry="10" fill="#989cff" opacity="0.7"/>
+  <ellipse cx="360" cy="218" rx="16" ry="8" fill="#767bd8" opacity="0.6"/>
+  <ellipse cx="520" cy="190" rx="22" ry="11" fill="#989cff" opacity="0.75"/>
+  <ellipse cx="680" cy="154" rx="14" ry="7" fill="#b8bcff" opacity="0.6"/>
+  <ellipse cx="810" cy="132" rx="18" ry="9" fill="#989cff" opacity="0.65"/>
+  <!-- Stone shadows -->
+  <g fill="#221938" opacity="0.08">
+    <ellipse cx="202" cy="256" rx="18" ry="4"/>
+    <ellipse cx="362" cy="226" rx="14" ry="3"/>
+    <ellipse cx="522" cy="201" rx="20" ry="4"/>
+    <ellipse cx="682" cy="161" rx="12" ry="3"/>
+    <ellipse cx="812" cy="141" rx="16" ry="3"/>
+  </g>
+
+  <!-- Small grass tufts along path -->
+  <g stroke="#b8bcff" fill="none" stroke-width="1.5" stroke-linecap="round" opacity="0.35">
+    <path d="M240 252 Q236 240 230 232"/>
+    <path d="M244 254 Q248 242 254 236"/>
+    <path d="M400 220 Q396 208 390 200"/>
+    <path d="M404 222 Q408 210 414 204"/>
+    <path d="M570 188 Q566 176 560 168"/>
+    <path d="M750 148 Q746 136 740 128"/>
+    <path d="M754 150 Q758 138 764 132"/>
+  </g>
+
+  <!-- Stone lantern — midway marker -->
+  <g transform="translate(520, 150)" opacity="0.6">
+    <rect x="-2" y="0" width="4" height="28" rx="1" fill="#2b2044"/>
+    <rect x="-7" y="-10" width="14" height="10" rx="2" fill="#2b2044"/>
+    <path d="M-10 -10 L0 -18 L10 -10" fill="#2b2044"/>
+    <rect x="-4" y="-7" width="3" height="5" rx="0.5" fill="#f1b0ff" opacity="0.5"/>
+    <rect x="1" y="-7" width="3" height="5" rx="0.5" fill="#f1b0ff" opacity="0.5"/>
+    <rect x="-6" y="28" width="12" height="3" rx="1" fill="#2b2044"/>
+  </g>
+
+  <!-- Destination — ensō + pagoda silhouette -->
+  <g transform="translate(880, 60)" opacity="0.7">
+    <!-- Ensō ring -->
+    <circle cx="0" cy="30" r="38" fill="none" stroke="#c9b3ff" stroke-width="4" stroke-dasharray="160 80" transform="rotate(-20 0 30)" opacity="0.5"/>
+    <!-- Pagoda silhouette -->
+    <rect x="-6" y="10" width="12" height="50" rx="2" fill="#2b2044" opacity="0.5"/>
+    <path d="M-18 14 L0 0 L18 14" fill="#2b2044" opacity="0.45"/>
+    <path d="M-14 30 L0 20 L14 30" fill="#2b2044" opacity="0.4"/>
+    <path d="M-10 46 L0 38 L10 46" fill="#2b2044" opacity="0.35"/>
+  </g>
+
+  <!-- Bamboo at entrance -->
+  <g stroke="#767bd8" fill="none" stroke-width="2.5" opacity="0.3">
+    <line x1="50" y1="120" x2="50" y2="290"/>
+    <line x1="38" y1="150" x2="38" y2="290"/>
+    <path d="M48 170 Q34 160 28 146"/>
+    <path d="M52 210 Q66 200 74 186"/>
+    <path d="M36 200 Q22 190 16 176"/>
+    <!-- Nodes -->
+    <line x1="47" y1="220" x2="53" y2="220" stroke-width="1.5"/>
+    <line x1="35" y1="230" x2="41" y2="230" stroke-width="1.5"/>
+  </g>
+
+  <!-- Code bracket — at first stepping stone -->
+  <path d="M186 238 L176 246 L186 254" fill="none" stroke="#2b2044" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+  <path d="M214 238 L224 246 L214 254" fill="none" stroke="#2b2044" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+
+  <!-- Accent motes -->
+  <circle cx="320" cy="180" r="3" fill="#f1b0ff" opacity="0.45"/>
+  <circle cx="650" cy="130" r="2.5" fill="#63c8ff" opacity="0.4"/>
+  <circle cx="440" cy="170" r="2" fill="#c9b3ff" opacity="0.35"/>
+  <circle cx="760" cy="110" r="2" fill="#f1b0ff" opacity="0.3"/>
+
+  <!-- Hanko seal (zen) -->
+  <g transform="translate(916, 270)" opacity="0.35">
+    <rect x="0" y="0" width="18" height="18" rx="2" fill="none" stroke="#989cff" stroke-width="1.2"/>
+    <text x="9" y="14" font-family="serif" font-size="11" fill="#989cff" text-anchor="middle" opacity="0.7">禅</text>
+  </g>
+
+  <!-- Cherry blossom petals — drifting warmth -->
+  <g fill="#f1b0ff" opacity="0.3">
+    <ellipse cx="340" cy="50" rx="2.5" ry="1.5" transform="rotate(30 340 50)"/>
+    <ellipse cx="620" cy="44" rx="2" ry="1.2" transform="rotate(-20 620 44)"/>
+    <ellipse cx="800" cy="56" rx="2" ry="1.2" transform="rotate(45 800 56)"/>
+  </g>
+</svg>

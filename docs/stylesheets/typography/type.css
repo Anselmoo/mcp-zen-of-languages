@@ -1,0 +1,34 @@
+/* TYPOGRAPHY
+   ═══════════════════════════════════════════════════════════════════════════ */
+.md-typeset {
+  font-size: var(--zen-text-sm);
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3 {
+  letter-spacing: 0.01em;
+}
+
+/* Links — use accent tone, balanced for readability */
+.md-typeset a {
+  text-decoration-color: color-mix(in oklch, var(--md-typeset-a-color) 40%, transparent);
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset a {
+  color: var(--md-typeset-a-color);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset a {
+  color: var(--caligo-accent-light);
+}
+
+.md-typeset a {
+  text-decoration-thickness: 0.08em;
+}
+
+.md-typeset a:hover {
+  text-decoration-color: var(--md-typeset-a-color);
+  transition: color var(--zen-duration-fast) var(--zen-ease-out),
+              text-decoration-color var(--zen-duration-fast) var(--zen-ease-out);
+}

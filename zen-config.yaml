@@ -1,0 +1,220 @@
+languages:
+  - python
+  - ruby
+  - typescript
+  - javascript
+  - go
+  - rust
+  - bash
+  - powershell
+  - cpp
+  - csharp
+  - yaml
+  - toml
+  - json
+  - xml
+
+severity_threshold: 5
+
+pipelines:
+  - language: python
+    detectors:
+      - type: analyzer_defaults
+        max_cyclomatic_complexity: 10
+        max_nesting_depth: 3
+        max_function_length: 50
+        max_class_length: 300
+        max_magic_methods: 3
+        enable_dependency_analysis: true
+        enable_pattern_detection: true
+        severity_threshold: 5
+      - type: name_style
+      - type: cyclomatic_complexity
+        max_cyclomatic_complexity: 10
+      - type: nesting_depth
+        max_nesting_depth: 3
+      - type: long_functions
+        max_function_length: 50
+      - type: class_size
+        max_class_length: 300
+      - type: magic_methods
+        max_magic_methods: 3
+      - type: god_classes
+      - type: circular_dependencies
+      - type: deep_inheritance
+      - type: feature_envy
+      - type: duplicate_implementations
+      - type: star_imports
+      - type: bare_except
+      - type: line_length
+        max_line_length: 88
+      - type: docstrings
+      - type: context_manager
+  - language: typescript
+    detectors:
+      - type: ts_any_usage
+      - type: ts_strict_mode
+      - type: ts_interface_preference
+      - type: ts_return_types
+      - type: ts_readonly
+      - type: ts_type_guards
+      - type: ts_utility_types
+      - type: ts_non_null_assertions
+      - type: ts_enum_const
+      - type: ts_unknown_over_any
+  - language: go
+    detectors:
+      - type: go_error_handling
+      - type: go_interface_size
+        max_interface_methods: 3
+      - type: go_context_usage
+      - type: go_defer_usage
+      - type: go_naming_convention
+      - type: go_interface_return
+      - type: go_zero_value
+      - type: go_interface_pointer
+      - type: go_goroutine_leaks
+      - type: go_package_naming
+      - type: go_package_state
+      - type: go_init_usage
+  - language: rust
+    detectors:
+      - type: rust_unwrap_usage
+      - type: rust_unsafe_blocks
+      - type: rust_clone_overhead
+      - type: rust_error_handling
+      - type: rust-002
+      - type: rust-003
+      - type: rust-005
+      - type: rust-006
+      - type: rust-007
+      - type: rust-009
+      - type: rust-010
+      - type: rust-011
+      - type: rust-012
+  - language: javascript
+    detectors:
+      - type: js_callback_nesting
+      - type: js_no_var
+      - type: js_strict_equality
+      - type: js_async_error_handling
+      - type: js_function_length
+      - type: js_global_state
+      - type: js_modern_features
+      - type: js_magic_numbers
+      - type: js-009
+      - type: js_pure_functions
+      - type: js-011
+  - language: bash
+    detectors:
+      - type: bash_strict_mode
+      - type: bash_quote_variables
+      - type: bash_eval_usage
+      - type: bash_double_brackets
+      - type: bash_command_substitution
+      - type: bash_readonly_constants
+      - type: bash-005
+      - type: bash-006
+      - type: bash-007
+      - type: bash-010
+      - type: bash-011
+      - type: bash-012
+      - type: bash-013
+      - type: bash-014
+  - language: powershell
+    detectors:
+      - type: powershell_approved_verbs
+      - type: powershell_error_handling
+      - type: powershell_pascal_case
+      - type: powershell_cmdlet_binding
+      - type: powershell_verbose_debug
+      - type: powershell_positional_params
+      - type: powershell_pipeline_usage
+      - type: powershell_should_process
+      - type: powershell_splatting
+      - type: powershell_parameter_validation
+      - type: powershell_comment_help
+      - type: powershell_alias_usage
+      - type: powershell_return_objects
+      - type: powershell_scope_usage
+      - type: powershell_null_handling
+  - language: ruby
+    detectors:
+      - type: ruby_naming_convention
+      - type: ruby_method_chain
+      - type: ruby_dry
+      - type: ruby_block_preference
+      - type: ruby_monkey_patch
+      - type: ruby_method_naming
+      - type: ruby_symbol_keys
+      - type: ruby_guard_clause
+      - type: ruby_metaprogramming
+      - type: ruby_expressive_syntax
+      - type: ruby_prefer_fail
+  - language: cpp
+    detectors:
+      - type: cpp_smart_pointers
+      - type: cpp_nullptr
+      - type: cpp-001
+      - type: cpp-003
+      - type: cpp-005
+      - type: cpp-006
+      - type: cpp-007
+      - type: cpp-008
+      - type: cpp-009
+      - type: cpp-010
+      - type: cpp-011
+      - type: cpp-012
+      - type: cpp-013
+  - language: csharp
+    detectors:
+      - type: csharp_async_await
+      - type: csharp_string_interpolation
+      - type: cs-001
+      - type: cs-002
+      - type: cs-003
+      - type: cs-005
+      - type: cs-007
+      - type: cs-008
+      - type: cs-009
+      - type: cs-010
+      - type: cs-011
+      - type: cs-012
+      - type: cs-013
+  - language: yaml
+    detectors:
+      - type: yaml-001
+        indent_size: 2
+      - type: yaml-002
+      - type: yaml-003
+      - type: yaml-004
+      - type: yaml-005
+      - type: yaml-006
+      - type: yaml-007
+      - type: yaml-008
+  - language: toml
+    detectors:
+      - type: toml-001
+      - type: toml-002
+      - type: toml-003
+      - type: toml-004
+      - type: toml-005
+      - type: toml-006
+      - type: toml-007
+      - type: toml-008
+  - language: json
+    detectors:
+      - type: json-001
+      - type: json-002
+      - type: json-003
+      - type: json-004
+      - type: json-005
+      - type: json-006
+  - language: xml
+    detectors:
+      - type: xml-001
+      - type: xml-002
+      - type: xml-003
+      - type: xml-004
+      - type: xml-005
+      - type: xml-006

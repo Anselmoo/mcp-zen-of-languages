@@ -1,0 +1,234 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 320" role="img" aria-labelledby="mcp-tools-title">
+  <title id="mcp-tools-title">MCP tools — zen garden with garden tool silhouettes representing analysis families</title>
+  <defs>
+    <linearGradient id="mt-bg" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f2effb"/>
+      <stop offset="100%" stop-color="#e9e4f7"/>
+    </linearGradient>
+    <linearGradient id="mt-stone" x1="0.3" x2="0.7" y1="0" y2="1">
+      <stop offset="0%" stop-color="#989cff"/>
+      <stop offset="100%" stop-color="#767bd8"/>
+    </linearGradient>
+    <linearGradient id="mt-stone2" x1="0.4" x2="0.6" y1="0" y2="1">
+      <stop offset="0%" stop-color="#b8bcff"/>
+      <stop offset="100%" stop-color="#989cff"/>
+    </linearGradient>
+    <linearGradient id="mt-torii" x1="0.5" x2="0.5" y1="0" y2="1">
+      <stop offset="0%" stop-color="#c9b3ff"/>
+      <stop offset="100%" stop-color="#989cff"/>
+    </linearGradient>
+    <radialGradient id="mt-glow" cx="0.5" cy="0.4" r="0.5">
+      <stop offset="0%" stop-color="#f1b0ff" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#f1b0ff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="mt-lantern2" cx="0.5" cy="0.4" r="0.5">
+      <stop offset="0%" stop-color="#c9b3ff" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#c9b3ff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Ground -->
+  <rect width="960" height="320" fill="url(#mt-bg)"/>
+
+  <!-- Distant ridgeline — layered depth -->
+  <path d="M0 60 C80 30, 160 50, 260 35 C360 20, 440 45, 540 28 C640 15, 720 40, 820 30 C900 22, 940 38, 960 32 L960 80 L0 80Z" fill="#e9e4f7" opacity="0.35"/>
+  <path d="M0 75 C100 55, 220 70, 340 58 C460 48, 560 65, 680 52 C780 42, 880 60, 960 50 L960 95 L0 95Z" fill="#dfd8f2" opacity="0.25"/>
+
+  <!-- Raked sand lines — kanso (simplicity) -->
+  <g fill="none" stroke="#dfd8f2" stroke-linecap="round">
+    <path d="M0 260 C160 235, 340 275, 520 255 C700 235, 840 272, 960 248" stroke-width="6" opacity="0.55"/>
+    <path d="M0 278 C180 258, 370 295, 540 275 C720 258, 850 290, 960 268" stroke-width="4" opacity="0.45"/>
+    <path d="M0 293 C200 278, 400 308, 560 292 C740 278, 860 306, 960 286" stroke-width="2.5" opacity="0.3"/>
+  </g>
+
+  <!-- Enso echo — background atmosphere (yugen) -->
+  <circle cx="480" cy="165" r="130" fill="none" stroke="#c9b3ff" stroke-width="3" stroke-dasharray="340 470" transform="rotate(-22 480 165)" opacity="0.12"/>
+  <circle cx="490" cy="160" r="100" fill="none" stroke="#b8bcff" stroke-width="2" stroke-dasharray="200 430" transform="rotate(40 490 160)" opacity="0.08"/>
+
+  <!-- Central stone lantern — MCP hub -->
+  <g transform="translate(480, 120)" opacity="0.85">
+    <circle cx="0" cy="0" r="36" fill="url(#mt-glow)"/>
+    <rect x="-3" y="8" width="6" height="48" rx="1.5" fill="#2b2044"/>
+    <rect x="-11" y="-10" width="22" height="18" rx="3" fill="#2b2044"/>
+    <path d="M-18 -10 L0 -22 L18 -10" fill="#2b2044"/>
+    <circle cx="0" cy="-25" r="3" fill="#2b2044"/>
+    <rect x="-6" y="-5" width="5" height="8" rx="1" fill="#f1b0ff" opacity="0.55"/>
+    <rect x="1" y="-5" width="5" height="8" rx="1" fill="#f1b0ff" opacity="0.55"/>
+    <rect x="-10" y="56" width="20" height="4" rx="1.5" fill="#2b2044"/>
+    <text x="0" y="72" font-family="system-ui, sans-serif" font-size="16" fill="#767bd8" text-anchor="middle" font-weight="700" opacity="0.85">MCP</text>
+  </g>
+
+  <!-- Path 1 — upper-left winding trail -->
+  <path d="M445 135 C380 110, 310 100, 240 92 C170 85, 120 94, 70 105" fill="none" stroke="#b8bcff" stroke-width="5" stroke-linecap="round" opacity="0.25"/>
+  <path d="M445 135 C380 110, 310 100, 240 92 C170 85, 120 94, 70 105" fill="none" stroke="#dfd8f2" stroke-width="2" stroke-linecap="round" opacity="0.2"/>
+  <!-- Silent stepping stones -->
+  <ellipse cx="350" cy="105" rx="18" ry="7" fill="url(#mt-stone)" opacity="0.45"/>
+  <ellipse cx="350" cy="112" rx="15" ry="2.5" fill="#221938" opacity="0.04"/>
+  <ellipse cx="240" cy="94" rx="14" ry="6" fill="url(#mt-stone2)" opacity="0.4"/>
+  <ellipse cx="240" cy="100" rx="12" ry="2" fill="#221938" opacity="0.03"/>
+  <ellipse cx="150" cy="96" rx="12" ry="5" fill="#989cff" opacity="0.35"/>
+
+  <!-- Pruning shears — Analysis family (examining, cutting) -->
+  <g transform="translate(300, 88) rotate(-20)" opacity="0.6">
+    <ellipse cx="-12" cy="0" rx="7" ry="5" fill="none" stroke="#989cff" stroke-width="1.8"/>
+    <ellipse cx="12" cy="0" rx="7" ry="5" fill="none" stroke="#989cff" stroke-width="1.8"/>
+    <circle cx="0" cy="0" r="2" fill="#767bd8"/>
+    <path d="M-5 -1 C-3 -12, 3 -20, 8 -26" fill="none" stroke="#2b2044" stroke-width="2" stroke-linecap="round"/>
+    <path d="M5 -1 C3 -12, -3 -20, -8 -26" fill="none" stroke="#2b2044" stroke-width="2" stroke-linecap="round"/>
+  </g>
+
+  <!-- Sundial — Metadata family (orientation, information) -->
+  <g transform="translate(120, 92)" opacity="0.55">
+    <ellipse cx="0" cy="0" rx="16" ry="8" fill="#b8bcff" opacity="0.5"/>
+    <line x1="0" y1="0" x2="0" y2="-18" stroke="#2b2044" stroke-width="1.8" stroke-linecap="round"/>
+    <g stroke="#767bd8" stroke-width="0.8" opacity="0.5">
+      <line x1="-12" y1="-2" x2="-9" y2="-2"/>
+      <line x1="12" y1="-2" x2="9" y2="-2"/>
+      <line x1="-8" y1="-6" x2="-6" y2="-5"/>
+      <line x1="8" y1="-6" x2="6" y2="-5"/>
+    </g>
+    <line x1="0" y1="0" x2="8" y2="-3" stroke="#989cff" stroke-width="1" opacity="0.4"/>
+    <ellipse cx="0" cy="6" rx="14" ry="2.5" fill="#221938" opacity="0.04"/>
+  </g>
+
+  <!-- Path 2 — upper-right winding trail -->
+  <path d="M515 135 C580 108, 650 95, 720 88 C790 82, 850 92, 910 100" fill="none" stroke="#c9b3ff" stroke-width="5" stroke-linecap="round" opacity="0.25"/>
+  <path d="M515 135 C580 108, 650 95, 720 88 C790 82, 850 92, 910 100" fill="none" stroke="#dfd8f2" stroke-width="2" stroke-linecap="round" opacity="0.2"/>
+  <!-- Silent stepping stones -->
+  <ellipse cx="620" cy="98" rx="16" ry="7" fill="url(#mt-stone)" opacity="0.4"/>
+  <ellipse cx="620" cy="105" rx="13" ry="2.5" fill="#221938" opacity="0.04"/>
+  <ellipse cx="770" cy="88" rx="14" ry="6" fill="#c9b3ff" opacity="0.35"/>
+  <ellipse cx="880" cy="96" rx="12" ry="5" fill="#767bd8" opacity="0.3"/>
+
+  <!-- Paper lantern — Reporting family (illuminating) -->
+  <g transform="translate(710, 60)" opacity="0.6">
+    <line x1="0" y1="-20" x2="0" y2="0" stroke="#2b2044" stroke-width="0.8"/>
+    <ellipse cx="0" cy="0" rx="5" ry="2" fill="#2b2044"/>
+    <ellipse cx="0" cy="6" rx="10" ry="4" fill="#c9b3ff" opacity="0.4"/>
+    <rect x="-10" y="6" width="20" height="22" rx="2" fill="#c9b3ff" opacity="0.35"/>
+    <ellipse cx="0" cy="28" rx="10" ry="4" fill="#c9b3ff" opacity="0.3"/>
+    <circle cx="0" cy="16" r="12" fill="url(#mt-lantern2)"/>
+    <line x1="-9" y1="12" x2="-9" y2="22" stroke="#767bd8" stroke-width="0.5" opacity="0.3"/>
+    <line x1="0" y1="6" x2="0" y2="28" stroke="#767bd8" stroke-width="0.5" opacity="0.3"/>
+    <line x1="9" y1="12" x2="9" y2="22" stroke="#767bd8" stroke-width="0.5" opacity="0.3"/>
+    <line x1="0" y1="32" x2="0" y2="38" stroke="#2b2044" stroke-width="0.8"/>
+    <circle cx="0" cy="40" r="1.5" fill="#989cff" opacity="0.5"/>
+  </g>
+
+  <!-- Bamboo rake — Configuration family (arranging patterns) -->
+  <g transform="translate(870, 78) rotate(25)" opacity="0.55">
+    <line x1="0" y1="0" x2="0" y2="50" stroke="#2b2044" stroke-width="2.2" stroke-linecap="round"/>
+    <line x1="-14" y1="0" x2="14" y2="0" stroke="#2b2044" stroke-width="2" stroke-linecap="round"/>
+    <line x1="-12" y1="0" x2="-12" y2="-10" stroke="#767bd8" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="-6" y1="0" x2="-6" y2="-10" stroke="#767bd8" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="0" y1="0" x2="0" y2="-10" stroke="#767bd8" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="6" y1="0" x2="6" y2="-10" stroke="#767bd8" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="12" y1="0" x2="12" y2="-10" stroke="#767bd8" stroke-width="1.2" stroke-linecap="round"/>
+  </g>
+
+  <!-- Path 3 — downward winding trail -->
+  <path d="M480 200 C478 218, 440 230, 400 238 C360 246, 310 242, 260 238" fill="none" stroke="#63c8ff" stroke-width="5" stroke-linecap="round" opacity="0.18"/>
+  <path d="M480 200 C478 218, 440 230, 400 238 C360 246, 310 242, 260 238" fill="none" stroke="#dfd8f2" stroke-width="2" stroke-linecap="round" opacity="0.18"/>
+  <!-- Silent stepping stones -->
+  <ellipse cx="430" cy="228" rx="14" ry="6" fill="url(#mt-stone2)" opacity="0.35"/>
+  <ellipse cx="430" cy="234" rx="12" ry="2" fill="#221938" opacity="0.03"/>
+  <ellipse cx="340" cy="240" rx="12" ry="5" fill="#989cff" opacity="0.3"/>
+  <ellipse cx="270" cy="236" rx="10" ry="4.5" fill="#767bd8" opacity="0.25"/>
+
+  <!-- Watering can — Onboarding family (nurturing new growth) -->
+  <g transform="translate(260, 212)" opacity="0.55">
+    <rect x="-10" y="0" width="20" height="16" rx="3" fill="#63c8ff" opacity="0.45"/>
+    <path d="M8 0 C14 -6, 14 -12, 8 -14" fill="none" stroke="#2b2044" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M-10 4 L-22 -6" fill="none" stroke="#2b2044" stroke-width="2" stroke-linecap="round"/>
+    <ellipse cx="-24" cy="-8" rx="4" ry="3" fill="#63c8ff" opacity="0.5"/>
+    <circle cx="-28" cy="-2" r="1" fill="#63c8ff" opacity="0.4"/>
+    <circle cx="-24" cy="0" r="0.8" fill="#63c8ff" opacity="0.3"/>
+    <circle cx="-20" cy="-1" r="0.8" fill="#63c8ff" opacity="0.35"/>
+    <ellipse cx="-2" cy="20" rx="14" ry="3" fill="#221938" opacity="0.04"/>
+  </g>
+
+  <!-- Natural stone cluster — right garden bed (fukinsei) -->
+  <g opacity="0.5">
+    <ellipse cx="760" cy="200" rx="30" ry="18" fill="url(#mt-stone)"/>
+    <ellipse cx="796" cy="210" rx="18" ry="12" fill="url(#mt-stone2)" opacity="0.7"/>
+    <ellipse cx="774" cy="215" rx="12" ry="8" fill="#c9b3ff" opacity="0.5"/>
+    <ellipse cx="762" cy="218" rx="28" ry="4" fill="#221938" opacity="0.05"/>
+    <ellipse cx="798" cy="222" rx="16" ry="3" fill="#221938" opacity="0.04"/>
+  </g>
+
+  <!-- Bamboo grove — left edge -->
+  <g stroke="#767bd8" fill="none" opacity="0.25">
+    <line x1="20" y1="30" x2="20" y2="300" stroke-width="3"/>
+    <line x1="36" y1="50" x2="36" y2="300" stroke-width="2.5"/>
+    <line x1="50" y1="70" x2="50" y2="300" stroke-width="2"/>
+    <line x1="17" y1="120" x2="23" y2="120" stroke-width="1.5"/>
+    <line x1="17" y1="200" x2="23" y2="200" stroke-width="1.5"/>
+    <line x1="33" y1="160" x2="39" y2="160" stroke-width="1.2"/>
+    <path d="M18 90 Q6 80 0 66" stroke-width="1.5"/>
+    <path d="M22 150 Q10 140 4 126" stroke-width="1.2"/>
+    <path d="M38 110 Q50 100 58 86" stroke-width="1.2"/>
+    <path d="M52 140 Q64 130 72 116" stroke-width="1"/>
+  </g>
+
+  <!-- Bonsai — right side -->
+  <g transform="translate(900, 140)" opacity="0.5">
+    <path d="M-14 90 L-10 100 L10 100 L14 90" fill="#2b2044" opacity="0.5"/>
+    <rect x="-16" y="87" width="32" height="4" rx="1.5" fill="#2b2044" opacity="0.4"/>
+    <path d="M0 86 C-1 70, -4 55, -2 40 C0 28, 4 22, 2 10" fill="none" stroke="#2b2044" stroke-width="3" stroke-linecap="round"/>
+    <path d="M-2 40 Q-16 32 -24 22" fill="none" stroke="#2b2044" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M2 25 Q14 18 22 10" fill="none" stroke="#2b2044" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="-24" cy="18" r="12" fill="#989cff" opacity="0.5"/>
+    <circle cx="-14" cy="12" r="9" fill="#767bd8" opacity="0.4"/>
+    <circle cx="2" cy="6" r="14" fill="#989cff" opacity="0.55"/>
+    <circle cx="22" cy="6" r="10" fill="#b8bcff" opacity="0.4"/>
+    <circle cx="12" cy="2" r="7" fill="#c9b3ff" opacity="0.35"/>
+    <ellipse cx="0" cy="88" rx="16" ry="3" fill="#b8bcff" opacity="0.2"/>
+  </g>
+
+  <!-- Torii gate — small, at path 1 entrance -->
+  <g transform="translate(60, 88)" opacity="0.55">
+    <rect x="0" y="0" width="4" height="50" rx="1" fill="url(#mt-torii)"/>
+    <rect x="36" y="0" width="4" height="50" rx="1" fill="url(#mt-torii)"/>
+    <path d="M-4 2 Q20 -6, 44 2" fill="none" stroke="#c9b3ff" stroke-width="4" stroke-linecap="round"/>
+    <rect x="3" y="12" width="34" height="2.5" rx="1" fill="#b8bcff"/>
+  </g>
+
+  <!-- Winding stream hint — cool blue thread -->
+  <path d="M460 230 C440 260, 500 270, 540 268 C600 264, 620 280, 660 275" fill="none" stroke="#63c8ff" stroke-width="6" stroke-linecap="round" opacity="0.06"/>
+  <path d="M460 230 C440 260, 500 270, 540 268 C600 264, 620 280, 660 275" fill="none" stroke="#63c8ff" stroke-width="2" stroke-linecap="round" opacity="0.08"/>
+
+  <!-- Code brackets — ink brushstroke hints -->
+  <g fill="none" stroke="#2b2044" stroke-linecap="round" stroke-linejoin="round" opacity="0.3">
+    <path d="M68 270 L56 280 L68 290" stroke-width="3"/>
+    <path d="M892 270 L904 280 L892 290" stroke-width="3"/>
+  </g>
+
+  <!-- Ground gravel band -->
+  <rect x="0" y="300" width="960" height="20" fill="#dfd8f2" opacity="0.3"/>
+  <g fill="#c9b3ff" opacity="0.1">
+    <circle cx="60" cy="308" r="1.2"/><circle cx="160" cy="312" r="1"/>
+    <circle cx="280" cy="306" r="1.2"/><circle cx="400" cy="314" r="1"/>
+    <circle cx="520" cy="308" r="1.2"/><circle cx="640" cy="310" r="1"/>
+    <circle cx="760" cy="306" r="1.2"/><circle cx="880" cy="312" r="1"/>
+  </g>
+
+  <!-- Hanko seal (zen) -->
+  <g transform="translate(916, 130)" opacity="0.35">
+    <rect x="0" y="0" width="18" height="18" rx="2" fill="none" stroke="#989cff" stroke-width="1.2"/>
+    <text x="9" y="14" font-family="serif" font-size="11" fill="#989cff" text-anchor="middle" opacity="0.7">禅</text>
+  </g>
+
+  <!-- Accent motes — ma (intentional marks in space) -->
+  <circle cx="160" cy="160" r="2.5" fill="#f1b0ff" opacity="0.4"/>
+  <circle cx="560" cy="60" r="2" fill="#63c8ff" opacity="0.35"/>
+  <circle cx="680" cy="240" r="2" fill="#c9b3ff" opacity="0.3"/>
+  <circle cx="440" cy="280" r="1.5" fill="#f1b0ff" opacity="0.25"/>
+  <circle cx="830" cy="280" r="1.5" fill="#63c8ff" opacity="0.25"/>
+
+  <!-- Cherry blossom petals — drifting warmth -->
+  <g fill="#f1b0ff" opacity="0.3">
+    <ellipse cx="280" cy="60" rx="2.5" ry="1.5" transform="rotate(25 280 60)"/>
+    <ellipse cx="540" cy="48" rx="2" ry="1.2" transform="rotate(-18 540 48)"/>
+    <ellipse cx="700" cy="55" rx="2" ry="1.2" transform="rotate(40 700 55)"/>
+  </g>
+</svg>

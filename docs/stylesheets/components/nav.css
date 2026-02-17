@@ -1,0 +1,82 @@
+/* SIDEBAR / NAV — subtle surface differentiation
+   ═══════════════════════════════════════════════════════════════════════════ */
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-sidebar {
+  background-color: var(--caligo-bg-base);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-nav__link {
+  color: var(--caligo-fg-secondary);
+  transition: color var(--zen-duration-fast) var(--zen-ease-out);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-nav__link:hover {
+  color: var(--caligo-accent-light);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+
+BACK-TO-TOP button
+   ═══════════════════════════════════════════════════════════════════════════ */
+.md-top {
+  background-color: var(--md-primary-fg-color);
+  color: var(--md-primary-bg-color);
+  border-radius: var(--zen-radius-full);
+  transition: transform var(--zen-duration-fast) var(--zen-ease-out),
+              box-shadow var(--zen-duration-fast) var(--zen-ease-out),
+              background-color var(--zen-duration-fast) var(--zen-ease-out),
+              color var(--zen-duration-fast) var(--zen-ease-out);
+}
+
+.md-top:hover {
+  transform: translateY(-2px);
+  background-color: var(--md-primary-fg-color--dark);
+  box-shadow: var(--zen-shadow-md);
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-top {
+  background-color: var(--caligo-accent-dark);
+  color: #ffffff;
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-top:hover {
+  background-color: var(--caligo-accent);
+  color: #ffffff;
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-top {
+  background-color: var(--caligo-accent);
+  color: var(--caligo-bg-base);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-top:hover {
+  background-color: var(--caligo-accent-soft);
+  color: var(--caligo-bg-base);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+
+SECONDARY NAV — active-link border indicator
+   ═══════════════════════════════════════════════════════════════════════════ */
+.md-nav--secondary > ul {
+  border-left: 0.1rem solid var(--md-default-fg-color--lightest);
+}
+
+.md-nav--secondary .md-nav__item .md-nav__link--active {
+  color: var(--md-default-fg-color);
+  border-left: 0.1rem solid var(--md-accent-fg-color);
+  margin-left: -0.1rem;
+}
+
+.md-nav--secondary .md-nav__item .md-nav__link:hover {
+  color: var(--md-default-fg-color);
+}
+
+.md-nav__link[data-md-state="blur"] {
+  color: var(--md-default-fg-color--light);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-nav__link[data-md-state="blur"] {
+  color: var(--caligo-fg-muted);
+}

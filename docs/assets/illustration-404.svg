@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 320" role="img" aria-labelledby="not-found-title">
+  <title id="not-found-title">Page not found — broken path dissolving into fog with stone lantern guide</title>
+  <defs>
+    <linearGradient id="e404-mist" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f2effb"/>
+      <stop offset="50%" stop-color="#e9e4f7"/>
+      <stop offset="100%" stop-color="#dfd8f2"/>
+    </linearGradient>
+    <radialGradient id="e404-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#f1b0ff" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#f1b0ff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="960" height="320" fill="url(#e404-mist)"/>
+
+  <!-- Fog layers — atmosphere of being lost -->
+  <g opacity="0.15">
+    <ellipse cx="200" cy="100" rx="300" ry="60" fill="#dfd8f2"/>
+    <ellipse cx="700" cy="80" rx="250" ry="50" fill="#e9e4f7"/>
+    <ellipse cx="480" cy="140" rx="350" ry="40" fill="#dfd8f2"/>
+  </g>
+
+  <!-- Distant mountain outline — barely visible through fog -->
+  <path d="M0 160 C80 120, 160 140, 260 100 C360 60, 420 110, 500 90 C580 70, 660 120, 760 80 C860 50, 920 100, 960 120" fill="none" stroke="#dfd8f2" stroke-width="2" opacity="0.4"/>
+
+  <!-- Broken path — starts solid, breaks apart -->
+  <g fill="none" stroke="#989cff" stroke-linecap="round" stroke-width="6">
+    <path d="M80 260 C140 245, 200 250, 280 240" opacity="0.7"/>
+    <path d="M310 236 L360 230" opacity="0.5"/>
+    <path d="M400 228 L430 224" opacity="0.3"/>
+  </g>
+  <!-- Broken path edge -->
+  <g fill="none" stroke="#b8bcff" stroke-linecap="round" stroke-width="2" opacity="0.3">
+    <path d="M80 264 C140 249, 200 254, 280 244"/>
+    <path d="M310 240 L360 234"/>
+  </g>
+
+  <!-- Scattered stepping stone fragments -->
+  <g opacity="0.6">
+    <ellipse cx="160" cy="256" rx="22" ry="10" fill="#989cff"/>
+    <ellipse cx="260" cy="244" rx="18" ry="9" fill="#767bd8" opacity="0.8"/>
+    <ellipse cx="340" cy="236" rx="14" ry="7" fill="#989cff" opacity="0.7"/>
+    <!-- Broken fragments -->
+    <ellipse cx="420" cy="228" rx="10" ry="5" fill="#b8bcff" opacity="0.5" transform="rotate(15 420 228)"/>
+    <ellipse cx="470" cy="232" rx="8" ry="4" fill="#989cff" opacity="0.35" transform="rotate(-20 470 232)"/>
+    <ellipse cx="510" cy="240" rx="6" ry="3" fill="#c9b3ff" opacity="0.25"/>
+    <ellipse cx="550" cy="245" rx="4" ry="2" fill="#989cff" opacity="0.15"/>
+  </g>
+  <!-- Fragment shadows -->
+  <g fill="#221938" opacity="0.06">
+    <ellipse cx="162" cy="266" rx="20" ry="4"/>
+    <ellipse cx="262" cy="253" rx="16" ry="3"/>
+    <ellipse cx="342" cy="243" rx="12" ry="2.5"/>
+  </g>
+
+  <!-- Gap / void — the missing page -->
+  <g opacity="0.08">
+    <rect x="460" y="160" width="200" height="120" rx="20" fill="#221938"/>
+  </g>
+
+  <!-- "404" text — brush-style, large -->
+  <text x="560" y="238" font-family="Georgia, serif" font-size="56" fill="#2b2044" text-anchor="middle" opacity="0.6" letter-spacing="8">404</text>
+  <!-- Decorative underline -->
+  <path d="M500 248 Q560 258, 620 248" fill="none" stroke="#c9b3ff" stroke-width="2" stroke-linecap="round" opacity="0.35"/>
+
+  <!-- Broken ensō — incomplete, fragmented -->
+  <circle cx="560" cy="210" r="70" fill="none" stroke="#c9b3ff" stroke-width="3" stroke-dasharray="80 60 40 120" transform="rotate(-40 560 210)" opacity="0.2"/>
+
+  <!-- Stone lantern in mist — a guide trying to help -->
+  <g transform="translate(780, 140)" opacity="0.5">
+    <circle cx="0" cy="-20" r="30" fill="url(#e404-glow)"/>
+    <rect x="-3" y="0" width="6" height="50" rx="1.5" fill="#2b2044"/>
+    <rect x="-10" y="-16" width="20" height="16" rx="3" fill="#2b2044"/>
+    <path d="M-14 -16 L0 -26 L14 -16" fill="#2b2044"/>
+    <rect x="-6" y="-10" width="4" height="7" rx="1" fill="#f1b0ff" opacity="0.5"/>
+    <rect x="2" y="-10" width="4" height="7" rx="1" fill="#f1b0ff" opacity="0.5"/>
+    <rect x="-8" y="50" width="16" height="4" rx="1.5" fill="#2b2044"/>
+    <!-- Shadow -->
+    <ellipse cx="0" cy="56" rx="12" ry="3" fill="#221938" opacity="0.08"/>
+  </g>
+
+  <!-- Small tree — right side, partially hidden in fog -->
+  <g transform="translate(880, 160)" opacity="0.3">
+    <path d="M0 60 C-2 40, 2 20, -1 4" fill="none" stroke="#2b2044" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="-1" cy="0" r="14" fill="#989cff" opacity="0.5"/>
+    <circle cx="10" cy="6" r="8" fill="#b8bcff" opacity="0.4"/>
+    <circle cx="-12" cy="6" r="8" fill="#767bd8" opacity="0.35"/>
+  </g>
+
+  <!-- Ground — uneven, trailing off -->
+  <path d="M0 280 C120 274, 240 278, 360 272 C480 266, 560 274, 640 280 C720 286, 840 278, 960 284 L960 320 L0 320Z" fill="#e9e4f7" opacity="0.5"/>
+
+  <!-- Floating question marks — subtle confusion -->
+  <g font-family="Georgia, serif" fill="#c9b3ff" opacity="0.2">
+    <text x="680" y="200" font-size="18">?</text>
+    <text x="720" y="180" font-size="14">?</text>
+  </g>
+
+  <!-- Accent motes -->
+  <circle cx="120" cy="180" r="2.5" fill="#f1b0ff" opacity="0.4"/>
+  <circle cx="300" cy="160" r="2" fill="#63c8ff" opacity="0.3"/>
+  <circle cx="650" cy="140" r="3" fill="#c9b3ff" opacity="0.25"/>
+</svg>

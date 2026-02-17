@@ -1,0 +1,61 @@
+/* HARMONY TOKENS — Standardized spacing, timing, and sizing for consistent design
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Spacing Scale (8px base, geometric progression) ── */
+  --zen-space-1: 0.25rem;   /* 4px  - tight spacing */
+  --zen-space-2: 0.5rem;    /* 8px  - base unit */
+  --zen-space-3: 0.75rem;   /* 12px - comfortable */
+  --zen-space-4: 1rem;      /* 16px - standard */
+  --zen-space-5: 1.5rem;    /* 24px - generous */
+  --zen-space-6: 2rem;      /* 32px - section */
+  --zen-space-7: 3rem;      /* 48px - large */
+  --zen-space-8: 4rem;      /* 64px - extra large */
+
+  /* ── Border Radius Scale (consistent roundness) ── */
+  --zen-radius-sm: 0.375rem;    /* 6px  - small elements (inline code, tags) */
+  --zen-radius-md: 0.75rem;     /* 12px - medium elements (cards, tabs, admonitions) */
+  --zen-radius-lg: 1rem;        /* 16px - large elements (hero, modals) */
+  --zen-radius-xl: 1.5rem;      /* 24px - extra large */
+  --zen-radius-full: 999px;     /* pill shape (buttons, scrollbar) */
+
+  /* ── Transition Timing (consistent motion) ── */
+  --zen-duration-fast: 150ms;   /* quick feedback (hover, focus) */
+  --zen-duration-base: 200ms;   /* standard transitions (most UI) */
+  --zen-duration-slow: 300ms;   /* deliberate animations (modals, drawers) */
+
+  /* ── Transition Easing (natural motion) ── */
+  --zen-ease-out: cubic-bezier(0.2, 0, 0.38, 0.9);     /* deceleration */
+  --zen-ease-in: cubic-bezier(0.62, 0.1, 0.8, 1);      /* acceleration */
+  --zen-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);   /* smooth both */
+  --zen-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* bounce effect */
+
+  /* ── Typography Scale (harmonious proportions) ── */
+  --zen-text-xs: 0.75rem;   /* 12px */
+  --zen-text-sm: 0.84rem;   /* ~13.5px - body default */
+  --zen-text-base: 1rem;    /* 16px */
+  --zen-text-lg: 1.125rem;  /* 18px */
+  --zen-text-xl: 1.25rem;   /* 20px */
+  --zen-text-2xl: 1.5rem;   /* 24px */
+  --zen-text-3xl: 1.875rem; /* 30px */
+  --zen-text-4xl: 2.25rem;  /* 36px */
+
+  /* ── Shadow Scale (depth perception) ── */
+  --zen-shadow-sm: 0 2px 8px color-mix(in oklch, var(--caligo-bg-base) 8%, transparent);
+  --zen-shadow-md: 0 6px 18px color-mix(in oklch, var(--caligo-bg-base) 10%, transparent);
+  --zen-shadow-lg: 0 10px 24px color-mix(in oklch, var(--caligo-bg-base) 12%, transparent);
+  --zen-shadow-xl: 0 16px 32px color-mix(in oklch, var(--caligo-bg-base) 15%, transparent);
+
+  /* ── Border Width Scale ── */
+  --zen-border-thin: 1px;
+  --zen-border-base: 2px;
+  --zen-border-thick: 3px;
+
+  /* ── Z-index Scale (layering order) ── */
+  --zen-z-base: 0;
+  --zen-z-dropdown: 10;
+  --zen-z-sticky: 20;
+  --zen-z-fixed: 30;
+  --zen-z-modal: 40;
+  --zen-z-toast: 50;
+}

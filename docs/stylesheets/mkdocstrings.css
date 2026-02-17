@@ -1,0 +1,9 @@
+/* SOURCE / MKDOCSTRINGS elements
+   ═══════════════════════════════════════════════════════════════════════════ */
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .doc-heading {
+  border-color: var(--caligo-bg-overlay);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .doc-object > .doc-children {
+  border-left-color: var(--caligo-bg-overlay);
+}

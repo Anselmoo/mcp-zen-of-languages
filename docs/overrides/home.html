@@ -1,0 +1,34 @@
+{% extends "main.html" %}
+
+{% block hero %}
+<section class="zen-hero md-typeset">
+  <div class="zen-hero__content">
+    <h1>MCP Zen of Languages</h1>
+    <p class="zen-hero__motto">
+      <em>
+        <span class="zen-hero__motto-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false" xmlns="http://www.w3.org/2000/svg">
+            <g transform="rotate(34 12 12)">
+              <rect x="10.8" y="2.8" width="2.8" height="11.5" rx="1.2" fill="currentColor" opacity="0.88"/>
+              <rect x="10.2" y="13.7" width="4" height="3.1" rx="0.9" fill="currentColor" opacity="0.66"/>
+              <path d="M9.7 16.8H14.3L12 21.2Z" fill="currentColor" opacity="0.94"/>
+            </g>
+            <circle cx="18.2" cy="18.1" r="1.1" fill="currentColor" opacity="0.38"/>
+          </svg>
+        </span>
+        Write code the way the language intended.
+      </em>
+    </p>
+    <p>Run MCP-native workflows for code review, remediation, and onboarding across multi-language codebases.</p>
+    <p>
+      <a class="md-button  md-button--primary" href="getting-started/quickstart/">Quickstart</a>
+      <a class="md-button" href="getting-started/mcp-integration/">MCP Integration</a>
+      <a class="md-button" href="user-guide/cli-reference/">CLI Reference</a>
+      <!-- <a class="md-button" href="user-guide/mcp-tools-reference/">MCP Tools</a> -->
+    </p>
+  </div>
+  <div class="zen-hero__media">
+    <img src="assets/hero-zen.svg" alt="Zen-inspired abstract hero artwork" loading="eager" />
+  </div>
+</section>
+{% endblock %}

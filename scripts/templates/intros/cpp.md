@@ -1,0 +1,1 @@
+Modern C++ (C++11 through C++20) is a fundamentally different language from the C-with-classes of the 1990s. These **13 principles** encode the [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/) philosophy: resource safety through RAII, type safety through smart pointers, and clarity through `auto`, `const`, and `override`.

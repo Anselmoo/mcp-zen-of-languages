@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 320" role="img" aria-labelledby="cli-title">
+  <title id="cli-title">CLI workflow illustration — zen garden with terminal stone tablet and scroll artifacts</title>
+  <defs>
+    <linearGradient id="cli-bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f2effb"/>
+      <stop offset="100%" stop-color="#e9e4f7"/>
+    </linearGradient>
+    <linearGradient id="cli-tablet" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#2b2044"/>
+      <stop offset="100%" stop-color="#221938"/>
+    </linearGradient>
+    <linearGradient id="cli-stream" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#989cff"/>
+      <stop offset="50%" stop-color="#63c8ff"/>
+      <stop offset="100%" stop-color="#c9b3ff"/>
+    </linearGradient>
+    <linearGradient id="cli-scroll" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f8f6ff"/>
+      <stop offset="100%" stop-color="#f2effb"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="960" height="320" fill="url(#cli-bg)"/>
+
+  <!-- Distant mountain silhouettes -->
+  <path d="M0 70 C80 40, 160 55, 260 45 C360 35, 440 60, 540 42 C640 24, 740 50, 840 38 C900 44, 940 36, 960 48 L960 90 L0 90Z" fill="#e9e4f7" opacity="0.4"/>
+  <path d="M0 85 C120 70, 220 80, 340 72 C460 64, 540 82, 660 74 C780 66, 860 78, 960 72 L960 100 L0 100Z" fill="#dfd8f2" opacity="0.3"/>
+
+  <!-- Raked sand waves — zen garden -->
+  <g fill="none" stroke="#dfd8f2" stroke-linecap="round" opacity="0.5">
+    <path d="M0 265 C160 240, 340 290, 520 265 C700 240, 860 285, 960 260" stroke-width="4"/>
+    <path d="M0 280 C180 260, 360 300, 540 280 C720 260, 880 295, 960 278" stroke-width="2.8"/>
+    <path d="M0 293 C180 278, 360 308, 560 293 C760 278, 900 305, 960 290" stroke-width="2"/>
+  </g>
+
+  <!-- Bamboo — left edge -->
+  <g stroke="#767bd8" fill="none" opacity="0.2">
+    <line x1="22" y1="50" x2="22" y2="310" stroke-width="3"/>
+    <line x1="38" y1="80" x2="38" y2="310" stroke-width="2.5"/>
+    <path d="M20 120 Q10 112 4 100" stroke-width="1.5"/>
+    <path d="M24 190 Q14 180 8 168" stroke-width="1.2"/>
+    <path d="M40 150 Q50 142 56 130" stroke-width="1.2"/>
+  </g>
+
+  <!-- Bamboo — right edge -->
+  <g stroke="#b8bcff" fill="none" opacity="0.15">
+    <line x1="940" y1="60" x2="940" y2="310" stroke-width="2.5"/>
+    <line x1="952" y1="90" x2="952" y2="310" stroke-width="2"/>
+    <path d="M938 130 Q928 122 922 110" stroke-width="1.2"/>
+  </g>
+
+  <!-- Ensō — background atmosphere -->
+  <circle cx="480" cy="160" r="130" fill="none" stroke="#c9b3ff" stroke-width="3" stroke-dasharray="340 480" transform="rotate(-15 480 160)" opacity="0.1"/>
+
+  <!-- Terminal stone tablet -->
+  <rect x="82" y="60" width="400" height="200" rx="16" fill="url(#cli-tablet)"/>
+  <!-- Tablet edge highlight -->
+  <rect x="82" y="60" width="400" height="200" rx="16" fill="none" stroke="#989cff" stroke-width="1" opacity="0.2"/>
+  <!-- Stone texture dots -->
+  <g fill="#989cff" opacity="0.08">
+    <circle cx="120" cy="90" r="1.5"/><circle cx="200" cy="100" r="1"/><circle cx="380" cy="85" r="1.2"/>
+    <circle cx="300" cy="230" r="1"/><circle cx="440" cy="200" r="1.3"/><circle cx="160" cy="210" r="0.8"/>
+  </g>
+
+  <!-- Traffic-light dots (subtler) -->
+  <circle cx="108" cy="78" r="4" fill="#f1b0ff" opacity="0.6"/>
+  <circle cx="124" cy="78" r="4" fill="#63c8ff" opacity="0.6"/>
+  <circle cx="140" cy="78" r="4" fill="#b8bcff" opacity="0.6"/>
+
+  <!-- Terminal text as brush calligraphy -->
+  <g fill="#d7d1e6" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13.5" opacity="0.92">
+    <text x="108" y="114">$ zen init</text>
+    <text x="108" y="140">$ zen report . --include-prompts</text>
+    <text x="108" y="166">$ zen prompts . --mode both</text>
+    <text x="108" y="200" fill="#c9b3ff">✓ analysis complete</text>
+    <text x="108" y="224" fill="#989cff" font-size="12">→ report.md · report.json · tasks.json</text>
+  </g>
+
+  <!-- Stream flow — replaces corporate arrow -->
+  <path d="M502 160 C540 150, 570 175, 610 158 C650 140, 680 170, 720 155" stroke="url(#cli-stream)" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.6"/>
+  <!-- Stream ripple drops -->
+  <circle cx="560" cy="168" r="2" fill="#63c8ff" opacity="0.3"/>
+  <circle cx="640" cy="148" r="1.5" fill="#989cff" opacity="0.25"/>
+  <circle cx="690" cy="162" r="1.8" fill="#c9b3ff" opacity="0.2"/>
+
+  <!-- Output scrolls — three rolled parchment cards -->
+  <g>
+    <!-- Scroll 1 -->
+    <rect x="734" y="68" width="152" height="56" rx="12" fill="url(#cli-scroll)"/>
+    <rect x="734" y="68" width="152" height="56" rx="12" fill="none" stroke="#c9b3ff" stroke-width="1" opacity="0.3"/>
+    <path d="M734 80 Q730 96 734 112" stroke="#b8bcff" stroke-width="1.5" fill="none" opacity="0.4"/>
+    <path d="M886 80 Q890 96 886 112" stroke="#b8bcff" stroke-width="1.5" fill="none" opacity="0.4"/>
+
+    <!-- Scroll 2 -->
+    <rect x="734" y="134" width="152" height="56" rx="12" fill="url(#cli-scroll)"/>
+    <rect x="734" y="134" width="152" height="56" rx="12" fill="none" stroke="#c9b3ff" stroke-width="1" opacity="0.3"/>
+    <path d="M734 146 Q730 162 734 178" stroke="#b8bcff" stroke-width="1.5" fill="none" opacity="0.4"/>
+    <path d="M886 146 Q890 162 886 178" stroke="#b8bcff" stroke-width="1.5" fill="none" opacity="0.4"/>
+
+    <!-- Scroll 3 -->
+    <rect x="734" y="200" width="152" height="56" rx="12" fill="url(#cli-scroll)"/>
+    <rect x="734" y="200" width="152" height="56" rx="12" fill="none" stroke="#c9b3ff" stroke-width="1" opacity="0.3"/>
+    <path d="M734 212 Q730 228 734 244" stroke="#b8bcff" stroke-width="1.5" fill="none" opacity="0.4"/>
+    <path d="M886 212 Q890 228 886 244" stroke="#b8bcff" stroke-width="1.5" fill="none" opacity="0.4"/>
+  </g>
+
+  <!-- Scroll icons — small file symbols -->
+  <g stroke="#989cff" stroke-width="1.5" fill="none" opacity="0.6">
+    <path d="M750 82 h14 v18 h-14 z M758 82 v6 h6"/>
+    <path d="M750 148 h14 v18 h-14 z M758 148 v6 h6"/>
+    <path d="M750 214 h14 v18 h-14 z M758 214 v6 h6"/>
+  </g>
+
+  <!-- Scroll text labels -->
+  <g fill="#2b2044" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto" font-size="13" opacity="0.85">
+    <text x="772" y="102">report.md</text>
+    <text x="772" y="168">report.json</text>
+    <text x="772" y="234">agent-tasks.json</text>
+  </g>
+
+  <!-- Garden stones near bottom -->
+  <g opacity="0.55">
+    <ellipse cx="180" cy="288" rx="22" ry="14" fill="#989cff"/>
+    <ellipse cx="220" cy="296" rx="12" ry="8" fill="#b8bcff" opacity="0.5"/>
+    <ellipse cx="660" cy="282" rx="18" ry="12" fill="#c9b3ff"/>
+    <ellipse cx="700" cy="290" rx="10" ry="7" fill="#b8bcff" opacity="0.4"/>
+  </g>
+  <!-- Stone shadows -->
+  <g fill="#221938" opacity="0.06">
+    <ellipse cx="182" cy="302" rx="20" ry="4"/>
+    <ellipse cx="222" cy="304" rx="10" ry="3"/>
+    <ellipse cx="662" cy="294" rx="16" ry="3.5"/>
+    <ellipse cx="702" cy="297" rx="8" ry="2.5"/>
+  </g>
+
+  <!-- Accent motes — floating particles -->
+  <circle cx="560" cy="90" r="2.5" fill="#f1b0ff" opacity="0.35"/>
+  <circle cx="820" cy="280" r="2" fill="#63c8ff" opacity="0.3"/>
+  <circle cx="350" cy="290" r="1.8" fill="#c9b3ff" opacity="0.25"/>
+  <circle cx="900" cy="100" r="2.2" fill="#f1b0ff" opacity="0.2"/>
+
+  <!-- Ground band -->
+  <rect x="0" y="300" width="960" height="20" fill="#dfd8f2" opacity="0.4"/>
+  <g fill="#c9b3ff" opacity="0.08">
+    <circle cx="60" cy="308" r="1"/><circle cx="180" cy="312" r="1"/>
+    <circle cx="320" cy="306" r="1"/><circle cx="480" cy="310" r="1"/>
+    <circle cx="640" cy="308" r="1"/><circle cx="800" cy="312" r="1"/>
+  </g>
+</svg>

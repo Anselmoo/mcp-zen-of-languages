@@ -1,0 +1,136 @@
+style_guide:
+  aesthetic: "Japanese sumi-e inspired, wabi-sabi philosophy, layered depth with recognisable motifs"
+  palette:
+    accent: ["#989cff (accent)", "#b8bcff (soft)", "#767bd8 (muted)"]
+    harmony: ["#f1b0ff (warm)", "#63c8ff (cool)", "#c9b3ff (bridge)"]
+    surfaces:
+      ["#f2effb (bg0)", "#e9e4f7 (bg1)", "#dfd8f2 (bg2)", "#f8f6ff (overlay)"]
+    ink: ["#2b2044 (overlay)", "#221938 (bg2)"]
+  composition: "layered depth, organic + geometric blend, 25-60 SVG elements per illustration, concrete motifs over pure abstraction"
+  zen_principles:
+    [
+      "ensō (open circle)",
+      "wabi-sabi (imperfect beauty)",
+      "ma (negative space)",
+      "fukinsei (asymmetry)",
+      "kanso (simplicity)",
+      "yugen (subtle depth)",
+    ]
+  avoid:
+    [
+      "photorealism",
+      "neon colors",
+      "clip-art look",
+      "fewer than 15 elements",
+      "solid geometric-only layouts",
+    ]
+
+prompts:
+  logo:
+    prompt: >-
+      Minimalist vector logo on soft lavender (#f2effb) rounded square: a thick ensō
+      brushstroke circle (accent gradient #989cff→#c9b3ff) with code symbols </> in
+      ink (#2b2044) at center. Three concentric rings of decreasing opacity (outer hint,
+      main ensō, inner glow), brush-splatter dots near the gap for wabi-sabi texture,
+      small stone cluster at bottom, warm pink accent dot (#f1b0ff) and cool blue dot
+      (#63c8ff). SVG-ready, ~20 elements.
+  hero:
+    prompt: >-
+      Wide hero illustration (1200×700) of a full zen garden scene: layered mountain
+      silhouettes in background, four concentric raked-sand wave lines, a winding
+      stream in cool blue (#63c8ff), a torii gate with kasagi and nuki beams in
+      bridge purple (#c9b3ff), six asymmetric garden stones with elliptical shadows,
+      a stone lantern (tōrō) with glowing firebox windows, detailed bamboo groves
+      on both edges with joints and leaves, stepping stones across the stream,
+      dual ensō echo rings, code bracket symbols, and scattered warm/cool accent
+      motes. Ground gravel band with texture dots. ~70 elements.
+  section_getting_started:
+    prompt: >-
+      Journey illustration (960×320): a torii gate entrance on the left with bamboo
+      grove, a winding stone path with gradient stroke arching across the scene,
+      five elliptical stepping stones with shadows and grass tufts along the path,
+      a stone lantern as a midway marker, code bracket pair at the first stone,
+      and a destination group with ensō ring and pagoda silhouette on the right.
+      Ground plane with gentle curves. ~40 elements.
+  section_user_guide:
+    prompt: >-
+      Knowledge illustration (960×320): a bookshelf on the left with two shelves
+      holding varied-height book rectangles in accent colours, a central open scroll
+      with roll hints at edges containing structured text lines and a code-block
+      area, a detailed bonsai tree on the right with pot, curved trunk, three
+      branches and eight foliage clusters, an ink brush tool at bottom-left, and
+      a Japanese hanko seal stamp (禅). ~50 elements.
+  section_cli:
+    prompt: >-
+      Zen garden CLI illustration (960×320): a dark stone tablet terminal on the
+      left with concrete `zen init`, `zen report`, and `zen prompts` command lines
+      engraved in soft lavender text, subtler traffic-light dots. A winding stream
+      in accent/cool gradient (#989cff→#63c8ff→#c9b3ff) flows rightward replacing
+      the corporate arrow, with ripple drops. Three parchment scroll cards on the
+      right with roll-edge hints containing file labels (`report.md`, `report.json`,
+      `agent-tasks.json`). Background: layered mountain silhouettes, raked-sand wave
+      lines, bamboo groves on edges, a faint ensō ring, asymmetric garden stones
+      with shadows near the bottom, ground gravel band with texture dots, and
+      scattered warm/cool accent motes. Caligo palette throughout. ~65 elements.
+  section_api:
+    prompt: >-
+      Architecture illustration (960×320): a three-layer mountain ridgeline showing
+      depth, four API module boxes at mountain peaks containing mini text/code lines,
+      connection nodes at peaks and valleys, dashed dependency links with tiny arrow
+      heads, typed return-value labels ("list", "dict"), a terminal/REPL window
+      with traffic-light dots and cursor, curly-brace data-flow symbols, and a
+      faint ensō background circle. Gradient background. ~55 elements.
+  section_mcp_tools:
+    prompt: >-
+      MCP workflow illustration (960×320): zen garden inspired network with a
+      central MCP hub feeding three concrete lanes. Lane 1 (Editor review): code
+      panel → analyze_zen_violations → generate_prompts with severity badge chips.
+      Lane 2 (CI remediation): repository stack → analyze_repository →
+      generate_agent_tasks → generate_report with task list card. Lane 3
+      (Onboarding/config): project folder → onboard_project → set_config_override
+      → get_config with config token chips. Add family markers (Analysis,
+      Reporting, Configuration, Metadata, Onboarding), subtle arrows, and 13/3/1
+      surface count badge. Caligo palette, layered depth, wabi-sabi asymmetry,
+      recognisable tool labels, ~65 elements.
+  section_contributing:
+    prompt: >-
+      Collaboration illustration (960×320): an arched bridge connecting two shores
+      over water with three layers of ripple lines. Bridge has railing, deck planks,
+      and support pillars with reflections. Three stick-figure contributors crossing
+      the bridge. A git branch/merge graph symbol below. Trees with trunk, branches,
+      and foliage clusters on each shore. Five drifting cherry-blossom petals.
+      Faint bridge reflection in water. ~60 elements.
+  section_tags:
+    prompt: >-
+      Tags illustration (960×320): layered soft terrain with bamboo on both sides,
+      a flowing ribbon path carrying three hanging tag cards with punched holes and
+      text bars, plus a stacked tag panel on the right. Include a subtle ensō echo
+      ring in the background, warm/cool accent motes, and Caligo palette depth.
+      Keep recognisable tag motifs, rounded corners, and wabi-sabi asymmetry.
+      ~45 elements.
+  section_changelog:
+    prompt: >-
+      Changelog illustration (960×320): release ledger/scroll panel on the left
+      with structured lines, a curved timeline rising to the right with milestone
+      nodes and version label chips, upward arrows indicating progress, and a
+      compact changelog card motif on the right. Add layered terrain, subtle ensō
+      ring, and warm/cool accent motes in Caligo palette. Keep style consistent
+      with existing section illustrations. ~50 elements.
+  social_card_bg:
+    prompt: >-
+      Social card background (1200×630): layered mountain silhouettes, four concentric
+      raked-sand wave lines, asymmetric stone arrangement with shadows, dual ensō
+      echo rings, bamboo groves on both edges with leaf branches, faint code bracket
+      symbols in bottom corners, ground gravel band with texture dots, scattered
+      warm/cool accent motes, and an italic motto text "Write code the way the
+      language intended." centered in the upper area at low opacity in ink colour.
+      Caligo palette gradients throughout. ~52 elements.
+  not_found_404:
+    prompt: >-
+      Lost-path illustration (960×320): atmospheric fog layers with misty ellipses,
+      a faint distant mountain outline, a broken path that starts solid and fragments
+      into scattered stepping-stone pieces trailing off to nothing, a void/gap
+      rectangle, brush-serif "404" text with decorative curved underline, a broken
+      ensō ring (fragmented dasharray), a stone lantern with glowing windows
+      casting a radial glow, a small tree partially hidden in fog, floating
+      question-mark typography, and an uneven ground contour. ~45 elements.

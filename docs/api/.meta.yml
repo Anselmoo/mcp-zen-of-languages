@@ -1,0 +1,8 @@
+icon: material/api
+tags:
+  - API
+  - MCP
+social:
+  cards_layout: default/variant
+  cards_layout_options:
+    background_color: "#e9f0ff"

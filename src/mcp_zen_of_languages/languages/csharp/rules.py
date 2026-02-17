@@ -1,0 +1,198 @@
+"""C# zen principles as Pydantic models."""
+
+from pydantic import HttpUrl
+
+from ...rules.base_models import LanguageZenPrinciples, PrincipleCategory, ZenPrinciple
+
+CSHARP_ZEN = LanguageZenPrinciples(
+    language="csharp",
+    name="C#",
+    philosophy="Modern C# Best Practices (.NET 6+)",
+    source_text="C# Coding Conventions",
+    source_url=HttpUrl(
+        "https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions"
+    ),
+    principles=[
+        ZenPrinciple(
+            id="cs-001",
+            principle="Use nullable reference types",
+            category=PrincipleCategory.TYPE_SAFETY,
+            severity=8,
+            description="Enable nullable reference types for null safety",
+            violations=[
+                "Not enabling nullable in project",
+                "Ignoring nullable warnings",
+                "Using ! operator excessively",
+                "Not annotating nullability",
+            ],
+            required_config={"Nullable": "enable"},
+            detectable_patterns=["!#nullable enable"],
+        ),
+        ZenPrinciple(
+            id="cs-002",
+            principle="Use expression-bodied members",
+            category=PrincipleCategory.IDIOMS,
+            severity=5,
+            description="Use => for simple properties and methods",
+            violations=[
+                "Full method bodies for one-line methods",
+                "Property getters with return statement",
+                "Not using lambda syntax when appropriate",
+            ],
+            detectable_patterns=["!=>"],
+        ),
+        ZenPrinciple(
+            id="cs-003",
+            principle="Prefer var for local variables",
+            category=PrincipleCategory.READABILITY,
+            severity=5,
+            description="Use var when type is obvious from right side",
+            violations=[
+                "Explicit types when var would be clear",
+                "Verbose type declarations",
+                "Not using var with new expressions",
+            ],
+            detectable_patterns=["!var "],
+        ),
+        ZenPrinciple(
+            id="cs-004",
+            principle="Use async/await properly",
+            category=PrincipleCategory.ASYNC,
+            severity=9,
+            description="Follow async best practices, avoid blocking",
+            violations=[
+                ".Result or .Wait() on Tasks",
+                "Async void methods (except event handlers)",
+                "Not using ConfigureAwait in libraries",
+                "Synchronous code in async methods",
+            ],
+            detectable_patterns=[".Result", ".Wait()", "async void"],
+        ),
+        ZenPrinciple(
+            id="cs-005",
+            principle="Use pattern matching",
+            category=PrincipleCategory.IDIOMS,
+            severity=6,
+            description="Leverage modern pattern matching features",
+            violations=[
+                "Type checks with 'is' followed by cast",
+                "Not using switch expressions",
+                "Verbose null checking instead of is null",
+                "Not using property patterns",
+            ],
+            detectable_patterns=["!is "],
+        ),
+        ZenPrinciple(
+            id="cs-006",
+            principle="Prefer string interpolation",
+            category=PrincipleCategory.READABILITY,
+            severity=6,
+            description='Use $"" instead of string.Format or concatenation',
+            violations=[
+                "String.Format for simple formatting",
+                "String concatenation with +",
+                "Not using string interpolation",
+            ],
+            detectable_patterns=["String.Format(", "string + variable"],
+        ),
+        ZenPrinciple(
+            id="cs-007",
+            principle="Use collection expressions",
+            category=PrincipleCategory.IDIOMS,
+            severity=5,
+            description="Use [] for collection initialization (C# 12+)",
+            violations=[
+                "new List<T> { } when [] works",
+                "Verbose array initialization",
+                "Not using collection expressions",
+            ],
+            detectable_patterns=["new List", "new []"],
+        ),
+        ZenPrinciple(
+            id="cs-008",
+            principle="Follow naming conventions",
+            category=PrincipleCategory.READABILITY,
+            severity=7,
+            description="PascalCase for public, camelCase for private",
+            violations=[
+                "camelCase for public members",
+                "snake_case in C# code",
+                "Hungarian notation",
+                "Inconsistent naming",
+            ],
+            metrics={
+                "public_naming": "PascalCase",
+                "private_naming": "camelCase or _camelCase",
+            },
+        ),
+        ZenPrinciple(
+            id="cs-009",
+            principle="Use IDisposable and using statements",
+            category=PrincipleCategory.RESOURCE_MANAGEMENT,
+            severity=9,
+            description="Properly dispose resources with using",
+            violations=[
+                "Not using 'using' for IDisposable",
+                "Manual Dispose() calls",
+                "Resource leaks",
+                "Not implementing IDisposable when needed",
+            ],
+            detectable_patterns=["Dispose()", "IDisposable"],
+        ),
+        ZenPrinciple(
+            id="cs-010",
+            principle="Avoid magic numbers",
+            category=PrincipleCategory.CLARITY,
+            severity=6,
+            description="Use named constants or enums",
+            violations=[
+                "Hardcoded numbers in logic",
+                "String literals repeated",
+                "Not using const or readonly",
+            ],
+            detectable_patterns=[" = 42", " = 100"],
+        ),
+        ZenPrinciple(
+            id="cs-011",
+            principle="Use LINQ appropriately",
+            category=PrincipleCategory.IDIOMS,
+            severity=7,
+            description="Leverage LINQ for collection operations",
+            violations=[
+                "Manual loops instead of LINQ",
+                "Complex iteration logic",
+                "Not using Where/Select/Any",
+                "Inefficient LINQ chains",
+            ],
+            detectable_patterns=["!Select("],
+        ),
+        ZenPrinciple(
+            id="cs-012",
+            principle="Handle exceptions properly",
+            category=PrincipleCategory.ERROR_HANDLING,
+            severity=8,
+            description="Catch specific exceptions, don't swallow errors",
+            violations=[
+                "Empty catch blocks",
+                "Catching Exception instead of specific types",
+                "Not using throw; for re-throwing",
+                "Exception as control flow",
+            ],
+            detectable_patterns=["catch { }", "catch (Exception)"],
+        ),
+        ZenPrinciple(
+            id="cs-013",
+            principle="Use records for DTOs",
+            category=PrincipleCategory.DESIGN,
+            severity=6,
+            description="Use record types for data transfer objects",
+            violations=[
+                "Classes for simple DTOs",
+                "Manual equality implementation",
+                "Not using with expressions",
+                "Mutable DTOs",
+            ],
+            detectable_patterns=["!record "],
+        ),
+    ],
+)

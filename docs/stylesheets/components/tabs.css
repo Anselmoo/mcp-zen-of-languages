@@ -1,0 +1,13 @@
+/* TABS
+   ═══════════════════════════════════════════════════════════════════════════ */
+.md-typeset .tabbed-set {
+  border: var(--zen-border-thin) solid color-mix(in oklch, var(--md-primary-fg-color) 20%, transparent);
+  border-radius: var(--zen-radius-md);
+  padding: var(--zen-space-2) var(--zen-space-3);
+  background: color-mix(in oklch, var(--md-default-bg-color) 88%, var(--md-primary-fg-color));
+  transition: border-color var(--zen-duration-base) var(--zen-ease-out);
+}
+
+.md-typeset details[open] > summary {
+  border-bottom: var(--zen-border-thin) solid color-mix(in oklch, var(--md-primary-fg-color) 20%, transparent);
+}

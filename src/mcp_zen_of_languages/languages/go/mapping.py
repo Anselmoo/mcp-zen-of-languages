@@ -1,0 +1,126 @@
+"""Mapping module."""
+
+from __future__ import annotations
+
+from mcp_zen_of_languages.analyzers.mapping_models import (
+    DetectorBinding,
+    LanguageDetectorMap,
+)
+from mcp_zen_of_languages.languages.configs import (
+    GoContextUsageConfig,
+    GoDeferUsageConfig,
+    GoErrorHandlingConfig,
+    GoGoroutineLeakConfig,
+    GoInitUsageConfig,
+    GoInterfacePointerConfig,
+    GoInterfaceReturnConfig,
+    GoInterfaceSizeConfig,
+    GoNamingConventionConfig,
+    GoPackageNamingConfig,
+    GoPackageStateConfig,
+    GoZeroValueConfig,
+)
+from mcp_zen_of_languages.languages.go.detectors import (
+    GoContextUsageDetector,
+    GoDeferUsageDetector,
+    GoErrorHandlingDetector,
+    GoGoroutineLeakDetector,
+    GoInitUsageDetector,
+    GoInterfacePointerDetector,
+    GoInterfaceReturnDetector,
+    GoInterfaceSizeDetector,
+    GoNamingConventionDetector,
+    GoPackageNamingDetector,
+    GoPackageStateDetector,
+    GoZeroValueDetector,
+)
+
+DETECTOR_MAP = LanguageDetectorMap(
+    language="go",
+    bindings=[
+        DetectorBinding(
+            detector_id="go_error_handling",
+            detector_class=GoErrorHandlingDetector,
+            config_model=GoErrorHandlingConfig,
+            rule_ids=["go-001"],
+            default_order=10,
+        ),
+        DetectorBinding(
+            detector_id="go_interface_size",
+            detector_class=GoInterfaceSizeDetector,
+            config_model=GoInterfaceSizeConfig,
+            rule_ids=["go-010"],
+            default_order=20,
+        ),
+        DetectorBinding(
+            detector_id="go_context_usage",
+            detector_class=GoContextUsageDetector,
+            config_model=GoContextUsageConfig,
+            rule_ids=["go-011"],
+            default_order=30,
+        ),
+        DetectorBinding(
+            detector_id="go_defer_usage",
+            detector_class=GoDeferUsageDetector,
+            config_model=GoDeferUsageConfig,
+            rule_ids=["go-007"],
+            default_order=40,
+        ),
+        DetectorBinding(
+            detector_id="go_naming_convention",
+            detector_class=GoNamingConventionDetector,
+            config_model=GoNamingConventionConfig,
+            rule_ids=["go-004"],
+            default_order=50,
+        ),
+        DetectorBinding(
+            detector_id="go_interface_return",
+            detector_class=GoInterfaceReturnDetector,
+            config_model=GoInterfaceReturnConfig,
+            rule_ids=["go-002"],
+            default_order=60,
+        ),
+        DetectorBinding(
+            detector_id="go_zero_value",
+            detector_class=GoZeroValueDetector,
+            config_model=GoZeroValueConfig,
+            rule_ids=["go-003"],
+            default_order=70,
+        ),
+        DetectorBinding(
+            detector_id="go_interface_pointer",
+            detector_class=GoInterfacePointerDetector,
+            config_model=GoInterfacePointerConfig,
+            rule_ids=["go-005"],
+            default_order=80,
+        ),
+        DetectorBinding(
+            detector_id="go_goroutine_leaks",
+            detector_class=GoGoroutineLeakDetector,
+            config_model=GoGoroutineLeakConfig,
+            rule_ids=["go-006"],
+            default_order=90,
+        ),
+        DetectorBinding(
+            detector_id="go_package_naming",
+            detector_class=GoPackageNamingDetector,
+            config_model=GoPackageNamingConfig,
+            rule_ids=["go-008"],
+            default_order=100,
+        ),
+        DetectorBinding(
+            detector_id="go_package_state",
+            detector_class=GoPackageStateDetector,
+            config_model=GoPackageStateConfig,
+            rule_ids=["go-009"],
+            default_order=110,
+        ),
+        DetectorBinding(
+            detector_id="go_init_usage",
+            detector_class=GoInitUsageDetector,
+            config_model=GoInitUsageConfig,
+            rule_ids=["go-012"],
+            default_order=120,
+        ),
+    ],
+)

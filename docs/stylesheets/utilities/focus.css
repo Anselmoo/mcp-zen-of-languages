@@ -1,0 +1,28 @@
+/* KEYBOARD FOCUS — :focus-visible accessibility
+   ═══════════════════════════════════════════════════════════════════════════ */
+:focus-visible {
+  outline: var(--zen-border-base) solid var(--zen-ring);
+  outline-offset: var(--zen-space-1);
+}
+
+.md-nav__link:focus-visible,
+.md-tabs__link:focus-visible {
+  outline: var(--zen-border-base) solid var(--zen-ring);
+  outline-offset: var(--zen-space-1);
+  border-radius: var(--zen-radius-sm);
+}
+
+.md-button:focus-visible {
+  outline: var(--zen-border-base) solid var(--zen-ring);
+  outline-offset: var(--zen-space-2);
+  box-shadow: 0 0 0 4px color-mix(in oklch, var(--zen-ring) 25%, transparent);
+}
+
+.md-search__input:focus-visible {
+  outline: var(--zen-border-base) solid var(--zen-ring);
+  outline-offset: calc(-1 * var(--zen-space-1));
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}

@@ -1,0 +1,26 @@
+/* CODE BLOCKS
+   ═══════════════════════════════════════════════════════════════════════════ */
+.md-typeset pre,
+.md-typeset .highlight pre {
+  border-radius: var(--zen-radius-md);
+  border: var(--zen-border-thin) solid color-mix(in oklch, var(--zen-ring) 22%, transparent);
+  box-shadow: var(--zen-shadow-sm);
+  transition: border-color var(--zen-duration-base) var(--zen-ease-out),
+              box-shadow var(--zen-duration-base) var(--zen-ease-out);
+}
+
+/* Code block hover — subtle border + shadow lift */
+.md-typeset pre.zen-code-hover,
+.md-typeset .highlight pre.zen-code-hover {
+  border-color: color-mix(in oklch, var(--zen-ring) 50%, transparent);
+  box-shadow: var(--zen-shadow-md);
+}
+
+.md-typeset code {
+  border-radius: var(--zen-radius-sm);
+}
+
+/* Inline code contrast */
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset code {
+  background-color: var(--caligo-bg-elevated);
+}

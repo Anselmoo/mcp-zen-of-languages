@@ -1,0 +1,34 @@
+/* ILLUSTRATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+img[alt*="hero"],
+img[alt*="Zen"] {
+  border-radius: var(--zen-radius-md);
+}
+
+.md-typeset img[alt*="illustration"] {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 1;
+  object-fit: contain;
+  margin: var(--zen-space-2) 0 var(--zen-space-4);
+  border-radius: var(--zen-radius-md);
+  border: var(--zen-border-thin) solid color-mix(in oklch, var(--md-primary-fg-color) 20%, transparent);
+  background: var(--zen-surface-elevated);
+  transition: transform var(--zen-duration-base) var(--zen-ease-out),
+              box-shadow var(--zen-duration-base) var(--zen-ease-out);
+}
+
+.md-typeset img[alt*="illustration"]:hover {
+  transform: scale(1.01);
+  box-shadow: var(--zen-shadow-md);
+}
+
+/* Dark-mode inversion for all SVG illustrations */
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset img[alt*="illustration"],
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset img[src*="illustration-"],
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .zen-hero__media img {
+  filter: invert(0.88) hue-rotate(180deg) saturate(1.4);
+  border-color: color-mix(in oklch, var(--caligo-accent) 22%, transparent);
+  background: var(--zen-surface-elevated);
+}

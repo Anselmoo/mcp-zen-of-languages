@@ -1,0 +1,110 @@
+/* Caligo design tokens (canonical naming + compatibility aliases) */
+:root {
+  /* Dark surface scale (canonical) */
+  --caligo-bg0: #161025;
+  --caligo-bg1: #1b142c;
+  --caligo-bg2: #221938;
+  --caligo-bg-overlay: #2b2044;
+
+  /* Dark foreground scale (canonical) */
+  --caligo-fg0: #d7d1e6;
+  --caligo-fg1: #b8b2c9;
+  --caligo-fg-muted: #9b95ad;
+  --caligo-fg-faint: #7f7892;
+
+  /* Light surface scale (canonical) */
+  --caligo-light-bg0: #f2effb;
+  --caligo-light-bg1: #e9e4f7;
+  --caligo-light-bg2: #dfd8f2;
+  --caligo-light-bg-overlay: #f8f6ff;
+
+  /* Light foreground scale (canonical) */
+  --caligo-light-fg0: #433b5d;
+  --caligo-light-fg1: #5f5680;
+  --caligo-light-fg-muted: #81789f;
+
+  /* Accent scale (canonical) */
+  --caligo-accent: #989cff;
+  --caligo-accent-soft: #b8bcff;
+  --caligo-accent-muted: #767bd8;
+
+  /* Harmony tokens */
+  --caligo-harmony-warm: #f1b0ff;
+  --caligo-harmony-cool: #63c8ff;
+  --caligo-harmony-bridge: #c9b3ff;
+
+  /* Syntax colours */
+  --caligo-syntax-keywords: #7da7ff;
+  --caligo-syntax-types: #ffadff;
+  --caligo-syntax-functions: #c4abff;
+  --caligo-syntax-strings: #d9a3ff;
+  --caligo-syntax-decorator: #4ec2ff;
+  --caligo-syntax-numbers: #8ec6ff;
+  --caligo-syntax-special: #65a7ff;
+  --caligo-syntax-constant: #b7a6ff;
+
+  /* Semantic tiers */
+  --caligo-error: #fff4ef;
+  --caligo-error-muted: #ffd9d1;
+  --caligo-error-bg: rgba(102, 55, 70, 0.22);
+
+  --caligo-warning: #fff6ea;
+  --caligo-warning-muted: #ffe4bf;
+  --caligo-warning-bg: rgba(108, 86, 52, 0.2);
+
+  --caligo-success: #00ff8a;
+  --caligo-success-muted: #84ffbe;
+  --caligo-success-bg: rgba(0, 110, 74, 0.2);
+
+  --caligo-info: #00f1ff;
+  --caligo-info-muted: #88f8ff;
+  --caligo-info-bg: rgba(0, 92, 116, 0.2);
+
+  /* Icon-specific colors */
+  --caligo-icon-primary: var(--caligo-accent);
+  --caligo-icon-secondary: var(--caligo-syntax-decorator);
+  --caligo-icon-interactive: var(--caligo-harmony-bridge);
+  --caligo-icon-muted: var(--caligo-fg-muted);
+
+  /* Light mode icon colors */
+  --caligo-light-icon-primary: #6166d5;
+  --caligo-light-icon-secondary: #4b92d9;
+  --caligo-light-icon-interactive: #9b78e5;
+  --caligo-light-icon-muted: #81789f;
+
+  /* Print palette */
+  --caligo-print-bg: var(--caligo-light-bg-overlay);
+  --caligo-print-fg: var(--caligo-light-fg0);
+  --caligo-print-link: var(--caligo-accent-muted);
+  --caligo-print-muted: var(--caligo-light-fg1);
+  --caligo-print-border: color-mix(in oklch, var(--caligo-light-fg0) 22%, transparent);
+
+  /* Shared aliases */
+  --zen-primary: var(--caligo-accent);
+  --zen-accent: var(--caligo-info);
+  --zen-ring: var(--caligo-accent);
+
+  /* Compatibility aliases */
+  --caligo-bg-base: var(--caligo-bg0);
+  --caligo-bg-surface: var(--caligo-bg1);
+  --caligo-bg-elevated: var(--caligo-bg2);
+
+  --caligo-fg-primary: var(--caligo-fg0);
+  --caligo-fg-secondary: var(--caligo-fg1);
+
+  --caligo-light-bg: var(--caligo-light-bg0);
+  --caligo-light-surface: var(--caligo-light-bg1);
+  --caligo-light-surface-2: var(--caligo-light-bg2);
+  --caligo-light-elevated: var(--caligo-light-bg-overlay);
+
+  --caligo-light-text: var(--caligo-light-fg0);
+  --caligo-light-muted: var(--caligo-light-fg1);
+  --caligo-light-faint: var(--caligo-light-fg-muted);
+
+  --caligo-accent-light: var(--caligo-accent-soft);
+  --caligo-accent-dark: var(--caligo-accent-muted);
+
+  --caligo-complement-warm: var(--caligo-harmony-warm);
+  --caligo-complement-cool: var(--caligo-harmony-cool);
+  --caligo-complement-purple: var(--caligo-harmony-bridge);
+}

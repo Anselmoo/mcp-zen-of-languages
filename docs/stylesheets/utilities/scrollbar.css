@@ -1,0 +1,79 @@
+/* SCROLLBARS
+   ═══════════════════════════════════════════════════════════════════════════ */
+html, body {
+  scrollbar-color: color-mix(in oklch, var(--caligo-accent) 36%, transparent) transparent;
+  scrollbar-width: thin;
+}
+
+.md-sidebar__scrollwrap,
+.md-nav--primary .md-nav__title {
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: color-mix(in oklch, var(--caligo-accent) 36%, transparent);
+  border-radius: var(--zen-radius-full);
+  transition: background var(--zen-duration-fast) var(--zen-ease-out);
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+
+SCROLLBAR STYLING — all scrollable containers
+   ═══════════════════════════════════════════════════════════════════════════ */
+.md-typeset pre > code,
+.md-sidebar__scrollwrap,
+.md-search__scrollwrap,
+.md-typeset div.mermaid,
+.md-typeset mermaid-div,
+.md-typeset div.arithmatex,
+.md-typeset__scrollwrap {
+  scrollbar-color: var(--md-default-fg-color--lighter) transparent;
+  scrollbar-width: thin;
+}
+
+:is(
+  .md-typeset pre > code,
+  .md-sidebar__scrollwrap,
+  .md-search__scrollwrap,
+  .md-typeset div.mermaid
+)::-webkit-scrollbar {
+  width: 0.2rem;
+  height: 0.2rem;
+}
+
+:is(
+  .md-typeset pre > code,
+  .md-sidebar__scrollwrap,
+  .md-search__scrollwrap,
+  .md-typeset div.mermaid
+)::-webkit-scrollbar-thumb {
+  background-color: var(--md-default-fg-color--lighter);
+}
+
+:is(
+  .md-typeset pre > code,
+  .md-sidebar__scrollwrap,
+  .md-search__scrollwrap,
+  .md-typeset div.mermaid
+)::-webkit-scrollbar-thumb:hover {
+  background-color: var(--md-accent-fg-color);
+}
+
+:is(
+  .md-typeset pre > code,
+  .md-sidebar__scrollwrap,
+  .md-search__scrollwrap,
+  .md-typeset div.mermaid
+):hover {
+  scrollbar-color: var(--md-accent-fg-color) transparent;
+}

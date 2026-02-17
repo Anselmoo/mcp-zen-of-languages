@@ -1,0 +1,42 @@
+/* Semantic aliases for component-level usage */
+:root {
+  --zen-surface-base: var(--caligo-bg0);
+  --zen-surface-raised: var(--caligo-bg1);
+  --zen-surface-elevated: var(--caligo-bg2);
+  --zen-surface-overlay: var(--caligo-bg-overlay);
+
+  --zen-text-primary: var(--caligo-fg0);
+  --zen-text-secondary: var(--caligo-fg1);
+  --zen-text-muted: var(--caligo-fg-muted);
+
+  --zen-interactive-default: var(--caligo-accent);
+  --zen-interactive-hover: var(--caligo-accent-soft);
+  --zen-interactive-muted: var(--caligo-accent-muted);
+
+  --zen-feedback-error: var(--caligo-error);
+  --zen-feedback-error-muted: var(--caligo-error-muted);
+  --zen-feedback-error-bg: var(--caligo-error-bg);
+
+  --zen-feedback-warning: var(--caligo-warning);
+  --zen-feedback-warning-muted: var(--caligo-warning-muted);
+  --zen-feedback-warning-bg: var(--caligo-warning-bg);
+
+  --zen-feedback-success: var(--caligo-success);
+  --zen-feedback-success-muted: var(--caligo-success-muted);
+  --zen-feedback-success-bg: var(--caligo-success-bg);
+
+  --zen-feedback-info: var(--caligo-info);
+  --zen-feedback-info-muted: var(--caligo-info-muted);
+  --zen-feedback-info-bg: var(--caligo-info-bg);
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) {
+  --zen-surface-base: var(--caligo-light-bg0);
+  --zen-surface-raised: var(--caligo-light-bg1);
+  --zen-surface-elevated: var(--caligo-light-bg2);
+  --zen-surface-overlay: var(--caligo-light-bg-overlay);
+
+  --zen-text-primary: var(--caligo-light-fg0);
+  --zen-text-secondary: var(--caligo-light-fg1);
+  --zen-text-muted: var(--caligo-light-fg-muted);
+}

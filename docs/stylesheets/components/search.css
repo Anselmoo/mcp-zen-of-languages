@@ -1,0 +1,36 @@
+/* TOGGLE / SEARCH / NAV buttons — ensure visibility in both modes
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Palette toggle icon */
+.md-header .md-header__button {
+  color: var(--md-primary-bg-color);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-header .md-header__button {
+  color: var(--caligo-fg-primary);
+}
+
+/* Search bar */
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-search__input {
+  background-color: color-mix(in oklch, var(--caligo-light-elevated) 90%, transparent);
+  color: var(--caligo-light-text);
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-search__form {
+  background-color: var(--caligo-light-elevated);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-search__input {
+  background-color: var(--caligo-bg-overlay);
+  color: var(--caligo-fg-primary);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-search__input::placeholder {
+  color: var(--caligo-fg-muted);
+}
+
+/* Search results */
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-search-result__meta {
+  background-color: var(--caligo-bg-elevated);
+  color: var(--caligo-fg-secondary);
+}

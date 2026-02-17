@@ -1,0 +1,17 @@
+/* HEADER / TABS — use elevated surface, not accent
+   ═══════════════════════════════════════════════════════════════════════════ */
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-header {
+  background-color: color-mix(in oklch, var(--caligo-accent-dark) 25%, var(--caligo-bg-surface));
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-tabs {
+  background-color: color-mix(in oklch, var(--caligo-accent-dark) 30%, var(--caligo-bg-surface));
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-header {
+  background-color: color-mix(in oklch, var(--caligo-accent) 30%, var(--caligo-light-elevated));
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-tabs {
+  background-color: color-mix(in oklch, var(--caligo-accent) 35%, var(--caligo-light-elevated));
+}

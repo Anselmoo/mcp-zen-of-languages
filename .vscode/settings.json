@@ -1,0 +1,14 @@
+{
+    "terminal.integrated.defaultProfile.osx": "bash",
+    "chat.agent.maxRequests": 2500,
+    "chat.customAgentInSubagent.enabled": true,
+    "chat.useAgentSkills": true,
+    "chat.useNestedAgentsMdFiles": true,
+    "inlineChat.notebookAgent": true,
+    "github.copilot.chat.agent.autoFix": true,
+    "github.copilot.chat.codesearch.enabled": true,
+    "github.copilot.chat.anthropic.thinking.budgetTokens": 14000,
+    "github.copilot.chat.anthropic.tools.websearch.enabled": true,
+    "github.copilot.chat.generateTests.codeLens": true,
+    "github.copilot.chat.githubMcpServer.enabled": true,
+}

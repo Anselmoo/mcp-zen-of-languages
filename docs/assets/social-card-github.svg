@@ -1,0 +1,199 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640" role="img" aria-labelledby="social-card-title">
+  <title id="social-card-title">MCP Zen of Languages — GitHub social card with zen garden and project statistics</title>
+  <defs>
+    <linearGradient id="sc-sky" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f2effb"/>
+      <stop offset="55%" stop-color="#e9e4f7"/>
+      <stop offset="100%" stop-color="#dfd8f2"/>
+    </linearGradient>
+    <linearGradient id="sc-stone" x1="0.3" x2="0.7" y1="0" y2="1">
+      <stop offset="0%" stop-color="#989cff"/>
+      <stop offset="100%" stop-color="#767bd8"/>
+    </linearGradient>
+    <linearGradient id="sc-stone2" x1="0.4" x2="0.6" y1="0" y2="1">
+      <stop offset="0%" stop-color="#b8bcff"/>
+      <stop offset="100%" stop-color="#989cff"/>
+    </linearGradient>
+    <linearGradient id="sc-torii" x1="0.5" x2="0.5" y1="0" y2="1">
+      <stop offset="0%" stop-color="#c9b3ff"/>
+      <stop offset="100%" stop-color="#989cff"/>
+    </linearGradient>
+    <radialGradient id="sc-glow" cx="0.5" cy="0.4" r="0.5">
+      <stop offset="0%" stop-color="#f1b0ff" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#f1b0ff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="sc-enso" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#989cff"/>
+      <stop offset="100%" stop-color="#c9b3ff"/>
+    </linearGradient>
+    <linearGradient id="sc-ink" x1="0.2" x2="0.8" y1="0" y2="1">
+      <stop offset="0%" stop-color="#2b2044"/>
+      <stop offset="100%" stop-color="#221938"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1280" height="640" fill="url(#sc-sky)"/>
+
+  <!-- ═══ Distant mountains ═══ -->
+  <path d="M0 160 C90 90, 180 60, 280 100 C380 140, 420 70, 520 55 C620 42, 660 75, 740 88 C840 105, 930 50, 1040 85 C1120 110, 1180 60, 1280 100 L1280 200 L0 200Z" fill="#e9e4f7" opacity="0.4"/>
+  <path d="M0 200 C120 150, 240 130, 380 160 C520 190, 580 120, 700 145 C820 170, 920 115, 1060 155 C1160 185, 1220 140, 1280 175 L1280 240 L0 240Z" fill="#dfd8f2" opacity="0.3"/>
+
+  <!-- ═══ Raked sand patterns ═══ -->
+  <g fill="none" stroke="#dfd8f2" stroke-linecap="round">
+    <path d="M0 440 C200 400, 400 470, 620 435 C840 400, 1020 475, 1280 435" stroke-width="7" opacity="0.4"/>
+    <path d="M0 470 C220 435, 420 495, 640 460 C860 430, 1040 500, 1280 465" stroke-width="5" opacity="0.3"/>
+    <path d="M0 495 C240 468, 440 515, 660 488 C880 465, 1060 520, 1280 492" stroke-width="3" opacity="0.22"/>
+  </g>
+
+  <!-- ═══ Ensō — large atmospheric ring ═══ -->
+  <circle cx="640" cy="320" r="240" fill="none" stroke="#c9b3ff" stroke-width="4" stroke-dasharray="600 920" transform="rotate(-15 640 320)" opacity="0.1"/>
+  <circle cx="650" cy="315" r="190" fill="none" stroke="#b8bcff" stroke-width="2" stroke-dasharray="350 840" transform="rotate(35 650 315)" opacity="0.06"/>
+
+  <!-- ═══ Bamboo grove — left side ═══ -->
+  <g stroke="#767bd8" fill="none" opacity="0.2">
+    <line x1="40" y1="80" x2="40" y2="600" stroke-width="4"/>
+    <line x1="62" y1="120" x2="62" y2="600" stroke-width="3.5"/>
+    <line x1="82" y1="155" x2="82" y2="600" stroke-width="2.8"/>
+    <!-- Joints -->
+    <line x1="36" y1="220" x2="44" y2="220" stroke-width="2"/>
+    <line x1="36" y1="370" x2="44" y2="370" stroke-width="2"/>
+    <line x1="58" y1="280" x2="66" y2="280" stroke-width="1.6"/>
+    <line x1="78" y1="320" x2="86" y2="320" stroke-width="1.4"/>
+    <!-- Leaves -->
+    <path d="M38 170 Q20 156 10 138" stroke-width="2"/>
+    <path d="M42 290 Q26 276 16 258" stroke-width="1.6"/>
+    <path d="M64 220 Q80 208 90 192" stroke-width="1.6"/>
+    <path d="M84 270 Q100 258 110 242" stroke-width="1.2"/>
+  </g>
+
+  <!-- ═══ Bamboo grove — right side ═══ -->
+  <g stroke="#b8bcff" fill="none" opacity="0.16">
+    <line x1="1210" y1="100" x2="1210" y2="600" stroke-width="3.5"/>
+    <line x1="1232" y1="145" x2="1232" y2="600" stroke-width="2.8"/>
+    <line x1="1250" y1="175" x2="1250" y2="600" stroke-width="2.2"/>
+    <line x1="1206" y1="260" x2="1214" y2="260" stroke-width="1.6"/>
+    <line x1="1228" y1="310" x2="1236" y2="310" stroke-width="1.4"/>
+    <path d="M1208 190 Q1192 178 1184 162" stroke-width="1.6"/>
+    <path d="M1234 250 Q1250 238 1260 222" stroke-width="1.3"/>
+  </g>
+
+  <!-- ═══ Stones — bottom garden bed ═══ -->
+  <g opacity="0.65">
+    <ellipse cx="180" cy="520" rx="50" ry="36" fill="url(#sc-stone)"/>
+    <ellipse cx="240" cy="535" rx="28" ry="20" fill="url(#sc-stone2)" opacity="0.7"/>
+    <ellipse cx="1060" cy="510" rx="60" ry="42" fill="url(#sc-stone)"/>
+    <ellipse cx="1140" cy="530" rx="30" ry="22" fill="#b8bcff" opacity="0.6"/>
+    <ellipse cx="1100" cy="536" rx="20" ry="14" fill="#c9b3ff" opacity="0.45"/>
+  </g>
+  <!-- Stone shadows -->
+  <g fill="#221938" opacity="0.07">
+    <ellipse cx="183" cy="556" rx="46" ry="8"/>
+    <ellipse cx="243" cy="555" rx="24" ry="5"/>
+    <ellipse cx="1063" cy="552" rx="56" ry="10"/>
+    <ellipse cx="1143" cy="552" rx="26" ry="5"/>
+  </g>
+
+  <!-- ═══ Stone lantern — right of center ═══ -->
+  <g transform="translate(1020, 380)" opacity="0.45">
+    <circle cx="0" cy="-10" r="30" fill="url(#sc-glow)"/>
+    <rect x="-3" y="0" width="6" height="45" rx="1.5" fill="#2b2044"/>
+    <rect x="-10" y="-18" width="20" height="18" rx="3" fill="#2b2044"/>
+    <path d="M-16 -18 L0 -30 L16 -18" fill="#2b2044"/>
+    <circle cx="0" cy="-33" r="2.5" fill="#2b2044"/>
+    <rect x="-5" y="-12" width="4" height="7" rx="1" fill="#f1b0ff" opacity="0.5"/>
+    <rect x="1" y="-12" width="4" height="7" rx="1" fill="#f1b0ff" opacity="0.5"/>
+    <rect x="-8" y="45" width="16" height="4" rx="1.5" fill="#2b2044"/>
+  </g>
+
+  <!-- ═══ Torii gate — small, left garden ═══ -->
+  <g transform="translate(130, 320)" opacity="0.35">
+    <rect x="0" y="0" width="8" height="110" rx="2" fill="url(#sc-torii)"/>
+    <rect x="70" y="0" width="8" height="110" rx="2" fill="url(#sc-torii)"/>
+    <path d="M-6 4 Q40 -10, 84 4" fill="none" stroke="#c9b3ff" stroke-width="7" stroke-linecap="round"/>
+    <rect x="6" y="24" width="66" height="4" rx="1.5" fill="#b8bcff"/>
+  </g>
+
+  <!-- ═══ Code brackets — ink brushstroke ═══ -->
+  <g fill="none" stroke="#2b2044" stroke-linecap="round" stroke-linejoin="round" opacity="0.18">
+    <path d="M110 530 L88 545 L110 560" stroke-width="5"/>
+    <path d="M1170 530 L1192 545 L1170 560" stroke-width="5"/>
+  </g>
+
+  <!-- Ground plane -->
+  <rect x="0" y="590" width="1280" height="50" fill="#dfd8f2" opacity="0.25"/>
+  <g fill="#c9b3ff" opacity="0.08">
+    <circle cx="80" cy="610" r="1.5"/><circle cx="200" cy="616" r="1.2"/>
+    <circle cx="360" cy="608" r="1.5"/><circle cx="520" cy="618" r="1.2"/>
+    <circle cx="680" cy="612" r="1.5"/><circle cx="840" cy="614" r="1.2"/>
+    <circle cx="1000" cy="608" r="1.5"/><circle cx="1160" cy="616" r="1.2"/>
+  </g>
+
+  <!-- Cherry blossom petals -->
+  <g fill="#f1b0ff" opacity="0.25">
+    <ellipse cx="320" cy="110" rx="3" ry="2" transform="rotate(20 320 110)"/>
+    <ellipse cx="780" cy="90" rx="2.5" ry="1.5" transform="rotate(-30 780 90)"/>
+    <ellipse cx="1100" cy="130" rx="2" ry="1.2" transform="rotate(45 1100 130)"/>
+  </g>
+
+  <!-- Accent motes -->
+  <circle cx="260" cy="260" r="3" fill="#f1b0ff" opacity="0.35"/>
+  <circle cx="960" cy="230" r="2.5" fill="#63c8ff" opacity="0.3"/>
+  <circle cx="1100" cy="290" r="2" fill="#c9b3ff" opacity="0.25"/>
+
+  <!-- ═══════════════════════════════════ -->
+  <!--  TYPOGRAPHY — 40pt safe border      -->
+  <!--  Safe area: x=40..1240, y=40..600   -->
+  <!-- ═══════════════════════════════════ -->
+
+  <!-- Logo ensō mark — compact, left of title -->
+  <g transform="translate(220, 235)">
+    <!-- Ensō brushstroke -->
+    <circle cx="0" cy="0" r="42" fill="none" stroke="url(#sc-enso)" stroke-width="8" stroke-linecap="round" stroke-dasharray="220 50" transform="rotate(-32 0 0)" opacity="0.85"/>
+    <!-- Code symbols -->
+    <path d="M-16 -5 L-28 5 L-16 15" fill="none" stroke="url(#sc-ink)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+    <path d="M16 -5 L28 5 L16 15" fill="none" stroke="url(#sc-ink)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+    <rect x="-4" y="-10" width="8" height="30" rx="3" fill="#2b2044" opacity="0.85"/>
+  </g>
+
+  <!-- Title — large, bold -->
+  <text x="290" y="228" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="52" fill="#2b2044" font-weight="800" letter-spacing="-1" opacity="0.92">MCP Zen of Languages</text>
+
+  <!-- Tagline — medium, lighter weight -->
+  <text x="295" y="270" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="22" fill="#767bd8" font-weight="500" opacity="0.75" letter-spacing="0.5">Multi-language code analysis against zen principles</text>
+
+  <!-- Divider — subtle ink line -->
+  <line x1="295" y1="290" x2="720" y2="290" stroke="#b8bcff" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+
+  <!-- Stats — small, styled badges -->
+  <g font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="15" opacity="0.6">
+    <text x="295" y="325" fill="#989cff" font-weight="600">151 principles</text>
+    <text x="440" y="325" fill="#dfd8f2" font-weight="400">·</text>
+    <text x="460" y="325" fill="#767bd8" font-weight="600">14 languages</text>
+    <text x="590" y="325" fill="#dfd8f2" font-weight="400">·</text>
+    <text x="610" y="325" fill="#c9b3ff" font-weight="600">13 MCP tools</text>
+  </g>
+
+  <!-- Feature highlights — small italic -->
+  <g font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="13" fill="#2b2044" opacity="0.4" font-style="italic">
+    <text x="295" y="360">zen-config.yaml · strategy detectors · Pydantic v2 · FastMCP</text>
+  </g>
+
+  <!-- Bottom motto — philosophical touch -->
+  <text x="640" y="568" text-anchor="middle" fill="#2b2044" font-family="'Ma Shan Zheng', 'Long Cang', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif" font-size="30" font-style="italic" letter-spacing="0.02em" opacity="0.46">“Write code the way the language intended.”</text>
+
+  <!-- Brush icon accent -->
+  <g transform="translate(312 526) rotate(12)" fill="#2b2044" opacity="0.4">
+    <rect x="0" y="0" width="8" height="34" rx="3"/>
+    <rect x="-2" y="31" width="12" height="9" rx="2" opacity="0.72"/>
+    <path d="M-3 40H11L4 50Z" opacity="0.88"/>
+    <circle cx="18" cy="43" r="2.4" opacity="0.35"/>
+  </g>
+
+  <!-- Hanko seal — bottom-right -->
+  <g transform="translate(1195, 540)" opacity="0.3">
+    <rect x="0" y="0" width="26" height="26" rx="3" fill="none" stroke="#989cff" stroke-width="1.5"/>
+    <text x="13" y="20" font-family="serif" font-size="16" fill="#989cff" text-anchor="middle" opacity="0.7">禅</text>
+  </g>
+
+</svg>

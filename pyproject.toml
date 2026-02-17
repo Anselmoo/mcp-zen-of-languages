@@ -1,0 +1,266 @@
+[project]
+name = "mcp-zen-of-languages"
+version = "0.1.0"
+description = "Multi-language architectural and idiomatic code analysis via CLI and MCP server."
+readme = "README.md"
+authors = [{ name = "Anselm Hahn", email = "Anselm.Hahn@gmail.com" }]
+requires-python = ">=3.12"
+keywords = [
+    "mcp",
+    "code-analysis",
+    "code-quality",
+    "linting",
+    "static-analysis",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Information Technology",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Operating System :: OS Independent",
+    "License :: OSI Approved :: MIT License",
+    "Typing :: Typed",
+]
+dependencies = [
+    "fastmcp>=2.14.4",
+    "networkx>=3.6.1",
+    "pydantic>=2.12.5",
+    "pygments>=2.19.2",
+    "radon>=6.0.1",
+    "typer>=0.12.0",
+    "tree-sitter>=0.25.2",
+]
+
+[project.urls]
+Homepage = "https://github.com/Anselmoo/mcp-zen-of-languages"
+Documentation = "https://anselmoo.github.io/mcp-zen-of-languages/"
+Issues = "https://github.com/Anselmoo/mcp-zen-of-languages/issues"
+Source = "https://github.com/Anselmoo/mcp-zen-of-languages"
+
+[project.scripts]
+mcp-zen-of-languages = "mcp_zen_of_languages.cli:main"
+zen = "mcp_zen_of_languages.cli:main"
+zen-mcp-server = "mcp_zen_of_languages.__main__:main"
+
+[project.optional-dependencies]
+tui = ["pyfiglet>=1.0.0"]
+
+[build-system]
+requires = ["uv_build>=0.9.26,<0.10.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+docs = [
+    "mkdocs>=1.6.0",
+    "mkdocs-material[imaging]>=9.7.1",
+    "mkdocstrings[python]>=0.26.0",
+    "mkdocs-minify-plugin>=0.8.0",
+    "mkdocs-git-revision-date-localized-plugin>=1.3.0",
+    "mkdocs-glightbox>=0.4.0",
+]
+dev = [
+    "cairosvg>=2.8.2",
+    "jinja2>=3.1.6",
+    "poethepoet>=0.33.1",
+    "playwright>=1.54.0",
+    "pytest>=9.0.2",
+    "pytest-asyncio>=1.3.0",
+    "pytest-cov>=7.0.0",
+    "interrogate[png]>=1.7.0",
+    "ruff>=0.14.14",
+    "ty>=0.0.16",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["ALL"]
+extend-ignore = [
+    # --- Baseline suppressions (pre-existing violations, fix incrementally) ---
+    # Style / formatting
+    "COM812", # missing-trailing-comma (formatter handles)
+    "E501",   # line-too-long (formatter handles)
+    "D202",   # blank-line-after-function
+    "D212",   # multi-line-summary-first-line
+    # Annotations
+    "ANN001", # missing-type-function-argument
+    "ANN002", # missing-type-args
+    "ANN003", # missing-type-kwargs
+    "ANN201", # missing-return-type-undocumented-public-function
+    "ANN202", # missing-return-type-private-function
+    "ANN204", # missing-return-type-special-method
+    "ANN401", # any-type
+    # Complexity / size
+    "C901",    # complex-structure
+    "PLR0911", # too-many-return-statements
+    "PLR0912", # too-many-branches
+    "PLR0913", # too-many-arguments
+    "PLR0915", # too-many-statements
+    # Import style
+    "PLC0415", # import-outside-top-level
+    "TID252",  # relative-imports
+    "TC001",   # typing-only-first-party-import
+    "TC002",   # typing-only-third-party-import
+    "TC003",   # typing-only-standard-library-import
+    # Boolean / argument patterns
+    "FBT001", # boolean-type-hint-positional-argument
+    "FBT002", # boolean-default-value-positional-argument
+    "FBT003", # boolean-positional-value-in-call
+    "ARG001", # unused-function-argument
+    "ARG002", # unused-method-argument
+    "ARG005", # unused-lambda-argument
+    # Exception patterns
+    "BLE001", # blind-except
+    "EM101",  # raw-string-in-exception
+    "EM102",  # f-string-in-exception
+    "EM103",  # dot-format-in-exception
+    "TRY003", # raise-vanilla-args
+    "TRY300", # try-consider-else
+    # Modernization (fix incrementally)
+    "UP015", # redundant-open-modes
+    "UP028", # yield-in-for-loop
+    "UP032", # f-string
+    "UP035", # deprecated-import
+    "UP037", # quoted-annotation
+    "UP038", # Use `X | Y` instead of `(X, Y)`
+    "UP042", # replace-str-enum
+    # Pylint conventions
+    "PLR2004", # magic-value-comparison
+    "PLR1714", # repeated-equality-comparison
+    "PLR1730", # if-stmt-min-max
+    "PLW0602", # global-variable-not-assigned
+    "PLW0603", # global-statement
+    "PLW1510", # subprocess-run-without-check
+    "PLW2901", # redefined-loop-name
+    "PLE0605", # invalid-all-format
+    # Performance
+    "PERF102", # incorrect-dict-iterator
+    "PERF401", # manual-list-comprehension
+    # Simplifications
+    "SIM101", # duplicate-isinstance-call
+    "SIM102", # collapsible-if
+    "SIM114", # if-with-same-arms
+    "SIM118", # in-dict-keys
+    # Private access / naming
+    "SLF001", # private-member-access
+    "N806",   # non-lowercase-variable-in-function
+    "N812",   # lowercase-imported-as-non-lowercase
+    "A002",   # builtin-argument-shadowing
+    # Security (review individually)
+    "S101", # assert
+    "S108", # hardcoded-temp-file
+    "S110", # try-except-pass
+    "S112", # try-except-continue
+    "S506", # unsafe-yaml-load
+    "S603", # subprocess-without-shell-equals-true
+    "S607", # start-process-with-partial-path
+    "S701", # jinja2-autoescape-false
+    # Miscellaneous
+    "B007",    # unused-loop-control-variable
+    "B008",    # function-call-in-default-argument
+    "B009",    # get-attr-with-constant
+    "B010",    # set-attr-with-constant
+    "B017",    # assert-raises-exception
+    "B905",    # zip-without-explicit-strict
+    "FURB167", # regex-flag-alias
+    "FURB171", # single-item-membership-test
+    "FURB188", # slice-copy
+    "PIE790",  # unnecessary-placeholder
+    "PGH003",  # blanket-type-ignore
+    "PTH122",  # os-path-splitext
+    "PTH123",  # builtin-open
+    "PYI051",  # redundant-literal-union
+    "PYI055",  # unnecessary-type-union
+    "PYI063",  # pep-484-style-positional-only-parameter
+    "RET504",  # unnecessary-assign
+    "RUF001",  # ambiguous-unicode-character-string
+    "RUF002",  # ambiguous-unicode-character-docstring
+    "RUF005",  # collection-literal-concatenation
+    "RUF007",  # pairwise-over-zipped
+    "RUF012",  # mutable-class-default
+    "RUF022",  # unsorted-dunder-all
+    "RUF059",  # variable unused
+    "T201",    # print
+    "TD002",   # missing-todo-author
+    "TD003",   # missing-todo-link
+    "FIX002",  # line-contains-fixme
+    "ERA001",  # commented-out-code
+    "EXE001",  # shebang-not-executable
+    "INP001",  # implicit-namespace-package
+    "PT006",   # pytest-parametrize-names-wrong-type
+    "PT011",   # pytest-raises-too-broad
+    "PT017",   # pytest-assert-in-except
+    "PT018",   # pytest-composite-assertion
+    # --- Pre-existing docstring ignores ---
+    "D100", # undocumented-public-module
+    "D104", # undocumented-public-package
+    "D105", # undocumented-public-magic-method
+    "D107", # undocumented-public-init
+    "D200", # one-line-docstring
+    "D205", # blank-line-after-summary
+    "D403", # first-word-capitalized
+    "D415", # ends-in-punctuation
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["D", "S101", "INP001", "SLF001", "PLR2004", "ARG", "ANN"]
+"scripts/**/*.py" = ["D", "T201", "INP001", "S", "ANN"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.pyflakes]
+allowed-unused-imports = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.interrogate]
+ignore-init-method = true
+ignore-init-module = true
+ignore-magic = true
+ignore-semiprivate = true
+ignore-private = true
+ignore-module = false
+fail-under = 90
+verbose = 1
+exclude = ["tests", "scripts"]
+
+[tool.ty]
+environment.python-version = "3.12"
+
+[tool.ty.rules]
+# Baseline suppressions — fix incrementally
+invalid-argument-type = "ignore"
+unresolved-attribute = "ignore"
+unsupported-base = "ignore"
+unknown-argument = "ignore"
+not-subscriptable = "ignore"
+invalid-type-form = "ignore"
+invalid-method-override = "ignore"
+
+[tool.poe.tasks]
+check_docs_assets = "python scripts/check_docs_assets.py"
+check_docs_contrast = "python scripts/check_docs_contrast.py --build --mode check"
+check_docs_links = "python scripts/check_docs_links.py"
+check_language_structure = "python scripts/check_language_structure.py"
+check_orphan_docs = "python scripts/check_orphan_docs.py"
+check_sphinx_roles = "python scripts/check_sphinx_roles.py"
+generate_config_docs = "python scripts/generate_config_docs.py"
+generate_language_docs = "python scripts/generate_language_docs.py"
+generate_mcp_tools_docs = "python scripts/generate_mcp_tools_docs.py"
+warn_missing_rule_coverage = "python scripts/warn_missing_rule_coverage.py"
+export_svg_assets = "python scripts/export_svg_assets.py"
+
+[tool.pytest.ini_options]
+addopts = "--cov=src/mcp_zen_of_languages --cov-report=term-missing --cov-fail-under=69"

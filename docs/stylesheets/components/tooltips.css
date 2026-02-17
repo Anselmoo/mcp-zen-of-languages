@@ -1,0 +1,7 @@
+/* DIALOG / TOOLTIP / ANNOTATION popups
+   ═══════════════════════════════════════════════════════════════════════════ */
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-tooltip {
+  background-color: var(--caligo-bg-elevated);
+  color: var(--caligo-fg-primary);
+  border: 1px solid var(--caligo-bg-overlay);
+}

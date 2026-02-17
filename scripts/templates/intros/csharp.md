@@ -1,0 +1,1 @@
+Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullable reference types, collection expressions. These **13 principles** catch codebases stuck on older patterns and guide them toward the expressive, safe idioms that the .NET team recommends.

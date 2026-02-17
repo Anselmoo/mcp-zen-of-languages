@@ -1,0 +1,13 @@
+╭────────────────────────────────────── Welcome ───────────────────────────────────────╮
+│ ZEN                                                                                  │
+│ v0.1.0                                                                               │
+│                                                                                      │
+│ Welcome to Zen of Languages.                                                         │
+│ Run a report to analyze your codebase.                                               │
+│ Run `zen --help` for the full command reference.                                     │
+│                                                                                      │
+│ Quick Commands                                                                       │
+│ zen report <path>     Generate a full report                                         │
+│ zen prompts <path>    Generate remediation guidance                                  │
+│ zen init              Create zen-config.yaml                                         │
+╰──────────────────────────────────────────────────────────────────────────────────────╯

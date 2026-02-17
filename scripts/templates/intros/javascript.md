@@ -1,0 +1,1 @@
+JavaScript has evolved enormously since ES6, but codebases often carry legacy patterns — `var` declarations, loose equality, callback pyramids. These **11 principles** encode modern JavaScript best practices drawn from the Airbnb Style Guide, Node.js best practices, and the functional programming community.

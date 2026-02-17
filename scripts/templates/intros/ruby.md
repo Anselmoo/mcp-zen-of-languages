@@ -1,0 +1,1 @@
+Ruby is designed for programmer happiness — expressive, elegant, optimized for reading. But that expressiveness can become a liability when metaprogramming runs wild, method chains grow unreadable, or monkey-patching mutates core classes. These **11 principles** encode the idioms that keep Ruby code joyful to maintain.

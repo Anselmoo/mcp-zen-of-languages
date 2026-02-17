@@ -1,0 +1,13 @@
+{
+    "servers": {
+        "mcp-zen-of-languages": {
+            "command": "uv",
+            "args": ["run", "zen-mcp-server"],
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src",
+                "ZEN_CONFIG_PATH": "${workspaceFolder}/zen-config.yaml",
+            },
+        }
+    }
+}

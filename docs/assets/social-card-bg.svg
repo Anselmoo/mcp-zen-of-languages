@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="social-bg-title">
+  <title id="social-bg-title">Social card background — zen garden with mountains, raked sand, and stone arrangements</title>
+  <defs>
+    <linearGradient id="sc-bg" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f2effb"/>
+      <stop offset="60%" stop-color="#e9e4f7"/>
+      <stop offset="100%" stop-color="#dfd8f2"/>
+    </linearGradient>
+    <linearGradient id="sc-stone" x1="0.3" x2="0.7" y1="0" y2="1">
+      <stop offset="0%" stop-color="#989cff"/>
+      <stop offset="100%" stop-color="#767bd8"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#sc-bg)"/>
+
+  <!-- Distant mountain silhouettes -->
+  <path d="M0 200 C100 140, 200 120, 320 160 C440 200, 520 110, 640 130 C760 150, 860 90, 960 140 C1060 180, 1120 130, 1200 170 L1200 250 L0 250Z" fill="#e9e4f7" opacity="0.4"/>
+  <path d="M0 250 C120 210, 260 190, 380 220 C500 250, 580 180, 700 210 C820 240, 920 180, 1060 220 C1140 250, 1180 230, 1200 240 L1200 300 L0 300Z" fill="#dfd8f2" opacity="0.3"/>
+
+  <!-- Raked sand wave lines — zen garden -->
+  <g fill="none" stroke="#dfd8f2" stroke-linecap="round" opacity="0.6">
+    <path d="M0 310 C170 270, 340 360, 520 310 C700 260, 880 360, 1200 300" stroke-width="8"/>
+    <path d="M0 350 C180 320, 350 400, 540 350 C730 310, 920 400, 1200 345" stroke-width="5"/>
+    <path d="M0 385 C180 360, 360 420, 560 385 C760 355, 940 430, 1200 380" stroke-width="3.5"/>
+    <path d="M0 415 C180 395, 370 445, 580 415 C790 390, 960 455, 1200 410" stroke-width="2.5" opacity="0.4"/>
+  </g>
+
+  <!-- Stones — asymmetric garden arrangement -->
+  <g opacity="0.75">
+    <ellipse cx="340" cy="470" rx="56" ry="42" fill="url(#sc-stone)"/>
+    <ellipse cx="440" cy="490" rx="34" ry="26" fill="#b8bcff" opacity="0.7"/>
+    <ellipse cx="820" cy="455" rx="64" ry="48" fill="url(#sc-stone)"/>
+    <ellipse cx="920" cy="478" rx="28" ry="20" fill="#c9b3ff" opacity="0.6"/>
+  </g>
+  <!-- Stone shadows -->
+  <g fill="#221938" opacity="0.08">
+    <ellipse cx="344" cy="512" rx="52" ry="10"/>
+    <ellipse cx="444" cy="516" rx="30" ry="6"/>
+    <ellipse cx="824" cy="503" rx="60" ry="11"/>
+    <ellipse cx="924" cy="498" rx="24" ry="5"/>
+  </g>
+
+  <!-- Ensō — large, semi-transparent -->
+  <circle cx="600" cy="340" r="160" fill="none" stroke="#c9b3ff" stroke-width="4" stroke-dasharray="420 580" transform="rotate(-20 600 340)" opacity="0.15"/>
+  <circle cx="610" cy="335" r="120" fill="none" stroke="#b8bcff" stroke-width="2" stroke-dasharray="250 500" transform="rotate(35 610 335)" opacity="0.08"/>
+
+  <!-- Bamboo — left edge -->
+  <g stroke="#767bd8" fill="none" opacity="0.2">
+    <line x1="50" y1="120" x2="50" y2="560" stroke-width="3.5"/>
+    <line x1="70" y1="160" x2="70" y2="560" stroke-width="3"/>
+    <line x1="86" y1="200" x2="86" y2="560" stroke-width="2.5"/>
+    <path d="M48 200 Q34 190 26 175" stroke-width="1.8"/>
+    <path d="M52 290 Q38 278 30 262" stroke-width="1.5"/>
+    <path d="M72 250 Q86 238 96 222" stroke-width="1.5"/>
+  </g>
+
+  <!-- Bamboo — right edge -->
+  <g stroke="#b8bcff" fill="none" opacity="0.15">
+    <line x1="1150" y1="140" x2="1150" y2="560" stroke-width="3"/>
+    <line x1="1168" y1="190" x2="1168" y2="560" stroke-width="2.5"/>
+    <path d="M1148 230 Q1134 220 1126 205" stroke-width="1.5"/>
+    <path d="M1170 280 Q1184 268 1192 252" stroke-width="1.2"/>
+  </g>
+
+  <!-- Code symbols — bottom corners, faint -->
+  <g fill="none" stroke="#2b2044" stroke-linecap="round" stroke-linejoin="round" opacity="0.25">
+    <path d="M160 520 L130 546 L160 572" stroke-width="6"/>
+    <path d="M1040 520 L1070 546 L1040 572" stroke-width="6"/>
+  </g>
+
+  <!-- Ground band -->
+  <rect x="0" y="570" width="1200" height="60" fill="#dfd8f2" opacity="0.5"/>
+  <!-- Ground texture -->
+  <g fill="#c9b3ff" opacity="0.1">
+    <circle cx="80" cy="590" r="1.5"/><circle cx="200" cy="596" r="1.5"/>
+    <circle cx="340" cy="588" r="1.5"/><circle cx="480" cy="594" r="1.5"/>
+    <circle cx="620" cy="586" r="1.5"/><circle cx="760" cy="596" r="1.5"/>
+    <circle cx="900" cy="590" r="1.5"/><circle cx="1040" cy="592" r="1.5"/>
+  </g>
+
+  <!-- Accent motes -->
+  <circle cx="300" cy="260" r="3" fill="#f1b0ff" opacity="0.4"/>
+  <circle cx="800" cy="280" r="3" fill="#63c8ff" opacity="0.35"/>
+  <circle cx="580" cy="240" r="2" fill="#c9b3ff" opacity="0.3"/>
+  <circle cx="1000" cy="320" r="2.5" fill="#f1b0ff" opacity="0.25"/>
+
+  <!-- Bottom motto — philosophical touch -->
+  <text x="600" y="548" text-anchor="middle" fill="#2b2044" font-family="'Ma Shan Zheng', 'Long Cang', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif" font-size="32" font-style="italic" letter-spacing="0.02em" opacity="0.44">“Write code the way the language intended.”</text>
+
+  <!-- Brush icon accent -->
+  <g transform="translate(294 506) rotate(12)" fill="#2b2044" opacity="0.4">
+    <rect x="0" y="0" width="8" height="34" rx="3"/>
+    <rect x="-2" y="31" width="12" height="9" rx="2" opacity="0.72"/>
+    <path d="M-3 40H11L4 50Z" opacity="0.88"/>
+    <circle cx="18" cy="43" r="2.4" opacity="0.35"/>
+  </g>
+</svg>

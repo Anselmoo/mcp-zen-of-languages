@@ -1,0 +1,98 @@
+/* MCP TOOL BADGES — family-coded inline badges for MCP reference pages
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Base badge style */
+.mcp-badge {
+  display: inline-block;
+  padding: 0.15em 0.55em;
+  border-radius: 1em;
+  font-size: 0.72em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.6;
+  vertical-align: middle;
+  text-decoration: none;
+  transition: background-color var(--zen-duration-fast) var(--zen-ease-out),
+              color var(--zen-duration-fast) var(--zen-ease-out),
+              border-color var(--zen-duration-fast) var(--zen-ease-out);
+}
+
+/* ── Dark mode ──────────────────────────────────────────────────────────── */
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .mcp-badge {
+  border: 1px solid color-mix(in oklch, var(--caligo-accent) 22%, transparent);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .mcp-badge--analysis {
+  background-color: color-mix(in oklch, var(--caligo-accent) 18%, var(--caligo-bg-overlay));
+  color: var(--caligo-accent-soft);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .mcp-badge--reporting {
+  background-color: color-mix(in oklch, var(--caligo-harmony-bridge) 18%, var(--caligo-bg-overlay));
+  color: var(--caligo-harmony-bridge);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .mcp-badge--configuration {
+  background-color: color-mix(in oklch, var(--caligo-harmony-cool) 16%, var(--caligo-bg-overlay));
+  color: var(--caligo-harmony-cool);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .mcp-badge--metadata {
+  background-color: color-mix(in oklch, var(--caligo-harmony-warm) 16%, var(--caligo-bg-overlay));
+  color: var(--caligo-harmony-warm);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .mcp-badge--onboarding {
+  background-color: color-mix(in oklch, var(--caligo-accent-muted) 20%, var(--caligo-bg-overlay));
+  color: var(--caligo-fg0);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .mcp-badge--read-only {
+  background-color: color-mix(in oklch, var(--caligo-harmony-cool) 12%, var(--caligo-bg-overlay));
+  color: var(--caligo-harmony-cool);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .mcp-badge--destructive {
+  background-color: color-mix(in oklch, var(--caligo-harmony-warm) 14%, var(--caligo-bg-overlay));
+  color: var(--caligo-harmony-warm);
+}
+
+/* ── Light mode ─────────────────────────────────────────────────────────── */
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .mcp-badge {
+  border: 1px solid color-mix(in oklch, var(--caligo-accent-muted) 25%, transparent);
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .mcp-badge--analysis {
+  background-color: color-mix(in oklch, var(--caligo-accent) 12%, var(--caligo-light-bg-overlay));
+  color: var(--caligo-accent-muted);
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .mcp-badge--reporting {
+  background-color: color-mix(in oklch, var(--caligo-harmony-bridge) 12%, var(--caligo-light-bg-overlay));
+  color: #7a6ab0;
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .mcp-badge--configuration {
+  background-color: color-mix(in oklch, var(--caligo-harmony-cool) 10%, var(--caligo-light-bg-overlay));
+  color: #3d8eb0;
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .mcp-badge--metadata {
+  background-color: color-mix(in oklch, var(--caligo-harmony-warm) 10%, var(--caligo-light-bg-overlay));
+  color: #a06cb0;
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .mcp-badge--onboarding {
+  background-color: color-mix(in oklch, var(--caligo-accent-muted) 14%, var(--caligo-light-bg-overlay));
+  color: var(--caligo-light-fg0);
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .mcp-badge--read-only {
+  background-color: color-mix(in oklch, var(--caligo-harmony-cool) 8%, var(--caligo-light-bg-overlay));
+  color: #3d8eb0;
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .mcp-badge--destructive {
+  background-color: color-mix(in oklch, var(--caligo-harmony-warm) 10%, var(--caligo-light-bg-overlay));
+  color: #a06cb0;
+}

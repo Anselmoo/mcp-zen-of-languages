@@ -1,0 +1,88 @@
+/* LIGHT SCHEME — complete override of every mkdocs-material variable
+   ═══════════════════════════════════════════════════════════════════════════ */
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) {
+  color-scheme: light;
+
+  /* ── Primary ── */
+  --md-primary-fg-color:            var(--caligo-accent);
+  --md-primary-fg-color--light:     var(--caligo-accent-light);
+  --md-primary-fg-color--dark:      var(--caligo-accent-dark);
+  --md-primary-bg-color:            var(--caligo-light-text);
+  --md-primary-bg-color--light:     color-mix(in oklch, var(--caligo-light-elevated) 70%, transparent);
+
+  /* ── Accent ── */
+  --md-accent-fg-color:             var(--caligo-accent-dark);
+  --md-accent-fg-color--transparent: rgba(152, 156, 255, 0.16);
+  --md-accent-bg-color:             var(--caligo-light-elevated);
+  --md-accent-bg-color--light:      color-mix(in oklch, var(--caligo-light-elevated) 70%, transparent);
+
+  /* ── Default fg/bg ── */
+  --md-default-fg-color:            var(--caligo-light-text);
+  --md-default-fg-color--light:     var(--caligo-light-muted);
+  --md-default-fg-color--lighter:   var(--caligo-light-fg-muted);
+  --md-default-fg-color--lightest:  rgba(63, 55, 88, 0.12);
+  --md-default-bg-color:            var(--caligo-light-bg);
+  --md-default-bg-color--light:     rgba(250, 248, 255, 0.72);
+  --md-default-bg-color--lighter:   rgba(250, 248, 255, 0.34);
+  --md-default-bg-color--lightest:  rgba(250, 248, 255, 0.14);
+
+  /* ── Code ── */
+  --md-code-fg-color:               var(--caligo-light-fg0);
+  --md-code-bg-color:               var(--caligo-light-surface);
+  --md-code-bg-color--light:        rgba(232, 227, 246, 0.74);
+  --md-code-bg-color--lighter:      rgba(232, 227, 246, 0.34);
+
+  /* ── Code highlighting ── */
+  --md-code-hl-color:               rgba(152, 156, 255, 0.35);
+  --md-code-hl-color--light:        rgba(152, 156, 255, 0.12);
+  --md-code-hl-number-color:        var(--caligo-syntax-numbers);
+  --md-code-hl-special-color:       var(--caligo-syntax-special);
+  --md-code-hl-function-color:      var(--caligo-syntax-functions);
+  --md-code-hl-constant-color:      var(--caligo-syntax-constant);
+  --md-code-hl-keyword-color:       var(--caligo-syntax-keywords);
+  --md-code-hl-string-color:        var(--caligo-syntax-strings);
+  --md-code-hl-name-color:          var(--md-code-fg-color);
+  --md-code-hl-operator-color:      var(--md-default-fg-color--light);
+  --md-code-hl-punctuation-color:   var(--md-default-fg-color--light);
+  --md-code-hl-comment-color:       var(--md-default-fg-color--lighter);
+  --md-code-hl-generic-color:       var(--md-default-fg-color--light);
+  --md-code-hl-variable-color:      var(--md-default-fg-color--light);
+
+  /* ── Typeset ── */
+  --md-typeset-color:               var(--caligo-light-text);
+  --md-typeset-a-color:             var(--caligo-accent-dark);
+  --md-typeset-del-color:           rgba(220, 60, 60, 0.15);
+  --md-typeset-ins-color:           rgba(152, 156, 255, 0.15);
+  --md-typeset-kbd-color:           var(--caligo-light-bg-overlay);
+  --md-typeset-kbd-accent-color:    var(--caligo-light-elevated);
+  --md-typeset-kbd-border-color:    color-mix(in oklch, var(--caligo-light-fg1) 36%, transparent);
+  --md-typeset-mark-color:          rgba(196, 171, 255, 0.32);
+  --md-typeset-table-color:         rgba(63, 55, 88, 0.12);
+  --md-typeset-table-color--light:  rgba(63, 55, 88, 0.05);
+
+  /* ── Admonition ── */
+  --md-admonition-fg-color:         var(--caligo-light-text);
+  --md-admonition-bg-color:         var(--caligo-light-elevated);
+
+  /* ── Warning banner ── */
+  --md-warning-fg-color:            var(--caligo-light-text);
+  --md-warning-bg-color:            #fff1dc;
+
+  /* ── Footer ── */
+  --md-footer-fg-color:             var(--caligo-light-elevated);
+  --md-footer-fg-color--light:      color-mix(in oklch, var(--caligo-light-elevated) 70%, transparent);
+  --md-footer-fg-color--lighter:    color-mix(in oklch, var(--caligo-light-elevated) 50%, transparent);
+  --md-footer-bg-color:             #1a1231;
+  --md-footer-bg-color--dark:       #120b24;
+
+  /* ── Shadows ── */
+  --md-shadow-z1:
+    0 0.2rem 0.5rem rgba(63, 55, 88, 0.08),
+    0 0     0.05rem rgba(63, 55, 88, 0.12);
+  --md-shadow-z2:
+    0 0.2rem 0.5rem rgba(63, 55, 88, 0.12),
+    0 0     0.05rem rgba(63, 55, 88, 0.24);
+  --md-shadow-z3:
+    0 0.2rem 0.5rem rgba(63, 55, 88, 0.22),
+    0 0     0.05rem rgba(63, 55, 88, 0.36);
+}

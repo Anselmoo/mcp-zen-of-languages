@@ -1,0 +1,135 @@
+"""Mapping module."""
+
+from __future__ import annotations
+
+from mcp_zen_of_languages.analyzers.mapping_models import (
+    DetectorBinding,
+    LanguageDetectorMap,
+)
+from mcp_zen_of_languages.languages.configs import (
+    CppAutoConfig,
+    CppAvoidGlobalsConfig,
+    CppConstCorrectnessConfig,
+    CppCStyleCastConfig,
+    CppManualAllocationConfig,
+    CppMoveConfig,
+    CppNullptrConfig,
+    CppOptionalConfig,
+    CppOverrideFinalConfig,
+    CppRaiiConfig,
+    CppRangeForConfig,
+    CppRuleOfFiveConfig,
+    CppSmartPointerConfig,
+)
+from mcp_zen_of_languages.languages.cpp.detectors import (
+    CppAutoDetector,
+    CppAvoidGlobalsDetector,
+    CppConstCorrectnessDetector,
+    CppCStyleCastDetector,
+    CppManualAllocationDetector,
+    CppMoveDetector,
+    CppNullptrDetector,
+    CppOptionalDetector,
+    CppOverrideFinalDetector,
+    CppRaiiDetector,
+    CppRangeForDetector,
+    CppRuleOfFiveDetector,
+    CppSmartPointerDetector,
+)
+
+DETECTOR_MAP = LanguageDetectorMap(
+    language="cpp",
+    bindings=[
+        DetectorBinding(
+            detector_id="cpp_smart_pointers",
+            detector_class=CppSmartPointerDetector,
+            config_model=CppSmartPointerConfig,
+            rule_ids=["cpp-002"],
+            default_order=10,
+        ),
+        DetectorBinding(
+            detector_id="cpp_nullptr",
+            detector_class=CppNullptrDetector,
+            config_model=CppNullptrConfig,
+            rule_ids=["cpp-004"],
+            default_order=20,
+        ),
+        DetectorBinding(
+            detector_id="cpp-001",
+            detector_class=CppRaiiDetector,
+            config_model=CppRaiiConfig,
+            rule_ids=["cpp-001"],
+            default_order=5,
+        ),
+        DetectorBinding(
+            detector_id="cpp-003",
+            detector_class=CppAutoDetector,
+            config_model=CppAutoConfig,
+            rule_ids=["cpp-003"],
+            default_order=15,
+        ),
+        DetectorBinding(
+            detector_id="cpp-005",
+            detector_class=CppRangeForDetector,
+            config_model=CppRangeForConfig,
+            rule_ids=["cpp-005"],
+            default_order=25,
+        ),
+        DetectorBinding(
+            detector_id="cpp-006",
+            detector_class=CppManualAllocationDetector,
+            config_model=CppManualAllocationConfig,
+            rule_ids=["cpp-006"],
+            default_order=35,
+        ),
+        DetectorBinding(
+            detector_id="cpp-007",
+            detector_class=CppConstCorrectnessDetector,
+            config_model=CppConstCorrectnessConfig,
+            rule_ids=["cpp-007"],
+            default_order=45,
+        ),
+        DetectorBinding(
+            detector_id="cpp-008",
+            detector_class=CppCStyleCastDetector,
+            config_model=CppCStyleCastConfig,
+            rule_ids=["cpp-008"],
+            default_order=55,
+        ),
+        DetectorBinding(
+            detector_id="cpp-009",
+            detector_class=CppRuleOfFiveDetector,
+            config_model=CppRuleOfFiveConfig,
+            rule_ids=["cpp-009"],
+            default_order=65,
+        ),
+        DetectorBinding(
+            detector_id="cpp-010",
+            detector_class=CppMoveDetector,
+            config_model=CppMoveConfig,
+            rule_ids=["cpp-010"],
+            default_order=75,
+        ),
+        DetectorBinding(
+            detector_id="cpp-011",
+            detector_class=CppAvoidGlobalsDetector,
+            config_model=CppAvoidGlobalsConfig,
+            rule_ids=["cpp-011"],
+            default_order=85,
+        ),
+        DetectorBinding(
+            detector_id="cpp-012",
+            detector_class=CppOverrideFinalDetector,
+            config_model=CppOverrideFinalConfig,
+            rule_ids=["cpp-012"],
+            default_order=95,
+        ),
+        DetectorBinding(
+            detector_id="cpp-013",
+            detector_class=CppOptionalDetector,
+            config_model=CppOptionalConfig,
+            rule_ids=["cpp-013"],
+            default_order=105,
+        ),
+    ],
+)

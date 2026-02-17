@@ -1,0 +1,242 @@
+"""PowerShell zen principles as Pydantic models."""
+
+from pydantic import HttpUrl
+
+from ...rules.base_models import LanguageZenPrinciples, PrincipleCategory, ZenPrinciple
+
+POWERSHELL_ZEN = LanguageZenPrinciples(
+    language="powershell",
+    name="PowerShell",
+    philosophy="PowerShell Best Practices and Style Guide",
+    source_text="PoshCode Style Guide",
+    source_url=HttpUrl("https://github.com/PoshCode/PowerShellPracticeAndStyle"),
+    principles=[
+        ZenPrinciple(
+            id="ps-001",
+            principle="Use approved verbs",
+            category=PrincipleCategory.NAMING,
+            severity=7,
+            description="Function names should use approved PowerShell verbs",
+            violations=[
+                "Non-standard verbs in function names",
+                "Custom verbs without approval",
+                "Unclear function naming",
+            ],
+            detectable_patterns=["function CustomVerb-Noun"],
+            recommended_alternative=(
+                "Get-Verb to see approved verbs, use Verb-Noun pattern"
+            ),
+        ),
+        ZenPrinciple(
+            id="ps-002",
+            principle="Use proper error handling",
+            category=PrincipleCategory.ERROR_HANDLING,
+            severity=9,
+            description="Use try/catch/finally and -ErrorAction",
+            violations=[
+                "Commands without error handling",
+                "Not using try/catch",
+                "Ignoring $Error variable",
+                "Silent failures",
+            ],
+            detectable_patterns=[
+                "command without try/catch",
+                "-ErrorAction SilentlyContinue abuse",
+            ],
+        ),
+        ZenPrinciple(
+            id="ps-003",
+            principle="Use cmdlet binding and parameters",
+            category=PrincipleCategory.DESIGN,
+            severity=8,
+            description="Functions should use [CmdletBinding()] and proper parameters",
+            violations=[
+                "Functions without [CmdletBinding()]",
+                "Using $args instead of parameters",
+                "Missing parameter validation",
+                "No parameter attributes",
+            ],
+            recommended_alternative="[CmdletBinding()] with [Parameter()] attributes",
+            detectable_patterns=["!CmdletBinding"],
+        ),
+        ZenPrinciple(
+            id="ps-004",
+            principle="Use PascalCase for function names",
+            category=PrincipleCategory.NAMING,
+            severity=7,
+            description="Follow PowerShell naming conventions",
+            violations=[
+                "camelCase function names",
+                "snake_case in PowerShell",
+                "All lowercase names",
+                "Inconsistent casing",
+            ],
+            metrics={
+                "naming_convention": "PascalCase for functions, camelCase for variables"
+            },
+        ),
+        ZenPrinciple(
+            id="ps-005",
+            principle="Use Write-Verbose and Write-Debug",
+            category=PrincipleCategory.DEBUGGING,
+            severity=6,
+            description="Use proper output streams for logging",
+            violations=[
+                "Using Write-Host for logging",
+                "Not using Write-Verbose",
+                "No debug output",
+                "Mixing output streams",
+            ],
+            detectable_patterns=["Write-Host for logging"],
+            recommended_alternative="Write-Verbose, Write-Debug, Write-Information",
+        ),
+        ZenPrinciple(
+            id="ps-006",
+            principle="Avoid positional parameters",
+            category=PrincipleCategory.READABILITY,
+            severity=7,
+            description="Always use named parameters in scripts",
+            violations=[
+                "Positional parameter usage",
+                "Unclear command calls",
+                "Not using -ParameterName syntax",
+            ],
+            recommended_alternative="Get-ChildItem -Path $path -Filter $filter",
+            detectable_patterns=["$args"],
+        ),
+        ZenPrinciple(
+            id="ps-007",
+            principle="Use pipeline properly",
+            category=PrincipleCategory.IDIOMS,
+            severity=7,
+            description="Leverage PowerShell pipeline for object processing",
+            violations=[
+                "ForEach-Object loops instead of pipeline",
+                "Not using pipeline when appropriate",
+                "Breaking pipeline chain unnecessarily",
+            ],
+            recommended_alternative="Get-Process | Where-Object { $_.CPU -gt 10 }",
+            detectable_patterns=["!|"],
+        ),
+        ZenPrinciple(
+            id="ps-008",
+            principle="Use -WhatIf and -Confirm support",
+            category=PrincipleCategory.SAFETY,
+            severity=8,
+            description="Implement ShouldProcess for destructive operations",
+            violations=[
+                "Destructive commands without -WhatIf",
+                "Not using ShouldProcess",
+                "No user confirmation for dangerous operations",
+            ],
+            recommended_alternative="[CmdletBinding(SupportsShouldProcess)]",
+            detectable_patterns=["!WhatIf"],
+        ),
+        ZenPrinciple(
+            id="ps-009",
+            principle="Use splatting for readability",
+            category=PrincipleCategory.READABILITY,
+            severity=6,
+            description="Use splatting for multiple parameters",
+            violations=[
+                "Long parameter lists inline",
+                "Not using @splat syntax",
+                "Unreadable command calls",
+            ],
+            recommended_alternative="$params = @{...}; Command @params",
+            detectable_patterns=["!@{"],
+        ),
+        ZenPrinciple(
+            id="ps-010",
+            principle="Validate parameters properly",
+            category=PrincipleCategory.ROBUSTNESS,
+            severity=8,
+            description="Use parameter validation attributes",
+            violations=[
+                "No [ValidateNotNull()]",
+                "No [ValidateSet()]",
+                "Missing [ValidateRange()]",
+                "No input validation",
+            ],
+            recommended_alternative=(
+                "[ValidateNotNullOrEmpty()], [ValidateSet('value1','value2')]"
+            ),
+            detectable_patterns=["![Validate"],
+        ),
+        ZenPrinciple(
+            id="ps-011",
+            principle="Use comment-based help",
+            category=PrincipleCategory.DOCUMENTATION,
+            severity=7,
+            description="Include .SYNOPSIS, .DESCRIPTION, .EXAMPLE",
+            violations=[
+                "Functions without help comments",
+                "Missing .SYNOPSIS",
+                "No usage examples",
+                "Incomplete documentation",
+            ],
+            detectable_patterns=["!.SYNOPSIS"],
+        ),
+        ZenPrinciple(
+            id="ps-012",
+            principle="Avoid aliases in scripts",
+            category=PrincipleCategory.CLARITY,
+            severity=6,
+            description="Use full cmdlet names, not aliases",
+            violations=[
+                "Using aliases like 'gci' instead of Get-ChildItem",
+                "Using '%' instead of ForEach-Object",
+                "Using '?' instead of Where-Object",
+                "Unclear abbreviated commands",
+            ],
+            detectable_patterns=["gci, ls, dir, cat, etc."],
+            recommended_alternative="Full cmdlet names",
+        ),
+        ZenPrinciple(
+            id="ps-013",
+            principle="Return objects, not formatted text",
+            category=PrincipleCategory.DESIGN,
+            severity=8,
+            description="Return structured objects for pipeline compatibility",
+            violations=[
+                "Returning formatted strings",
+                "Using Format-Table in functions",
+                "Breaking pipeline with text output",
+                "Not using PSCustomObject",
+            ],
+            recommended_alternative="[PSCustomObject]@{Property='Value'}",
+            detectable_patterns=["Format-Table", "Out-String"],
+        ),
+        ZenPrinciple(
+            id="ps-014",
+            principle="Use script scope carefully",
+            category=PrincipleCategory.SCOPE,
+            severity=7,
+            description="Be explicit about variable scope",
+            violations=[
+                "Unintended global variables",
+                "Not using $script: or $global:",
+                "Scope pollution",
+                "Variable leakage",
+            ],
+            detectable_patterns=["$global:", "$script:"],
+        ),
+        ZenPrinciple(
+            id="ps-015",
+            principle="Handle null values explicitly",
+            category=PrincipleCategory.CORRECTNESS,
+            severity=7,
+            description="Check for null before operations",
+            violations=[
+                "Not checking for $null",
+                "NullReferenceException in scripts",
+                "Assuming objects exist",
+                "No null coalescing",
+            ],
+            recommended_alternative=(
+                "if ($null -ne $variable) or $variable ?? 'default'"
+            ),
+            detectable_patterns=["!$null"],
+        ),
+    ],
+)

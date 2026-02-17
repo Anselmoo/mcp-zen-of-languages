@@ -1,0 +1,275 @@
+site_name: MCP Zen of Languages
+site_description: Multi-language code analysis against zen principles.
+site_url: https://anselmoo.github.io/mcp-zen-of-languages/
+copyright: © 2026 MCP Zen of Languages contributors
+repo_url: https://github.com/Anselmoo/mcp-zen-of-languages
+repo_name: Anselmoo/mcp-zen-of-languages
+edit_uri: edit/main/docs/
+exclude_docs: includes/.abbreviations.md
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+  features:
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.indexes
+    - navigation.expand
+    - navigation.top
+    - navigation.footer
+    - navigation.path
+    - toc.follow
+    - content.code.copy
+    - content.code.annotate
+    - content.code.select
+    - content.tabs.link
+    - content.action.edit
+    - content.action.view
+    - content.tooltips
+    - search.suggest
+    - search.highlight
+    - search.share
+    - header.autohide
+    - announce.dismiss
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: caligo-light
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: caligo-dark
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+  logo: assets/logo.svg
+  favicon: assets/favicon.svg
+  icon:
+    repo: fontawesome/brands/github
+    tag:
+      python: fontawesome/brands/python
+      typescript: material/language-typescript
+      rust: material/language-rust
+      go: material/language-go
+      javascript: fontawesome/brands/js
+      cpp: material/language-cpp
+      csharp: material/language-csharp
+      ruby: material/language-ruby
+      bash: material/console
+      powershell: material/console-line
+      json: material/code-json
+      toml: material/code-json
+      xml: material/code-tags
+      yaml: material/code-json
+      mcp: material/api
+      cli: material/console
+      api: material/book-open-variant
+      config: material/cog
+      default: material/tag
+
+plugins:
+  - search:
+      separator: '[\\s\\-\\.]+'
+  - autorefs:
+      resolve_closest: true
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            docstring_section_style: spacy
+            show_source: true
+            show_root_heading: true
+            show_root_toc_entry: true
+            show_bases: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            show_category_heading: true
+            group_by_category: true
+            members_order: source
+            merge_init_into_class: true
+            separate_signature: true
+            signature_crossrefs: true
+            annotations_path: source
+            heading_level: 2
+            filters:
+              - "!^_"
+              - "!^__"
+  - meta
+  - social:
+      enabled: !ENV [MKDOCS_SOCIAL_ENABLED, false]
+      cards_layout: default/variant
+      cards_layout_options:
+        font_family: Inter
+  - optimize:
+      enabled: !ENV [MKDOCS_OPTIMIZE_ENABLED, false]
+  - tags
+  - privacy:
+      enabled: true
+  - minify:
+      minify_html: true
+  - git-revision-date-localized:
+      enabled: !ENV [MKDOCS_GIT_REVISION_ENABLED, false]
+      fallback_to_build_date: true
+      enable_creation_date: true
+      enable_git_follow: false
+      type: timeago
+  - glightbox
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - material.extensions.preview
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shortener: true
+      repo_url_shorthand: true
+      social_url_shorthand: true
+      social_url_shortener: true
+      provider: github
+      user: Anselmoo
+      repo: mcp-zen-of-languages
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      check_paths: true
+      base_path:
+        - .
+        - docs
+      auto_append:
+        - includes/.abbreviations.md
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Anselmoo/mcp-zen-of-languages
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/mcp-zen-of-languages/
+  generator: false
+  status:
+    new: Recently added
+    deprecated: Legacy - will be removed
+  tags:
+    Python: python
+    TypeScript: typescript
+    Rust: rust
+    Go: go
+    JavaScript: javascript
+    C++: cpp
+    C#: csharp
+    Ruby: ruby
+    Bash: bash
+    PowerShell: powershell
+    JSON: json
+    TOML: toml
+    XML: xml
+    YAML: yaml
+    MCP: mcp
+    CLI: cli
+    API: api
+    Configuration: config
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - javascripts/extra.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - getting-started/index.md
+      - Installation: getting-started/installation.md
+      - Quickstart: getting-started/quickstart.md
+      - MCP Integration: getting-started/mcp-integration.md
+      - Security: getting-started/security.md
+  - User Guide:
+      - user-guide/index.md
+      - MCP Tools Reference: user-guide/mcp-tools-reference.md
+      - CLI Reference: user-guide/cli-reference.md
+      - Configuration: user-guide/configuration.md
+      - Languages:
+          - user-guide/languages/index.md
+          - Python: user-guide/languages/python.md
+          - TypeScript: user-guide/languages/typescript.md
+          - Rust: user-guide/languages/rust.md
+          - Go: user-guide/languages/go.md
+          - JavaScript: user-guide/languages/javascript.md
+          - Bash: user-guide/languages/bash.md
+          - PowerShell: user-guide/languages/powershell.md
+          - Ruby: user-guide/languages/ruby.md
+          - C++: user-guide/languages/cpp.md
+          - "C#": user-guide/languages/csharp.md
+          - Config Formats: user-guide/languages/config-formats.md
+      - Understanding Violations: user-guide/understanding-violations.md
+      - Prompt Generation: user-guide/prompt-generation.md
+      - Project Analysis: user-guide/project-analysis.md
+      - Examples: user-guide/examples.md
+      - Config Reference: config.md
+  - API Reference:
+      - api/index.md
+      - Analyzers: api/analyzers.md
+      - Detectors: api/detectors.md
+      - Models: api/models.md
+      - Pipeline: api/pipeline.md
+      - Rules: api/rules.md
+      - Config: api/config.md
+      - Entry Points: api/entrypoints.md
+      - Server Tools: api/server.md
+  - Contributing:
+      - contributing/index.md
+      - Development: contributing/development.md
+      - MkDocs Material Modernization: contributing/mkdocs-material-modernization.md
+      - Adding a Language: contributing/adding-language.md
+      - Adding a Detector: contributing/adding-detector.md
+      - Architecture: contributing/architecture.md
+      - Rendering Style Guide: contributing/rendering-style-guide.md
+      - Material Examples: contributing/material-examples.md
+  - Tags: tags.md
+  - Changelog: changelog.md

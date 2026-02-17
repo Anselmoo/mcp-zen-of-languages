@@ -1,0 +1,1 @@
+Go's philosophy is radical simplicity: small interfaces, explicit errors, flat hierarchies. These **12 principles** come from [Effective Go](https://go.dev/doc/effective_go), the [Go Proverbs](https://go-proverbs.github.io/), and the collective wisdom of the Go community. They catch the patterns where Go's simplicity gets undermined.

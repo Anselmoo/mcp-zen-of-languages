@@ -1,0 +1,8 @@
+icon: material/archive
+status: deprecated
+tags:
+  - API
+social:
+  cards_layout: default/variant
+  cards_layout_options:
+    background_color: "#efe9ff"

@@ -1,0 +1,177 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img" aria-labelledby="hero-zen-title">
+  <title id="hero-zen-title">Zen garden inspired hero — sumi-e landscape with torii gate, stones, bamboo, and raked sand</title>
+  <defs>
+    <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f2effb"/>
+      <stop offset="60%" stop-color="#e9e4f7"/>
+      <stop offset="100%" stop-color="#dfd8f2"/>
+    </linearGradient>
+    <linearGradient id="stone" x1="0.3" x2="0.7" y1="0" y2="1">
+      <stop offset="0%" stop-color="#989cff"/>
+      <stop offset="100%" stop-color="#767bd8"/>
+    </linearGradient>
+    <linearGradient id="stone2" x1="0.4" x2="0.6" y1="0" y2="1">
+      <stop offset="0%" stop-color="#b8bcff"/>
+      <stop offset="100%" stop-color="#989cff"/>
+    </linearGradient>
+    <linearGradient id="water" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#63c8ff" stop-opacity="0.08"/>
+      <stop offset="50%" stop-color="#63c8ff" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#63c8ff" stop-opacity="0.05"/>
+    </linearGradient>
+    <linearGradient id="torii" x1="0.5" x2="0.5" y1="0" y2="1">
+      <stop offset="0%" stop-color="#c9b3ff"/>
+      <stop offset="100%" stop-color="#989cff"/>
+    </linearGradient>
+    <radialGradient id="lantern-glow" cx="0.5" cy="0.4" r="0.5">
+      <stop offset="0%" stop-color="#f1b0ff" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#f1b0ff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Ground -->
+  <rect width="1200" height="700" fill="url(#sky)"/>
+
+  <!-- Distant mountain silhouettes — layered depth -->
+  <path d="M0 200 C80 120, 160 90, 240 130 C320 170, 360 100, 440 80 C520 60, 560 95, 620 110 C700 130, 780 70, 860 100 C940 130, 1020 80, 1100 120 L1200 160 L1200 240 L0 240Z" fill="#e9e4f7" opacity="0.5"/>
+  <path d="M0 240 C100 180, 200 160, 320 190 C440 220, 500 150, 600 170 C700 190, 800 140, 900 180 C1000 220, 1080 170, 1200 210 L1200 280 L0 280Z" fill="#dfd8f2" opacity="0.4"/>
+
+  <!-- Raked sand patterns — data-flow lines (kanso: simplicity) -->
+  <g fill="none" stroke="#dfd8f2" stroke-linecap="round">
+    <path d="M0 300 C200 250, 420 350, 620 300 C840 245, 1020 360, 1200 300" stroke-width="10"/>
+    <path d="M0 340 C210 300, 390 390, 640 338 C880 296, 1040 400, 1200 340" stroke-width="7"/>
+    <path d="M0 375 C200 340, 380 420, 620 372 C860 338, 1020 430, 1200 372" stroke-width="5"/>
+    <path d="M0 405 C190 380, 400 440, 600 402 C820 376, 960 448, 1200 400" stroke-width="4" opacity="0.5"/>
+  </g>
+
+  <!-- Winding stream — cool blue path through garden -->
+  <path d="M-20 420 C100 400, 200 440, 340 410 C480 380, 520 430, 600 415 C700 395, 800 440, 960 400 C1060 380, 1120 420, 1220 395" fill="none" stroke="#63c8ff" stroke-width="28" stroke-linecap="round" opacity="0.1"/>
+  <path d="M-20 420 C100 400, 200 440, 340 410 C480 380, 520 430, 600 415 C700 395, 800 440, 960 400 C1060 380, 1120 420, 1220 395" fill="none" stroke="#63c8ff" stroke-width="14" stroke-linecap="round" opacity="0.12"/>
+  <path d="M-20 420 C100 400, 200 440, 340 410 C480 380, 520 430, 600 415 C700 395, 800 440, 960 400 C1060 380, 1120 420, 1220 395" fill="none" stroke="#63c8ff" stroke-width="3" stroke-linecap="round" opacity="0.2"/>
+
+  <!-- Torii gate — left third, gateway motif -->
+  <g opacity="0.75">
+    <!-- Pillars -->
+    <rect x="140" y="280" width="12" height="180" rx="3" fill="url(#torii)"/>
+    <rect x="248" y="280" width="12" height="180" rx="3" fill="url(#torii)"/>
+    <!-- Top beam (kasagi) — slightly curved -->
+    <path d="M128 284 Q200 268, 272 284" fill="none" stroke="#c9b3ff" stroke-width="10" stroke-linecap="round"/>
+    <!-- Lower beam (nuki) -->
+    <rect x="146" y="310" width="108" height="6" rx="2" fill="#b8bcff"/>
+    <!-- Pillar bases -->
+    <ellipse cx="146" cy="460" rx="14" ry="5" fill="#989cff" opacity="0.5"/>
+    <ellipse cx="254" cy="460" rx="14" ry="5" fill="#989cff" opacity="0.5"/>
+  </g>
+
+  <!-- Stones — modules/components (fukinsei: asymmetric placement) -->
+  <g opacity="0.88">
+    <ellipse cx="500" cy="490" rx="76" ry="56" fill="url(#stone)"/>
+    <ellipse cx="620" cy="510" rx="44" ry="34" fill="url(#stone2)" opacity="0.8"/>
+    <ellipse cx="540" cy="518" rx="30" ry="22" fill="#767bd8" opacity="0.6"/>
+    <ellipse cx="850" cy="470" rx="84" ry="62" fill="url(#stone)"/>
+    <ellipse cx="980" cy="500" rx="38" ry="28" fill="#b8bcff" opacity="0.65"/>
+    <ellipse cx="920" cy="505" rx="24" ry="18" fill="#c9b3ff" opacity="0.5"/>
+  </g>
+  <!-- Stone shadows — yugen (subtle depth) -->
+  <g fill="#221938" opacity="0.1">
+    <ellipse cx="506" cy="546" rx="72" ry="12"/>
+    <ellipse cx="624" cy="544" rx="40" ry="8"/>
+    <ellipse cx="544" cy="540" rx="26" ry="5"/>
+    <ellipse cx="856" cy="532" rx="80" ry="14"/>
+    <ellipse cx="984" cy="528" rx="34" ry="7"/>
+    <ellipse cx="924" cy="523" rx="20" ry="4"/>
+  </g>
+
+  <!-- Stone lantern (tōrō) — right of center -->
+  <g transform="translate(730, 350)" opacity="0.7">
+    <!-- Glow -->
+    <circle cx="0" cy="-10" r="40" fill="url(#lantern-glow)"/>
+    <!-- Post -->
+    <rect x="-4" y="0" width="8" height="60" rx="2" fill="#2b2044"/>
+    <!-- Firebox (hibukuro) -->
+    <rect x="-14" y="-22" width="28" height="22" rx="4" fill="#2b2044"/>
+    <!-- Roof (kasa) -->
+    <path d="M-22 -22 L0 -36 L22 -22" fill="#2b2044"/>
+    <!-- Light opening -->
+    <rect x="-8" y="-16" width="6" height="10" rx="1" fill="#f1b0ff" opacity="0.5"/>
+    <rect x="2" y="-16" width="6" height="10" rx="1" fill="#f1b0ff" opacity="0.5"/>
+    <!-- Base -->
+    <rect x="-12" y="60" width="24" height="6" rx="2" fill="#2b2044"/>
+  </g>
+
+  <!-- Ensō echo — large open circle fading into background -->
+  <circle cx="600" cy="360" r="200" fill="none" stroke="#c9b3ff" stroke-width="5" stroke-dasharray="500 760" transform="rotate(-18 600 360)" opacity="0.18"/>
+  <circle cx="610" cy="355" r="160" fill="none" stroke="#b8bcff" stroke-width="2" stroke-dasharray="300 700" transform="rotate(30 610 355)" opacity="0.1"/>
+
+  <!-- Code symbols — ink brushstroke (datsuzoku: unexpected precision) -->
+  <g fill="none" stroke="#2b2044" stroke-linecap="round" stroke-linejoin="round" opacity="0.85">
+    <path d="M360 530L300 570L360 610" stroke-width="12"/>
+    <path d="M1020 530L1080 570L1020 610" stroke-width="12"/>
+  </g>
+  <rect x="672" y="510" width="14" height="120" rx="5" fill="#2b2044" opacity="0.85"/>
+
+  <!-- Bamboo grove — left side, more detailed -->
+  <g stroke="#767bd8" fill="none" opacity="0.3">
+    <line x1="40" y1="100" x2="40" y2="640" stroke-width="4"/>
+    <line x1="60" y1="140" x2="60" y2="640" stroke-width="3.5"/>
+    <line x1="78" y1="170" x2="78" y2="640" stroke-width="3"/>
+    <line x1="94" y1="200" x2="94" y2="640" stroke-width="2.5"/>
+    <!-- Nodes (joints) -->
+    <line x1="36" y1="250" x2="44" y2="250" stroke-width="2"/>
+    <line x1="36" y1="380" x2="44" y2="380" stroke-width="2"/>
+    <line x1="56" y1="300" x2="64" y2="300" stroke-width="1.8"/>
+    <line x1="56" y1="440" x2="64" y2="440" stroke-width="1.8"/>
+    <line x1="74" y1="340" x2="82" y2="340" stroke-width="1.5"/>
+    <!-- Leaves -->
+    <path d="M38 200 Q20 188 10 170" stroke-width="2"/>
+    <path d="M42 310 Q26 296 18 278" stroke-width="1.8"/>
+    <path d="M62 240 Q78 228 88 210" stroke-width="1.8"/>
+    <path d="M62 370 Q80 356 92 336" stroke-width="1.5"/>
+    <path d="M80 280 Q96 266 106 248" stroke-width="1.5"/>
+    <path d="M96 330 Q112 318 120 302" stroke-width="1.2"/>
+  </g>
+
+  <!-- Bamboo grove — right side, sparser -->
+  <g stroke="#b8bcff" fill="none" opacity="0.22">
+    <line x1="1130" y1="130" x2="1130" y2="640" stroke-width="3.5"/>
+    <line x1="1152" y1="180" x2="1152" y2="640" stroke-width="3"/>
+    <line x1="1168" y1="220" x2="1168" y2="640" stroke-width="2.5"/>
+    <line x1="1126" y1="280" x2="1134" y2="280" stroke-width="1.8"/>
+    <line x1="1148" y1="340" x2="1156" y2="340" stroke-width="1.5"/>
+    <path d="M1128 220 Q1110 208 1102 192" stroke-width="1.8"/>
+    <path d="M1154 280 Q1170 268 1180 252" stroke-width="1.5"/>
+    <path d="M1166 310 Q1182 298 1190 282" stroke-width="1.2"/>
+  </g>
+
+  <!-- Stepping-stone path across stream -->
+  <g fill="#2b2044" opacity="0.2">
+    <ellipse cx="300" cy="418" rx="18" ry="8"/>
+    <ellipse cx="370" cy="412" rx="14" ry="6"/>
+    <ellipse cx="430" cy="416" rx="16" ry="7"/>
+  </g>
+
+  <!-- Accent dots — harmony warm/cool (ma: intentional marks) -->
+  <circle cx="200" cy="240" r="3" fill="#f1b0ff" opacity="0.5"/>
+  <circle cx="480" cy="280" r="4" fill="#f1b0ff" opacity="0.35"/>
+  <circle cx="900" cy="260" r="3" fill="#63c8ff" opacity="0.4"/>
+  <circle cx="1060" cy="300" r="2.5" fill="#63c8ff" opacity="0.35"/>
+  <circle cx="660" cy="250" r="2" fill="#c9b3ff" opacity="0.4"/>
+
+  <!-- Cherry blossom petals — drifting warmth -->
+  <g fill="#f1b0ff" opacity="0.3">
+    <ellipse cx="300" cy="130" rx="3" ry="2" transform="rotate(25 300 130)"/>
+    <ellipse cx="520" cy="110" rx="2.5" ry="1.5" transform="rotate(-18 520 110)"/>
+    <ellipse cx="840" cy="140" rx="2" ry="1.2" transform="rotate(40 840 140)"/>
+  </g>
+
+  <!-- Ground plane — gravel band -->
+  <rect x="0" y="640" width="1200" height="60" fill="#dfd8f2"/>
+  <!-- Ground texture dots -->
+  <g fill="#c9b3ff" opacity="0.15">
+    <circle cx="60" cy="660" r="2"/><circle cx="140" cy="670" r="1.5"/>
+    <circle cx="260" cy="658" r="2"/><circle cx="380" cy="672" r="1.5"/>
+    <circle cx="500" cy="662" r="2"/><circle cx="620" cy="668" r="1.5"/>
+    <circle cx="740" cy="656" r="2"/><circle cx="860" cy="674" r="1.5"/>
+    <circle cx="980" cy="660" r="2"/><circle cx="1100" cy="666" r="1.5"/>
+  </g>
+</svg>

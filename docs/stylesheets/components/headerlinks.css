@@ -1,0 +1,37 @@
+/* HEADERLINK — accent-colored anchor icon with split-complementary styling
+   ═══════════════════════════════════════════════════════════════════════════ */
+.md-typeset .headerlink {
+  opacity: 0;
+  transition: opacity var(--zen-duration-fast) var(--zen-ease-out),
+              color var(--zen-duration-fast) var(--zen-ease-out);
+}
+
+/* Light mode headerlink colors */
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset .headerlink {
+  color: var(--caligo-light-icon-muted);
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset [id]:hover > .headerlink {
+  opacity: 1;
+  color: var(--caligo-light-icon-secondary);
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset [id]:target > .headerlink {
+  opacity: 1;
+  color: var(--caligo-light-icon-primary);
+}
+
+/* Dark mode headerlink colors */
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .headerlink {
+  color: var(--caligo-icon-muted);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset [id]:hover > .headerlink {
+  opacity: 1;
+  color: var(--caligo-icon-secondary);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset [id]:target > .headerlink {
+  opacity: 1;
+  color: var(--caligo-icon-primary);
+}

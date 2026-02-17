@@ -1,0 +1,31 @@
+/* TAGS / BADGES — visible in dark mode
+   ═══════════════════════════════════════════════════════════════════════════ */
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-tag {
+  background-color: var(--caligo-bg-overlay);
+  color: var(--caligo-fg-secondary);
+  border: 1px solid color-mix(in oklch, var(--caligo-accent) 20%, transparent);
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-tag {
+  background-color: var(--caligo-light-surface);
+  color: var(--caligo-light-text);
+}
+
+.md-tag {
+  text-decoration: none;
+  transition: background-color var(--zen-duration-fast) var(--zen-ease-out),
+              color var(--zen-duration-fast) var(--zen-ease-out),
+              border-color var(--zen-duration-fast) var(--zen-ease-out);
+}
+
+.md-tag[href]:hover {
+  border-color: color-mix(in oklch, var(--caligo-accent) 48%, transparent);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-tag[href]:hover {
+  color: var(--caligo-harmony-cool);
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-tag[href]:hover {
+  color: var(--caligo-accent-dark);
+}

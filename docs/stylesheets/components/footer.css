@@ -1,0 +1,43 @@
+/* FOOTER — ensure text is always visible
+   ═══════════════════════════════════════════════════════════════════════════ */
+footer.md-footer-meta__inner.md-grid,
+footer.md-footer-meta__inner,
+.md-footer-meta,
+.md-footer {
+  background-color: var(--md-footer-bg-color);
+  color: var(--md-footer-fg-color);
+}
+
+footer.md-footer-meta__inner.md-grid,
+footer.md-footer-meta__inner {
+  padding-block: 0.5rem;
+}
+
+.md-footer-nav__link {
+  color: var(--md-footer-fg-color);
+}
+
+footer.md-footer-meta__inner a,
+.md-footer-meta a,
+html .md-footer-meta.md-typeset a {
+  color: var(--md-footer-fg-color--light);
+}
+
+footer.md-footer-meta__inner a:hover,
+footer.md-footer-meta__inner a:focus,
+html .md-footer-meta.md-typeset a:hover,
+html .md-footer-meta.md-typeset a:focus {
+  color: var(--caligo-accent-light);
+}
+
+.md-copyright {
+  color: var(--md-footer-fg-color--lighter);
+}
+
+.md-social__link {
+  color: var(--md-footer-fg-color--lighter);
+}
+
+.md-social__link:hover {
+  color: var(--md-footer-fg-color);
+}

@@ -1,0 +1,75 @@
+/* MERMAID DIAGRAMS — align diagram colors with Caligo palette */
+.md-typeset .mermaid {
+  padding: var(--zen-space-2);
+  border-radius: var(--zen-radius-md);
+  border: var(--zen-border-thin) solid color-mix(in oklch, var(--caligo-accent) 30%, transparent);
+}
+
+.md-typeset .mermaid text,
+.md-typeset .mermaid .nodeLabel,
+.md-typeset .mermaid .edgeLabel {
+  fill: var(--zen-text-primary) !important;
+  color: var(--zen-text-primary) !important;
+}
+
+/* --- Dark theme --- */
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid {
+  background-color: color-mix(in oklch, var(--caligo-bg-overlay) 90%, transparent);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid text,
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid .nodeLabel,
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid .edgeLabel {
+  fill: #f0ecf6 !important;
+  color: #f0ecf6 !important;
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid .node rect,
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid .node circle,
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid .node ellipse,
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid .node polygon {
+  fill: color-mix(in oklch, var(--caligo-bg2) 48%, var(--caligo-harmony-bridge) 52%) !important;
+  stroke: color-mix(in oklch, var(--caligo-harmony-cool) 70%, #fff 30%) !important;
+  stroke-width: 1.5px !important;
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid .cluster rect,
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid .section0,
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid .section2 {
+  fill: color-mix(in oklch, var(--caligo-bg-overlay) 60%, var(--caligo-harmony-bridge) 40%) !important;
+  stroke: color-mix(in oklch, var(--caligo-harmony-cool) 50%, #fff 20%) !important;
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid .edgePath .path,
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid .flowchart-link,
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid marker path {
+  stroke: color-mix(in oklch, var(--caligo-harmony-cool) 80%, #fff 20%) !important;
+  fill: color-mix(in oklch, var(--caligo-harmony-cool) 80%, #fff 20%) !important;
+}
+
+/* --- Light theme --- */
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset .mermaid {
+  background-color: color-mix(in oklch, var(--caligo-light-elevated) 80%, var(--caligo-accent-soft));
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset .mermaid .node rect,
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset .mermaid .node circle,
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset .mermaid .node ellipse,
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset .mermaid .node polygon {
+  fill: color-mix(in oklch, var(--caligo-light-bg2) 68%, var(--caligo-accent-soft)) !important;
+  stroke: color-mix(in oklch, var(--caligo-accent-dark) 56%, var(--caligo-harmony-cool)) !important;
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset .mermaid .cluster rect,
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset .mermaid .section0,
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset .mermaid .section2 {
+  fill: color-mix(in oklch, var(--caligo-light-bg1) 82%, var(--caligo-harmony-bridge)) !important;
+  stroke: color-mix(in oklch, var(--caligo-accent-dark) 40%, transparent) !important;
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset .mermaid .edgePath .path,
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset .mermaid .flowchart-link,
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset .mermaid marker path {
+  stroke: var(--caligo-accent-dark) !important;
+  fill: var(--caligo-accent-dark) !important;
+}

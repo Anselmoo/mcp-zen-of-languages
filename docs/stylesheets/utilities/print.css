@@ -1,0 +1,42 @@
+/* PRINT STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media print {
+  .md-header,
+  .md-tabs,
+  .md-sidebar,
+  .md-footer,
+  .md-top,
+  .md-search,
+  .md-source {
+    display: none !important;
+  }
+
+  body,
+  .md-content {
+    color: var(--caligo-print-fg) !important;
+    background: var(--caligo-print-bg) !important;
+  }
+
+  .md-content {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 1rem !important;
+  }
+
+  .md-typeset a {
+    color: var(--caligo-print-link) !important;
+    text-decoration: underline !important;
+  }
+
+  .md-typeset a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: var(--caligo-print-muted);
+  }
+
+  .md-typeset pre {
+    page-break-inside: avoid;
+    border: 1px solid var(--caligo-print-border);
+    box-shadow: none;
+  }
+}

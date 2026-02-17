@@ -1,0 +1,20 @@
+/* REDUCED MOTION — respect OS preferences
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .md-typeset .grid.cards > ul > li {
+    transition: none;
+  }
+  .md-typeset .grid.cards > ul > li:hover {
+    transform: none;
+  }
+  .md-typeset pre,
+  .md-typeset .highlight pre {
+    transition: none;
+  }
+  .md-typeset a {
+    transition: none;
+  }
+  .md-typeset .headerlink {
+    transition: none;
+  }
+}

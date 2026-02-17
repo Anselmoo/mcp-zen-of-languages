@@ -1,0 +1,135 @@
+"""Mapping module."""
+
+from __future__ import annotations
+
+from mcp_zen_of_languages.analyzers.mapping_models import (
+    DetectorBinding,
+    LanguageDetectorMap,
+)
+from mcp_zen_of_languages.languages.configs import (
+    RustCloneOverheadConfig,
+    RustDebugDeriveConfig,
+    RustEnumOverBoolConfig,
+    RustErrorHandlingConfig,
+    RustInteriorMutabilityConfig,
+    RustIteratorPreferenceConfig,
+    RustLifetimeUsageConfig,
+    RustMustUseConfig,
+    RustNewtypePatternConfig,
+    RustStdTraitsConfig,
+    RustTypeSafetyConfig,
+    RustUnsafeBlocksConfig,
+    RustUnwrapUsageConfig,
+)
+from mcp_zen_of_languages.languages.rust.detectors import (
+    RustCloneOverheadDetector,
+    RustDebugDeriveDetector,
+    RustEnumOverBoolDetector,
+    RustErrorHandlingDetector,
+    RustInteriorMutabilityDetector,
+    RustIteratorPreferenceDetector,
+    RustLifetimeUsageDetector,
+    RustMustUseDetector,
+    RustNewtypePatternDetector,
+    RustStdTraitsDetector,
+    RustTypeSafetyDetector,
+    RustUnsafeBlocksDetector,
+    RustUnwrapUsageDetector,
+)
+
+DETECTOR_MAP = LanguageDetectorMap(
+    language="rust",
+    bindings=[
+        DetectorBinding(
+            detector_id="rust_unwrap_usage",
+            detector_class=RustUnwrapUsageDetector,
+            config_model=RustUnwrapUsageConfig,
+            rule_ids=["rust-001"],
+            default_order=10,
+        ),
+        DetectorBinding(
+            detector_id="rust-002",
+            detector_class=RustTypeSafetyDetector,
+            config_model=RustTypeSafetyConfig,
+            rule_ids=["rust-002"],
+            default_order=15,
+        ),
+        DetectorBinding(
+            detector_id="rust-003",
+            detector_class=RustIteratorPreferenceDetector,
+            config_model=RustIteratorPreferenceConfig,
+            rule_ids=["rust-003"],
+            default_order=18,
+        ),
+        DetectorBinding(
+            detector_id="rust_unsafe_blocks",
+            detector_class=RustUnsafeBlocksDetector,
+            config_model=RustUnsafeBlocksConfig,
+            rule_ids=["rust-008"],
+            default_order=20,
+        ),
+        DetectorBinding(
+            detector_id="rust_clone_overhead",
+            detector_class=RustCloneOverheadDetector,
+            config_model=RustCloneOverheadConfig,
+            rule_ids=["rust-004"],
+            default_order=30,
+        ),
+        DetectorBinding(
+            detector_id="rust_error_handling",
+            detector_class=RustErrorHandlingDetector,
+            config_model=RustErrorHandlingConfig,
+            rule_ids=["rust-001"],
+            default_order=40,
+        ),
+        DetectorBinding(
+            detector_id="rust-005",
+            detector_class=RustMustUseDetector,
+            config_model=RustMustUseConfig,
+            rule_ids=["rust-005"],
+            default_order=50,
+        ),
+        DetectorBinding(
+            detector_id="rust-006",
+            detector_class=RustDebugDeriveDetector,
+            config_model=RustDebugDeriveConfig,
+            rule_ids=["rust-006"],
+            default_order=60,
+        ),
+        DetectorBinding(
+            detector_id="rust-007",
+            detector_class=RustNewtypePatternDetector,
+            config_model=RustNewtypePatternConfig,
+            rule_ids=["rust-007"],
+            default_order=70,
+        ),
+        DetectorBinding(
+            detector_id="rust-009",
+            detector_class=RustStdTraitsDetector,
+            config_model=RustStdTraitsConfig,
+            rule_ids=["rust-009"],
+            default_order=80,
+        ),
+        DetectorBinding(
+            detector_id="rust-010",
+            detector_class=RustEnumOverBoolDetector,
+            config_model=RustEnumOverBoolConfig,
+            rule_ids=["rust-010"],
+            default_order=90,
+        ),
+        DetectorBinding(
+            detector_id="rust-011",
+            detector_class=RustLifetimeUsageDetector,
+            config_model=RustLifetimeUsageConfig,
+            rule_ids=["rust-011"],
+            default_order=100,
+        ),
+        DetectorBinding(
+            detector_id="rust-012",
+            detector_class=RustInteriorMutabilityDetector,
+            config_model=RustInteriorMutabilityConfig,
+            rule_ids=["rust-012"],
+            default_order=110,
+        ),
+    ],
+)

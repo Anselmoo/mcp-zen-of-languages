@@ -1,0 +1,8 @@
+icon: material/rocket-launch
+tags:
+  - CLI
+  - MCP
+social:
+  cards_layout: default/variant
+  cards_layout_options:
+    background_color: "#ede9ff"

@@ -1,0 +1,1 @@
+TypeScript's power lies in its type system — but that power is easily undermined by `any` casts, missing return types, and non-null assertions. MCP Zen of Languages encodes **10 type-safety principles** that catch the patterns where TypeScript's guarantees quietly erode.

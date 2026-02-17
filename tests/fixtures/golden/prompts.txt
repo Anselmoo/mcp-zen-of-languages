@@ -1,0 +1,143 @@
+                Remediation Roadmap
+  1. Address Complexity issues (2 violations).
+  2. Address Documentation issues (1 violations).
+  3. Address Naming & Style issues (1 violations).
+  4. Address Other issues (1 violations).
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Big Picture ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Health score: 2.5/100                                                     ┃
+┃ Trajectory: Prioritize Complexity fixes first for the fastest score lift. ┃
+┃ Systemic patterns:                                                        ┃
+┃ - High concentration of Complexity violations (2 findings).               ┃
+┃ - Secondary pressure in Documentation (1 findings).                       ┃
+┃ - Secondary pressure in Naming & Style (1 findings).                      ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+                                      File Summary
+╭─────────────────────────────────────┬──────────────┬──────────────────┬──────────────╮
+│ File                                │   Violations │ Top Themes       │   Top Sev    │
+├─────────────────────────────────────┼──────────────┼──────────────────┼──────────────┤
+│ tests/fixtures/medium_violations.py │            5 │ Complexity,      │   🔴 CRIT    │
+│                                     │              │ Naming & Style   │              │
+╰─────────────────────────────────────┴──────────────┴──────────────────┴──────────────╯
+╭───────────────── File Prompt - tests/fixtures/medium_violations.py ──────────────────╮
+│ Context: Remediate code quality violations in a multi-language codebase using zen    │
+│ principles.                                                                          │
+│ Target: tests/fixtures/medium_violations.py (python)                                 │
+│ Goal: Provide actionable, prioritized remediation steps with before/after guidance   │
+│ and acceptance criteria.                                                             │
+│ Requirements:                                                                        │
+│ 1. Summarize the top violation themes and prioritize fixes.                          │
+│ 2. Include concrete before/after code patterns when possible.                        │
+│ 3. Provide a short checklist for verifying the fix.                                  │
+│ 4. Keep steps clear and testable.                                                    │
+│ Checklist:                                                                           │
+│ - Suggest 5 immediate code quality improvements.                                     │
+│ - Pinpoint 5 technical debt hotspots to address.                                     │
+│ - Find 5 opportunities for code reuse or simplification.                             │
+│ - Propose 5 improvements for variable or function naming.                            │
+│ - Identify 5 areas to make code more resilient or fault-tolerant.                    │
+│                                                                                      │
+│ Violations:                                                                          │
+│ - [8] Flat is better than nested: Nesting depth > 3 levels                           │
+│   Theme: Complexity                                                                  │
+│   Action: Refactor deep nesting into guard clauses and early returns.                │
+│   Idiom: Guard clauses make Python flows easier to read and test.                    │
+│   Effort: M                                                                          │
+│   Before:                                                                            │
+│ ┌──── Code ─────┐                                                                    │
+│ │ if condition: │                                                                    │
+│ │     if other: │                                                                    │
+│ │         ...   │                                                                    │
+│ └───────────────┘                                                                    │
+│   After:                                                                             │
+│ ┌────── Code ───────┐                                                                │
+│ │ if not condition: │                                                                │
+│ │     return        │                                                                │
+│ │ if not other:     │                                                                │
+│ │     return        │                                                                │
+│ │ ...               │                                                                │
+│ └───────────────────┘                                                                │
+│   Acceptance: No blocks exceed the configured nesting depth in                       │
+│ tests/fixtures/medium_violations.py.                                                 │
+│ - [7] Explicit is better than implicit: Magic numbers without constants              │
+│   Theme: Naming & Style                                                              │
+│   Action: Replace literals with named constants or enums.                            │
+│   Idiom: Named constants make intent explicit and simplify change.                   │
+│   Effort: S                                                                          │
+│   Before:                                                                            │
+│ ┌──── Code ────┐                                                                     │
+│ │ timeout = 30 │                                                                     │
+│ └──────────────┘                                                                     │
+│   After:                                                                             │
+│ ┌────────────── Code ───────────────┐                                                │
+│ │ DEFAULT_TIMEOUT_SECONDS = 30      │                                                │
+│ │ ...                               │                                                │
+│ │ timeout = DEFAULT_TIMEOUT_SECONDS │                                                │
+│ └───────────────────────────────────┘                                                │
+│   Acceptance: Magic numbers are replaced with named constants in                     │
+│ tests/fixtures/medium_violations.py.                                                 │
+│ - [9] Readability counts: Missing docstrings for public APIs                         │
+│   Theme: Documentation                                                               │
+│   Action: Add Google-style docstrings with summary, args, and return details.        │
+│   Idiom: Explicit docstrings document intent and reduce onboarding time.             │
+│   Effort: S                                                                          │
+│   Before:                                                                            │
+│ ┌───────────── Code ─────────────┐                                                   │
+│ │ def fetch_data(client, query): │                                                   │
+│ │     ...                        │                                                   │
+│ └────────────────────────────────┘                                                   │
+│   After:                                                                             │
+│ ┌───────────── Code ─────────────┐                                                   │
+│ │ def fetch_data(client, query): │                                                   │
+│ │     """Fetch data for a query. │                                                   │
+│ │                                │                                                   │
+│ │     Args:                      │                                                   │
+│ │         client: API client.    │                                                   │
+│ │         query: Query string.   │                                                   │
+│ │                                │                                                   │
+│ │     Returns:                   │                                                   │
+│ │         Parsed response data.  │                                                   │
+│ │     """                        │                                                   │
+│ │     ...                        │                                                   │
+│ └────────────────────────────────┘                                                   │
+│   Acceptance: Public functions and classes include docstrings in                     │
+│ tests/fixtures/medium_violations.py.                                                 │
+│ - [7] In the face of ambiguity, refuse the temptation to guess: Missing input        │
+│ validation                                                                           │
+│   Theme: Other                                                                       │
+│   Action: Missing input validation                                                   │
+│   Idiom: Follow the language's zen principles and keep changes focused.              │
+│   Effort: S                                                                          │
+│   Acceptance: Resolve the violation and confirm it no longer appears in              │
+│ tests/fixtures/medium_violations.py.                                                 │
+│ - [8] Flat is better than nested: Nesting depth 4 exceeds maximum 3                  │
+│   Theme: Complexity                                                                  │
+│   Action: Refactor deep nesting into guard clauses and early returns.                │
+│   Idiom: Guard clauses make Python flows easier to read and test.                    │
+│   Effort: M                                                                          │
+│   Before:                                                                            │
+│ ┌──── Code ─────┐                                                                    │
+│ │ if condition: │                                                                    │
+│ │     if other: │                                                                    │
+│ │         ...   │                                                                    │
+│ └───────────────┘                                                                    │
+│   After:                                                                             │
+│ ┌────── Code ───────┐                                                                │
+│ │ if not condition: │                                                                │
+│ │     return        │                                                                │
+│ │ if not other:     │                                                                │
+│ │     return        │                                                                │
+│ │ ...               │                                                                │
+│ └───────────────────┘                                                                │
+│   Acceptance: No blocks exceed the configured nesting depth in                       │
+│ tests/fixtures/medium_violations.py.                                                 │
+╰─────────────────────────────── python · 5 violations ────────────────────────────────╯
+                                    Generic Prompts
+╭─────────────────────────────┬────────────────────────────────────────────────────────╮
+│ Title                       │ Focus                                                  │
+├─────────────────────────────┼────────────────────────────────────────────────────────┤
+│ Quick quality checklist     │ - Suggest 5 immediate code quality improvements.       │
+│ Refactor hotspots           │ Review high-severity Python violations and refactor    │
+│                             │ complex functions into smaller units with clear        │
+│                             │ docstrings.                                            │
+╰─────────────────────────────┴────────────────────────────────────────────────────────╯

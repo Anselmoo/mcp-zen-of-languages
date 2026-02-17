@@ -1,0 +1,108 @@
+"""Mapping module."""
+
+from __future__ import annotations
+
+from mcp_zen_of_languages.analyzers.mapping_models import (
+    DetectorBinding,
+    LanguageDetectorMap,
+)
+from mcp_zen_of_languages.languages.configs import (
+    TsAnyUsageConfig,
+    TsEnumConstConfig,
+    TsInterfacePreferenceConfig,
+    TsNonNullAssertionConfig,
+    TsReadonlyConfig,
+    TsReturnTypeConfig,
+    TsStrictModeConfig,
+    TsTypeGuardConfig,
+    TsUnknownOverAnyConfig,
+    TsUtilityTypesConfig,
+)
+from mcp_zen_of_languages.languages.typescript.detectors import (
+    TsAnyUsageDetector,
+    TsEnumConstDetector,
+    TsInterfacePreferenceDetector,
+    TsNonNullAssertionDetector,
+    TsReadonlyDetector,
+    TsReturnTypeDetector,
+    TsStrictModeDetector,
+    TsTypeGuardDetector,
+    TsUnknownOverAnyDetector,
+    TsUtilityTypesDetector,
+)
+
+DETECTOR_MAP = LanguageDetectorMap(
+    language="typescript",
+    bindings=[
+        DetectorBinding(
+            detector_id="ts_any_usage",
+            detector_class=TsAnyUsageDetector,
+            config_model=TsAnyUsageConfig,
+            rule_ids=["ts-001"],
+            default_order=10,
+        ),
+        DetectorBinding(
+            detector_id="ts_strict_mode",
+            detector_class=TsStrictModeDetector,
+            config_model=TsStrictModeConfig,
+            rule_ids=["ts-002"],
+            default_order=20,
+        ),
+        DetectorBinding(
+            detector_id="ts_interface_preference",
+            detector_class=TsInterfacePreferenceDetector,
+            config_model=TsInterfacePreferenceConfig,
+            rule_ids=["ts-003"],
+            default_order=30,
+        ),
+        DetectorBinding(
+            detector_id="ts_return_types",
+            detector_class=TsReturnTypeDetector,
+            config_model=TsReturnTypeConfig,
+            rule_ids=["ts-004"],
+            default_order=40,
+        ),
+        DetectorBinding(
+            detector_id="ts_readonly",
+            detector_class=TsReadonlyDetector,
+            config_model=TsReadonlyConfig,
+            rule_ids=["ts-005"],
+            default_order=50,
+        ),
+        DetectorBinding(
+            detector_id="ts_type_guards",
+            detector_class=TsTypeGuardDetector,
+            config_model=TsTypeGuardConfig,
+            rule_ids=["ts-006"],
+            default_order=60,
+        ),
+        DetectorBinding(
+            detector_id="ts_utility_types",
+            detector_class=TsUtilityTypesDetector,
+            config_model=TsUtilityTypesConfig,
+            rule_ids=["ts-007"],
+            default_order=70,
+        ),
+        DetectorBinding(
+            detector_id="ts_non_null_assertions",
+            detector_class=TsNonNullAssertionDetector,
+            config_model=TsNonNullAssertionConfig,
+            rule_ids=["ts-008"],
+            default_order=80,
+        ),
+        DetectorBinding(
+            detector_id="ts_enum_const",
+            detector_class=TsEnumConstDetector,
+            config_model=TsEnumConstConfig,
+            rule_ids=["ts-009"],
+            default_order=90,
+        ),
+        DetectorBinding(
+            detector_id="ts_unknown_over_any",
+            detector_class=TsUnknownOverAnyDetector,
+            config_model=TsUnknownOverAnyConfig,
+            rule_ids=["ts-010"],
+            default_order=100,
+        ),
+    ],
+)

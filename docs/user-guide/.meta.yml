@@ -1,0 +1,8 @@
+icon: material/book-open-page-variant
+tags:
+  - CLI
+  - Configuration
+social:
+  cards_layout: default/variant
+  cards_layout_options:
+    background_color: "#ecebff"

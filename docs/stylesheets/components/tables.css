@@ -1,0 +1,10 @@
+/* TABLE STYLING — consistent borders in dark mode
+   ═══════════════════════════════════════════════════════════════════════════ */
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset table:not([class]) th {
+  background-color: var(--caligo-bg-elevated);
+  color: var(--caligo-fg-primary);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset table:not([class]) td {
+  border-color: var(--md-typeset-table-color);
+}

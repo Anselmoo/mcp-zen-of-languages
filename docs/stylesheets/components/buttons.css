@@ -1,0 +1,38 @@
+/* BUTTONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+.md-button {
+  border-radius: var(--zen-radius-full);
+  transition: background-color var(--zen-duration-fast) var(--zen-ease-out),
+              border-color var(--zen-duration-fast) var(--zen-ease-out),
+              transform var(--zen-duration-fast) var(--zen-ease-out);
+}
+
+.md-button:hover {
+  transform: translateY(-1px);
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset a.md-button:not(.md-button--primary) {
+  color: var(--caligo-light-text);
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset a.md-button:not(.md-button--primary) {
+  color: var(--caligo-fg-primary);
+}
+
+.md-button--primary {
+  background-color: var(--md-primary-fg-color);
+  color: var(--caligo-bg-base);
+  border-color: var(--md-primary-fg-color);
+}
+
+.md-button--primary:hover {
+  background-color: var(--md-primary-fg-color--light);
+  border-color: var(--md-primary-fg-color--light);
+  color: var(--caligo-bg-base);
+}
+
+.md-typeset a.md-button--primary,
+.md-typeset a.md-button--primary:hover,
+.md-typeset a.md-button--primary:focus {
+  color: var(--caligo-bg-base);
+}

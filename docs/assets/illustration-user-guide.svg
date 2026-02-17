@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 320" role="img" aria-labelledby="user-guide-title">
+  <title id="user-guide-title">User guide — bookshelf with open scroll document and bonsai tree with hanko seal</title>
+  <defs>
+    <linearGradient id="ug-paper" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f8f6ff"/>
+      <stop offset="100%" stop-color="#e9e4f7"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="320" fill="#f2effb"/>
+
+  <!-- Bookshelf / document stack — left side (structured knowledge) -->
+  <g transform="translate(60, 50)" opacity="0.65">
+    <!-- Shelf -->
+    <rect x="0" y="200" width="120" height="4" rx="1" fill="#2b2044"/>
+    <!-- Books on shelf (varying heights and colours) -->
+    <rect x="8" y="140" width="14" height="60" rx="2" fill="#989cff" opacity="0.8"/>
+    <rect x="26" y="150" width="12" height="50" rx="2" fill="#767bd8" opacity="0.7"/>
+    <rect x="42" y="134" width="16" height="66" rx="2" fill="#c9b3ff" opacity="0.75"/>
+    <rect x="62" y="156" width="10" height="44" rx="2" fill="#b8bcff" opacity="0.65"/>
+    <rect x="76" y="144" width="14" height="56" rx="2" fill="#989cff" opacity="0.7"/>
+    <rect x="94" y="160" width="12" height="40" rx="2" fill="#767bd8" opacity="0.6"/>
+    <!-- Upper shelf -->
+    <rect x="0" y="120" width="120" height="4" rx="1" fill="#2b2044" opacity="0.6"/>
+    <rect x="12" y="70" width="14" height="50" rx="2" fill="#b8bcff" opacity="0.5"/>
+    <rect x="30" y="80" width="10" height="40" rx="2" fill="#c9b3ff" opacity="0.45"/>
+    <rect x="44" y="74" width="16" height="46" rx="2" fill="#989cff" opacity="0.5"/>
+    <rect x="64" y="86" width="12" height="34" rx="2" fill="#767bd8" opacity="0.4"/>
+  </g>
+
+  <!-- Main open scroll / document -->
+  <g transform="translate(220, 40)">
+    <!-- Scroll background -->
+    <rect x="0" y="20" width="480" height="220" rx="16" fill="#e9e4f7"/>
+    <rect x="12" y="32" width="456" height="196" rx="10" fill="url(#ug-paper)" opacity="0.85"/>
+    <!-- Scroll roll hints at left/right edges -->
+    <ellipse cx="6" cy="130" rx="6" ry="90" fill="#dfd8f2" opacity="0.5"/>
+    <ellipse cx="474" cy="130" rx="6" ry="90" fill="#dfd8f2" opacity="0.5"/>
+    <!-- Text lines — structured layout (heading + body + body + code block + body) -->
+    <rect x="40" y="56" width="180" height="16" rx="6" fill="#989cff" opacity="0.85"/>
+    <rect x="40" y="84" width="300" height="12" rx="5" fill="#767bd8" opacity="0.55"/>
+    <rect x="40" y="106" width="260" height="12" rx="5" fill="#b8bcff" opacity="0.4"/>
+    <!-- Code block area -->
+    <rect x="40" y="130" width="380" height="40" rx="6" fill="#221938" opacity="0.06"/>
+    <rect x="54" y="140" width="140" height="8" rx="3" fill="#989cff" opacity="0.45"/>
+    <rect x="54" y="154" width="200" height="8" rx="3" fill="#c9b3ff" opacity="0.35"/>
+    <!-- More text -->
+    <rect x="40" y="184" width="220" height="10" rx="4" fill="#767bd8" opacity="0.35"/>
+    <rect x="40" y="202" width="160" height="10" rx="4" fill="#b8bcff" opacity="0.25"/>
+  </g>
+
+  <!-- Bonsai — right side, more detailed -->
+  <g transform="translate(760, 60)" opacity="0.8">
+    <!-- Pot -->
+    <path d="M-24 180 L-18 200 L18 200 L24 180" fill="#2b2044" opacity="0.6"/>
+    <rect x="-26" y="176" width="52" height="6" rx="2" fill="#2b2044" opacity="0.5"/>
+    <!-- Trunk — curved, aged appearance -->
+    <path d="M0 176 C-2 150, -8 130, -4 110 C0 90, 8 80, 4 65 C0 50, -6 42, -2 30" fill="none" stroke="#2b2044" stroke-width="5" stroke-linecap="round"/>
+    <!-- Main branches -->
+    <path d="M-4 110 Q-30 95 -44 80" fill="none" stroke="#2b2044" stroke-width="3" stroke-linecap="round"/>
+    <path d="M4 80 Q28 68 40 55" fill="none" stroke="#2b2044" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M-2 60 Q-20 50 -32 38" fill="none" stroke="#2b2044" stroke-width="2" stroke-linecap="round"/>
+    <!-- Foliage clusters — overlapping spheres -->
+    <circle cx="-44" cy="74" r="20" fill="#989cff" opacity="0.65"/>
+    <circle cx="-30" cy="65" r="16" fill="#767bd8" opacity="0.55"/>
+    <circle cx="-2" cy="24" r="22" fill="#989cff" opacity="0.7"/>
+    <circle cx="14" cy="32" r="14" fill="#b8bcff" opacity="0.55"/>
+    <circle cx="40" cy="50" r="18" fill="#767bd8" opacity="0.6"/>
+    <circle cx="30" cy="40" r="12" fill="#c9b3ff" opacity="0.5"/>
+    <circle cx="-32" cy="32" r="14" fill="#b8bcff" opacity="0.45"/>
+    <circle cx="-16" cy="18" r="10" fill="#c9b3ff" opacity="0.5"/>
+    <!-- Ground moss -->
+    <ellipse cx="0" cy="178" rx="28" ry="6" fill="#b8bcff" opacity="0.25"/>
+  </g>
+
+  <!-- Ink brush — bottom left, writing tool motif -->
+  <g transform="translate(200, 270) rotate(-25)" opacity="0.5">
+
+  <!-- Ensō echo — subtle background ring (completeness of knowledge) -->
+  <circle cx="460" cy="160" r="120" fill="none" stroke="#c9b3ff" stroke-width="2.5" stroke-dasharray="380 370" transform="rotate(-20 460 160)" opacity="0.12"/>
+
+    <rect x="0" y="0" width="4" height="40" rx="1" fill="#2b2044"/>
+    <path d="M0 0 L2 -8 L4 0" fill="#2b2044"/>
+    <rect x="-1" y="30" width="6" height="12" rx="1" fill="#767bd8" opacity="0.5"/>
+  </g>
+
+  <!-- Seal / stamp — hanko (authenticity mark) -->
+  <g transform="translate(720, 230)" opacity="0.45">
+    <rect x="0" y="0" width="24" height="24" rx="3" fill="none" stroke="#989cff" stroke-width="2"/>
+    <text x="12" y="18" font-family="serif" font-size="14" fill="#989cff" text-anchor="middle" opacity="0.7">禅</text>
+  </g>
+
+  <!-- Accent motes -->
+  <circle cx="520" cy="36" r="3" fill="#f1b0ff" opacity="0.4"/>
+  <circle cx="160" cy="280" r="2.5" fill="#63c8ff" opacity="0.35"/>
+  <circle cx="880" cy="260" r="2" fill="#c9b3ff" opacity="0.3"/>
+
+  <!-- Cherry blossom petals — drifting warmth -->
+  <g fill="#f1b0ff" opacity="0.3">
+    <ellipse cx="360" cy="30" rx="2.5" ry="1.5" transform="rotate(28 360 30)"/>
+    <ellipse cx="580" cy="26" rx="2" ry="1.2" transform="rotate(-22 580 26)"/>
+    <ellipse cx="750" cy="38" rx="2" ry="1.2" transform="rotate(42 750 38)"/>
+  </g>
+</svg>

@@ -1,0 +1,111 @@
+---
+title: {{ language_name }}
+description: "{{ num_principles }} zen principles enforced by {{ num_detectors }} detectors{% if philosophy %}: {{ philosophy }}{% endif %}."
+icon: {{ icon }}
+tags:
+  - {{ language_name }}
+---
+
+# {{ language_name }}
+
+{{ intro }}
+
+## Zen Principles
+
+{{ num_principles }} principles across {{ num_categories }} categories, drawn from {% if source_url %}[{{ source_text }}]({{ source_url }}){% else %}{{ source_text }}{% endif %}.
+
+{% if category_summary %}
+<div class="grid" markdown>
+
+{% for cat, count in category_summary %}
+:material-tag-outline: **{{ cat }}** · {{ count }} principle{{ "s" if count != 1 else "" }}
+{% endfor %}
+
+</div>
+{% endif %}
+
+| Rule ID | Principle | Category | Severity |
+|---------|-----------|----------|:--------:|
+{% for p in principles %}
+| `{{ p.id }}` | {{ p.principle }} | {{ p.category }} | {{ p.severity }} |
+{% endfor %}
+
+{% for p in principles %}
+??? info "`{{ p.id }}` — {{ p.principle }}"
+    **{{ p.description }}**
+
+{% if p.violations %}
+    **Common Violations:**
+
+{% for v in p.violations %}
+    - {{ v }}
+{% endfor %}
+
+{% endif %}
+{% if p.detectable_patterns %}
+    **Detectable Patterns:**
+
+{% for pat in p.detectable_patterns %}
+    - `{{ pat }}`
+{% endfor %}
+
+{% endif %}
+{% if p.metrics %}
+    **Thresholds:**
+
+    | Parameter | Default |
+    |-----------|---------|
+{% for key, val in p.metrics.items() %}
+    | `{{ key }}` | `{{ val }}` |
+{% endfor %}
+
+{% endif %}
+{% if p.recommended_alternative %}
+    !!! tip "Recommended Fix"
+        {{ p.recommended_alternative }}
+
+{% endif %}
+{% endfor %}
+
+## Detector Catalog
+
+{% for category, detectors in detector_groups %}
+### {{ category }}
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+{% for d in detectors %}
+| **{{ d.name }}** | {{ d.description }} | {% for rid in d.rule_ids %}`{{ rid }}`{% if not loop.last %}, {% endif %}{% endfor %} |
+{% endfor %}
+
+{% endfor %}
+
+{% if mermaid_diagram %}
+??? example "Principle → Detector Wiring"
+    ```mermaid
+{{ mermaid_diagram }}
+    ```
+{% endif %}
+
+## Configuration
+
+```yaml
+languages:
+  {{ language_key }}:
+    enabled: true
+    pipeline:
+{% for cfg in config_entries %}
+      - type: {{ cfg.type }}
+{% for key, val in cfg.params.items() %}
+        {{ key }}: {{ val }}{{ "  # " + cfg.comments[key] if key in cfg.comments else "" }}
+{% endfor %}
+{% endfor %}
+```
+
+{% if config_tip %}
+{{ config_tip }}
+{% endif %}
+
+## See Also
+
+{{ see_also }}

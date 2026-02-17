@@ -1,0 +1,93 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        args: ["--markdown-linebreak-ext=md"]
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: ["--unsafe"]
+      - id: check-added-large-files
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.1
+    hooks:
+      - id: ruff-check
+        types_or: ["python", "pyi"]
+        args: ["--fix"]
+      - id: ruff-format
+        types_or: ["python", "pyi"]
+  - repo: local
+    hooks:
+      - id: ty
+        name: ty
+        entry: uv run ty check src
+        language: system
+        pass_filenames: false
+        types_or: ["python", "pyi"]
+      - id: interrogate
+        name: Docstring coverage (interrogate)
+        entry: uvx --from interrogate interrogate -c pyproject.toml src
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [manual]
+  - repo: local
+    hooks:
+      - id: check-language-structure
+        name: Check language folder structure
+        entry: uv run python scripts/check_language_structure.py
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: generate-config-docs
+        name: Generate config reference
+        entry: uv run python scripts/generate_config_docs.py
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: warn-missing-rule-coverage
+        name: Warn on missing rule coverage
+        entry: uv run python scripts/warn_missing_rule_coverage.py
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: check-docs-assets
+        name: Check docs CSS/JS quality
+        entry: uv run python scripts/check_docs_assets.py
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: check-docs-links
+        name: Check docs hyperlink coverage
+        entry: uv run python scripts/check_docs_links.py
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: check-sphinx-roles
+        name: Check Sphinx role markup
+        entry: uv run python scripts/check_sphinx_roles.py
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: check-orphan-docs
+        name: Check orphan docs not in nav
+        entry: uv run python scripts/check_orphan_docs.py
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: check-docs-contrast
+        name: Check docs contrast (WCAG AA)
+        entry: uv run python scripts/check_docs_contrast.py --build --mode check
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [manual]
+      - id: docs-build-strict
+        name: Build docs (strict)
+        entry: uv run mkdocs build --strict
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]

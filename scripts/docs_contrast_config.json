@@ -1,0 +1,54 @@
+{
+  "schemes": ["caligo-light", "caligo-dark"],
+  "checks": [
+    {
+      "name": "Body text",
+      "selector": ".md-typeset p, .md-typeset li, .md-typeset td",
+      "min_ratio": 4.5
+    },
+    {
+      "name": "Content links",
+      "selector": ".md-typeset p a, .md-typeset li a, .md-typeset td a, .md-typeset blockquote a",
+      "min_ratio": 4.5
+    },
+    {
+      "name": "Navigation links",
+      "selector": ".md-nav__link, .md-tabs__link",
+      "min_ratio": 4.5
+    },
+    {
+      "name": "Code text",
+      "selector": ".md-typeset :not(pre) > code:not([class])",
+      "min_ratio": 4.5
+    },
+    {
+      "name": "Footer text",
+      "selector": ".md-footer, .md-footer a, .md-copyright",
+      "min_ratio": 4.5
+    },
+    {
+      "name": "Buttons",
+      "selector": ".md-button",
+      "min_ratio": 4.5
+    },
+    {
+      "name": "Search input",
+      "selector": ".md-search__input",
+      "min_ratio": 4.5
+    },
+    {
+      "name": "Admonitions",
+      "selector": ".md-typeset .admonition, .md-typeset details",
+      "min_ratio": 4.5
+    }
+  ],
+  "ignore_selectors": [
+    ".md-icon",
+    ".md-content__button",
+    ".headerlink",
+    "a[href*='__codelineno-']",
+    "a[id^='__codelineno-']",
+    ".md-source__repository-icon"
+  ],
+  "max_failures_per_check_per_page": 25
+}

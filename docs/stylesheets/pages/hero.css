@@ -1,0 +1,93 @@
+/* HERO SECTION (homepage)
+   ═══════════════════════════════════════════════════════════════════════════ */
+.zen-hero {
+  display: grid;
+  gap: var(--zen-space-6);
+  grid-template-columns: 1.1fr 1fr;
+  align-items: center;
+  padding: var(--zen-space-5);
+  border-radius: var(--zen-radius-lg);
+  background: linear-gradient(
+    125deg,
+    color-mix(in oklch, var(--md-primary-fg-color) 14%, var(--md-default-bg-color)) 0%,
+    color-mix(in oklch, var(--md-accent-fg-color) 8%, var(--md-default-bg-color)) 100%
+  );
+  border: var(--zen-border-thin) solid color-mix(in oklch, var(--md-primary-fg-color) 18%, transparent);
+  transition: box-shadow var(--zen-duration-base) var(--zen-ease-out);
+}
+
+.zen-hero:hover {
+  box-shadow: var(--zen-shadow-lg);
+}
+
+.zen-hero__content h1 {
+  margin-top: 0;
+  margin-bottom: var(--zen-space-2);
+}
+
+.zen-hero__motto {
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+  color: color-mix(in oklch, var(--md-default-fg-color) 72%, transparent);
+  margin-bottom: var(--zen-space-4);
+}
+
+.zen-hero__motto-icon {
+  display: inline-flex;
+  width: 1.1em;
+  height: 1.1em;
+  margin-right: 0.38em;
+  vertical-align: -0.14em;
+  color: color-mix(in oklch, var(--md-primary-fg-color) 70%, var(--md-default-fg-color));
+}
+
+.zen-hero__motto-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.zen-hero__content p {
+  margin-bottom: var(--zen-space-4);
+}
+
+.zen-hero__media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zen-hero__media img {
+  width: clamp(22rem, 50vw, 52rem);
+  max-width: 100%;
+  height: auto;
+  max-height: clamp(20rem, 34vw, 34rem);
+  aspect-ratio: 12 / 7;
+  object-fit: contain;
+  margin-inline: auto;
+  border-radius: var(--zen-radius-md);
+  border: var(--zen-border-thin) solid color-mix(in oklch, var(--md-primary-fg-color) 22%, transparent);
+  background: var(--zen-surface-elevated);
+  transition: transform var(--zen-duration-base) var(--zen-ease-out);
+}
+
+.zen-hero__media img:hover {
+  transform: scale(1.02);
+}
+
+@media (max-width: 900px) {
+  .zen-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .zen-hero__media img {
+    width: clamp(18rem, 86vw, 36rem);
+    max-height: clamp(16rem, 56vw, 24rem);
+  }
+}
+
+@media (max-width: 640px) {
+  .zen-hero__media img {
+    width: clamp(15rem, 92vw, 28rem);
+    max-height: clamp(13rem, 70vw, 20rem);
+  }
+}

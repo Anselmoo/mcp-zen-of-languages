@@ -1,0 +1,1 @@
+Rust's zen is the compiler's bargain: fight with the borrow checker at compile time, and your code won't segfault at runtime. These **12 principles** encode the idiomatic patterns that experienced Rustaceans follow — patterns that go beyond "it compiles" into "it's well-designed."

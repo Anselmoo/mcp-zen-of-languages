@@ -30,6 +30,7 @@ See Also:
 from __future__ import annotations
 
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from mcp_zen_of_languages.orchestration import (
     analyze_targets as _shared_analyze_targets,
@@ -49,7 +50,6 @@ from mcp_zen_of_languages.reporting.models import (
 )
 from mcp_zen_of_languages.reporting.prompts import build_prompt_bundle
 from mcp_zen_of_languages.utils.markdown_quality import normalize_markdown
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.models import AnalysisResult

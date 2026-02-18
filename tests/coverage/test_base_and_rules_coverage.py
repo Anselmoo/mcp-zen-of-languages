@@ -115,12 +115,12 @@ def test_base_analyzer_rule_adapter_branches():
     result = analyzer.analyze("def foo():\n    pass\n")
     assert result.rules_summary is not None
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="No zen rules for language: unknown"):
         WrongLangAnalyzer()
 
 
 def test_pipeline_config_error_path():
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="No zen rules for language: unknown"):
         PipelineConfig.from_rules("unknown")
 
 

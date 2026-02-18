@@ -23,7 +23,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Annotated, Literal, Protocol, TYPE_CHECKING
+from typing import TYPE_CHECKING, Annotated, Literal, Protocol
 
 import click
 import typer
@@ -81,8 +81,9 @@ from mcp_zen_of_languages.rules import get_language_zen
 from mcp_zen_of_languages.utils.markdown_quality import normalize_markdown
 
 if TYPE_CHECKING:
-    from mcp_zen_of_languages.reporting.models import PromptBundle
     from rich.table import Table
+
+    from mcp_zen_of_languages.reporting.models import PromptBundle
 
 logger = logging.getLogger(__name__)
 logger.setLevel(

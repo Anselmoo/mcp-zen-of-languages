@@ -39,8 +39,11 @@ from mcp_zen_of_languages.analyzers.base import (
 from mcp_zen_of_languages.languages.configs import DetectorConfig
 
 if TYPE_CHECKING:
-    from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples, ZenPrinciple
     from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+    from mcp_zen_of_languages.rules.base_models import (
+        LanguageZenPrinciples,
+        ZenPrinciple,
+    )
 
 
 class DetectorMetadata(BaseModel):

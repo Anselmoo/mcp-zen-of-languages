@@ -86,7 +86,7 @@ def test_detection_pipeline_logs_errors(capsys):
 def test_pipeline_merge_override_language_mismatch():
     base = PipelineConfig.from_rules("python")
     overrides = PipelineConfig.from_rules("go")
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Override pipeline language mismatch"):
         merge_pipeline_overrides(base, overrides)
 
 
@@ -272,11 +272,8 @@ def test_rules_registry_helpers():
 
 def test_detector_registry_adapter_cache():
     registry = DetectorRegistry()
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="No detectors registered"):
         registry.get_config_union()
-
-
-def test_rules_adapter_missing_language_defaults():
     adapter = RulesAdapter(language="unknown")
     assert adapter.find_violations("def foo():\n    pass\n") == []
 

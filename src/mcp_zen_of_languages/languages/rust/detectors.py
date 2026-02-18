@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from typing import TYPE_CHECKING
 
 from mcp_zen_of_languages.analyzers.base import AnalysisContext, ViolationDetector
 from mcp_zen_of_languages.languages.configs import (
@@ -20,7 +21,6 @@ from mcp_zen_of_languages.languages.configs import (
     RustUnsafeBlocksConfig,
     RustUnwrapUsageConfig,
 )
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.models import Violation

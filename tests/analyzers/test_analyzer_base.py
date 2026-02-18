@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-import pytest
+from typing import ClassVar
 
+import pytest
 from pydantic import BaseModel
 
 from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
@@ -32,7 +33,7 @@ class _DummyAnalyzer(BaseAnalyzer):
 
     def build_pipeline(self):
         class _Pipeline:
-            detectors: list = []
+            detectors: ClassVar[list] = []
 
             def run(self, context, config):
                 return []

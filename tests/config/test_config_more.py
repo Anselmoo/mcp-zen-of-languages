@@ -9,7 +9,7 @@ from mcp_zen_of_languages.languages.configs import DetectorConfig
 
 def test_pipeline_for_unknown_language_raises():
     config = ConfigModel()
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="No zen rules for language: unknown"):
         config.pipeline_for("unknown")
 
 

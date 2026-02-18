@@ -5,8 +5,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from mcp_zen_of_languages.models import CyclomaticSummary, ParserResult
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
+    from mcp_zen_of_languages.models import CyclomaticSummary, ParserResult
 
 from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,

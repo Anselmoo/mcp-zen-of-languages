@@ -116,13 +116,13 @@ def test_config_model_pipeline_for_with_override():
 def test_pipeline_merge_language_mismatch():
     base = type("Base", (), {"language": "python", "detectors": []})()
     override = type("Override", (), {"language": "go", "detectors": []})()
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Override pipeline language mismatch"):
         merge_pipeline_overrides(base, override)
 
 
 def test_registry_get_config_union_no_detectors():
     registry = DetectorRegistry()
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="No detectors registered"):
         registry.get_config_union()
 
 
@@ -550,7 +550,7 @@ def test_registry_configs_from_rules_unknown_metric():
         source_url="https://example.com/src",
         principles=[principle],
     )
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Unknown metric keys for python-001"):
         registry.configs_from_rules(lang)
 
 
@@ -562,7 +562,7 @@ def test_registry_get_missing_detector():
 
 @pytest.mark.filterwarnings("ignore::DeprecationWarning")
 def test_analyzer_config_type_check():
-    with pytest.raises(Exception):
+    with pytest.raises(Exception, match="severity_threshold"):
         AnalyzerConfig.model_validate({"severity_threshold": "bad"})
 
 

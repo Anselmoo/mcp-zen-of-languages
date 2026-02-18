@@ -106,42 +106,19 @@ extend-ignore = [
     # Import style
     "PLC0415", # import-outside-top-level
     "TID252",  # relative-imports
-    "TC001",   # typing-only-first-party-import
-    "TC002",   # typing-only-third-party-import
-    "TC003",   # typing-only-standard-library-import
     # Boolean / argument patterns
-    "FBT001", # boolean-type-hint-positional-argument
-    "FBT002", # boolean-default-value-positional-argument
-    "FBT003", # boolean-positional-value-in-call
     "ARG001", # unused-function-argument
     "ARG002", # unused-method-argument
     "ARG005", # unused-lambda-argument
     # Exception patterns
-    "BLE001", # blind-except
-    "EM101",  # raw-string-in-exception
-    "EM102",  # f-string-in-exception
-    "EM103",  # dot-format-in-exception
-    "TRY003", # raise-vanilla-args
-    "TRY300", # try-consider-else
     # Modernization (fix incrementally)
-    "UP015", # redundant-open-modes
-    "UP042", # replace-str-enum
     # Pylint conventions
-    "PLR2004", # magic-value-comparison
-    "PLR1714", # repeated-equality-comparison
-    "PLR1730", # if-stmt-min-max
     "PLW0602", # global-variable-not-assigned
     "PLW0603", # global-statement
-    "PLW1510", # subprocess-run-without-check
-    "PLW2901", # redefined-loop-name
     "PLE0605", # invalid-all-format
     # Simplifications
-    "SIM114", # if-with-same-arms
     # Private access / naming
     "SLF001", # private-member-access
-    "N806",   # non-lowercase-variable-in-function
-    "N812",   # lowercase-imported-as-non-lowercase
-    "A002",   # builtin-argument-shadowing
     # Security (review individually)
     "S101", # assert
     "S108", # hardcoded-temp-file
@@ -152,30 +129,20 @@ extend-ignore = [
     "S607", # start-process-with-partial-path
     "S701", # jinja2-autoescape-false
     # Miscellaneous
-    "B007",    # unused-loop-control-variable
     "B008",    # function-call-in-default-argument
     "B009",    # get-attr-with-constant
     "B010",    # set-attr-with-constant
     "B017",    # assert-raises-exception
-    "B905",    # zip-without-explicit-strict
     "FURB167", # regex-flag-alias
-    "FURB171", # single-item-membership-test
-    "FURB188", # slice-copy
-    "PIE790",  # unnecessary-placeholder
     "PGH003",  # blanket-type-ignore
     "PTH122",  # os-path-splitext
     "PTH123",  # builtin-open
     "PYI051",  # redundant-literal-union
     "PYI055",  # unnecessary-type-union
     "PYI063",  # pep-484-style-positional-only-parameter
-    "RET504",  # unnecessary-assign
     "RUF001",  # ambiguous-unicode-character-string
     "RUF002",  # ambiguous-unicode-character-docstring
-    "RUF005",  # collection-literal-concatenation
     "RUF007",  # pairwise-over-zipped
-    "RUF012",  # mutable-class-default
-    "RUF022",  # unsorted-dunder-all
-    "RUF059",  # variable unused
     "T201",    # print
     "TD002",   # missing-todo-author
     "TD003",   # missing-todo-link
@@ -183,10 +150,6 @@ extend-ignore = [
     "ERA001",  # commented-out-code
     "EXE001",  # shebang-not-executable
     "INP001",  # implicit-namespace-package
-    "PT006",   # pytest-parametrize-names-wrong-type
-    "PT011",   # pytest-raises-too-broad
-    "PT017",   # pytest-assert-in-except
-    "PT018",   # pytest-composite-assertion
     # --- Pre-existing docstring ignores ---
     "D100", # undocumented-public-module
     "D104", # undocumented-public-package

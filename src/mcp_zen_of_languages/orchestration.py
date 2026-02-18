@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Literal, TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from mcp_zen_of_languages.analyzers.analyzer_factory import create_analyzer
 from mcp_zen_of_languages.config import load_config
@@ -16,9 +16,10 @@ from mcp_zen_of_languages.models import (
 from mcp_zen_of_languages.utils.language_detection import detect_language_by_extension
 
 if TYPE_CHECKING:
-    from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
-    from pathlib import Path
     from collections.abc import Callable
+    from pathlib import Path
+
+    from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
 
 logger = logging.getLogger(__name__)
 

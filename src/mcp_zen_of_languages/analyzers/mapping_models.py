@@ -24,7 +24,10 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from mcp_zen_of_languages.analyzers.base import AnalyzerConfig, ViolationDetector  # noqa: TC001
+from mcp_zen_of_languages.analyzers.base import (  # noqa: TC001
+    AnalyzerConfig,
+    ViolationDetector,
+)
 from mcp_zen_of_languages.languages.configs import DetectorConfig  # noqa: TC001
 
 CoverageLevel = Literal["partial", "full-shallow", "full", "1:1"]

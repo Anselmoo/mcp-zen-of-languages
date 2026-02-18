@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import sys
 from contextlib import contextmanager
+from typing import TYPE_CHECKING
 
 from rich.progress import (
     BarColumn,
@@ -22,7 +23,6 @@ from rich.progress import (
 )
 
 from .console import console, is_quiet
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from collections.abc import Iterator

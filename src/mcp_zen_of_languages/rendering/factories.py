@@ -20,10 +20,10 @@ from .layout import get_output_width
 from .themes import BOX_CONTENT, BOX_SUMMARY
 
 if TYPE_CHECKING:
-    from rich.console import RenderableType
     from collections.abc import Sequence
+
     from rich import box as _box_module
-    from rich.console import Console
+    from rich.console import Console, RenderableType
 
 # ── Panels ──────────────────────────────────────────────────────────
 

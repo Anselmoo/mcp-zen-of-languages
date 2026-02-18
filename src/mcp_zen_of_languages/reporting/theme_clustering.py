@@ -26,9 +26,9 @@ See Also:
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
-
 from typing import TYPE_CHECKING
+
+from pydantic import BaseModel, Field
 
 from mcp_zen_of_languages.models import Violation  # noqa: TC001
 

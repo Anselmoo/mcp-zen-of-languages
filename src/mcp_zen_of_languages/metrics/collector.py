@@ -8,9 +8,9 @@ directly into the ``AnalysisContext`` consumed by the detection pipeline.
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 
 from .complexity import compute_cyclomatic_complexity, compute_maintainability_index
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.models import CyclomaticSummary

@@ -21,7 +21,7 @@ See Also:
 
 from __future__ import annotations
 
-from typing import Literal, TypedDict, TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal, TypedDict
 
 from pydantic import BaseModel, Field
 

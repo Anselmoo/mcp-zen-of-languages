@@ -19,8 +19,8 @@ def _build_config(name: str, **fields):
 
 
 def test_rule_pattern_detector_matches_patterns():
-    RuleConfig = _build_config("pattern_rule")
-    config = RuleConfig(
+    rule_config = _build_config("pattern_rule")
+    config = rule_config(
         detectable_patterns=["TODO"],
         recommended_alternative="Fix the TODO.",
     )
@@ -31,26 +31,26 @@ def test_rule_pattern_detector_matches_patterns():
 
 
 def test_rule_pattern_detector_script_length():
-    RuleConfig = _build_config(
+    rule_config = _build_config(
         "script_rule", max_script_length_without_functions=(int | None, 2)
     )
-    config = RuleConfig()
+    config = rule_config()
     context = AnalysisContext(code="line1\nline2\nline3", language="bash")
     violations = RulePatternDetector().detect(context, config)
     assert violations
 
 
 def test_rule_pattern_detector_variable_name_length():
-    RuleConfig = _build_config("var_rule", min_variable_name_length=(int | None, 3))
-    config = RuleConfig()
+    rule_config = _build_config("var_rule", min_variable_name_length=(int | None, 3))
+    config = rule_config()
     context = AnalysisContext(code="ab=1", language="bash")
     violations = RulePatternDetector().detect(context, config)
     assert violations
 
 
 def test_rule_pattern_detector_inheritance_depth():
-    RuleConfig = _build_config("inherit_rule", max_inheritance_depth=(int | None, 1))
-    config = RuleConfig()
+    rule_config = _build_config("inherit_rule", max_inheritance_depth=(int | None, 1))
+    config = rule_config()
     context = AnalysisContext(
         code="class A extends B {}\nclass B extends C {}\n", language="javascript"
     )
@@ -59,26 +59,26 @@ def test_rule_pattern_detector_inheritance_depth():
 
 
 def test_rule_pattern_detector_identifier_length():
-    RuleConfig = _build_config("ident_rule", min_identifier_length=(int | None, 3))
-    config = RuleConfig()
+    rule_config = _build_config("ident_rule", min_identifier_length=(int | None, 3))
+    config = rule_config()
     context = AnalysisContext(code="const x = 1", language="javascript")
     violations = RulePatternDetector().detect(context, config)
     assert violations
 
 
 def test_rule_pattern_detector_public_naming():
-    RuleConfig = _build_config("public_rule", public_naming=(str | None, "PascalCase"))
-    config = RuleConfig()
+    rule_config = _build_config("public_rule", public_naming=(str | None, "PascalCase"))
+    config = rule_config()
     context = AnalysisContext(code="public class foo {}", language="csharp")
     violations = RulePatternDetector().detect(context, config)
     assert violations
 
 
 def test_rule_pattern_detector_private_naming():
-    RuleConfig = _build_config(
+    rule_config = _build_config(
         "private_rule", private_naming=(str | None, "camelCase or _camelCase")
     )
-    config = RuleConfig()
+    config = rule_config()
     context = AnalysisContext(
         code="public class Foo { private int BadName; }", language="csharp"
     )
@@ -87,8 +87,8 @@ def test_rule_pattern_detector_private_naming():
 
 
 def test_rule_pattern_detector_name_and_required_pattern_branches():
-    RuleConfig = _build_config("required_rule")
-    config = RuleConfig(
+    rule_config = _build_config("required_rule")
+    config = rule_config(
         detectable_patterns=["", "!", "!MUST_HAVE"],
         recommended_alternative="Add required marker.",
     )
@@ -103,7 +103,7 @@ def test_rule_pattern_detector_name_and_required_pattern_branches():
 
 
 def test_rule_pattern_detector_no_violation_return_paths():
-    RuleConfig = _build_config(
+    rule_config = _build_config(
         "no_violation_rule",
         max_script_length_without_functions=(int | None, 10),
         min_variable_name_length=(int | None, 3),
@@ -112,7 +112,7 @@ def test_rule_pattern_detector_no_violation_return_paths():
         public_naming=(str | None, "UnknownStyle"),
         private_naming=(str | None, "UnknownStyle"),
     )
-    config = RuleConfig()
+    config = rule_config()
     context = AnalysisContext(
         code=(
             "class Child extends Parent {}\n"

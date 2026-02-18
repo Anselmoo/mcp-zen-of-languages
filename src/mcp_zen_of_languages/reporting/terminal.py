@@ -26,6 +26,7 @@ See Also:
 from __future__ import annotations
 
 from collections import Counter
+from typing import TYPE_CHECKING
 
 from rich.console import Console, Group, RenderableType
 from rich.panel import Panel
@@ -42,13 +43,13 @@ from mcp_zen_of_languages.rendering.factories import (
 from mcp_zen_of_languages.rendering.layout import get_output_width
 from mcp_zen_of_languages.rendering.themes import BOX_CODE
 from mcp_zen_of_languages.reporting.theme_clustering import classify_violation
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from mcp_zen_of_languages.reporting.models import PromptBundle
-    from mcp_zen_of_languages.reporting.agent_tasks import AgentTaskList
-    from mcp_zen_of_languages.models import AnalysisResult
     from rich.table import Table
+
+    from mcp_zen_of_languages.models import AnalysisResult
+    from mcp_zen_of_languages.reporting.agent_tasks import AgentTaskList
+    from mcp_zen_of_languages.reporting.models import PromptBundle
 
 
 def _active_console(output_console: Console | None = None) -> Console:

@@ -12,6 +12,8 @@ All data access uses Pydantic model attributes — never raw dictionary keys.
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel, Field
 
 from mcp_zen_of_languages.models import (
@@ -20,7 +22,6 @@ from mcp_zen_of_languages.models import (
     Violation,
 )
 from mcp_zen_of_languages.rules import get_language_zen
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.rules.base_models import (

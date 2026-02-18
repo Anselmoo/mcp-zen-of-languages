@@ -9,6 +9,8 @@ Callers never need to import individual analyzer modules; they go through
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from mcp_zen_of_languages.languages.bash.analyzer import BashAnalyzer
 from mcp_zen_of_languages.languages.cpp.analyzer import CppAnalyzer
 from mcp_zen_of_languages.languages.csharp.analyzer import CSharpAnalyzer
@@ -23,11 +25,10 @@ from mcp_zen_of_languages.languages.toml.analyzer import TomlAnalyzer
 from mcp_zen_of_languages.languages.typescript.analyzer import TypeScriptAnalyzer
 from mcp_zen_of_languages.languages.xml.analyzer import XmlAnalyzer
 from mcp_zen_of_languages.languages.yaml.analyzer import YamlAnalyzer
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
     from mcp_zen_of_languages.analyzers.base import AnalyzerConfig, BaseAnalyzer
+    from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
 
 SUPPORTED_LANGUAGES: tuple[str, ...] = (
     "python",

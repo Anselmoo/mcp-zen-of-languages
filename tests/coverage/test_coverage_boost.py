@@ -102,7 +102,7 @@ def test_base_analyzer_build_pipeline_errors_on_unknown_language():
         def default_config(self) -> AnalyzerConfig:
             return AnalyzerConfig()
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="No zen rules for language: unknown"):
         BadAnalyzer()
 
 
@@ -172,7 +172,7 @@ def test_detector_registry_project_principle_errors_on_unknown_metric():
         violations=[],
         metrics={"unknown_metric": 1},
     )
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Unknown metric keys for python-999"):
         registry._project_principle(
             principle, "python", set(AnalyzerConfig.model_fields)
         )

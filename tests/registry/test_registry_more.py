@@ -29,7 +29,7 @@ def test_registry_duplicate_detector_id():
         language="python",
     )
     registry.register(metadata)
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Duplicate detector_id: dummy"):
         registry.register(metadata)
 
 
@@ -41,7 +41,7 @@ def test_registry_get_unknown():
 
 def test_registry_get_config_union_no_detectors():
     registry = DetectorRegistry()
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="No detectors registered"):
         registry.get_config_union()
 
 

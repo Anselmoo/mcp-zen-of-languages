@@ -219,7 +219,7 @@ def generate() -> str:
     )
 
     # --- Categorize tools ---
-    TOOL_FAMILIES = {
+    tool_families = {
         "Reporting": {
             "prompts",
             "remediation",
@@ -237,7 +237,7 @@ def generate() -> str:
     def _classify(tool_tags: set[str] | None) -> str:
         if not tool_tags:
             return "Other"
-        for family, keywords in TOOL_FAMILIES.items():
+        for family, keywords in tool_families.items():
             if tool_tags & keywords:
                 return family
         return "Other"
@@ -273,7 +273,7 @@ def generate() -> str:
     sections.append("\n")
 
     # --- Detailed tool sections ---
-    FAMILY_ICONS = {
+    family_icons = {
         "Analysis": ":material-magnify:",
         "Reporting": ":material-file-document-outline:",
         "Configuration": ":material-cog-outline:",
@@ -293,7 +293,7 @@ def generate() -> str:
         family_list = family_tools.get(family, [])
         if not family_list:
             continue
-        icon = FAMILY_ICONS.get(family, "")
+        icon = family_icons.get(family, "")
         sections.append(f"## {icon} {family} Tools\n\n")
 
         for tool in family_list:

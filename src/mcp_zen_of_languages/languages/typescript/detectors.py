@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from typing import TYPE_CHECKING
 
 from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,
@@ -32,7 +33,6 @@ from mcp_zen_of_languages.rules.detections import (
     detect_ts_unknown_over_any,
     detect_ts_utility_types,
 )
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.models import Violation

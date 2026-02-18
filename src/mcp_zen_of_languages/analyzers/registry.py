@@ -454,8 +454,7 @@ class DetectorRegistry:
         for meta in metas:
             allowed_keys |= set(meta.config_model.model_fields) - base_fields
 
-        unknown = set(metrics) - allowed_keys
-        if unknown:
+        if unknown := set(metrics) - allowed_keys:
             raise ValueError(
                 f"Unknown metric keys for {principle.id}: {sorted(unknown)}"
             )
@@ -467,7 +466,7 @@ class DetectorRegistry:
             }
             data: dict[str, object] = {"type": meta.detector_id}
             if payload:
-                data.update(payload)
+                data |= payload
             config = self.adapter().validate_python(data)
             config.principle_id = principle.id
             config.principle = principle.principle

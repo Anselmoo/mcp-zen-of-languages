@@ -106,17 +106,16 @@ class YamlNoTabsDetector(ViolationDetector[YamlNoTabsConfig], LocationHelperMixi
         Returns:
             list[Violation]: One violation per line containing a tab character.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if "\t" in line:
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="tabs",
-                        location=Location(line=idx, column=line.find("\t") + 1),
-                        suggestion="Replace tabs with spaces.",
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="tabs",
+                location=Location(line=idx, column=line.find("\t") + 1),
+                suggestion="Replace tabs with spaces.",
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if "\t" in line
+        ]
         return violations
 
 
@@ -158,7 +157,7 @@ class YamlDuplicateKeysDetector(
             match = re.match(r"^([A-Za-z0-9_-]+)\s*:", line)
             if not match:
                 continue
-            key = match.group(1)
+            key = match[1]
             if key in seen:
                 violations.append(
                     self.build_violation(
@@ -209,7 +208,7 @@ class YamlLowercaseKeysDetector(
             match = re.match(r"^\s*([A-Za-z0-9_-]+)\s*:", line)
             if not match:
                 continue
-            key = match.group(1)
+            key = match[1]
             if any(char.isupper() for char in key):
                 violations.append(
                     self.build_violation(
@@ -259,7 +258,7 @@ class YamlKeyClarityDetector(
             match = re.match(r"^\s*([A-Za-z0-9_-]+)\s*:", line)
             if not match:
                 continue
-            key = match.group(1)
+            key = match[1]
             if len(key) < config.min_key_length:
                 violations.append(
                     self.build_violation(
@@ -321,16 +320,19 @@ class YamlConsistencyDetector(
                     suggestion="Use a consistent list marker style (e.g., '-').",
                 )
             ]
-        if markers and config.allowed_list_markers:
-            if not markers.issubset(set(config.allowed_list_markers)):
-                return [
-                    self.build_violation(
-                        config,
-                        contains="list markers",
-                        location=Location(line=1, column=1),
-                        suggestion="Use allowed YAML list markers only.",
-                    )
-                ]
+        if (
+            markers
+            and config.allowed_list_markers
+            and not markers.issubset(set(config.allowed_list_markers))
+        ):
+            return [
+                self.build_violation(
+                    config,
+                    contains="list markers",
+                    location=Location(line=1, column=1),
+                    suggestion="Use allowed YAML list markers only.",
+                )
+            ]
         return []
 
 
@@ -432,7 +434,7 @@ class YamlStringStyleDetector(
             match = re.match(r"^\s*([A-Za-z0-9_-]+)\s*:\s*(.+)$", line)
             if not match:
                 continue
-            value = match.group(2).strip()
+            value = match[2].strip()
             if not value or value.startswith(("#", "|", ">")):
                 continue
             if value[0] in {"'", '"'}:

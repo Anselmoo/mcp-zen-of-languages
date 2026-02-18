@@ -385,9 +385,7 @@ class RulesAdapter:
         # Check for circular dependencies
         if metrics.get("detect_circular_dependencies") and cycles_list:
             cycle_count = len(cycles_list)
-            pretty = []
-            for c in cycles_list[:3]:
-                pretty.append(" -> ".join(c))
+            pretty = [" -> ".join(c) for c in cycles_list[:3]]
             violations.append(
                 Violation(
                     principle=principle.principle,
@@ -499,7 +497,7 @@ class RulesAdapter:
         """
         return [v for v in violations if v.severity >= self.config.severity_threshold]
 
-    def get_detector_config(self, detector_name: str) -> "DetectorConfig":
+    def get_detector_config(self, detector_name: str) -> DetectorConfig:
         """Aggregate zen-principle metrics into a single ``DetectorConfig``.
 
         Walks every principle for the bound language and collects thresholds,

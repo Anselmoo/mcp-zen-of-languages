@@ -36,22 +36,21 @@ def _format_field(name: str, field) -> str:
 
 def main() -> None:
     output = [HEADER]
-    for name, field in AnalyzerConfig.model_fields.items():
-        output.append(_format_field(name, field))
-    output.append("\n## Notes\n")
-    output.append(
-        "- Detector metrics must match detector config field names exactly "
-        "(strict projection).\n"
+    output.extend(
+        _format_field(name, field)
+        for name, field in AnalyzerConfig.model_fields.items()
     )
-    output.append(
-        "- Unknown `metrics` keys in rules will raise a validation error during "
-        "pipeline construction.\n"
+    output.extend(
+        (
+            "\n## Notes\n",
+            "- Detector metrics must match detector config field names exactly "
+            "(strict projection).\n",
+            "- Unknown `metrics` keys in rules will raise a validation error during "
+            "pipeline construction.\n",
+            "- Language module folders are expected to include `__init__.py`, "
+            "`analyzer.py`, `detectors.py`, `mapping.py`, and `rules.py`.\n",
+        )
     )
-    output.append(
-        "- Language module folders are expected to include `__init__.py`, "
-        "`analyzer.py`, `detectors.py`, `mapping.py`, and `rules.py`.\n"
-    )
-
     docs_path = Path(__file__).resolve().parents[1] / "docs" / "config.md"
     docs_path.write_text("".join(output), encoding="utf-8")
 

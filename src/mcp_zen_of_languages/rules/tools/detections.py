@@ -282,8 +282,7 @@ def detect_magic_methods_overuse(code: str) -> list[str]:
     Returns:
         Raw matched lines (including leading whitespace) for each dunder ``def``.
     """
-    methods = re.findall(r"^\s*def\s+__\w+__", code, flags=re.M)
-    return methods
+    return re.findall(r"^\s*def\s+__\w+__", code, flags=re.M)
 
 
 def detect_multiple_implementations(files: dict[str, str]) -> list[DuplicateFinding]:
@@ -304,10 +303,11 @@ def detect_multiple_implementations(files: dict[str, str]) -> list[DuplicateFind
         for m in re.finditer(r"^def\s+(\w+)", code, flags=re.M):
             name = m.group(1)
             name_map.setdefault(name, []).append(fname)
-    duplicates: list[DuplicateFinding] = []
-    for name, fns in name_map.items():
-        if len(fns) > 1:
-            duplicates.append(DuplicateFinding(name=name, files=fns))
+    duplicates: list[DuplicateFinding] = [
+        DuplicateFinding(name=name, files=fns)
+        for name, fns in name_map.items()
+        if len(fns) > 1
+    ]
     return duplicates
 
 
@@ -334,8 +334,7 @@ def detect_god_classes(
     class_start = 0
     method_count = 0
     for i, ln in enumerate(lines, start=1):
-        m = re.match(r"^class\s+(\w+)", ln)
-        if m:
+        if m := re.match(r"^class\s+(\w+)", ln):
             # close previous
             if current_class:
                 length = i - class_start
@@ -345,7 +344,7 @@ def detect_god_classes(
                             name=current_class, method_count=method_count, lines=length
                         )
                     )
-            current_class = m.group(1)
+            current_class = m[1]
             class_start = i
             method_count = 0
         elif current_class and re.match(r"^\s+def\s+\w+", ln):
@@ -378,7 +377,7 @@ def detect_deep_inheritance(
         One ``InheritanceFinding`` per chain exceeding *max_depth*.
     """
     parent_map: dict[str, list[str]] = {}
-    for fname, code in code_map.items():
+    for code in code_map.values():
         for m in re.finditer(r"^class\s+(\w+)\(([^\)]+)\)", code, flags=re.M):
             cls = m.group(1)
             parents = [p.strip().split()[0] for p in m.group(2).split(",") if p.strip()]
@@ -396,15 +395,19 @@ def detect_deep_inheritance(
             return [start]
         chains = []
         for p in parents:
-            for tail in walk_chain(p, seen):
-                chains.append([start] + (tail if isinstance(tail, list) else [tail]))
+            chains.extend(
+                [start] + (tail if isinstance(tail, list) else [tail])
+                for tail in walk_chain(p, seen)
+            )
         return chains
 
-    for cls in parent_map.keys():
+    for cls in parent_map:
         chains = walk_chain(cls, set())
-        for ch in chains:
-            if isinstance(ch, list) and len(ch) - 1 > max_depth:
-                results.append(InheritanceFinding(chain=ch, depth=len(ch) - 1))
+        results.extend(
+            InheritanceFinding(chain=ch, depth=len(ch) - 1)
+            for ch in chains
+            if isinstance(ch, list) and len(ch) - 1 > max_depth
+        )
     return results
 
 
@@ -439,7 +442,7 @@ def detect_dependency_cycles(
             dfs(nb, path, seen)
         path.pop()
 
-    for n in adj.keys():
+    for n in adj:
         dfs(n, [], set())
     return results
 
@@ -459,7 +462,7 @@ def detect_feature_envy(code: str) -> list[FeatureEnvyFinding]:
     """
     results: list[FeatureEnvyFinding] = []
     # Very naive: count occurrences of 'other.attr' patterns vs 'self.attr'
-    for m in re.finditer(r"def\s+(\w+)\(|class\s+(\w+)", code):
+    for _ in re.finditer(r"def\s+(\w+)\(|class\s+(\w+)", code):
         pass
     # Simple global heuristic across whole file
     self_refs = len(re.findall(r"self\.[a-zA-Z_]+", code))

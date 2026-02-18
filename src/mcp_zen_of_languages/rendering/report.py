@@ -90,9 +90,11 @@ def render_report_terminal(
     analysis_data = data.get("analysis")
     results: list[AnalysisResult] = []
     if isinstance(analysis_data, list):
-        for item in analysis_data:
-            if isinstance(item, dict):
-                results.append(AnalysisResult.model_validate(item))
+        results.extend(
+            AnalysisResult.model_validate(item)
+            for item in analysis_data
+            if isinstance(item, dict)
+        )
     for result in results:
         _render_result_panel(result, width, active_console)
 
@@ -127,10 +129,10 @@ def _build_summary_table(summary: dict, width: int) -> Table:
     table.add_column("Value")
     table.add_row("Total files", str(summary.get("total_files", 0)))
     table.add_row("Total violations", str(summary.get("total_violations", 0)))
-    table.add_row("Critical", severity_badge(9) + f" {counts.get('critical', 0)}")
-    table.add_row("High", severity_badge(7) + f" {counts.get('high', 0)}")
-    table.add_row("Medium", severity_badge(4) + f" {counts.get('medium', 0)}")
-    table.add_row("Low", severity_badge(1) + f" {counts.get('low', 0)}")
+    table.add_row("Critical", f"{severity_badge(9)} {counts.get('critical', 0)}")
+    table.add_row("High", f"{severity_badge(7)} {counts.get('high', 0)}")
+    table.add_row("Medium", f"{severity_badge(4)} {counts.get('medium', 0)}")
+    table.add_row("Low", f"{severity_badge(1)} {counts.get('low', 0)}")
     score = summary.get("score")
     if score is not None:
         table.add_row("Score", f"{score_glyph()} {score}")

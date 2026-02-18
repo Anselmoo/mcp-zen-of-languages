@@ -188,7 +188,7 @@ class JsonDateFormatDetector(
             match = re.search(r"\"([^\"]+)\"", line)
             if not match:
                 continue
-            value = match.group(1)
+            value = match[1]
             if re.fullmatch(r"\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}Z?)?", value):
                 continue
             if re.search(r"\d{2}/\d{2}/\d{4}", value):

@@ -129,12 +129,11 @@ if not REGISTRY.items():
         lang_zen = get_language_zen(language)
         if not lang_zen:
             continue
-        missing = [
+        if missing := [
             principle.id
             for principle in lang_zen.principles
             if not REGISTRY.detectors_for_rule(principle.id, language)
-        ]
-        if missing:
+        ]:
             rules_to_register[language] = missing
 
     rule_configs = _build_rule_configs(

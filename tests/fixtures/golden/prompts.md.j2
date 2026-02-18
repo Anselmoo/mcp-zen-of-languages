@@ -4,24 +4,24 @@
 ╰────────────────────────────────────────────────╯
                                   Remediation Roadmap
 ╭────────┬─────────────────────────────────────────────────────────────────────────────╮
-│      1 │ 1. Address Complexity issues (2 violations).                                │
-│      2 │ 2. Address Documentation issues (1 violations).                             │
-│      3 │ 3. Address Naming & Style issues (1 violations).                            │
-│      4 │ 4. Address Other issues (1 violations).                                     │
+│      1 │ 1. Address Documentation issues (1 violations).                             │
+│      2 │ 2. Address Naming & Style issues (1 violations).                            │
+│      3 │ 3. Address Other issues (1 violations).                                     │
 ╰────────┴─────────────────────────────────────────────────────────────────────────────╯
                                       Big Picture
 ┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ Health score       ┃ 2.5/100                                                         ┃
-┃ Trajectory         ┃ Prioritize Complexity fixes first for the fastest score lift.   ┃
-┃ Pattern            ┃ High concentration of Complexity violations (2 findings).       ┃
-┃ Pattern            ┃ Secondary pressure in Documentation (1 findings).               ┃
+┃ Health score       ┃ 42.5/100                                                        ┃
+┃ Trajectory         ┃ Prioritize Documentation fixes first for the fastest score      ┃
+┃                    ┃ lift.                                                           ┃
+┃ Pattern            ┃ High concentration of Documentation violations (1 findings).    ┃
 ┃ Pattern            ┃ Secondary pressure in Naming & Style (1 findings).              ┃
+┃ Pattern            ┃ Secondary pressure in Other (1 findings).                       ┃
 ┗━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
                                       File Summary
 ╭─────────────────────────────────────┬──────────┬─────────────────────────────────────╮
 │ File                                │   Issues │ Summary                             │
 ├─────────────────────────────────────┼──────────┼─────────────────────────────────────┤
-│ {{ fixture_path }} │        5 │ Complexity, Naming & Style · 🔴     │
+│ {{ fixture_path }} │        3 │ Naming & Style, Documentation · 🔴  │
 │                                     │          │ CRIT                                │
 ╰─────────────────────────────────────┴──────────┴─────────────────────────────────────╯
 ╭───────────────── File Prompt - {{ fixture_path }} ──────────────────╮
@@ -43,27 +43,6 @@
 │ - Identify 5 areas to make code more resilient or fault-tolerant.                    │
 │                                                                                      │
 │ Violations:                                                                          │
-│ - [8] Flat is better than nested: Nesting depth > 3 levels                           │
-│   Theme: Complexity                                                                  │
-│   Action: Refactor deep nesting into guard clauses and early returns.                │
-│   Idiom: Guard clauses make Python flows easier to read and test.                    │
-│   Effort: M                                                                          │
-│   Before:                                                                            │
-│ ┌──── Code ─────┐                                                                    │
-│ │ if condition: │                                                                    │
-│ │     if other: │                                                                    │
-│ │         ...   │                                                                    │
-│ └───────────────┘                                                                    │
-│   After:                                                                             │
-│ ┌────── Code ───────┐                                                                │
-│ │ if not condition: │                                                                │
-│ │     return        │                                                                │
-│ │ if not other:     │                                                                │
-│ │     return        │                                                                │
-│ │ ...               │                                                                │
-│ └───────────────────┘                                                                │
-│   Acceptance: No blocks exceed the configured nesting depth in                       │
-│ {{ fixture_path }}.                                                 │
 │ - [7] Explicit is better than implicit: Magic numbers without constants              │
 │   Theme: Naming & Style                                                              │
 │   Action: Replace literals with named constants or enums.                            │
@@ -115,28 +94,7 @@
 │   Effort: S                                                                          │
 │   Acceptance: Resolve the violation and confirm it no longer appears in              │
 │ {{ fixture_path }}.                                                 │
-│ - [8] Flat is better than nested: Nesting depth 4 exceeds maximum 3                  │
-│   Theme: Complexity                                                                  │
-│   Action: Refactor deep nesting into guard clauses and early returns.                │
-│   Idiom: Guard clauses make Python flows easier to read and test.                    │
-│   Effort: M                                                                          │
-│   Before:                                                                            │
-│ ┌──── Code ─────┐                                                                    │
-│ │ if condition: │                                                                    │
-│ │     if other: │                                                                    │
-│ │         ...   │                                                                    │
-│ └───────────────┘                                                                    │
-│   After:                                                                             │
-│ ┌────── Code ───────┐                                                                │
-│ │ if not condition: │                                                                │
-│ │     return        │                                                                │
-│ │ if not other:     │                                                                │
-│ │     return        │                                                                │
-│ │ ...               │                                                                │
-│ └───────────────────┘                                                                │
-│   Acceptance: No blocks exceed the configured nesting depth in                       │
-│ {{ fixture_path }}.                                                 │
-╰─────────────────────────────── python · 5 violations ────────────────────────────────╯
+╰─────────────────────────────── python · 3 violations ────────────────────────────────╯
                                     Generic Prompts
 ╭─────────────────────────────┬────────────────────────────────────────────────────────╮
 │ Title                       │ Focus                                                  │

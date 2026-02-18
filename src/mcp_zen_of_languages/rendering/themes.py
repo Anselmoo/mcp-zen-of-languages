@@ -61,9 +61,7 @@ def severity_style(severity: int) -> str:
         return "severity.critical"
     if severity >= 7:
         return "severity.high"
-    if severity >= 4:
-        return "severity.medium"
-    return "severity.low"
+    return "severity.medium" if severity >= 4 else "severity.low"
 
 
 def severity_badge(severity: int) -> str:

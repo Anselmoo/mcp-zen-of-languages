@@ -298,8 +298,7 @@ def render_prompt_panel(
         big_picture_table.add_row(
             "Trajectory", bundle.big_picture.improvement_trajectory
         )
-        patterns = bundle.big_picture.systemic_patterns or []
-        if patterns:
+        if patterns := bundle.big_picture.systemic_patterns or []:
             for pattern in patterns:
                 big_picture_table.add_row("Pattern", pattern)
         else:

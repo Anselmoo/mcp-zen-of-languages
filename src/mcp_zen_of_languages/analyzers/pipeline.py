@@ -87,7 +87,7 @@ class PipelineConfig(BaseModel):
         raise TypeError("detectors must be a list")
 
     @classmethod
-    def from_rules(cls, language: str) -> "PipelineConfig":
+    def from_rules(cls, language: str) -> PipelineConfig:
         """Build a complete pipeline by projecting a language's zen principles.
 
         Loads the [`LanguageZenPrinciples`][mcp_zen_of_languages.rules.base_models.LanguageZenPrinciples]

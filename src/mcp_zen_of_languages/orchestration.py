@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable, Literal
+from typing import Literal
 
 from mcp_zen_of_languages.analyzers.analyzer_factory import create_analyzer
 from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig

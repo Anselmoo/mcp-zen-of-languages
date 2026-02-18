@@ -69,17 +69,16 @@ class RubyNamingConventionDetector(
         Returns:
             list[Violation]: One violation per method using non-snake_case naming.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if re.search(r"def\s+[A-Z]", line):
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="snake_case",
-                        location=Location(line=idx, column=1),
-                        suggestion="Use snake_case for method names.",
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="snake_case",
+                location=Location(line=idx, column=1),
+                suggestion="Use snake_case for method names.",
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if re.search(r"def\s+[A-Z]", line)
+        ]
         return violations
 
 
@@ -115,18 +114,17 @@ class RubyMethodChainDetector(
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        violations: list[Violation] = []
         max_chain = config.max_method_chain_length
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if line.count(".") > max_chain:
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="chain",
-                        location=Location(line=idx, column=1),
-                        suggestion=f"Limit method chains to <= {max_chain} calls.",
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="chain",
+                location=Location(line=idx, column=1),
+                suggestion=f"Limit method chains to <= {max_chain} calls.",
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if line.count(".") > max_chain
+        ]
         return violations
 
 
@@ -265,16 +263,16 @@ class RubyMonkeyPatchDetector(
         """
         violations: list[Violation] = []
         pattern = re.compile(r"^\s*class\s+(String|Array|Hash|Integer|Float)\b")
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if pattern.search(line):
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="monkey patch",
-                        location=Location(line=idx, column=1),
-                        suggestion="Avoid monkey-patching Ruby core classes.",
-                    )
-                )
+        violations.extend(
+            self.build_violation(
+                config,
+                contains="monkey patch",
+                location=Location(line=idx, column=1),
+                suggestion="Avoid monkey-patching Ruby core classes.",
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if pattern.search(line)
+        )
         return violations
 
 
@@ -316,7 +314,7 @@ class RubyMethodNamingDetector(
             match = re.search(r"\bdef\s+([a-zA-Z_]\w*)", line)
             if not match:
                 continue
-            name = match.group(1)
+            name = match[1]
             if name.startswith(("is", "has")) and not name.endswith("?"):
                 violations.append(
                     self.build_violation(
@@ -361,17 +359,16 @@ class RubySymbolKeysDetector(
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if re.search(r"['\"][^'\"]+['\"]\s*=>", line):
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="string keys",
-                        location=Location(line=idx, column=1),
-                        suggestion="Use symbols for hash keys.",
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="string keys",
+                location=Location(line=idx, column=1),
+                suggestion="Use symbols for hash keys.",
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if re.search(r"['\"][^'\"]+['\"]\s*=>", line)
+        ]
         return violations
 
 
@@ -457,23 +454,27 @@ class RubyMetaprogrammingDetector(
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        for token in (
-            "define_method",
-            "method_missing",
-            "class_eval",
-            "instance_eval",
-            "send(",
-            "public_send(",
-        ):
-            if token in context.code:
-                return [
+        return next(
+            (
+                [
                     self.build_violation(
                         config,
                         contains=token,
                         suggestion="Avoid metaprogramming unless strictly necessary.",
                     )
                 ]
-        return []
+                for token in (
+                    "define_method",
+                    "method_missing",
+                    "class_eval",
+                    "instance_eval",
+                    "send(",
+                    "public_send(",
+                )
+                if token in context.code
+            ),
+            [],
+        )
 
 
 class RubyExpressiveSyntaxDetector(
@@ -509,9 +510,9 @@ class RubyExpressiveSyntaxDetector(
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if re.search(r"^\s*for\s+\w+\s+in\s+", line) or "unless !" in line:
-                return [
+        return next(
+            (
+                [
                     self.build_violation(
                         config,
                         contains="expressive syntax",
@@ -519,7 +520,11 @@ class RubyExpressiveSyntaxDetector(
                         suggestion="Prefer each/if over for/unless !.",
                     )
                 ]
-        return []
+                for idx, line in enumerate(context.code.splitlines(), start=1)
+                if re.search(r"^\s*for\s+\w+\s+in\s+", line) or "unless !" in line
+            ),
+            [],
+        )
 
 
 class RubyPreferFailDetector(

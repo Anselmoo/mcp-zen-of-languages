@@ -123,7 +123,7 @@ def discover_pages(site_dir: Path) -> list[str]:
         if rel.endswith("/index.html"):
             pages.append("/" + rel.removesuffix("index.html"))
             continue
-        pages.append("/" + rel)
+        pages.append(f"/{rel}")
     return pages
 
 
@@ -424,14 +424,14 @@ def run_audit(
                 else:
                     summary["min_ratio_seen"] = min(summary["min_ratio_seen"], ratio)
 
-            for failure in check["failures"]:
-                failures.append(
-                    {
-                        "page": entry["page"],
-                        "scheme": scheme,
-                        **failure,
-                    }
-                )
+            failures.extend(
+                {
+                    "page": entry["page"],
+                    "scheme": scheme,
+                    **failure,
+                }
+                for failure in check["failures"]
+            )
 
     return {
         "summary": {

@@ -127,8 +127,7 @@ def get_principle_by_id(principle_id: str) -> "ZenPrinciple | None":
     """
     _initialize_registry()
     for lang_zen in ZEN_REGISTRY.values():
-        principle = lang_zen.get_by_id(principle_id)
-        if principle:
+        if principle := lang_zen.get_by_id(principle_id):
             return principle
     return None
 
@@ -148,8 +147,7 @@ def get_all_principles_by_category(
     _initialize_registry()
     result = {}
     for lang, lang_zen in ZEN_REGISTRY.items():
-        principles = lang_zen.get_by_category(category)
-        if principles:
+        if principles := lang_zen.get_by_category(category):
             result[lang] = principles
     return result
 
@@ -164,8 +162,7 @@ def get_all_critical_principles() -> dict[str, list[ZenPrinciple]]:
     _initialize_registry()
     result = {}
     for lang, lang_zen in ZEN_REGISTRY.items():
-        critical = lang_zen.get_by_severity(min_severity=9)
-        if critical:
+        if critical := lang_zen.get_by_severity(min_severity=9):
             result[lang] = critical
     return result
 

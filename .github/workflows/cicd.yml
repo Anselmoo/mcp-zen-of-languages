@@ -2,7 +2,18 @@ name: CI/CD
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - feat/**
+      - fix/**
+      - chore/**
+      - docs/**
+      - refactor/**
+      - test/**
+      - ci/**
+      - perf/**
+      - style/**
+      - build/**
     tags: ["v*.*.*"]
   pull_request:
     branches: [main]

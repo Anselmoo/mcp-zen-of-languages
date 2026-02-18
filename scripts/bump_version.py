@@ -93,14 +93,14 @@ class Version:
     patch: int
 
     @classmethod
-    def parse(cls, s: str) -> "Version":
+    def parse(cls, s: str) -> Version:
         parts = s.strip().split(".")
         if len(parts) != 3 or not all(p.isdigit() for p in parts):
             msg = f"Invalid semver: {s!r}"
             raise ValueError(msg)
         return cls(int(parts[0]), int(parts[1]), int(parts[2]))
 
-    def bump(self, kind: str) -> "Version":
+    def bump(self, kind: str) -> Version:
         if kind == "major":
             return Version(self.major + 1, 0, 0)
         if kind == "minor":
@@ -116,11 +116,9 @@ class Version:
 
 def _read_current_version() -> Version:
     text = PYPROJECT.read_text(encoding="utf-8")
-    m = VERSION_RE.search(text)
-    if not m:
-        msg = "Could not find version = '...' in pyproject.toml"
-        raise RuntimeError(msg)
-    return Version.parse(m.group(1))
+    if m := VERSION_RE.search(text):
+        return Version.parse(m.group(1))
+    raise RuntimeError("Could not find version = '...' in pyproject.toml")
 
 
 # ---------------------------------------------------------------------------
@@ -212,21 +210,19 @@ def _parse_conventional_commit(sha: str, subject: str) -> _ParsedCommit | None:
     if subject.startswith("Merge ") or subject.lower().startswith("release:"):
         return None
 
-    m = _CONV_RE.match(subject)
-    if not m:
-        return None
-
-    return _ParsedCommit(
-        sha=sha,
-        type=m.group("type").lower(),
-        scope=m.group("scope"),
-        description=m.group("desc").strip(),
-        breaking=bool(m.group("breaking")),
-    )
+    if m := _CONV_RE.match(subject):
+        return _ParsedCommit(
+            sha=sha,
+            type=m.group("type").lower(),
+            scope=m.group("scope"),
+            description=m.group("desc").strip(),
+            breaking=bool(m.group("breaking")),
+        )
+    return None
 
 
 def _build_changelog_section(
-    version: "Version",
+    version: Version,
     commits: list[tuple[str, str]],
     include_maintenance: bool,
 ) -> str:
@@ -262,14 +258,12 @@ def _build_changelog_section(
         rendered_any = True
 
     if not rendered_any:
-        lines.append("_No notable changes recorded._")
-        lines.append("")
-
+        lines.extend(("_No notable changes recorded._", ""))
     return "\n".join(lines)
 
 
 def _update_changelog(
-    new: "Version",
+    new: Version,
     commits: list[tuple[str, str]],
     include_maintenance: bool,
     dry_run: bool,
@@ -278,14 +272,12 @@ def _update_changelog(
 
     # Count visible entries for the summary line
     added = sum(
-        1
+        bool((p := _parse_conventional_commit("", s)) and p.type == "feat")
         for _, s in commits
-        if (p := _parse_conventional_commit("", s)) and p.type == "feat"
     )
     fixed = sum(
-        1
+        bool((p := _parse_conventional_commit("", s)) and p.type == "fix")
         for _, s in commits
-        if (p := _parse_conventional_commit("", s)) and p.type == "fix"
     )
 
     if dry_run:

@@ -129,17 +129,16 @@ class JsNoVarDetector(ViolationDetector[JsNoVarConfig], LocationHelperMixin):
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if re.search(r"\bvar\b", line):
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="var",
-                        location=Location(line=idx, column=line.find("var") + 1),
-                        suggestion="Use const/let instead of var.",
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="var",
+                location=Location(line=idx, column=line.find("var") + 1),
+                suggestion="Use const/let instead of var.",
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if re.search(r"\bvar\b", line)
+        ]
         return violations
 
 
@@ -185,8 +184,7 @@ class JsStrictEqualityDetector(
             if "==" in line or "!=" in line:
                 if "===" in line or "!==" in line:
                     continue
-                match = re.search(r"(!=|==)", line)
-                if match:
+                if match := re.search(r"(!=|==)", line):
                     violations.append(
                         self.build_violation(
                             config,
@@ -358,17 +356,16 @@ class JsGlobalStateDetector(
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if "window." in line or "globalThis." in line or "global." in line:
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="global",
-                        location=Location(line=idx, column=1),
-                        suggestion="Avoid global mutable state.",
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="global",
+                location=Location(line=idx, column=1),
+                suggestion="Avoid global mutable state.",
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if "window." in line or "globalThis." in line or "global." in line
+        ]
         return violations
 
 

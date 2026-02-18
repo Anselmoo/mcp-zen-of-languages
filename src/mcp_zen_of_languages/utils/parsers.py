@@ -45,8 +45,7 @@ def parse_python_with_treesitter(code: str) -> object | None:
         if not hasattr(parser, "set_language"):
             return None
         parser.set_language(PY_LANGUAGE)
-        tree = parser.parse(bytes(code, "utf8"))
-        return tree
+        return parser.parse(bytes(code, "utf8"))
     except Exception:
         # Fall back to builtin ast if any step fails; do not raise here to keep analysis robust
         return None
@@ -77,7 +76,7 @@ def parse_python_with_builtin_ast(code: str) -> Module | None:
         return None
 
 
-def parse_python(code: str) -> "ParserResult | None":
+def parse_python(code: str) -> ParserResult | None:
     """Unified entry point that selects the best available parser for Python source.
 
     Tries tree-sitter first for its richer concrete syntax tree, then
@@ -98,6 +97,4 @@ def parse_python(code: str) -> "ParserResult | None":
     if tree is not None:
         return ParserResult(type="tree-sitter", tree=tree)
     ast_tree = parse_python_with_builtin_ast(code)
-    if ast_tree is not None:
-        return ParserResult(type="ast", tree=ast_tree)
-    return None
+    return None if ast_tree is None else ParserResult(type="ast", tree=ast_tree)

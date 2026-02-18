@@ -10,8 +10,8 @@ caller opts out via the *enabled* flag.
 from __future__ import annotations
 
 import sys
+from collections.abc import Iterator
 from contextlib import contextmanager
-from typing import Iterator
 
 from rich.progress import (
     BarColumn,

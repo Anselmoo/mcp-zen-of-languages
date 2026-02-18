@@ -45,7 +45,7 @@ class CSharpAnalyzer(BaseAnalyzer):
     def __init__(
         self,
         config: AnalyzerConfig | None = None,
-        pipeline_config: "PipelineConfig" | None = None,
+        pipeline_config: PipelineConfig | None = None,
     ):
         """Initialize instance.
 

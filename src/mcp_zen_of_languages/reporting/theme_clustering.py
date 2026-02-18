@@ -104,10 +104,14 @@ def classify_violation(violation: Violation) -> str:
     """
 
     text = f"{violation.principle} {violation.message}".lower()
-    for theme, tags in THEME_TAGS.items():
-        if any(tag in text for tag in tags):
-            return theme
-    return "Other"
+    return next(
+        (
+            theme
+            for theme, tags in THEME_TAGS.items()
+            if any(tag in text for tag in tags)
+        ),
+        "Other",
+    )
 
 
 def build_big_picture_analysis(results: list[AnalysisResult]) -> BigPictureAnalysis:
@@ -134,16 +138,15 @@ def build_big_picture_analysis(results: list[AnalysisResult]) -> BigPictureAnaly
             clusters_map.setdefault(theme, []).append(violation)
             total_weight += violation.severity
 
-    clusters: list[ViolationCluster] = []
-    for theme, violations in clusters_map.items():
-        clusters.append(
-            ViolationCluster(
-                theme=theme,
-                violations=violations,
-                total_severity_weight=sum(v.severity for v in violations),
-                suggested_order=0,
-            )
+    clusters: list[ViolationCluster] = [
+        ViolationCluster(
+            theme=theme,
+            violations=violations,
+            total_severity_weight=sum(v.severity for v in violations),
+            suggested_order=0,
         )
+        for theme, violations in clusters_map.items()
+    ]
     clusters.sort(key=lambda cluster: cluster.total_severity_weight, reverse=True)
     for idx, cluster in enumerate(clusters, start=1):
         cluster.suggested_order = idx
@@ -155,11 +158,13 @@ def build_big_picture_analysis(results: list[AnalysisResult]) -> BigPictureAnaly
             f"High concentration of {top_cluster.theme} violations "
             f"({len(top_cluster.violations)} findings)."
         )
-    for cluster in clusters[1:3]:
-        systemic_patterns.append(
+    systemic_patterns.extend(
+        [
             f"Secondary pressure in {cluster.theme} "
             f"({len(cluster.violations)} findings)."
-        )
+            for cluster in clusters[1:3]
+        ]
+    )
 
     refactoring_roadmap = [
         f"{cluster.suggested_order}. Address {cluster.theme} issues "

@@ -123,18 +123,18 @@ def build_explicit_rule_coverage(language: str) -> RuleCoverageMap:
     rules: dict[str, list[str]] = {}
     for principle in lang_zen.principles:
         metas = REGISTRY.detectors_for_rule(principle.id, language)
-        detector_ids = sorted(
+        if detector_ids := sorted(
             {
                 meta.detector_id
                 for meta in metas
                 if meta.detector_class is not RulePatternDetector
             }
-        )
-        if not detector_ids:
+        ):
+            rules[principle.id] = detector_ids
+        else:
             raise ValueError(
                 f"Explicit coverage missing for {language} rule {principle.id}"
             )
-        rules[principle.id] = detector_ids
     return RuleCoverageMap(language=language, rules=rules)
 
 

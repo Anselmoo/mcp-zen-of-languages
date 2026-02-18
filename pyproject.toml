@@ -1,6 +1,6 @@
 [project]
 name = "mcp-zen-of-languages"
-version = "0.1.1"
+version = "0.2.0"
 description = "Multi-language architectural and idiomatic code analysis via CLI and MCP server."
 readme = "README.md"
 authors = [{ name = "Anselm Hahn", email = "Anselm.Hahn@gmail.com" }]
@@ -44,7 +44,6 @@ Issues = "https://github.com/Anselmoo/mcp-zen-of-languages/issues"
 Source = "https://github.com/Anselmoo/mcp-zen-of-languages"
 
 [project.scripts]
-mcp-zen-of-languages = "mcp_zen_of_languages.cli:main"
 zen = "mcp_zen_of_languages.cli:main"
 zen-mcp-server = "mcp_zen_of_languages.__main__:main"
 
@@ -261,8 +260,15 @@ generate_language_docs = "python scripts/generate_language_docs.py"
 generate_cli_docs = "python scripts/generate_cli_docs.py"
 generate_mcp_tools_docs = "python scripts/generate_mcp_tools_docs.py"
 bump_version = "python scripts/bump_version.py"
+bump_patch = "python scripts/bump_version.py patch"
+bump_minor = "python scripts/bump_version.py minor"
+bump_major = "python scripts/bump_version.py major"
+bump_no_changelog = "python scripts/bump_version.py patch --no-changelog"
+changelog_preview = "python scripts/bump_version.py patch --dry-run"
+branch_new = "python scripts/branch.py new"
+branch_rescue = "python scripts/branch.py rescue"
 warn_missing_rule_coverage = "python scripts/warn_missing_rule_coverage.py"
 export_svg_assets = "python scripts/export_svg_assets.py"
 
 [tool.pytest.ini_options]
-addopts = "--cov=src/mcp_zen_of_languages --cov-report=term-missing --cov-fail-under=69"
+addopts = "--cov=src/mcp_zen_of_languages --cov-report=term-missing --cov-fail-under=95"

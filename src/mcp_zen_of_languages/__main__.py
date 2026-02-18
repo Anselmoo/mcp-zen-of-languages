@@ -5,9 +5,8 @@ file, which boots the FastMCP server in stdio transport mode. Stdio is the
 standard communication channel that MCP clients (editors, CI tools, agent
 frameworks) use to exchange JSON-RPC messages with the server process.
 
-An equivalent entry point, ``zen-mcp-server``, is registered as a console
-script in ``pyproject.toml`` so the server can also be launched directly
-from the shell without the ``python -m`` prefix.
+The ``pyproject.toml`` console scripts expose ``zen-mcp-server`` for MCP server
+startup (this module), while ``zen`` maps to the Typer CLI entry point.
 """
 
 from mcp_zen_of_languages.server import mcp

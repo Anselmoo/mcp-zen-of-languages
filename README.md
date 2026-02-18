@@ -41,20 +41,32 @@ Multi-language architectural and idiomatic code analysis, exposed as an **MCP se
 <!-- --8<-- [start:quickstart] -->
 
 ```bash
-# Run without installing (recommended)
+# MCP server (IDE/agent workflows)
+uvx --from mcp-zen-of-languages zen-mcp-server
+
+# CLI without installing (recommended)
 uvx --from mcp-zen-of-languages zen --help
 
 # Or install globally
 pip install mcp-zen-of-languages
 
-# Analyze a file
+# Analyze a file (CLI)
 zen report path/to/file.py
 
-# Analyze a project with remediation prompts
+# Analyze a project with remediation prompts (CLI)
 zen report path/to/project --include-prompts
 ```
 
 <!-- --8<-- [end:quickstart] -->
+
+## Naming Guide
+
+Keep these names distinct to avoid setup confusion:
+
+- **Package name**: `mcp-zen-of-languages` (for `pip install` and `uvx --from`)
+- **CLI command**: `zen`
+- **MCP server command**: `zen-mcp-server`
+- **MCP client server key**: `zen-of-languages` (JSON config label in VS Code/Claude/Cursor)
 
 ## Installation
 

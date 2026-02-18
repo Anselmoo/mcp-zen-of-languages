@@ -1638,7 +1638,7 @@ def export_mapping(
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Top-level CLI entry point invoked by the ``mcp-zen-of-languages`` console script.
+    """Top-level CLI entry point invoked by the ``zen`` console script.
 
     With no arguments the welcome panel is displayed and the process exits
     cleanly.  Otherwise *argv* is forwarded to the Typer :pydata:`app`
@@ -1662,7 +1662,7 @@ def main(argv: list[str] | None = None) -> int:
             _build_welcome_panel()
         return 0
     try:
-        result = app(args=argv, prog_name="mcp-zen-of-languages", standalone_mode=False)
+        result = app(args=argv, prog_name="zen", standalone_mode=False)
     except typer.Exit as exc:
         return exc.exit_code
     except click.ClickException as exc:

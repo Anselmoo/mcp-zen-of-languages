@@ -11,6 +11,12 @@ tags:
 
 Three commands, two minutes, and you'll have a full analysis with violations, severity scores, and remediation prompts.
 
+!!! info "Command naming cheat sheet"
+    - Package for install/uvx: `mcp-zen-of-languages`
+    - CLI command: `zen`
+    - MCP server command: `zen-mcp-server`
+    - MCP config server key: `zen-of-languages`
+
 ## 1. Initialize configuration
 
 ```bash
@@ -20,6 +26,14 @@ zen init  # (1)!
 1. Creates `zen-config.yaml` with sensible defaults for all 14 languages. Can also bootstrap `.vscode/mcp.json` for MCP integration.
 
 This creates a `zen-config.yaml` in your project root. It enables all languages and sets default thresholds — you can [tune these later](../user-guide/configuration.md).
+
+## MCP-first path (editor + agent)
+
+```bash
+zen-mcp-server
+```
+
+Start the MCP server when you want VS Code/Copilot or another MCP client to run analysis tools directly. Keep this process running, then ask your agent to call tools like `analyze_zen_violations` or `generate_report`.
 
 ## 2. Run a report
 

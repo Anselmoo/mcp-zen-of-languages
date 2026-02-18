@@ -1,6 +1,6 @@
 [project]
 name = "mcp-zen-of-languages"
-version = "0.1.0"
+version = "0.1.1"
 description = "Multi-language architectural and idiomatic code analysis via CLI and MCP server."
 readme = "README.md"
 authors = [{ name = "Anselm Hahn", email = "Anselm.Hahn@gmail.com" }]
@@ -258,7 +258,9 @@ check_orphan_docs = "python scripts/check_orphan_docs.py"
 check_sphinx_roles = "python scripts/check_sphinx_roles.py"
 generate_config_docs = "python scripts/generate_config_docs.py"
 generate_language_docs = "python scripts/generate_language_docs.py"
+generate_cli_docs = "python scripts/generate_cli_docs.py"
 generate_mcp_tools_docs = "python scripts/generate_mcp_tools_docs.py"
+bump_version = "python scripts/bump_version.py"
 warn_missing_rule_coverage = "python scripts/warn_missing_rule_coverage.py"
 export_svg_assets = "python scripts/export_svg_assets.py"
 

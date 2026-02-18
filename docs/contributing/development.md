@@ -40,6 +40,7 @@ All `scripts/*.py` helpers are available through Poe tasks in `pyproject.toml`.
 ```bash
 uv run poe check_docs_links
 uv run poe check_orphan_docs
+uv run poe generate_cli_docs
 uv run poe generate_mcp_tools_docs
 uv run poe export_svg_assets
 ```

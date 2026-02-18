@@ -11,6 +11,10 @@ tags:
 
 ![CLI workflow illustration](../assets/illustration-cli.svg)
 
+> **Auto-generated** from [`cli.py`](https://github.com/Anselmoo/mcp-zen-of-languages/blob/main/src/mcp_zen_of_languages/cli.py). Do not edit manually.
+>
+> Regenerate with: `uv run python scripts/generate_cli_docs.py`
+
 The CLI is available as `zen` (short alias) or `mcp-zen-of-languages`. It is the local/CI interface for the same analysis capabilities exposed through MCP tools. All commands support `--quiet` to suppress Rich panels and banners.
 
 !!! info "MCP-first workflow"
@@ -19,106 +23,156 @@ The CLI is available as `zen` (short alias) or `mcp-zen-of-languages`. It is the
 ## Commands at a glance
 
 | Command | Purpose |
-|---------|---------|
-| `zen init` | Initialize `zen-config.yaml` for your project |
-| `zen report` | Analyze a directory and produce violation reports |
-| `zen prompts` | Generate AI-ready remediation prompts |
-| `zen list-rules` | Show all principles and severities for a language |
-| `zen export-mapping` | Export rule-to-detector mapping as JSON |
+|---------|--------|
+| `zen check` | Run zen analysis for a path with optional CI gating and machine output. |
+| `zen export-mapping` | Export rule-to-detector mappings as a Rich table or JSON payload. |
+| `zen init` | Interactively scaffold a ``zen-config.yaml`` and optional VS Code integration. |
+| `zen list-rules` | Display a table of zen rule IDs, severities, and principle texts. |
+| `zen prompts` | Turn analysis violations into actionable remediation prompts or agent tasks. |
+| `zen reports` | Generate a comprehensive analysis report for a file or directory. |
 
-## zen init
+## :material-magnify: Analysis Commands
 
-```bash
-zen init [--force] [--yes] [--languages <lang>...] [--strictness relaxed|moderate|strict]
-```
-
-Interactive wizard that:
-
-1. Detects languages in your project
-2. Lets you choose a strictness level (affects thresholds)
-3. Writes `zen-config.yaml`
-4. Optionally creates `.vscode/mcp.json` for MCP integration
-
-Use `--yes` in CI to skip interactive prompts and accept defaults.
-
-**When to use**: First time setting up zen in a repository, or after adding a new language to your project.
-
-## zen report
+### zen check {{ #check }}
 
 ```bash
-zen report <path> [--language <lang>] [--config <path>] \
-  [--format markdown|json|both] [--out <file>] \
-  [--export-json <file>] [--export-markdown <file>] [--export-log <file>] \
-  [--include-prompts] [--skip-analysis] [--skip-gaps]
+zen check <PATH> [--language <TEXT>] [--config <TEXT>] [--format terminal|json|sarif] [--out <TEXT>] [--fail-on-severity <INTEGER RANGE>]
 ```
 
-The primary analysis command. Scans all supported files in `<path>`, runs the detection pipeline, and outputs violations grouped by language and severity.
+Run zen analysis for a path with optional CI gating and machine output.
 
-**Common workflows**:
+**Options:**
 
-=== "Local review"
-    ```bash
-    zen report . --out report.md
-    ```
-    Quick check before committing — scan the whole repo, write results to markdown.
+| Option | Default | Description |
+|--------|---------|-------------|
+| `--language <TEXT>` | — | Override language detection |
+| `--config <TEXT>` | — | Path to zen-config.yaml |
+| `--format terminal|json|sarif` | `terminal` | Output format |
+| `--out <TEXT>` | — | Write output to file |
+| `--fail-on-severity <INTEGER RANGE>` | — | Exit with code 1 when any violation has severity >= this threshold |
 
-=== "CI gate"
-    ```bash
-    zen report . --export-json report.json --format json
-    # Exit code 1 if violations exceed severity_threshold
-    ```
-    Attach `report.json` as a build artifact for review.
+**Returns:** int: Exit code ``0`` on success, ``1`` for severity-gated failure, and ``2`` for input/target errors.
 
-=== "With prompts"
-    ```bash
-    zen report . --include-prompts --out full-report.md
-    ```
-    Include remediation prompts inline with each violation.
+---
 
-## zen prompts
+### zen prompts {{ #prompts }}
 
 ```bash
-zen prompts <path> [--language <lang>] [--config <path>] \
-  [--mode remediation|agent|both] \
-  [--export-prompts <file>] [--export-agent <file>] [--severity <n>]
+zen prompts <PATH> [--language <TEXT>] [--config <TEXT>] [--mode remediation|agent|both] [--export-prompts <TEXT>] [--export-agent <TEXT>] [--severity <INTEGER>]
 ```
 
-Generate remediation prompts from analysis results. Two modes:
+Turn analysis violations into actionable remediation prompts or agent tasks.
 
-- **remediation** — Human-readable markdown prompts you can paste into AI chat
-- **agent** — Structured JSON tasks for MCP agents to execute automatically
-- **both** — Both outputs
+**Options:**
 
-Use `--severity` to filter: only violations at or above this severity get prompts.
+| Option | Default | Description |
+|--------|---------|-------------|
+| `--language <TEXT>` | — | Override language detection |
+| `--config <TEXT>` | — | Path to zen-config.yaml |
+| `--mode remediation|agent|both` | `remediation` | Prompt generation mode |
+| `--export-prompts <TEXT>` | — | Write prompts markdown to file |
+| `--export-agent <TEXT>` | — | Write agent JSON to file |
+| `--severity <INTEGER>` | — | Minimum severity threshold |
 
-## zen list-rules
+**Returns:** int: Process exit code — ``0`` on success, ``2`` on input errors.
+
+---
+
+### zen reports {{ #reports }}
 
 ```bash
-zen list-rules <language>
+zen reports <PATH> [--language <TEXT>] [--config <TEXT>] [--format markdown|json|both|sarif] [--out <TEXT>] [--export-json <TEXT>] [--export-markdown <TEXT>] [--export-log <TEXT>] [--include-prompts] [--skip-analysis] [--skip-gaps]
 ```
 
-Displays all zen principles for a language as a Rich table with severity badges. Useful for understanding what the analyzer checks before running it.
+Generate a comprehensive analysis report for a file or directory.
 
-## zen export-mapping
+**Options:**
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `--language <TEXT>` | — | Override language detection |
+| `--config <TEXT>` | — | Path to zen-config.yaml |
+| `--format markdown|json|both|sarif` | `markdown` | Output format |
+| `--out <TEXT>` | — | Write output to file |
+| `--export-json <TEXT>` | — | Write report JSON to file |
+| `--export-markdown <TEXT>` | — | Write report markdown to file |
+| `--export-log <TEXT>` | — | Write log summary to file |
+| `--include-prompts` | — | Include remediation prompts |
+| `--skip-analysis` | — | Skip analysis details in report |
+| `--skip-gaps` | — | Skip gap analysis |
+
+**Returns:** int: Process exit code — ``0`` on success, ``2`` on input errors.
+
+---
+
+## :material-cog-outline: Configuration Commands
+
+### zen export-mapping {{ #export-mapping }}
 
 ```bash
-zen export-mapping [--out <file>] [--languages <lang>...]
+zen export-mapping [--out <TEXT>] [--languages <TEXT>] [--format terminal|json]
 ```
 
-Exports the complete rule-to-detector mapping as JSON. Useful for auditing which detectors implement which principles, or for building custom tooling.
+Export rule-to-detector mappings as a Rich table or JSON payload.
 
-## Global options
+**Options:**
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `--out <TEXT>` | — | Write output to file |
+| `--languages <TEXT>` | — | Filter by languages |
+| `--format terminal|json` | `terminal` | Output format |
+
+**Returns:** int: Process exit code — always ``0``.
+
+---
+
+### zen init {{ #init }}
+
+```bash
+zen init [--force] [--yes] [--languages <TEXT>] [--strictness relaxed|moderate|strict]
+```
+
+Interactively scaffold a ``zen-config.yaml`` and optional VS Code integration.
+
+**Options:**
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `--force` | — | Overwrite existing config |
+| `--yes` | — | Skip prompts and use defaults |
+| `--languages <TEXT>` | — | Languages to include (repeatable) |
+| `--strictness relaxed|moderate|strict` | `moderate` | Strictness: relaxed|moderate|strict |
+
+**Returns:** int: Process exit code — ``0`` on success, ``2`` if the file exists without ``--force``.
+
+---
+
+### zen list-rules {{ #list-rules }}
+
+```bash
+zen list-rules <LANGUAGE>
+```
+
+Display a table of zen rule IDs, severities, and principle texts.
+
+**Returns:** int: Process exit code — ``0`` on success, ``2`` if the language is unknown.
+
+---
+
+## Global Options
 
 | Flag | Description |
 |------|-------------|
 | `--quiet`, `-q` | Suppress banner, Rich panels, and decorative output |
+| `--verbose`, `-v` | Show rich tracebacks with local variable inspection |
 | `--help` | Show help for any command |
 | `--version` | Print version number |
 
-## Exit codes
+## Exit Codes
 
 | Code | Meaning |
-|------|---------|
+|------|--------|
 | `0` | Success — no violations above the configured threshold |
 | `1` | Violations found above the severity threshold |
 | `2` | Invalid configuration or arguments |

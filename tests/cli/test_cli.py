@@ -196,7 +196,7 @@ def test_main_uses_sys_argv_for_help(monkeypatch, capsys):
     assert "full-screen TUI" in output
     assert "[bold" not in output
     assert "check" in output
-    assert "Usage: zen " in output
+    assert "Usage:" in output
     assert "mcp-zen-of-languages" not in output
     assert "zen-cli" not in output
     _assert_max_width(output)

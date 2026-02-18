@@ -169,6 +169,8 @@ def generate() -> str:
 
         # MCP Tools Reference
 
+        ![MCP tools illustration](../assets/illustration-mcp-tools.svg)
+
         > **Auto-generated** from [`server.py`](https://github.com/Anselmoo/mcp-zen-of-languages/blob/main/src/mcp_zen_of_languages/server.py). Do not edit manually.
         >
         > Regenerate with: `uv run python scripts/generate_mcp_tools_docs.py`

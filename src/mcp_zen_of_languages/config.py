@@ -268,7 +268,7 @@ def load_config(path: str | None = None) -> ConfigModel:
             except ValueError as exc:
                 raise ValueError(
                     "Environment variable ZEN_SEVERITY_THRESHOLD must be an integer "
-                    "between 1 and 10; got {!r}".format(env_severity_threshold)
+                    f"between 1 and 10; got {env_severity_threshold!r}"
                 ) from exc
         cfg = ConfigModel.model_validate(merged)
         if not cfg.pipelines:

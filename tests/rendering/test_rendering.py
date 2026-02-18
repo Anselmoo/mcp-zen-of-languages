@@ -10,7 +10,12 @@ from rich.progress import MofNCompleteColumn
 from rich.table import Table
 
 from mcp_zen_of_languages.rendering import progress as progress_module
-from mcp_zen_of_languages.rendering.console import print_banner, print_error, set_quiet
+from mcp_zen_of_languages.rendering.console import (
+    get_banner_art,
+    print_banner,
+    print_error,
+    set_quiet,
+)
 from mcp_zen_of_languages.rendering.layout import MAX_OUTPUT_WIDTH, get_output_width
 from mcp_zen_of_languages.rendering.panels import (
     build_project_summary_panel,
@@ -178,6 +183,20 @@ def test_print_banner_snapshot(monkeypatch):
     assert "ZEN" in output
     assert "v0.1.1" in output
     assert "╔" in output
+
+
+def test_get_banner_art_uses_pyfiglet(monkeypatch):
+    console_module = importlib.import_module("mcp_zen_of_languages.rendering.console")
+
+    class _FakePyfiglet:
+        @staticmethod
+        def figlet_format(*_args, **_kwargs):
+            return "ZEN\n"
+
+    monkeypatch.setattr(console_module, "import_module", lambda _name: _FakePyfiglet)
+    art = get_banner_art()
+    assert "ZEN" in art
+    assert "of Languages" in art
 
 
 def test_box_style_hierarchy_is_distinct():

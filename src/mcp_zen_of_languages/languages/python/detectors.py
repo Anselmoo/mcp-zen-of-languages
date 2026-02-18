@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import ast
 import re
-from typing import Iterable
+from collections.abc import Iterable
 
 from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,
@@ -895,8 +895,7 @@ class NameStyleDetector(ViolationDetector[NameStyleConfig], LocationHelperMixin)
         """
         for t in targets:
             if isinstance(t, ast.Tuple) or isinstance(t, ast.List):
-                for elt in getattr(t, "elts", []):
-                    yield elt
+                yield from getattr(t, "elts", [])
             else:
                 yield t
 
@@ -1123,8 +1122,7 @@ class ShortVariableNamesDetector(
         """
         for t in targets:
             if isinstance(t, ast.Tuple) or isinstance(t, ast.List):
-                for elt in getattr(t, "elts", []):
-                    yield elt
+                yield from getattr(t, "elts", [])
             else:
                 yield t
 

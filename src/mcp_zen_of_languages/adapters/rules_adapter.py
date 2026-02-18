@@ -499,7 +499,7 @@ class RulesAdapter:
         """
         return [v for v in violations if v.severity >= self.config.severity_threshold]
 
-    def get_detector_config(self, detector_name: str) -> "DetectorConfig":
+    def get_detector_config(self, detector_name: str) -> DetectorConfig:
         """Aggregate zen-principle metrics into a single ``DetectorConfig``.
 
         Walks every principle for the bound language and collects thresholds,

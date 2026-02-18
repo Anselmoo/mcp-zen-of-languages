@@ -84,3 +84,45 @@ def test_rule_pattern_detector_private_naming():
     )
     violations = RulePatternDetector().detect(context, config)
     assert violations
+
+
+def test_rule_pattern_detector_name_and_required_pattern_branches():
+    RuleConfig = _build_config("required_rule")
+    config = RuleConfig(
+        detectable_patterns=["", "!", "!MUST_HAVE"],
+        recommended_alternative="Add required marker.",
+    )
+    context = AnalysisContext(code="echo ok", language="bash")
+    detector = RulePatternDetector()
+
+    assert detector.name == "rule_pattern"
+    violations = detector.detect(context, config)
+
+    assert len(violations) == 1
+    assert violations[0].principle == "required_rule"
+
+
+def test_rule_pattern_detector_no_violation_return_paths():
+    RuleConfig = _build_config(
+        "no_violation_rule",
+        max_script_length_without_functions=(int | None, 10),
+        min_variable_name_length=(int | None, 3),
+        max_inheritance_depth=(int | None, 5),
+        min_identifier_length=(int | None, 1),
+        public_naming=(str | None, "UnknownStyle"),
+        private_naming=(str | None, "UnknownStyle"),
+    )
+    config = RuleConfig()
+    context = AnalysisContext(
+        code=(
+            "class Child extends Parent {}\n"
+            "echo ok\n"
+            "abc=1\n"
+            "const goodName = 1\n"
+            "public int Name;\n"
+            "private int Other;\n"
+        ),
+        language="javascript",
+    )
+    violations = RulePatternDetector().detect(context, config)
+    assert violations == []

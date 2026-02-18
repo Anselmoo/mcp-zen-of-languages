@@ -30,7 +30,7 @@ class XmlAnalyzer(BaseAnalyzer):
     def __init__(
         self,
         config: AnalyzerConfig | None = None,
-        pipeline_config: "PipelineConfig" | None = None,
+        pipeline_config: PipelineConfig | None = None,
     ):
         """Set up the XML analyzer with optional threshold and pipeline overrides.
 

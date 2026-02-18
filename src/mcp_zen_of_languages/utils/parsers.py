@@ -77,7 +77,7 @@ def parse_python_with_builtin_ast(code: str) -> Module | None:
         return None
 
 
-def parse_python(code: str) -> "ParserResult | None":
+def parse_python(code: str) -> ParserResult | None:
     """Unified entry point that selects the best available parser for Python source.
 
     Tries tree-sitter first for its richer concrete syntax tree, then

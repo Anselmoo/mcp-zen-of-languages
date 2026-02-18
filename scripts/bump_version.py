@@ -93,14 +93,14 @@ class Version:
     patch: int
 
     @classmethod
-    def parse(cls, s: str) -> "Version":
+    def parse(cls, s: str) -> Version:
         parts = s.strip().split(".")
         if len(parts) != 3 or not all(p.isdigit() for p in parts):
             msg = f"Invalid semver: {s!r}"
             raise ValueError(msg)
         return cls(int(parts[0]), int(parts[1]), int(parts[2]))
 
-    def bump(self, kind: str) -> "Version":
+    def bump(self, kind: str) -> Version:
         if kind == "major":
             return Version(self.major + 1, 0, 0)
         if kind == "minor":
@@ -226,7 +226,7 @@ def _parse_conventional_commit(sha: str, subject: str) -> _ParsedCommit | None:
 
 
 def _build_changelog_section(
-    version: "Version",
+    version: Version,
     commits: list[tuple[str, str]],
     include_maintenance: bool,
 ) -> str:
@@ -237,7 +237,9 @@ def _build_changelog_section(
         parsed = _parse_conventional_commit(sha, subject)
         if parsed is None:
             continue
-        section = "Breaking Changes" if parsed.breaking else _SECTION_MAP.get(parsed.type)
+        section = (
+            "Breaking Changes" if parsed.breaking else _SECTION_MAP.get(parsed.type)
+        )
         if section is None:
             continue
         scope_part = f"**{parsed.scope}**: " if parsed.scope else ""
@@ -267,7 +269,7 @@ def _build_changelog_section(
 
 
 def _update_changelog(
-    new: "Version",
+    new: Version,
     commits: list[tuple[str, str]],
     include_maintenance: bool,
     dry_run: bool,

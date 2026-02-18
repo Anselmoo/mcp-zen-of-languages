@@ -128,9 +128,7 @@ def _commits_ahead(base_ref: str) -> list[str]:
 
 
 def cmd_new(args: argparse.Namespace) -> None:
-    branch = BranchName(
-        type=args.type, description=args.description, scope=args.scope
-    )
+    branch = BranchName(type=args.type, description=args.description, scope=args.scope)
     branch_name = branch.slug()
     commit_title = branch.commit_title()
 
@@ -173,9 +171,7 @@ def cmd_new(args: argparse.Namespace) -> None:
 
 
 def cmd_rescue(args: argparse.Namespace) -> None:
-    branch = BranchName(
-        type=args.type, description=args.description, scope=args.scope
-    )
+    branch = BranchName(type=args.type, description=args.description, scope=args.scope)
     branch_name = branch.slug()
     commit_title = branch.commit_title()
 

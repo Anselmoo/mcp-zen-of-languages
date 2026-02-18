@@ -25,7 +25,7 @@ def test_class_size_detector_respects_rules():
         """
 class Big:
 """
-        + "\n".join(["    def m{}(self):\n        pass".format(i) for i in range(20)])
+        + "\n".join([f"    def m{i}(self):\n        pass" for i in range(20)])
         + "\n"
     )
 

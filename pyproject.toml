@@ -126,11 +126,6 @@ extend-ignore = [
     "TRY300", # try-consider-else
     # Modernization (fix incrementally)
     "UP015", # redundant-open-modes
-    "UP028", # yield-in-for-loop
-    "UP032", # f-string
-    "UP035", # deprecated-import
-    "UP037", # quoted-annotation
-    "UP038", # Use `X | Y` instead of `(X, Y)`
     "UP042", # replace-str-enum
     # Pylint conventions
     "PLR2004", # magic-value-comparison

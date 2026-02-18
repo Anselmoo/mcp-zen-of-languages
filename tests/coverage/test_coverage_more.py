@@ -374,7 +374,8 @@ def test_rules_adapter_check_dependencies_cycle_string():
 def test_rules_adapter_check_dependencies_cycle_bad_object():
     class BadCycle:
         def __iter__(self):
-            raise TypeError("bad")
+            msg = "bad"
+            raise TypeError(msg)
 
     principle = ZenPrinciple(
         id="python-333",
@@ -490,7 +491,8 @@ def test_rules_adapter_check_patterns_search_exception(monkeypatch):
         pattern = "TODO"
 
         def search(self, _):
-            raise RuntimeError("boom")
+            msg = "boom"
+            raise RuntimeError(msg)
 
     monkeypatch.setattr(ZenPrinciple, "compiled_patterns", lambda self: [BadPattern()])
     assert adapter._check_patterns("TODO", principle) == []
@@ -740,7 +742,8 @@ def test_server_analyze_repository_rust(tmp_path, monkeypatch):
     sample.write_text("fn main() {}", encoding="utf-8")
 
     def _boom(*args, **kwargs):
-        raise OSError("nope")
+        msg = "nope"
+        raise OSError(msg)
 
     monkeypatch.setattr(type(sample), "read_text", _boom)
     import asyncio
@@ -800,7 +803,8 @@ def test_python_analyzer_dependency_error(monkeypatch):
     analyzer = PythonAnalyzer()
 
     def _boom(*args, **kwargs):
-        raise RuntimeError("boom")
+        msg = "boom"
+        raise RuntimeError(msg)
 
     monkeypatch.setattr(
         "mcp_zen_of_languages.metrics.dependency_graph.build_import_graph", _boom
@@ -1093,7 +1097,8 @@ def test_rules_adapter_check_dependencies_none():
 def test_rules_adapter_check_dependencies_cycle_exception():
     class BadCycles(dict):
         def get(self, key, default=None):
-            raise RuntimeError("boom")
+            msg = "boom"
+            raise RuntimeError(msg)
 
     principle = ZenPrinciple(
         id="python-020",
@@ -1123,7 +1128,8 @@ def test_rules_adapter_check_dependencies_cycle_exception():
 def test_rules_adapter_check_dependencies_bad_edge():
     class BadEdge:
         def __getattr__(self, name):
-            raise RuntimeError("boom")
+            msg = "boom"
+            raise RuntimeError(msg)
 
     principle = ZenPrinciple(
         id="python-030",

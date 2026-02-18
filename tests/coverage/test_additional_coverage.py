@@ -74,7 +74,8 @@ def test_detection_pipeline_logs_errors(capsys):
             return "boom"
 
         def detect(self, context: AnalysisContext, config):
-            raise RuntimeError("boom")
+            msg = "boom"
+            raise RuntimeError(msg)
 
     pipeline = DetectionPipeline([BoomDetector()])
     pipeline.run(AnalysisContext(code="", language="python"), AnalyzerConfig())
@@ -172,7 +173,8 @@ def test_rules_adapter_maintainability_threshold():
 def test_rules_adapter_compiled_pattern_errors():
     class BadPrinciple(ZenPrinciple):
         def compiled_patterns(self):
-            raise ValueError("boom")
+            msg = "boom"
+            raise ValueError(msg)
 
     adapter = RulesAdapter(language="python")
     principle = BadPrinciple(
@@ -201,7 +203,8 @@ def test_models_getitem_and_violation_access():
 
 def test_metrics_collector_error_path(monkeypatch):
     def boom(_: str):
-        raise RuntimeError("boom")
+        msg = "boom"
+        raise RuntimeError(msg)
 
     monkeypatch.setattr(
         "mcp_zen_of_languages.metrics.collector.compute_cyclomatic_complexity", boom

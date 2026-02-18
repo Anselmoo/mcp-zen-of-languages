@@ -23,7 +23,8 @@ class _DummyAnalyzer(BaseAnalyzer):
 
     def parse_code(self, code: str):
         if "bad" in code:
-            raise ValueError("parse error")
+            msg = "parse error"
+            raise ValueError(msg)
         return _DummyParseResult()
 
     def compute_metrics(self, code: str, ast_tree):

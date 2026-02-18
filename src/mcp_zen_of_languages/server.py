@@ -172,7 +172,8 @@ def rules_resource(language: str) -> LanguageZenPrinciples:
 
     zen = get_language_zen(_canonical_language(language))
     if zen is None:
-        raise ValueError(f"Unsupported language '{language}'.")
+        msg = f"Unsupported language '{language}'."
+        raise ValueError(msg)
     return zen
 
 
@@ -333,9 +334,8 @@ async def analyze_zen_violations(
     supported = sorted(supported_languages())
     if canonical_language not in supported:
         supported_list = ", ".join(supported)
-        raise ValueError(
-            f"Unsupported language '{language}'. Supported languages: {supported_list}."
-        )
+        msg = f"Unsupported language '{language}'. Supported languages: {supported_list}."
+        raise ValueError(msg)
 
     runtime_override = _runtime_overrides.get(canonical_language)
     effective_threshold = severity_threshold
@@ -400,9 +400,8 @@ async def generate_prompts_tool(code: str, language: str) -> PromptBundle:
     supported = sorted(supported_languages())
     if canonical_language not in supported:
         supported_list = ", ".join(supported)
-        raise ValueError(
-            f"Unsupported language '{language}'. Supported languages: {supported_list}."
-        )
+        msg = f"Unsupported language '{language}'. Supported languages: {supported_list}."
+        raise ValueError(msg)
     analyzer = create_analyzer(
         canonical_language,
         pipeline_config=_pipeline_with_runtime_overrides(canonical_language),
@@ -644,10 +643,11 @@ async def check_architectural_patterns(code: str, language: str) -> PatternsResu
 
     """
 
-    raise NotImplementedError(
+    msg = (
         "check_architectural_patterns is not implemented yet. "
         "Pattern detection is planned but not available in this release."
     )
+    raise NotImplementedError(msg)
 
 
 @mcp.tool(

@@ -1157,11 +1157,11 @@ def _render_report_output(report, fmt: str) -> str:
     if fmt == "sarif":
         analysis = report.data.get("analysis", [])
         if not isinstance(analysis, list):
-            raise ValueError("Report analysis payload must be a list for SARIF output.")
+            msg = "Report analysis payload must be a list for SARIF output."
+            raise ValueError(msg)
         if any(not isinstance(item, dict) for item in analysis):
-            raise ValueError(
-                "Report analysis entries must be objects for SARIF output."
-            )
+            msg = "Report analysis entries must be objects for SARIF output."
+            raise ValueError(msg)
         analysis_results = [AnalysisResult.model_validate(item) for item in analysis]
         return json.dumps(analysis_results_to_sarif(analysis_results), indent=2)
     if fmt == "markdown":

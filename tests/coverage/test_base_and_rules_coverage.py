@@ -54,10 +54,8 @@ class NoPatternAnalyzer(DummyAnalyzer):
 
 class BoomPipeline(DetectionPipeline):
     def run(self, context: AnalysisContext, config: AnalyzerConfig):
-        raise RuntimeError("boom")
-
-
-class BoomAnalyzer(DummyAnalyzer):
+        msg = "boom"
+        raise RuntimeError(msg)
     def build_pipeline(self):
         return BoomPipeline([])
 

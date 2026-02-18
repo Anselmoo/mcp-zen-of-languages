@@ -49,9 +49,8 @@ def _parse_custom_assets(
     for raw_asset in raw_assets:
         input_part, separator, output_part = raw_asset.partition(":")
         if separator == "" or not input_part.strip() or not output_part.strip():
-            raise SystemExit(
-                "Invalid --asset value. Expected '<input_svg>:<output_png>' format."
-            )
+            msg = "Invalid --asset value. Expected '<input_svg>:<output_png>' format."
+            raise SystemExit(msg)
 
         parsed_assets.append(
             (Path(input_part.strip()), Path(output_part.strip()), None, None)
@@ -137,7 +136,8 @@ def _export_one(
     height: int | None,
 ) -> None:
     if not input_path.exists():
-        raise SystemExit(f"Input SVG not found: {input_path}")
+        msg = f"Input SVG not found: {input_path}"
+        raise SystemExit(msg)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -158,10 +158,11 @@ def _export_one(
             height=height,
         )
     except (ImportError, OSError) as exc:
-        raise SystemExit(
+        msg = (
             "Unable to export PNG. Install a Playwright browser via "
             "`uv run python -m playwright install chromium` or install cairo for CairoSVG."
-        ) from exc
+        )
+        raise SystemExit(msg) from exc
 
 
 def main() -> int:

@@ -582,7 +582,8 @@ class BaseAnalyzer(ABC):
                 ``AnalyzerConfig`` instance.
         """
         if config is not None and not isinstance(config, AnalyzerConfig):
-            raise TypeError("AnalyzerConfig instance required")
+            msg = "AnalyzerConfig instance required"
+            raise TypeError(msg)
         self.config: AnalyzerConfig = config or self.default_config()
         self.pipeline: DetectionPipeline = self.build_pipeline()
 
@@ -814,7 +815,8 @@ class BaseAnalyzer(ABC):
 
         lang_zen = get_language_zen(self.language())
         if lang_zen is None:
-            raise ValueError(f"No zen rules for language: {self.language()}")
+            msg = f"No zen rules for language: {self.language()}"
+            raise ValueError(msg)
         if self._pipeline_config is None:
             self._pipeline_config = PipelineConfig(
                 language=self.language(),

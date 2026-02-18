@@ -161,7 +161,8 @@ class DetectorRegistry:
         """
 
         if metadata.detector_id in self._registry:
-            raise ValueError(f"Duplicate detector_id: {metadata.detector_id}")
+            msg = f"Duplicate detector_id: {metadata.detector_id}"
+            raise ValueError(msg)
         self._registry[metadata.detector_id] = metadata
         self._config_union = None
         self._config_adapter = None
@@ -201,7 +202,8 @@ class DetectorRegistry:
                 raise
             lang_map = getattr(module, "DETECTOR_MAP", None)
             if lang_map is None:
-                raise ValueError(f"Missing DETECTOR_MAP in {module_name}")
+                msg = f"Missing DETECTOR_MAP in {module_name}"
+                raise ValueError(msg)
             for binding in lang_map.bindings:
                 self.register(DetectorMetadata.from_binding(binding, lang_map.language))
 
@@ -231,7 +233,8 @@ class DetectorRegistry:
         try:
             return self._registry[detector_id]
         except KeyError as exc:
-            raise KeyError(f"Unknown detector_id: {detector_id}") from exc
+            msg = f"Unknown detector_id: {detector_id}"
+            raise KeyError(msg) from exc
 
     def detectors_for_rule(self, rule_id: str, language: str) -> list[DetectorMetadata]:
         """Resolve which detectors enforce a specific zen rule for a language.
@@ -281,7 +284,8 @@ class DetectorRegistry:
             if meta.enabled_by_default or meta.detector_id == "analyzer_defaults"
         ]
         if not config_models:
-            raise ValueError("No detectors registered")
+            msg = "No detectors registered"
+            raise ValueError(msg)
 
         union_type = reduce(operator.or_, config_models)
         union_type = Annotated[union_type, Discriminator("type")]
@@ -455,9 +459,8 @@ class DetectorRegistry:
             allowed_keys |= set(meta.config_model.model_fields) - base_fields
 
         if unknown := set(metrics) - allowed_keys:
-            raise ValueError(
-                f"Unknown metric keys for {principle.id}: {sorted(unknown)}"
-            )
+            msg = f"Unknown metric keys for {principle.id}: {sorted(unknown)}"
+            raise ValueError(msg)
 
         for meta in metas:
             config_fields = set(meta.config_model.model_fields) - base_fields

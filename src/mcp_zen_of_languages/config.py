@@ -135,7 +135,8 @@ class ConfigModel(BaseModel):
         if value is None:
             return []
         if not isinstance(value, list):
-            raise TypeError("pipelines must be a list")
+            msg = "pipelines must be a list"
+            raise TypeError(msg)
         return [PipelineConfig.model_validate(item) for item in value]
 
     def pipeline_for(self, language: str) -> PipelineConfig:
@@ -266,10 +267,11 @@ def load_config(path: str | None = None) -> ConfigModel:
             try:
                 merged["severity_threshold"] = int(env_severity_threshold)
             except ValueError as exc:
-                raise ValueError(
+                msg = (
                     "Environment variable ZEN_SEVERITY_THRESHOLD must be an integer "
                     f"between 1 and 10; got {env_severity_threshold!r}"
-                ) from exc
+                )
+                raise ValueError(msg) from exc
         cfg = ConfigModel.model_validate(merged)
         if not cfg.pipelines:
             cfg = cfg.model_copy(

@@ -131,4 +131,5 @@ def create_analyzer(
         return XmlAnalyzer(config=config, pipeline_config=pipeline_config)
     if lang == "json":
         return JsonAnalyzer(config=config, pipeline_config=pipeline_config)
-    raise ValueError(f"Unsupported language: {language}")
+    msg = f"Unsupported language: {language}"
+    raise ValueError(msg)

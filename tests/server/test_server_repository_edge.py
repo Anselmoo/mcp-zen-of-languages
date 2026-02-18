@@ -33,7 +33,8 @@ async def test_analyze_repository_surfaces_read_errors(tmp_path, monkeypatch, ca
 
     def _broken_read_text(self: Path, *args, **kwargs):
         if self.name == "broken.py":
-            raise OSError("cannot read file")
+            msg = "cannot read file"
+            raise OSError(msg)
         return original_read_text(self, *args, **kwargs)
 
     monkeypatch.setattr(Path, "read_text", _broken_read_text)

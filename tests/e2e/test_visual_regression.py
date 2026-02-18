@@ -52,8 +52,7 @@ def _render_template(path: Path, context: dict[str, str]) -> str:
 def _to_template(output: str, context: dict[str, str]) -> str:
     templated = _strip_ansi(output)
     templated = templated.replace(f"v{context['version']}", "v{{ version }}")
-    templated = templated.replace(context["fixture_path"], "{{ fixture_path }}")
-    return templated
+    return templated.replace(context["fixture_path"], "{{ fixture_path }}")
 
 
 def _assert_or_update_golden(path: Path, output: str, context: dict[str, str]) -> None:

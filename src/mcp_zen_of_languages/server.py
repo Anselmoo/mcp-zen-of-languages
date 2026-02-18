@@ -32,7 +32,7 @@ import logging
 import os
 from pathlib import Path
 
-import fastmcp as MCP
+import fastmcp
 from mcp.types import ToolAnnotations
 from pydantic import BaseModel, TypeAdapter
 
@@ -66,7 +66,7 @@ from mcp_zen_of_languages.reporting.report import generate_report
 from mcp_zen_of_languages.rules import get_all_languages, get_language_zen
 from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
 
-mcp = MCP.FastMCP(name="zen_of_languages", version=__version__)
+mcp = fastmcp.FastMCP(name="zen_of_languages", version=__version__)
 CONFIG = load_config(path=os.environ.get("ZEN_CONFIG_PATH"))
 logger = logging.getLogger(__name__)
 logger.setLevel(
@@ -415,7 +415,7 @@ async def _analyze_repository_internal(
     repo_path: str,
     languages: list[str] | None = None,
     max_files: int = 100,
-    ctx: MCP.Context | None = None,
+    ctx: fastmcp.Context | None = None,
 ) -> list[RepositoryAnalysis]:
     """Orchestrate multi-file analysis across a repository tree.
 
@@ -440,7 +440,7 @@ async def _analyze_repository_internal(
             Defaults to ``["python"]`` when omitted.
         max_files (int): Cap on files analysed per language, preventing
             runaway analysis on very large repositories.
-        ctx (MCP.Context | None): Optional FastMCP context used for
+        ctx (fastmcp.Context | None): Optional FastMCP context used for
             progress updates and per-file log messages.
 
     Returns:
@@ -524,7 +524,7 @@ async def analyze_repository(
     repo_path: str,
     languages: list[str] | None = None,
     max_files: int = 100,
-    ctx: MCP.Context | None = None,
+    ctx: fastmcp.Context | None = None,
 ) -> list[RepositoryAnalysis]:
     """Analyse every eligible file in a repository and return per-file results.
 
@@ -541,7 +541,7 @@ async def analyze_repository(
             language identifiers.  Defaults to ``["python"]`` internally.
         max_files (int): Per-language cap on the number of files to
             analyse, protecting against excessive runtime on monorepos.
-        ctx (MCP.Context | None): Optional FastMCP context for progress
+        ctx (fastmcp.Context | None): Optional FastMCP context for progress
             and log updates during repository analysis.
 
     Returns:
@@ -664,7 +664,7 @@ async def generate_report_tool(
     include_prompts: bool = False,
     include_analysis: bool = True,
     include_gaps: bool = True,
-    ctx: MCP.Context | None = None,
+    ctx: fastmcp.Context | None = None,
 ) -> ReportOutput:
     """Produce a structured markdown report combining analysis, gaps, and prompts.
 
@@ -689,7 +689,7 @@ async def generate_report_tool(
             showing per-rule findings.
         include_gaps (bool): Include quality-gap and coverage-gap
             summaries highlighting areas that need attention.
-        ctx (MCP.Context | None): Optional FastMCP context used to emit
+        ctx (fastmcp.Context | None): Optional FastMCP context used to emit
             progress and log updates for analyzed targets.
 
     Returns:

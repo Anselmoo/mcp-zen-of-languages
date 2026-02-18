@@ -37,9 +37,9 @@ from mcp_zen_of_languages.analyzers.base import (
     ViolationDetector,
 )
 from mcp_zen_of_languages.languages.configs import DetectorConfig
-from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples, ZenPrinciple
 
 if TYPE_CHECKING:
+    from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples, ZenPrinciple
     from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
 
 

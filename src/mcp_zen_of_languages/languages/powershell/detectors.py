@@ -801,8 +801,8 @@ class PowerShellNullHandlingDetector(
 
 
 __all__ = [
-    "PowerShellApprovedVerbDetector",
     "PowerShellAliasUsageDetector",
+    "PowerShellApprovedVerbDetector",
     "PowerShellCmdletBindingDetector",
     "PowerShellCommentHelpDetector",
     "PowerShellErrorHandlingDetector",

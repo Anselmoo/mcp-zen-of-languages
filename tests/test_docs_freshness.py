@@ -17,6 +17,7 @@ def test_language_docs_freshness() -> None:
         [sys.executable, "scripts/generate_language_docs.py", "--check"],
         capture_output=True,
         text=True,
+        check=False,
     )
     if result.returncode != 0:
         stale = [

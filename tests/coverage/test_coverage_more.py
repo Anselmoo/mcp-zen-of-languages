@@ -643,7 +643,8 @@ def test_parser_normalizer_wraps_unknown():
     from mcp_zen_of_languages.languages.python.parser_normalizer import ParserNormalizer
 
     wrapped = ParserNormalizer.normalize({"tree": "raw"})
-    assert wrapped and wrapped.type == "unknown"
+    assert wrapped
+    assert wrapped.type == "unknown"
 
 
 def test_detector_config_select_violation_message_contains():
@@ -908,7 +909,7 @@ def test_main_entrypoint_module_execution(monkeypatch):
 
 
 @pytest.mark.parametrize(
-    "contents, expected",
+    ("contents", "expected"),
     [
         ("import os\n", ["os"]),
         ("from sys import path\n", ["sys"]),

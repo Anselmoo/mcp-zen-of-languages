@@ -387,10 +387,10 @@ class JsonArrayOrderDetector(
 
 
 __all__ = [
-    "JsonStrictnessDetector",
-    "JsonSchemaConsistencyDetector",
-    "JsonDateFormatDetector",
-    "JsonNullHandlingDetector",
-    "JsonKeyCasingDetector",
     "JsonArrayOrderDetector",
+    "JsonDateFormatDetector",
+    "JsonKeyCasingDetector",
+    "JsonNullHandlingDetector",
+    "JsonSchemaConsistencyDetector",
+    "JsonStrictnessDetector",
 ]

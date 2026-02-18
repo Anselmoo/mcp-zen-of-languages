@@ -10,7 +10,6 @@ caller opts out via the *enabled* flag.
 from __future__ import annotations
 
 import sys
-from collections.abc import Iterator
 from contextlib import contextmanager
 
 from rich.progress import (
@@ -23,6 +22,10 @@ from rich.progress import (
 )
 
 from .console import console, is_quiet
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 
 @contextmanager

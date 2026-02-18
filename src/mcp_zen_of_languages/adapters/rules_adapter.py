@@ -20,11 +20,14 @@ from mcp_zen_of_languages.models import (
     Violation,
 )
 from mcp_zen_of_languages.rules import get_language_zen
-from mcp_zen_of_languages.rules.base_models import (
-    DetectorConfig,
-    LanguageZenPrinciples,
-    ZenPrinciple,
-)
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from mcp_zen_of_languages.rules.base_models import (
+        DetectorConfig,
+        LanguageZenPrinciples,
+        ZenPrinciple,
+    )
 
 
 class RulesAdapterConfig(BaseModel):

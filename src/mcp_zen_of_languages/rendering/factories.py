@@ -10,10 +10,8 @@ visually consistent across the entire tool surface.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
 from typing import TYPE_CHECKING
 
-from rich.console import RenderableType
 from rich.panel import Panel
 from rich.table import Table
 
@@ -22,6 +20,8 @@ from .layout import get_output_width
 from .themes import BOX_CONTENT, BOX_SUMMARY
 
 if TYPE_CHECKING:
+    from rich.console import RenderableType
+    from collections.abc import Sequence
     from rich import box as _box_module
     from rich.console import Console
 

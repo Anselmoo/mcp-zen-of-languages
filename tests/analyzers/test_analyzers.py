@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 from mcp_zen_of_languages.analyzers.analyzer_factory import create_analyzer
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
 from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
@@ -8,12 +10,8 @@ from mcp_zen_of_languages.languages.python.rules import PYTHON_ZEN
 
 
 def test_create_analyzer_invalid_language():
-    try:
+    with pytest.raises(ValueError, match="Unsupported"):
         create_analyzer("unknown")
-    except ValueError as exc:
-        assert "Unsupported" in str(exc)
-    else:
-        raise AssertionError("Expected ValueError")
 
 
 def test_pipeline_config_from_rules():

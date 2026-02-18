@@ -22,13 +22,15 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from pydantic import BaseModel, field_validator
 
-from mcp_zen_of_languages.languages.configs import DetectorConfig
+from mcp_zen_of_languages.languages.configs import DetectorConfig  # noqa: TC001
 from mcp_zen_of_languages.rules import get_language_zen
-from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
+
+if TYPE_CHECKING:
+    from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
 
 logger = logging.getLogger(__name__)
 logger.setLevel(

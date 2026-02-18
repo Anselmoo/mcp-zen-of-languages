@@ -186,6 +186,7 @@ def _git_log_since_tag() -> list[tuple[str, str]]:
         cwd=ROOT,
         capture_output=True,
         text=True,
+        check=False,
     )
     tags = [t.strip() for t in tag_result.stdout.splitlines() if t.strip()]
     ref = f"{tags[0]}..HEAD" if tags else "HEAD"
@@ -195,6 +196,7 @@ def _git_log_since_tag() -> list[tuple[str, str]]:
         cwd=ROOT,
         capture_output=True,
         text=True,
+        check=False,
     )
     pairs: list[tuple[str, str]] = []
     for line in log_result.stdout.splitlines():
@@ -311,7 +313,7 @@ def _run(cmd: list[str], dry_run: bool, label: str) -> None:
         print(f"  [dry-run] Would run: {pretty}")
         return
     print(f"  $ {pretty}")
-    result = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+    result = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, check=False)
     if result.returncode != 0:
         print(result.stdout)
         print(result.stderr, file=sys.stderr)
@@ -327,6 +329,7 @@ def _branch_exists(branch: str) -> bool:
         cwd=ROOT,
         capture_output=True,
         text=True,
+        check=False,
     )
     return bool(result.stdout.strip())
 
@@ -337,6 +340,7 @@ def _current_branch() -> str:
         cwd=ROOT,
         capture_output=True,
         text=True,
+        check=False,
     )
     return result.stdout.strip()
 
@@ -347,6 +351,7 @@ def _working_tree_clean() -> bool:
         cwd=ROOT,
         capture_output=True,
         text=True,
+        check=False,
     )
     return result.stdout.strip() == ""
 

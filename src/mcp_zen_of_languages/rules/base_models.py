@@ -17,7 +17,7 @@ Key concepts:
 """
 
 import re
-from enum import Enum
+from enum import Enum, StrEnum
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, HttpUrl, field_validator
@@ -46,7 +46,7 @@ class SeverityLevel(int, Enum):
     CRITICAL_HIGH = 10
 
 
-class PrincipleCategory(str, Enum):
+class PrincipleCategory(StrEnum):
     """Taxonomy tag that groups related zen principles.
 
     Analyzers and reporters use these categories to organise output (e.g.

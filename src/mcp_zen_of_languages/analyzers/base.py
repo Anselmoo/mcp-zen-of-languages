@@ -359,7 +359,6 @@ class ViolationDetector[ConfigT: "DetectorConfig"](ABC):
             Zero or more violations discovered by this strategy. An empty
             list signals clean code for this detector's concern.
         """
-        pass
 
     @property
     @abstractmethod
@@ -374,7 +373,6 @@ class ViolationDetector[ConfigT: "DetectorConfig"](ABC):
             Short, unique name such as ``"cyclomatic_complexity"`` or
             ``"god_class"``.
         """
-        pass
 
     def build_violation(
         self,
@@ -600,7 +598,6 @@ class BaseAnalyzer(ABC):
         Returns:
             Language-appropriate configuration with default thresholds.
         """
-        pass
 
     @abstractmethod
     def language(self) -> str:
@@ -614,7 +611,6 @@ class BaseAnalyzer(ABC):
             Lowercase language name used for rule lookup and result
             tagging.
         """
-        pass
 
     @abstractmethod
     def parse_code(self, code: str) -> ParserResult | None:
@@ -633,7 +629,6 @@ class BaseAnalyzer(ABC):
             analysis — metric computation and detectors will proceed
             with whatever data is available.
         """
-        pass
 
     @abstractmethod
     def compute_metrics(
@@ -658,7 +653,6 @@ class BaseAnalyzer(ABC):
             maintainability_index, lines_of_code)``. Any element may be
             ``None`` when the corresponding metric is unavailable.
         """
-        pass
 
     # Template Method - defines the algorithm structure
     def analyze(

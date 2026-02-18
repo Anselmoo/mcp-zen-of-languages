@@ -118,7 +118,7 @@ def test_args_sections_are_semantically_described() -> None:
             if stripped == "Args:":
                 in_args = True
                 continue
-            if in_args and stripped.endswith(":") and stripped not in {"Args:"}:
+            if in_args and stripped.endswith(":") and stripped != "Args:":
                 in_args = False
             if not in_args or not stripped:
                 continue
@@ -150,7 +150,7 @@ def test_returns_sections_are_semantically_described() -> None:
             if stripped == "Returns:":
                 in_returns = True
                 continue
-            if in_returns and stripped.endswith(":") and stripped not in {"Returns:"}:
+            if in_returns and stripped.endswith(":") and stripped != "Returns:":
                 in_returns = False
             if not in_returns or not stripped:
                 continue

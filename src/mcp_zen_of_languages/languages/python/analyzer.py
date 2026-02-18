@@ -15,6 +15,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from mcp_zen_of_languages.models import (
+        CyclomaticSummary,
+        ParserResult,
+    )
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
 
 from mcp_zen_of_languages.analyzers.base import (
@@ -24,10 +28,6 @@ from mcp_zen_of_languages.analyzers.base import (
     DetectionPipeline,
     LocationHelperMixin,
     PythonAnalyzerConfig,
-)
-from mcp_zen_of_languages.models import (
-    CyclomaticSummary,
-    ParserResult,
 )
 
 # ============================================================================
@@ -185,11 +185,7 @@ class PythonAnalyzer(BaseAnalyzer, LocationHelperMixin):
             imports = []
             for line in context.code.splitlines():
                 stripped = line.strip()
-                if stripped.startswith("import "):
-                    parts = stripped.split()
-                    if len(parts) >= 2:
-                        imports.append(parts[1].split(".")[0])
-                elif stripped.startswith("from "):
+                if stripped.startswith("import ") or stripped.startswith("from "):
                     parts = stripped.split()
                     if len(parts) >= 2:
                         imports.append(parts[1].split(".")[0])

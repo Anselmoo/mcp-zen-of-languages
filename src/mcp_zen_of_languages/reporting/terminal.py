@@ -30,10 +30,8 @@ from collections import Counter
 from rich.console import Console, Group, RenderableType
 from rich.panel import Panel
 from rich.syntax import Syntax
-from rich.table import Table
 from rich.text import Text
 
-from mcp_zen_of_languages.models import AnalysisResult
 from mcp_zen_of_languages.rendering import console, file_glyph, severity_badge
 from mcp_zen_of_languages.rendering.factories import (
     zen_header_panel,
@@ -43,9 +41,14 @@ from mcp_zen_of_languages.rendering.factories import (
 )
 from mcp_zen_of_languages.rendering.layout import get_output_width
 from mcp_zen_of_languages.rendering.themes import BOX_CODE
-from mcp_zen_of_languages.reporting.agent_tasks import AgentTaskList
-from mcp_zen_of_languages.reporting.models import PromptBundle
 from mcp_zen_of_languages.reporting.theme_clustering import classify_violation
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from mcp_zen_of_languages.reporting.models import PromptBundle
+    from mcp_zen_of_languages.reporting.agent_tasks import AgentTaskList
+    from mcp_zen_of_languages.models import AnalysisResult
+    from rich.table import Table
 
 
 def _active_console(output_console: Console | None = None) -> Console:
@@ -190,7 +193,7 @@ def _build_prompt_details_renderable(prompt: str, language: str, width: int) -> 
                 code_language = stripped[3:].strip() or language or "text"
             continue
         if in_code:
-            code_lines.append(raw_line[2:] if raw_line.startswith("  ") else raw_line)
+            code_lines.append(raw_line.removeprefix("  "))
             continue
         prose_lines.append(raw_line)
 

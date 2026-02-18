@@ -301,7 +301,7 @@ class TomlOrderDetector(ViolationDetector[TomlOrderConfig], LocationHelperMixin)
             if line.strip().startswith("[") and line.strip().endswith("]")
         ]
         if len(table_headers) >= 2:
-            gaps = [b - a for a, b in zip(table_headers, table_headers[1:])]
+            gaps = [b - a for a, b in zip(table_headers, table_headers[1:], strict=False)]
             if any(gap > 10 for gap in gaps):
                 return [
                     self.build_violation(
@@ -419,12 +419,12 @@ class TomlFloatIntegerDetector(
 
 
 __all__ = [
+    "TomlCommentClarityDetector",
     "TomlDuplicateKeysDetector",
+    "TomlFloatIntegerDetector",
+    "TomlIsoDatetimeDetector",
     "TomlLowercaseKeysDetector",
     "TomlNoInlineTablesDetector",
-    "TomlTrailingCommasDetector",
-    "TomlCommentClarityDetector",
     "TomlOrderDetector",
-    "TomlIsoDatetimeDetector",
-    "TomlFloatIntegerDetector",
+    "TomlTrailingCommasDetector",
 ]

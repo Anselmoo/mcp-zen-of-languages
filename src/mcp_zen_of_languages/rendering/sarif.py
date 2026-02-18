@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.models import AnalysisResult
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from mcp_zen_of_languages.models import AnalysisResult
 
 
 def _sarif_level(severity: int) -> str:

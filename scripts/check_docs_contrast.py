@@ -8,15 +8,17 @@ import os
 import subprocess
 import sys
 import threading
-from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
 from playwright.sync_api import Page, sync_playwright
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 CONFIG_PATH = Path("scripts/docs_contrast_config.json")
 DEFAULT_SITE_DIR = Path("site")
@@ -130,7 +132,7 @@ def discover_pages(site_dir: Path) -> list[str]:
 class QuietHandler(SimpleHTTPRequestHandler):
     """HTTP handler with suppressed access logs."""
 
-    def log_message(self, format: str, *args: Any) -> None:
+    def log_message(self, fmt: str, *args: Any) -> None:
         return
 
 

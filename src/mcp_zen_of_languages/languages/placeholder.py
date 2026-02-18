@@ -6,7 +6,10 @@ from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,
     ViolationDetector,
 )
-from mcp_zen_of_languages.models import Violation
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from mcp_zen_of_languages.models import Violation
 
 
 class PlaceholderDetector(ViolationDetector):

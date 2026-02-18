@@ -23,13 +23,12 @@ import sys
 from collections import Counter
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Literal, Protocol
+from typing import Literal, Protocol, TYPE_CHECKING
 
 import click
 import typer
 import typer.rich_utils as typer_rich_utils
 from rich.console import Group
-from rich.table import Table
 from rich.text import Text
 
 from mcp_zen_of_languages import __version__
@@ -71,7 +70,6 @@ from mcp_zen_of_languages.rendering.factories import (
 from mcp_zen_of_languages.rendering.layout import MAX_OUTPUT_WIDTH
 from mcp_zen_of_languages.rendering.sarif import analysis_results_to_sarif
 from mcp_zen_of_languages.reporting.agent_tasks import AgentTaskList, build_agent_tasks
-from mcp_zen_of_languages.reporting.models import PromptBundle
 from mcp_zen_of_languages.reporting.prompts import build_prompt_bundle
 from mcp_zen_of_languages.reporting.terminal import (
     build_agent_tasks_table as render_agent_tasks_table,
@@ -81,6 +79,10 @@ from mcp_zen_of_languages.reporting.terminal import (
 )
 from mcp_zen_of_languages.rules import get_language_zen
 from mcp_zen_of_languages.utils.markdown_quality import normalize_markdown
+
+if TYPE_CHECKING:
+    from mcp_zen_of_languages.reporting.models import PromptBundle
+    from rich.table import Table
 
 logger = logging.getLogger(__name__)
 logger.setLevel(
@@ -1373,8 +1375,8 @@ def reports(
     path: str = typer.Argument(..., help="File or directory to analyze"),
     language: str | None = typer.Option(None, help="Override language detection"),
     config: str | None = typer.Option(None, help="Path to zen-config.yaml"),
-    format: Literal["markdown", "json", "both", "sarif"] = typer.Option(
-        "markdown", help="Output format", show_choices=True
+    output_format: Literal["markdown", "json", "both", "sarif"] = typer.Option(
+        "markdown", "--format", help="Output format", show_choices=True
     ),
     out: str | None = typer.Option(None, help="Write output to file"),
     export_json: str | None = typer.Option(
@@ -1407,7 +1409,7 @@ def reports(
         path (str): File or directory to analyse — directories are walked recursively.
         language (str | None): Override extension-based language detection.
         config (str | None): Path to a custom ``zen-config.yaml``; auto-discovered when omitted.
-        format (Literal['markdown', 'json', 'both']): Primary output serialisation format.
+        output_format (Literal['markdown', 'json', 'both']): Primary output serialisation format.
         out (str | None): Write the rendered report to this file instead of stdout.
         export_json (str | None): Sidecar path for the raw JSON data export.
         export_markdown (str | None): Sidecar path for the rendered markdown export.
@@ -1427,7 +1429,7 @@ def reports(
         path=path,
         language=language,
         config=config,
-        format=format,
+        format=output_format,
         out=out,
         export_json=export_json,
         export_markdown=export_markdown,
@@ -1447,8 +1449,8 @@ def check(
     path: str = typer.Argument(..., help="File or directory to analyze"),
     language: str | None = typer.Option(None, help="Override language detection"),
     config: str | None = typer.Option(None, help="Path to zen-config.yaml"),
-    format: Literal["terminal", "json", "sarif"] = typer.Option(
-        "terminal", help="Output format", show_choices=True
+    output_format: Literal["terminal", "json", "sarif"] = typer.Option(
+        "terminal", "--format", help="Output format", show_choices=True
     ),
     out: str | None = typer.Option(None, help="Write output to file"),
     fail_on_severity: int | None = typer.Option(
@@ -1465,7 +1467,7 @@ def check(
         path (str): File or directory to analyze.
         language (str | None): Optional language override.
         config (str | None): Optional path to ``zen-config.yaml``.
-        format (Literal["terminal", "json", "sarif"]): Output format.
+        output_format (Literal["terminal", "json", "sarif"]): Output format.
         out (str | None): Optional file path for output payload.
         fail_on_severity (int | None): Exit with code ``1`` when any
             violation has severity greater than or equal to this threshold.
@@ -1479,7 +1481,7 @@ def check(
         path=path,
         language=language,
         config=config,
-        format=format,
+        format=output_format,
         out=out,
         fail_on_severity=fail_on_severity,
     )
@@ -1610,8 +1612,8 @@ def export_mapping(
     languages: list[str] | None = typer.Option(
         None, "--languages", help="Filter by languages"
     ),
-    format: Literal["terminal", "json"] = typer.Option(
-        "terminal", help="Output format", show_choices=True
+    output_format: Literal["terminal", "json"] = typer.Option(
+        "terminal", "--format", help="Output format", show_choices=True
     ),
 ) -> int:
     """Export rule-to-detector mappings as a Rich table or JSON payload.
@@ -1624,7 +1626,7 @@ def export_mapping(
     Args:
         out (str | None): Write JSON mapping to this file and exit.
         languages (list[str] | None): Restrict output to these languages; ``None`` includes all.
-        format (Literal['terminal', 'json']): Output style — Rich table or raw JSON.
+        output_format (Literal['terminal', 'json']): Output style — Rich table or raw JSON.
 
     Returns:
         int: Process exit code — always ``0``.
@@ -1633,7 +1635,7 @@ def export_mapping(
         [`_run_export_mapping`][_run_export_mapping]: Contains the mapping-build and rendering logic.
     """
 
-    args = _ns(out=out, languages=languages, format=format)
+    args = _ns(out=out, languages=languages, format=output_format)
     return _run_export_mapping(args)
 
 

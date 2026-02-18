@@ -293,10 +293,10 @@ class XmlClosingTagsDetector(
 
 
 __all__ = [
-    "XmlSemanticMarkupDetector",
     "XmlAttributeUsageDetector",
-    "XmlNamespaceDetector",
-    "XmlValidityDetector",
-    "XmlHierarchyDetector",
     "XmlClosingTagsDetector",
+    "XmlHierarchyDetector",
+    "XmlNamespaceDetector",
+    "XmlSemanticMarkupDetector",
+    "XmlValidityDetector",
 ]

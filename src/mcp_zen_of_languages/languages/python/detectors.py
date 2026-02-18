@@ -17,7 +17,6 @@ from __future__ import annotations
 
 import ast
 import re
-from collections.abc import Iterable
 
 from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,
@@ -51,6 +50,10 @@ from mcp_zen_of_languages.languages.configs import (
     StarImportConfig,
 )
 from mcp_zen_of_languages.models import Location, ParserResult, Violation
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 
 def _principle_text(config: DetectorConfig) -> str:
@@ -1289,7 +1292,7 @@ class NestingDepthDetector(ViolationDetector[NestingDepthConfig], LocationHelper
         principle = _principle_text(config)
         severity = _severity_level(config)
 
-        is_deep, depth = detect_deep_nesting(context.code, max_allowed)
+        is_deep, _depth = detect_deep_nesting(context.code, max_allowed)
         if is_deep:
             location = self._find_nested_location(context)
             violations.append(
@@ -1431,7 +1434,7 @@ class LongFunctionDetector(ViolationDetector[LongFunctionConfig], LocationHelper
 
         long_functions = detect_long_functions(code=context.code, max_lines=max_lines)
 
-        for name, length in long_functions:
+        for name, _length in long_functions:
             location = self._find_function_location(context, name)
             violations.append(
                 Violation(
@@ -2162,26 +2165,26 @@ class NamespaceUsageDetector(ViolationDetector[NamespaceConfig], LocationHelperM
 
 __all__ = [
     "BareExceptDetector",
-    "MagicNumberDetector",
-    "ComplexOneLinersDetector",
-    "StarImportDetector",
-    "ClassSizeDetector",
-    "ContextManagerDetector",
-    "DocstringDetector",
-    "LineLengthDetector",
-    "NameStyleDetector",
-    "ShortVariableNamesDetector",
     "CircularDependencyDetector",
+    "ClassSizeDetector",
+    "ComplexOneLinersDetector",
     "ConsistencyDetector",
+    "ContextManagerDetector",
     "CyclomaticComplexityDetector",
     "DeepInheritanceDetector",
+    "DocstringDetector",
     "DuplicateImplementationDetector",
     "ExplicitnessDetector",
     "FeatureEnvyDetector",
     "GodClassDetector",
+    "LineLengthDetector",
     "LongFunctionDetector",
     "MagicMethodDetector",
+    "MagicNumberDetector",
+    "NameStyleDetector",
     "NamespaceUsageDetector",
     "NestingDepthDetector",
+    "ShortVariableNamesDetector",
     "SparseCodeDetector",
+    "StarImportDetector",
 ]

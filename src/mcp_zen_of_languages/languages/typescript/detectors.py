@@ -21,7 +21,6 @@ from mcp_zen_of_languages.languages.configs import (
     TsUnknownOverAnyConfig,
     TsUtilityTypesConfig,
 )
-from mcp_zen_of_languages.models import Violation
 from mcp_zen_of_languages.rules.detections import (
     detect_ts_any_usage,
     detect_ts_missing_return_types,
@@ -33,6 +32,10 @@ from mcp_zen_of_languages.rules.detections import (
     detect_ts_unknown_over_any,
     detect_ts_utility_types,
 )
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from mcp_zen_of_languages.models import Violation
 
 
 class TsAnyUsageDetector(ViolationDetector[TsAnyUsageConfig], LocationHelperMixin):
@@ -515,13 +518,13 @@ class TsUnknownOverAnyDetector(
 
 __all__ = [
     "TsAnyUsageDetector",
-    "TsStrictModeDetector",
-    "TsInterfacePreferenceDetector",
-    "TsReturnTypeDetector",
-    "TsReadonlyDetector",
-    "TsTypeGuardDetector",
-    "TsUtilityTypesDetector",
-    "TsNonNullAssertionDetector",
     "TsEnumConstDetector",
+    "TsInterfacePreferenceDetector",
+    "TsNonNullAssertionDetector",
+    "TsReadonlyDetector",
+    "TsReturnTypeDetector",
+    "TsStrictModeDetector",
+    "TsTypeGuardDetector",
     "TsUnknownOverAnyDetector",
+    "TsUtilityTypesDetector",
 ]

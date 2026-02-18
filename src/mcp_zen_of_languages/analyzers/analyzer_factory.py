@@ -9,8 +9,6 @@ Callers never need to import individual analyzer modules; they go through
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.base import AnalyzerConfig, BaseAnalyzer
-from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
 from mcp_zen_of_languages.languages.bash.analyzer import BashAnalyzer
 from mcp_zen_of_languages.languages.cpp.analyzer import CppAnalyzer
 from mcp_zen_of_languages.languages.csharp.analyzer import CSharpAnalyzer
@@ -25,6 +23,11 @@ from mcp_zen_of_languages.languages.toml.analyzer import TomlAnalyzer
 from mcp_zen_of_languages.languages.typescript.analyzer import TypeScriptAnalyzer
 from mcp_zen_of_languages.languages.xml.analyzer import XmlAnalyzer
 from mcp_zen_of_languages.languages.yaml.analyzer import YamlAnalyzer
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
+    from mcp_zen_of_languages.analyzers.base import AnalyzerConfig, BaseAnalyzer
 
 SUPPORTED_LANGUAGES: tuple[str, ...] = (
     "python",
@@ -104,7 +107,7 @@ def create_analyzer(
         return PythonAnalyzer(config=config, pipeline_config=pipeline_config)
     if lang in {"ts", "tsx", "typescript"}:
         return TypeScriptAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang in {"go"}:
+    if lang == "go":
         return GoAnalyzer(config=config, pipeline_config=pipeline_config)
     if lang in {"rust", "rs"}:
         return RustAnalyzer(config=config, pipeline_config=pipeline_config)
@@ -122,10 +125,10 @@ def create_analyzer(
         return CSharpAnalyzer(config=config, pipeline_config=pipeline_config)
     if lang in ("yaml", "yml"):
         return YamlAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang in ("toml",):
+    if lang == "toml":
         return TomlAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang in ("xml",):
+    if lang == "xml":
         return XmlAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang in ("json",):
+    if lang == "json":
         return JsonAnalyzer(config=config, pipeline_config=pipeline_config)
     raise ValueError(f"Unsupported language: {language}")

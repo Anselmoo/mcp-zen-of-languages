@@ -23,7 +23,6 @@ See Also:
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.models import AnalysisResult, Violation
 from mcp_zen_of_languages.reporting.models import (
     FilePrompt,
     GenericPrompt,
@@ -37,6 +36,10 @@ from mcp_zen_of_languages.reporting.theme_clustering import (
     build_big_picture_analysis,
     classify_violation,
 )
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from mcp_zen_of_languages.models import AnalysisResult, Violation
 
 PROMPT_CONTEXT = "Remediate code quality violations in a multi-language codebase using zen principles."
 PROMPT_GOAL = (

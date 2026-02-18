@@ -8,9 +8,12 @@ directly into the ``AnalysisContext`` consumed by the detection pipeline.
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.models import CyclomaticSummary
 
 from .complexity import compute_cyclomatic_complexity, compute_maintainability_index
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from mcp_zen_of_languages.models import CyclomaticSummary
 
 
 class MetricsCollector:
@@ -41,6 +44,7 @@ class MetricsCollector:
             cc = compute_cyclomatic_complexity(code)
             mi = compute_maintainability_index(code)
             loc = len(code.splitlines())
-            return cc, mi, loc
         except Exception:
             return None, None, len(code.splitlines())
+        else:
+            return cc, mi, loc

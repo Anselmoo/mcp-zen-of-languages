@@ -3,12 +3,9 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import Callable
-from pathlib import Path
-from typing import Literal
+from typing import Literal, TYPE_CHECKING
 
 from mcp_zen_of_languages.analyzers.analyzer_factory import create_analyzer
-from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
 from mcp_zen_of_languages.config import load_config
 from mcp_zen_of_languages.models import (
     AnalysisResult,
@@ -17,6 +14,11 @@ from mcp_zen_of_languages.models import (
     Violation,
 )
 from mcp_zen_of_languages.utils.language_detection import detect_language_by_extension
+
+if TYPE_CHECKING:
+    from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
+    from pathlib import Path
+    from collections.abc import Callable
 
 logger = logging.getLogger(__name__)
 
@@ -51,11 +53,7 @@ def _extract_python_imports(text: str) -> list[str]:
     imports: list[str] = []
     for line in text.splitlines():
         stripped = line.strip()
-        if stripped.startswith("import "):
-            parts = stripped.split()
-            if len(parts) >= 2:
-                imports.append(parts[1].split(".")[0])
-        elif stripped.startswith("from "):
+        if stripped.startswith("import ") or stripped.startswith("from "):
             parts = stripped.split()
             if len(parts) >= 2:
                 imports.append(parts[1].split(".")[0])

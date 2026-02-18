@@ -9,7 +9,6 @@ widgets.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
 
 from rich.panel import Panel
 from rich.table import Table
@@ -17,6 +16,10 @@ from rich.table import Table
 from .console import console
 from .layout import get_output_width
 from .themes import BOX_CONTENT, BOX_SUMMARY
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 def build_project_summary_panel(summary: object) -> Panel:

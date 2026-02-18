@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 from pydantic import BaseModel
 
 from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
@@ -29,7 +31,7 @@ class _DummyAnalyzer(BaseAnalyzer):
 
     def build_pipeline(self):
         class _Pipeline:
-            detectors = []
+            detectors: list = []
 
             def run(self, context, config):
                 return []
@@ -66,12 +68,8 @@ def test_base_analyzer_analyze_success():
 
 def test_base_analyzer_handles_parse_error():
     analyzer = _DummyAnalyzer()
-    try:
+    with pytest.raises(ValueError, match="parse error"):
         analyzer.analyze("bad")
-    except ValueError as exc:
-        assert "parse error" in str(exc)
-    else:
-        raise AssertionError("Expected parse error")
 
 
 def test_base_analyzer_collects_results():

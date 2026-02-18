@@ -239,8 +239,7 @@ def detect_deep_nesting(code: str, max_depth: int = 3) -> tuple[bool, int]:
     for line in code.splitlines():
         stripped = line.lstrip("\t ")
         depth = (len(line) - len(stripped)) // 4
-        if depth > max_found:
-            max_found = depth
+        max_found = max(max_found, depth)
     return (max_found > max_depth, max_found)
 
 
@@ -431,7 +430,7 @@ def detect_dependency_cycles(
         """Recurse through the adjacency list, recording cycles when a node is revisited."""
         if node in path:
             idx = path.index(node)
-            cycle = path[idx:] + [node]
+            cycle = [*path[idx:], node]
             results.append(DependencyCycleFinding(cycle=cycle))
             return
         if node in seen:

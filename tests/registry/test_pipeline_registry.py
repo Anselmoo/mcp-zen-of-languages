@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 from mcp_zen_of_languages.analyzers.pipeline import (
     PipelineConfig,
     merge_pipeline_overrides,
@@ -28,9 +30,5 @@ def test_merge_pipeline_overrides():
 def test_merge_pipeline_overrides_language_mismatch():
     base = PipelineConfig.from_rules("python")
     overrides = PipelineConfig(language="rust", detectors=base.detectors[:1])
-    try:
+    with pytest.raises(ValueError, match="language"):
         merge_pipeline_overrides(base, overrides)
-    except ValueError as exc:
-        assert "language" in str(exc)
-    else:
-        raise AssertionError("Expected ValueError")

@@ -207,7 +207,8 @@ def test_metrics_collector_error_path(monkeypatch):
         "mcp_zen_of_languages.metrics.collector.compute_cyclomatic_complexity", boom
     )
     cc, mi, loc = MetricsCollector.collect("line\n")
-    assert cc is None and mi is None
+    assert cc is None
+    assert mi is None
     assert loc == 1
 
 

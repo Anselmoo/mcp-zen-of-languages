@@ -20,7 +20,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from mcp_zen_of_languages.languages.configs import DetectorConfig
+from mcp_zen_of_languages.languages.configs import DetectorConfig  # noqa: TC001
 from mcp_zen_of_languages.languages.rule_pattern import RulePatternDetector
 from mcp_zen_of_languages.rules import get_all_languages, get_language_zen
 

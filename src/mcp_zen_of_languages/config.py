@@ -258,7 +258,7 @@ def load_config(path: str | None = None) -> ConfigModel:
     if not path:
         return default
     try:
-        with open(path, "r") as f:
+        with open(path) as f:
             data = yaml.safe_load(f) or {}
         merged = {**default.model_dump(), **data}
         env_severity_threshold = os.environ.get("ZEN_SEVERITY_THRESHOLD")
@@ -279,8 +279,9 @@ def load_config(path: str | None = None) -> ConfigModel:
                     ]
                 }
             )
-        return cfg
     except FileNotFoundError:
         return default
     except Exception:
         raise
+    else:
+        return cfg

@@ -55,6 +55,9 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
+# Minimum line number for which a "previous line" lookup is valid
+MIN_LINE_FOR_PREV_LOOKUP = 2
+
 
 def _principle_text(config: DetectorConfig) -> str:
     """Extract the human-readable principle name from a detector config.
@@ -513,7 +516,7 @@ class ContextManagerDetector(
                         start = max(0, lineno - 3)
                         end = min(len(lines), lineno + 2)
                         snippet = "\n".join(lines[start:end])
-                        prev_line = lines[lineno - 2] if lineno >= 2 else ""
+                        prev_line = lines[lineno - 2] if lineno >= MIN_LINE_FOR_PREV_LOOKUP else ""
                         if (
                             "with open" not in snippet
                             and not prev_line.strip().startswith("with")

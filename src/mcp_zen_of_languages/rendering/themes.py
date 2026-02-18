@@ -19,6 +19,11 @@ from rich import box
 from rich.console import Console
 from rich.theme import Theme
 
+# Severity tier thresholds (1–10 scale)
+SEVERITY_CRITICAL = 9
+SEVERITY_HIGH = 7
+SEVERITY_MEDIUM = 4
+
 ZEN_THEME = Theme(
     {
         "severity.critical": "bold red",
@@ -57,11 +62,11 @@ def severity_style(severity: int) -> str:
         str: Theme token name usable with Rich ``style=`` parameters.
     """
 
-    if severity >= 9:
+    if severity >= SEVERITY_CRITICAL:
         return "severity.critical"
-    if severity >= 7:
+    if severity >= SEVERITY_HIGH:
         return "severity.high"
-    return "severity.medium" if severity >= 4 else "severity.low"
+    return "severity.medium" if severity >= SEVERITY_MEDIUM else "severity.low"
 
 
 def severity_badge(severity: int) -> str:
@@ -81,18 +86,18 @@ def severity_badge(severity: int) -> str:
     """
 
     if _use_emoji():
-        if severity >= 9:
+        if severity >= SEVERITY_CRITICAL:
             return "[severity.critical]🔴 CRIT[/]"
-        if severity >= 7:
+        if severity >= SEVERITY_HIGH:
             return "[severity.high]🟠 HIGH[/]"
-        if severity >= 4:
+        if severity >= SEVERITY_MEDIUM:
             return "[severity.medium]🔵 MED[/]"
         return "[severity.low]⚪ LOW[/]"
-    if severity >= 9:
+    if severity >= SEVERITY_CRITICAL:
         return "[severity.critical]● CRIT[/]"
-    if severity >= 7:
+    if severity >= SEVERITY_HIGH:
         return "[severity.high]▲ HIGH[/]"
-    if severity >= 4:
+    if severity >= SEVERITY_MEDIUM:
         return "[severity.medium]◆ MED[/]"
     return "[severity.low]○ LOW[/]"
 

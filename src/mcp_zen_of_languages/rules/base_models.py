@@ -581,7 +581,7 @@ class AnalysisResult(BaseModel):
         Returns:
             ``ViolationReport`` entries at the critical severity level.
         """
-        return [v for v in self.violations if v.severity >= 9]
+        return [v for v in self.violations if v.severity >= SeverityLevel.CRITICAL_LOW]
 
     @property
     def violation_count(self) -> int:

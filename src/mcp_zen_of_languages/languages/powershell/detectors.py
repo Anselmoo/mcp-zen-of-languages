@@ -38,6 +38,9 @@ from mcp_zen_of_languages.languages.configs import (
 )
 from mcp_zen_of_languages.models import Location, Violation
 
+# Maximum number of inline parameters before recommending splatting
+MAX_INLINE_PARAMS = 4
+
 
 class PowerShellApprovedVerbDetector(
     ViolationDetector[PowerShellApprovedVerbConfig], LocationHelperMixin
@@ -489,7 +492,7 @@ class PowerShellSplattingDetector(
             if "@" in line:
                 continue
             param_count = len(re.findall(r"\s-\w+", line))
-            if param_count >= 4:
+            if param_count >= MAX_INLINE_PARAMS:
                 violations.append(
                     self.build_violation(
                         config,

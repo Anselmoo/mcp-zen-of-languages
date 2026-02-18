@@ -21,6 +21,12 @@ from mcp_zen_of_languages.languages.configs import (
 )
 from mcp_zen_of_languages.models import Location, Violation
 
+# Minimum number of table headers needed to check for large inter-table gaps
+MIN_TABLE_HEADERS_FOR_GAP = 2
+
+# Maximum allowed line gap between consecutive TOML table sections
+MAX_TABLE_GAP_LINES = 10
+
 
 class TomlNoInlineTablesDetector(
     ViolationDetector[TomlNoInlineTablesConfig], LocationHelperMixin
@@ -300,9 +306,9 @@ class TomlOrderDetector(ViolationDetector[TomlOrderConfig], LocationHelperMixin)
             for idx, line in enumerate(context.code.splitlines(), start=1)
             if line.strip().startswith("[") and line.strip().endswith("]")
         ]
-        if len(table_headers) >= 2:
+        if len(table_headers) >= MIN_TABLE_HEADERS_FOR_GAP:
             gaps = [b - a for a, b in zip(table_headers, table_headers[1:], strict=False)]
-            if any(gap > 10 for gap in gaps):
+            if any(gap > MAX_TABLE_GAP_LINES for gap in gaps):
                 return [
                     self.build_violation(
                         config,

@@ -53,6 +53,9 @@ PROMPT_REQUIREMENTS = [
     "Keep steps clear and testable.",
 ]
 
+# Maximum violations listed per file prompt before the "...and N more" line
+MAX_VIOLATIONS_SHOWN = 8
+
 GENERIC_PROMPTS_BY_LANGUAGE: dict[str, list[tuple[str, str]]] = {
     "bash": [
         (
@@ -211,8 +214,8 @@ def _format_file_prompt(result: AnalysisResult, violations: list[Violation]) -> 
             lines.extend([f"  {line}" for line in pattern.after_pattern.splitlines()])
             lines.append("  ```")
         lines.append(f"  Acceptance: {acceptance}")
-    if len(violations) > 8:
-        lines.append(f"- ...and {len(violations) - 8} more.")
+    if len(violations) > MAX_VIOLATIONS_SHOWN:
+        lines.append(f"- ...and {len(violations) - MAX_VIOLATIONS_SHOWN} more.")
     return "\n".join(lines)
 
 

@@ -93,6 +93,11 @@ logger.setLevel(
 
 _THRESHOLDS = {"relaxed": 5, "moderate": 6, "strict": 7}
 
+# Severity tier thresholds (1–10 scale)
+SEVERITY_CRITICAL = 9
+SEVERITY_HIGH = 7
+SEVERITY_MEDIUM = 4
+
 # Keep Typer's rich help panels aligned with the CLI rendering width contract.
 if typer_rich_utils.MAX_WIDTH is None or typer_rich_utils.MAX_WIDTH > MAX_OUTPUT_WIDTH:
     typer_rich_utils.MAX_WIDTH = MAX_OUTPUT_WIDTH
@@ -524,11 +529,11 @@ def _summarize_violations(violations: list) -> RulesSummary:
         "low": 0,
     }
     for violation in violations:
-        if violation.severity >= 9:
+        if violation.severity >= SEVERITY_CRITICAL:
             summary["critical"] += 1
-        elif violation.severity >= 7:
+        elif violation.severity >= SEVERITY_HIGH:
             summary["high"] += 1
-        elif violation.severity >= 4:
+        elif violation.severity >= SEVERITY_MEDIUM:
             summary["medium"] += 1
         else:
             summary["low"] += 1
@@ -561,11 +566,11 @@ def _summarize_violation_dicts(violations: list[dict]) -> RulesSummary:
     }
     for violation in violations:
         severity = int(violation.get("severity", 0))
-        if severity >= 9:
+        if severity >= SEVERITY_CRITICAL:
             summary["critical"] += 1
-        elif severity >= 7:
+        elif severity >= SEVERITY_HIGH:
             summary["high"] += 1
-        elif severity >= 4:
+        elif severity >= SEVERITY_MEDIUM:
             summary["medium"] += 1
         else:
             summary["low"] += 1
@@ -804,11 +809,11 @@ def _aggregate_results(results: list[AnalysisResult]) -> ProjectSummary:
             )
         )
         for violation in result.violations:
-            if violation.severity >= 9:
+            if violation.severity >= SEVERITY_CRITICAL:
                 severity_counts.critical += 1
-            elif violation.severity >= 7:
+            elif violation.severity >= SEVERITY_HIGH:
                 severity_counts.high += 1
-            elif violation.severity >= 4:
+            elif violation.severity >= SEVERITY_MEDIUM:
                 severity_counts.medium += 1
             else:
                 severity_counts.low += 1

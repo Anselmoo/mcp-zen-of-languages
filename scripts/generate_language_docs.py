@@ -21,6 +21,9 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
 
+# Maximum characters shown from a principle description in diagram labels
+PRINCIPLE_PREVIEW_LENGTH = 40
+
 # ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
@@ -198,7 +201,7 @@ def _build_mermaid(principles, detector_map) -> str:
     rule_labels: dict[str, str] = {}
     for p in principles:
         safe_id = p.id.replace("-", "_")
-        short = p.principle[:40] + ("..." if len(p.principle) > 40 else "")
+        short = p.principle[:PRINCIPLE_PREVIEW_LENGTH] + ("..." if len(p.principle) > PRINCIPLE_PREVIEW_LENGTH else "")
         lines.append(f'    {safe_id}["{p.id}<br/>{short}"]')
         rule_labels[p.id] = safe_id
 

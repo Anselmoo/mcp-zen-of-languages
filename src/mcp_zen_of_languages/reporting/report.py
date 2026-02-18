@@ -54,6 +54,14 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from mcp_zen_of_languages.models import AnalysisResult
 
+# Severity tier thresholds (1–10 scale)
+SEVERITY_CRITICAL = 9
+SEVERITY_HIGH = 7
+SEVERITY_MEDIUM = 4
+
+# Maximum violations shown inline in the Markdown table before truncation
+MAX_VIOLATIONS_IN_TABLE = 10
+
 
 def _collect_targets(
     target: Path, language_override: str | None
@@ -133,11 +141,11 @@ def _summarize_results(results: list[AnalysisResult]) -> AnalysisSummary:
     for result in results:
         for violation in result.violations:
             total_violations += 1
-            if violation.severity >= 9:
+            if violation.severity >= SEVERITY_CRITICAL:
                 severity_counts["critical"] += 1
-            elif violation.severity >= 7:
+            elif violation.severity >= SEVERITY_HIGH:
                 severity_counts["high"] += 1
-            elif violation.severity >= 4:
+            elif violation.severity >= SEVERITY_MEDIUM:
                 severity_counts["medium"] += 1
             else:
                 severity_counts["low"] += 1
@@ -259,13 +267,13 @@ def _format_analysis_markdown(results: list[AnalysisResult]) -> list[str]:
                 violation.message,
                 violation.suggestion or "-",
             ]
-            for violation in result.violations[:10]
+            for violation in result.violations[:MAX_VIOLATIONS_IN_TABLE]
         ]
         lines.extend(
             _markdown_table(["Severity", "Principle", "Message", "Suggestion"], rows)
         )
-        if len(result.violations) > 10:
-            lines.append(f"- ...and {len(result.violations) - 10} more violations.")
+        if len(result.violations) > MAX_VIOLATIONS_IN_TABLE:
+            lines.append(f"- ...and {len(result.violations) - MAX_VIOLATIONS_IN_TABLE} more violations.")
     return lines
 
 

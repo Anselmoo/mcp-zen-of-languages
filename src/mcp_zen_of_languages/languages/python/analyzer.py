@@ -30,9 +30,8 @@ from mcp_zen_of_languages.analyzers.base import (
     PythonAnalyzerConfig,
 )
 
-# ============================================================================
-# Python Analyzer
-# ============================================================================
+# Minimum number of whitespace-split tokens in an import statement to extract the module name
+MIN_IMPORT_PARTS = 2
 
 
 class PythonAnalyzer(BaseAnalyzer, LocationHelperMixin):
@@ -187,7 +186,7 @@ class PythonAnalyzer(BaseAnalyzer, LocationHelperMixin):
                 stripped = line.strip()
                 if stripped.startswith("import ") or stripped.startswith("from "):
                     parts = stripped.split()
-                    if len(parts) >= 2:
+                    if len(parts) >= MIN_IMPORT_PARTS:
                         imports.append(parts[1].split(".")[0])
 
             file_imports = {(context.path or "<current>"): imports}

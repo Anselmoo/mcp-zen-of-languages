@@ -19,6 +19,9 @@ from mcp_zen_of_languages.languages.configs import (
 )
 from mcp_zen_of_languages.models import Location, Violation
 
+# Minimum number of tag occurrences before flagging as ungrouped repetition
+MIN_TAG_OCCURRENCES_FOR_GROUP = 2
+
 
 class XmlSemanticMarkupDetector(
     ViolationDetector[XmlSemanticMarkupConfig], LocationHelperMixin
@@ -235,7 +238,7 @@ class XmlHierarchyDetector(ViolationDetector[XmlHierarchyConfig], LocationHelper
             list[Violation]: A single violation when ungrouped repeated elements are found.
         """
         if tag_counts := re.findall(r"<([A-Za-z0-9_]+)>", context.code):
-            duplicates = {tag for tag in tag_counts if tag_counts.count(tag) > 2}
+            duplicates = {tag for tag in tag_counts if tag_counts.count(tag) > MIN_TAG_OCCURRENCES_FOR_GROUP}
             if duplicates and "<group>" not in context.code:
                 return [
                     self.build_violation(

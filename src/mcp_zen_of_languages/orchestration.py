@@ -22,6 +22,9 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+# Minimum number of whitespace-split tokens in an import statement to extract the module name
+MIN_IMPORT_PARTS = 2
+
 
 def collect_targets(
     target: Path, language_override: str | None
@@ -55,7 +58,7 @@ def _extract_python_imports(text: str) -> list[str]:
         stripped = line.strip()
         if stripped.startswith("import ") or stripped.startswith("from "):
             parts = stripped.split()
-            if len(parts) >= 2:
+            if len(parts) >= MIN_IMPORT_PARTS:
                 imports.append(parts[1].split(".")[0])
     return imports
 

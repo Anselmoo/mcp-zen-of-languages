@@ -29,6 +29,17 @@ if TYPE_CHECKING:
         ZenPrinciple,
     )
 
+# Severity tier thresholds (1–10 scale)
+SEVERITY_CRITICAL = 9
+SEVERITY_HIGH = 7
+SEVERITY_MEDIUM = 4
+
+# Dependency cycle display limit
+MAX_CYCLES_SHOWN = 3
+
+# Minimum tuple/list length to unpack as a dependency edge
+MIN_EDGE_PARTS = 2
+
 
 class RulesAdapterConfig(BaseModel):
     """Threshold overrides that callers pass to ``RulesAdapter``.
@@ -396,7 +407,7 @@ class RulesAdapter:
                     message=(
                         f"Circular dependencies detected: {cycle_count} cycle(s). "
                         f"Cycles: {', '.join(pretty)}"
-                        f"{'...' if cycle_count > 3 else ''}"
+                        f"{'...' if cycle_count > MAX_CYCLES_SHOWN else ''}"
                     ),
                 )
             )
@@ -420,7 +431,7 @@ class RulesAdapter:
 
                 for edge in raw_edges:
                     # edge may be tuple/list or model; normalize
-                    if isinstance(edge, (list, tuple)) and len(edge) >= 2:
+                    if isinstance(edge, (list, tuple)) and len(edge) >= MIN_EDGE_PARTS:
                         a, b = edge[0], edge[1]
                     else:
                         # Try to unpack dataclass-like objects
@@ -580,11 +591,11 @@ class RulesAdapter:
         }
 
         for violation in violations:
-            if violation.severity >= 9:
+            if violation.severity >= SEVERITY_CRITICAL:
                 summary["critical"] += 1
-            elif violation.severity >= 7:
+            elif violation.severity >= SEVERITY_HIGH:
                 summary["high"] += 1
-            elif violation.severity >= 4:
+            elif violation.severity >= SEVERITY_MEDIUM:
                 summary["medium"] += 1
             else:
                 summary["low"] += 1

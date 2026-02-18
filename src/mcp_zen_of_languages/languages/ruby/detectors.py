@@ -33,6 +33,9 @@ from mcp_zen_of_languages.languages.configs import (
 )
 from mcp_zen_of_languages.models import Location, Violation
 
+# Minimum number of identical lines before flagging as duplication
+MIN_DUPLICATE_LINE_COUNT = 3
+
 
 class RubyNamingConventionDetector(
     ViolationDetector[RubyNamingConventionConfig], LocationHelperMixin
@@ -165,7 +168,7 @@ class RubyDryDetector(ViolationDetector[RubyDryConfig], LocationHelperMixin):
             if not stripped or stripped.startswith("#"):
                 continue
             counts[stripped] = counts.get(stripped, 0) + 1
-            if counts[stripped] >= 3:
+            if counts[stripped] >= MIN_DUPLICATE_LINE_COUNT:
                 return [
                     self.build_violation(
                         config,

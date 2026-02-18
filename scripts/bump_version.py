@@ -80,10 +80,12 @@ _SECTION_ORDER = [
     "Maintenance",
 ]
 
-
 # ---------------------------------------------------------------------------
 # Version helpers
 # ---------------------------------------------------------------------------
+
+SEMVER_PARTS = 3
+CHANGELOG_PREVIEW_LINES = 8
 
 
 @dataclass
@@ -95,7 +97,7 @@ class Version:
     @classmethod
     def parse(cls, s: str) -> Version:
         parts = s.strip().split(".")
-        if len(parts) != 3 or not all(p.isdigit() for p in parts):
+        if len(parts) != SEMVER_PARTS or not all(p.isdigit() for p in parts):
             msg = f"Invalid semver: {s!r}"
             raise ValueError(msg)
         return cls(int(parts[0]), int(parts[1]), int(parts[2]))
@@ -287,9 +289,9 @@ def _update_changelog(
 
     if dry_run:
         print(f"  [dry-run] Would prepend to {CHANGELOG.name}:")
-        for ln in section.splitlines()[:8]:
+        for ln in section.splitlines()[:CHANGELOG_PREVIEW_LINES]:
             print(f"    {ln}")
-        if len(section.splitlines()) > 8:
+        if len(section.splitlines()) > CHANGELOG_PREVIEW_LINES:
             print("    …")
         return
 

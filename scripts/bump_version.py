@@ -13,18 +13,22 @@ Steps performed:
     2. Compute new version
     3. Update pyproject.toml  [version = "…"]
     4. Update src/…/__init__.py  [__version__ = "…"]
-    5. Run ``uv lock`` to refresh uv.lock
-    6. ``git checkout -b release/v{new}``
-    7. ``git add pyproject.toml uv.lock src/…/__init__.py``
-    8. ``git commit -m "chore: bump version to v{new}"``
+    5. Update CHANGELOG.md  (git log since last tag, grouped by type)
+    6. Run ``uv lock`` to refresh uv.lock
+    7. ``git checkout -b release/v{new}``
+    8. ``git add pyproject.toml uv.lock src/…/__init__.py CHANGELOG.md``
+    9. ``git commit -m "chore: bump version to v{new}"``
 
-Pass ``--no-commit`` to skip steps 7-8 (stage only).
-Pass ``--dry-run``  to preview all changes without touching the filesystem or git.
+Pass ``--no-commit``          to skip steps 8-9 (stage only).
+Pass ``--dry-run``            to preview all changes without touching the filesystem or git.
+Pass ``--no-changelog``       to skip step 5.
+Pass ``--include-maintenance`` to include chore/ci/build/test entries in the changelog.
 """
 
 from __future__ import annotations
 
 import argparse
+import datetime
 import re
 import subprocess
 import sys
@@ -37,9 +41,44 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 PYPROJECT = ROOT / "pyproject.toml"
 INIT_FILE = ROOT / "src" / "mcp_zen_of_languages" / "__init__.py"
+CHANGELOG = ROOT / "CHANGELOG.md"
 
 VERSION_RE = re.compile(r'^version\s*=\s*"([^"]+)"', re.MULTILINE)
 INIT_VERSION_RE = re.compile(r'^(__version__\s*=\s*)"([^"]+)"', re.MULTILINE)
+
+# Matches: feat(scope)!: description  OR  feat: description
+_CONV_RE = re.compile(
+    r"^(?P<type>feat|fix|docs|style|refactor|perf|test|build|ci|chore|deps)"
+    r"(?:\((?P<scope>[^)]+)\))?"
+    r"(?P<breaking>!)?"
+    r"\s*:\s*(?P<desc>.+)$",
+    re.IGNORECASE,
+)
+
+# Keep-a-Changelog section names per commit type
+_SECTION_MAP: dict[str, str] = {
+    "feat": "Added",
+    "fix": "Fixed",
+    "refactor": "Changed",
+    "perf": "Changed",
+    "style": "Changed",
+    "docs": "Documentation",
+    "chore": "Maintenance",
+    "ci": "Maintenance",
+    "build": "Maintenance",
+    "test": "Maintenance",
+    "deps": "Maintenance",
+}
+
+# Ordered display sections (Breaking Changes always first)
+_SECTION_ORDER = [
+    "Breaking Changes",
+    "Added",
+    "Fixed",
+    "Changed",
+    "Documentation",
+    "Maintenance",
+]
 
 
 # ---------------------------------------------------------------------------
@@ -125,6 +164,149 @@ def _update_init(new: Version, dry_run: bool) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Changelog helpers
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class _ParsedCommit:
+    sha: str
+    type: str
+    scope: str | None
+    description: str
+    breaking: bool = False
+
+
+def _git_log_since_tag() -> list[tuple[str, str]]:
+    """Return ``[(sha, subject), …]`` for commits since the most recent semver tag.
+
+    Falls back to the full history when no tags exist.
+    """
+    # Find latest semver tag
+    tag_result = subprocess.run(
+        ["git", "tag", "--sort=-v:refname"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+    tags = [t.strip() for t in tag_result.stdout.splitlines() if t.strip()]
+    ref = f"{tags[0]}..HEAD" if tags else "HEAD"
+
+    log_result = subprocess.run(
+        ["git", "log", ref, "--pretty=format:%H\t%s"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+    pairs: list[tuple[str, str]] = []
+    for line in log_result.stdout.splitlines():
+        if "\t" in line:
+            sha, subject = line.split("\t", 1)
+            pairs.append((sha.strip(), subject.strip()))
+    return pairs
+
+
+def _parse_conventional_commit(sha: str, subject: str) -> _ParsedCommit | None:
+    """Parse a conventional commit subject.  Returns *None* for skipped lines."""
+    # Skip merge commits and release markers
+    if subject.startswith("Merge ") or subject.lower().startswith("release:"):
+        return None
+
+    m = _CONV_RE.match(subject)
+    if not m:
+        return None
+
+    return _ParsedCommit(
+        sha=sha,
+        type=m.group("type").lower(),
+        scope=m.group("scope"),
+        description=m.group("desc").strip(),
+        breaking=bool(m.group("breaking")),
+    )
+
+
+def _build_changelog_section(
+    version: "Version",
+    commits: list[tuple[str, str]],
+    include_maintenance: bool,
+) -> str:
+    """Render a Keep-a-Changelog ``## [version]`` block."""
+    sections: dict[str, list[str]] = {s: [] for s in _SECTION_ORDER}
+
+    for sha, subject in commits:
+        parsed = _parse_conventional_commit(sha, subject)
+        if parsed is None:
+            continue
+        section = "Breaking Changes" if parsed.breaking else _SECTION_MAP.get(parsed.type)
+        if section is None:
+            continue
+        scope_part = f"**{parsed.scope}**: " if parsed.scope else ""
+        entry = f"- {scope_part}{parsed.description}"
+        sections[section].append(entry)
+
+    today = datetime.datetime.now(datetime.UTC).date().isoformat()
+    lines = [f"## [{version}] \u2013 {today}", ""]
+
+    rendered_any = False
+    for section_name in _SECTION_ORDER:
+        entries = sections[section_name]
+        if not entries:
+            continue
+        if section_name == "Maintenance" and not include_maintenance:
+            continue
+        lines.append(f"### {section_name}")
+        lines.extend(entries)
+        lines.append("")
+        rendered_any = True
+
+    if not rendered_any:
+        lines.append("_No notable changes recorded._")
+        lines.append("")
+
+    return "\n".join(lines)
+
+
+def _update_changelog(
+    new: "Version",
+    commits: list[tuple[str, str]],
+    include_maintenance: bool,
+    dry_run: bool,
+) -> None:
+    section = _build_changelog_section(new, commits, include_maintenance)
+
+    # Count visible entries for the summary line
+    added = sum(
+        1
+        for _, s in commits
+        if (p := _parse_conventional_commit("", s)) and p.type == "feat"
+    )
+    fixed = sum(
+        1
+        for _, s in commits
+        if (p := _parse_conventional_commit("", s)) and p.type == "fix"
+    )
+
+    if dry_run:
+        print(f"  [dry-run] Would prepend to {CHANGELOG.name}:")
+        for ln in section.splitlines()[:8]:
+            print(f"    {ln}")
+        if len(section.splitlines()) > 8:
+            print("    …")
+        return
+
+    existing = CHANGELOG.read_text(encoding="utf-8") if CHANGELOG.exists() else ""
+    CHANGELOG.write_text(section + "\n" + existing, encoding="utf-8")
+
+    summary_parts = []
+    if added:
+        summary_parts.append(f"Added: {added}")
+    if fixed:
+        summary_parts.append(f"Fixed: {fixed}")
+    summary = ", ".join(summary_parts) if summary_parts else "no feat/fix entries"
+    print(f"  ✓ {CHANGELOG.name}  →  ## [{new}]  ({summary})")
+
+
+# ---------------------------------------------------------------------------
 # Git / uv helpers
 # ---------------------------------------------------------------------------
 
@@ -202,6 +384,16 @@ def main() -> None:
         help="Stage changed files but skip the git commit.",
     )
     parser.add_argument(
+        "--no-changelog",
+        action="store_true",
+        help="Skip updating CHANGELOG.md.",
+    )
+    parser.add_argument(
+        "--include-maintenance",
+        action="store_true",
+        help="Include chore/ci/build/test entries in the changelog.",
+    )
+    parser.add_argument(
         "--base-branch",
         default=None,
         metavar="BRANCH",
@@ -251,6 +443,12 @@ def main() -> None:
     _update_pyproject(new, args.dry_run)
     _update_init(new, args.dry_run)
 
+    # 2a. Update changelog
+    if not args.no_changelog:
+        print("\n── Updating CHANGELOG.md ──────────────────────────────────────")
+        commits = _git_log_since_tag()
+        _update_changelog(new, commits, args.include_maintenance, args.dry_run)
+
     # 2. Refresh lockfile
     print("\n── Refreshing uv.lock ───────────────────────────────────────")
     _run(["uv", "lock"], dry_run=args.dry_run, label="uv lock")
@@ -269,6 +467,8 @@ def main() -> None:
         "uv.lock",
         str(INIT_FILE.relative_to(ROOT)),
     ]
+    if not args.no_changelog and CHANGELOG.exists():
+        files_to_stage.append(str(CHANGELOG.relative_to(ROOT)))
     _run(["git", "add", *files_to_stage], dry_run=args.dry_run, label="git add")
 
     # 5. Commit (unless --no-commit)

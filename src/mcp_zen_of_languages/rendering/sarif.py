@@ -16,7 +16,7 @@ def _sarif_level(severity: int) -> str:
 def analysis_results_to_sarif(
     results: list[AnalysisResult],
     *,
-    tool_name: str = "mcp-zen-of-languages",
+    tool_name: str = "zen-of-languages",
 ) -> dict[str, object]:
     """Convert analysis results into a SARIF 2.1.0 payload."""
     rules: dict[str, dict[str, object]] = {}

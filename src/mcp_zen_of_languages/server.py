@@ -66,7 +66,7 @@ from mcp_zen_of_languages.reporting.report import generate_report
 from mcp_zen_of_languages.rules import get_all_languages, get_language_zen
 from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
 
-mcp = MCP.FastMCP(name="mcp_zen_of_languages", version=__version__)
+mcp = MCP.FastMCP(name="zen_of_languages", version=__version__)
 CONFIG = load_config(path=os.environ.get("ZEN_CONFIG_PATH"))
 logger = logging.getLogger(__name__)
 logger.setLevel(
@@ -1079,7 +1079,7 @@ async def onboard_project(
             title="Set up VS Code integration",
             description="Add the MCP server configuration to .vscode/mcp.json for VS Code integration.",
             action="setup_vscode",
-            example='{"mcp": {"servers": {"mcp-zen-of-languages": {"command": "uv", "args": ["run", "zen-mcp-server"]}}}}',
+            example='{"mcp": {"servers": {"zen-of-languages": {"command": "uv", "args": ["run", "zen-mcp-server"]}}}}',
         ),
         OnboardingStep(
             step=3,

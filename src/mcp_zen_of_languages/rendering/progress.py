@@ -29,7 +29,7 @@ if TYPE_CHECKING:
 
 
 @contextmanager
-def analysis_progress(enabled: bool = True) -> Iterator[Progress | None]:
+def analysis_progress(*, enabled: bool = True) -> Iterator[Progress | None]:
     """Yield a transient Rich progress bar scoped to an analysis run.
 
     The progress bar is suppressed (yields ``None``) when any of the

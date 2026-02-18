@@ -107,7 +107,7 @@ def get_banner_art() -> str:
     return _render_banner_art()
 
 
-def set_quiet(value: bool) -> None:
+def set_quiet(*, value: bool) -> None:
     """Toggle the module-level quiet flag for decorative output.
 
     When quiet mode is active, ``print_banner`` and the progress
@@ -174,5 +174,5 @@ def print_error(message: str) -> None:
     """
 
     error_console.print(
-        f"{pass_fail_glyph(False)} {message}", style="bold red", markup=False
+        f"{pass_fail_glyph(passed=False)} {message}", style="bold red", markup=False
     )

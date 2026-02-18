@@ -661,6 +661,7 @@ async def check_architectural_patterns(code: str, language: str) -> PatternsResu
 async def generate_report_tool(
     target_path: str,
     language: str | None = None,
+    *,
     include_prompts: bool = False,
     include_analysis: bool = True,
     include_gaps: bool = True,

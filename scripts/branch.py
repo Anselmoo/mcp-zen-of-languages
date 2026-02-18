@@ -83,7 +83,7 @@ class BranchName:
 # ---------------------------------------------------------------------------
 
 
-def _run(cmd: list[str], dry_run: bool, label: str) -> str:
+def _run(cmd: list[str], *, dry_run: bool, label: str) -> str:
     pretty = " ".join(cmd)
     if dry_run:
         print(f"  [dry-run] Would run: {pretty}")

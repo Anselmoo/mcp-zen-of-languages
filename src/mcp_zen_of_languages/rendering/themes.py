@@ -97,7 +97,7 @@ def severity_badge(severity: int) -> str:
     return "[severity.low]○ LOW[/]"
 
 
-def pass_fail_glyph(passed: bool) -> str:
+def pass_fail_glyph(*, passed: bool) -> str:
     """Return a pass (✅ / ``[OK]``) or fail (❌ / ``[FAIL]``) indicator.
 
     Used in summary lines and ``print_error`` to give instant visual

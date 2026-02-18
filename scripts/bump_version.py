@@ -127,7 +127,7 @@ def _read_current_version() -> Version:
 # ---------------------------------------------------------------------------
 
 
-def _update_pyproject(new: Version, dry_run: bool) -> None:
+def _update_pyproject(new: Version, *, dry_run: bool) -> None:
     text = PYPROJECT.read_text(encoding="utf-8")
     updated = VERSION_RE.sub(f'version = "{new}"', text, count=1)
     if text == updated:
@@ -142,7 +142,7 @@ def _update_pyproject(new: Version, dry_run: bool) -> None:
         print(f'  ✓ {PYPROJECT.relative_to(ROOT)}  →  version = "{new}"')
 
 
-def _update_init(new: Version, dry_run: bool) -> None:
+def _update_init(new: Version, *, dry_run: bool) -> None:
     if not INIT_FILE.exists():
         print(f"  ⚠ {INIT_FILE.relative_to(ROOT)} not found — skipping")
         return
@@ -227,6 +227,7 @@ def _parse_conventional_commit(sha: str, subject: str) -> _ParsedCommit | None:
 def _build_changelog_section(
     version: Version,
     commits: list[tuple[str, str]],
+    *,
     include_maintenance: bool,
 ) -> str:
     """Render a Keep-a-Changelog ``## [version]`` block."""
@@ -268,10 +269,11 @@ def _build_changelog_section(
 def _update_changelog(
     new: Version,
     commits: list[tuple[str, str]],
+    *,
     include_maintenance: bool,
     dry_run: bool,
 ) -> None:
-    section = _build_changelog_section(new, commits, include_maintenance)
+    section = _build_changelog_section(new, commits, include_maintenance=include_maintenance)
 
     # Count visible entries for the summary line
     added = sum(
@@ -308,7 +310,7 @@ def _update_changelog(
 # ---------------------------------------------------------------------------
 
 
-def _run(cmd: list[str], dry_run: bool, label: str) -> None:
+def _run(cmd: list[str], *, dry_run: bool, label: str) -> None:
     pretty = " ".join(cmd)
     if dry_run:
         print(f"  [dry-run] Would run: {pretty}")
@@ -440,14 +442,14 @@ def main() -> None:
 
     # 1. Update files
     print("── Updating version strings ──────────────────────────────────")
-    _update_pyproject(new, args.dry_run)
-    _update_init(new, args.dry_run)
+    _update_pyproject(new, dry_run=args.dry_run)
+    _update_init(new, dry_run=args.dry_run)
 
     # 2a. Update changelog
     if not args.no_changelog:
         print("\n── Updating CHANGELOG.md ──────────────────────────────────────")
         commits = _git_log_since_tag()
-        _update_changelog(new, commits, args.include_maintenance, args.dry_run)
+        _update_changelog(new, commits, include_maintenance=args.include_maintenance, dry_run=args.dry_run)
 
     # 2. Refresh lockfile
     print("\n── Refreshing uv.lock ───────────────────────────────────────")

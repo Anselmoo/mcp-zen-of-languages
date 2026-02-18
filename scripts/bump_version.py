@@ -237,7 +237,9 @@ def _build_changelog_section(
         parsed = _parse_conventional_commit(sha, subject)
         if parsed is None:
             continue
-        section = "Breaking Changes" if parsed.breaking else _SECTION_MAP.get(parsed.type)
+        section = (
+            "Breaking Changes" if parsed.breaking else _SECTION_MAP.get(parsed.type)
+        )
         if section is None:
             continue
         scope_part = f"**{parsed.scope}**: " if parsed.scope else ""

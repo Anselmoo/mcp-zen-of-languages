@@ -89,7 +89,10 @@ class TestCommitTitle:
         )
 
     def test_docs_no_scope(self):
-        assert BranchName("docs", "update API ref").commit_title() == "docs: update API ref"
+        assert (
+            BranchName("docs", "update API ref").commit_title()
+            == "docs: update API ref"
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -120,7 +123,9 @@ class TestNewCommandDryRun:
         assert "feat: add something" in result.stdout
 
     def test_dry_run_with_scope(self):
-        result = _run_branch("new", "fix", "crash on empty input", "--scope", "python", "--dry-run")
+        result = _run_branch(
+            "new", "fix", "crash on empty input", "--scope", "python", "--dry-run"
+        )
         assert "fix/python-crash-on-empty-input" in result.stdout
         assert "fix(python): crash on empty input" in result.stdout
 

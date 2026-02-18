@@ -9,8 +9,14 @@ from rich.panel import Panel
 from rich.progress import MofNCompleteColumn
 from rich.table import Table
 
+from mcp_zen_of_languages import __version__
 from mcp_zen_of_languages.rendering import progress as progress_module
-from mcp_zen_of_languages.rendering.console import print_banner, print_error, set_quiet
+from mcp_zen_of_languages.rendering.console import (
+    get_banner_art,
+    print_banner,
+    print_error,
+    set_quiet,
+)
 from mcp_zen_of_languages.rendering.layout import MAX_OUTPUT_WIDTH, get_output_width
 from mcp_zen_of_languages.rendering.panels import (
     build_project_summary_panel,
@@ -160,7 +166,7 @@ def test_print_banner_outputs(monkeypatch, capsys):
     monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
     print_banner()
     captured = capsys.readouterr()
-    assert "v0.1.1" in captured.out
+    assert f"v{__version__}" in captured.out
     assert ("of Languages" in captured.out) or ("********" in captured.out)
 
 
@@ -176,8 +182,22 @@ def test_print_banner_snapshot(monkeypatch):
     print_banner(output_console=capture_console)
     output = buffer.getvalue()
     assert "ZEN" in output
-    assert "v0.1.1" in output
+    assert f"v{__version__}" in output
     assert "╔" in output
+
+
+def test_get_banner_art_uses_pyfiglet(monkeypatch):
+    console_module = importlib.import_module("mcp_zen_of_languages.rendering.console")
+
+    class _FakePyfiglet:
+        @staticmethod
+        def figlet_format(*_args, **_kwargs):
+            return "ZEN\n"
+
+    monkeypatch.setattr(console_module, "import_module", lambda _name: _FakePyfiglet)
+    art = get_banner_art()
+    assert "ZEN" in art
+    assert "of Languages" in art
 
 
 def test_box_style_hierarchy_is_distinct():

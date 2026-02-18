@@ -44,7 +44,6 @@ Issues = "https://github.com/Anselmoo/mcp-zen-of-languages/issues"
 Source = "https://github.com/Anselmoo/mcp-zen-of-languages"
 
 [project.scripts]
-mcp-zen-of-languages = "mcp_zen_of_languages.cli:main"
 zen = "mcp_zen_of_languages.cli:main"
 zen-mcp-server = "mcp_zen_of_languages.__main__:main"
 

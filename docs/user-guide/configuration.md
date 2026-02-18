@@ -22,7 +22,7 @@ The config file controls three things:
 ## Basic example
 
 === "Python + TypeScript"
-    ```yaml
+`yaml
     version: 1
     languages:
       python:
@@ -37,10 +37,10 @@ The config file controls three things:
         pipeline:
           - type: any-usage
             max_any_count: 0
-    ```
+    `
 
 === "Strict CI profile"
-    ```yaml
+`yaml
     version: 1
     severity_threshold: 6
     languages:
@@ -51,10 +51,10 @@ The config file controls three things:
             max_cyclomatic_complexity: 7
           - type: function-length
             max_function_length: 35
-    ```
+    `
 
 === "Relaxed local development"
-    ```yaml
+`yaml
     version: 1
     severity_threshold: 8
     languages:
@@ -63,18 +63,18 @@ The config file controls three things:
       typescript:
         enabled: true
       # All detectors use their default thresholds
-    ```
+    `
 
 ## Choosing thresholds
 
 !!! tip "Start relaxed, tighten over time"
-    Begin with default thresholds. Run `zen report .` to see your baseline. Then lower limits on the detectors that matter most to your team.
+Begin with default thresholds. Run `zen report .` to see your baseline. Then lower limits on the detectors that matter most to your team.
 
-| Strictness | Cyclomatic complexity | Nesting depth | Function length | Good for |
-|-----------|:---------------------:|:-------------:|:---------------:|----------|
-| **Relaxed** | 15 | 5 | 80 | Legacy codebases, initial adoption |
-| **Moderate** | 10 | 4 | 50 | Active development, PR reviews |
-| **Strict** | 7 | 3 | 35 | Greenfield projects, CI gates |
+| Strictness   | Cyclomatic complexity | Nesting depth | Function length | Good for                           |
+| ------------ | :-------------------: | :-----------: | :-------------: | ---------------------------------- |
+| **Relaxed**  |          15           |       5       |       80        | Legacy codebases, initial adoption |
+| **Moderate** |          10           |       4       |       50        | Active development, PR reviews     |
+| **Strict**   |           7           |       3       |       35        | Greenfield projects, CI gates      |
 
 ## Override behavior
 
@@ -83,7 +83,7 @@ Pipeline entries override detector defaults **by `type`**. If you list a detecto
 ```yaml
 pipeline:
   - type: cyclomatic-complexity
-    max_cyclomatic_complexity: 7  # overrides default of 10
+    max_cyclomatic_complexity: 7 # overrides default of 10
   # nesting-depth not listed → uses rule-derived default
 ```
 
@@ -112,21 +112,22 @@ Each package can have its own thresholds — strict for new code, relaxed for le
 
 ### Configuration
 
-| Variable | Purpose |
-|----------|---------|
+| Variable          | Purpose                                               |
+| ----------------- | ----------------------------------------------------- |
 | `ZEN_CONFIG_PATH` | Override config file location (useful for MCP server) |
 
 ### MCP Server (FastMCP)
 
 When running `zen-mcp-server`, these FastMCP environment variables control server behavior:
 
-| Variable | Purpose | Default |
-|----------|---------|---------|
-| `FASTMCP_DEBUG` | Enable debug mode with verbose logging | `false` |
-| `FASTMCP_LOG_LEVEL` | Set logging level: `DEBUG`, `INFO`, `WARNING`, `ERROR` | `INFO` |
-| `FASTMCP_SERVER_NAME` | Override server name in MCP protocol | `mcp-zen-of-languages` |
+| Variable              | Purpose                                                | Default            |
+| --------------------- | ------------------------------------------------------ | ------------------ |
+| `FASTMCP_DEBUG`       | Enable debug mode with verbose logging                 | `false`            |
+| `FASTMCP_LOG_LEVEL`   | Set logging level: `DEBUG`, `INFO`, `WARNING`, `ERROR` | `INFO`             |
+| `FASTMCP_SERVER_NAME` | Override server name in MCP protocol                   | `zen-of-languages` |
 
 **Example:**
+
 ```json
 {
   "env": {

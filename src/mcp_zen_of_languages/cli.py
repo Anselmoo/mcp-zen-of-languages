@@ -317,7 +317,7 @@ def _write_vscode_mcp_config() -> Path:
     payload = {
         "mcp": {
             "servers": {
-                "mcp-zen-of-languages": {
+                "zen-of-languages": {
                     "command": "uv",
                     "args": ["run", "zen-mcp-server"],
                     "cwd": "${workspaceFolder}",

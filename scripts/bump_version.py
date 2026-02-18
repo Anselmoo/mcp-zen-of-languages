@@ -79,7 +79,7 @@ def _read_current_version() -> Version:
     text = PYPROJECT.read_text(encoding="utf-8")
     m = VERSION_RE.search(text)
     if not m:
-        msg = "Could not find version = '...' in pyproject.toml"
+        msg = 'Could not find version = "..." in pyproject.toml'
         raise RuntimeError(msg)
     return Version.parse(m.group(1))
 

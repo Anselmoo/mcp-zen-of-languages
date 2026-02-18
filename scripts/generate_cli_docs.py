@@ -128,12 +128,14 @@ def _option_signature(param: object) -> str:
 
     opts = list(param.opts)
 
-    type_obj = param.type
-    if isinstance(type_obj, click.Choice):
-        choices = "|".join(str(c) for c in type_obj.choices)
+    # Check if it's a flag (boolean option without a value)
+    if param.is_flag:
+        value_part = ""
+    elif isinstance(param.type, click.Choice):
+        choices = "|".join(str(c) for c in param.type.choices)
         value_part = f" {choices}"
-    elif type_obj and type_obj.name not in ("bool", "flag"):
-        value_part = f" <{type_obj.name.upper()}>"
+    elif param.type and param.type.name not in ("bool", "flag"):
+        value_part = f" <{param.type.name.upper()}>"
     else:
         value_part = ""
 
@@ -156,12 +158,14 @@ def _build_usage(name: str, command: object) -> str:
         elif isinstance(param, click.Option):
             opts = list(param.opts)
             primary = opts[0] if opts else ""
-            type_obj = param.type
-            if isinstance(type_obj, click.Choice):
-                value = "|".join(type_obj.choices)
+            # Check if it's a flag (boolean option without a value)
+            if param.is_flag:
+                options.append(f"[{primary}]")
+            elif isinstance(param.type, click.Choice):
+                value = "|".join(param.type.choices)
                 options.append(f"[{primary} {value}]")
-            elif type_obj and type_obj.name not in ("bool", "flag"):
-                options.append(f"[{primary} <{type_obj.name.upper()}>]")
+            elif param.type and param.type.name not in ("bool", "flag"):
+                options.append(f"[{primary} <{param.type.name.upper()}>]")
             else:
                 options.append(f"[{primary}]")
 
@@ -268,7 +272,7 @@ def generate() -> str:
             fn = getattr(cmd, "callback", None)
             full_doc = inspect.getdoc(fn) if fn else ""
 
-            sections.append(f"### zen {cmd_name} {{ #{cmd_name} }}\n\n")
+            sections.append(f"### zen {cmd_name} {{{{ #{cmd_name} }}}}\n\n")
 
             # Usage
             usage = _build_usage(cmd_name, cmd)

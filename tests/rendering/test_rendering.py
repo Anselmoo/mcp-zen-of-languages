@@ -160,7 +160,7 @@ def test_print_banner_outputs(monkeypatch, capsys):
     monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
     print_banner()
     captured = capsys.readouterr()
-    assert "v0.1.0" in captured.out
+    assert "v0.1.1" in captured.out
     assert ("of Languages" in captured.out) or ("********" in captured.out)
 
 
@@ -176,7 +176,7 @@ def test_print_banner_snapshot(monkeypatch):
     print_banner(output_console=capture_console)
     output = buffer.getvalue()
     assert "ZEN" in output
-    assert "v0.1.0" in output
+    assert "v0.1.1" in output
     assert "╔" in output
 
 

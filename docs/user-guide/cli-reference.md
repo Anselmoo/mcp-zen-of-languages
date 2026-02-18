@@ -33,7 +33,7 @@ The CLI is available as `zen` (short alias) or `mcp-zen-of-languages`. It is the
 
 ## :material-magnify: Analysis Commands
 
-### zen check { #check }
+### zen check {{ #check }}
 
 ```bash
 zen check <PATH> [--language <TEXT>] [--config <TEXT>] [--format terminal|json|sarif] [--out <TEXT>] [--fail-on-severity <INTEGER RANGE>]
@@ -55,7 +55,7 @@ Run zen analysis for a path with optional CI gating and machine output.
 
 ---
 
-### zen prompts { #prompts }
+### zen prompts {{ #prompts }}
 
 ```bash
 zen prompts <PATH> [--language <TEXT>] [--config <TEXT>] [--mode remediation|agent|both] [--export-prompts <TEXT>] [--export-agent <TEXT>] [--severity <INTEGER>]
@@ -78,10 +78,10 @@ Turn analysis violations into actionable remediation prompts or agent tasks.
 
 ---
 
-### zen reports { #reports }
+### zen reports {{ #reports }}
 
 ```bash
-zen reports <PATH> [--language <TEXT>] [--config <TEXT>] [--format markdown|json|both|sarif] [--out <TEXT>] [--export-json <TEXT>] [--export-markdown <TEXT>] [--export-log <TEXT>] [--include-prompts <BOOLEAN>] [--skip-analysis <BOOLEAN>] [--skip-gaps <BOOLEAN>]
+zen reports <PATH> [--language <TEXT>] [--config <TEXT>] [--format markdown|json|both|sarif] [--out <TEXT>] [--export-json <TEXT>] [--export-markdown <TEXT>] [--export-log <TEXT>] [--include-prompts] [--skip-analysis] [--skip-gaps]
 ```
 
 Generate a comprehensive analysis report for a file or directory.
@@ -97,9 +97,9 @@ Generate a comprehensive analysis report for a file or directory.
 | `--export-json <TEXT>` | — | Write report JSON to file |
 | `--export-markdown <TEXT>` | — | Write report markdown to file |
 | `--export-log <TEXT>` | — | Write log summary to file |
-| `--include-prompts <BOOLEAN>` | — | Include remediation prompts |
-| `--skip-analysis <BOOLEAN>` | — | Skip analysis details in report |
-| `--skip-gaps <BOOLEAN>` | — | Skip gap analysis |
+| `--include-prompts` | — | Include remediation prompts |
+| `--skip-analysis` | — | Skip analysis details in report |
+| `--skip-gaps` | — | Skip gap analysis |
 
 **Returns:** int: Process exit code — ``0`` on success, ``2`` on input errors.
 
@@ -107,7 +107,7 @@ Generate a comprehensive analysis report for a file or directory.
 
 ## :material-cog-outline: Configuration Commands
 
-### zen export-mapping { #export-mapping }
+### zen export-mapping {{ #export-mapping }}
 
 ```bash
 zen export-mapping [--out <TEXT>] [--languages <TEXT>] [--format terminal|json]
@@ -127,10 +127,10 @@ Export rule-to-detector mappings as a Rich table or JSON payload.
 
 ---
 
-### zen init { #init }
+### zen init {{ #init }}
 
 ```bash
-zen init [--force <BOOLEAN>] [--yes <BOOLEAN>] [--languages <TEXT>] [--strictness relaxed|moderate|strict]
+zen init [--force] [--yes] [--languages <TEXT>] [--strictness relaxed|moderate|strict]
 ```
 
 Interactively scaffold a ``zen-config.yaml`` and optional VS Code integration.
@@ -139,8 +139,8 @@ Interactively scaffold a ``zen-config.yaml`` and optional VS Code integration.
 
 | Option | Default | Description |
 |--------|---------|-------------|
-| `--force <BOOLEAN>` | — | Overwrite existing config |
-| `--yes <BOOLEAN>` | — | Skip prompts and use defaults |
+| `--force` | — | Overwrite existing config |
+| `--yes` | — | Skip prompts and use defaults |
 | `--languages <TEXT>` | — | Languages to include (repeatable) |
 | `--strictness relaxed|moderate|strict` | `moderate` | Strictness: relaxed|moderate|strict |
 
@@ -148,7 +148,7 @@ Interactively scaffold a ``zen-config.yaml`` and optional VS Code integration.
 
 ---
 
-### zen list-rules { #list-rules }
+### zen list-rules {{ #list-rules }}
 
 ```bash
 zen list-rules <LANGUAGE>
@@ -176,3 +176,4 @@ Display a table of zen rule IDs, severities, and principle texts.
 | `0` | Success — no violations above the configured threshold |
 | `1` | Violations found above the severity threshold |
 | `2` | Invalid configuration or arguments |
+

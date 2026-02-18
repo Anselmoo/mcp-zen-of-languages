@@ -70,19 +70,18 @@ class CppSmartPointerDetector(
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if re.search(r"\bnew\b", line) or re.search(r"\bdelete\b", line):
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="new",
-                        location=Location(line=idx, column=1),
-                        suggestion=(
-                            "Prefer smart pointers and RAII over manual new/delete."
-                        ),
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="new",
+                location=Location(line=idx, column=1),
+                suggestion=(
+                    "Prefer smart pointers and RAII over manual new/delete."
+                ),
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if re.search(r"\bnew\b", line) or re.search(r"\bdelete\b", line)
+        ]
         return violations
 
 
@@ -117,17 +116,16 @@ class CppNullptrDetector(ViolationDetector[CppNullptrConfig], LocationHelperMixi
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if re.search(r"\bNULL\b", line):
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="nullptr",
-                        location=Location(line=idx, column=1),
-                        suggestion="Use nullptr instead of NULL/0.",
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="nullptr",
+                location=Location(line=idx, column=1),
+                suggestion="Use nullptr instead of NULL/0.",
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if re.search(r"\bNULL\b", line)
+        ]
         return violations
 
 
@@ -163,17 +161,16 @@ class CppRaiiDetector(ViolationDetector[CppRaiiConfig], LocationHelperMixin):
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if re.search(r"\bnew\b|\bdelete\b|malloc\(|free\(", line):
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="RAII",
-                        location=Location(line=idx, column=1),
-                        suggestion="Prefer RAII wrappers instead of manual resource control.",
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="RAII",
+                location=Location(line=idx, column=1),
+                suggestion="Prefer RAII wrappers instead of manual resource control.",
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if re.search(r"\bnew\b|\bdelete\b|malloc\(|free\(", line)
+        ]
         return violations
 
 
@@ -258,17 +255,16 @@ class CppRangeForDetector(ViolationDetector[CppRangeForConfig], LocationHelperMi
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if "for" in line and (".begin()" in line or ".end()" in line):
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="range-for",
-                        location=Location(line=idx, column=1),
-                        suggestion="Prefer range-based for loops for iteration.",
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="range-for",
+                location=Location(line=idx, column=1),
+                suggestion="Prefer range-based for loops for iteration.",
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if "for" in line and (".begin()" in line or ".end()" in line)
+        ]
         return violations
 
 
@@ -306,17 +302,16 @@ class CppManualAllocationDetector(
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if re.search(r"malloc\(|free\(|new\s+\w+\s*\[|delete\s*\[", line):
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="allocation",
-                        location=Location(line=idx, column=1),
-                        suggestion="Use standard containers or smart pointers.",
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="allocation",
+                location=Location(line=idx, column=1),
+                suggestion="Use standard containers or smart pointers.",
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if re.search(r"malloc\(|free\(|new\s+\w+\s*\[|delete\s*\[", line)
+        ]
         return violations
 
 
@@ -353,17 +348,16 @@ class CppConstCorrectnessDetector(
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if "&" in line and "const" not in line:
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="const",
-                        location=Location(line=idx, column=1),
-                        suggestion="Mark references as const where applicable.",
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="const",
+                location=Location(line=idx, column=1),
+                suggestion="Mark references as const where applicable.",
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if "&" in line and "const" not in line
+        ]
         return violations
 
 
@@ -539,17 +533,17 @@ class CppAvoidGlobalsDetector(
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if re.match(r"\s*(static|extern)\s+", line) and "static_assert" not in line:
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="global",
-                        location=Location(line=idx, column=1),
-                        suggestion="Avoid mutable globals; use scoped state.",
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="global",
+                location=Location(line=idx, column=1),
+                suggestion="Avoid mutable globals; use scoped state.",
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if re.match(r"\s*(static|extern)\s+", line)
+            and "static_assert" not in line
+        ]
         return violations
 
 
@@ -586,17 +580,16 @@ class CppOverrideFinalDetector(
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if "virtual" in line and "override" not in line and "final" not in line:
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="override",
-                        location=Location(line=idx, column=1),
-                        suggestion="Add override/final to virtual overrides.",
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="override",
+                location=Location(line=idx, column=1),
+                suggestion="Add override/final to virtual overrides.",
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if "virtual" in line and "override" not in line and "final" not in line
+        ]
         return violations
 
 

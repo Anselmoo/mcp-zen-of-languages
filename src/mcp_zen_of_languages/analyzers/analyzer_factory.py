@@ -100,15 +100,15 @@ def create_analyzer(
     """
 
     lang = language.lower()
-    if lang in ("py", "python"):
+    if lang in {"py", "python"}:
         return PythonAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang in ("ts", "tsx", "typescript"):
+    if lang in {"ts", "tsx", "typescript"}:
         return TypeScriptAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang in ("go",):
+    if lang in {"go"}:
         return GoAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang in ("rust", "rs"):
+    if lang in {"rust", "rs"}:
         return RustAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang in ("js", "jsx", "javascript"):
+    if lang in {"js", "jsx", "javascript"}:
         return JavaScriptAnalyzer(config=config, pipeline_config=pipeline_config)
     if lang in ("bash", "sh", "shell"):
         return BashAnalyzer(config=config, pipeline_config=pipeline_config)

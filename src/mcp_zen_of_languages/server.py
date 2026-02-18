@@ -192,7 +192,7 @@ def languages_resource() -> LanguagesResource:
         detectors = [
             meta.detector_id
             for meta in REGISTRY.items()
-            if meta.language == language or meta.language == "any"
+            if meta.language in [language, "any"]
         ]
         zen = get_language_zen(language)
         entries.append(
@@ -1159,7 +1159,7 @@ async def get_supported_languages() -> dict[str, list[str]]:
         detectors = [
             meta.detector_id
             for meta in REGISTRY.items()
-            if meta.language == lang or meta.language == "any"
+            if meta.language in [lang, "any"]
         ]
         result[lang] = detectors
     return result

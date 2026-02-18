@@ -116,11 +116,10 @@ class Version:
 
 def _read_current_version() -> Version:
     text = PYPROJECT.read_text(encoding="utf-8")
-    m = VERSION_RE.search(text)
-    if not m:
-        msg = "Could not find version = '...' in pyproject.toml"
-        raise RuntimeError(msg)
-    return Version.parse(m.group(1))
+    if m := VERSION_RE.search(text):
+        return Version.parse(m.group(1))
+    else:
+        raise RuntimeError("Could not find version = '...' in pyproject.toml")
 
 
 # ---------------------------------------------------------------------------
@@ -212,17 +211,16 @@ def _parse_conventional_commit(sha: str, subject: str) -> _ParsedCommit | None:
     if subject.startswith("Merge ") or subject.lower().startswith("release:"):
         return None
 
-    m = _CONV_RE.match(subject)
-    if not m:
+    if m := _CONV_RE.match(subject):
+        return _ParsedCommit(
+            sha=sha,
+            type=m.group("type").lower(),
+            scope=m.group("scope"),
+            description=m.group("desc").strip(),
+            breaking=bool(m.group("breaking")),
+        )
+    else:
         return None
-
-    return _ParsedCommit(
-        sha=sha,
-        type=m.group("type").lower(),
-        scope=m.group("scope"),
-        description=m.group("desc").strip(),
-        breaking=bool(m.group("breaking")),
-    )
 
 
 def _build_changelog_section(
@@ -262,9 +260,7 @@ def _build_changelog_section(
         rendered_any = True
 
     if not rendered_any:
-        lines.append("_No notable changes recorded._")
-        lines.append("")
-
+        lines.extend(("_No notable changes recorded._", ""))
     return "\n".join(lines)
 
 
@@ -277,16 +273,10 @@ def _update_changelog(
     section = _build_changelog_section(new, commits, include_maintenance)
 
     # Count visible entries for the summary line
-    added = sum(
-        1
-        for _, s in commits
-        if (p := _parse_conventional_commit("", s)) and p.type == "feat"
-    )
-    fixed = sum(
-        1
-        for _, s in commits
-        if (p := _parse_conventional_commit("", s)) and p.type == "fix"
-    )
+    added = sum(bool((p := _parse_conventional_commit("", s)) and p.type == "feat")
+            for _, s in commits)
+    fixed = sum(bool((p := _parse_conventional_commit("", s)) and p.type == "fix")
+            for _, s in commits)
 
     if dry_run:
         print(f"  [dry-run] Would prepend to {CHANGELOG.name}:")

@@ -114,8 +114,7 @@ def _slugify_violation(value: str) -> str:
     Returns:
         Lowercase hyphen-separated slug suitable for use as a ``ViolationSpec.id``.
     """
-    slug = re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
-    return slug
+    return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
 
 
 class ZenPrinciple(BaseModel):
@@ -312,10 +311,14 @@ class LanguageZenPrinciples(BaseModel):
         Returns:
             The matching principle, or ``None`` if no principle has that ID.
         """
-        for principle in self.principles:
-            if principle.id == principle_id:
-                return principle
-        return None
+        return next(
+            (
+                principle
+                for principle in self.principles
+                if principle.id == principle_id
+            ),
+            None,
+        )
 
     def get_by_category(self, category: PrincipleCategory) -> list[ZenPrinciple]:
         """Filter principles belonging to *category*.
@@ -509,8 +512,9 @@ def get_registry_detector_gaps(
     """
     gaps: dict[str, list[str]] = {}
     for language in registry.values():
-        missing = get_missing_detector_rules(language, explicit_only=explicit_only)
-        if missing:
+        if missing := get_missing_detector_rules(
+            language, explicit_only=explicit_only
+        ):
             gaps[language.language] = missing
     return gaps
 
@@ -675,16 +679,16 @@ class RegistryStats(BaseModel):
         total_languages = len(registry)
         total_principles = sum(lang.principle_count for lang in registry.values())
 
-        languages: dict[str, LanguageSummary] = {}
-        for key, lang in registry.items():
-            languages[key] = LanguageSummary(
+        languages: dict[str, LanguageSummary] = {
+            key: LanguageSummary(
                 name=lang.name,
                 principle_count=lang.principle_count,
                 philosophy=lang.philosophy,
                 source_text=getattr(lang, "source_text", None),
                 source_url=getattr(lang, "source_url", None),
             )
-
+            for key, lang in registry.items()
+        }
         return cls(
             total_languages=total_languages,
             total_principles=total_principles,

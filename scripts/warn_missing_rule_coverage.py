@@ -10,8 +10,7 @@ def main() -> int:
         lang_zen = get_language_zen(language)
         if not lang_zen:
             continue
-        missing = get_missing_detector_rules(lang_zen, explicit_only=True)
-        if missing:
+        if missing := get_missing_detector_rules(lang_zen, explicit_only=True):
             gaps[language] = missing
 
     if not gaps:

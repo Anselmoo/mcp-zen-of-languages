@@ -168,9 +168,7 @@ def _load_detector_map(module_key: str):
 def _load_intro(module_key: str) -> str:
     """Load editorial intro from intros/{lang}.md or generate a fallback."""
     intro_path = INTROS_DIR / f"{module_key}.md"
-    if intro_path.exists():
-        return intro_path.read_text().strip()
-    return ""
+    return intro_path.read_text().strip() if intro_path.exists() else ""
 
 
 def _detector_first_line(detector_cls: type) -> str:
@@ -178,8 +176,7 @@ def _detector_first_line(detector_cls: type) -> str:
     doc = detector_cls.__doc__ or ""
     # Take first non-empty line
     for line in doc.strip().splitlines():
-        line = line.strip()
-        if line:
+        if line := line.strip():
             # Remove trailing period for table consistency, then re-add
             return line.rstrip(".")
     return "Detects violations"
@@ -220,9 +217,12 @@ def _build_mermaid(principles, detector_map) -> str:
             if rid in rule_labels:
                 lines.append(f"    {rule_labels[rid]} --> {det_id}")
 
-    # Style
-    lines.append("    classDef principle fill:#4051b5,color:#fff,stroke:none")
-    lines.append("    classDef detector fill:#26a269,color:#fff,stroke:none")
+    lines.extend(
+        (
+            "    classDef principle fill:#4051b5,color:#fff,stroke:none",
+            "    classDef detector fill:#26a269,color:#fff,stroke:none",
+        )
+    )
     for p in principles:
         safe_id = p.id.replace("-", "_")
         lines.append(f"    class {safe_id} principle")
@@ -257,8 +257,7 @@ def _build_config_entries(principles, detector_map) -> list[dict]:
             default = field_info.default
             if default is not None:
                 params[field_name] = default
-                desc = field_info.description
-                if desc:
+                if desc := field_info.description:
                     comments[field_name] = desc[:60]
 
         if params:
@@ -280,11 +279,9 @@ def _build_config_entries(principles, detector_map) -> list[dict]:
 # ---------------------------------------------------------------------------
 def _group_detectors(principles, detector_map) -> list[tuple[str, list[dict]]]:
     """Group detectors by PrincipleCategory."""
-    # Build rule_id → category mapping
-    rule_to_category: dict[str, str] = {}
-    for p in principles:
-        rule_to_category[p.id] = _build_category_label(p.category)
-
+    rule_to_category: dict[str, str] = {
+        p.id: _build_category_label(p.category) for p in principles
+    }
     # Group bindings by their primary category
     groups: dict[str, list[dict]] = {}
     seen: set[str] = set()
@@ -294,13 +291,14 @@ def _group_detectors(principles, detector_map) -> list[tuple[str, list[dict]]]:
             continue
         seen.add(det_name)
 
-        # Determine category from first rule_id
-        category = "General"
-        for rid in binding.rule_ids:
-            if rid in rule_to_category:
-                category = rule_to_category[rid]
-                break
-
+        category = next(
+            (
+                rule_to_category[rid]
+                for rid in binding.rule_ids
+                if rid in rule_to_category
+            ),
+            "General",
+        )
         desc = _detector_first_line(binding.detector_class)
         entry = {
             "name": det_name,
@@ -404,10 +402,9 @@ def render_language_page(
 
 def render_config_formats_page(env: Environment) -> str:
     """Render the config-formats.md page for JSON/TOML/XML/YAML."""
-    sections: list[str] = []
-
-    sections.append(
-        textwrap.dedent("""\
+    sections: list[str] = [
+        textwrap.dedent(
+            """\
         ---
         title: Config Formats
         description: "Zen principles across JSON, TOML, XML, and YAML enforced by dedicated detectors for data format consistency and correctness."
@@ -422,8 +419,9 @@ def render_config_formats_page(env: Environment) -> str:
         # Configuration Formats
 
         Configuration files are code too — they're read by humans, versioned in git, and debugged at 2am during outages. MCP Zen of Languages analyzes four data formats with dedicated detectors for each.
-    """)
-    )
+    """
+        )
+    ]
 
     for module_key, display_name in CONFIG_LANGUAGES:
         zen = _load_zen(module_key)
@@ -681,13 +679,9 @@ def main() -> int:
         langs_to_process = [
             lang_cfg for lang_cfg in LANGUAGES if lang_cfg[0] == args.lang
         ]
-        if not langs_to_process:
-            # Maybe it's a config format
-            if args.lang in dict(CONFIG_LANGUAGES):
-                pass  # Will be handled by config-formats
-            else:
-                print(f"Unknown language: {args.lang}")
-                return 1
+        if not langs_to_process and args.lang not in dict(CONFIG_LANGUAGES):
+            print(f"Unknown language: {args.lang}")
+            return 1
 
     # Render language pages
     for module_key, lang_name, icon, filename, config_key in langs_to_process:
@@ -732,7 +726,7 @@ def main() -> int:
         return 1
 
     if not args.check:
-        total = len(langs_to_process) + (1 if not args.lang else 0) + 1
+        total = len(langs_to_process) + (0 if args.lang else 1) + 1
         print(f"\nGenerated {total} documentation pages.")
 
     return 0

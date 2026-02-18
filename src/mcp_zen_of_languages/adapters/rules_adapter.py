@@ -385,9 +385,7 @@ class RulesAdapter:
         # Check for circular dependencies
         if metrics.get("detect_circular_dependencies") and cycles_list:
             cycle_count = len(cycles_list)
-            pretty = []
-            for c in cycles_list[:3]:
-                pretty.append(" -> ".join(c))
+            pretty = [" -> ".join(c) for c in cycles_list[:3]]
             violations.append(
                 Violation(
                     principle=principle.principle,

@@ -69,10 +69,11 @@ def _iter_module_asts() -> list[tuple[Path, ast.Module]]:
 
 
 def test_function_docstrings_do_not_start_with_blank_line() -> None:
-    offenders: list[str] = []
-    for path, name, lineno, doc in _iter_function_docstrings():
-        if doc.startswith("\n"):
-            offenders.append(f"{path}:{lineno}:{name}")
+    offenders: list[str] = [
+        f"{path}:{lineno}:{name}"
+        for path, name, lineno, doc in _iter_function_docstrings()
+        if doc.startswith("\n")
+    ]
     assert not offenders, (
         "Docstrings must start with summary on opening line:\n" + "\n".join(offenders)
     )
@@ -96,9 +97,11 @@ def test_src_docstrings_do_not_use_placeholder_templates() -> None:
     offenders: list[str] = []
     for path in SRC_PY_FILES:
         source = path.read_text(encoding="utf-8")
-        for pattern in BANNED_DOCSTRING_PATTERNS:
-            if re.search(pattern, source):
-                offenders.append(f"{path}: {pattern}")
+        offenders.extend(
+            f"{path}: {pattern}"
+            for pattern in BANNED_DOCSTRING_PATTERNS
+            if re.search(pattern, source)
+        )
     assert not offenders, (
         "src docstrings must not contain placeholder docstring templates:\n"
         + "\n".join(offenders)
@@ -122,7 +125,7 @@ def test_args_sections_are_semantically_described() -> None:
             match = arg_line.match(line)
             if not match:
                 continue
-            param_name, description = match.group(1).lstrip("*"), match.group(2).strip()
+            param_name, description = match[1].lstrip("*"), match[2].strip()
             if any(pattern.match(description) for pattern in GENERIC_ARG_PATTERNS):
                 offenders.append(
                     f"{path}:{lineno}:{name}:{param_name} -> generic args description"
@@ -154,7 +157,7 @@ def test_returns_sections_are_semantically_described() -> None:
             match = return_line.match(line)
             if not match:
                 continue
-            description = match.group(2).strip()
+            description = match[2].strip()
             if any(pattern.match(description) for pattern in GENERIC_RETURN_PATTERNS):
                 offenders.append(
                     f"{path}:{lineno}:{name} -> generic returns description"

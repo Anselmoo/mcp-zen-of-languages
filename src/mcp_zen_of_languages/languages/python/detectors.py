@@ -239,11 +239,10 @@ class BareExceptDetector(ViolationDetector[BareExceptConfig], LocationHelperMixi
                     )
                 )
                 continue
-            empty_inline = re.match(
+            if empty_inline := re.match(
                 r"except\s+\w+(?:\s+as\s+\w+)?\s*:\s*(pass|\.\.\.)\s*$",
                 stripped,
-            )
-            if empty_inline:
+            ):
                 loc = Location(line=i, column=line.find("except") + 1)
                 violations.append(
                     Violation(
@@ -261,8 +260,9 @@ class BareExceptDetector(ViolationDetector[BareExceptConfig], LocationHelperMixi
                     )
                 )
                 continue
-            empty_header = re.match(r"except\s+\w+(?:\s+as\s+\w+)?\s*:\s*$", stripped)
-            if empty_header:
+            if empty_header := re.match(
+                r"except\s+\w+(?:\s+as\s+\w+)?\s*:\s*$", stripped
+            ):
                 next_line = lines[i] if i < len(lines) else ""
                 if next_line.strip() in {"pass", "..."}:
                     loc = Location(line=i, column=line.find("except") + 1)
@@ -512,7 +512,7 @@ class ContextManagerDetector(
                         start = max(0, lineno - 3)
                         end = min(len(lines), lineno + 2)
                         snippet = "\n".join(lines[start:end])
-                        prev_line = lines[lineno - 2] if lineno - 2 >= 0 else ""
+                        prev_line = lines[lineno - 2] if lineno >= 2 else ""
                         if (
                             "with open" not in snippet
                             and not prev_line.strip().startswith("with")
@@ -838,22 +838,21 @@ class NameStyleDetector(ViolationDetector[NameStyleConfig], LocationHelperMixin)
         severity = config.severity or 3
         message = config.select_violation_message(index=1)
         for node in ast.walk(tree):
-            if isinstance(node, ast.FunctionDef):
-                if not self._is_snake_case(node.name):
-                    loc = self.ast_node_to_location(
-                        context.ast_tree, node
-                    ) or self.find_location_by_substring(
-                        context.code, f"def {node.name}"
+            if isinstance(node, ast.FunctionDef) and not self._is_snake_case(node.name):
+                loc = self.ast_node_to_location(
+                    context.ast_tree, node
+                ) or self.find_location_by_substring(
+                    context.code, f"def {node.name}"
+                )
+                violations.append(
+                    Violation(
+                        principle=principle,
+                        severity=severity,
+                        message=message,
+                        location=loc,
+                        suggestion="Rename to snake_case to match Python conventions.",
                     )
-                    violations.append(
-                        Violation(
-                            principle=principle,
-                            severity=severity,
-                            message=message,
-                            location=loc,
-                            suggestion="Rename to snake_case to match Python conventions.",
-                        )
-                    )
+                )
 
             if isinstance(node, ast.Assign):
                 for target in self._iter_assignment_targets(node.targets):
@@ -894,7 +893,7 @@ class NameStyleDetector(ViolationDetector[NameStyleConfig], LocationHelperMixin)
             Iterable[ast.expr]: Stream of leaf target nodes.
         """
         for t in targets:
-            if isinstance(t, ast.Tuple) or isinstance(t, ast.List):
+            if isinstance(t, (ast.Tuple, ast.List)):
                 yield from getattr(t, "elts", [])
             else:
                 yield t
@@ -1121,7 +1120,7 @@ class ShortVariableNamesDetector(
             Iterable[ast.expr]: Stream of leaf target nodes.
         """
         for t in targets:
-            if isinstance(t, ast.Tuple) or isinstance(t, ast.List):
+            if isinstance(t, (ast.Tuple, ast.List)):
                 yield from getattr(t, "elts", [])
             else:
                 yield t
@@ -1238,8 +1237,9 @@ class CyclomaticComplexityDetector(
                 if isinstance(tree, ast.AST):
                     for node in ast.walk(tree):
                         if isinstance(node, ast.FunctionDef):
-                            loc = self.ast_node_to_location(context.ast_tree, node)
-                            if loc:
+                            if loc := self.ast_node_to_location(
+                                context.ast_tree, node
+                            ):
                                 return loc
             except Exception:
                 pass
@@ -1481,8 +1481,9 @@ class LongFunctionDetector(ViolationDetector[LongFunctionConfig], LocationHelper
                 if isinstance(tree, ast.AST):
                     for node in ast.walk(tree):
                         if isinstance(node, ast.FunctionDef) and node.name == func_name:
-                            loc = self.ast_node_to_location(context.ast_tree, node)
-                            if loc:
+                            if loc := self.ast_node_to_location(
+                                context.ast_tree, node
+                            ):
                                 return loc
             except Exception:
                 pass
@@ -1539,18 +1540,17 @@ class GodClassDetector(ViolationDetector[GodClassConfig]):
             context.code, max_methods=max_methods, max_lines=max_lines
         )
 
-        for god_class in god_classes:
-            violations.append(
-                Violation(
-                    principle=principle,
-                    severity=severity,
-                    message=_violation_message(
-                        config, contains="Classes longer", index=1
-                    ),
-                    suggestion="Break the large class into smaller cohesive classes.",
-                )
+        violations.extend(
+            Violation(
+                principle=principle,
+                severity=severity,
+                message=_violation_message(
+                    config, contains="Classes longer", index=1
+                ),
+                suggestion="Break the large class into smaller cohesive classes.",
             )
-
+            for _ in god_classes
+        )
         return violations
 
 
@@ -1674,18 +1674,17 @@ class CircularDependencyDetector(ViolationDetector[CircularDependencyConfig]):
         principle = _principle_text(config)
         severity = _severity_level(config)
 
-        for cycle in cycles:
-            violations.append(
-                Violation(
-                    principle=principle,
-                    severity=severity,
-                    message=_violation_message(
-                        config, contains="dependencies", index=0
-                    ),
-                    suggestion="Refactor to break cycles or introduce interfaces/abstractions.",
-                )
+        violations.extend(
+            Violation(
+                principle=principle,
+                severity=severity,
+                message=_violation_message(
+                    config, contains="dependencies", index=0
+                ),
+                suggestion="Refactor to break cycles or introduce interfaces/abstractions.",
             )
-
+            for _ in cycles
+        )
         return violations
 
 
@@ -1745,16 +1744,17 @@ class DeepInheritanceDetector(ViolationDetector[DeepInheritanceConfig]):
         principle = _principle_text(config)
         severity = _severity_level(config)
 
-        for chain in inheritance_chains:
-            violations.append(
-                Violation(
-                    principle=principle,
-                    severity=severity,
-                    message=_violation_message(config, contains="inheritance", index=1),
-                    suggestion="Favor composition over deep inheritance.",
-                )
+        violations.extend(
+            Violation(
+                principle=principle,
+                severity=severity,
+                message=_violation_message(
+                    config, contains="inheritance", index=1
+                ),
+                suggestion="Favor composition over deep inheritance.",
             )
-
+            for _ in inheritance_chains
+        )
         return violations
 
 
@@ -1811,18 +1811,17 @@ class FeatureEnvyDetector(ViolationDetector[FeatureEnvyConfig]):
             e for e in feature_envies if getattr(e, "occurrences", 0) >= min_occurrences
         ]
 
-        for envy in feature_envies:
-            violations.append(
-                Violation(
-                    principle=principle,
-                    severity=severity,
-                    message=_violation_message(
-                        config, contains="Multiple implementations", index=3
-                    ),
-                    suggestion="Consider moving the method to the target class or extracting a helper.",
-                )
+        violations.extend(
+            Violation(
+                principle=principle,
+                severity=severity,
+                message=_violation_message(
+                    config, contains="Multiple implementations", index=3
+                ),
+                suggestion="Consider moving the method to the target class or extracting a helper.",
             )
-
+            for _ in feature_envies
+        )
         return violations
 
 
@@ -1885,19 +1884,18 @@ class DuplicateImplementationDetector(ViolationDetector[DuplicateImplementationC
         principle = _principle_text(config)
         severity = _severity_level(config)
 
-        for duplicate in duplicates:
-            violations.append(
-                Violation(
-                    principle=principle,
-                    severity=severity,
-                    message=_violation_message(
-                        config, contains="Multiple implementations", index=3
-                    ),
-                    files=duplicate.files,
-                    suggestion="Consolidate duplicated implementations into a single utility or module.",
-                )
+        violations.extend(
+            Violation(
+                principle=principle,
+                severity=severity,
+                message=_violation_message(
+                    config, contains="Multiple implementations", index=3
+                ),
+                files=duplicate.files,
+                suggestion="Consolidate duplicated implementations into a single utility or module.",
             )
-
+            for duplicate in duplicates
+        )
         return violations
 
 

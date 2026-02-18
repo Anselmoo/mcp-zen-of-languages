@@ -79,7 +79,7 @@ class PowerShellApprovedVerbDetector(
         violations: list[Violation] = []
         for idx, line in enumerate(context.code.splitlines(), start=1):
             match = re.search(r"function\s+(\w+)-", line, re.IGNORECASE)
-            if match and match.group(1).lower() not in config.approved_verbs:
+            if match and match[1].lower() not in config.approved_verbs:
                 violations.append(
                     self.build_violation(
                         config,
@@ -180,9 +180,8 @@ class PowerShellPascalCaseDetector(
         """
         violations: list[Violation] = []
         for idx, line in enumerate(context.code.splitlines(), start=1):
-            match = re.search(r"function\s+(\w+)", line, re.IGNORECASE)
-            if match:
-                name = match.group(1)
+            if match := re.search(r"function\s+(\w+)", line, re.IGNORECASE):
+                name = match[1]
                 if not re.match(r"^[A-Z][A-Za-z0-9]*(-[A-Z][A-Za-z0-9]*)?$", name):
                     violations.append(
                         self.build_violation(
@@ -282,19 +281,18 @@ class PowerShellVerboseDebugDetector(
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if "Write-Host" in line:
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="Write-Host",
-                        location=Location(line=idx, column=line.find("Write-Host") + 1),
-                        suggestion=(
-                            "Use Write-Verbose or Write-Debug for logging output."
-                        ),
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="Write-Host",
+                location=Location(line=idx, column=line.find("Write-Host") + 1),
+                suggestion=(
+                    "Use Write-Verbose or Write-Debug for logging output."
+                ),
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if "Write-Host" in line
+        ]
         return violations
 
 
@@ -334,17 +332,16 @@ class PowerShellPositionalParamsDetector(
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if "$args" in line:
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="$args",
-                        location=Location(line=idx, column=line.find("$args") + 1),
-                        suggestion="Prefer named parameters over positional arguments.",
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="$args",
+                location=Location(line=idx, column=line.find("$args") + 1),
+                suggestion="Prefer named parameters over positional arguments.",
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if "$args" in line
+        ]
         return violations
 
 
@@ -643,12 +640,11 @@ class PowerShellAliasUsageDetector(
         violations: list[Violation] = []
         alias_pattern = re.compile(r"(?<!\w)(gci|ls|dir|cat|%|\?)(?!\w)")
         for idx, line in enumerate(context.code.splitlines(), start=1):
-            match = alias_pattern.search(line)
-            if match:
+            if match := alias_pattern.search(line):
                 violations.append(
                     self.build_violation(
                         config,
-                        contains=match.group(1),
+                        contains=match[1],
                         location=Location(line=idx, column=match.start(1) + 1),
                         suggestion="Use full cmdlet names instead of aliases.",
                     )
@@ -693,16 +689,20 @@ class PowerShellReturnObjectsDetector(
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        for token in ("Format-Table", "Out-String"):
-            if token in context.code:
-                return [
+        return next(
+            (
+                [
                     self.build_violation(
                         config,
                         contains=token,
                         suggestion="Return objects instead of formatted text.",
                     )
                 ]
-        return []
+                for token in ("Format-Table", "Out-String")
+                if token in context.code
+            ),
+            [],
+        )
 
 
 class PowerShellScopeUsageDetector(

@@ -123,7 +123,7 @@ def discover_pages(site_dir: Path) -> list[str]:
         if rel.endswith("/index.html"):
             pages.append("/" + rel.removesuffix("index.html"))
             continue
-        pages.append("/" + rel)
+        pages.append(f"/{rel}")
     return pages
 
 

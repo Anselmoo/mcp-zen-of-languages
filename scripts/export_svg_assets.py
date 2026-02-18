@@ -64,14 +64,13 @@ def _extract_dimensions(svg_text: str) -> tuple[int, int]:
     width_match = re.search(r'\bwidth="([0-9]+(?:\.[0-9]+)?)', svg_text)
     height_match = re.search(r'\bheight="([0-9]+(?:\.[0-9]+)?)', svg_text)
     if width_match and height_match:
-        return int(float(width_match.group(1))), int(float(height_match.group(1)))
+        return int(float(width_match[1])), int(float(height_match[1]))
 
-    viewbox_match = re.search(
+    if viewbox_match := re.search(
         r'\bviewBox="[0-9.\-]+\s+[0-9.\-]+\s+([0-9.\-]+)\s+([0-9.\-]+)"',
         svg_text,
-    )
-    if viewbox_match:
-        return int(float(viewbox_match.group(1))), int(float(viewbox_match.group(2)))
+    ):
+        return int(float(viewbox_match[1])), int(float(viewbox_match[2]))
 
     return 1200, 630
 

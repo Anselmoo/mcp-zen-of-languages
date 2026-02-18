@@ -158,7 +158,7 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
             match = re.match(r"\s*([a-zA-Z_][a-zA-Z0-9_]*)=", line)
             if not match:
                 continue
-            name = match.group(1)
+            name = match[1]
             if len(name) < min_length and name not in {"i", "j", "k"}:
                 return [
                     self.build_violation(
@@ -284,7 +284,7 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
         for idx, line in enumerate(context.code.splitlines(), start=1):
             if public_naming:
                 match = re.search(r"\bpublic\s+\w[\w<>,\s]*\s+([A-Za-z_]\w*)", line)
-                if match and not matches_style(match.group(1), public_naming):
+                if match and not matches_style(match[1], public_naming):
                     return [
                         self.build_violation(
                             config,

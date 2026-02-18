@@ -76,9 +76,7 @@ class DetectorConfig(BaseModel):
                 if contains in message:
                     return message
         if messages:
-            if 0 <= index < len(messages):
-                return messages[index]
-            return messages[0]
+            return messages[index] if 0 <= index < len(messages) else messages[0]
         return self.principle or self.principle_id or self.type
 
 

@@ -54,17 +54,16 @@ class TomlNoInlineTablesDetector(
         Returns:
             list[Violation]: One violation per line containing an inline table.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if re.search(r"=\s*\{", line):
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="{",
-                        location=Location(line=idx, column=line.find("{") + 1),
-                        suggestion="Prefer full tables over inline tables.",
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="{",
+                location=Location(line=idx, column=line.find("{") + 1),
+                suggestion="Prefer full tables over inline tables.",
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if re.search(r"=\s*\{", line)
+        ]
         return violations
 
 
@@ -108,7 +107,7 @@ class TomlDuplicateKeysDetector(
             match = re.match(r"^\s*([A-Za-z0-9_.-]+)\s*=", line)
             if not match:
                 continue
-            key = match.group(1)
+            key = match[1]
             if key in seen:
                 violations.append(
                     self.build_violation(
@@ -159,7 +158,7 @@ class TomlLowercaseKeysDetector(
             match = re.match(r"^\s*([A-Za-z0-9_.-]+)\s*=", line)
             if not match:
                 continue
-            key = match.group(1)
+            key = match[1]
             if any(char.isupper() for char in key):
                 violations.append(
                     self.build_violation(
@@ -204,17 +203,16 @@ class TomlTrailingCommasDetector(
         Returns:
             list[Violation]: One violation per line containing a trailing comma.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if re.search(r",\s*[\]\}]", line):
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="trailing comma",
-                        location=Location(line=idx, column=1),
-                        suggestion="Remove trailing commas for TOML clarity.",
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="trailing comma",
+                location=Location(line=idx, column=1),
+                suggestion="Remove trailing commas for TOML clarity.",
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if re.search(r",\s*[\]\}]", line)
+        ]
         return violations
 
 
@@ -354,7 +352,7 @@ class TomlIsoDatetimeDetector(
             match = re.search(r"=\s*\"([^\"]+)\"", line)
             if not match:
                 continue
-            value = match.group(1)
+            value = match[1]
             if re.fullmatch(r"\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}Z?", value):
                 continue
             if re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
@@ -407,12 +405,11 @@ class TomlFloatIntegerDetector(
         """
         violations: list[Violation] = []
         for idx, line in enumerate(context.code.splitlines(), start=1):
-            match = re.search(r"=\s*([0-9]+)\.0\b", line)
-            if match:
+            if match := re.search(r"=\s*([0-9]+)\.0\b", line):
                 violations.append(
                     self.build_violation(
                         config,
-                        contains=match.group(0),
+                        contains=match[0],
                         location=Location(line=idx, column=1),
                         suggestion="Use integers instead of floats ending in .0.",
                     )

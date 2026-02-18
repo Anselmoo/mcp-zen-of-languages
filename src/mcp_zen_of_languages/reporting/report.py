@@ -160,8 +160,7 @@ def _markdown_table(headers: list[str], rows: list[list[str]]) -> list[str]:
     header = "| " + " | ".join(headers) + " |"
     separator = "| " + " | ".join(["---"] * len(headers)) + " |"
     lines = [header, separator]
-    for row in rows:
-        lines.append("| " + " | ".join(row) + " |")
+    lines.extend("| " + " | ".join(row) + " |" for row in rows)
     return lines
 
 
@@ -205,24 +204,24 @@ def _format_gap_markdown(gaps: GapAnalysis) -> list[str]:
 
     rows: list[list[str]] = []
     if gaps.detector_gaps:
-        for gap in gaps.detector_gaps:
-            rows.append(
-                [
-                    "Detector",
-                    (
-                        f"{gap.language} {gap.rule_id} ({gap.severity}): "
-                        f"{gap.principle} — {gap.reason}"
-                    ),
-                ]
-            )
+        rows.extend(
+            [
+                "Detector",
+                (
+                    f"{gap.language} {gap.rule_id} ({gap.severity}): "
+                    f"{gap.principle} — {gap.reason}"
+                ),
+            ]
+            for gap in gaps.detector_gaps
+        )
     if gaps.feature_gaps:
-        for gap in gaps.feature_gaps:
-            rows.append(
-                [
-                    "Feature",
-                    f"{gap.area}: {gap.description} (Next: {gap.suggested_next_step})",
-                ]
-            )
+        rows.extend(
+            [
+                "Feature",
+                f"{gap.area}: {gap.description} (Next: {gap.suggested_next_step})",
+            ]
+            for gap in gaps.feature_gaps
+        )
     if not rows:
         rows.append(["None", "No gaps reported."])
     lines = ["## Gap Analysis"]
@@ -250,16 +249,15 @@ def _format_analysis_markdown(results: list[AnalysisResult]) -> list[str]:
         if not result.violations:
             lines.append("No violations detected.")
             continue
-        rows: list[list[str]] = []
-        for violation in result.violations[:10]:
-            rows.append(
-                [
-                    str(violation.severity),
-                    violation.principle,
-                    violation.message,
-                    violation.suggestion or "-",
-                ]
-            )
+        rows: list[list[str]] = [
+            [
+                str(violation.severity),
+                violation.principle,
+                violation.message,
+                violation.suggestion or "-",
+            ]
+            for violation in result.violations[:10]
+        ]
         lines.extend(
             _markdown_table(["Severity", "Principle", "Message", "Suggestion"], rows)
         )

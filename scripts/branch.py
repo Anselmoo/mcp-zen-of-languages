@@ -132,7 +132,7 @@ def cmd_new(args: argparse.Namespace) -> None:
     branch_name = branch.slug()
     commit_title = branch.commit_title()
 
-    base = _current_branch() if not args.dry_run else "<current>"
+    base = "<current>" if args.dry_run else _current_branch()
     print(f"\n{'[DRY RUN] ' if args.dry_run else ''}New branch from '{base}'")
     print(f"  Branch : {branch_name}")
     print(f"  Title  : {commit_title}\n")
@@ -175,7 +175,7 @@ def cmd_rescue(args: argparse.Namespace) -> None:
     branch_name = branch.slug()
     commit_title = branch.commit_title()
 
-    origin_branch = _current_branch() if not args.dry_run else "main"
+    origin_branch = "main" if args.dry_run else _current_branch()
 
     print(
         f"\n{'[DRY RUN] ' if args.dry_run else ''}"

@@ -849,10 +849,14 @@ def _format_prompt_markdown(bundle: PromptBundle) -> str:
             )
         else:
             lines.append("- No roadmap available.")
-        lines.append("")
-        lines.append("## Big Picture")
-        lines.append(f"- Health score: {bundle.big_picture.health_score:.1f}/100")
-        lines.append(f"- Trajectory: {bundle.big_picture.improvement_trajectory}")
+        lines.extend(
+            (
+                "",
+                "## Big Picture",
+                f"- Health score: {bundle.big_picture.health_score:.1f}/100",
+                f"- Trajectory: {bundle.big_picture.improvement_trajectory}",
+            )
+        )
         if bundle.big_picture.systemic_patterns:
             lines.append("- Systemic patterns:")
             lines.extend(
@@ -862,8 +866,7 @@ def _format_prompt_markdown(bundle: PromptBundle) -> str:
     if bundle.file_prompts:
         lines.append("## File Prompts")
         for prompt in bundle.file_prompts:
-            lines.append(prompt.prompt.strip())
-            lines.append("")
+            lines.extend((prompt.prompt.strip(), ""))
     else:
         lines.extend(["## File Prompts", "- No file-specific prompts generated.", ""])
     if bundle.generic_prompts:
@@ -930,9 +933,7 @@ def _resolve_prompt_export_path(export: str | None) -> Path | None:
         Path | None: Resolved path, or ``None`` when *export* is falsy.
     """
 
-    if not export:
-        return None
-    return Path(export)
+    return Path(export) if export else None
 
 
 def _run_prompts(args: PromptsArgs) -> int:
@@ -1064,10 +1065,9 @@ def _run_init_interactive(args: InitArgs) -> tuple[list[str], str, bool]:
     languages = args.languages
     if languages is None:
         detected_list = ", ".join(detected)
-        use_detected = Confirm.ask(
+        if use_detected := Confirm.ask(
             f"Detected languages: {detected_list}. Use these?", default=True
-        )
-        if use_detected:
+        ):
             languages = detected
         else:
             response = Prompt.ask(

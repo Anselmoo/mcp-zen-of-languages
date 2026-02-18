@@ -57,10 +57,11 @@ def _detectors_without_tests() -> list[str]:
                 covered.add(detector_name)
         if covered == detector_names:
             break
-    missing: list[str] = []
-    for detector_name in sorted(detector_names):
-        if detector_name not in covered:
-            missing.append(detector_name)
+    missing: list[str] = [
+        detector_name
+        for detector_name in sorted(detector_names)
+        if detector_name not in covered
+    ]
     return missing
 
 
@@ -70,8 +71,9 @@ def _build_feature_gaps() -> list[FeatureGap]:
     factory_languages = set(supported_languages())
     feature_gaps: list[FeatureGap] = []
 
-    missing_detector_languages = sorted(rules_languages - registry_languages)
-    if missing_detector_languages:
+    if missing_detector_languages := sorted(
+        rules_languages - registry_languages
+    ):
         feature_gaps.append(
             FeatureGap(
                 area="coverage",
@@ -85,8 +87,7 @@ def _build_feature_gaps() -> list[FeatureGap]:
             )
         )
 
-    missing_tests = _detectors_without_tests()
-    if missing_tests:
+    if missing_tests := _detectors_without_tests():
         feature_gaps.append(
             FeatureGap(
                 area="testing",
@@ -99,8 +100,9 @@ def _build_feature_gaps() -> list[FeatureGap]:
             )
         )
 
-    missing_server_routes = sorted(factory_languages - set(_SERVER_ROUTED_LANGUAGES))
-    if missing_server_routes:
+    if missing_server_routes := sorted(
+        factory_languages - set(_SERVER_ROUTED_LANGUAGES)
+    ):
         feature_gaps.append(
             FeatureGap(
                 area="routing",

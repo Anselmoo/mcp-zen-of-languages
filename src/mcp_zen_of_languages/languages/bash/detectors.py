@@ -123,17 +123,16 @@ class BashQuoteVariablesDetector(
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if re.search(r"\$\w+", line) and '"' not in line:
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="quote",
-                        location=Location(line=idx, column=1),
-                        suggestion='Quote variable expansions like "$var".',
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="quote",
+                location=Location(line=idx, column=1),
+                suggestion='Quote variable expansions like "$var".',
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if re.search(r"\$\w+", line) and '"' not in line
+        ]
         return violations
 
 
@@ -174,17 +173,16 @@ class BashEvalUsageDetector(
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if "eval" in line:
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="eval",
-                        location=Location(line=idx, column=line.find("eval") + 1),
-                        suggestion="Avoid eval; use arrays or case statements instead.",
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="eval",
+                location=Location(line=idx, column=line.find("eval") + 1),
+                suggestion="Avoid eval; use arrays or case statements instead.",
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if "eval" in line
+        ]
         return violations
 
 
@@ -225,17 +223,16 @@ class BashDoubleBracketsDetector(
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if re.search(r"\[[^\\[]", line) and "[[" not in line:
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="[",
-                        location=Location(line=idx, column=1),
-                        suggestion="Prefer [[ ]] over [ ] for conditionals.",
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="[",
+                location=Location(line=idx, column=1),
+                suggestion="Prefer [[ ]] over [ ] for conditionals.",
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if re.search(r"\[[^\\[]", line) and "[[" not in line
+        ]
         return violations
 
 
@@ -276,17 +273,16 @@ class BashCommandSubstitutionDetector(
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if "`" in line:
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="`",
-                        location=Location(line=idx, column=line.find("`") + 1),
-                        suggestion="Use $(...) instead of backticks.",
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="`",
+                location=Location(line=idx, column=line.find("`") + 1),
+                suggestion="Use $(...) instead of backticks.",
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if "`" in line
+        ]
         return violations
 
 
@@ -327,17 +323,16 @@ class BashReadonlyConstantsDetector(
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if re.match(r"^[A-Z][A-Z0-9_]*=", line) and "readonly" not in line:
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="readonly",
-                        location=Location(line=idx, column=1),
-                        suggestion="Declare constants with readonly.",
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="readonly",
+                location=Location(line=idx, column=1),
+                suggestion="Declare constants with readonly.",
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if re.match(r"^[A-Z][A-Z0-9_]*=", line) and "readonly" not in line
+        ]
         return violations
 
 
@@ -631,7 +626,7 @@ class BashMeaningfulNamesDetector(
             match = re.match(r"^\s*([A-Za-z_][A-Za-z0-9_]*)=", line)
             if not match:
                 continue
-            name = match.group(1)
+            name = match[1]
             if name.isupper() or name in {"i", "j", "k"}:
                 continue
             if len(name) < min_len:

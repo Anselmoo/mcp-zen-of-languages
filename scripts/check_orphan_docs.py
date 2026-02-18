@@ -70,8 +70,7 @@ def main() -> int:
             continue
         all_md.add(rel)
 
-    orphans = sorted(all_md - nav_paths)
-    if orphans:
+    if orphans := sorted(all_md - nav_paths):
         print(f"Found {len(orphans)} orphan doc(s) not in mkdocs.yml nav:")
         for orphan in orphans:
             print(f"  - {orphan}")

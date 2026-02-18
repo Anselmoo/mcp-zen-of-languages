@@ -8,9 +8,7 @@ from mcp_zen_of_languages.models import AnalysisResult
 def _sarif_level(severity: int) -> str:
     if severity >= 9:
         return "error"
-    if severity >= 4:
-        return "warning"
-    return "note"
+    return "warning" if severity >= 4 else "note"
 
 
 def analysis_results_to_sarif(

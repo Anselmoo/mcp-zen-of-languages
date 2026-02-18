@@ -107,12 +107,11 @@ class XmlAttributeUsageDetector(
             list[Violation]: A single violation for the first oversized attribute found.
         """
         for idx, line in enumerate(context.code.splitlines(), start=1):
-            match = re.search(r"\w+=\"([^\"]{30,})\"", line)
-            if match:
+            if match := re.search(r"\w+=\"([^\"]{30,})\"", line):
                 return [
                     self.build_violation(
                         config,
-                        contains=match.group(1)[:10],
+                        contains=match[1][:10],
                         location=Location(line=idx, column=1),
                         suggestion="Move large data values into child elements.",
                     )
@@ -235,8 +234,7 @@ class XmlHierarchyDetector(ViolationDetector[XmlHierarchyConfig], LocationHelper
         Returns:
             list[Violation]: A single violation when ungrouped repeated elements are found.
         """
-        tag_counts = re.findall(r"<([A-Za-z0-9_]+)>", context.code)
-        if tag_counts:
+        if tag_counts := re.findall(r"<([A-Za-z0-9_]+)>", context.code):
             duplicates = {tag for tag in tag_counts if tag_counts.count(tag) > 2}
             if duplicates and "<group>" not in context.code:
                 return [

@@ -109,11 +109,9 @@ class RustUnsafeBlocksDetector(ViolationDetector[RustUnsafeBlocksConfig]):
                 continue
             if line.strip().startswith("//"):
                 continue
-            has_comment = False
-            for back in range(max(0, idx - 2), idx):
-                if "// SAFETY:" in lines[back]:
-                    has_comment = True
-                    break
+            has_comment = any(
+                "// SAFETY:" in lines[back] for back in range(max(0, idx - 2), idx)
+            )
             if not has_comment:
                 violations.append(
                     self.build_violation(
@@ -270,12 +268,11 @@ class RustTypeSafetyDetector(ViolationDetector[RustTypeSafetyConfig]):
         struct_pattern = re.compile(r"struct\s+\w+\s*\{(?P<body>[^}]*)\}", re.S)
         for match in struct_pattern.finditer(context.code):
             body = match.group("body")
-            type_match = re.search(rf":\s*(?P<typ>{types_pattern})\b", body)
-            if type_match:
+            if type_match := re.search(rf":\s*(?P<typ>{types_pattern})\b", body):
                 violations.append(
                     self.build_violation(
                         config,
-                        contains=type_match.group("typ"),
+                        contains=type_match["typ"],
                         index=0,
                         suggestion=(
                             "Introduce newtypes or enums for domain-specific values instead "
@@ -319,8 +316,9 @@ class RustIteratorPreferenceDetector(ViolationDetector[RustIteratorPreferenceCon
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        loop_count = len(re.findall(r"\bfor\s+\w+\s+in\b", context.code))
-        loop_count += len(re.findall(r"\bwhile\b", context.code))
+        loop_count = len(re.findall(r"\bfor\s+\w+\s+in\b", context.code)) + len(
+            re.findall(r"\bwhile\b", context.code)
+        )
         if loop_count > config.max_loops:
             return [
                 self.build_violation(
@@ -450,19 +448,23 @@ class RustNewtypePatternDetector(ViolationDetector[RustNewtypePatternConfig]):
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        types_pattern = "|".join(re.escape(t) for t in config.primitive_types)
-        if not types_pattern:
-            return []
-        if re.search(rf"type\s+\w+\s*=\s*(?:{types_pattern})\b", context.code):
-            return [
-                self.build_violation(
-                    config,
-                    contains="type",
-                    index=0,
-                    suggestion="Prefer tuple struct newtypes over type aliases.",
+        if types_pattern := "|".join(re.escape(t) for t in config.primitive_types):
+            return (
+                [
+                    self.build_violation(
+                        config,
+                        contains="type",
+                        index=0,
+                        suggestion="Prefer tuple struct newtypes over type aliases.",
+                    )
+                ]
+                if re.search(
+                    rf"type\s+\w+\s*=\s*(?:{types_pattern})\b", context.code
                 )
-            ]
-        return []
+                else []
+            )
+        else:
+            return []
 
 
 class RustStdTraitsDetector(ViolationDetector[RustStdTraitsConfig]):
@@ -588,8 +590,9 @@ class RustLifetimeUsageDetector(ViolationDetector[RustLifetimeUsageConfig]):
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        lifetimes = len(re.findall(r"<\s*'\w+", context.code))
-        lifetimes += len(re.findall(r"'static", context.code))
+        lifetimes = len(re.findall(r"<\s*'\w+", context.code)) + len(
+            re.findall(r"'static", context.code)
+        )
         if lifetimes > config.max_explicit_lifetimes:
             return [
                 self.build_violation(

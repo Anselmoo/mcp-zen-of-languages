@@ -97,13 +97,11 @@ def detect_language_from_content(code: str) -> DetectionResult:
     # Relaxed heuristics: 'def ' alone is sufficient to indicate Python in many fixtures
     if "def " in code:
         return DetectionResult(language="python", confidence=0.9, method="heuristics")
-    if "end" in code and "def " in code:
-        return DetectionResult(language="ruby", confidence=0.8, method="heuristics")
     if "interface " in code or "=>" in code or "function " in code:
         return DetectionResult(
             language="typescript", confidence=0.85, method="heuristics"
         )
-    if "function " in code or "const " in code or "let " in code:
+    if "const " in code or "let " in code:
         return DetectionResult(
             language="javascript", confidence=0.8, method="heuristics"
         )

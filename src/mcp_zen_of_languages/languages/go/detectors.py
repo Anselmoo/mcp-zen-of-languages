@@ -243,7 +243,7 @@ class GoDeferUsageDetector(ViolationDetector[GoDeferUsageConfig]):
             prev_line = lines[idx - 2] if idx > 1 else ""
             if "defer" in prev_line:
                 continue
-            method = match.group(2)
+            method = match[2]
             contains = "Unlock" if method == "Unlock" else "Close"
             violations.append(
                 self.build_violation(
@@ -290,7 +290,7 @@ class GoNamingConventionDetector(ViolationDetector[GoNamingConventionConfig]):
         violations: list[Violation] = []
         if not config.detect_long_names:
             return violations
-        for match in re.finditer(r"\bvar\s+(\w{25,})\b", context.code):
+        for _ in re.finditer(r"\bvar\s+(\w{25,})\b", context.code):
             violations.append(
                 self.build_violation(
                     config,
@@ -516,9 +516,8 @@ class GoPackageNamingDetector(ViolationDetector[GoPackageNamingConfig]):
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        match = re.search(r"^\s*package\s+(\w+)", context.code, re.M)
-        if match:
-            name = match.group(1)
+        if match := re.search(r"^\s*package\s+(\w+)", context.code, re.M):
+            name = match[1]
             if name.endswith("s") or "_" in name:
                 return [
                     self.build_violation(

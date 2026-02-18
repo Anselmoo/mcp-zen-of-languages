@@ -38,7 +38,7 @@ def build_import_graph(file_imports: dict[str, list[str]]) -> DependencyAnalysis
             g.add_edge(f, imp)
 
     nodes = list(g.nodes())
-    edges = [(u, v) for u, v in g.edges()]
+    edges = list(g.edges())
     cycles_raw = list(nx.simple_cycles(g))
     cycles = [DependencyCycle(cycle=c) for c in cycles_raw]
     return DependencyAnalysis(nodes=nodes, edges=edges, cycles=cycles)

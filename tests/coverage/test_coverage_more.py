@@ -688,7 +688,7 @@ def test_language_detector_javascript_heuristic():
     )
 
     result = detect_language_from_content("function test() {}")
-    assert result.language == "typescript" or result.language == "javascript"
+    assert result.language in ["typescript", "javascript"]
 
 
 def test_language_detector_typescript_interface():
@@ -816,7 +816,7 @@ def test_python_analyzer_parse_exception(monkeypatch):
     analyzer = PythonAnalyzer()
     monkeypatch.setattr(
         "mcp_zen_of_languages.utils.parsers.parse_python",
-        lambda _: (_ for _ in ()).throw(RuntimeError("boom")),
+        lambda _: iter(()).throw(RuntimeError("boom")),
     )
     assert analyzer.parse_code("def foo():\n    pass") is None
 

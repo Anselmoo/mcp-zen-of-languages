@@ -31,7 +31,7 @@ def test_build_rule_coverage_python() -> None:
     missing = {
         rule_id for rule_id, detectors in coverage.rules.items() if not detectors
     }
-    assert missing == set()
+    assert not missing
     assert "nesting_depth" in coverage.rules["python-005"]
 
 

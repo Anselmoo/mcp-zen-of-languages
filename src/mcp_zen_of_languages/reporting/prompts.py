@@ -174,14 +174,15 @@ def _format_file_prompt(result: AnalysisResult, violations: list[Violation]) -> 
         f"Target: {path} ({result.language})",
         f"Goal: {PROMPT_GOAL}",
         "Requirements:",
+        *[
+            f"{idx}. {req}"
+            for idx, req in enumerate(PROMPT_REQUIREMENTS, start=1)
+        ],
+        "Checklist:",
+        *[f"- {item}" for item in QUALITY_CHECKLIST],
+        "",
+        "Violations:",
     ]
-    lines.extend(
-        [f"{idx}. {req}" for idx, req in enumerate(PROMPT_REQUIREMENTS, start=1)]
-    )
-    lines.append("Checklist:")
-    lines.extend([f"- {item}" for item in QUALITY_CHECKLIST])
-    lines.append("")
-    lines.append("Violations:")
     for violation in violations[:8]:
         pattern = resolve_pattern(violation, result.language)
         theme = classify_violation(violation)
@@ -251,9 +252,10 @@ def build_prompt_bundle(results: list[AnalysisResult]) -> PromptBundle:
     ]
     languages_seen = {result.language for result in results}
     for language in sorted(languages_seen):
-        for title, prompt in GENERIC_PROMPTS_BY_LANGUAGE.get(language, []):
-            generic_prompts.append(GenericPrompt(title=title, prompt=prompt))
-
+        generic_prompts.extend(
+            GenericPrompt(title=title, prompt=prompt)
+            for title, prompt in GENERIC_PROMPTS_BY_LANGUAGE.get(language, [])
+        )
     big_picture = build_big_picture_analysis(results)
     return PromptBundle(
         file_prompts=file_prompts,

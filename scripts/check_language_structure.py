@@ -83,8 +83,9 @@ def main() -> int:
         if entry.name not in languages:
             errors.append(f"{entry.name}: no rules registry entry")
             continue
-        missing = sorted(REQUIRED_FILES - {p.name for p in entry.iterdir()})
-        if missing:
+        if missing := sorted(
+            REQUIRED_FILES - {p.name for p in entry.iterdir()}
+        ):
             errors.append(f"{entry.name}: missing {', '.join(missing)}")
             continue
         mapping_module_name = f"mcp_zen_of_languages.languages.{entry.name}.mapping"
@@ -135,8 +136,7 @@ def main() -> int:
             if meta.language != entry.name:
                 continue
             rule_map_keys.update(meta.rule_map.keys())
-        unknown_rule_keys = sorted(rule_map_keys - rule_ids)
-        if unknown_rule_keys:
+        if unknown_rule_keys := sorted(rule_map_keys - rule_ids):
             errors.append(
                 f"{entry.name}: rule_map references unknown rules {unknown_rule_keys}"
             )
@@ -169,8 +169,7 @@ def main() -> int:
                 )
             if full_coverage:
                 continue
-            missing_specs = sorted(required_ids - covered)
-            if missing_specs:
+            if missing_specs := sorted(required_ids - covered):
                 errors.append(
                     f"{entry.name}: {principle.id} missing violations {missing_specs}"
                 )

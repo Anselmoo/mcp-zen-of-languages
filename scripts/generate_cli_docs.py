@@ -217,9 +217,10 @@ def generate() -> str:
             continue
         commands[cmd_name] = cmd
 
-    # --- Frontmatter ---
-    sections.append(
-        textwrap.dedent("""\
+    sections.extend(
+        (
+            textwrap.dedent(
+                """\
         ---
         title: CLI Reference
         description: The CLI is available as zen (short alias) or mcp-zen-of-languages.
@@ -242,13 +243,12 @@ def generate() -> str:
         !!! info "MCP-first workflow"
             If you're using an MCP-capable editor or agent, start with [MCP Tools Reference](mcp-tools-reference.md). Use the CLI when you need local checks, export artifacts, or CI automation.
 
-    """)
+    """
+            ),
+            "## Commands at a glance\n\n",
+        )
     )
-
-    # --- Commands at a glance ---
-    sections.append("## Commands at a glance\n\n")
-    sections.append("| Command | Purpose |\n")
-    sections.append("|---------|--------|\n")
+    sections.extend(("| Command | Purpose |\n", "|---------|--------|\n"))
     for cmd_name, cmd in commands.items():
         first_line = _extract_first_paragraph(cmd.help or "")
         sections.append(f"| `zen {cmd_name}` | {first_line} |\n")
@@ -278,18 +278,14 @@ def generate() -> str:
             usage = _build_usage(cmd_name, cmd)
             sections.append(f"```bash\n{usage}\n```\n\n")
 
-            # First paragraph
-            first_para = _extract_first_paragraph(full_doc)
-            if first_para:
+            if first_para := _extract_first_paragraph(full_doc):
                 sections.append(f"{first_para}\n\n")
 
-            # Options table
-            params = [
+            if params := [
                 p
                 for p in getattr(cmd, "params", [])
                 if not isinstance(p, click.Argument)
-            ]
-            if params:
+            ]:
                 sections.append("**Options:**\n\n")
                 sections.append("| Option | Default | Description |\n")
                 sections.append("|--------|---------|-------------|\n")
@@ -308,9 +304,7 @@ def generate() -> str:
                     sections.append(f"| {sig} | {default_str} | {help_text} |\n")
                 sections.append("\n")
 
-            # Returns / exit code note from docstring
-            returns = _extract_returns_section(full_doc)
-            if returns:
+            if returns := _extract_returns_section(full_doc):
                 sections.append(f"**Returns:** {returns}\n\n")
 
             sections.append("---\n\n")

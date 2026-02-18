@@ -69,17 +69,16 @@ class CSharpAsyncAwaitDetector(
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if ".Result" in line or ".Wait()" in line:
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="async",
-                        location=Location(line=idx, column=1),
-                        suggestion="Avoid blocking on tasks; use async/await.",
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="async",
+                location=Location(line=idx, column=1),
+                suggestion="Avoid blocking on tasks; use async/await.",
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if ".Result" in line or ".Wait()" in line
+        ]
         return violations
 
 
@@ -115,19 +114,18 @@ class CSharpStringInterpolationDetector(
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if "String.Format" in line:
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="String.Format",
-                        location=Location(line=idx, column=1),
-                        suggestion=(
-                            'Use string interpolation ($"...") instead of String.Format.'
-                        ),
-                    )
-                )
+        violations: list[Violation] = [
+            self.build_violation(
+                config,
+                contains="String.Format",
+                location=Location(line=idx, column=1),
+                suggestion=(
+                    'Use string interpolation ($"...") instead of String.Format.'
+                ),
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if "String.Format" in line
+        ]
         return violations
 
 
@@ -207,9 +205,9 @@ class CSharpExpressionBodiedDetector(
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if re.search(r"\bget\s*\{\s*return", line):
-                return [
+        return next(
+            (
+                [
                     self.build_violation(
                         config,
                         contains="expression-bodied",
@@ -217,7 +215,11 @@ class CSharpExpressionBodiedDetector(
                         suggestion="Use expression-bodied members for simple getters.",
                     )
                 ]
-        return []
+                for idx, line in enumerate(context.code.splitlines(), start=1)
+                if re.search(r"\bget\s*\{\s*return", line)
+            ),
+            [],
+        )
 
 
 class CSharpVarDetector(ViolationDetector[CSharpVarConfig], LocationHelperMixin):
@@ -253,16 +255,16 @@ class CSharpVarDetector(ViolationDetector[CSharpVarConfig], LocationHelperMixin)
         """
         violations: list[Violation] = []
         pattern = re.compile(r"\b(int|string|bool|double|float|decimal)\s+\w+\s*=")
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if pattern.search(line):
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="var",
-                        location=Location(line=idx, column=1),
-                        suggestion="Use var when the type is obvious.",
-                    )
-                )
+        violations.extend(
+            self.build_violation(
+                config,
+                contains="var",
+                location=Location(line=idx, column=1),
+                suggestion="Use var when the type is obvious.",
+            )
+            for idx, line in enumerate(context.code.splitlines(), start=1)
+            if pattern.search(line)
+        )
         return violations
 
 
@@ -298,9 +300,9 @@ class CSharpPatternMatchingDetector(
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if "is " in line and "switch" not in line:
-                return [
+        return next(
+            (
+                [
                     self.build_violation(
                         config,
                         contains="pattern",
@@ -308,7 +310,11 @@ class CSharpPatternMatchingDetector(
                         suggestion="Use pattern matching (is/expression) instead of casts.",
                     )
                 ]
-        return []
+                for idx, line in enumerate(context.code.splitlines(), start=1)
+                if "is " in line and "switch" not in line
+            ),
+            [],
+        )
 
 
 class CSharpCollectionExpressionDetector(
@@ -343,9 +349,9 @@ class CSharpCollectionExpressionDetector(
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if re.search(r"new\s+List|new\s+\w+\[\]", line):
-                return [
+        return next(
+            (
+                [
                     self.build_violation(
                         config,
                         contains="collection",
@@ -353,7 +359,11 @@ class CSharpCollectionExpressionDetector(
                         suggestion="Prefer collection expressions ([]) for simple lists.",
                     )
                 ]
-        return []
+                for idx, line in enumerate(context.code.splitlines(), start=1)
+                if re.search(r"new\s+List|new\s+\w+\[\]", line)
+            ),
+            [],
+        )
 
 
 class CSharpNamingConventionDetector(
@@ -408,7 +418,7 @@ class CSharpNamingConventionDetector(
         for idx, line in enumerate(context.code.splitlines(), start=1):
             match = re.search(r"\bpublic\s+\w[\w<>,\s]*\s+([A-Za-z_]\w*)", line)
             if match and config.public_naming:
-                name = match.group(1)
+                name = match[1]
                 if not matches_style(name, config.public_naming):
                     return [
                         self.build_violation(

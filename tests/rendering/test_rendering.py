@@ -9,6 +9,7 @@ from rich.panel import Panel
 from rich.progress import MofNCompleteColumn
 from rich.table import Table
 
+from mcp_zen_of_languages import __version__
 from mcp_zen_of_languages.rendering import progress as progress_module
 from mcp_zen_of_languages.rendering.console import (
     get_banner_art,
@@ -165,7 +166,7 @@ def test_print_banner_outputs(monkeypatch, capsys):
     monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
     print_banner()
     captured = capsys.readouterr()
-    assert "v0.1.1" in captured.out
+    assert f"v{__version__}" in captured.out
     assert ("of Languages" in captured.out) or ("********" in captured.out)
 
 
@@ -181,7 +182,7 @@ def test_print_banner_snapshot(monkeypatch):
     print_banner(output_console=capture_console)
     output = buffer.getvalue()
     assert "ZEN" in output
-    assert "v0.1.1" in output
+    assert f"v{__version__}" in output
     assert "╔" in output
 
 

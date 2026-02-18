@@ -12,7 +12,7 @@ This is an MCP server for multi-language code analysis against "zen principles" 
 - **analyzers/pipeline.py**: Builds detector configs from rules and merges overrides
 - **analyzers/detectors/**: Individual violation detectors (Strategy pattern)
 - **models.py**: Analysis results with dict-like access for legacy compatibility
-- **cli.py**: Local analysis wrapper (`mcp-zen-of-languages check file.py`)
+- **cli.py**: Local analysis wrapper (`zen check file.py`)
 
 Data flow: `server`/`cli` -> `create_analyzer()` -> `BaseAnalyzer.analyze()` (parse/metrics) -> `DetectionPipeline` detectors -> `AnalysisResult`.
 
@@ -26,7 +26,7 @@ python -m mcp_zen_of_languages
 zen-mcp-server
 
 # For local CLI analysis
-mcp-zen-of-languages check myfile.py
+zen check myfile.py
 ```
 
 ## Build, Test, Lint
@@ -72,7 +72,7 @@ mcp-zen-of-languages check myfile.py
 
 - External: fastmcp, networkx, pydantic, pygments, radon, tree-sitter
 - Config: `zen-config.yaml` with language-specific pipeline overrides
-- CLI: Wraps MCP tools for local `mcp-zen-of-languages check file.py` usage
+- CLI: Wraps MCP tools for local `zen check file.py` usage
 
 ## Terminal UX Guidelines
 

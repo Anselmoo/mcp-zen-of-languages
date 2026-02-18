@@ -1100,7 +1100,7 @@ async def onboard_project(
             title="Integrate with CI/CD",
             description="Add zen analysis to your CI pipeline for continuous code quality monitoring.",
             action="ci_integration",
-            example="mcp-zen-of-languages check src/ --severity-threshold 7",
+            example="zen check src/ --severity-threshold 7",
         ),
     ]
 

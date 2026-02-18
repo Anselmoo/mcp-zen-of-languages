@@ -196,6 +196,9 @@ def test_main_uses_sys_argv_for_help(monkeypatch, capsys):
     assert "full-screen TUI" in output
     assert "[bold" not in output
     assert "check" in output
+    assert "Usage:" in output
+    assert "mcp-zen-of-languages" not in output
+    assert "zen-cli" not in output
     _assert_max_width(output)
 
 
@@ -270,6 +273,12 @@ def test_zen_alias_entrypoint_present():
         ep.name == "zen" and ep.value == "mcp_zen_of_languages.cli:main"
         for ep in entry_points
     )
+
+
+def test_deprecated_cli_alias_entrypoints_absent():
+    entry_points = metadata.entry_points(group="console_scripts")
+    deprecated = {"mcp-zen-of-languages", "zen-of-languages", "zen-cli"}
+    assert all(ep.name not in deprecated for ep in entry_points)
 
 
 SAMPLES = {

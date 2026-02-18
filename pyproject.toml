@@ -1,6 +1,6 @@
 [project]
 name = "mcp-zen-of-languages"
-version = "0.1.1"
+version = "0.2.0"
 description = "Multi-language architectural and idiomatic code analysis via CLI and MCP server."
 readme = "README.md"
 authors = [{ name = "Anselm Hahn", email = "Anselm.Hahn@gmail.com" }]
@@ -44,7 +44,6 @@ Issues = "https://github.com/Anselmoo/mcp-zen-of-languages/issues"
 Source = "https://github.com/Anselmoo/mcp-zen-of-languages"
 
 [project.scripts]
-mcp-zen-of-languages = "mcp_zen_of_languages.cli:main"
 zen = "mcp_zen_of_languages.cli:main"
 zen-mcp-server = "mcp_zen_of_languages.__main__:main"
 

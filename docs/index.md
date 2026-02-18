@@ -63,6 +63,9 @@ Every programming language has a philosophy — a sense of what "good code" look
 ## Quickstart
 
 ```bash
+# MCP server (IDE/agent workflows)
+uvx --from mcp-zen-of-languages zen-mcp-server
+
 # Run without installing (recommended)
 uvx --from mcp-zen-of-languages zen init
 uvx --from mcp-zen-of-languages zen report path/to/project

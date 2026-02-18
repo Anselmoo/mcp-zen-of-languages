@@ -1,6 +1,6 @@
 ---
 title: CLI Reference
-description: The CLI is available as zen (short alias) or mcp-zen-of-languages.
+description: The CLI executable is `zen`.
 icon: material/book-open-page-variant
 tags:
   - CLI
@@ -15,7 +15,7 @@ tags:
 >
 > Regenerate with: `uv run python scripts/generate_cli_docs.py`
 
-The CLI is available as `zen` (short alias) or `mcp-zen-of-languages`. It is the local/CI interface for the same analysis capabilities exposed through MCP tools. All commands support `--quiet` to suppress Rich panels and banners.
+The CLI executable is `zen`. It is the local/CI interface for the same analysis capabilities exposed through MCP tools. All commands support `--quiet` to suppress Rich panels and banners.
 
 !!! info "MCP-first workflow"
     If you're using an MCP-capable editor or agent, start with [MCP Tools Reference](mcp-tools-reference.md). Use the CLI when you need local checks, export artifacts, or CI automation.

@@ -1065,7 +1065,7 @@ def _run_init_interactive(args: InitArgs) -> tuple[list[str], str, bool]:
     languages = args.languages
     if languages is None:
         detected_list = ", ".join(detected)
-        if use_detected := Confirm.ask(
+        if Confirm.ask(
             f"Detected languages: {detected_list}. Use these?", default=True
         ):
             languages = detected

@@ -75,9 +75,7 @@ class CppSmartPointerDetector(
                 config,
                 contains="new",
                 location=Location(line=idx, column=1),
-                suggestion=(
-                    "Prefer smart pointers and RAII over manual new/delete."
-                ),
+                suggestion=("Prefer smart pointers and RAII over manual new/delete."),
             )
             for idx, line in enumerate(context.code.splitlines(), start=1)
             if re.search(r"\bnew\b", line) or re.search(r"\bdelete\b", line)
@@ -541,8 +539,7 @@ class CppAvoidGlobalsDetector(
                 suggestion="Avoid mutable globals; use scoped state.",
             )
             for idx, line in enumerate(context.code.splitlines(), start=1)
-            if re.match(r"\s*(static|extern)\s+", line)
-            and "static_assert" not in line
+            if re.match(r"\s*(static|extern)\s+", line) and "static_assert" not in line
         ]
         return violations
 

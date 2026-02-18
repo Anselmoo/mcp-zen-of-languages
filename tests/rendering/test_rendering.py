@@ -199,6 +199,18 @@ def test_get_banner_art_uses_pyfiglet(monkeypatch):
     assert "of Languages" in art
 
 
+def test_get_banner_art_falls_back_when_pyfiglet_errors(monkeypatch):
+    console_module = importlib.import_module("mcp_zen_of_languages.rendering.console")
+    monkeypatch.setattr(
+        console_module,
+        "import_module",
+        lambda _name: (_ for _ in ()).throw(RuntimeError("boom")),
+    )
+    art = get_banner_art()
+    assert "_____" in art
+    assert "of Languages" in art
+
+
 def test_box_style_hierarchy_is_distinct():
     assert BOX_BANNER != BOX_SUMMARY
     assert BOX_SUMMARY != BOX_CONTENT

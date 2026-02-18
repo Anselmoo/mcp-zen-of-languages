@@ -136,14 +136,8 @@ extend-ignore = [
     "PLW1510", # subprocess-run-without-check
     "PLW2901", # redefined-loop-name
     "PLE0605", # invalid-all-format
-    # Performance
-    "PERF102", # incorrect-dict-iterator
-    "PERF401", # manual-list-comprehension
     # Simplifications
-    "SIM101", # duplicate-isinstance-call
-    "SIM102", # collapsible-if
     "SIM114", # if-with-same-arms
-    "SIM118", # in-dict-keys
     # Private access / naming
     "SLF001", # private-member-access
     "N806",   # non-lowercase-variable-in-function

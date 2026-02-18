@@ -458,13 +458,10 @@ class RustNewtypePatternDetector(ViolationDetector[RustNewtypePatternConfig]):
                         suggestion="Prefer tuple struct newtypes over type aliases.",
                     )
                 ]
-                if re.search(
-                    rf"type\s+\w+\s*=\s*(?:{types_pattern})\b", context.code
-                )
+                if re.search(rf"type\s+\w+\s*=\s*(?:{types_pattern})\b", context.code)
                 else []
             )
-        else:
-            return []
+        return []
 
 
 class RustStdTraitsDetector(ViolationDetector[RustStdTraitsConfig]):

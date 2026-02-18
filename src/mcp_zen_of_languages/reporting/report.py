@@ -301,8 +301,12 @@ def _format_prompts_markdown(context: ReportContext) -> list[str]:
         lines.append("- No file-specific prompts generated.")
     lines.append("### Generic Prompts")
     if context.prompts.generic_prompts:
-        for prompt in context.prompts.generic_prompts:
-            lines.append(f"- {prompt.title}: {prompt.prompt}")
+        lines.extend(
+            [
+                f"- {prompt.title}: {prompt.prompt}"
+                for prompt in context.prompts.generic_prompts
+            ]
+        )
     else:
         lines.append("- No generic prompts available.")
     return lines

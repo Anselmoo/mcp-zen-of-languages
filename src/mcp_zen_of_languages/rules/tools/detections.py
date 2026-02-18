@@ -377,7 +377,7 @@ def detect_deep_inheritance(
         One ``InheritanceFinding`` per chain exceeding *max_depth*.
     """
     parent_map: dict[str, list[str]] = {}
-    for fname, code in code_map.items():
+    for code in code_map.values():
         for m in re.finditer(r"^class\s+(\w+)\(([^\)]+)\)", code, flags=re.M):
             cls = m.group(1)
             parents = [p.strip().split()[0] for p in m.group(2).split(",") if p.strip()]
@@ -395,15 +395,19 @@ def detect_deep_inheritance(
             return [start]
         chains = []
         for p in parents:
-            for tail in walk_chain(p, seen):
-                chains.append([start] + (tail if isinstance(tail, list) else [tail]))
+            chains.extend(
+                [start] + (tail if isinstance(tail, list) else [tail])
+                for tail in walk_chain(p, seen)
+            )
         return chains
 
     for cls in parent_map:
         chains = walk_chain(cls, set())
-        for ch in chains:
-            if isinstance(ch, list) and len(ch) - 1 > max_depth:
-                results.append(InheritanceFinding(chain=ch, depth=len(ch) - 1))
+        results.extend(
+            InheritanceFinding(chain=ch, depth=len(ch) - 1)
+            for ch in chains
+            if isinstance(ch, list) and len(ch) - 1 > max_depth
+        )
     return results
 
 

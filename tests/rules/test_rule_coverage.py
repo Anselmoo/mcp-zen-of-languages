@@ -53,7 +53,7 @@ def test_build_all_rule_coverage_has_no_missing_rules() -> None:
 
 def test_build_explicit_rule_coverage_powershell() -> None:
     coverage = build_explicit_rule_coverage("powershell")
-    for rule_id, detectors in coverage.rules.items():
+    for detectors in coverage.rules.values():
         assert detectors
 
 

@@ -213,9 +213,13 @@ def _build_mermaid(principles, detector_map) -> str:
         seen_detectors.append(det_name)
         det_id = f"det_{det_name}"
         lines.append(f'    {det_id}["{det_name}"]')
-        for rid in sorted(binding.rule_ids):
-            if rid in rule_labels:
-                lines.append(f"    {rule_labels[rid]} --> {det_id}")
+        lines.extend(
+            [
+                f"    {rule_labels[rid]} --> {det_id}"
+                for rid in sorted(binding.rule_ids)
+                if rid in rule_labels
+            ]
+        )
 
     lines.extend(
         (
@@ -226,8 +230,7 @@ def _build_mermaid(principles, detector_map) -> str:
     for p in principles:
         safe_id = p.id.replace("-", "_")
         lines.append(f"    class {safe_id} principle")
-    for det_name in seen_detectors:
-        lines.append(f"    class det_{det_name} detector")
+    lines.extend(f"    class det_{det_name} detector" for det_name in seen_detectors)
 
     return "\n".join(lines)
 

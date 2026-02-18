@@ -320,7 +320,11 @@ class YamlConsistencyDetector(
                     suggestion="Use a consistent list marker style (e.g., '-').",
                 )
             ]
-        if markers and config.allowed_list_markers and not markers.issubset(set(config.allowed_list_markers)):
+        if (
+            markers
+            and config.allowed_list_markers
+            and not markers.issubset(set(config.allowed_list_markers))
+        ):
             return [
                 self.build_violation(
                     config,

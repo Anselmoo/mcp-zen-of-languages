@@ -512,9 +512,7 @@ def get_registry_detector_gaps(
     """
     gaps: dict[str, list[str]] = {}
     for language in registry.values():
-        if missing := get_missing_detector_rules(
-            language, explicit_only=explicit_only
-        ):
+        if missing := get_missing_detector_rules(language, explicit_only=explicit_only):
             gaps[language.language] = missing
     return gaps
 

@@ -239,7 +239,7 @@ class BareExceptDetector(ViolationDetector[BareExceptConfig], LocationHelperMixi
                     )
                 )
                 continue
-            if empty_inline := re.match(
+            if re.match(
                 r"except\s+\w+(?:\s+as\s+\w+)?\s*:\s*(pass|\.\.\.)\s*$",
                 stripped,
             ):
@@ -260,9 +260,7 @@ class BareExceptDetector(ViolationDetector[BareExceptConfig], LocationHelperMixi
                     )
                 )
                 continue
-            if empty_header := re.match(
-                r"except\s+\w+(?:\s+as\s+\w+)?\s*:\s*$", stripped
-            ):
+            if re.match(r"except\s+\w+(?:\s+as\s+\w+)?\s*:\s*$", stripped):
                 next_line = lines[i] if i < len(lines) else ""
                 if next_line.strip() in {"pass", "..."}:
                     loc = Location(line=i, column=line.find("except") + 1)
@@ -604,24 +602,21 @@ class DocstringDetector(ViolationDetector[DocstringConfig], LocationHelperMixin)
                             ),
                         )
                     )
-            elif isinstance(node, ast.ClassDef):
-                if ast.get_docstring(node) is None:
-                    loc = self.find_location_by_substring(
-                        context.code, f"class {node.name}"
+            elif isinstance(node, ast.ClassDef) and ast.get_docstring(node) is None:
+                loc = self.find_location_by_substring(
+                    context.code, f"class {node.name}"
+                )
+                violations.append(
+                    Violation(
+                        principle=config.principle
+                        or config.principle_id
+                        or config.type,
+                        severity=config.severity or 4,
+                        message=message,
+                        location=loc,
+                        suggestion=("Add class docstring describing responsibilities."),
                     )
-                    violations.append(
-                        Violation(
-                            principle=config.principle
-                            or config.principle_id
-                            or config.type,
-                            severity=config.severity or 4,
-                            message=message,
-                            location=loc,
-                            suggestion=(
-                                "Add class docstring describing responsibilities."
-                            ),
-                        )
-                    )
+                )
         return violations
 
 
@@ -841,9 +836,7 @@ class NameStyleDetector(ViolationDetector[NameStyleConfig], LocationHelperMixin)
             if isinstance(node, ast.FunctionDef) and not self._is_snake_case(node.name):
                 loc = self.ast_node_to_location(
                     context.ast_tree, node
-                ) or self.find_location_by_substring(
-                    context.code, f"def {node.name}"
-                )
+                ) or self.find_location_by_substring(context.code, f"def {node.name}")
                 violations.append(
                     Violation(
                         principle=principle,
@@ -1236,11 +1229,10 @@ class CyclomaticComplexityDetector(
 
                 if isinstance(tree, ast.AST):
                     for node in ast.walk(tree):
-                        if isinstance(node, ast.FunctionDef):
-                            if loc := self.ast_node_to_location(
-                                context.ast_tree, node
-                            ):
-                                return loc
+                        if isinstance(node, ast.FunctionDef) and (
+                            loc := self.ast_node_to_location(context.ast_tree, node)
+                        ):
+                            return loc
             except Exception:
                 pass
 
@@ -1480,11 +1472,14 @@ class LongFunctionDetector(ViolationDetector[LongFunctionConfig], LocationHelper
 
                 if isinstance(tree, ast.AST):
                     for node in ast.walk(tree):
-                        if isinstance(node, ast.FunctionDef) and node.name == func_name:
-                            if loc := self.ast_node_to_location(
-                                context.ast_tree, node
-                            ):
-                                return loc
+                        if (
+                            isinstance(node, ast.FunctionDef)
+                            and node.name == func_name
+                            and (
+                                loc := self.ast_node_to_location(context.ast_tree, node)
+                            )
+                        ):
+                            return loc
             except Exception:
                 pass
 
@@ -1544,9 +1539,7 @@ class GodClassDetector(ViolationDetector[GodClassConfig]):
             Violation(
                 principle=principle,
                 severity=severity,
-                message=_violation_message(
-                    config, contains="Classes longer", index=1
-                ),
+                message=_violation_message(config, contains="Classes longer", index=1),
                 suggestion="Break the large class into smaller cohesive classes.",
             )
             for _ in god_classes
@@ -1678,9 +1671,7 @@ class CircularDependencyDetector(ViolationDetector[CircularDependencyConfig]):
             Violation(
                 principle=principle,
                 severity=severity,
-                message=_violation_message(
-                    config, contains="dependencies", index=0
-                ),
+                message=_violation_message(config, contains="dependencies", index=0),
                 suggestion="Refactor to break cycles or introduce interfaces/abstractions.",
             )
             for _ in cycles
@@ -1748,9 +1739,7 @@ class DeepInheritanceDetector(ViolationDetector[DeepInheritanceConfig]):
             Violation(
                 principle=principle,
                 severity=severity,
-                message=_violation_message(
-                    config, contains="inheritance", index=1
-                ),
+                message=_violation_message(config, contains="inheritance", index=1),
                 suggestion="Favor composition over deep inheritance.",
             )
             for _ in inheritance_chains

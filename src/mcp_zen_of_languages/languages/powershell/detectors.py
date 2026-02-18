@@ -286,9 +286,7 @@ class PowerShellVerboseDebugDetector(
                 config,
                 contains="Write-Host",
                 location=Location(line=idx, column=line.find("Write-Host") + 1),
-                suggestion=(
-                    "Use Write-Verbose or Write-Debug for logging output."
-                ),
+                suggestion=("Use Write-Verbose or Write-Debug for logging output."),
             )
             for idx, line in enumerate(context.code.splitlines(), start=1)
             if "Write-Host" in line

@@ -83,9 +83,7 @@ def main() -> int:
         if entry.name not in languages:
             errors.append(f"{entry.name}: no rules registry entry")
             continue
-        if missing := sorted(
-            REQUIRED_FILES - {p.name for p in entry.iterdir()}
-        ):
+        if missing := sorted(REQUIRED_FILES - {p.name for p in entry.iterdir()}):
             errors.append(f"{entry.name}: missing {', '.join(missing)}")
             continue
         mapping_module_name = f"mcp_zen_of_languages.languages.{entry.name}.mapping"

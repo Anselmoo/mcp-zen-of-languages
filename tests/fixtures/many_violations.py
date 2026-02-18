@@ -7,7 +7,12 @@ class DataProcessor:
     def process(self, records):
         result = []
         for record in records:
-            if record and isinstance(record, dict) and "value" in record and record["value"] > 0:
+            if (
+                record
+                and isinstance(record, dict)
+                and "value" in record
+                and record["value"] > 0
+            ):
                 if record["value"] % 2 == 0:
                     result.append(record["value"] * 2)
                 else:

@@ -71,9 +71,7 @@ def _build_feature_gaps() -> list[FeatureGap]:
     factory_languages = set(supported_languages())
     feature_gaps: list[FeatureGap] = []
 
-    if missing_detector_languages := sorted(
-        rules_languages - registry_languages
-    ):
+    if missing_detector_languages := sorted(rules_languages - registry_languages):
         feature_gaps.append(
             FeatureGap(
                 area="coverage",

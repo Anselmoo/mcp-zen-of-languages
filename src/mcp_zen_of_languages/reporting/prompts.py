@@ -174,10 +174,7 @@ def _format_file_prompt(result: AnalysisResult, violations: list[Violation]) -> 
         f"Target: {path} ({result.language})",
         f"Goal: {PROMPT_GOAL}",
         "Requirements:",
-        *[
-            f"{idx}. {req}"
-            for idx, req in enumerate(PROMPT_REQUIREMENTS, start=1)
-        ],
+        *[f"{idx}. {req}" for idx, req in enumerate(PROMPT_REQUIREMENTS, start=1)],
         "Checklist:",
         *[f"- {item}" for item in QUALITY_CHECKLIST],
         "",

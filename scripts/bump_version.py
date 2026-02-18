@@ -118,8 +118,7 @@ def _read_current_version() -> Version:
     text = PYPROJECT.read_text(encoding="utf-8")
     if m := VERSION_RE.search(text):
         return Version.parse(m.group(1))
-    else:
-        raise RuntimeError("Could not find version = '...' in pyproject.toml")
+    raise RuntimeError("Could not find version = '...' in pyproject.toml")
 
 
 # ---------------------------------------------------------------------------
@@ -219,8 +218,7 @@ def _parse_conventional_commit(sha: str, subject: str) -> _ParsedCommit | None:
             description=m.group("desc").strip(),
             breaking=bool(m.group("breaking")),
         )
-    else:
-        return None
+    return None
 
 
 def _build_changelog_section(
@@ -273,10 +271,14 @@ def _update_changelog(
     section = _build_changelog_section(new, commits, include_maintenance)
 
     # Count visible entries for the summary line
-    added = sum(bool((p := _parse_conventional_commit("", s)) and p.type == "feat")
-            for _, s in commits)
-    fixed = sum(bool((p := _parse_conventional_commit("", s)) and p.type == "fix")
-            for _, s in commits)
+    added = sum(
+        bool((p := _parse_conventional_commit("", s)) and p.type == "feat")
+        for _, s in commits
+    )
+    fixed = sum(
+        bool((p := _parse_conventional_commit("", s)) and p.type == "fix")
+        for _, s in commits
+    )
 
     if dry_run:
         print(f"  [dry-run] Would prepend to {CHANGELOG.name}:")

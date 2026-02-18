@@ -38,7 +38,7 @@ def test_build_rule_config_coverage_powershell() -> None:
 def test_build_explicit_rule_config_coverage_powershell() -> None:
     coverage = build_explicit_rule_config_coverage("powershell")
     assert PowerShellCmdletBindingConfig in coverage.rules["ps-003"]
-    for rule_id, configs in coverage.rules.items():
+    for configs in coverage.rules.values():
         assert configs
         assert all(issubclass(config, DetectorConfig) for config in configs)
 

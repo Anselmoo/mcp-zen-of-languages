@@ -544,7 +544,7 @@ def detect_missing_type_hints(code: str) -> list[ExplicitnessFinding]:
     results: list[ExplicitnessFinding] = []
     try:
         tree = ast.parse(code)
-    except Exception:
+    except SyntaxError:
         return results
     for node in ast.walk(tree):
         if isinstance(node, ast.FunctionDef):
@@ -574,7 +574,7 @@ def detect_namespace_usage(code: str) -> NamespaceFinding:
     export_count: int | None = None
     try:
         tree = ast.parse(code)
-    except Exception:
+    except SyntaxError:
         return NamespaceFinding(top_level_symbols=0, export_count=None)
     for node in tree.body:
         if isinstance(

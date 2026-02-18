@@ -140,7 +140,7 @@ def analyze_targets(
 
         try:
             repository_imports = build_repository_imports(files, language)
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001
             logger.warning("Failed import scan for %s files: %s", language, exc)
             repository_imports = {str(path): [] for path in files}
 

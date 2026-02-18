@@ -492,7 +492,7 @@ class ContextManagerDetector(
         message = config.select_violation_message(contains="context managers", index=2)
         try:
             tree = ast.parse(context.code)
-        except Exception:
+        except SyntaxError:
             return violations
 
         for node in ast.walk(tree):
@@ -583,7 +583,7 @@ class DocstringDetector(ViolationDetector[DocstringConfig], LocationHelperMixin)
         )
         try:
             tree = ast.parse(context.code)
-        except Exception:
+        except SyntaxError:
             return violations
 
         for node in ast.iter_child_nodes(tree):
@@ -735,13 +735,13 @@ class ClassSizeDetector(ViolationDetector[ClassSizeConfig], LocationHelperMixin)
                 if isinstance(context.ast_tree, ParserResult)
                 else context.ast_tree
             )
-        except Exception:
+        except AttributeError:
             ast_root = context.ast_tree
 
         if not isinstance(ast_root, ast.AST):
             try:
                 ast_root = ast.parse(context.code)
-            except Exception:
+            except SyntaxError:
                 return violations
 
         for node in ast.walk(ast_root):
@@ -829,7 +829,7 @@ class NameStyleDetector(ViolationDetector[NameStyleConfig], LocationHelperMixin)
                         tree = ast.parse(context.code)
             else:
                 tree = ast.parse(context.code)
-        except Exception:
+        except (AttributeError, SyntaxError):
             return self._heuristic_detect(context, config)
 
         principle = config.principle or config.principle_id or config.type
@@ -1015,7 +1015,7 @@ class ShortVariableNamesDetector(
             )
             if not isinstance(tree, ast.AST):
                 tree = ast.parse(context.code)
-        except Exception:
+        except (AttributeError, SyntaxError):
             return self._heuristic_detect(context, config)
 
         for node in ast.walk(tree):
@@ -1236,7 +1236,7 @@ class CyclomaticComplexityDetector(
                             loc := self.ast_node_to_location(context.ast_tree, node)
                         ):
                             return loc
-            except Exception:
+            except (AttributeError, TypeError):
                 pass
 
         return self.find_location_by_substring(context.code, "def ")
@@ -1362,7 +1362,7 @@ class NestingDepthDetector(ViolationDetector[NestingDepthConfig], LocationHelper
             )
             if not isinstance(tree, ast.AST):
                 tree = ast.parse(context.code)
-        except Exception:
+        except (AttributeError, SyntaxError):
             return 0
 
         def walk(node: ast.AST, depth: int) -> int:
@@ -1483,7 +1483,7 @@ class LongFunctionDetector(ViolationDetector[LongFunctionConfig], LocationHelper
                             )
                         ):
                             return loc
-            except Exception:
+            except (AttributeError, TypeError):
                 pass
 
         return self.find_location_by_substring(context.code, func_name)

@@ -517,7 +517,7 @@ class DetectionPipeline:
                 detector_config = detector.config or config
                 violations = detector.detect(context, detector_config)
                 all_violations.extend(violations)
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 # Log error but continue with other detectors
                 print(f"Error in detector {detector.name}: {e}")
 
@@ -754,7 +754,7 @@ class BaseAnalyzer(ABC):
             elif isinstance(raw_dep, dict):
                 try:
                     dep_analysis = DependencyAnalysis.model_validate(raw_dep)
-                except Exception:
+                except (ValueError, TypeError):
                     dep_analysis = None
 
             rules_violations = (
@@ -773,7 +773,7 @@ class BaseAnalyzer(ABC):
                 **adapter.summarize_violations(all_violations)
             )
             result.violations = all_violations
-        except Exception:
+        except Exception:  # noqa: BLE001
             # If adapter missing or fails, proceed without rules_summary
             pass
 
@@ -1052,7 +1052,7 @@ class LocationHelperMixin:
 
             if lineno is not None and col_offset is not None:
                 return Location(line=int(lineno), column=int(col_offset) + 1)
-        except Exception:
+        except (TypeError, ValueError):
             pass
 
         return None

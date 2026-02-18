@@ -44,7 +44,7 @@ class MetricsCollector:
             cc = compute_cyclomatic_complexity(code)
             mi = compute_maintainability_index(code)
             loc = len(code.splitlines())
-        except Exception:
+        except Exception:  # noqa: BLE001
             return None, None, len(code.splitlines())
         else:
             return cc, mi, loc

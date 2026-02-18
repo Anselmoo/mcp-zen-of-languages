@@ -117,7 +117,7 @@ class PythonAnalyzer(BaseAnalyzer, LocationHelperMixin):
         try:
             raw = parse_python(code)
             return ParserNormalizer.normalize(raw)
-        except Exception:
+        except Exception:  # noqa: BLE001
             return None
 
     def compute_metrics(
@@ -192,5 +192,5 @@ class PythonAnalyzer(BaseAnalyzer, LocationHelperMixin):
 
             file_imports = {(context.path or "<current>"): imports}
             return build_import_graph(file_imports)
-        except Exception:
+        except Exception:  # noqa: BLE001
             return None

@@ -378,11 +378,11 @@ class RulesAdapter:
                     else:
                         # Fallback single item
                         normalized_cycles.append([str(seq)])
-                except Exception:
+                except Exception:  # noqa: BLE001
                     continue
 
             cycles_list = normalized_cycles
-        except Exception:
+        except Exception:  # noqa: BLE001
             cycles_list = []
 
         # Check for circular dependencies
@@ -427,7 +427,7 @@ class RulesAdapter:
                         try:
                             a = getattr(edge, "from")
                             b = getattr(edge, "to")
-                        except Exception:
+                        except AttributeError:
                             continue
                     deps_map.setdefault(str(a), []).append(str(b))
 
@@ -443,7 +443,7 @@ class RulesAdapter:
                                 ),
                             )
                         )
-            except Exception:
+            except Exception:  # noqa: BLE001
                 pass
 
         return violations
@@ -471,7 +471,7 @@ class RulesAdapter:
         # Use compiled patterns helper on the Pydantic model
         try:
             compiled = principle.compiled_patterns()
-        except Exception:
+        except (AttributeError, TypeError, ValueError):
             compiled = []
 
         for cre in compiled:
@@ -484,7 +484,7 @@ class RulesAdapter:
                             message=f"Detected anti-pattern matching: '{cre.pattern}'",
                         )
                     )
-            except Exception:
+            except Exception:  # noqa: BLE001
                 continue
 
         return violations
@@ -548,7 +548,7 @@ class RulesAdapter:
                     ):
                         try:
                             thresholds[k] = float(v)
-                        except Exception:
+                        except (ValueError, TypeError):
                             metadata[k] = v
             if p.detectable_patterns:
                 patterns.extend(p.detectable_patterns)

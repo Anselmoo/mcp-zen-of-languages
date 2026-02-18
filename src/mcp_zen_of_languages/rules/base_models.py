@@ -250,7 +250,7 @@ class ZenPrinciple(BaseModel):
         for p in patterns:
             try:
                 compiled.append(re.compile(p))
-            except Exception:
+            except re.error:
                 # Fall back to literal substring match by escaping
                 compiled.append(re.compile(re.escape(p)))
         return compiled

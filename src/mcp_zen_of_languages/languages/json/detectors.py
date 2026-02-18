@@ -120,7 +120,7 @@ class JsonSchemaConsistencyDetector(
         """
         try:
             data = json.loads(context.code)
-        except Exception:
+        except (json.JSONDecodeError, ValueError):
             return []
         if not isinstance(data, list) or len(data) < 2:
             return []
@@ -239,7 +239,7 @@ class JsonNullHandlingDetector(
         """
         try:
             data = json.loads(context.code)
-        except Exception:
+        except (json.JSONDecodeError, ValueError):
             return []
         if not isinstance(data, dict):
             return []
@@ -290,7 +290,7 @@ class JsonKeyCasingDetector(
         """
         try:
             data = json.loads(context.code)
-        except Exception:
+        except (json.JSONDecodeError, ValueError):
             return []
         if not isinstance(data, dict):
             return []
@@ -361,7 +361,7 @@ class JsonArrayOrderDetector(
 
         try:
             data = json.loads(context.code)
-        except Exception:
+        except (json.JSONDecodeError, ValueError):
             return []
         if contains_list(data):
             return [

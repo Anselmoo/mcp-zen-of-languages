@@ -83,7 +83,7 @@ def _render_banner_art() -> str:
         art = figlet_format(
             "Zen", font="banner3-d", direction="auto", justify="center", width=55
         ).rstrip()
-    except Exception:
+    except Exception:  # noqa: BLE001
         art = ZEN_BANNER.strip()
 
     # Right-align the subtitle to the width of the art block

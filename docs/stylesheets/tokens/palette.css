@@ -33,6 +33,13 @@
   --caligo-harmony-cool: #63c8ff;
   --caligo-harmony-bridge: #c9b3ff;
 
+  /* Cherry-red scale (zen duality — vibrant tension vs. calm purple) */
+  /* Contrast with #fff: cherry 5.20:1 ✓ AA, cherry-dark 7.40:1 ✓ AAA */
+  --caligo-cherry: #c8315a;               /* vibrant cherry — WCAG AA with #fff */
+  --caligo-cherry-soft: #e85c82;          /* hover / lighter variant */
+  --caligo-cherry-dark: #9b1847;          /* deep / pressed state — WCAG AAA */
+  --caligo-cherry-glow: rgba(200, 49, 90, 0.15); /* subtle tint for bg fills */
+
   /* Syntax colours */
   --caligo-syntax-keywords: #7da7ff;
   --caligo-syntax-types: #ffadff;
@@ -107,4 +114,9 @@
   --caligo-complement-warm: var(--caligo-harmony-warm);
   --caligo-complement-cool: var(--caligo-harmony-cool);
   --caligo-complement-purple: var(--caligo-harmony-bridge);
+
+  /* Cherry aliases (for component access) */
+  --caligo-cherry-primary: var(--caligo-cherry);
+  --caligo-cherry-accent: var(--caligo-cherry-soft);
+  --caligo-cherry-deep: var(--caligo-cherry-dark);
 }

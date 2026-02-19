@@ -6,6 +6,7 @@
   }
   .md-typeset .grid.cards > ul > li:hover {
     transform: none;
+    translate: none;
   }
   .md-typeset pre,
   .md-typeset .highlight pre {
@@ -16,5 +17,11 @@
   }
   .md-typeset .headerlink {
     transition: none;
+  }
+  /* Suppress lift effects on buttons and back-to-top */
+  .md-button:hover,
+  .md-top:hover {
+    translate: none;
+    transform: none;
   }
 }

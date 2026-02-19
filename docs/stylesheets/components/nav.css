@@ -18,40 +18,53 @@
 
 BACK-TO-TOP button
    ═══════════════════════════════════════════════════════════════════════════ */
+/* NOTE: mkdocs-material centres .md-top with transform: translateX(-50%).
+   We MUST NOT override the transform shorthand on :hover or the button drifts
+   sideways (the "flip"). Use the individual `translate` CSS property instead —
+   it composites independently and never conflicts with transform. */
 .md-top {
   background-color: var(--md-primary-fg-color);
   color: var(--md-primary-bg-color);
   border-radius: var(--zen-radius-full);
-  transition: transform var(--zen-duration-fast) var(--zen-ease-out),
+  transition: translate var(--zen-duration-fast) var(--zen-ease-out),
               box-shadow var(--zen-duration-fast) var(--zen-ease-out),
-              background-color var(--zen-duration-fast) var(--zen-ease-out),
+              background-color var(--zen-duration-base) var(--zen-ease-out),
               color var(--zen-duration-fast) var(--zen-ease-out);
 }
 
 .md-top:hover {
-  transform: translateY(-2px);
+  /* `translate` is the individual transform — does NOT clobber mkdocs's
+     transform: translateX(-50%) centering, so no more horizontal jump. */
+  translate: 0 -2px;
   background-color: var(--md-primary-fg-color--dark);
   box-shadow: var(--zen-shadow-md);
 }
 
+/* ── Light mode ─────────────────────────────────────────────────────────────
+   #767bd8 bg + #161025 dark text → 5.05:1 contrast ✓ WCAG AA
+   Cherry hover (#c8315a + #fff)  → 5.20:1 contrast ✓ WCAG AA            */
 :is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-top {
-  background-color: var(--caligo-accent-dark);
-  color: #ffffff;
+  background-color: var(--caligo-accent-muted);
+  color: var(--caligo-bg0);
 }
 
 :is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-top:hover {
-  background-color: var(--caligo-accent);
+  /* Cherry-red hover: zen tension — vibrance vs. calm purple */
+  background-color: var(--caligo-cherry);
   color: #ffffff;
 }
 
+/* ── Dark mode ──────────────────────────────────────────────────────────────
+   #989cff (accent) on #161025 → ~10:1 contrast ✓ WCAG AAA
+   Soft hover (#b8bcff on #161025) → ~12:1 ✓ WCAG AAA                    */
 :is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-top {
   background-color: var(--caligo-accent);
-  color: var(--caligo-bg-base);
+  color: var(--caligo-bg0);
 }
 
 :is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-top:hover {
   background-color: var(--caligo-accent-soft);
-  color: var(--caligo-bg-base);
+  color: var(--caligo-bg0);
 }
 
 

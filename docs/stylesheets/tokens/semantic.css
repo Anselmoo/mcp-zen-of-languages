@@ -13,6 +13,11 @@
   --zen-interactive-hover: var(--caligo-accent-soft);
   --zen-interactive-muted: var(--caligo-accent-muted);
 
+  /* Cherry — active / tension state (zen duality) */
+  --zen-interactive-cherry: var(--caligo-cherry);
+  --zen-interactive-cherry-hover: var(--caligo-cherry-soft);
+  --zen-interactive-cherry-glow: var(--caligo-cherry-glow);
+
   --zen-feedback-error: var(--caligo-error);
   --zen-feedback-error-muted: var(--caligo-error-muted);
   --zen-feedback-error-bg: var(--caligo-error-bg);

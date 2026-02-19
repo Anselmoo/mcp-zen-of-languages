@@ -308,6 +308,7 @@ SAMPLES = {
     "cpp": "int main() { return 0; }\n",
     "csharp": "public class Foo {}\n",
     "yaml": "key: value\n",
+    "github-actions": "name: CI\non: push\njobs:\n  build:\n    runs-on: ubuntu-latest\n    timeout-minutes: 5\n    steps:\n      - run: echo hi\n        shell: bash\n",
     "toml": 'key = "value"\n',
     "json": '{"key": "value"}\n',
     "xml": "<root></root>\n",

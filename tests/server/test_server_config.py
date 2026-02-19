@@ -31,3 +31,4 @@ async def test_set_and_clear_config_override():
 async def test_get_supported_languages():
     result = await server.get_supported_languages.fn()
     assert "python" in result
+    assert "github-actions" in result

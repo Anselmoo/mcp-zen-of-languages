@@ -14,6 +14,9 @@ from typing import TYPE_CHECKING
 from mcp_zen_of_languages.languages.bash.analyzer import BashAnalyzer
 from mcp_zen_of_languages.languages.cpp.analyzer import CppAnalyzer
 from mcp_zen_of_languages.languages.csharp.analyzer import CSharpAnalyzer
+from mcp_zen_of_languages.languages.github_actions.analyzer import (
+    GitHubActionsAnalyzer,
+)
 from mcp_zen_of_languages.languages.go.analyzer import GoAnalyzer
 from mcp_zen_of_languages.languages.javascript.analyzer import JavaScriptAnalyzer
 from mcp_zen_of_languages.languages.json.analyzer import JsonAnalyzer
@@ -44,6 +47,7 @@ SUPPORTED_LANGUAGES: tuple[str, ...] = (
     "cpp",
     "csharp",
     "yaml",
+    "github-actions",
     "toml",
     "xml",
     "json",
@@ -77,6 +81,9 @@ _ANALYZERS_BY_ALIAS: dict[str, AnalyzerClass] = {
     "cs": CSharpAnalyzer,
     "yaml": YamlAnalyzer,
     "yml": YamlAnalyzer,
+    "github-actions": GitHubActionsAnalyzer,
+    "github_actions": GitHubActionsAnalyzer,
+    "gha": GitHubActionsAnalyzer,
     "toml": TomlAnalyzer,
     "xml": XmlAnalyzer,
     "json": JsonAnalyzer,
@@ -132,6 +139,7 @@ def create_analyzer(
         C++                             ``cpp``, ``c++``, ``cc``, ``cxx``
         C#                              ``csharp``, ``cs``
         YAML                            ``yaml``, ``yml``
+        GitHub Actions                  ``github-actions``, ``github_actions``, ``gha``
         TOML                            ``toml``
         XML                             ``xml``
         JSON                            ``json``

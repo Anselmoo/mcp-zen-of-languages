@@ -226,7 +226,7 @@ def test_dependency_graph_build_and_find_cycles():
     assert find_cycles(cycle_graph)
 
 
-def test_parser_normalizer_and_parse_python():
+def test_parse_python_returns_parser_result():
     parsed = parse_python("def foo():\n    pass\n")
     assert isinstance(parsed, ParserResult)
 

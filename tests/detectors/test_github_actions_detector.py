@@ -1,6 +1,11 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.analyzer_factory import create_analyzer
+from mcp_zen_of_languages.languages.ci_yaml_utils import (
+    job_steps,
+    load_ci_yaml,
+    workflow_jobs,
+)
 
 
 def test_github_actions_detector_finds_security_and_timeout_issues():
@@ -44,3 +49,9 @@ jobs:
     principles = {violation.principle for violation in result.violations}
     assert "gha-011" in principles
     assert "gha-015" in principles
+
+
+def test_ci_yaml_utils_handle_invalid_or_unexpected_shapes():
+    assert load_ci_yaml(": bad: yaml:") == {}
+    assert workflow_jobs({"jobs": []}) == {}
+    assert job_steps({"steps": {}}) == []

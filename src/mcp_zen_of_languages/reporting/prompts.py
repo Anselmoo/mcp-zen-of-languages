@@ -154,6 +154,13 @@ GENERIC_PROMPTS_BY_LANGUAGE: dict[str, list[tuple[str, str]]] = {
             "and enforce schema validation for producer/consumer contracts.",
         ),
     ],
+    "github-actions": [
+        (
+            "GitHub Actions hardening",
+            "Pin third-party actions to commit SHAs, scope permissions tightly, "
+            "and add timeouts/concurrency to avoid stale or risky runs.",
+        ),
+    ],
 }
 
 

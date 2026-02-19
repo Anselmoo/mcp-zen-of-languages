@@ -102,7 +102,7 @@ def test_build_explicit_rule_config_coverage_missing_configs(monkeypatch) -> Non
                 category=PrincipleCategory.CLARITY,
                 severity=5,
                 description="Test description",
-            )
+            ),
         ],
     )
 
@@ -127,7 +127,7 @@ def test_build_rule_config_coverage_deduplicates_configs(monkeypatch) -> None:
                 category=PrincipleCategory.CLARITY,
                 severity=5,
                 description="Test description",
-            )
+            ),
         ],
     )
     metas = [
@@ -145,7 +145,9 @@ def test_build_rule_config_coverage_deduplicates_configs(monkeypatch) -> None:
 
     monkeypatch.setattr(coverage_module, "get_language_zen", lambda _: language)
     monkeypatch.setattr(
-        registry_module.REGISTRY, "detectors_for_rule", lambda *_: metas
+        registry_module.REGISTRY,
+        "detectors_for_rule",
+        lambda *_: metas,
     )
 
     coverage = coverage_module.build_rule_config_coverage("fake")
@@ -168,7 +170,7 @@ def test_build_explicit_rule_config_coverage_deduplicates_configs(
                 category=PrincipleCategory.CLARITY,
                 severity=5,
                 description="Test description",
-            )
+            ),
         ],
     )
     metas = [
@@ -191,7 +193,9 @@ def test_build_explicit_rule_config_coverage_deduplicates_configs(
 
     monkeypatch.setattr(coverage_module, "get_language_zen", lambda _: language)
     monkeypatch.setattr(
-        registry_module.REGISTRY, "detectors_for_rule", lambda *_: metas
+        registry_module.REGISTRY,
+        "detectors_for_rule",
+        lambda *_: metas,
     )
 
     coverage = coverage_module.build_explicit_rule_config_coverage("fake")

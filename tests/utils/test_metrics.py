@@ -19,7 +19,9 @@ def test_dependency_graph_builds_cycles():
 
 def test_compute_cyclomatic_complexity_handles_error(monkeypatch):
     monkeypatch.setattr(
-        complexity, "cc_visit", lambda _: iter(()).throw(RuntimeError("boom"))
+        complexity,
+        "cc_visit",
+        lambda _: iter(()).throw(RuntimeError("boom")),
     )
     summary = complexity.compute_cyclomatic_complexity("def foo():\n    pass\n")
     assert summary.average == 0.0

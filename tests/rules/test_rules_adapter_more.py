@@ -18,7 +18,9 @@ def test_check_cyclomatic_complexity_handles_missing_avg():
     )
     cyclomatic = CyclomaticSummary(blocks=[], average=0.0)
     results = adapter._check_cyclomatic_complexity(
-        cyclomatic, principle, principle.metrics or {}
+        cyclomatic,
+        principle,
+        principle.metrics or {},
     )
     assert isinstance(results, list)
 
@@ -37,7 +39,9 @@ def test_check_maintainability_index_handles_missing_metric():
         metrics={},
     )
     results = adapter._check_maintainability_index(
-        0.0, principle, principle.metrics or {}
+        0.0,
+        principle,
+        principle.metrics or {},
     )
     assert results == []
 
@@ -54,7 +58,9 @@ def test_check_dependencies_handles_dict():
         metrics={"max_dependencies": 1},
     )
     results = adapter._check_dependencies(
-        {"edges": [("a", "b"), ("a", "c")]}, principle, principle.metrics or {}
+        {"edges": [("a", "b"), ("a", "c")]},
+        principle,
+        principle.metrics or {},
     )
     assert results
 
@@ -71,7 +77,9 @@ def test_check_dependencies_handles_cycles():
         metrics={"detect_circular_dependencies": True},
     )
     results = adapter._check_dependencies(
-        {"cycles": [["a", "b", "a"]]}, principle, principle.metrics or {}
+        {"cycles": [["a", "b", "a"]]},
+        principle,
+        principle.metrics or {},
     )
     assert results
 

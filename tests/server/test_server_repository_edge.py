@@ -13,7 +13,9 @@ async def test_analyze_repository_unknown_lang_skips(tmp_path):
     file_path = tmp_path / "sample.unknown"
     file_path.write_text("data", encoding="utf-8")
     results = await server.analyze_repository.fn(
-        str(tmp_path), ["unknown"], max_files=1
+        str(tmp_path),
+        ["unknown"],
+        max_files=1,
     )
     assert results
 
@@ -40,7 +42,9 @@ async def test_analyze_repository_surfaces_read_errors(tmp_path, monkeypatch, ca
     monkeypatch.setattr(Path, "read_text", _broken_read_text)
     with caplog.at_level(logging.WARNING):
         results = await server.analyze_repository.fn(
-            str(tmp_path), ["python"], max_files=1
+            str(tmp_path),
+            ["python"],
+            max_files=1,
         )
 
     assert len(results) == 1

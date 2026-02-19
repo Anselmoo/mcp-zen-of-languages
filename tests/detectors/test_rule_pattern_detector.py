@@ -32,7 +32,8 @@ def test_rule_pattern_detector_matches_patterns():
 
 def test_rule_pattern_detector_script_length():
     rule_config = _build_config(
-        "script_rule", max_script_length_without_functions=(int | None, 2)
+        "script_rule",
+        max_script_length_without_functions=(int | None, 2),
     )
     config = rule_config()
     context = AnalysisContext(code="line1\nline2\nline3", language="bash")
@@ -52,7 +53,8 @@ def test_rule_pattern_detector_inheritance_depth():
     rule_config = _build_config("inherit_rule", max_inheritance_depth=(int | None, 1))
     config = rule_config()
     context = AnalysisContext(
-        code="class A extends B {}\nclass B extends C {}\n", language="javascript"
+        code="class A extends B {}\nclass B extends C {}\n",
+        language="javascript",
     )
     violations = RulePatternDetector().detect(context, config)
     assert violations
@@ -76,11 +78,13 @@ def test_rule_pattern_detector_public_naming():
 
 def test_rule_pattern_detector_private_naming():
     rule_config = _build_config(
-        "private_rule", private_naming=(str | None, "camelCase or _camelCase")
+        "private_rule",
+        private_naming=(str | None, "camelCase or _camelCase"),
     )
     config = rule_config()
     context = AnalysisContext(
-        code="public class Foo { private int BadName; }", language="csharp"
+        code="public class Foo { private int BadName; }",
+        language="csharp",
     )
     violations = RulePatternDetector().detect(context, config)
     assert violations

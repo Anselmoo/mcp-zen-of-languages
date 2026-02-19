@@ -52,7 +52,7 @@ def test_prompts_both_exports(tmp_path):
             str(export_md),
             "--export-agent",
             str(export_json),
-        ]
+        ],
     )
     assert exit_code == 0
     assert export_md.exists()

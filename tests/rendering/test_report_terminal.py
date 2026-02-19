@@ -48,19 +48,19 @@ def test_render_report_terminal_with_gaps_and_prompts(capsys):
                         "principle": "Test",
                         "severity": 5,
                         "reason": "missing",
-                    }
+                    },
                 ],
                 "feature_gaps": [
                     {
                         "area": "docs",
                         "description": "Missing docs",
                         "suggested_next_step": "Add docs",
-                    }
+                    },
                 ],
             },
             "prompts": {
                 "file_prompts": [
-                    {"path": "a.py", "language": "python", "prompt": "fix"}
+                    {"path": "a.py", "language": "python", "prompt": "fix"},
                 ],
                 "generic_prompts": [{"title": "t", "prompt": "p"}],
             },

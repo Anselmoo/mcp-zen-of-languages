@@ -71,8 +71,10 @@ CONFIG = load_config(path=os.environ.get("ZEN_CONFIG_PATH"))
 logger = logging.getLogger(__name__)
 logger.setLevel(
     getattr(
-        logging, os.environ.get("ZEN_LOG_LEVEL", "WARNING").upper(), logging.WARNING
-    )
+        logging,
+        os.environ.get("ZEN_LOG_LEVEL", "WARNING").upper(),
+        logging.WARNING,
+    ),
 )
 
 READONLY_ANNOTATIONS = ToolAnnotations(
@@ -123,7 +125,8 @@ def _pipeline_with_runtime_overrides(language: str) -> PipelineConfig:
     if runtime_override is None:
         return pipeline_config
     override_values = runtime_override.model_dump(
-        exclude_none=True, exclude={"language", "severity_threshold"}
+        exclude_none=True,
+        exclude={"language", "severity_threshold"},
     )
     if not override_values:
         return pipeline_config
@@ -197,7 +200,7 @@ def languages_resource() -> LanguagesResource:
                 language=language,
                 principles=len(zen.principles) if zen else 0,
                 detectors=len(detectors),
-            )
+            ),
         )
     return LanguagesResource(languages=entries)
 
@@ -275,7 +278,9 @@ async def detect_languages(repo_path: str) -> LanguagesResult:
     output_schema=_output_schema(AnalysisResult),
 )
 async def analyze_zen_violations(
-    code: str, language: str, severity_threshold: int | None = None
+    code: str,
+    language: str,
+    severity_threshold: int | None = None,
 ) -> AnalysisResult:
     r"""Run the full zen analysis pipeline on a single code snippet.
 
@@ -610,7 +615,9 @@ async def generate_agent_tasks_tool(
     repo_results = await _analyze_repository_internal(repo_path, languages=languages)
     analysis_results = [entry.result for entry in repo_results]
     return build_agent_tasks(
-        analysis_results, project=repo_path, min_severity=min_severity
+        analysis_results,
+        project=repo_path,
+        min_severity=min_severity,
     )
 
 

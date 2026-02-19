@@ -72,7 +72,7 @@ POWERSHELL_ZEN = LanguageZenPrinciples(
                 "Inconsistent casing",
             ],
             metrics={
-                "naming_convention": "PascalCase for functions, camelCase for variables"
+                "naming_convention": "PascalCase for functions, camelCase for variables",
             },
         ),
         ZenPrinciple(

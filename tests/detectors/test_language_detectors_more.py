@@ -18,7 +18,8 @@ from mcp_zen_of_languages.languages.powershell.detectors import (
 def test_js_async_error_handling_detector():
     context = AnalysisContext(code="async function foo() {}", language="javascript")
     violations = JsAsyncErrorHandlingDetector().detect(
-        context, JsAsyncErrorHandlingConfig()
+        context,
+        JsAsyncErrorHandlingConfig(),
     )
     assert violations
 
@@ -26,7 +27,8 @@ def test_js_async_error_handling_detector():
 def test_js_async_error_handling_detector_for_promises():
     context = AnalysisContext(code="fetch(url).then(handle);", language="javascript")
     violations = JsAsyncErrorHandlingDetector().detect(
-        context, JsAsyncErrorHandlingConfig()
+        context,
+        JsAsyncErrorHandlingConfig(),
     )
     assert violations
 
@@ -43,6 +45,7 @@ def test_powershell_approved_verb_detector():
     code = "function customThing-Thing { }\n"
     context = AnalysisContext(code=code, language="powershell")
     violations = PowerShellApprovedVerbDetector().detect(
-        context, PowerShellApprovedVerbConfig()
+        context,
+        PowerShellApprovedVerbConfig(),
     )
     assert violations

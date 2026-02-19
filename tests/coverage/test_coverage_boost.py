@@ -67,7 +67,9 @@ def test_rules_adapter_dependency_edges_and_thresholds():
         cycles=[DependencyCycle(cycle=["a", "b", "a"])],
     )
     violations = adapter._check_dependencies(
-        dep_model, principle, principle.metrics or {}
+        dep_model,
+        principle,
+        principle.metrics or {},
     )
     assert any("Circular dependencies" in v.message for v in violations)
     assert any("exceeds maximum" in v.message for v in violations)
@@ -174,7 +176,9 @@ def test_detector_registry_project_principle_errors_on_unknown_metric():
     )
     with pytest.raises(ValueError, match="Unknown metric keys for python-999"):
         registry._project_principle(
-            principle, "python", set(AnalyzerConfig.model_fields)
+            principle,
+            "python",
+            set(AnalyzerConfig.model_fields),
         )
 
 
@@ -203,7 +207,7 @@ def test_config_load_discovery_breaks_on_pyproject(tmp_path, monkeypatch):
 def test_language_detection_helpers():
     assert detect_language_by_extension("file.py").language == "python"
     assert detect_language_from_content(
-        "function foo() {}\nconst x = 1\n"
+        "function foo() {}\nconst x = 1\n",
     ).language in {
         "typescript",
         "javascript",

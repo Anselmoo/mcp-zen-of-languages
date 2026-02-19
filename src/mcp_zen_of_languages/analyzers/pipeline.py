@@ -35,8 +35,10 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 logger.setLevel(
     getattr(
-        logging, os.environ.get("ZEN_LOG_LEVEL", "WARNING").upper(), logging.WARNING
-    )
+        logging,
+        os.environ.get("ZEN_LOG_LEVEL", "WARNING").upper(),
+        logging.WARNING,
+    ),
 )
 
 
@@ -149,7 +151,8 @@ def project_rules_to_configs(lang_zen: LanguageZenPrinciples) -> list[DetectorCo
 
 
 def merge_pipeline_overrides(
-    base: PipelineConfig, overrides: PipelineConfig | None
+    base: PipelineConfig,
+    overrides: PipelineConfig | None,
 ) -> PipelineConfig:
     """Layer user overrides from ``zen-config.yaml`` onto rule-derived defaults.
 

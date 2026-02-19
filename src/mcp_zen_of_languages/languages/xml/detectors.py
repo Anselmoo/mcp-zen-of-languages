@@ -24,7 +24,8 @@ MIN_TAG_OCCURRENCES_FOR_GROUP = 2
 
 
 class XmlSemanticMarkupDetector(
-    ViolationDetector[XmlSemanticMarkupConfig], LocationHelperMixin
+    ViolationDetector[XmlSemanticMarkupConfig],
+    LocationHelperMixin,
 ):
     """Flags presentational HTML-era tags and inline style attributes in XML.
 
@@ -45,7 +46,9 @@ class XmlSemanticMarkupDetector(
         return "xml-001"
 
     def detect(
-        self, context: AnalysisContext, config: XmlSemanticMarkupConfig
+        self,
+        context: AnalysisContext,
+        config: XmlSemanticMarkupConfig,
     ) -> list[Violation]:
         """Search for presentational tags (``<font>``, ``<b>``, etc.) and inline ``style`` attributes.
 
@@ -63,7 +66,7 @@ class XmlSemanticMarkupDetector(
                     contains="presentational tag",
                     location=Location(line=1, column=1),
                     suggestion="Use semantic tags instead of presentational markup.",
-                )
+                ),
             ]
         if re.search(r"style=\"[^\"]+\"", context.code):
             return [
@@ -72,13 +75,14 @@ class XmlSemanticMarkupDetector(
                     contains="style",
                     location=Location(line=1, column=1),
                     suggestion="Avoid presentation-oriented style attributes.",
-                )
+                ),
             ]
         return []
 
 
 class XmlAttributeUsageDetector(
-    ViolationDetector[XmlAttributeUsageConfig], LocationHelperMixin
+    ViolationDetector[XmlAttributeUsageConfig],
+    LocationHelperMixin,
 ):
     """Identifies oversized attribute values that belong in child elements instead.
 
@@ -98,7 +102,9 @@ class XmlAttributeUsageDetector(
         return "xml-002"
 
     def detect(
-        self, context: AnalysisContext, config: XmlAttributeUsageConfig
+        self,
+        context: AnalysisContext,
+        config: XmlAttributeUsageConfig,
     ) -> list[Violation]:
         """Scan for attribute values longer than 30 characters that should be child elements.
 
@@ -117,7 +123,7 @@ class XmlAttributeUsageDetector(
                         contains=match[1][:10],
                         location=Location(line=idx, column=1),
                         suggestion="Move large data values into child elements.",
-                    )
+                    ),
                 ]
         return []
 
@@ -141,7 +147,9 @@ class XmlNamespaceDetector(ViolationDetector[XmlNamespaceConfig], LocationHelper
         return "xml-003"
 
     def detect(
-        self, context: AnalysisContext, config: XmlNamespaceConfig
+        self,
+        context: AnalysisContext,
+        config: XmlNamespaceConfig,
     ) -> list[Violation]:
         """Check whether prefixed elements (``<prefix:tag>``) have a matching ``xmlns`` binding.
 
@@ -160,7 +168,7 @@ class XmlNamespaceDetector(ViolationDetector[XmlNamespaceConfig], LocationHelper
                     contains="xmlns",
                     location=Location(line=1, column=1),
                     suggestion="Declare XML namespaces for prefixed elements.",
-                )
+                ),
             ]
         return []
 
@@ -184,7 +192,9 @@ class XmlValidityDetector(ViolationDetector[XmlValidityConfig], LocationHelperMi
         return "xml-004"
 
     def detect(
-        self, context: AnalysisContext, config: XmlValidityConfig
+        self,
+        context: AnalysisContext,
+        config: XmlValidityConfig,
     ) -> list[Violation]:
         """Search for ``xsi:schemaLocation`` or ``DOCTYPE`` references in the document.
 
@@ -202,7 +212,7 @@ class XmlValidityDetector(ViolationDetector[XmlValidityConfig], LocationHelperMi
                     contains="schema",
                     location=Location(line=1, column=1),
                     suggestion="Include schema references (xsi:schemaLocation or DOCTYPE).",
-                )
+                ),
             ]
         return []
 
@@ -226,7 +236,9 @@ class XmlHierarchyDetector(ViolationDetector[XmlHierarchyConfig], LocationHelper
         return "xml-005"
 
     def detect(
-        self, context: AnalysisContext, config: XmlHierarchyConfig
+        self,
+        context: AnalysisContext,
+        config: XmlHierarchyConfig,
     ) -> list[Violation]:
         """Count opening tags and flag any that repeat more than twice without a ``<group>`` wrapper.
 
@@ -250,13 +262,14 @@ class XmlHierarchyDetector(ViolationDetector[XmlHierarchyConfig], LocationHelper
                         contains=next(iter(duplicates)),
                         location=Location(line=1, column=1),
                         suggestion="Group repeated elements under a parent container.",
-                    )
+                    ),
                 ]
         return []
 
 
 class XmlClosingTagsDetector(
-    ViolationDetector[XmlClosingTagsConfig], LocationHelperMixin
+    ViolationDetector[XmlClosingTagsConfig],
+    LocationHelperMixin,
 ):
     """Identifies self-closing tags (``<tag />``) where explicit closing tags are preferred.
 
@@ -276,7 +289,9 @@ class XmlClosingTagsDetector(
         return "xml-006"
 
     def detect(
-        self, context: AnalysisContext, config: XmlClosingTagsConfig
+        self,
+        context: AnalysisContext,
+        config: XmlClosingTagsConfig,
     ) -> list[Violation]:
         """Search for self-closing tag syntax (``<tag />``) in the XML document.
 
@@ -294,7 +309,7 @@ class XmlClosingTagsDetector(
                     contains="self-closing",
                     location=Location(line=1, column=1),
                     suggestion="Use explicit closing tags when content is expected.",
-                )
+                ),
             ]
         return []
 

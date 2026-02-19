@@ -98,7 +98,7 @@ class ConfigModel(BaseModel):
             "powershell",
             "cpp",
             "csharp",
-        ]
+        ],
     )
     severity_threshold: int = 5
     pipelines: list[PipelineConfig] = Field(default_factory=list)
@@ -276,8 +276,8 @@ def load_config(path: str | None = None) -> ConfigModel:
                 update={
                     "pipelines": [
                         PipelineConfig.from_rules(lang) for lang in cfg.languages
-                    ]
-                }
+                    ],
+                },
             )
     except FileNotFoundError:
         return default

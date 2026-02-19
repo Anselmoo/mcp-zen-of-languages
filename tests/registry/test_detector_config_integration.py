@@ -47,7 +47,8 @@ class Big:
         if cfg.type == "class_size"
     )
     rule_violations = detector.detect(
-        ctx, rule_cfg.model_copy(update={"max_class_length": 10})
+        ctx,
+        rule_cfg.model_copy(update={"max_class_length": 10}),
     )
     assert any("Classes longer than 300 lines" in v.message for v in rule_violations)
 

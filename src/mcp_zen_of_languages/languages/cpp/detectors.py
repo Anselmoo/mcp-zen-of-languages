@@ -38,7 +38,8 @@ from mcp_zen_of_languages.models import Location, Violation
 
 
 class CppSmartPointerDetector(
-    ViolationDetector[CppSmartPointerConfig], LocationHelperMixin
+    ViolationDetector[CppSmartPointerConfig],
+    LocationHelperMixin,
 ):
     """Flags raw ``new``/``delete`` usage where smart pointers should be used.
 
@@ -59,7 +60,9 @@ class CppSmartPointerDetector(
         return "cpp_smart_pointers"
 
     def detect(
-        self, context: AnalysisContext, config: CppSmartPointerConfig
+        self,
+        context: AnalysisContext,
+        config: CppSmartPointerConfig,
     ) -> list[Violation]:
         """Flag lines containing raw ``new`` or ``delete`` expressions.
 
@@ -103,7 +106,9 @@ class CppNullptrDetector(ViolationDetector[CppNullptrConfig], LocationHelperMixi
         return "cpp_nullptr"
 
     def detect(
-        self, context: AnalysisContext, config: CppNullptrConfig
+        self,
+        context: AnalysisContext,
+        config: CppNullptrConfig,
     ) -> list[Violation]:
         """Flag lines that reference the ``NULL`` macro.
 
@@ -148,7 +153,9 @@ class CppRaiiDetector(ViolationDetector[CppRaiiConfig], LocationHelperMixin):
         return "cpp-001"
 
     def detect(
-        self, context: AnalysisContext, config: CppRaiiConfig
+        self,
+        context: AnalysisContext,
+        config: CppRaiiConfig,
     ) -> list[Violation]:
         """Flag lines with ``new``/``delete``/``malloc``/``free`` that bypass RAII.
 
@@ -196,7 +203,9 @@ class CppAutoDetector(ViolationDetector[CppAutoConfig], LocationHelperMixin):
         return "cpp-003"
 
     def detect(
-        self, context: AnalysisContext, config: CppAutoConfig
+        self,
+        context: AnalysisContext,
+        config: CppAutoConfig,
     ) -> list[Violation]:
         """Flag assignments with explicit ``std::`` types that could use ``auto``.
 
@@ -218,7 +227,7 @@ class CppAutoDetector(ViolationDetector[CppAutoConfig], LocationHelperMixin):
                         contains="auto",
                         location=Location(line=idx, column=1),
                         suggestion="Use auto for obvious type deduction.",
-                    )
+                    ),
                 )
         return violations
 
@@ -242,7 +251,9 @@ class CppRangeForDetector(ViolationDetector[CppRangeForConfig], LocationHelperMi
         return "cpp-005"
 
     def detect(
-        self, context: AnalysisContext, config: CppRangeForConfig
+        self,
+        context: AnalysisContext,
+        config: CppRangeForConfig,
     ) -> list[Violation]:
         """Flag ``for`` loops using explicit ``.begin()``/``.end()`` iterators.
 
@@ -267,7 +278,8 @@ class CppRangeForDetector(ViolationDetector[CppRangeForConfig], LocationHelperMi
 
 
 class CppManualAllocationDetector(
-    ViolationDetector[CppManualAllocationConfig], LocationHelperMixin
+    ViolationDetector[CppManualAllocationConfig],
+    LocationHelperMixin,
 ):
     """Detects C-style heap allocation (``malloc``/``free``, ``new[]``/``delete[]``).
 
@@ -289,7 +301,9 @@ class CppManualAllocationDetector(
         return "cpp-006"
 
     def detect(
-        self, context: AnalysisContext, config: CppManualAllocationConfig
+        self,
+        context: AnalysisContext,
+        config: CppManualAllocationConfig,
     ) -> list[Violation]:
         """Flag ``malloc``/``free`` and array ``new[]``/``delete[]`` usage.
 
@@ -314,7 +328,8 @@ class CppManualAllocationDetector(
 
 
 class CppConstCorrectnessDetector(
-    ViolationDetector[CppConstCorrectnessConfig], LocationHelperMixin
+    ViolationDetector[CppConstCorrectnessConfig],
+    LocationHelperMixin,
 ):
     """Flags non-const references where ``const`` qualification is appropriate.
 
@@ -335,7 +350,9 @@ class CppConstCorrectnessDetector(
         return "cpp-007"
 
     def detect(
-        self, context: AnalysisContext, config: CppConstCorrectnessConfig
+        self,
+        context: AnalysisContext,
+        config: CppConstCorrectnessConfig,
     ) -> list[Violation]:
         """Flag reference parameters and variables missing ``const`` qualification.
 
@@ -360,7 +377,8 @@ class CppConstCorrectnessDetector(
 
 
 class CppCStyleCastDetector(
-    ViolationDetector[CppCStyleCastConfig], LocationHelperMixin
+    ViolationDetector[CppCStyleCastConfig],
+    LocationHelperMixin,
 ):
     """Detects C-style casts that should use ``static_cast``/``dynamic_cast``.
 
@@ -381,7 +399,9 @@ class CppCStyleCastDetector(
         return "cpp-008"
 
     def detect(
-        self, context: AnalysisContext, config: CppCStyleCastConfig
+        self,
+        context: AnalysisContext,
+        config: CppCStyleCastConfig,
     ) -> list[Violation]:
         """Flag C-style cast syntax on lines not already using named casts.
 
@@ -403,13 +423,14 @@ class CppCStyleCastDetector(
                         contains="cast",
                         location=Location(line=idx, column=1),
                         suggestion="Use C++-style casts (static_cast, dynamic_cast).",
-                    )
+                    ),
                 )
         return violations
 
 
 class CppRuleOfFiveDetector(
-    ViolationDetector[CppRuleOfFiveConfig], LocationHelperMixin
+    ViolationDetector[CppRuleOfFiveConfig],
+    LocationHelperMixin,
 ):
     """Flags classes with destructors but missing copy/move special members.
 
@@ -430,7 +451,9 @@ class CppRuleOfFiveDetector(
         return "cpp-009"
 
     def detect(
-        self, context: AnalysisContext, config: CppRuleOfFiveConfig
+        self,
+        context: AnalysisContext,
+        config: CppRuleOfFiveConfig,
     ) -> list[Violation]:
         """Flag classes with a destructor but no ``operator=`` definition.
 
@@ -447,7 +470,7 @@ class CppRuleOfFiveDetector(
                     config,
                     contains="rule of five",
                     suggestion="Define or default copy/move operations consistently.",
-                )
+                ),
             ]
         return []
 
@@ -472,7 +495,9 @@ class CppMoveDetector(ViolationDetector[CppMoveConfig], LocationHelperMixin):
         return "cpp-010"
 
     def detect(
-        self, context: AnalysisContext, config: CppMoveConfig
+        self,
+        context: AnalysisContext,
+        config: CppMoveConfig,
     ) -> list[Violation]:
         """Flag code with ``&&`` references but no ``std::move`` usage.
 
@@ -489,13 +514,14 @@ class CppMoveDetector(ViolationDetector[CppMoveConfig], LocationHelperMixin):
                     config,
                     contains="std::move",
                     suggestion="Use std::move when transferring ownership.",
-                )
+                ),
             ]
         return []
 
 
 class CppAvoidGlobalsDetector(
-    ViolationDetector[CppAvoidGlobalsConfig], LocationHelperMixin
+    ViolationDetector[CppAvoidGlobalsConfig],
+    LocationHelperMixin,
 ):
     """Detects mutable global and file-scope ``static``/``extern`` variables.
 
@@ -520,7 +546,9 @@ class CppAvoidGlobalsDetector(
         return "cpp-011"
 
     def detect(
-        self, context: AnalysisContext, config: CppAvoidGlobalsConfig
+        self,
+        context: AnalysisContext,
+        config: CppAvoidGlobalsConfig,
     ) -> list[Violation]:
         """Flag file-scope ``static`` or ``extern`` declarations (excluding ``static_assert``).
 
@@ -545,7 +573,8 @@ class CppAvoidGlobalsDetector(
 
 
 class CppOverrideFinalDetector(
-    ViolationDetector[CppOverrideFinalConfig], LocationHelperMixin
+    ViolationDetector[CppOverrideFinalConfig],
+    LocationHelperMixin,
 ):
     """Flags ``virtual`` overrides missing the ``override`` or ``final`` specifier.
 
@@ -566,7 +595,9 @@ class CppOverrideFinalDetector(
         return "cpp-012"
 
     def detect(
-        self, context: AnalysisContext, config: CppOverrideFinalConfig
+        self,
+        context: AnalysisContext,
+        config: CppOverrideFinalConfig,
     ) -> list[Violation]:
         """Flag ``virtual`` methods lacking ``override`` or ``final`` specifiers.
 
@@ -611,7 +642,9 @@ class CppOptionalDetector(ViolationDetector[CppOptionalConfig], LocationHelperMi
         return "cpp-013"
 
     def detect(
-        self, context: AnalysisContext, config: CppOptionalConfig
+        self,
+        context: AnalysisContext,
+        config: CppOptionalConfig,
     ) -> list[Violation]:
         """Flag pointer declarations where ``std::optional`` would express intent better.
 
@@ -631,7 +664,7 @@ class CppOptionalDetector(ViolationDetector[CppOptionalConfig], LocationHelperMi
                     config,
                     contains="optional",
                     suggestion="Prefer std::optional over nullable pointers.",
-                )
+                ),
             ]
         return []
 

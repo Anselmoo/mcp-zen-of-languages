@@ -38,7 +38,8 @@ MIN_DUPLICATE_LINE_COUNT = 3
 
 
 class RubyNamingConventionDetector(
-    ViolationDetector[RubyNamingConventionConfig], LocationHelperMixin
+    ViolationDetector[RubyNamingConventionConfig],
+    LocationHelperMixin,
 ):
     """Flags Ruby methods defined with non-snake_case names.
 
@@ -61,7 +62,9 @@ class RubyNamingConventionDetector(
         return "ruby_naming_convention"
 
     def detect(
-        self, context: AnalysisContext, config: RubyNamingConventionConfig
+        self,
+        context: AnalysisContext,
+        config: RubyNamingConventionConfig,
     ) -> list[Violation]:
         """Scan method definitions for non-snake_case names.
 
@@ -86,7 +89,8 @@ class RubyNamingConventionDetector(
 
 
 class RubyMethodChainDetector(
-    ViolationDetector[RubyMethodChainConfig], LocationHelperMixin
+    ViolationDetector[RubyMethodChainConfig],
+    LocationHelperMixin,
 ):
     """Detects excessively long method chains that reduce readability.
 
@@ -106,7 +110,9 @@ class RubyMethodChainDetector(
         return "ruby_method_chain"
 
     def detect(
-        self, context: AnalysisContext, config: RubyMethodChainConfig
+        self,
+        context: AnalysisContext,
+        config: RubyMethodChainConfig,
     ) -> list[Violation]:
         """Flag lines where the number of chained method calls exceeds the threshold.
 
@@ -151,7 +157,9 @@ class RubyDryDetector(ViolationDetector[RubyDryConfig], LocationHelperMixin):
         return "ruby_dry"
 
     def detect(
-        self, context: AnalysisContext, config: RubyDryConfig
+        self,
+        context: AnalysisContext,
+        config: RubyDryConfig,
     ) -> list[Violation]:
         """Flag source files containing three or more identical non-blank lines.
 
@@ -174,13 +182,14 @@ class RubyDryDetector(ViolationDetector[RubyDryConfig], LocationHelperMixin):
                         config,
                         contains="duplication",
                         suggestion="Extract repeated code into methods or modules.",
-                    )
+                    ),
                 ]
         return []
 
 
 class RubyBlockPreferenceDetector(
-    ViolationDetector[RubyBlockPreferenceConfig], LocationHelperMixin
+    ViolationDetector[RubyBlockPreferenceConfig],
+    LocationHelperMixin,
 ):
     """Flags use of ``lambda``/``Proc.new`` where idiomatic blocks would suffice.
 
@@ -205,7 +214,9 @@ class RubyBlockPreferenceDetector(
         return "ruby_block_preference"
 
     def detect(
-        self, context: AnalysisContext, config: RubyBlockPreferenceConfig
+        self,
+        context: AnalysisContext,
+        config: RubyBlockPreferenceConfig,
     ) -> list[Violation]:
         """Flag files that use ``lambda`` or ``Proc.new`` instead of blocks.
 
@@ -222,13 +233,14 @@ class RubyBlockPreferenceDetector(
                     config,
                     contains="lambda",
                     suggestion="Prefer blocks for simple iterations and callbacks.",
-                )
+                ),
             ]
         return []
 
 
 class RubyMonkeyPatchDetector(
-    ViolationDetector[RubyMonkeyPatchConfig], LocationHelperMixin
+    ViolationDetector[RubyMonkeyPatchConfig],
+    LocationHelperMixin,
 ):
     """Detects reopening of core Ruby classes (monkey patching).
 
@@ -253,7 +265,9 @@ class RubyMonkeyPatchDetector(
         return "ruby_monkey_patch"
 
     def detect(
-        self, context: AnalysisContext, config: RubyMonkeyPatchConfig
+        self,
+        context: AnalysisContext,
+        config: RubyMonkeyPatchConfig,
     ) -> list[Violation]:
         """Flag class reopenings of built-in Ruby types like String or Array.
 
@@ -280,7 +294,8 @@ class RubyMonkeyPatchDetector(
 
 
 class RubyMethodNamingDetector(
-    ViolationDetector[RubyMethodNamingConfig], LocationHelperMixin
+    ViolationDetector[RubyMethodNamingConfig],
+    LocationHelperMixin,
 ):
     """Flags boolean-style methods that lack the conventional trailing ``?``.
 
@@ -301,7 +316,9 @@ class RubyMethodNamingDetector(
         return "ruby_method_naming"
 
     def detect(
-        self, context: AnalysisContext, config: RubyMethodNamingConfig
+        self,
+        context: AnalysisContext,
+        config: RubyMethodNamingConfig,
     ) -> list[Violation]:
         """Flag methods starting with ``is``/``has`` that are missing a ``?`` suffix.
 
@@ -325,13 +342,14 @@ class RubyMethodNamingDetector(
                         contains=name,
                         location=Location(line=idx, column=match.start(1) + 1),
                         suggestion="Boolean methods should end with ?.",
-                    )
+                    ),
                 )
         return violations
 
 
 class RubySymbolKeysDetector(
-    ViolationDetector[RubySymbolKeysConfig], LocationHelperMixin
+    ViolationDetector[RubySymbolKeysConfig],
+    LocationHelperMixin,
 ):
     """Flags hash literals using string keys instead of idiomatic symbol keys.
 
@@ -351,7 +369,9 @@ class RubySymbolKeysDetector(
         return "ruby_symbol_keys"
 
     def detect(
-        self, context: AnalysisContext, config: RubySymbolKeysConfig
+        self,
+        context: AnalysisContext,
+        config: RubySymbolKeysConfig,
     ) -> list[Violation]:
         """Flag hash literals that use quoted string keys with ``=>`` syntax.
 
@@ -376,7 +396,8 @@ class RubySymbolKeysDetector(
 
 
 class RubyGuardClauseDetector(
-    ViolationDetector[RubyGuardClauseConfig], LocationHelperMixin
+    ViolationDetector[RubyGuardClauseConfig],
+    LocationHelperMixin,
 ):
     """Detects methods that could benefit from guard clauses to reduce nesting.
 
@@ -396,7 +417,9 @@ class RubyGuardClauseDetector(
         return "ruby_guard_clause"
 
     def detect(
-        self, context: AnalysisContext, config: RubyGuardClauseConfig
+        self,
+        context: AnalysisContext,
+        config: RubyGuardClauseConfig,
     ) -> list[Violation]:
         """Flag code with ``if`` blocks that lack ``return if/unless`` guard clauses.
 
@@ -414,13 +437,14 @@ class RubyGuardClauseDetector(
                     config,
                     contains="guard clause",
                     suggestion="Use guard clauses (return if/unless) to reduce nesting.",
-                )
+                ),
             ]
         return []
 
 
 class RubyMetaprogrammingDetector(
-    ViolationDetector[RubyMetaprogrammingConfig], LocationHelperMixin
+    ViolationDetector[RubyMetaprogrammingConfig],
+    LocationHelperMixin,
 ):
     """Flags dangerous metaprogramming constructs like ``method_missing`` and ``eval``.
 
@@ -446,7 +470,9 @@ class RubyMetaprogrammingDetector(
         return "ruby_metaprogramming"
 
     def detect(
-        self, context: AnalysisContext, config: RubyMetaprogrammingConfig
+        self,
+        context: AnalysisContext,
+        config: RubyMetaprogrammingConfig,
     ) -> list[Violation]:
         """Flag code containing dynamic dispatch or runtime method generation.
 
@@ -464,7 +490,7 @@ class RubyMetaprogrammingDetector(
                         config,
                         contains=token,
                         suggestion="Avoid metaprogramming unless strictly necessary.",
-                    )
+                    ),
                 ]
                 for token in (
                     "define_method",
@@ -481,7 +507,8 @@ class RubyMetaprogrammingDetector(
 
 
 class RubyExpressiveSyntaxDetector(
-    ViolationDetector[RubyExpressiveSyntaxConfig], LocationHelperMixin
+    ViolationDetector[RubyExpressiveSyntaxConfig],
+    LocationHelperMixin,
 ):
     """Flags non-idiomatic control flow like C-style ``for`` loops and ``unless !``.
 
@@ -502,7 +529,9 @@ class RubyExpressiveSyntaxDetector(
         return "ruby_expressive_syntax"
 
     def detect(
-        self, context: AnalysisContext, config: RubyExpressiveSyntaxConfig
+        self,
+        context: AnalysisContext,
+        config: RubyExpressiveSyntaxConfig,
     ) -> list[Violation]:
         """Flag ``for...in`` loops and ``unless !`` double-negatives.
 
@@ -521,7 +550,7 @@ class RubyExpressiveSyntaxDetector(
                         contains="expressive syntax",
                         location=Location(line=idx, column=1),
                         suggestion="Prefer each/if over for/unless !.",
-                    )
+                    ),
                 ]
                 for idx, line in enumerate(context.code.splitlines(), start=1)
                 if re.search(r"^\s*for\s+\w+\s+in\s+", line) or "unless !" in line
@@ -531,7 +560,8 @@ class RubyExpressiveSyntaxDetector(
 
 
 class RubyPreferFailDetector(
-    ViolationDetector[RubyPreferFailConfig], LocationHelperMixin
+    ViolationDetector[RubyPreferFailConfig],
+    LocationHelperMixin,
 ):
     """Flags use of ``raise`` where ``fail`` is the preferred convention for programmer errors.
 
@@ -552,7 +582,9 @@ class RubyPreferFailDetector(
         return "ruby_prefer_fail"
 
     def detect(
-        self, context: AnalysisContext, config: RubyPreferFailConfig
+        self,
+        context: AnalysisContext,
+        config: RubyPreferFailConfig,
     ) -> list[Violation]:
         """Flag files that use ``raise`` without any corresponding ``fail`` calls.
 
@@ -569,7 +601,7 @@ class RubyPreferFailDetector(
                     config,
                     contains="raise",
                     suggestion="Use fail for programmer errors.",
-                )
+                ),
             ]
         return []
 

@@ -82,23 +82,26 @@ x = 1; y = 2
 
     magic_cfg = MagicMethodConfig().model_copy(update={"max_magic_methods": 0})
     magic_context = AnalysisContext(
-        code="def __str__(self):\n    return 'x'\n", language="python"
+        code="def __str__(self):\n    return 'x'\n",
+        language="python",
     )
     assert MagicMethodDetector().detect(magic_context, magic_cfg)
 
     nest_cfg = NestingDepthConfig().model_copy(update={"max_nesting_depth": 0})
     nested_context = AnalysisContext(
-        code="if True:\n    if True:\n        pass\n", language="python"
+        code="if True:\n    if True:\n        pass\n",
+        language="python",
     )
     assert NestingDepthDetector().detect(nested_context, nest_cfg)
 
     cc_summary = CyclomaticSummary(
-        blocks=[CyclomaticBlock(name="foo", complexity=12, lineno=1)], average=12.0
+        blocks=[CyclomaticBlock(name="foo", complexity=12, lineno=1)],
+        average=12.0,
     )
     cc_context = AnalysisContext(code="def foo():\n    return 1\n", language="python")
     cc_context.cyclomatic_summary = cc_summary
     cc_cfg = CyclomaticComplexityConfig().model_copy(
-        update={"max_cyclomatic_complexity": 5}
+        update={"max_cyclomatic_complexity": 5},
     )
     assert CyclomaticComplexityDetector().detect(cc_context, cc_cfg)
 
@@ -109,7 +112,8 @@ x = 1; y = 2
     assert ConsistencyDetector().detect(consistency_context, ConsistencyConfig())
 
     explicit_context = AnalysisContext(
-        code="def foo(x, y):\n    return x\n", language="python"
+        code="def foo(x, y):\n    return x\n",
+        language="python",
     )
     assert ExplicitnessDetector().detect(explicit_context, ExplicitnessConfig())
 
@@ -118,7 +122,7 @@ x = 1; y = 2
         language="python",
     )
     ns_cfg = NamespaceConfig().model_copy(
-        update={"max_top_level_symbols": 1, "max_exports": 0}
+        update={"max_top_level_symbols": 1, "max_exports": 0},
     )
     assert NamespaceUsageDetector().detect(namespace_context, ns_cfg)
 

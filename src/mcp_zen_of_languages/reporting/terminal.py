@@ -68,7 +68,8 @@ def _active_console(output_console: Console | None = None) -> Console:
 
 
 def _build_prompt_file_summary(
-    results: list[AnalysisResult], output_console: Console | None = None
+    results: list[AnalysisResult],
+    output_console: Console | None = None,
 ) -> Table:
     """Build a compact file-summary table showing violation counts and top themes.
 
@@ -106,7 +107,8 @@ def _build_prompt_file_summary(
 
 
 def _build_generic_prompts_table(
-    bundle: PromptBundle, output_console: Console | None = None
+    bundle: PromptBundle,
+    output_console: Console | None = None,
 ) -> Table | None:
     """Build a table listing generic (language-level) remediation prompts.
 
@@ -171,8 +173,12 @@ def _build_prompt_details_renderable(prompt: str, language: str, width: int) -> 
             )
             renderables.append(
                 Panel(
-                    syntax, title="Code", box=BOX_CODE, width=code_width, expand=False
-                )
+                    syntax,
+                    title="Code",
+                    box=BOX_CODE,
+                    width=code_width,
+                    expand=False,
+                ),
             )
             code_lines.clear()
 
@@ -203,7 +209,9 @@ def _build_prompt_details_renderable(prompt: str, language: str, width: int) -> 
 
 
 def _render_file_prompt_panels(
-    bundle: PromptBundle, width: int, output_console: Console
+    bundle: PromptBundle,
+    width: int,
+    output_console: Console,
 ) -> None:
     """Print a zen-styled panel for each file prompt in the bundle.
 
@@ -219,10 +227,12 @@ def _render_file_prompt_panels(
     """
     for file_prompt in bundle.file_prompts:
         violation_count = file_prompt.prompt.count("\n- [") + int(
-            file_prompt.prompt.strip().startswith("- [")
+            file_prompt.prompt.strip().startswith("- ["),
         )
         details = _build_prompt_details_renderable(
-            file_prompt.prompt, file_prompt.language, width
+            file_prompt.prompt,
+            file_prompt.language,
+            width,
         )
         output_console.print(
             zen_panel(
@@ -230,7 +240,7 @@ def _render_file_prompt_panels(
                 title=f"File Prompt - {file_prompt.path}",
                 subtitle=f"{file_prompt.language} · {violation_count} violations",
                 output_console=output_console,
-            )
+            ),
         )
 
 
@@ -266,7 +276,7 @@ def render_prompt_panel(
             f"Languages: {', '.join(languages) if languages else 'n/a'}",
             title="Zen Prompts",
             output_console=active_console,
-        )
+        ),
     )
     if bundle.big_picture:
         roadmap = bundle.big_picture.refactoring_roadmap or []
@@ -291,10 +301,12 @@ def render_prompt_panel(
         big_picture_table.add_column("Metric", style="metric", width=18)
         big_picture_table.add_column("Detail", ratio=1)
         big_picture_table.add_row(
-            "Health score", f"{bundle.big_picture.health_score:.1f}/100"
+            "Health score",
+            f"{bundle.big_picture.health_score:.1f}/100",
         )
         big_picture_table.add_row(
-            "Trajectory", bundle.big_picture.improvement_trajectory
+            "Trajectory",
+            bundle.big_picture.improvement_trajectory,
         )
         if patterns := bundle.big_picture.systemic_patterns or []:
             for pattern in patterns:
@@ -310,7 +322,8 @@ def render_prompt_panel(
 
 
 def build_agent_tasks_table(
-    task_list: AgentTaskList, output_console: Console | None = None
+    task_list: AgentTaskList,
+    output_console: Console | None = None,
 ) -> Table:
     """Build a Rich table listing all agent tasks with ID, file, and action columns.
 

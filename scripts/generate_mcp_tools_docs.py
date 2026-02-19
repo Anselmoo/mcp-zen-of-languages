@@ -178,7 +178,7 @@ def generate() -> str:
         The MCP server exposes **tools**, **resources**, and **prompts** that AI agents
         and IDE integrations can invoke via the
         [Model Context Protocol](https://modelcontextprotocol.io/).
-    """)
+    """),
     )
 
     # --- Summary table ---
@@ -215,7 +215,7 @@ def generate() -> str:
         | **Tools**  | {len(tools)} |
         | **Resources** | {len(resources) + len(resource_templates)} |
         | **Prompts** | {len(prompts)} |
-    """)
+    """),
     )
 
     # --- Categorize tools ---
@@ -267,7 +267,7 @@ def generate() -> str:
             annotations = getattr(tool, "annotations", None)
             access = _annotation_label(annotations) if annotations else ""
             sections.append(
-                f"| [`{name}`](#{name.replace('_', '-')}) | {family} | {desc} | {access} |\n"
+                f"| [`{name}`](#{name.replace('_', '-')}) | {family} | {desc} | {access} |\n",
             )
 
     sections.append("\n")
@@ -344,7 +344,7 @@ def generate() -> str:
     if all_resources:
         sections.append("## :material-database-outline: Resources\n\n")
         sections.append(
-            "MCP resources are read-only data endpoints that clients can subscribe to.\n\n"
+            "MCP resources are read-only data endpoints that clients can subscribe to.\n\n",
         )
         sections.append("| URI | Name | Description |\n")
         sections.append("|-----|------|-------------|\n")
@@ -373,7 +373,7 @@ def generate() -> str:
     if prompts:
         sections.append("## :material-chat-outline: Prompts\n\n")
         sections.append(
-            "MCP prompts are pre-built templates that clients can render for user interaction.\n\n"
+            "MCP prompts are pre-built templates that clients can render for user interaction.\n\n",
         )
         for prompt in prompts:
             name = getattr(prompt, "name", "")
@@ -492,7 +492,7 @@ def generate() -> str:
             MCP-->>Agent: ConfigStatus (reset to defaults)
         ```
 
-    """)
+    """),
     )
 
     return "".join(sections)
@@ -505,7 +505,7 @@ def generate() -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Generate MCP tools reference docs from server.py"
+        description="Generate MCP tools reference docs from server.py",
     )
     parser.add_argument(
         "--check",

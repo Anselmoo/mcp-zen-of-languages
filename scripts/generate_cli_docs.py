@@ -243,12 +243,12 @@ def generate() -> str:
         !!! info "MCP-first workflow"
             If you're using an MCP-capable editor or agent, start with [MCP Tools Reference](mcp-tools-reference.md). Use the CLI when you need local checks, export artifacts, or CI automation.
 
-    """
+    """,
             ),
             "## Commands at a glance\n\n",
             "| Command | Purpose |\n",
             "|---------|--------|\n",
-        )
+        ),
     )
     for cmd_name, cmd in commands.items():
         first_line = _extract_first_paragraph(cmd.help or "")
@@ -315,7 +315,7 @@ def generate() -> str:
             "## Global Options\n\n",
             "| Flag | Description |\n",
             "|------|-------------|\n",
-        )
+        ),
     )
     for flag, desc in GLOBAL_OPTIONS:
         sections.append(f"| {flag} | {desc} |\n")
@@ -335,7 +335,7 @@ def generate() -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Generate CLI reference docs from cli.py"
+        description="Generate CLI reference docs from cli.py",
     )
     parser.add_argument(
         "--check",

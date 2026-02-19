@@ -48,7 +48,9 @@ async def test_analyze_zen_violations_applies_severity_threshold(monkeypatch):
             )
 
     monkeypatch.setattr(
-        server, "create_analyzer", lambda *_args, **_kwargs: _FakeAnalyzer()
+        server,
+        "create_analyzer",
+        lambda *_args, **_kwargs: _FakeAnalyzer(),
     )
     result = await server.analyze_zen_violations.fn("def foo(): pass", "python", 7)
     assert len(result.violations) == 1
@@ -113,7 +115,9 @@ async def test_analyze_zen_violations_applies_runtime_pipeline_override(monkeypa
     ],
 )
 async def test_analyze_zen_violations_accepts_supported_aliases(
-    monkeypatch, alias, canonical
+    monkeypatch,
+    alias,
+    canonical,
 ):
     captured = {}
 
@@ -172,7 +176,9 @@ async def test_generate_agent_tasks_tool(tmp_path):
     sample = tmp_path / "sample.py"
     sample.write_text("def foo():\n    pass\n", encoding="utf-8")
     tasks = await server.generate_agent_tasks_tool.fn(
-        repo_path=str(tmp_path), languages=["python"], min_severity=1
+        repo_path=str(tmp_path),
+        languages=["python"],
+        min_severity=1,
     )
     assert tasks.total_tasks >= 1
 
@@ -215,7 +221,10 @@ async def test_analyze_repository_reports_context_progress(tmp_path):
             progress.append((current, total))
 
     await server.analyze_repository.fn(
-        str(tmp_path), ["python"], max_files=1, ctx=_Ctx()
+        str(tmp_path),
+        ["python"],
+        max_files=1,
+        ctx=_Ctx(),
     )
     assert any("Analyzing" in msg for msg in logs)
     assert progress

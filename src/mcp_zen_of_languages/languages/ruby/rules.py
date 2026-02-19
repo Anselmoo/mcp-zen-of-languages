@@ -24,7 +24,7 @@ RUBY_ZEN = LanguageZenPrinciples(
                 "Methods starting with capital letters",
             ],
             metrics={
-                "naming_convention": "snake_case for methods/variables, PascalCase for classes"
+                "naming_convention": "snake_case for methods/variables, PascalCase for classes",
             },
         ),
         ZenPrinciple(

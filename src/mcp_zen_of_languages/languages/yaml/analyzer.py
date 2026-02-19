@@ -72,7 +72,9 @@ class YamlAnalyzer(BaseAnalyzer):
         return None
 
     def compute_metrics(
-        self, code: str, _ast_tree: ParserResult | None
+        self,
+        code: str,
+        _ast_tree: ParserResult | None,
     ) -> tuple[CyclomaticSummary | None, float | None, int]:
         """Compute a line count for the YAML file; complexity metrics are not applicable.
 

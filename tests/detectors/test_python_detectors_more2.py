@@ -36,7 +36,7 @@ def test_namespace_usage_detector_flags_exports():
     code = "a=1\n__all__ = ['a', 'b', 'c', 'd', 'e']\n"
     context = AnalysisContext(code=code, language="python")
     config = NamespaceConfig().model_copy(
-        update={"max_top_level_symbols": 0, "max_exports": 1}
+        update={"max_top_level_symbols": 0, "max_exports": 1},
     )
     violations = NamespaceUsageDetector().detect(context, config)
     assert violations

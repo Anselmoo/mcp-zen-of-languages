@@ -20,7 +20,7 @@ def test_summarize_violations_counts():
 
 def test_summarize_violation_dicts_counts():
     summary = cli._summarize_violation_dicts(
-        [{"severity": 9}, {"severity": 7}, {"severity": 4}, {"severity": 1}]
+        [{"severity": 9}, {"severity": 7}, {"severity": 4}, {"severity": 1}],
     )
     assert summary.critical == 1
     assert summary.high == 1
@@ -97,7 +97,7 @@ def test_build_log_summary_outputs_counts():
                         "low": 0,
                     },
                 },
-            }
+            },
         },
     )
     output = cli._build_log_summary(report)

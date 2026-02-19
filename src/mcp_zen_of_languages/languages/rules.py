@@ -45,7 +45,9 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
         return "rule_pattern"
 
     def detect(
-        self, context: AnalysisContext, config: DetectorConfig
+        self,
+        context: AnalysisContext,
+        config: DetectorConfig,
     ) -> list[Violation]:
         """Run all sub-detection strategies and aggregate their violations.
 
@@ -67,7 +69,9 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
         return violations
 
     def _detect_patterns(
-        self, context: AnalysisContext, config: DetectorConfig
+        self,
+        context: AnalysisContext,
+        config: DetectorConfig,
     ) -> list[Violation]:
         """Match literal text patterns and required-absence patterns from ``detectable_patterns``.
 
@@ -94,7 +98,7 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
                             config,
                             contains=needle,
                             suggestion=config.recommended_alternative,
-                        )
+                        ),
                     )
                 continue
             for idx, line in enumerate(context.code.splitlines(), start=1):
@@ -105,13 +109,15 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
                             contains=needle,
                             location=Location(line=idx, column=line.find(needle) + 1),
                             suggestion=config.recommended_alternative,
-                        )
+                        ),
                     )
                     break
         return violations
 
     def _detect_script_length(
-        self, context: AnalysisContext, config: DetectorConfig
+        self,
+        context: AnalysisContext,
+        config: DetectorConfig,
     ) -> list[Violation]:
         """Flag scripts exceeding a line-count threshold that lack function definitions.
 
@@ -127,7 +133,9 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
             return []
         lines = context.code.splitlines()
         has_function = re.search(
-            r"^\s*(function\s+\w+|\w+\s*\(\)\s*\{)", context.code, re.MULTILINE
+            r"^\s*(function\s+\w+|\w+\s*\(\)\s*\{)",
+            context.code,
+            re.MULTILINE,
         )
         if len(lines) > max_length and not has_function:
             return [
@@ -135,12 +143,14 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
                     config,
                     contains="function",
                     suggestion="Extract reusable logic into functions.",
-                )
+                ),
             ]
         return []
 
     def _detect_variable_name_length(
-        self, context: AnalysisContext, config: DetectorConfig
+        self,
+        context: AnalysisContext,
+        config: DetectorConfig,
     ) -> list[Violation]:
         """Flag shell-style variable assignments with names shorter than a minimum length.
 
@@ -166,12 +176,14 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
                         contains=name,
                         location=Location(line=idx, column=1),
                         suggestion="Use more descriptive variable names.",
-                    )
+                    ),
                 ]
         return []
 
     def _detect_inheritance_depth(
-        self, context: AnalysisContext, config: DetectorConfig
+        self,
+        context: AnalysisContext,
+        config: DetectorConfig,
     ) -> list[Violation]:
         """Flag class hierarchies whose ``extends`` chains exceed a configurable depth.
 
@@ -213,12 +225,14 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
                         config,
                         contains="extends",
                         suggestion="Prefer composition over deep inheritance chains.",
-                    )
+                    ),
                 ]
         return []
 
     def _detect_identifier_length(
-        self, context: AnalysisContext, config: DetectorConfig
+        self,
+        context: AnalysisContext,
+        config: DetectorConfig,
     ) -> list[Violation]:
         """Flag JavaScript-style identifiers (``const``, ``let``, ``var``, etc.) shorter than a minimum.
 
@@ -243,12 +257,14 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
                             contains=name,
                             location=Location(line=idx, column=match.start(1) + 1),
                             suggestion="Use clearer, longer identifiers for readability.",
-                        )
+                        ),
                     ]
         return []
 
     def _detect_naming_conventions(
-        self, context: AnalysisContext, config: DetectorConfig
+        self,
+        context: AnalysisContext,
+        config: DetectorConfig,
     ) -> list[Violation]:
         """Enforce PascalCase or camelCase conventions on public and private members.
 
@@ -291,7 +307,7 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
                             contains=match[1],
                             location=Location(line=idx, column=match.start(1) + 1),
                             suggestion=f"Use {public_naming} for public members.",
-                        )
+                        ),
                     ]
             if private_naming:
                 match = re.search(r"\bprivate\s+\w[\w<>,\s]*\s+([A-Za-z_]\w*)", line)
@@ -302,7 +318,7 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
                             contains=match.group(1),
                             location=Location(line=idx, column=match.start(1) + 1),
                             suggestion=f"Use {private_naming} for private members.",
-                        )
+                        ),
                     ]
         return []
 

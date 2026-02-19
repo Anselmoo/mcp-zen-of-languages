@@ -16,6 +16,8 @@ def test_python_analyzer_handles_repository_imports(tmp_path):
     analyzer = PythonAnalyzer()
     repo_imports = {str(tmp_path / "sample.py"): ["os"]}
     result = analyzer.analyze(
-        "import os\n", path=str(tmp_path / "sample.py"), repository_imports=repo_imports
+        "import os\n",
+        path=str(tmp_path / "sample.py"),
+        repository_imports=repo_imports,
     )
     assert result.metrics.lines_of_code == 1

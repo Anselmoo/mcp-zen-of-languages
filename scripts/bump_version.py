@@ -137,7 +137,7 @@ def _update_pyproject(new: Version, *, dry_run: bool) -> None:
         raise RuntimeError(msg)
     if dry_run:
         print(
-            f'  [dry-run] Would update {PYPROJECT.relative_to(ROOT)}: version = "{new}"'
+            f'  [dry-run] Would update {PYPROJECT.relative_to(ROOT)}: version = "{new}"',
         )
     else:
         PYPROJECT.write_text(updated, encoding="utf-8")
@@ -152,12 +152,12 @@ def _update_init(new: Version, *, dry_run: bool) -> None:
     updated = INIT_VERSION_RE.sub(rf'\g<1>"{new}"', text, count=1)
     if text == updated:
         print(
-            f"  ⚠ No __version__ pattern found in {INIT_FILE.relative_to(ROOT)} — skipping"
+            f"  ⚠ No __version__ pattern found in {INIT_FILE.relative_to(ROOT)} — skipping",
         )
         return
     if dry_run:
         print(
-            f'  [dry-run] Would update {INIT_FILE.relative_to(ROOT)}: __version__ = "{new}"'
+            f'  [dry-run] Would update {INIT_FILE.relative_to(ROOT)}: __version__ = "{new}"',
         )
     else:
         INIT_FILE.write_text(updated, encoding="utf-8")
@@ -276,7 +276,9 @@ def _update_changelog(
     dry_run: bool,
 ) -> None:
     section = _build_changelog_section(
-        new, commits, include_maintenance=include_maintenance
+        new,
+        commits,
+        include_maintenance=include_maintenance,
     )
 
     # Count visible entries for the summary line

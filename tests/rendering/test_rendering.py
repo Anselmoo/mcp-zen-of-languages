@@ -177,7 +177,11 @@ def test_print_banner_snapshot(monkeypatch):
     monkeypatch.setattr(console_module, "_render_banner_art", lambda: "ZEN")
     buffer = StringIO()
     capture_console = Console(
-        file=buffer, width=40, force_terminal=True, no_color=True, theme=ZEN_THEME
+        file=buffer,
+        width=40,
+        force_terminal=True,
+        no_color=True,
+        theme=ZEN_THEME,
     )
     print_banner(output_console=capture_console)
     output = buffer.getvalue()

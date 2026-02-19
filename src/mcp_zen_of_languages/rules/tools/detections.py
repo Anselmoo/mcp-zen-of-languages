@@ -312,7 +312,9 @@ def detect_multiple_implementations(files: dict[str, str]) -> list[DuplicateFind
 
 # New detectors
 def detect_god_classes(
-    code: str, max_methods: int = 10, max_lines: int = 500
+    code: str,
+    max_methods: int = 10,
+    max_lines: int = 500,
 ) -> list[GodClassFinding]:
     """Flag classes that exceed method-count or line-span thresholds.
 
@@ -340,8 +342,10 @@ def detect_god_classes(
                 if method_count > max_methods or length > max_lines:
                     results.append(
                         GodClassFinding(
-                            name=current_class, method_count=method_count, lines=length
-                        )
+                            name=current_class,
+                            method_count=method_count,
+                            lines=length,
+                        ),
                     )
             current_class = m[1]
             class_start = i
@@ -354,14 +358,17 @@ def detect_god_classes(
         if method_count > max_methods or length > max_lines:
             results.append(
                 GodClassFinding(
-                    name=current_class, method_count=method_count, lines=length
-                )
+                    name=current_class,
+                    method_count=method_count,
+                    lines=length,
+                ),
             )
     return results
 
 
 def detect_deep_inheritance(
-    code_map: dict[str, str], max_depth: int = 3
+    code_map: dict[str, str],
+    max_depth: int = 3,
 ) -> list[InheritanceFinding]:
     """Discover inheritance chains deeper than *max_depth* across multiple files.
 
@@ -476,14 +483,17 @@ def detect_feature_envy(code: str) -> list[FeatureEnvyFinding]:
         if top[1] > self_refs:
             results.append(
                 FeatureEnvyFinding(
-                    method="<unknown>", target_class=top[0], occurrences=top[1]
-                )
+                    method="<unknown>",
+                    target_class=top[0],
+                    occurrences=top[1],
+                ),
             )
     return results
 
 
 def detect_sparse_code(
-    code: str, max_statements_per_line: int = 1
+    code: str,
+    max_statements_per_line: int = 1,
 ) -> list[SparseCodeFinding]:
     """Flag lines containing multiple semicolon-separated statements.
 
@@ -556,7 +566,7 @@ def detect_missing_type_hints(code: str) -> list[ExplicitnessFinding]:
                     missing.append(arg.arg)
             if missing:
                 results.append(
-                    ExplicitnessFinding(function=node.name, missing_params=missing)
+                    ExplicitnessFinding(function=node.name, missing_params=missing),
                 )
     return results
 
@@ -597,7 +607,8 @@ def detect_namespace_usage(code: str) -> NamespaceFinding:
                     else:
                         export_count = None
     return NamespaceFinding(
-        top_level_symbols=top_level_symbols, export_count=export_count
+        top_level_symbols=top_level_symbols,
+        export_count=export_count,
     )
 
 

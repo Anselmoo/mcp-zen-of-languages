@@ -34,7 +34,7 @@ ZEN_THEME = Theme(
         "metric": "magenta",
         "score": "bold white",
         "banner": "bold cyan",
-    }
+    },
 )
 
 BOX_BANNER = box.DOUBLE

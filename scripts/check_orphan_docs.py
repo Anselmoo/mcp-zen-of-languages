@@ -17,7 +17,9 @@ class _MkDocsLoader(yaml.SafeLoader):
 
 
 def _passthrough_constructor(
-    _loader: yaml.Loader, _tag_suffix: str, _node: yaml.Node
+    _loader: yaml.Loader,
+    _tag_suffix: str,
+    _node: yaml.Node,
 ) -> str:
     """Return empty string for any unknown tags — we only need the nav."""
     return ""

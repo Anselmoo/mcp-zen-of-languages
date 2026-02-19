@@ -21,8 +21,10 @@ def test_server_analyze_repository_other_language(tmp_path):
     sample.write_text("def foo():\n    pass\n", encoding="utf-8")
     result = asyncio.run(
         analyze_repository.fn(
-            repo_path=str(tmp_path), languages=["kotlin"], max_files=1
-        )
+            repo_path=str(tmp_path),
+            languages=["kotlin"],
+            max_files=1,
+        ),
     )
     assert result == []
 
@@ -31,8 +33,10 @@ def test_server_analyze_repository_unknown_files(tmp_path):
     (tmp_path / "sample.txt").write_text("text", encoding="utf-8")
     result = asyncio.run(
         analyze_repository.fn(
-            repo_path=str(tmp_path), languages=["unknown"], max_files=1
-        )
+            repo_path=str(tmp_path),
+            languages=["unknown"],
+            max_files=1,
+        ),
     )
     assert result
 

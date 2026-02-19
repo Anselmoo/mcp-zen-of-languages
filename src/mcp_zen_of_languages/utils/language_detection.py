@@ -98,10 +98,14 @@ def detect_language_from_content(code: str) -> DetectionResult:
         return DetectionResult(language="python", confidence=0.9, method="heuristics")
     if "interface " in code or "=>" in code or "function " in code:
         return DetectionResult(
-            language="typescript", confidence=0.85, method="heuristics"
+            language="typescript",
+            confidence=0.85,
+            method="heuristics",
         )
     if "const " in code or "let " in code:
         return DetectionResult(
-            language="javascript", confidence=0.8, method="heuristics"
+            language="javascript",
+            confidence=0.8,
+            method="heuristics",
         )
     return DetectionResult(language="unknown", confidence=0.1, method="heuristics")

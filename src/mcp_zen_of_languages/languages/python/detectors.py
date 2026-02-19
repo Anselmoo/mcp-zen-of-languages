@@ -142,7 +142,9 @@ class StarImportDetector(ViolationDetector[StarImportConfig], LocationHelperMixi
         return "star_imports"
 
     def detect(
-        self, context: AnalysisContext, config: StarImportConfig
+        self,
+        context: AnalysisContext,
+        config: StarImportConfig,
     ) -> list[Violation]:
         """Scan source lines for ``from X import *`` patterns.
 
@@ -173,7 +175,7 @@ class StarImportDetector(ViolationDetector[StarImportConfig], LocationHelperMixi
                         suggestion=(
                             "Import explicit names to avoid namespace pollution."
                         ),
-                    )
+                    ),
                 )
         return violations
 
@@ -205,7 +207,9 @@ class BareExceptDetector(ViolationDetector[BareExceptConfig], LocationHelperMixi
         return "bare_except"
 
     def detect(
-        self, context: AnalysisContext, config: BareExceptConfig
+        self,
+        context: AnalysisContext,
+        config: BareExceptConfig,
     ) -> list[Violation]:
         """Scan source lines for bare excepts and empty exception handlers.
 
@@ -236,13 +240,14 @@ class BareExceptDetector(ViolationDetector[BareExceptConfig], LocationHelperMixi
                         or config.type,
                         severity=config.severity or 5,
                         message=config.select_violation_message(
-                            contains="Bare", index=0
+                            contains="Bare",
+                            index=0,
                         ),
                         location=loc,
                         suggestion=(
                             "Catch specific exceptions or re-raise after logging."
                         ),
-                    )
+                    ),
                 )
                 continue
             if re.match(
@@ -257,13 +262,14 @@ class BareExceptDetector(ViolationDetector[BareExceptConfig], LocationHelperMixi
                         or config.type,
                         severity=config.severity or 5,
                         message=config.select_violation_message(
-                            contains="Empty", index=0
+                            contains="Empty",
+                            index=0,
                         ),
                         location=loc,
                         suggestion=(
                             "Handle the exception or re-raise; avoid empty except blocks."
                         ),
-                    )
+                    ),
                 )
                 continue
             if re.match(r"except\s+\w+(?:\s+as\s+\w+)?\s*:\s*$", stripped):
@@ -277,13 +283,14 @@ class BareExceptDetector(ViolationDetector[BareExceptConfig], LocationHelperMixi
                             or config.type,
                             severity=config.severity or 5,
                             message=config.select_violation_message(
-                                contains="Empty", index=0
+                                contains="Empty",
+                                index=0,
                             ),
                             location=loc,
                             suggestion=(
                                 "Handle the exception or re-raise; avoid empty except blocks."
                             ),
-                        )
+                        ),
                     )
         return violations
 
@@ -315,7 +322,9 @@ class MagicNumberDetector(ViolationDetector[MagicNumberConfig], LocationHelperMi
         return "magic_number"
 
     def detect(
-        self, context: AnalysisContext, config: MagicNumberConfig
+        self,
+        context: AnalysisContext,
+        config: MagicNumberConfig,
     ) -> list[Violation]:
         """Count numeric literals across non-trivial lines and flag when too many.
 
@@ -358,13 +367,14 @@ class MagicNumberDetector(ViolationDetector[MagicNumberConfig], LocationHelperMi
                     index=0,
                     location=location,
                     suggestion="Use named constants instead of magic numbers.",
-                )
+                ),
             )
         return violations
 
 
 class ComplexOneLinersDetector(
-    ViolationDetector[ComplexOneLinersConfig], LocationHelperMixin
+    ViolationDetector[ComplexOneLinersConfig],
+    LocationHelperMixin,
 ):
     """Detect overly dense one-liner expressions that sacrifice readability.
 
@@ -394,7 +404,9 @@ class ComplexOneLinersDetector(
         return "complex_one_liners"
 
     def detect(
-        self, context: AnalysisContext, config: ComplexOneLinersConfig
+        self,
+        context: AnalysisContext,
+        config: ComplexOneLinersConfig,
     ) -> list[Violation]:
         """Scan each line for nested comprehensions or complex ternary chains.
 
@@ -425,7 +437,7 @@ class ComplexOneLinersDetector(
                         index=0,
                         location=Location(line=idx, column=1),
                         suggestion="Split nested comprehensions into named steps.",
-                    )
+                    ),
                 )
                 continue
             if (
@@ -440,13 +452,14 @@ class ComplexOneLinersDetector(
                         index=0,
                         location=Location(line=idx, column=1),
                         suggestion="Break complex expressions into multiple lines.",
-                    )
+                    ),
                 )
         return violations
 
 
 class ContextManagerDetector(
-    ViolationDetector[ContextManagerConfig], LocationHelperMixin
+    ViolationDetector[ContextManagerConfig],
+    LocationHelperMixin,
 ):
     """Detect ``open()`` calls not wrapped in a ``with`` context manager.
 
@@ -474,7 +487,9 @@ class ContextManagerDetector(
         return "context_manager"
 
     def detect(
-        self, context: AnalysisContext, config: ContextManagerConfig
+        self,
+        context: AnalysisContext,
+        config: ContextManagerConfig,
     ) -> list[Violation]:
         """Walk the AST for ``open()`` calls and verify ``with`` wrapping.
 
@@ -536,7 +551,7 @@ class ContextManagerDetector(
                                     suggestion=(
                                         "Use 'with open(...) as f' to ensure proper resource cleanup."
                                     ),
-                                )
+                                ),
                             )
         return violations
 
@@ -567,7 +582,9 @@ class DocstringDetector(ViolationDetector[DocstringConfig], LocationHelperMixin)
         return "docstrings"
 
     def detect(
-        self, context: AnalysisContext, config: DocstringConfig
+        self,
+        context: AnalysisContext,
+        config: DocstringConfig,
     ) -> list[Violation]:
         """Parse the module AST and flag top-level defs lacking a docstring.
 
@@ -586,7 +603,8 @@ class DocstringDetector(ViolationDetector[DocstringConfig], LocationHelperMixin)
         """
         violations: list[Violation] = []
         message = config.select_violation_message(
-            contains="Missing docstrings", index=3
+            contains="Missing docstrings",
+            index=3,
         )
         try:
             tree = ast.parse(context.code)
@@ -597,7 +615,8 @@ class DocstringDetector(ViolationDetector[DocstringConfig], LocationHelperMixin)
             if isinstance(node, ast.FunctionDef):
                 if ast.get_docstring(node) is None:
                     loc = self.find_location_by_substring(
-                        context.code, f"def {node.name}"
+                        context.code,
+                        f"def {node.name}",
                     )
                     violations.append(
                         Violation(
@@ -610,11 +629,12 @@ class DocstringDetector(ViolationDetector[DocstringConfig], LocationHelperMixin)
                             suggestion=(
                                 "Add a brief docstring describing purpose and args."
                             ),
-                        )
+                        ),
                     )
             elif isinstance(node, ast.ClassDef) and ast.get_docstring(node) is None:
                 loc = self.find_location_by_substring(
-                    context.code, f"class {node.name}"
+                    context.code,
+                    f"class {node.name}",
                 )
                 violations.append(
                     Violation(
@@ -625,7 +645,7 @@ class DocstringDetector(ViolationDetector[DocstringConfig], LocationHelperMixin)
                         message=message,
                         location=loc,
                         suggestion=("Add class docstring describing responsibilities."),
-                    )
+                    ),
                 )
         return violations
 
@@ -652,7 +672,9 @@ class LineLengthDetector(ViolationDetector[LineLengthConfig], LocationHelperMixi
         return "line_length"
 
     def detect(
-        self, context: AnalysisContext, config: LineLengthConfig
+        self,
+        context: AnalysisContext,
+        config: LineLengthConfig,
     ) -> list[Violation]:
         """Iterate source lines and emit a violation for each exceeding ``max_line_length``.
 
@@ -684,7 +706,7 @@ class LineLengthDetector(ViolationDetector[LineLengthConfig], LocationHelperMixi
                         suggestion=(
                             f"Wrap or refactor to keep line <= {max_len} characters."
                         ),
-                    )
+                    ),
                 )
         return violations
 
@@ -715,7 +737,9 @@ class ClassSizeDetector(ViolationDetector[ClassSizeConfig], LocationHelperMixin)
         return "class_size"
 
     def detect(
-        self, context: AnalysisContext, config: ClassSizeConfig
+        self,
+        context: AnalysisContext,
+        config: ClassSizeConfig,
     ) -> list[Violation]:
         """Walk the AST and flag classes whose line span exceeds ``max_class_length``.
 
@@ -771,7 +795,7 @@ class ClassSizeDetector(ViolationDetector[ClassSizeConfig], LocationHelperMixin)
                             message=message,
                             location=loc,
                             suggestion="Split large classes into smaller cohesive units.",
-                        )
+                        ),
                     )
 
         return violations
@@ -804,7 +828,9 @@ class NameStyleDetector(ViolationDetector[NameStyleConfig], LocationHelperMixin)
         return "name_style"
 
     def detect(
-        self, context: AnalysisContext, config: NameStyleConfig
+        self,
+        context: AnalysisContext,
+        config: NameStyleConfig,
     ) -> list[Violation]:
         """Walk the AST for non-snake_case function and variable names.
 
@@ -845,7 +871,8 @@ class NameStyleDetector(ViolationDetector[NameStyleConfig], LocationHelperMixin)
         for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef) and not self._is_snake_case(node.name):
                 loc = self.ast_node_to_location(
-                    context.ast_tree, node
+                    context.ast_tree,
+                    node,
                 ) or self.find_location_by_substring(context.code, f"def {node.name}")
                 violations.append(
                     Violation(
@@ -854,7 +881,7 @@ class NameStyleDetector(ViolationDetector[NameStyleConfig], LocationHelperMixin)
                         message=message,
                         location=loc,
                         suggestion="Rename to snake_case to match Python conventions.",
-                    )
+                    ),
                 )
 
             if isinstance(node, ast.Assign):
@@ -865,9 +892,11 @@ class NameStyleDetector(ViolationDetector[NameStyleConfig], LocationHelperMixin)
                             continue
                         if not self._is_snake_case(name):
                             loc = self.ast_node_to_location(
-                                context.ast_tree, target
+                                context.ast_tree,
+                                target,
                             ) or self.find_location_by_substring(
-                                context.code, f"{name} ="
+                                context.code,
+                                f"{name} =",
                             )
                             violations.append(
                                 Violation(
@@ -876,13 +905,14 @@ class NameStyleDetector(ViolationDetector[NameStyleConfig], LocationHelperMixin)
                                     message=message,
                                     location=loc,
                                     suggestion="Use snake_case for variable names.",
-                                )
+                                ),
                             )
 
         return violations
 
     def _iter_assignment_targets(
-        self, targets: Iterable[ast.expr]
+        self,
+        targets: Iterable[ast.expr],
     ) -> Iterable[ast.expr]:
         """Flatten compound assignment targets into individual ``ast.Name`` nodes.
 
@@ -902,7 +932,9 @@ class NameStyleDetector(ViolationDetector[NameStyleConfig], LocationHelperMixin)
                 yield t
 
     def _heuristic_detect(
-        self, context: AnalysisContext, config: NameStyleConfig
+        self,
+        context: AnalysisContext,
+        config: NameStyleConfig,
     ) -> list[Violation]:
         """Regex fallback for name-style checking when AST parsing fails.
 
@@ -922,7 +954,9 @@ class NameStyleDetector(ViolationDetector[NameStyleConfig], LocationHelperMixin)
         severity = config.severity or 3
         message = config.select_violation_message(index=1)
         for m in re.finditer(
-            r"^def\s+([A-Za-z0-9_]+)", context.code, flags=re.MULTILINE
+            r"^def\s+([A-Za-z0-9_]+)",
+            context.code,
+            flags=re.MULTILINE,
         ):
             name = m.group(1)
             if not self._is_snake_case(name):
@@ -934,7 +968,7 @@ class NameStyleDetector(ViolationDetector[NameStyleConfig], LocationHelperMixin)
                         message=message,
                         location=loc,
                         suggestion="Rename to snake_case to match Python conventions.",
-                    )
+                    ),
                 )
 
         for m in re.finditer(r"^([A-Za-z0-9_]+)\s*=", context.code, flags=re.MULTILINE):
@@ -950,7 +984,7 @@ class NameStyleDetector(ViolationDetector[NameStyleConfig], LocationHelperMixin)
                         message=message,
                         location=loc,
                         suggestion="Use snake_case for variable names.",
-                    )
+                    ),
                 )
 
         return violations
@@ -968,7 +1002,8 @@ class NameStyleDetector(ViolationDetector[NameStyleConfig], LocationHelperMixin)
 
 
 class ShortVariableNamesDetector(
-    ViolationDetector[ShortVariableNamesConfig], LocationHelperMixin
+    ViolationDetector[ShortVariableNamesConfig],
+    LocationHelperMixin,
 ):
     """Detect variables and loop targets with names shorter than the configured minimum.
 
@@ -996,7 +1031,9 @@ class ShortVariableNamesDetector(
         return "short_variable_names"
 
     def detect(
-        self, context: AnalysisContext, config: ShortVariableNamesConfig
+        self,
+        context: AnalysisContext,
+        config: ShortVariableNamesConfig,
     ) -> list[Violation]:
         """Walk the AST and flag identifiers shorter than ``min_identifier_length``.
 
@@ -1041,9 +1078,11 @@ class ShortVariableNamesDetector(
                             continue
                         if len(name) < min_len:
                             loc = self.ast_node_to_location(
-                                context.ast_tree, target
+                                context.ast_tree,
+                                target,
                             ) or self.find_location_by_substring(
-                                context.code, f"{name} ="
+                                context.code,
+                                f"{name} =",
                             )
                             violations.append(
                                 self.build_violation(
@@ -1054,7 +1093,7 @@ class ShortVariableNamesDetector(
                                     suggestion=(
                                         "Use descriptive variable names for readability."
                                     ),
-                                )
+                                ),
                             )
             elif isinstance(node, (ast.For, ast.AsyncFor)):
                 target = node.target
@@ -1073,12 +1112,14 @@ class ShortVariableNamesDetector(
                                 suggestion=(
                                     "Use descriptive loop variables instead of short names."
                                 ),
-                            )
+                            ),
                         )
         return violations
 
     def _heuristic_detect(
-        self, context: AnalysisContext, config: ShortVariableNamesConfig
+        self,
+        context: AnalysisContext,
+        config: ShortVariableNamesConfig,
     ) -> list[Violation]:
         """Regex fallback for short-name detection when AST parsing fails.
 
@@ -1106,12 +1147,13 @@ class ShortVariableNamesDetector(
                     index=0,
                     location=loc,
                     suggestion="Use descriptive variable names for readability.",
-                )
+                ),
             )
         return violations
 
     def _iter_assignment_targets(
-        self, targets: Iterable[ast.expr]
+        self,
+        targets: Iterable[ast.expr],
     ) -> Iterable[ast.expr]:
         """Flatten compound assignment targets for short-name checking.
 
@@ -1132,7 +1174,8 @@ class ShortVariableNamesDetector(
 
 
 class CyclomaticComplexityDetector(
-    ViolationDetector[CyclomaticComplexityConfig], LocationHelperMixin
+    ViolationDetector[CyclomaticComplexityConfig],
+    LocationHelperMixin,
 ):
     """Detect functions whose cyclomatic complexity exceeds the configured threshold.
 
@@ -1160,7 +1203,9 @@ class CyclomaticComplexityDetector(
         return "cyclomatic_complexity"
 
     def detect(
-        self, context: AnalysisContext, config: CyclomaticComplexityConfig
+        self,
+        context: AnalysisContext,
+        config: CyclomaticComplexityConfig,
     ) -> list[Violation]:
         """Check module-wide average and per-function cyclomatic complexity.
 
@@ -1197,7 +1242,7 @@ class CyclomaticComplexityDetector(
                     message=_violation_message(config, contains="cyclomatic", index=0),
                     location=location,
                     suggestion="Reduce branching and split complex functions into smaller units.",
-                )
+                ),
             )
 
         for block in context.cyclomatic_summary.blocks or []:
@@ -1210,11 +1255,13 @@ class CyclomaticComplexityDetector(
                         principle=principle,
                         severity=severity,
                         message=_violation_message(
-                            config, contains="cyclomatic", index=0
+                            config,
+                            contains="cyclomatic",
+                            index=0,
                         ),
                         location=loc,
                         suggestion="Consider refactoring this function to reduce branching.",
-                    )
+                    ),
                 )
 
         return violations
@@ -1278,7 +1325,9 @@ class NestingDepthDetector(ViolationDetector[NestingDepthConfig], LocationHelper
         return "nesting_depth"
 
     def detect(
-        self, context: AnalysisContext, config: NestingDepthConfig
+        self,
+        context: AnalysisContext,
+        config: NestingDepthConfig,
     ) -> list[Violation]:
         """Check indentation depth and loop nesting against thresholds.
 
@@ -1309,29 +1358,34 @@ class NestingDepthDetector(ViolationDetector[NestingDepthConfig], LocationHelper
                     principle=principle,
                     severity=severity,
                     message=_violation_message(
-                        config, contains="Nesting depth", index=0
+                        config,
+                        contains="Nesting depth",
+                        index=0,
                     ),
                     location=location,
                     suggestion=(
                         "Refactor deeply nested blocks into smaller functions or use early returns."
                     ),
-                )
+                ),
             )
         loop_depth = self._max_loop_depth(context)
         if loop_depth > 1:
             location = self.find_location_by_substring(
-                context.code, "for "
+                context.code,
+                "for ",
             ) or self.find_location_by_substring(context.code, "while ")
             violations.append(
                 Violation(
                     principle=principle,
                     severity=severity,
                     message=_violation_message(
-                        config, contains="nested loops", index=0
+                        config,
+                        contains="nested loops",
+                        index=0,
                     ),
                     location=location,
                     suggestion="Flatten nested loops or extract inner logic.",
-                )
+                ),
             )
 
         return violations
@@ -1420,7 +1474,9 @@ class LongFunctionDetector(ViolationDetector[LongFunctionConfig], LocationHelper
         return "long_functions"
 
     def detect(
-        self, context: AnalysisContext, config: LongFunctionConfig
+        self,
+        context: AnalysisContext,
+        config: LongFunctionConfig,
     ) -> list[Violation]:
         """Delegate to ``detect_long_functions`` and emit violations for oversized defs.
 
@@ -1450,17 +1506,21 @@ class LongFunctionDetector(ViolationDetector[LongFunctionConfig], LocationHelper
                     principle=principle,
                     severity=severity,
                     message=_violation_message(
-                        config, contains="Functions longer", index=0
+                        config,
+                        contains="Functions longer",
+                        index=0,
                     ),
                     location=location,
                     suggestion="Split large functions into smaller, focused helpers.",
-                )
+                ),
             )
 
         return violations
 
     def _find_function_location(
-        self, context: AnalysisContext, func_name: str
+        self,
+        context: AnalysisContext,
+        func_name: str,
     ) -> Location:
         """Locate a specific function definition by name for violation anchoring.
 
@@ -1523,7 +1583,9 @@ class GodClassDetector(ViolationDetector[GodClassConfig]):
         return "god_classes"
 
     def detect(
-        self, context: AnalysisContext, config: GodClassConfig
+        self,
+        context: AnalysisContext,
+        config: GodClassConfig,
     ) -> list[Violation]:
         """Delegate to ``detect_god_classes`` and flag classes that breach thresholds.
 
@@ -1544,7 +1606,9 @@ class GodClassDetector(ViolationDetector[GodClassConfig]):
         severity = _severity_level(config)
 
         god_classes = detect_god_classes(
-            context.code, max_methods=max_methods, max_lines=max_lines
+            context.code,
+            max_methods=max_methods,
+            max_lines=max_lines,
         )
 
         violations.extend(
@@ -1586,7 +1650,9 @@ class MagicMethodDetector(ViolationDetector[MagicMethodConfig], LocationHelperMi
         return "magic_methods"
 
     def detect(
-        self, context: AnalysisContext, config: MagicMethodConfig
+        self,
+        context: AnalysisContext,
+        config: MagicMethodConfig,
     ) -> list[Violation]:
         """Count dunder method definitions and flag when exceeding the threshold.
 
@@ -1619,7 +1685,7 @@ class MagicMethodDetector(ViolationDetector[MagicMethodConfig], LocationHelperMi
                     message=_violation_message(config, contains="magic", index=2),
                     location=location,
                     suggestion="Avoid excessive operator overloading; prefer explicit APIs.",
-                )
+                ),
             )
 
         return violations
@@ -1650,7 +1716,9 @@ class CircularDependencyDetector(ViolationDetector[CircularDependencyConfig]):
         return "circular_dependencies"
 
     def detect(
-        self, context: AnalysisContext, config: CircularDependencyConfig
+        self,
+        context: AnalysisContext,
+        config: CircularDependencyConfig,
     ) -> list[Violation]:
         """Extract dependency graph edges and flag any import cycles.
 
@@ -1717,7 +1785,9 @@ class DeepInheritanceDetector(ViolationDetector[DeepInheritanceConfig]):
         return "deep_inheritance"
 
     def detect(
-        self, context: AnalysisContext, config: DeepInheritanceConfig
+        self,
+        context: AnalysisContext,
+        config: DeepInheritanceConfig,
     ) -> list[Violation]:
         """Trace class parent chains across files and flag excessive depth.
 
@@ -1784,7 +1854,9 @@ class FeatureEnvyDetector(ViolationDetector[FeatureEnvyConfig]):
         return "feature_envy"
 
     def detect(
-        self, context: AnalysisContext, config: FeatureEnvyConfig
+        self,
+        context: AnalysisContext,
+        config: FeatureEnvyConfig,
     ) -> list[Violation]:
         """Identify methods excessively accessing another object's attributes.
 
@@ -1817,7 +1889,9 @@ class FeatureEnvyDetector(ViolationDetector[FeatureEnvyConfig]):
                 principle=principle,
                 severity=severity,
                 message=_violation_message(
-                    config, contains="Multiple implementations", index=3
+                    config,
+                    contains="Multiple implementations",
+                    index=3,
                 ),
                 suggestion="Consider moving the method to the target class or extracting a helper.",
             )
@@ -1851,7 +1925,9 @@ class DuplicateImplementationDetector(ViolationDetector[DuplicateImplementationC
         return "duplicate_implementations"
 
     def detect(
-        self, context: AnalysisContext, config: DuplicateImplementationConfig
+        self,
+        context: AnalysisContext,
+        config: DuplicateImplementationConfig,
     ) -> list[Violation]:
         """Compare function bodies across files and flag duplicates.
 
@@ -1890,7 +1966,9 @@ class DuplicateImplementationDetector(ViolationDetector[DuplicateImplementationC
                 principle=principle,
                 severity=severity,
                 message=_violation_message(
-                    config, contains="Multiple implementations", index=3
+                    config,
+                    contains="Multiple implementations",
+                    index=3,
                 ),
                 files=duplicate.files,
                 suggestion="Consolidate duplicated implementations into a single utility or module.",
@@ -1926,7 +2004,9 @@ class SparseCodeDetector(ViolationDetector[SparseCodeConfig], LocationHelperMixi
         return "sparse_code"
 
     def detect(
-        self, context: AnalysisContext, config: SparseCodeConfig
+        self,
+        context: AnalysisContext,
+        config: SparseCodeConfig,
     ) -> list[Violation]:
         """Flag lines containing more than ``max_statements_per_line`` statements.
 
@@ -1951,11 +2031,13 @@ class SparseCodeDetector(ViolationDetector[SparseCodeConfig], LocationHelperMixi
                     principle=principle,
                     severity=severity,
                     message=_violation_message(
-                        config, contains="Multiple statements", index=0
+                        config,
+                        contains="Multiple statements",
+                        index=0,
                     ),
                     location=loc,
                     suggestion="Split statements across lines to improve readability.",
-                )
+                ),
             )
 
         return violations
@@ -1986,7 +2068,9 @@ class ConsistencyDetector(ViolationDetector[ConsistencyConfig], LocationHelperMi
         return "consistency"
 
     def detect(
-        self, context: AnalysisContext, config: ConsistencyConfig
+        self,
+        context: AnalysisContext,
+        config: ConsistencyConfig,
     ) -> list[Violation]:
         """Count distinct naming styles and flag when too many coexist.
 
@@ -2018,11 +2102,13 @@ class ConsistencyDetector(ViolationDetector[ConsistencyConfig], LocationHelperMi
                     principle=principle,
                     severity=severity,
                     message=_violation_message(
-                        config, contains="Different naming", index=1
+                        config,
+                        contains="Different naming",
+                        index=1,
                     ),
                     location=loc,
                     suggestion="Use a single naming style consistently (e.g., snake_case).",
-                )
+                ),
             )
 
         return violations
@@ -2055,7 +2141,9 @@ class ExplicitnessDetector(ViolationDetector[ExplicitnessConfig], LocationHelper
         return "explicitness"
 
     def detect(
-        self, context: AnalysisContext, config: ExplicitnessConfig
+        self,
+        context: AnalysisContext,
+        config: ExplicitnessConfig,
     ) -> list[Violation]:
         """Scan function signatures for un-annotated parameters.
 
@@ -2081,18 +2169,21 @@ class ExplicitnessDetector(ViolationDetector[ExplicitnessConfig], LocationHelper
 
         for finding in detect_missing_type_hints(context.code):
             loc = self.find_location_by_substring(
-                context.code, f"def {finding.function}"
+                context.code,
+                f"def {finding.function}",
             )
             violations.append(
                 Violation(
                     principle=principle,
                     severity=severity,
                     message=_violation_message(
-                        config, contains="Missing input", index=2
+                        config,
+                        contains="Missing input",
+                        index=2,
                     ),
                     location=loc,
                     suggestion="Add explicit type hints to function parameters.",
-                )
+                ),
             )
 
         return violations
@@ -2124,7 +2215,9 @@ class NamespaceUsageDetector(ViolationDetector[NamespaceConfig], LocationHelperM
         return "namespace_usage"
 
     def detect(
-        self, context: AnalysisContext, config: NamespaceConfig
+        self,
+        context: AnalysisContext,
+        config: NamespaceConfig,
     ) -> list[Violation]:
         """Count top-level symbols and ``__all__`` entries against thresholds.
 
@@ -2154,7 +2247,7 @@ class NamespaceUsageDetector(ViolationDetector[NamespaceConfig], LocationHelperM
                     severity=severity,
                     message=_violation_message(config, contains="Polluting", index=0),
                     suggestion="Refactor to reduce module-level symbols or split the module.",
-                )
+                ),
             )
         if (
             finding.export_count is not None
@@ -2166,7 +2259,7 @@ class NamespaceUsageDetector(ViolationDetector[NamespaceConfig], LocationHelperM
                     severity=severity,
                     message=_violation_message(config, contains="__all__", index=1),
                     suggestion="Reduce __all__ exports or split the module into submodules.",
-                )
+                ),
             )
 
         return violations

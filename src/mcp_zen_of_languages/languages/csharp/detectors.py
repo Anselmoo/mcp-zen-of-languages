@@ -37,7 +37,8 @@ from mcp_zen_of_languages.models import Location, Violation
 
 
 class CSharpAsyncAwaitDetector(
-    ViolationDetector[CSharpAsyncAwaitConfig], LocationHelperMixin
+    ViolationDetector[CSharpAsyncAwaitConfig],
+    LocationHelperMixin,
 ):
     """Flags synchronous blocking on tasks via ``.Result`` or ``.Wait()``.
 
@@ -58,7 +59,9 @@ class CSharpAsyncAwaitDetector(
         return "csharp_async_await"
 
     def detect(
-        self, context: AnalysisContext, config: CSharpAsyncAwaitConfig
+        self,
+        context: AnalysisContext,
+        config: CSharpAsyncAwaitConfig,
     ) -> list[Violation]:
         """Flag lines that block on tasks with ``.Result`` or ``.Wait()``.
 
@@ -83,7 +86,8 @@ class CSharpAsyncAwaitDetector(
 
 
 class CSharpStringInterpolationDetector(
-    ViolationDetector[CSharpStringInterpolationConfig], LocationHelperMixin
+    ViolationDetector[CSharpStringInterpolationConfig],
+    LocationHelperMixin,
 ):
     """Flags ``String.Format`` usage where string interpolation is cleaner.
 
@@ -103,7 +107,9 @@ class CSharpStringInterpolationDetector(
         return "csharp_string_interpolation"
 
     def detect(
-        self, context: AnalysisContext, config: CSharpStringInterpolationConfig
+        self,
+        context: AnalysisContext,
+        config: CSharpStringInterpolationConfig,
     ) -> list[Violation]:
         """Flag calls to ``String.Format`` that should use interpolation.
 
@@ -130,7 +136,8 @@ class CSharpStringInterpolationDetector(
 
 
 class CSharpNullableDetector(
-    ViolationDetector[CSharpNullableConfig], LocationHelperMixin
+    ViolationDetector[CSharpNullableConfig],
+    LocationHelperMixin,
 ):
     """Detects files missing ``#nullable enable`` for nullable reference types.
 
@@ -151,7 +158,9 @@ class CSharpNullableDetector(
         return "cs-001"
 
     def detect(
-        self, context: AnalysisContext, config: CSharpNullableConfig
+        self,
+        context: AnalysisContext,
+        config: CSharpNullableConfig,
     ) -> list[Violation]:
         """Flag files that do not contain a ``#nullable enable`` directive.
 
@@ -168,13 +177,14 @@ class CSharpNullableDetector(
                     config,
                     contains="nullable",
                     suggestion="Enable nullable reference types with #nullable enable.",
-                )
+                ),
             ]
         return []
 
 
 class CSharpExpressionBodiedDetector(
-    ViolationDetector[CSharpExpressionBodiedConfig], LocationHelperMixin
+    ViolationDetector[CSharpExpressionBodiedConfig],
+    LocationHelperMixin,
 ):
     """Flags verbose property getters that should use expression-bodied members.
 
@@ -194,7 +204,9 @@ class CSharpExpressionBodiedDetector(
         return "cs-002"
 
     def detect(
-        self, context: AnalysisContext, config: CSharpExpressionBodiedConfig
+        self,
+        context: AnalysisContext,
+        config: CSharpExpressionBodiedConfig,
     ) -> list[Violation]:
         """Flag ``get { return ... }`` patterns that could be expression-bodied.
 
@@ -213,7 +225,7 @@ class CSharpExpressionBodiedDetector(
                         contains="expression-bodied",
                         location=Location(line=idx, column=1),
                         suggestion="Use expression-bodied members for simple getters.",
-                    )
+                    ),
                 ]
                 for idx, line in enumerate(context.code.splitlines(), start=1)
                 if re.search(r"\bget\s*\{\s*return", line)
@@ -242,7 +254,9 @@ class CSharpVarDetector(ViolationDetector[CSharpVarConfig], LocationHelperMixin)
         return "cs-003"
 
     def detect(
-        self, context: AnalysisContext, config: CSharpVarConfig
+        self,
+        context: AnalysisContext,
+        config: CSharpVarConfig,
     ) -> list[Violation]:
         """Flag assignments with explicit primitive types that could use ``var``.
 
@@ -269,7 +283,8 @@ class CSharpVarDetector(ViolationDetector[CSharpVarConfig], LocationHelperMixin)
 
 
 class CSharpPatternMatchingDetector(
-    ViolationDetector[CSharpPatternMatchingConfig], LocationHelperMixin
+    ViolationDetector[CSharpPatternMatchingConfig],
+    LocationHelperMixin,
 ):
     """Suggests pattern matching (``is``/``switch`` expressions) over explicit casts.
 
@@ -289,7 +304,9 @@ class CSharpPatternMatchingDetector(
         return "cs-005"
 
     def detect(
-        self, context: AnalysisContext, config: CSharpPatternMatchingConfig
+        self,
+        context: AnalysisContext,
+        config: CSharpPatternMatchingConfig,
     ) -> list[Violation]:
         """Flag ``is`` type checks that could leverage pattern matching.
 
@@ -308,7 +325,7 @@ class CSharpPatternMatchingDetector(
                         contains="pattern",
                         location=Location(line=idx, column=1),
                         suggestion="Use pattern matching (is/expression) instead of casts.",
-                    )
+                    ),
                 ]
                 for idx, line in enumerate(context.code.splitlines(), start=1)
                 if "is " in line and "switch" not in line
@@ -318,7 +335,8 @@ class CSharpPatternMatchingDetector(
 
 
 class CSharpCollectionExpressionDetector(
-    ViolationDetector[CSharpCollectionExpressionConfig], LocationHelperMixin
+    ViolationDetector[CSharpCollectionExpressionConfig],
+    LocationHelperMixin,
 ):
     """Flags verbose ``new List`` or ``new T[]`` where collection expressions work.
 
@@ -338,7 +356,9 @@ class CSharpCollectionExpressionDetector(
         return "cs-007"
 
     def detect(
-        self, context: AnalysisContext, config: CSharpCollectionExpressionConfig
+        self,
+        context: AnalysisContext,
+        config: CSharpCollectionExpressionConfig,
     ) -> list[Violation]:
         """Flag ``new List`` or ``new T[]`` initialisations that could use ``[]``.
 
@@ -357,7 +377,7 @@ class CSharpCollectionExpressionDetector(
                         contains="collection",
                         location=Location(line=idx, column=1),
                         suggestion="Prefer collection expressions ([]) for simple lists.",
-                    )
+                    ),
                 ]
                 for idx, line in enumerate(context.code.splitlines(), start=1)
                 if re.search(r"new\s+List|new\s+\w+\[\]", line)
@@ -367,7 +387,8 @@ class CSharpCollectionExpressionDetector(
 
 
 class CSharpNamingConventionDetector(
-    ViolationDetector[Cs008Config], LocationHelperMixin
+    ViolationDetector[Cs008Config],
+    LocationHelperMixin,
 ):
     """Enforces .NET naming conventions for public and private members.
 
@@ -426,7 +447,7 @@ class CSharpNamingConventionDetector(
                             contains=name,
                             location=Location(line=idx, column=match.start(1) + 1),
                             suggestion=f"Use {config.public_naming} for public members.",
-                        )
+                        ),
                     ]
             match = re.search(r"\bprivate\s+\w[\w<>,\s]*\s+([A-Za-z_]\w*)", line)
             if match and config.private_naming:
@@ -438,13 +459,14 @@ class CSharpNamingConventionDetector(
                             contains=name,
                             location=Location(line=idx, column=match.start(1) + 1),
                             suggestion=f"Use {config.private_naming} for private members.",
-                        )
+                        ),
                     ]
         return []
 
 
 class CSharpDisposableDetector(
-    ViolationDetector[CSharpDisposableConfig], LocationHelperMixin
+    ViolationDetector[CSharpDisposableConfig],
+    LocationHelperMixin,
 ):
     """Detects ``IDisposable`` resources not wrapped in ``using`` statements.
 
@@ -466,7 +488,9 @@ class CSharpDisposableDetector(
         return "cs-009"
 
     def detect(
-        self, context: AnalysisContext, config: CSharpDisposableConfig
+        self,
+        context: AnalysisContext,
+        config: CSharpDisposableConfig,
     ) -> list[Violation]:
         """Flag code referencing ``IDisposable``/``Dispose()`` without ``using``.
 
@@ -484,13 +508,14 @@ class CSharpDisposableDetector(
                     config,
                     contains="using",
                     suggestion="Wrap disposable resources in using statements.",
-                )
+                ),
             ]
         return []
 
 
 class CSharpMagicNumberDetector(
-    ViolationDetector[CSharpMagicNumberConfig], LocationHelperMixin
+    ViolationDetector[CSharpMagicNumberConfig],
+    LocationHelperMixin,
 ):
     """Flags hard-coded numeric literals (magic numbers) in business logic.
 
@@ -511,7 +536,9 @@ class CSharpMagicNumberDetector(
         return "cs-010"
 
     def detect(
-        self, context: AnalysisContext, config: CSharpMagicNumberConfig
+        self,
+        context: AnalysisContext,
+        config: CSharpMagicNumberConfig,
     ) -> list[Violation]:
         """Flag multi-digit numeric literals that should be named constants.
 
@@ -528,7 +555,7 @@ class CSharpMagicNumberDetector(
                     config,
                     contains="magic number",
                     suggestion="Replace magic numbers with named constants.",
-                )
+                ),
             ]
         return []
 
@@ -553,7 +580,9 @@ class CSharpLinqDetector(ViolationDetector[CSharpLinqConfig], LocationHelperMixi
         return "cs-011"
 
     def detect(
-        self, context: AnalysisContext, config: CSharpLinqConfig
+        self,
+        context: AnalysisContext,
+        config: CSharpLinqConfig,
     ) -> list[Violation]:
         """Flag ``foreach`` loops that lack corresponding LINQ method calls.
 
@@ -571,13 +600,14 @@ class CSharpLinqDetector(ViolationDetector[CSharpLinqConfig], LocationHelperMixi
                     config,
                     contains="LINQ",
                     suggestion="Use LINQ methods like Select/Where for collections.",
-                )
+                ),
             ]
         return []
 
 
 class CSharpExceptionHandlingDetector(
-    ViolationDetector[CSharpExceptionHandlingConfig], LocationHelperMixin
+    ViolationDetector[CSharpExceptionHandlingConfig],
+    LocationHelperMixin,
 ):
     """Flags overly broad ``catch (Exception)`` or empty ``catch`` blocks.
 
@@ -598,7 +628,9 @@ class CSharpExceptionHandlingDetector(
         return "cs-012"
 
     def detect(
-        self, context: AnalysisContext, config: CSharpExceptionHandlingConfig
+        self,
+        context: AnalysisContext,
+        config: CSharpExceptionHandlingConfig,
     ) -> list[Violation]:
         """Flag ``catch (Exception)`` and bare ``catch`` blocks.
 
@@ -618,7 +650,7 @@ class CSharpExceptionHandlingDetector(
                     config,
                     contains="catch",
                     suggestion="Catch specific exceptions and avoid empty handlers.",
-                )
+                ),
             ]
         return []
 
@@ -643,7 +675,9 @@ class CSharpRecordDetector(ViolationDetector[CSharpRecordConfig], LocationHelper
         return "cs-013"
 
     def detect(
-        self, context: AnalysisContext, config: CSharpRecordConfig
+        self,
+        context: AnalysisContext,
+        config: CSharpRecordConfig,
     ) -> list[Violation]:
         """Flag ``class`` definitions with ``get; set;`` that could be records.
 
@@ -661,7 +695,7 @@ class CSharpRecordDetector(ViolationDetector[CSharpRecordConfig], LocationHelper
                     config,
                     contains="record",
                     suggestion="Prefer records for immutable DTOs.",
-                )
+                ),
             ]
         return []
 

@@ -14,7 +14,8 @@ async def test_analyze_zen_violations_rust():
 @pytest.mark.asyncio
 async def test_analyze_zen_violations_go():
     result = await server.analyze_zen_violations.fn(
-        "package main\nfunc main() {}", "go"
+        "package main\nfunc main() {}",
+        "go",
     )
     assert result.language == "go"
 

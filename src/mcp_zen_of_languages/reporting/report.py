@@ -64,7 +64,8 @@ MAX_VIOLATIONS_IN_TABLE = 10
 
 
 def _collect_targets(
-    target: Path, language_override: str | None
+    target: Path,
+    language_override: str | None,
 ) -> list[tuple[Path, str]]:
     """Discover analysable source files under a target path.
 
@@ -262,11 +263,11 @@ def _format_analysis_markdown(results: list[AnalysisResult]) -> list[str]:
             for violation in result.violations[:MAX_VIOLATIONS_IN_TABLE]
         ]
         lines.extend(
-            _markdown_table(["Severity", "Principle", "Message", "Suggestion"], rows)
+            _markdown_table(["Severity", "Principle", "Message", "Suggestion"], rows),
         )
         if len(result.violations) > MAX_VIOLATIONS_IN_TABLE:
             lines.append(
-                f"- ...and {len(result.violations) - MAX_VIOLATIONS_IN_TABLE} more violations."
+                f"- ...and {len(result.violations) - MAX_VIOLATIONS_IN_TABLE} more violations.",
             )
     return lines
 
@@ -295,7 +296,7 @@ def _format_prompts_markdown(context: ReportContext) -> list[str]:
                 ["File prompts", str(file_count)],
                 ["Generic prompts", str(generic_count)],
             ],
-        )
+        ),
     )
     lines.append("### File-Specific Prompts")
     if context.prompts.file_prompts:
@@ -309,7 +310,7 @@ def _format_prompts_markdown(context: ReportContext) -> list[str]:
             [
                 f"- {prompt.title}: {prompt.prompt}"
                 for prompt in context.prompts.generic_prompts
-            ]
+            ],
         )
     else:
         lines.append("- No generic prompts available.")
@@ -379,5 +380,6 @@ def generate_report(
         "prompts": prompts.model_dump() if prompts else None,
     }
     return ReportOutput(
-        markdown=normalize_markdown("\n".join(markdown_sections)), data=data
+        markdown=normalize_markdown("\n".join(markdown_sections)),
+        data=data,
     )

@@ -87,7 +87,7 @@ def test_function_docstrings_have_single_args_and_returns_sections() -> None:
         returns_count = len(re.findall(r"^\s*Returns:\s*$", doc, re.MULTILINE))
         if args_count > 1 or returns_count > 1:
             offenders.append(
-                f"{path}:{lineno}:{name} (Args={args_count}, Returns={returns_count})"
+                f"{path}:{lineno}:{name} (Args={args_count}, Returns={returns_count})",
             )
     assert not offenders, (
         "Docstrings must not duplicate Args/Returns sections:\n" + "\n".join(offenders)
@@ -129,11 +129,11 @@ def test_args_sections_are_semantically_described() -> None:
             param_name, description = match[1].lstrip("*"), match[2].strip()
             if any(pattern.match(description) for pattern in GENERIC_ARG_PATTERNS):
                 offenders.append(
-                    f"{path}:{lineno}:{name}:{param_name} -> generic args description"
+                    f"{path}:{lineno}:{name}:{param_name} -> generic args description",
                 )
             if description.lower().startswith(f"the {param_name.lower()} "):
                 offenders.append(
-                    f"{path}:{lineno}:{name}:{param_name} -> name-repeating args description"
+                    f"{path}:{lineno}:{name}:{param_name} -> name-repeating args description",
                 )
     assert not offenders, (
         "Args descriptions must explain semantics, not templates:\n"
@@ -161,7 +161,7 @@ def test_returns_sections_are_semantically_described() -> None:
             description = match[2].strip()
             if any(pattern.match(description) for pattern in GENERIC_RETURN_PATTERNS):
                 offenders.append(
-                    f"{path}:{lineno}:{name} -> generic returns description"
+                    f"{path}:{lineno}:{name} -> generic returns description",
                 )
     assert not offenders, (
         "Returns descriptions must communicate caller-visible contract:\n"

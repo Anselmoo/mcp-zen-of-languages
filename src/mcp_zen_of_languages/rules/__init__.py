@@ -88,7 +88,7 @@ def _initialize_registry() -> None:
             "yaml": YAML_ZEN,
             "toml": TOML_ZEN,
             "xml": XML_ZEN,
-        }
+        },
     )
 
 

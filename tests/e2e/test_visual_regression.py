@@ -74,7 +74,11 @@ def test_report_visual_consistency(fixture: str):
     report = generate_report(fixture, include_prompts=True)
     buffer = StringIO()
     output_console = Console(
-        file=buffer, width=88, force_terminal=True, no_color=True, theme=ZEN_THEME
+        file=buffer,
+        width=88,
+        force_terminal=True,
+        no_color=True,
+        theme=ZEN_THEME,
     )
     render_report_terminal(report, output_console=output_console)
     output = buffer.getvalue()
@@ -86,7 +90,11 @@ def test_report_visual_consistency(fixture: str):
 def test_welcome_golden(monkeypatch):
     buffer = StringIO()
     output_console = Console(
-        file=buffer, width=88, force_terminal=True, no_color=True, theme=ZEN_THEME
+        file=buffer,
+        width=88,
+        force_terminal=True,
+        no_color=True,
+        theme=ZEN_THEME,
     )
     monkeypatch.setattr(cli, "console", output_console)
     monkeypatch.setattr(cli, "get_banner_art", lambda: "ZEN")
@@ -105,7 +113,11 @@ def test_report_golden():
     report = generate_report(FIXTURE_PATH, include_prompts=True)
     buffer = StringIO()
     output_console = Console(
-        file=buffer, width=88, force_terminal=True, no_color=True, theme=ZEN_THEME
+        file=buffer,
+        width=88,
+        force_terminal=True,
+        no_color=True,
+        theme=ZEN_THEME,
     )
     render_report_terminal(report, output_console=output_console)
     output = buffer.getvalue()
@@ -124,7 +136,11 @@ def test_prompts_golden():
     bundle = build_prompt_bundle(results)
     buffer = StringIO()
     output_console = Console(
-        file=buffer, width=88, force_terminal=True, no_color=True, theme=ZEN_THEME
+        file=buffer,
+        width=88,
+        force_terminal=True,
+        no_color=True,
+        theme=ZEN_THEME,
     )
     render_prompt_panel(bundle, results, output_console=output_console)
     output = buffer.getvalue()

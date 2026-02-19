@@ -46,7 +46,9 @@ class GoErrorHandlingDetector(ViolationDetector[GoErrorHandlingConfig]):
         return "go_error_handling"
 
     def detect(
-        self, context: AnalysisContext, config: GoErrorHandlingConfig
+        self,
+        context: AnalysisContext,
+        config: GoErrorHandlingConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -75,7 +77,7 @@ class GoErrorHandlingDetector(ViolationDetector[GoErrorHandlingConfig]):
                         "Check errors explicitly; avoid panic or ignored errors in "
                         "libraries."
                     ),
-                )
+                ),
             )
         return violations
 
@@ -101,7 +103,9 @@ class GoInterfaceSizeDetector(ViolationDetector[GoInterfaceSizeConfig]):
         return "go_interface_size"
 
     def detect(
-        self, context: AnalysisContext, config: GoInterfaceSizeConfig
+        self,
+        context: AnalysisContext,
+        config: GoInterfaceSizeConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -117,7 +121,8 @@ class GoInterfaceSizeDetector(ViolationDetector[GoInterfaceSizeConfig]):
             return violations
         max_methods = config.max_interface_methods
         for match in re.finditer(
-            r"type\s+(\w+)\s+interface\s*\{([\s\S]*?)\}", context.code
+            r"type\s+(\w+)\s+interface\s*\{([\s\S]*?)\}",
+            context.code,
         ):
             body = match.group(2)
             methods = [
@@ -132,7 +137,7 @@ class GoInterfaceSizeDetector(ViolationDetector[GoInterfaceSizeConfig]):
                         contains="interfaces",
                         index=0,
                         suggestion="Split large interfaces into smaller ones.",
-                    )
+                    ),
                 )
         return violations
 
@@ -158,7 +163,9 @@ class GoContextUsageDetector(ViolationDetector[GoContextUsageConfig]):
         return "go_context_usage"
 
     def detect(
-        self, context: AnalysisContext, config: GoContextUsageConfig
+        self,
+        context: AnalysisContext,
+        config: GoContextUsageConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -180,7 +187,7 @@ class GoContextUsageDetector(ViolationDetector[GoContextUsageConfig]):
                         "Pass context.Context to long-running or cancellable "
                         "operations."
                     ),
-                )
+                ),
             )
         return violations
 
@@ -206,7 +213,9 @@ class GoDeferUsageDetector(ViolationDetector[GoDeferUsageConfig]):
         return "go_defer_usage"
 
     def detect(
-        self, context: AnalysisContext, config: GoDeferUsageConfig
+        self,
+        context: AnalysisContext,
+        config: GoDeferUsageConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -220,7 +229,8 @@ class GoDeferUsageDetector(ViolationDetector[GoDeferUsageConfig]):
         violations: list[Violation] = []
         code = context.code
         if config.detect_defer_in_loop and re.search(
-            r"for\s+.+\{[\s\S]*?\bdefer\b", code
+            r"for\s+.+\{[\s\S]*?\bdefer\b",
+            code,
         ):
             violations.append(
                 self.build_violation(
@@ -231,7 +241,7 @@ class GoDeferUsageDetector(ViolationDetector[GoDeferUsageConfig]):
                         "Avoid defers inside tight loops; defer outside or manage "
                         "resources explicitly."
                     ),
-                )
+                ),
             )
         if not config.detect_missing_defer:
             return violations
@@ -254,7 +264,7 @@ class GoDeferUsageDetector(ViolationDetector[GoDeferUsageConfig]):
                     contains=contains,
                     index=0,
                     suggestion="Defer cleanup immediately after acquiring the resource.",
-                )
+                ),
             )
         return violations
 
@@ -279,7 +289,9 @@ class GoNamingConventionDetector(ViolationDetector[GoNamingConventionConfig]):
         return "go_naming_convention"
 
     def detect(
-        self, context: AnalysisContext, config: GoNamingConventionConfig
+        self,
+        context: AnalysisContext,
+        config: GoNamingConventionConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -300,7 +312,7 @@ class GoNamingConventionDetector(ViolationDetector[GoNamingConventionConfig]):
                     contains="variable names",
                     index=0,
                     suggestion="Use short, contextual variable names in local scopes.",
-                )
+                ),
             )
             break
         return violations
@@ -327,7 +339,9 @@ class GoInterfaceReturnDetector(ViolationDetector[GoInterfaceReturnConfig]):
         return "go_interface_return"
 
     def detect(
-        self, context: AnalysisContext, config: GoInterfaceReturnConfig
+        self,
+        context: AnalysisContext,
+        config: GoInterfaceReturnConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -344,7 +358,7 @@ class GoInterfaceReturnDetector(ViolationDetector[GoInterfaceReturnConfig]):
                     config,
                     contains="interface",
                     suggestion="Accept interfaces, return concrete structs.",
-                )
+                ),
             ]
         return []
 
@@ -370,7 +384,9 @@ class GoZeroValueDetector(ViolationDetector[GoZeroValueConfig]):
         return "go_zero_value"
 
     def detect(
-        self, context: AnalysisContext, config: GoZeroValueConfig
+        self,
+        context: AnalysisContext,
+        config: GoZeroValueConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -387,7 +403,7 @@ class GoZeroValueDetector(ViolationDetector[GoZeroValueConfig]):
                     config,
                     contains="New",
                     suggestion="Prefer making zero values usable without constructors.",
-                )
+                ),
             ]
         return []
 
@@ -412,7 +428,9 @@ class GoInterfacePointerDetector(ViolationDetector[GoInterfacePointerConfig]):
         return "go_interface_pointer"
 
     def detect(
-        self, context: AnalysisContext, config: GoInterfacePointerConfig
+        self,
+        context: AnalysisContext,
+        config: GoInterfacePointerConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -429,7 +447,7 @@ class GoInterfacePointerDetector(ViolationDetector[GoInterfacePointerConfig]):
                     config,
                     contains="*interface",
                     suggestion="Avoid pointers to interfaces.",
-                )
+                ),
             ]
         return []
 
@@ -455,7 +473,9 @@ class GoGoroutineLeakDetector(ViolationDetector[GoGoroutineLeakConfig]):
         return "go_goroutine_leaks"
 
     def detect(
-        self, context: AnalysisContext, config: GoGoroutineLeakConfig
+        self,
+        context: AnalysisContext,
+        config: GoGoroutineLeakConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -474,7 +494,7 @@ class GoGoroutineLeakDetector(ViolationDetector[GoGoroutineLeakConfig]):
                     config,
                     contains="goroutine",
                     suggestion="Ensure goroutines can terminate (context/cancel).",
-                )
+                ),
             )
         if re.search(r"make\s*\(\s*chan\b", code) and "close(" not in code:
             violations.append(
@@ -482,7 +502,7 @@ class GoGoroutineLeakDetector(ViolationDetector[GoGoroutineLeakConfig]):
                     config,
                     contains="close",
                     suggestion="Close channels to signal completion and avoid leaks.",
-                )
+                ),
             )
         return violations
 
@@ -508,7 +528,9 @@ class GoPackageNamingDetector(ViolationDetector[GoPackageNamingConfig]):
         return "go_package_naming"
 
     def detect(
-        self, context: AnalysisContext, config: GoPackageNamingConfig
+        self,
+        context: AnalysisContext,
+        config: GoPackageNamingConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -527,7 +549,7 @@ class GoPackageNamingDetector(ViolationDetector[GoPackageNamingConfig]):
                         config,
                         contains=name,
                         suggestion="Use singular, lowercase package names.",
-                    )
+                    ),
                 ]
         return []
 
@@ -553,7 +575,9 @@ class GoPackageStateDetector(ViolationDetector[GoPackageStateConfig]):
         return "go_package_state"
 
     def detect(
-        self, context: AnalysisContext, config: GoPackageStateConfig
+        self,
+        context: AnalysisContext,
+        config: GoPackageStateConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -570,7 +594,7 @@ class GoPackageStateDetector(ViolationDetector[GoPackageStateConfig]):
                     config,
                     contains="package state",
                     suggestion="Avoid mutable package-level state.",
-                )
+                ),
             ]
         return []
 
@@ -596,7 +620,9 @@ class GoInitUsageDetector(ViolationDetector[GoInitUsageConfig]):
         return "go_init_usage"
 
     def detect(
-        self, context: AnalysisContext, config: GoInitUsageConfig
+        self,
+        context: AnalysisContext,
+        config: GoInitUsageConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -613,7 +639,7 @@ class GoInitUsageDetector(ViolationDetector[GoInitUsageConfig]):
                     config,
                     contains="init",
                     suggestion="Prefer explicit initialization over init().",
-                )
+                ),
             ]
         return []
 

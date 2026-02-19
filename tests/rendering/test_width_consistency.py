@@ -57,7 +57,7 @@ def test_prompt_panel_respects_capped_width(terminal_width: int):
     bundle = PromptBundle(
         file_prompts=[],
         generic_prompts=[
-            GenericPrompt(title="Quick", prompt="Focus on severity first.")
+            GenericPrompt(title="Quick", prompt="Focus on severity first."),
         ],
         big_picture=BigPictureAnalysis(
             health_score=67.5,

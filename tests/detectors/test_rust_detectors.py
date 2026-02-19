@@ -34,7 +34,9 @@ def run_detector(detector, code, config):
 def test_rust_unwrap_usage_detector():
     code = "fn main() { let _ = Some(1).unwrap(); }"
     violations = run_detector(
-        RustUnwrapUsageDetector(), code, config_for("rust_unwrap_usage")
+        RustUnwrapUsageDetector(),
+        code,
+        config_for("rust_unwrap_usage"),
     )
     assert violations
 
@@ -42,7 +44,9 @@ def test_rust_unwrap_usage_detector():
 def test_rust_unsafe_blocks_detector():
     code = "unsafe fn do_it() {}"
     violations = run_detector(
-        RustUnsafeBlocksDetector(), code, config_for("rust_unsafe_blocks")
+        RustUnsafeBlocksDetector(),
+        code,
+        config_for("rust_unsafe_blocks"),
     )
     assert violations
 
@@ -50,7 +54,9 @@ def test_rust_unsafe_blocks_detector():
 def test_rust_unsafe_blocks_detector_allows_safety_comment():
     code = "// SAFETY: caller upholds invariants\nunsafe { do_it(); }\n"
     violations = run_detector(
-        RustUnsafeBlocksDetector(), code, config_for("rust_unsafe_blocks")
+        RustUnsafeBlocksDetector(),
+        code,
+        config_for("rust_unsafe_blocks"),
     )
     assert not violations
 
@@ -65,7 +71,9 @@ def test_rust_clone_overhead_detector():
 def test_rust_error_handling_detector():
     code = "fn main() { let result: Result<i32, i32> = Ok(1); }"
     violations = run_detector(
-        RustErrorHandlingDetector(), code, config_for("rust_error_handling")
+        RustErrorHandlingDetector(),
+        code,
+        config_for("rust_error_handling"),
     )
     assert violations
 
@@ -73,7 +81,7 @@ def test_rust_error_handling_detector():
 def test_rust_error_handling_detector_panics():
     code = 'fn main() { panic!("boom"); }'
     cfg = config_for("rust_error_handling").model_copy(
-        update={"detect_unhandled_results": False, "max_panics": 0}
+        update={"detect_unhandled_results": False, "max_panics": 0},
     )
     violations = run_detector(RustErrorHandlingDetector(), code, cfg)
     assert violations
@@ -88,7 +96,9 @@ def test_rust_type_safety_detector():
 def test_rust_iterator_preference_detector():
     code = 'for item in items { println!("{}", item); }\n'
     violations = run_detector(
-        RustIteratorPreferenceDetector(), code, config_for("rust-003")
+        RustIteratorPreferenceDetector(),
+        code,
+        config_for("rust-003"),
     )
     assert violations
 
@@ -108,7 +118,9 @@ def test_rust_debug_derive_detector():
 def test_rust_newtype_pattern_detector():
     code = "type UserId = i32;\n"
     violations = run_detector(
-        RustNewtypePatternDetector(), code, config_for("rust-007")
+        RustNewtypePatternDetector(),
+        code,
+        config_for("rust-007"),
     )
     assert violations
 
@@ -137,7 +149,9 @@ def test_rust_interior_mutability_detector():
         "struct Foo { inner: Rc<RefCell<i32>> }\n"
     )
     violations = run_detector(
-        RustInteriorMutabilityDetector(), code, config_for("rust-012")
+        RustInteriorMutabilityDetector(),
+        code,
+        config_for("rust-012"),
     )
     assert violations
 

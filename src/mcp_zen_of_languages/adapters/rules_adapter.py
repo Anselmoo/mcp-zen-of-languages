@@ -139,31 +139,37 @@ class RulesAdapter:
 
             # Check nesting depth
             violations.extend(
-                self._check_nesting_depth(code, principle, principle_metrics)
+                self._check_nesting_depth(code, principle, principle_metrics),
             )
 
             # Check cyclomatic complexity
             if cyclomatic_summary is not None:
                 violations.extend(
                     self._check_cyclomatic_complexity(
-                        cyclomatic_summary, principle, principle_metrics
-                    )
+                        cyclomatic_summary,
+                        principle,
+                        principle_metrics,
+                    ),
                 )
 
             # Check maintainability index
             if maintainability_index is not None:
                 violations.extend(
                     self._check_maintainability_index(
-                        maintainability_index, principle, principle_metrics
-                    )
+                        maintainability_index,
+                        principle,
+                        principle_metrics,
+                    ),
                 )
 
             # Check dependency issues
             if dependency_analysis is not None:
                 violations.extend(
                     self._check_dependencies(
-                        dependency_analysis, principle, principle_metrics
-                    )
+                        dependency_analysis,
+                        principle,
+                        principle_metrics,
+                    ),
                 )
 
             # Check detectable patterns
@@ -214,7 +220,7 @@ class RulesAdapter:
                     principle=principle.principle,
                     severity=principle.severity,
                     message=f"Nesting depth {depth} exceeds maximum {max_allowed}",
-                )
+                ),
             )
 
         return violations
@@ -267,7 +273,7 @@ class RulesAdapter:
                             f"Average cyclomatic complexity {avg_complexity:.2f} "
                             f"exceeds maximum {max_allowed}"
                         ),
-                    )
+                    ),
                 )
         except (AttributeError, KeyError, TypeError):
             # Log error but don't fail - graceful degradation
@@ -315,7 +321,7 @@ class RulesAdapter:
                             f"Maintainability index {maintainability_index:.2f} "
                             f"below minimum {min_required}"
                         ),
-                    )
+                    ),
                 )
         except (KeyError, TypeError):
             pass
@@ -415,7 +421,7 @@ class RulesAdapter:
                         f"Cycles: {', '.join(pretty)}"
                         f"{'...' if cycle_count > MAX_CYCLES_SHOWN else ''}"
                     ),
-                )
+                ),
             )
 
         # Check for excessive dependencies (God module)
@@ -499,11 +505,13 @@ class RulesAdapter:
                             principle=principle.principle,
                             severity=principle.severity,
                             message=f"Detected anti-pattern matching: '{cre.pattern}'",
-                        )
+                        ),
                     )
             except Exception as exc:  # noqa: BLE001
                 logger.debug(
-                    "Pattern evaluation failed for %s", cre.pattern, exc_info=exc
+                    "Pattern evaluation failed for %s",
+                    cre.pattern,
+                    exc_info=exc,
                 )
 
         return violations

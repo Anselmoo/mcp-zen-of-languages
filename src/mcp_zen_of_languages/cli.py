@@ -88,8 +88,10 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 logger.setLevel(
     getattr(
-        logging, os.environ.get("ZEN_LOG_LEVEL", "WARNING").upper(), logging.WARNING
-    )
+        logging,
+        os.environ.get("ZEN_LOG_LEVEL", "WARNING").upper(),
+        logging.WARNING,
+    ),
 )
 
 _THRESHOLDS = {"relaxed": 5, "moderate": 6, "strict": 7}
@@ -169,12 +171,15 @@ def _install_rich_traceback() -> None:
 def _configure_app(
     *,
     quiet: Annotated[
-        bool, typer.Option("--quiet", "-q", help="Suppress decorative output")
+        bool,
+        typer.Option("--quiet", "-q", help="Suppress decorative output"),
     ] = False,
     verbose: Annotated[
         bool,
         typer.Option(
-            "--verbose", "-v", help="Show rich tracebacks with local variables"
+            "--verbose",
+            "-v",
+            help="Show rich tracebacks with local variables",
         ),
     ] = False,
 ) -> None:
@@ -329,9 +334,9 @@ def _write_vscode_mcp_config() -> Path:
                         "PYTHONPATH": "${workspaceFolder}/src",
                         "ZEN_CONFIG_PATH": "${workspaceFolder}/zen-config.yaml",
                     },
-                }
-            }
-        }
+                },
+            },
+        },
     }
     config_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     return config_path
@@ -601,7 +606,7 @@ def _filter_result(result: AnalysisResult, min_severity: int | None) -> Analysis
         _summarize_violations(filtered) if result.rules_summary is not None else None
     )
     return result.model_copy(
-        update={"violations": filtered, "rules_summary": rules_summary}
+        update={"violations": filtered, "rules_summary": rules_summary},
     )
 
 
@@ -658,7 +663,8 @@ def _placeholder_result(language: str, path: str | None) -> AnalysisResult:
 
 
 def _collect_targets(
-    target: Path, language_override: str | None
+    target: Path,
+    language_override: str | None,
 ) -> list[tuple[Path, str]]:
     """Walk a file or directory and pair each source file with its detected language.
 
@@ -796,7 +802,7 @@ def _aggregate_results(results: list[AnalysisResult]) -> ProjectSummary:
                 path=path,
                 violations=violation_count,
                 language=result.language,
-            )
+            ),
         )
         for violation in result.violations:
             if violation.severity >= SEVERITY_CRITICAL:
@@ -838,7 +844,7 @@ def _format_prompt_markdown(bundle: PromptBundle) -> str:
         lines.append("## Remediation Roadmap")
         if bundle.big_picture.refactoring_roadmap:
             lines.extend(
-                [f"- {step}" for step in bundle.big_picture.refactoring_roadmap]
+                [f"- {step}" for step in bundle.big_picture.refactoring_roadmap],
             )
         else:
             lines.append("- No roadmap available.")
@@ -848,12 +854,12 @@ def _format_prompt_markdown(bundle: PromptBundle) -> str:
                 "## Big Picture",
                 f"- Health score: {bundle.big_picture.health_score:.1f}/100",
                 f"- Trajectory: {bundle.big_picture.improvement_trajectory}",
-            )
+            ),
         )
         if bundle.big_picture.systemic_patterns:
             lines.append("- Systemic patterns:")
             lines.extend(
-                [f"  - {pattern}" for pattern in bundle.big_picture.systemic_patterns]
+                [f"  - {pattern}" for pattern in bundle.big_picture.systemic_patterns],
             )
         lines.append("")
     if bundle.file_prompts:
@@ -968,19 +974,23 @@ def _run_prompts(args: PromptsArgs) -> int:
             _render_prompt_panel(prompt_bundle, results)
         if prompt_path:
             prompt_path.write_text(
-                _format_prompt_markdown(prompt_bundle), encoding="utf-8"
+                _format_prompt_markdown(prompt_bundle),
+                encoding="utf-8",
             )
 
     if mode in ("agent", "both"):
         min_severity = args.severity or 1
         task_list = build_agent_tasks(
-            results, project=str(target), min_severity=min_severity
+            results,
+            project=str(target),
+            min_severity=min_severity,
         )
         if not is_quiet():
             console.print(_build_agent_tasks_table(task_list))
         if agent_path:
             agent_path.write_text(
-                json.dumps(task_list.model_dump(), indent=2), encoding="utf-8"
+                json.dumps(task_list.model_dump(), indent=2),
+                encoding="utf-8",
             )
 
     return 0
@@ -1012,7 +1022,7 @@ def _run_list_rules(args: ListRulesArgs) -> int:
             f"{file_glyph()} Language: {args.language}",
             f"Principles: {len(zen.principles)}",
             title="Zen Rules",
-        )
+        ),
     )
     table = zen_table(title=f"Rules - {args.language}")
     table.add_column("ID", width=14, no_wrap=True)
@@ -1053,12 +1063,14 @@ def _run_init_interactive(args: InitArgs) -> tuple[list[str], str, bool]:
     if languages is None:
         detected_list = ", ".join(detected)
         if Confirm.ask(
-            f"Detected languages: {detected_list}. Use these?", default=True
+            f"Detected languages: {detected_list}. Use these?",
+            default=True,
         ):
             languages = detected
         else:
             response = Prompt.ask(
-                "Enter languages (comma-separated)", default=detected_list
+                "Enter languages (comma-separated)",
+                default=detected_list,
             )
             languages = _parse_languages(response)
     strictness = Prompt.ask(
@@ -1067,7 +1079,8 @@ def _run_init_interactive(args: InitArgs) -> tuple[list[str], str, bool]:
         default=_normalize_strictness(args.strictness),
     )
     setup_vscode = Confirm.ask(
-        "Create .vscode/mcp.json for VS Code integration?", default=True
+        "Create .vscode/mcp.json for VS Code integration?",
+        default=True,
     )
     return (languages or detected), strictness, setup_vscode
 
@@ -1193,7 +1206,7 @@ def _run_check(args: CheckArgs) -> int:
                 print_error(
                     "Analysis failed: found violations meeting "
                     f"--fail-on-severity={args.fail_on_severity}. "
-                    "Use --format json or --format sarif for detailed output."
+                    "Use --format json or --format sarif for detailed output.",
                 )
             return 1
     return 0
@@ -1243,7 +1256,8 @@ def _run_report(args: ReportArgs) -> int:
 
     if export_json:
         Path(export_json).write_text(
-            json.dumps(report.data, indent=2), encoding="utf-8"
+            json.dumps(report.data, indent=2),
+            encoding="utf-8",
         )
     if export_markdown:
         Path(export_markdown).write_text(report.markdown, encoding="utf-8")
@@ -1316,7 +1330,7 @@ def _run_export_mapping(args: ExportMappingArgs) -> int:
                 f"none={coverage_totals.get('none', 0)}"
             ),
             title="Rule Detector Mapping",
-        )
+        ),
     )
     table = zen_table(title="Language Coverage")
     table.add_column("Language", style="metric", no_wrap=True)
@@ -1356,27 +1370,39 @@ def reports(
     language: str | None = typer.Option(None, help="Override language detection"),
     config: str | None = typer.Option(None, help="Path to zen-config.yaml"),
     output_format: Literal["markdown", "json", "both", "sarif"] = typer.Option(
-        "markdown", "--format", help="Output format", show_choices=True
+        "markdown",
+        "--format",
+        help="Output format",
+        show_choices=True,
     ),
     out: str | None = typer.Option(None, help="Write output to file"),
     export_json: str | None = typer.Option(
-        None, "--export-json", help="Write report JSON to file"
+        None,
+        "--export-json",
+        help="Write report JSON to file",
     ),
     export_markdown: str | None = typer.Option(
-        None, "--export-markdown", help="Write report markdown to file"
+        None,
+        "--export-markdown",
+        help="Write report markdown to file",
     ),
     export_log: str | None = typer.Option(
-        None, "--export-log", help="Write log summary to file"
+        None,
+        "--export-log",
+        help="Write log summary to file",
     ),
     *,
     include_prompts: Annotated[
-        bool, typer.Option("--include-prompts", help="Include remediation prompts")
+        bool,
+        typer.Option("--include-prompts", help="Include remediation prompts"),
     ] = False,
     skip_analysis: Annotated[
-        bool, typer.Option("--skip-analysis", help="Skip analysis details in report")
+        bool,
+        typer.Option("--skip-analysis", help="Skip analysis details in report"),
     ] = False,
     skip_gaps: Annotated[
-        bool, typer.Option("--skip-gaps", help="Skip gap analysis")
+        bool,
+        typer.Option("--skip-gaps", help="Skip gap analysis"),
     ] = False,
 ) -> int:
     """Generate a comprehensive analysis report for a file or directory.
@@ -1432,7 +1458,10 @@ def check(
     language: str | None = typer.Option(None, help="Override language detection"),
     config: str | None = typer.Option(None, help="Path to zen-config.yaml"),
     output_format: Literal["terminal", "json", "sarif"] = typer.Option(
-        "terminal", "--format", help="Output format", show_choices=True
+        "terminal",
+        "--format",
+        help="Output format",
+        show_choices=True,
     ),
     out: str | None = typer.Option(None, help="Write output to file"),
     fail_on_severity: int | None = typer.Option(
@@ -1475,13 +1504,19 @@ def prompts(
     language: str | None = typer.Option(None, help="Override language detection"),
     config: str | None = typer.Option(None, help="Path to zen-config.yaml"),
     mode: Literal["remediation", "agent", "both"] = typer.Option(
-        "remediation", help="Prompt generation mode", show_choices=True
+        "remediation",
+        help="Prompt generation mode",
+        show_choices=True,
     ),
     export_prompts: str | None = typer.Option(
-        None, "--export-prompts", help="Write prompts markdown to file"
+        None,
+        "--export-prompts",
+        help="Write prompts markdown to file",
     ),
     export_agent: str | None = typer.Option(
-        None, "--export-agent", help="Write agent JSON to file"
+        None,
+        "--export-agent",
+        help="Write agent JSON to file",
     ),
     severity: int | None = typer.Option(None, help="Minimum severity threshold"),
 ) -> int:
@@ -1547,10 +1582,12 @@ def list_rules(language: str = typer.Argument(..., help="Language identifier")) 
 def init(
     *,
     force: Annotated[
-        bool, typer.Option("--force", help="Overwrite existing config")
+        bool,
+        typer.Option("--force", help="Overwrite existing config"),
     ] = False,
     yes: Annotated[
-        bool, typer.Option("--yes", help="Skip prompts and use defaults")
+        bool,
+        typer.Option("--yes", help="Skip prompts and use defaults"),
     ] = False,
     languages: Annotated[
         list[str] | None,
@@ -1594,10 +1631,14 @@ def init(
 def export_mapping(
     out: str | None = typer.Option(None, help="Write output to file"),
     languages: Annotated[
-        list[str] | None, typer.Option("--languages", help="Filter by languages")
+        list[str] | None,
+        typer.Option("--languages", help="Filter by languages"),
     ] = None,
     output_format: Literal["terminal", "json"] = typer.Option(
-        "terminal", "--format", help="Output format", show_choices=True
+        "terminal",
+        "--format",
+        help="Output format",
+        show_choices=True,
     ),
 ) -> int:
     """Export rule-to-detector mappings as a Rich table or JSON payload.

@@ -52,7 +52,7 @@ def _parse_custom_assets(
             raise SystemExit(msg)
 
         parsed_assets.append(
-            (Path(input_part.strip()), Path(output_part.strip()), None, None)
+            (Path(input_part.strip()), Path(output_part.strip()), None, None),
         )
 
     return parsed_assets
@@ -103,7 +103,7 @@ def _export_with_playwright(
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch()
         page = browser.new_page(
-            viewport={"width": resolved_width, "height": resolved_height}
+            viewport={"width": resolved_width, "height": resolved_height},
         )
         page.set_content(html)
         page.screenshot(path=str(output_path), omit_background=True)

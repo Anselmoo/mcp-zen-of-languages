@@ -20,7 +20,7 @@ def test_init_yes_writes_config(tmp_path, monkeypatch):
             "go",
             "--strictness",
             "strict",
-        ]
+        ],
     )
     assert exit_code == 0
     contents = (tmp_path / "zen-config.yaml").read_text(encoding="utf-8")
@@ -40,7 +40,9 @@ def test_init_interactive_writes_vscode_config(tmp_path, monkeypatch):
     monkeypatch.setattr(sys, "stdin", DummyStdin())
     confirmations = iter([True, True])
     monkeypatch.setattr(
-        rich.prompt.Confirm, "ask", lambda *args, **kwargs: next(confirmations)
+        rich.prompt.Confirm,
+        "ask",
+        lambda *args, **kwargs: next(confirmations),
     )
     monkeypatch.setattr(rich.prompt.Prompt, "ask", lambda *args, **kwargs: "strict")
     exit_code = cli.main(["init"])
@@ -49,6 +51,6 @@ def test_init_interactive_writes_vscode_config(tmp_path, monkeypatch):
     assert "  - python" in contents
     assert "severity_threshold: 7" in contents
     payload = json.loads(
-        (tmp_path / ".vscode" / "mcp.json").read_text(encoding="utf-8")
+        (tmp_path / ".vscode" / "mcp.json").read_text(encoding="utf-8"),
     )
     assert "zen-of-languages" in payload["mcp"]["servers"]

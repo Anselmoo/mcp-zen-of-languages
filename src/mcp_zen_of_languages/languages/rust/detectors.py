@@ -47,7 +47,9 @@ class RustUnwrapUsageDetector(ViolationDetector[RustUnwrapUsageConfig]):
         return "rust_unwrap_usage"
 
     def detect(
-        self, context: AnalysisContext, config: RustUnwrapUsageConfig
+        self,
+        context: AnalysisContext,
+        config: RustUnwrapUsageConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -67,7 +69,7 @@ class RustUnwrapUsageDetector(ViolationDetector[RustUnwrapUsageConfig]):
                     contains="unwrap",
                     index=0,
                     suggestion="Use ? or match with proper error handling instead of unwrap/expect.",
-                )
+                ),
             )
         return violations
 
@@ -92,7 +94,9 @@ class RustUnsafeBlocksDetector(ViolationDetector[RustUnsafeBlocksConfig]):
         return "rust_unsafe_blocks"
 
     def detect(
-        self, context: AnalysisContext, config: RustUnsafeBlocksConfig
+        self,
+        context: AnalysisContext,
+        config: RustUnsafeBlocksConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -124,7 +128,7 @@ class RustUnsafeBlocksDetector(ViolationDetector[RustUnsafeBlocksConfig]):
                         suggestion=(
                             "Document invariants with // SAFETY: before unsafe blocks."
                         ),
-                    )
+                    ),
                 )
         return violations
 
@@ -149,7 +153,9 @@ class RustCloneOverheadDetector(ViolationDetector[RustCloneOverheadConfig]):
         return "rust_clone_overhead"
 
     def detect(
-        self, context: AnalysisContext, config: RustCloneOverheadConfig
+        self,
+        context: AnalysisContext,
+        config: RustCloneOverheadConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -169,7 +175,7 @@ class RustCloneOverheadDetector(ViolationDetector[RustCloneOverheadConfig]):
                     contains="clone",
                     index=0,
                     suggestion="Prefer borrowing or Cow<T> over cloning in hot paths.",
-                )
+                ),
             )
         return violations
 
@@ -194,7 +200,9 @@ class RustErrorHandlingDetector(ViolationDetector[RustErrorHandlingConfig]):
         return "rust_error_handling"
 
     def detect(
-        self, context: AnalysisContext, config: RustErrorHandlingConfig
+        self,
+        context: AnalysisContext,
+        config: RustErrorHandlingConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -217,7 +225,7 @@ class RustErrorHandlingDetector(ViolationDetector[RustErrorHandlingConfig]):
                     contains="Result",
                     index=0,
                     suggestion="Propagate errors with ? or handle Result explicitly.",
-                )
+                ),
             )
         panic_count = len(re.findall(r"\bpanic!\s*\(", context.code))
         if panic_count > config.max_panics:
@@ -227,7 +235,7 @@ class RustErrorHandlingDetector(ViolationDetector[RustErrorHandlingConfig]):
                     contains="panic",
                     index=0,
                     suggestion="Avoid panic! in library code; return Result instead.",
-                )
+                ),
             )
         return violations
 
@@ -253,7 +261,9 @@ class RustTypeSafetyDetector(ViolationDetector[RustTypeSafetyConfig]):
         return "rust-002"
 
     def detect(
-        self, context: AnalysisContext, config: RustTypeSafetyConfig
+        self,
+        context: AnalysisContext,
+        config: RustTypeSafetyConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -281,7 +291,7 @@ class RustTypeSafetyDetector(ViolationDetector[RustTypeSafetyConfig]):
                             "Introduce newtypes or enums for domain-specific values instead "
                             "of raw primitives."
                         ),
-                    )
+                    ),
                 )
                 break
         return violations
@@ -308,7 +318,9 @@ class RustIteratorPreferenceDetector(ViolationDetector[RustIteratorPreferenceCon
         return "rust-003"
 
     def detect(
-        self, context: AnalysisContext, config: RustIteratorPreferenceConfig
+        self,
+        context: AnalysisContext,
+        config: RustIteratorPreferenceConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -320,7 +332,7 @@ class RustIteratorPreferenceDetector(ViolationDetector[RustIteratorPreferenceCon
             list[Violation]: Violations detected for the analyzed context.
         """
         loop_count = len(re.findall(r"\bfor\s+\w+\s+in\b", context.code)) + len(
-            re.findall(r"\bwhile\b", context.code)
+            re.findall(r"\bwhile\b", context.code),
         )
         if loop_count > config.max_loops:
             return [
@@ -329,7 +341,7 @@ class RustIteratorPreferenceDetector(ViolationDetector[RustIteratorPreferenceCon
                     contains="for",
                     index=0,
                     suggestion="Prefer iterator adapters (map/filter) over manual loops.",
-                )
+                ),
             ]
         return []
 
@@ -354,7 +366,9 @@ class RustMustUseDetector(ViolationDetector[RustMustUseConfig]):
         return "rust-005"
 
     def detect(
-        self, context: AnalysisContext, config: RustMustUseConfig
+        self,
+        context: AnalysisContext,
+        config: RustMustUseConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -372,7 +386,7 @@ class RustMustUseDetector(ViolationDetector[RustMustUseConfig]):
                     contains="Result",
                     index=0,
                     suggestion="Annotate important return types with #[must_use].",
-                )
+                ),
             ]
         return []
 
@@ -397,7 +411,9 @@ class RustDebugDeriveDetector(ViolationDetector[RustDebugDeriveConfig]):
         return "rust-006"
 
     def detect(
-        self, context: AnalysisContext, config: RustDebugDeriveConfig
+        self,
+        context: AnalysisContext,
+        config: RustDebugDeriveConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -415,7 +431,7 @@ class RustDebugDeriveDetector(ViolationDetector[RustDebugDeriveConfig]):
                     contains="Debug",
                     index=0,
                     suggestion="Derive Debug for public structs with #[derive(Debug)].",
-                )
+                ),
             ]
         return []
 
@@ -440,7 +456,9 @@ class RustNewtypePatternDetector(ViolationDetector[RustNewtypePatternConfig]):
         return "rust-007"
 
     def detect(
-        self, context: AnalysisContext, config: RustNewtypePatternConfig
+        self,
+        context: AnalysisContext,
+        config: RustNewtypePatternConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -459,7 +477,7 @@ class RustNewtypePatternDetector(ViolationDetector[RustNewtypePatternConfig]):
                         contains="type",
                         index=0,
                         suggestion="Prefer tuple struct newtypes over type aliases.",
-                    )
+                    ),
                 ]
                 if re.search(rf"type\s+\w+\s*=\s*(?:{types_pattern})\b", context.code)
                 else []
@@ -488,7 +506,9 @@ class RustStdTraitsDetector(ViolationDetector[RustStdTraitsConfig]):
         return "rust-009"
 
     def detect(
-        self, context: AnalysisContext, config: RustStdTraitsConfig
+        self,
+        context: AnalysisContext,
+        config: RustStdTraitsConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -500,7 +520,8 @@ class RustStdTraitsDetector(ViolationDetector[RustStdTraitsConfig]):
             list[Violation]: Violations detected for the analyzed context.
         """
         if "struct" in context.code and not re.search(
-            r"impl\s+(From|Into|Default|Display)", context.code
+            r"impl\s+(From|Into|Default|Display)",
+            context.code,
         ):
             return [
                 self.build_violation(
@@ -508,7 +529,7 @@ class RustStdTraitsDetector(ViolationDetector[RustStdTraitsConfig]):
                     contains="impl",
                     index=0,
                     suggestion="Implement standard traits like From, Default, or Display.",
-                )
+                ),
             ]
         return []
 
@@ -534,7 +555,9 @@ class RustEnumOverBoolDetector(ViolationDetector[RustEnumOverBoolConfig]):
         return "rust-010"
 
     def detect(
-        self, context: AnalysisContext, config: RustEnumOverBoolConfig
+        self,
+        context: AnalysisContext,
+        config: RustEnumOverBoolConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -553,7 +576,7 @@ class RustEnumOverBoolDetector(ViolationDetector[RustEnumOverBoolConfig]):
                     contains="bool",
                     index=0,
                     suggestion="Use enums instead of boolean flags for state.",
-                )
+                ),
             ]
         return []
 
@@ -579,7 +602,9 @@ class RustLifetimeUsageDetector(ViolationDetector[RustLifetimeUsageConfig]):
         return "rust-011"
 
     def detect(
-        self, context: AnalysisContext, config: RustLifetimeUsageConfig
+        self,
+        context: AnalysisContext,
+        config: RustLifetimeUsageConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -591,7 +616,7 @@ class RustLifetimeUsageDetector(ViolationDetector[RustLifetimeUsageConfig]):
             list[Violation]: Violations detected for the analyzed context.
         """
         lifetimes = len(re.findall(r"<\s*'\w+", context.code)) + len(
-            re.findall(r"'static", context.code)
+            re.findall(r"'static", context.code),
         )
         if lifetimes > config.max_explicit_lifetimes:
             return [
@@ -600,7 +625,7 @@ class RustLifetimeUsageDetector(ViolationDetector[RustLifetimeUsageConfig]):
                     contains="lifetime",
                     index=0,
                     suggestion="Prefer elided lifetimes unless explicit ones are required.",
-                )
+                ),
             ]
         return []
 
@@ -626,7 +651,9 @@ class RustInteriorMutabilityDetector(ViolationDetector[RustInteriorMutabilityCon
         return "rust-012"
 
     def detect(
-        self, context: AnalysisContext, config: RustInteriorMutabilityConfig
+        self,
+        context: AnalysisContext,
+        config: RustInteriorMutabilityConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -644,7 +671,7 @@ class RustInteriorMutabilityDetector(ViolationDetector[RustInteriorMutabilityCon
                     contains="RefCell",
                     index=0,
                     suggestion="Avoid Rc<RefCell> or Arc<Mutex> unless required.",
-                )
+                ),
             ]
         return []
 

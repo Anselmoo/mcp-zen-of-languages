@@ -25,7 +25,7 @@ def main() -> int:
         for violation in violations:
             print(f"  • {violation}")
         print(
-            "Use mkdocstrings markdown cross-references instead, e.g. [`Name`][path.to.Name]."
+            "Use mkdocstrings markdown cross-references instead, e.g. [`Name`][path.to.Name].",
         )
         return 1
 

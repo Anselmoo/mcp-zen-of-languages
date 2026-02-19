@@ -167,7 +167,9 @@ def test_rules_adapter_maintainability_threshold():
         metrics={"min_maintainability_index": 50.0},
     )
     violations = adapter._check_maintainability_index(
-        40.0, principle, principle.metrics
+        40.0,
+        principle,
+        principle.metrics,
     )
     assert violations
 
@@ -209,7 +211,8 @@ def test_metrics_collector_error_path(monkeypatch):
         raise RuntimeError(msg)
 
     monkeypatch.setattr(
-        "mcp_zen_of_languages.metrics.collector.compute_cyclomatic_complexity", boom
+        "mcp_zen_of_languages.metrics.collector.compute_cyclomatic_complexity",
+        boom,
     )
     cc, mi, loc = MetricsCollector.collect("line\n")
     assert cc is None

@@ -30,7 +30,8 @@ MAX_TABLE_GAP_LINES = 10
 
 
 class TomlNoInlineTablesDetector(
-    ViolationDetector[TomlNoInlineTablesConfig], LocationHelperMixin
+    ViolationDetector[TomlNoInlineTablesConfig],
+    LocationHelperMixin,
 ):
     """Flags inline table syntax (``key = { ... }``) that should use full table sections.
 
@@ -50,7 +51,9 @@ class TomlNoInlineTablesDetector(
         return "toml-001"
 
     def detect(
-        self, context: AnalysisContext, config: TomlNoInlineTablesConfig
+        self,
+        context: AnalysisContext,
+        config: TomlNoInlineTablesConfig,
     ) -> list[Violation]:
         """Scan for ``= {`` patterns indicating inline table assignments.
 
@@ -75,7 +78,8 @@ class TomlNoInlineTablesDetector(
 
 
 class TomlDuplicateKeysDetector(
-    ViolationDetector[TomlDuplicateKeysConfig], LocationHelperMixin
+    ViolationDetector[TomlDuplicateKeysConfig],
+    LocationHelperMixin,
 ):
     """Catches repeated bare keys within the same scope of a TOML file.
 
@@ -95,7 +99,9 @@ class TomlDuplicateKeysDetector(
         return "toml-002"
 
     def detect(
-        self, context: AnalysisContext, config: TomlDuplicateKeysConfig
+        self,
+        context: AnalysisContext,
+        config: TomlDuplicateKeysConfig,
     ) -> list[Violation]:
         """Track seen keys and flag any that appear more than once at the same level.
 
@@ -122,14 +128,15 @@ class TomlDuplicateKeysDetector(
                         contains=key,
                         location=Location(line=idx, column=1),
                         suggestion="Avoid duplicate keys in TOML files.",
-                    )
+                    ),
                 )
             seen.add(key)
         return violations
 
 
 class TomlLowercaseKeysDetector(
-    ViolationDetector[TomlLowercaseKeysConfig], LocationHelperMixin
+    ViolationDetector[TomlLowercaseKeysConfig],
+    LocationHelperMixin,
 ):
     """Enforces lowercase key names throughout the TOML document.
 
@@ -149,7 +156,9 @@ class TomlLowercaseKeysDetector(
         return "toml-003"
 
     def detect(
-        self, context: AnalysisContext, config: TomlLowercaseKeysConfig
+        self,
+        context: AnalysisContext,
+        config: TomlLowercaseKeysConfig,
     ) -> list[Violation]:
         """Scan key assignments and flag any containing uppercase characters.
 
@@ -173,13 +182,14 @@ class TomlLowercaseKeysDetector(
                         contains=key,
                         location=Location(line=idx, column=1),
                         suggestion="Use lowercase keys for TOML consistency.",
-                    )
+                    ),
                 )
         return violations
 
 
 class TomlTrailingCommasDetector(
-    ViolationDetector[TomlTrailingCommasConfig], LocationHelperMixin
+    ViolationDetector[TomlTrailingCommasConfig],
+    LocationHelperMixin,
 ):
     """Detects trailing commas inside TOML arrays and inline tables.
 
@@ -199,7 +209,9 @@ class TomlTrailingCommasDetector(
         return "toml-004"
 
     def detect(
-        self, context: AnalysisContext, config: TomlTrailingCommasConfig
+        self,
+        context: AnalysisContext,
+        config: TomlTrailingCommasConfig,
     ) -> list[Violation]:
         """Search for comma-then-closing-bracket patterns on each line.
 
@@ -224,7 +236,8 @@ class TomlTrailingCommasDetector(
 
 
 class TomlCommentClarityDetector(
-    ViolationDetector[TomlCommentClarityConfig], LocationHelperMixin
+    ViolationDetector[TomlCommentClarityConfig],
+    LocationHelperMixin,
 ):
     """Ensures TOML files with non-trivial configuration include explanatory comments.
 
@@ -245,7 +258,9 @@ class TomlCommentClarityDetector(
         return "toml-005"
 
     def detect(
-        self, context: AnalysisContext, config: TomlCommentClarityConfig
+        self,
+        context: AnalysisContext,
+        config: TomlCommentClarityConfig,
     ) -> list[Violation]:
         """Count comment lines and flag the file when fewer than *min_comment_lines* exist.
 
@@ -266,7 +281,7 @@ class TomlCommentClarityDetector(
                     contains="comment",
                     location=Location(line=1, column=1),
                     suggestion="Add comments for magic values.",
-                )
+                ),
             ]
         return []
 
@@ -291,7 +306,9 @@ class TomlOrderDetector(ViolationDetector[TomlOrderConfig], LocationHelperMixin)
         return "toml-006"
 
     def detect(
-        self, context: AnalysisContext, config: TomlOrderConfig
+        self,
+        context: AnalysisContext,
+        config: TomlOrderConfig,
     ) -> list[Violation]:
         """Measure line gaps between consecutive ``[table]`` headers and flag large separations.
 
@@ -316,13 +333,14 @@ class TomlOrderDetector(ViolationDetector[TomlOrderConfig], LocationHelperMixin)
                         contains="table order",
                         location=Location(line=table_headers[0], column=1),
                         suggestion="Group related TOML tables together.",
-                    )
+                    ),
                 ]
         return []
 
 
 class TomlIsoDatetimeDetector(
-    ViolationDetector[TomlIsoDatetimeConfig], LocationHelperMixin
+    ViolationDetector[TomlIsoDatetimeConfig],
+    LocationHelperMixin,
 ):
     """Enforces ISO 8601 datetime formatting in quoted TOML string values.
 
@@ -343,7 +361,9 @@ class TomlIsoDatetimeDetector(
         return "toml-007"
 
     def detect(
-        self, context: AnalysisContext, config: TomlIsoDatetimeConfig
+        self,
+        context: AnalysisContext,
+        config: TomlIsoDatetimeConfig,
     ) -> list[Violation]:
         """Search quoted string values for non-ISO date patterns like ``MM/DD/YYYY``.
 
@@ -371,14 +391,15 @@ class TomlIsoDatetimeDetector(
                         contains=value,
                         location=Location(line=idx, column=1),
                         suggestion="Use ISO 8601 date/time strings.",
-                    )
+                    ),
                 )
                 break
         return violations
 
 
 class TomlFloatIntegerDetector(
-    ViolationDetector[TomlFloatIntegerConfig], LocationHelperMixin
+    ViolationDetector[TomlFloatIntegerConfig],
+    LocationHelperMixin,
 ):
     """Flags float literals ending in ``.0`` that should be plain integers.
 
@@ -399,7 +420,9 @@ class TomlFloatIntegerDetector(
         return "toml-008"
 
     def detect(
-        self, context: AnalysisContext, config: TomlFloatIntegerConfig
+        self,
+        context: AnalysisContext,
+        config: TomlFloatIntegerConfig,
     ) -> list[Violation]:
         """Scan assignments for numeric values matching the ``N.0`` pattern.
 
@@ -419,7 +442,7 @@ class TomlFloatIntegerDetector(
                         contains=match[0],
                         location=Location(line=idx, column=1),
                         suggestion="Use integers instead of floats ending in .0.",
-                    )
+                    ),
                 )
                 break
         return violations

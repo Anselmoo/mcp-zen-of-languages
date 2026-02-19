@@ -313,7 +313,7 @@ class ShortVariableNamesConfig(DetectorConfig):
     type: Literal["short_variable_names"] = "short_variable_names"
     min_identifier_length: int = 3
     allowed_loop_names: list[str] = Field(
-        default_factory=lambda: ["i", "j", "k", "x", "y"]
+        default_factory=lambda: ["i", "j", "k", "x", "y"],
     )
 
 

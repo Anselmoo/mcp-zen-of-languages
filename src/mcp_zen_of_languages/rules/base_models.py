@@ -163,23 +163,31 @@ class ZenPrinciple(BaseModel):
     )
     category: PrincipleCategory = Field(..., description="Category of the principle")
     severity: int = Field(
-        ..., ge=1, le=10, description="Severity level (1-10, where 9-10 is critical)"
+        ...,
+        ge=1,
+        le=10,
+        description="Severity level (1-10, where 9-10 is critical)",
     )
     description: str = Field(..., description="Detailed explanation of the principle")
     violations: list[ViolationSpec | str] = Field(
-        default_factory=list, description="Common violations of this principle"
+        default_factory=list,
+        description="Common violations of this principle",
     )
     detectable_patterns: list[str] | None = Field(
-        default=None, description="Specific code patterns that indicate violations"
+        default=None,
+        description="Specific code patterns that indicate violations",
     )
     metrics: dict[str, Any] | None = Field(
-        default=None, description="Quantifiable thresholds (e.g., max_complexity: 10)"
+        default=None,
+        description="Quantifiable thresholds (e.g., max_complexity: 10)",
     )
     recommended_alternative: str | None = Field(
-        default=None, description="Suggested fix or better approach"
+        default=None,
+        description="Suggested fix or better approach",
     )
     required_config: dict[str, Any] | None = Field(
-        default=None, description="Required configuration settings"
+        default=None,
+        description="Required configuration settings",
     )
 
     model_config = ConfigDict(use_enum_values=True)
@@ -218,7 +226,8 @@ class ZenPrinciple(BaseModel):
                 spec = ViolationSpec(id=slug, description=description)
             if spec.id in seen:
                 spec = ViolationSpec(
-                    id=f"{spec.id}-{index}", description=spec.description
+                    id=f"{spec.id}-{index}",
+                    description=spec.description,
                 )
             seen.add(spec.id)
             normalized.append(spec)
@@ -284,13 +293,16 @@ class LanguageZenPrinciples(BaseModel):
     )
     philosophy: str = Field(..., description="Core philosophy or guiding document")
     source_text: str = Field(
-        ..., description="Source documentation or style guide name"
+        ...,
+        description="Source documentation or style guide name",
     )
     source_url: HttpUrl = Field(
-        ..., description="Source documentation or style guide URL"
+        ...,
+        description="Source documentation or style guide URL",
     )
     principles: list[ZenPrinciple] = Field(
-        default_factory=list, description="List of zen principles for this language"
+        default_factory=list,
+        description="List of zen principles for this language",
     )
 
     @property
@@ -541,7 +553,8 @@ class ViolationReport(BaseModel):
     severity: int = Field(..., description="Severity level (1-10)")
     category: PrincipleCategory = Field(..., description="Category of violation")
     location: dict[str, int] | None = Field(
-        default=None, description="Location in code (line, column)"
+        default=None,
+        description="Location in code (line, column)",
     )
     message: str = Field(..., description="Human-readable violation message")
     suggestion: str | None = Field(default=None, description="Suggested fix")
@@ -564,13 +577,18 @@ class AnalysisResult(BaseModel):
 
     language: str = Field(..., description="Analyzed language")
     violations: list[ViolationReport] = Field(
-        default_factory=list, description="Detected violations"
+        default_factory=list,
+        description="Detected violations",
     )
     overall_score: float = Field(
-        default=100.0, ge=0.0, le=100.0, description="Overall zen score (100 = perfect)"
+        default=100.0,
+        ge=0.0,
+        le=100.0,
+        description="Overall zen score (100 = perfect)",
     )
     metrics: dict[str, Any] = Field(
-        default_factory=dict, description="Computed metrics (complexity, LOC, etc.)"
+        default_factory=dict,
+        description="Computed metrics (complexity, LOC, etc.)",
     )
     summary: str = Field(default="", description="Summary of analysis")
 
@@ -611,10 +629,12 @@ class LanguageSummary(BaseModel):
     principle_count: int = Field(..., description="Number of principles")
     philosophy: str = Field(..., description="Core philosophy or guiding document")
     source_text: str | None = Field(
-        None, description="Source documentation or style guide name"
+        None,
+        description="Source documentation or style guide name",
     )
     source_url: HttpUrl | None = Field(
-        None, description="Source documentation or style guide URL"
+        None,
+        description="Source documentation or style guide URL",
     )
 
 
@@ -654,7 +674,8 @@ class RegistryStats(BaseModel):
 
     total_languages: int = Field(..., description="Total supported languages")
     total_principles: int = Field(
-        ..., description="Total number of principles across all languages"
+        ...,
+        description="Total number of principles across all languages",
     )
     languages: dict[str, LanguageSummary] = Field(
         default_factory=dict,
@@ -663,7 +684,8 @@ class RegistryStats(BaseModel):
 
     @classmethod
     def from_registry(
-        cls, registry: dict[str, "LanguageZenPrinciples"]
+        cls,
+        registry: dict[str, "LanguageZenPrinciples"],
     ) -> "RegistryStats":
         """Snapshot the live registry into a serialisable ``RegistryStats`` model.
 

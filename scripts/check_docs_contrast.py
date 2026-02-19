@@ -443,7 +443,8 @@ def run_audit(
             "failures": len(failures),
         },
         "matrix": sorted(
-            matrix.values(), key=lambda item: (item["scheme"], item["check"])
+            matrix.values(),
+            key=lambda item: (item["scheme"], item["check"]),
         ),
         "failures": failures,
     }
@@ -465,7 +466,7 @@ def print_summary(report: dict[str, Any]) -> None:
                 "  - "
                 f"[{failure['scheme']}] {failure['page']} :: {failure['check']} "
                 f"ratio={failure['ratio']:.2f} < {failure['threshold']:.2f} "
-                f"fg={failure['fg']} bg={failure['bg']} text='{failure['text']}'"
+                f"fg={failure['fg']} bg={failure['bg']} text='{failure['text']}'",
             )
 
 

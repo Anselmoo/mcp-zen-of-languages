@@ -23,7 +23,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 from types import SimpleNamespace
-from typing import TYPE_CHECKING, Annotated, Literal, Protocol
+from typing import TYPE_CHECKING, Annotated, Any, Literal, Protocol, cast
 
 import click
 import typer
@@ -102,14 +102,11 @@ SEVERITY_MEDIUM = 4
 # Keep Typer's rich help panels aligned with the CLI rendering width contract.
 if typer_rich_utils.MAX_WIDTH is None or typer_rich_utils.MAX_WIDTH > MAX_OUTPUT_WIDTH:
     typer_rich_utils.MAX_WIDTH = MAX_OUTPUT_WIDTH
-options_panel_border_attr = "STYLE_OPTIONS_PANEL_BORDER"
-commands_panel_border_attr = "STYLE_COMMANDS_PANEL_BORDER"
-options_table_box_attr = "STYLE_OPTIONS_TABLE_BOX"
-commands_table_box_attr = "STYLE_COMMANDS_TABLE_BOX"
-setattr(typer_rich_utils, options_panel_border_attr, "cyan")
-setattr(typer_rich_utils, commands_panel_border_attr, "cyan")
-setattr(typer_rich_utils, options_table_box_attr, "ROUNDED")
-setattr(typer_rich_utils, commands_table_box_attr, "ROUNDED")
+_typer_rich_utils_any = cast("Any", typer_rich_utils)
+_typer_rich_utils_any.STYLE_OPTIONS_PANEL_BORDER = "cyan"
+_typer_rich_utils_any.STYLE_COMMANDS_PANEL_BORDER = "cyan"
+_typer_rich_utils_any.STYLE_OPTIONS_TABLE_BOX = "ROUNDED"
+_typer_rich_utils_any.STYLE_COMMANDS_TABLE_BOX = "ROUNDED"
 
 _ORIGINAL_RICH_FORMAT_HELP = typer_rich_utils.rich_format_help
 
@@ -141,8 +138,7 @@ def _rich_format_help_with_banner(
     _ORIGINAL_RICH_FORMAT_HELP(obj=obj, ctx=ctx, markup_mode=markup_mode)
 
 
-rich_format_help_attr = "rich_format_help"
-setattr(typer_rich_utils, rich_format_help_attr, _rich_format_help_with_banner)
+_typer_rich_utils_any.rich_format_help = _rich_format_help_with_banner
 
 app = typer.Typer(
     name="mcp-zen-of-languages",

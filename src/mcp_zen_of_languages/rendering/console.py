@@ -51,7 +51,13 @@ console = Console(theme=ZEN_THEME, no_color=not _supports_color(sys.stdout))
 error_console = Console(
     theme=ZEN_THEME, stderr=True, no_color=not _supports_color(sys.stderr)
 )
-_QUIET = False
+
+
+class _ConsoleState:
+    quiet = False
+
+
+_STATE = _ConsoleState()
 
 ZEN_BANNER = r"""
  _____
@@ -118,7 +124,7 @@ def set_quiet(*, value: bool) -> None:
         value: True to suppress banners and spinners, False to re-enable them.
     """
 
-    globals()["_QUIET"] = value
+    _STATE.quiet = value
 
 
 def is_quiet() -> bool:
@@ -128,7 +134,7 @@ def is_quiet() -> bool:
         bool: True when quiet mode has been activated via ``set_quiet``.
     """
 
-    return _QUIET
+    return _STATE.quiet
 
 
 def print_banner(output_console: Console | None = None) -> None:
@@ -144,7 +150,7 @@ def print_banner(output_console: Console | None = None) -> None:
             module-level ``console`` singleton.
     """
 
-    if _QUIET or not sys.stdout.isatty():
+    if _STATE.quiet or not sys.stdout.isatty():
         return
     target_console = output_console or console
     banner = f"[bold cyan]{_render_banner_art()}[/]\n[dim]v{__version__}[/]"

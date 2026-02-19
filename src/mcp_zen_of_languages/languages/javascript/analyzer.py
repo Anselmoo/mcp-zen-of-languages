@@ -46,7 +46,7 @@ class JavaScriptAnalyzer(BaseAnalyzer):
         self,
         config: AnalyzerConfig | None = None,
         pipeline_config: PipelineConfig | None = None,
-    ):
+    ) -> None:
         """Initialize the JavaScript analyzer with optional configuration.
 
         Args:
@@ -77,7 +77,7 @@ class JavaScriptAnalyzer(BaseAnalyzer):
         """
         return "javascript"
 
-    def parse_code(self, code: str) -> ParserResult | None:
+    def parse_code(self, _code: str) -> ParserResult | None:
         """Attempt to parse JavaScript source into a structured AST.
 
         Currently returns ``None`` because no Python-native JS parser is
@@ -94,7 +94,7 @@ class JavaScriptAnalyzer(BaseAnalyzer):
         return None
 
     def compute_metrics(
-        self, code: str, ast_tree: ParserResult | None
+        self, code: str, _ast_tree: ParserResult | None
     ) -> tuple[CyclomaticSummary | None, float | None, int]:
         """Compute source-level metrics for the JavaScript file.
 
@@ -123,7 +123,7 @@ class JavaScriptAnalyzer(BaseAnalyzer):
         """
         return super().build_pipeline()
 
-    def _build_dependency_analysis(self, context: AnalysisContext) -> object | None:
+    def _build_dependency_analysis(self, _context: AnalysisContext) -> object | None:
         """Build cross-file dependency data for JavaScript imports.
 
         Not yet implemented for JavaScript; returns ``None``.  Future versions

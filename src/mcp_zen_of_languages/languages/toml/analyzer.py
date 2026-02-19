@@ -32,7 +32,7 @@ class TomlAnalyzer(BaseAnalyzer):
         self,
         config: AnalyzerConfig | None = None,
         pipeline_config: PipelineConfig | None = None,
-    ):
+    ) -> None:
         """Set up the TOML analyzer with optional threshold and pipeline overrides.
 
         Args:
@@ -60,7 +60,7 @@ class TomlAnalyzer(BaseAnalyzer):
         """
         return "toml"
 
-    def parse_code(self, code: str) -> ParserResult | None:
+    def parse_code(self, _code: str) -> ParserResult | None:
         """Return ``None`` because TOML analysis uses line-oriented text scanning.
 
         Args:
@@ -72,7 +72,7 @@ class TomlAnalyzer(BaseAnalyzer):
         return None
 
     def compute_metrics(
-        self, code: str, ast_tree: ParserResult | None
+        self, code: str, _ast_tree: ParserResult | None
     ) -> tuple[CyclomaticSummary | None, float | None, int]:
         """Compute a line count for the TOML file; complexity metrics are not applicable.
 
@@ -95,7 +95,7 @@ class TomlAnalyzer(BaseAnalyzer):
         """
         return super().build_pipeline()
 
-    def _build_dependency_analysis(self, context: AnalysisContext) -> object | None:
+    def _build_dependency_analysis(self, _context: AnalysisContext) -> object | None:
         """Return ``None`` because TOML files have no cross-file dependency semantics.
 
         Args:

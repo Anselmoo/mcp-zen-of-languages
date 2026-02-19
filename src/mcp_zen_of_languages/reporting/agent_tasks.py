@@ -138,7 +138,6 @@ def build_agent_tasks(
     Returns:
         AgentTaskList: Sorted tasks with clusters, health score, and roadmap.
     """
-
     big_picture = build_big_picture_analysis(results)
     theme_priority = {
         cluster.theme: cluster.suggested_order for cluster in big_picture.clusters

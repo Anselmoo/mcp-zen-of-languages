@@ -47,7 +47,6 @@ def _active_console(output_console: Console | None = None) -> Console:
     Returns:
         Console: The resolved Rich console instance.
     """
-
     return output_console or console
 
 
@@ -67,7 +66,6 @@ def render_report_terminal(
         output_console: Alternate console to write to; defaults to the
             module-level ``console`` singleton.
     """
-
     active_console = _active_console(output_console)
     width = get_output_width(active_console)
     data = report.data if isinstance(report.data, dict) else {}
@@ -127,7 +125,6 @@ def _build_summary_table(summary: dict, width: int) -> Table:
     Returns:
         Table: Populated summary table ready for ``console.print()``.
     """
-
     counts = summary.get("severity_counts", {})
     table = zen_summary_table(title="Summary", width=width)
     table.add_column("Metric", style="metric")
@@ -145,7 +142,7 @@ def _build_summary_table(summary: dict, width: int) -> Table:
 
 
 def _render_result_panel(
-    result: AnalysisResult, width: int, output_console: Console
+    result: AnalysisResult, _width: int, output_console: Console
 ) -> None:
     """Print a per-file analysis panel to the console.
 
@@ -157,10 +154,10 @@ def _render_result_panel(
     Args:
         result: Single-file ``AnalysisResult`` containing ``path`` and
             ``violations``.
-        width: Column width for the enclosing panel.
+        _width: Reserved width parameter kept for call-site compatibility.
+            Panel width is derived from ``output_console``.
         output_console: Console instance to print the panel to.
     """
-
     title = result.path or "<input>"
     if not result.violations:
         output_console.print(
@@ -191,7 +188,6 @@ def _build_gap_panel(gaps: dict, width: int) -> Panel:
     Returns:
         Panel: ``zen_panel``-wrapped table of coverage gaps.
     """
-
     table = zen_table(title="Gap Analysis", width=width)
     table.add_column("Area", style="metric", width=14)
     table.add_column("Detail", ratio=2)
@@ -235,7 +231,6 @@ def _build_prompt_panel(prompts: dict, width: int) -> Panel:
     Returns:
         Panel: ``zen_panel``-wrapped table of prompt counts.
     """
-
     file_prompts = prompts.get("file_prompts", [])
     generic_prompts = prompts.get("generic_prompts", [])
     table = zen_table(

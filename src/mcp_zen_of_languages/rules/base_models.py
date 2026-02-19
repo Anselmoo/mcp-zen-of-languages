@@ -186,7 +186,7 @@ class ZenPrinciple(BaseModel):
 
     @field_validator("violations", mode="before")
     @classmethod
-    def _normalize_violations(cls, value: Any) -> list[ViolationSpec]:
+    def _normalize_violations(cls, value: object) -> list[ViolationSpec]:
         """Coerce raw violation data into a deduplicated ``ViolationSpec`` list.
 
         Accepts ``None``, a single item, or a heterogeneous list of strings,
@@ -673,7 +673,6 @@ class RegistryStats(BaseModel):
         Returns:
             A fully populated ``RegistryStats`` instance.
         """
-
         total_languages = len(registry)
         total_principles = sum(lang.principle_count for lang in registry.values())
 

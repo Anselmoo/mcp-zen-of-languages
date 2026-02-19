@@ -47,7 +47,7 @@ class PowerShellAnalyzer(BaseAnalyzer):
         self,
         config: AnalyzerConfig | None = None,
         pipeline_config: PipelineConfig | None = None,
-    ):
+    ) -> None:
         """Initialize the PowerShell analyzer with optional configuration.
 
         Args:
@@ -78,7 +78,7 @@ class PowerShellAnalyzer(BaseAnalyzer):
         """
         return "powershell"
 
-    def parse_code(self, code: str) -> ParserResult | None:
+    def parse_code(self, _code: str) -> ParserResult | None:
         """Attempt to parse PowerShell source into a structured AST.
 
         Currently returns ``None`` because no Python-native PowerShell parser
@@ -95,7 +95,7 @@ class PowerShellAnalyzer(BaseAnalyzer):
         return None
 
     def compute_metrics(
-        self, code: str, ast_tree: ParserResult | None
+        self, code: str, _ast_tree: ParserResult | None
     ) -> tuple[CyclomaticSummary | None, float | None, int]:
         """Compute source-level metrics for the PowerShell file.
 
@@ -124,7 +124,7 @@ class PowerShellAnalyzer(BaseAnalyzer):
         """
         return super().build_pipeline()
 
-    def _build_dependency_analysis(self, context: AnalysisContext) -> object | None:
+    def _build_dependency_analysis(self, _context: AnalysisContext) -> object | None:
         """Build cross-file dependency data for PowerShell module imports.
 
         Not yet implemented for PowerShell; returns ``None``.  Future versions

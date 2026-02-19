@@ -55,7 +55,7 @@ class PythonAnalyzer(BaseAnalyzer, LocationHelperMixin):
         self,
         config: AnalyzerConfig | None = None,
         pipeline_config: PipelineConfig | None = None,
-    ):
+    ) -> None:
         """Initialise the Python analyzer with optional config overrides.
 
         Args:
@@ -120,7 +120,7 @@ class PythonAnalyzer(BaseAnalyzer, LocationHelperMixin):
             return None
 
     def compute_metrics(
-        self, code: str, ast_tree: ParserResult | None
+        self, code: str, _ast_tree: ParserResult | None
     ) -> tuple[CyclomaticSummary | None, float | None, int]:
         """Collect cyclomatic complexity, maintainability index, and line count.
 

@@ -67,13 +67,13 @@ Thanks for improving MCP Zen of Languages. Whether you're fixing a bug, adding a
 
     [Rendering Style Guide](rendering-style-guide.md)
 
--   :material-theme-light-dark:{ .lg .middle } **MkDocs Material Modernization**
+-   :material-theme-light-dark:{ .lg .middle } **Zensical Migration**
 
     ---
 
-    Theming, palette strategy, and Caligo token mapping.
+    Updated docs engine/build workflow and theme migration notes.
 
-    [MkDocs Material Modernization](mkdocs-material-modernization.md)
+    [Zensical Migration](zensical-migration.md)
 
 </div>
 
@@ -102,7 +102,6 @@ Thanks for improving MCP Zen of Languages. Whether you're fixing a bug, adding a
 
 ## See Also
 
-- [MkDocs Material Modernization](mkdocs-material-modernization.md) — Theme conventions and docs rendering standards.
-- [Material Examples](material-examples.md) — Copy-paste reference for icons, admonitions, tabs, footnotes, and diagrams.
+- [Zensical Migration](zensical-migration.md) — Theme migration and docs build workflow updates.
 - [User Guide](../user-guide/index.md) — End-user documentation surfaces impacted by contributor changes.
 - [API Reference](../api/index.md) — Generated API docs from docstrings.

@@ -46,7 +46,6 @@ def analysis_progress(*, enabled: bool = True) -> Iterator[Progress | None]:
         Progress | None: A running ``Progress`` instance when the terminal
             supports it, or ``None`` when progress display is suppressed.
     """
-
     if not enabled or is_quiet() or not sys.stdout.isatty() or not console.is_terminal:
         yield None
         return

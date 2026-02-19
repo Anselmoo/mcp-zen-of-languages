@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Export project SVG assets to PNG files with a consistent renderer flow."""
 
 from __future__ import annotations

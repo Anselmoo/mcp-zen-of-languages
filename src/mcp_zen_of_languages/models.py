@@ -123,10 +123,9 @@ class Violation(BaseModel):
             >>> v.get("nonexistent", "fallback")
             'fallback'
         """
-
         return getattr(self, key, default)
 
-    def __getitem__(self, key: str):
+    def __getitem__(self, key: str) -> object:
         """Support bracket-style access (``violation["field"]``).
 
         Legacy consumers indexed violations as if they were plain dicts.
@@ -419,7 +418,7 @@ class AnalysisResult(BaseModel):
     overall_score: float
     rules_summary: RulesSummary | None = None
 
-    def __getitem__(self, item):
+    def __getitem__(self, item: str) -> object:
         """Support bracket-style access (``result["field"]``).
 
         Legacy test suites indexed analysis results as plain dictionaries.

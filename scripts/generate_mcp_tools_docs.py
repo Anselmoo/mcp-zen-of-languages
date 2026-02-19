@@ -182,26 +182,26 @@ def generate() -> str:
     )
 
     # --- Summary table ---
-    tool_manager = mcp._tool_manager
-    resource_manager = mcp._resource_manager
-    prompt_manager = mcp._prompt_manager
+    tool_manager = mcp._tool_manager  # noqa: SLF001
+    resource_manager = mcp._resource_manager  # noqa: SLF001
+    prompt_manager = mcp._prompt_manager  # noqa: SLF001
 
     tools = (
-        list(tool_manager._tools.values()) if hasattr(tool_manager, "_tools") else []
+        list(tool_manager._tools.values()) if hasattr(tool_manager, "_tools") else []  # noqa: SLF001
     )
     resources = (
-        list(resource_manager._resources.values())
+        list(resource_manager._resources.values())  # noqa: SLF001
         if hasattr(resource_manager, "_resources")
         else []
     )
     # Include resource templates (e.g. zen://rules/{language})
     resource_templates = (
-        list(resource_manager._templates.values())
+        list(resource_manager._templates.values())  # noqa: SLF001
         if hasattr(resource_manager, "_templates")
         else []
     )
     prompts = (
-        list(prompt_manager._prompts.values())
+        list(prompt_manager._prompts.values())  # noqa: SLF001
         if hasattr(prompt_manager, "_prompts")
         else []
     )

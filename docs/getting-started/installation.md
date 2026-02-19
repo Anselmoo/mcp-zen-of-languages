@@ -54,7 +54,7 @@ cd mcp-zen-of-languages
 uv sync --group dev --group docs
 ```
 
-This installs all development dependencies (pytest, ruff, ty) and documentation tooling (mkdocs-material).
+This installs all development dependencies (pytest, ruff, ty) and documentation tooling (Zensical).
 
 ## Install with Docker (no local Python)
 
@@ -93,5 +93,5 @@ Run [Quickstart](quickstart.md) to initialize a project and see your first analy
 ## Theme customization references
 
 - https://www.mkdocs.org/user-guide/customizing-your-theme/
-- https://squidfunk.github.io/mkdocs-material/customization/
-- https://github.com/squidfunk/mkdocs-material
+- https://zensical.org/docs/
+- https://github.com/zensical/zensical

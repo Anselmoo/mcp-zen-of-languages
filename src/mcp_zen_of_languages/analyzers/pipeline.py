@@ -22,7 +22,7 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from pydantic import BaseModel, field_validator
 
@@ -63,7 +63,7 @@ class PipelineConfig(BaseModel):
 
     @field_validator("detectors", mode="before")
     @classmethod
-    def _validate_detectors(cls, value: Any) -> list[DetectorConfig]:
+    def _validate_detectors(cls, value: object) -> list[DetectorConfig]:
         """Coerce raw dicts into typed ``DetectorConfig`` subclasses.
 
         Each element is validated through the registry's discriminated-union
@@ -80,7 +80,6 @@ class PipelineConfig(BaseModel):
         Raises:
             TypeError: If *value* is not a list.
         """
-
         if isinstance(value, list):
             from mcp_zen_of_languages.analyzers.registry import REGISTRY
 
@@ -114,7 +113,6 @@ class PipelineConfig(BaseModel):
             >>> cfg.language
             'python'
         """
-
         lang_zen = get_language_zen(language)
         if not lang_zen:
             msg = f"No zen rules for language: {language}"
@@ -145,7 +143,6 @@ def project_rules_to_configs(lang_zen: LanguageZenPrinciples) -> list[DetectorCo
         ``DetectorRegistry.configs_from_rules``
         — the registry method this function delegates to.
     """
-
     from mcp_zen_of_languages.analyzers.registry import REGISTRY
 
     return REGISTRY.configs_from_rules(lang_zen)
@@ -174,7 +171,6 @@ def merge_pipeline_overrides(
     Raises:
         ValueError: If *overrides.language* doesn't match *base.language*.
     """
-
     if overrides is None:
         return base
     if overrides.language != base.language:

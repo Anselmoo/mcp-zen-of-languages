@@ -66,7 +66,6 @@ def parse_python_with_builtin_ast(code: str) -> Module | None:
         An ``ast.Module`` root node on success, or ``None`` when the source
         contains a syntax error.
     """
-
     import ast
 
     # Let syntax errors propagate as SyntaxError; return None only on unexpected exceptions.

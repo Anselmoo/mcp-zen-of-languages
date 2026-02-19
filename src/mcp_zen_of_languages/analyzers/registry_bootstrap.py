@@ -59,12 +59,11 @@ def _rule_class_name(rule_id: str) -> str:
         >>> _rule_class_name("js-009")
         'Js009Config'
     """
-
     parts = rule_id.replace("-", "_").split("_")
     return "".join(part.capitalize() for part in parts) + "Config"
 
 
-def _rule_literal(rule_id: str) -> Any:
+def _rule_literal(rule_id: str) -> object:
     """Create a ``Literal["<rule_id>"]`` type for use as a Pydantic discriminator.
 
     The returned type is assigned to the ``type`` field of dynamically
@@ -77,7 +76,6 @@ def _rule_literal(rule_id: str) -> Any:
     Returns:
         A ``Literal`` type containing exactly *rule_id*.
     """
-
     return Literal[rule_id]
 
 
@@ -99,7 +97,6 @@ def _build_rule_configs(rule_ids: list[str]) -> dict[str, type[DetectorConfig]]:
         Mapping from rule ID to its config model class, ready for
         [`register`][mcp_zen_of_languages.analyzers.registry.DetectorRegistry.register].
     """
-
     configs: dict[str, type[DetectorConfig]] = {}
     for rule_id in rule_ids:
         if rule_id in RULE_CONFIGS:

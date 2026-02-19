@@ -13,6 +13,7 @@ uv sync --all-groups --all-extras
 uv run pytest -xvs
 uv run ty check
 uv run ruff check
+uv run zensical build -f mkdocs.yml
 uv run python scripts/check_docs_contrast.py --build --mode check
 ```
 

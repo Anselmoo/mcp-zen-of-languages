@@ -26,7 +26,7 @@ from .layout import get_output_width
 from .themes import BOX_BANNER, ZEN_THEME, pass_fail_glyph
 
 
-def _supports_color(stream) -> bool:
+def _supports_color(stream: object) -> bool:
     """Probe whether a file stream can render ANSI colour sequences.
 
     Checks the ``NO_COLOR`` env-var first (unconditional off), then
@@ -51,7 +51,13 @@ console = Console(theme=ZEN_THEME, no_color=not _supports_color(sys.stdout))
 error_console = Console(
     theme=ZEN_THEME, stderr=True, no_color=not _supports_color(sys.stderr)
 )
-_QUIET = False
+
+
+class _ConsoleState:
+    quiet = False
+
+
+_STATE = _ConsoleState()
 
 ZEN_BANNER = r"""
  _____
@@ -77,9 +83,8 @@ def _render_banner_art() -> str:
     Returns:
         str: Multi-line ASCII art string with appended subtitle.
     """
-
     try:
-        figlet_format = getattr(import_module("pyfiglet"), "figlet_format")
+        figlet_format = import_module("pyfiglet").figlet_format
         art = figlet_format(
             "Zen", font="banner3-d", direction="auto", justify="center", width=55
         ).rstrip()
@@ -103,7 +108,6 @@ def get_banner_art() -> str:
     Returns:
         str: Multi-line ASCII art including the *"of Languages"* subtitle.
     """
-
     return _render_banner_art()
 
 
@@ -117,9 +121,7 @@ def set_quiet(*, value: bool) -> None:
     Args:
         value: True to suppress banners and spinners, False to re-enable them.
     """
-
-    global _QUIET
-    _QUIET = value
+    _STATE.quiet = value
 
 
 def is_quiet() -> bool:
@@ -128,8 +130,7 @@ def is_quiet() -> bool:
     Returns:
         bool: True when quiet mode has been activated via ``set_quiet``.
     """
-
-    return _QUIET
+    return _STATE.quiet
 
 
 def print_banner(output_console: Console | None = None) -> None:
@@ -144,8 +145,7 @@ def print_banner(output_console: Console | None = None) -> None:
         output_console: Alternate console to print to; defaults to the
             module-level ``console`` singleton.
     """
-
-    if _QUIET or not sys.stdout.isatty():
+    if _STATE.quiet or not sys.stdout.isatty():
         return
     target_console = output_console or console
     banner = f"[bold cyan]{_render_banner_art()}[/]\n[dim]v{__version__}[/]"
@@ -172,7 +172,6 @@ def print_error(message: str) -> None:
     Args:
         message: Human-readable error description to display.
     """
-
     error_console.print(
         f"{pass_fail_glyph(passed=False)} {message}", style="bold red", markup=False
     )

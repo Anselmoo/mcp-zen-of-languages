@@ -57,7 +57,7 @@ build-backend = "uv_build"
 [dependency-groups]
 docs = [
     "mkdocs>=1.6.0",
-    "mkdocs-material[imaging]>=9.7.1",
+    "zensical>=0.0.23",
     "mkdocstrings[python]>=0.26.0",
     "mkdocs-minify-plugin>=0.8.0",
     "mkdocs-git-revision-date-localized-plugin>=1.3.0",
@@ -87,16 +87,7 @@ extend-ignore = [
     # Style / formatting
     "COM812", # missing-trailing-comma (formatter handles)
     "E501",   # line-too-long (formatter handles)
-    "D202",   # blank-line-after-function
-    "D212",   # multi-line-summary-first-line
     # Annotations
-    "ANN001", # missing-type-function-argument
-    "ANN002", # missing-type-args
-    "ANN003", # missing-type-kwargs
-    "ANN201", # missing-return-type-undocumented-public-function
-    "ANN202", # missing-return-type-private-function
-    "ANN204", # missing-return-type-special-method
-    "ANN401", # any-type
     # Complexity / size
     "C901",    # complex-structure
     "PLR0911", # too-many-return-statements
@@ -106,19 +97,9 @@ extend-ignore = [
     # Import style
     "PLC0415", # import-outside-top-level
     "TID252",  # relative-imports
-    # Boolean / argument patterns
-    "ARG001", # unused-function-argument
-    "ARG002", # unused-method-argument
-    "ARG005", # unused-lambda-argument
     # Exception patterns
     # Modernization (fix incrementally)
-    # Pylint conventions
-    "PLW0602", # global-variable-not-assigned
-    "PLW0603", # global-statement
-    "PLE0605", # invalid-all-format
     # Simplifications
-    # Private access / naming
-    "SLF001", # private-member-access
     # Security (review individually)
     "S101", # assert
     "S108", # hardcoded-temp-file
@@ -129,10 +110,6 @@ extend-ignore = [
     "S607", # start-process-with-partial-path
     "S701", # jinja2-autoescape-false
     # Miscellaneous
-    "B008",    # function-call-in-default-argument
-    "B009",    # get-attr-with-constant
-    "B010",    # set-attr-with-constant
-    "B017",    # assert-raises-exception
     "FURB167", # regex-flag-alias
     "PGH003",  # blanket-type-ignore
     "PTH122",  # os-path-splitext
@@ -144,21 +121,7 @@ extend-ignore = [
     "RUF002",  # ambiguous-unicode-character-docstring
     "RUF007",  # pairwise-over-zipped
     "T201",    # print
-    "TD002",   # missing-todo-author
-    "TD003",   # missing-todo-link
-    "FIX002",  # line-contains-fixme
     "ERA001",  # commented-out-code
-    "EXE001",  # shebang-not-executable
-    "INP001",  # implicit-namespace-package
-    # --- Pre-existing docstring ignores ---
-    "D100", # undocumented-public-module
-    "D104", # undocumented-public-package
-    "D105", # undocumented-public-magic-method
-    "D107", # undocumented-public-init
-    "D200", # one-line-docstring
-    "D205", # blank-line-after-summary
-    "D403", # first-word-capitalized
-    "D415", # ends-in-punctuation
 ]
 
 [tool.ruff.lint.per-file-ignores]

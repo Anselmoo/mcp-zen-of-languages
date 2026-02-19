@@ -474,7 +474,7 @@ class DetectionPipeline:
             Factory that assembles the detector list from zen rules.
     """
 
-    def __init__(self, detectors: list[ViolationDetector]):
+    def __init__(self, detectors: list[ViolationDetector]) -> None:
         """Prepare the pipeline with an ordered detector sequence.
 
         Args:
@@ -565,7 +565,7 @@ class BaseAnalyzer(ABC):
             Configuration consumed by the analyzer and its detectors.
     """
 
-    def __init__(self, config: AnalyzerConfig | None = None):
+    def __init__(self, config: AnalyzerConfig | None = None) -> None:
         """Bootstrap the analyzer with configuration and a detector pipeline.
 
         If no *config* is supplied, the language-specific ``default_config()``
@@ -889,7 +889,7 @@ class BaseAnalyzer(ABC):
             repository_imports=repository_imports,
         )
 
-    def _build_dependency_analysis(self, context: AnalysisContext) -> object | None:
+    def _build_dependency_analysis(self, _context: AnalysisContext) -> object | None:
         """Build a language-specific dependency graph from the analysis context.
 
         The base implementation returns ``None`` (no dependency analysis).
@@ -1021,7 +1021,7 @@ class LocationHelperMixin:
         return Location(line=1, column=1)
 
     def ast_node_to_location(
-        self, ast_tree: ParserResult | None, node: object | None
+        self, _ast_tree: ParserResult | None, node: object | None
     ) -> Location | None:
         """Extract a ``Location`` from a Python-style AST node.
 

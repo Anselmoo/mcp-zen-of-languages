@@ -89,7 +89,6 @@ MUTATING_ANNOTATIONS = ToolAnnotations(
 
 def _output_schema(annotation: object) -> dict[str, object]:
     """Convert a return annotation into MCP-compatible JSON Schema."""
-
     return TypeAdapter(annotation).json_schema()
 
 
@@ -157,7 +156,6 @@ class LanguagesResource(BaseModel):
 )
 def config_resource() -> "ConfigStatus":
     """Return current configuration status as a read-only MCP resource."""
-
     return _build_config_status()
 
 
@@ -169,7 +167,6 @@ def config_resource() -> "ConfigStatus":
 )
 def rules_resource(language: str) -> LanguageZenPrinciples:
     """Return canonical zen principles for the requested language key."""
-
     zen = get_language_zen(_canonical_language(language))
     if zen is None:
         msg = f"Unsupported language '{language}'."
@@ -185,7 +182,6 @@ def rules_resource(language: str) -> LanguageZenPrinciples:
 )
 def languages_resource() -> LanguagesResource:
     """Return supported languages with principle and detector counts."""
-
     from mcp_zen_of_languages.analyzers.registry import REGISTRY
 
     entries: list[LanguageCoverage] = []
@@ -214,7 +210,6 @@ def languages_resource() -> LanguagesResource:
 )
 def remediation_prompt(language: str, violations: str) -> str:
     """Build a typed remediation prompt template for MCP clients."""
-
     return (
         "Context: Remediate zen violations in a codebase.\n"
         f"Language: {language}\n"
@@ -265,9 +260,9 @@ async def detect_languages(repo_path: str) -> LanguagesResult:
             configured languages.
 
     """
-
     from mcp_zen_of_languages.models import LanguagesResult
 
+    _ = repo_path
     return LanguagesResult(languages=CONFIG.languages)
 
 
@@ -397,7 +392,6 @@ async def generate_prompts_tool(code: str, language: str) -> PromptBundle:
             Embeds prompts alongside gap analysis in a full report.
 
     """
-
     canonical_language = _canonical_language(language)
     supported = sorted(supported_languages())
     if canonical_language not in supported:
@@ -451,7 +445,6 @@ async def _analyze_repository_internal(
         carrying the file path, detected language, and its
         ``AnalysisResult``.
     """
-
     repo = Path(repo_path)
     if languages:
         targets: list[tuple[Path, str]] = []
@@ -565,7 +558,6 @@ async def analyze_repository(
             Builds actionable remediation tasks from repository analysis.
 
     """
-
     return await _analyze_repository_internal(repo_path, languages, max_files, ctx)
 
 
@@ -615,7 +607,6 @@ async def generate_agent_tasks_tool(
             structured tasks.
 
     """
-
     repo_results = await _analyze_repository_internal(repo_path, languages=languages)
     analysis_results = [entry.result for entry in repo_results]
     return build_agent_tasks(
@@ -646,7 +637,6 @@ async def check_architectural_patterns(code: str, language: str) -> PatternsResu
             is implemented.
 
     """
-
     msg = (
         "check_architectural_patterns is not implemented yet. "
         "Pattern detection is planned but not available in this release."
@@ -708,7 +698,6 @@ async def generate_report_tool(
             Standalone prompt generation when a full report is not needed.
 
     """
-
     if ctx is not None:
         ctx.log(f"Generating zen-of-languages report for {target_path}")
         ctx.report_progress(0, 1)
@@ -759,7 +748,6 @@ async def export_rule_detector_mapping(
             rather than full mapping metadata.
 
     """
-
     from mcp_zen_of_languages.rules.mapping_export import build_rule_detector_mapping
 
     return build_rule_detector_mapping(languages)
@@ -1048,6 +1036,7 @@ async def onboard_project(
             ``zen-config.yaml``.
 
     """
+    _ = team_size
     # Determine thresholds based on strictness
     thresholds = {
         "relaxed": {
@@ -1190,7 +1179,6 @@ class _LegacyPromptManager:
 
 def _attach_legacy_test_compat() -> None:
     """Expose legacy tool attributes used by the repository test suite."""
-
     tools_with_annotations = [
         (detect_languages, READONLY_ANNOTATIONS),
         (analyze_zen_violations, READONLY_ANNOTATIONS),
@@ -1209,14 +1197,16 @@ def _attach_legacy_test_compat() -> None:
 
     for tool_fn, annotations in tools_with_annotations:
         if not hasattr(tool_fn, "fn"):
-            setattr(tool_fn, "fn", tool_fn)
+            tool_fn.fn = tool_fn
         if not hasattr(tool_fn, "annotations"):
-            setattr(tool_fn, "annotations", annotations)
+            tool_fn.annotations = annotations
 
-    if not hasattr(mcp, "_resource_manager"):
-        setattr(mcp, "_resource_manager", _LegacyResourceManager())
-    if not hasattr(mcp, "_prompt_manager"):
-        setattr(mcp, "_prompt_manager", _LegacyPromptManager())
+    resource_manager_attr = "_resource_manager"
+    if not hasattr(mcp, resource_manager_attr):
+        setattr(mcp, resource_manager_attr, _LegacyResourceManager())
+    prompt_manager_attr = "_prompt_manager"
+    if not hasattr(mcp, prompt_manager_attr):
+        setattr(mcp, prompt_manager_attr, _LegacyPromptManager())
 
 
 _attach_legacy_test_compat()

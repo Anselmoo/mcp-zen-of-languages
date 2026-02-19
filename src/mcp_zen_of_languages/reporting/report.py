@@ -79,7 +79,6 @@ def _collect_targets(
     Returns:
         list[tuple[Path, str]]: Pairs of ``(file_path, language)`` ready for analysis.
     """
-
     return _shared_collect_targets(target, language_override)
 
 
@@ -101,7 +100,6 @@ def _analyze_targets(
     Returns:
         list[AnalysisResult]: Per-file analysis results with violations and metrics.
     """
-
     return _shared_analyze_targets(targets, config_path=config_path)
 
 
@@ -118,7 +116,6 @@ def _build_repository_imports(files: list[Path]) -> dict[str, list[str]]:
     Returns:
         dict[str, list[str]]: Mapping from file path string to imported root module names.
     """
-
     return _shared_build_repository_imports(files, language="python")
 
 
@@ -135,7 +132,6 @@ def _summarize_results(results: list[AnalysisResult]) -> AnalysisSummary:
     Returns:
         AnalysisSummary: Total files, total violations, and severity bucket counts.
     """
-
     severity_counts = {"critical": 0, "high": 0, "medium": 0, "low": 0}
     total_violations = 0
     for result in results:
@@ -167,7 +163,6 @@ def _markdown_table(headers: list[str], rows: list[list[str]]) -> list[str]:
     Returns:
         list[str]: Markdown lines including the header, separator, and data rows.
     """
-
     header = "| " + " | ".join(headers) + " |"
     separator = "| " + " | ".join(["---"] * len(headers)) + " |"
     lines = [header, separator]
@@ -184,7 +179,6 @@ def _format_summary_markdown(summary: AnalysisSummary) -> list[str]:
     Returns:
         list[str]: Markdown lines for the summary section.
     """
-
     counts = summary.severity_counts
     rows = [
         ["Total files", str(summary.total_files)],
@@ -212,7 +206,6 @@ def _format_gap_markdown(gaps: GapAnalysis) -> list[str]:
     Returns:
         list[str]: Markdown lines for the gap analysis section.
     """
-
     rows: list[list[str]] = []
     if gaps.detector_gaps:
         rows.extend(
@@ -253,7 +246,6 @@ def _format_analysis_markdown(results: list[AnalysisResult]) -> list[str]:
     Returns:
         list[str]: Markdown lines for the analysis section.
     """
-
     lines = ["## Analysis"]
     for result in results:
         lines.append(f"### {result.path or '<input>'} ({result.language})")
@@ -291,7 +283,6 @@ def _format_prompts_markdown(context: ReportContext) -> list[str]:
     Returns:
         list[str]: Markdown lines for the remediation prompts section (empty if no prompts).
     """
-
     if not context.prompts:
         return []
     file_count = len(context.prompts.file_prompts)
@@ -351,7 +342,6 @@ def generate_report(
     Returns:
         ReportOutput: Markdown report text and equivalent machine-readable data dict.
     """
-
     path = Path(target_path)
     targets = _collect_targets(path, language)
     results = _analyze_targets(targets, config_path) if include_analysis else []

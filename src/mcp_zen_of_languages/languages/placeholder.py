@@ -30,7 +30,7 @@ class PlaceholderDetector(ViolationDetector):
         """
         return "placeholder_detector"
 
-    def detect(self, context: AnalysisContext, config: object) -> list[Violation]:
+    def detect(self, _context: AnalysisContext, _config: object) -> list[Violation]:
         """Return an empty list — no violations are ever produced.
 
         Args:

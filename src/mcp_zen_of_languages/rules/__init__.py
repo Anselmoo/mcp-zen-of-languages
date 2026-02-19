@@ -53,7 +53,6 @@ def _initialize_registry() -> None:
     Called lazily on the first ``get_*`` access.  Subsequent calls are
     no-ops because the guard ``if ZEN_REGISTRY`` short-circuits.
     """
-    global ZEN_REGISTRY
     if ZEN_REGISTRY:
         return  # Already initialized
 

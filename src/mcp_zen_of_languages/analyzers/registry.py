@@ -98,7 +98,6 @@ class DetectorMetadata(BaseModel):
         Returns:
             Registry-ready metadata for [`DetectorRegistry.register`][DetectorRegistry.register].
         """
-
         return cls(
             detector_id=binding.detector_id,
             detector_class=binding.detector_class,
@@ -121,7 +120,6 @@ class DetectorMetadata(BaseModel):
         Args:
             __context: Pydantic internal validation context (unused).
         """
-
         if not self.rule_map and self.rule_ids:
             self.rule_map = {rule_id: ["*"] for rule_id in self.rule_ids}
         if self.rule_map and not self.rule_ids:
@@ -162,7 +160,6 @@ class DetectorRegistry:
             ValueError: If a detector with the same ``detector_id`` is
                 already registered.
         """
-
         if metadata.detector_id in self._registry:
             msg = f"Duplicate detector_id: {metadata.detector_id}"
             raise ValueError(msg)
@@ -186,7 +183,6 @@ class DetectorRegistry:
             ValueError: If a discovered ``mapping`` module lacks a
                 ``DETECTOR_MAP`` attribute.
         """
-
         if self._registry:
             return
         import importlib
@@ -216,7 +212,6 @@ class DetectorRegistry:
         Returns:
             Shallow copy of all metadata entries in registration order.
         """
-
         return list(self._registry.values())
 
     def get(self, detector_id: str) -> DetectorMetadata:
@@ -232,7 +227,6 @@ class DetectorRegistry:
         Raises:
             KeyError: If *detector_id* is not registered.
         """
-
         try:
             return self._registry[detector_id]
         except KeyError as exc:
@@ -254,7 +248,6 @@ class DetectorRegistry:
             Metadata for every detector covering *rule_id* in *language*,
             or an empty list if none are registered.
         """
-
         if self._rule_index is None:
             self._rule_index = {}
             for meta in self._registry.values():
@@ -262,7 +255,7 @@ class DetectorRegistry:
                     self._rule_index.setdefault((meta.language, rid), []).append(meta)
         return list(self._rule_index.get((language, rule_id), []))
 
-    def get_config_union(self) -> Any:
+    def get_config_union(self) -> object:
         """Build a Pydantic discriminated union covering all registered config models.
 
         The union uses ``Annotated[... , Discriminator("type")]`` so that
@@ -277,7 +270,6 @@ class DetectorRegistry:
         Raises:
             ValueError: If no detectors are registered.
         """
-
         if self._config_union is not None:
             return self._config_union
 
@@ -307,7 +299,6 @@ class DetectorRegistry:
             A ``TypeAdapter`` that validates raw dicts into the correct
             ``DetectorConfig`` subclass by discriminator.
         """
-
         if self._config_adapter is None:
             # Ensure registry is bootstrapped before creating adapter
             from mcp_zen_of_languages.analyzers import registry_bootstrap  # noqa: F401
@@ -333,7 +324,6 @@ class DetectorRegistry:
             Ordered detector configs sorted by [`DetectorMetadata.default_order`][DetectorMetadata.default_order],
             with ``analyzer_defaults`` first.
         """
-
         from mcp_zen_of_languages.analyzers import registry_bootstrap  # noqa: F401
 
         configs_by_type: dict[str, DetectorConfig] = {
@@ -375,7 +365,6 @@ class DetectorRegistry:
         Returns:
             Merged and re-ordered detector config list.
         """
-
         configs_by_type = {cfg.type: cfg for cfg in base}
         for override in overrides:
             existing = configs_by_type.get(override.type)
@@ -406,7 +395,6 @@ class DetectorRegistry:
             Pipeline containing configured detector instances in execution
             order.
         """
-
         configs = self.configs_from_rules(lang_zen)
         detectors: list[ViolationDetector] = []
         for config in configs:
@@ -450,7 +438,6 @@ class DetectorRegistry:
             ValueError: If *principle.metrics* contains keys not present
                 on any registered detector's config model.
         """
-
         configs: list[DetectorConfig] = []
         metrics = principle.metrics or {}
         metas = self.detectors_for_rule(principle.id, language)
@@ -505,7 +492,6 @@ class DetectorRegistry:
         Returns:
             Deterministically ordered config list.
         """
-
         configs_by_type = dict(configs_by_type)
         order_map = {meta.detector_id: meta.default_order for meta in self.items()}
         ordered: list[DetectorConfig] = []

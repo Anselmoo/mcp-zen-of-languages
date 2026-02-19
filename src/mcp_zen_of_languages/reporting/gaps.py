@@ -131,7 +131,6 @@ def build_gap_analysis(languages: list[str]) -> GapAnalysis:
     Returns:
         GapAnalysis: Combined detector and feature gap report.
     """
-
     detector_gaps: list[DetectorCoverageGap] = []
     for language in languages:
         lang_zen = get_language_zen(language)

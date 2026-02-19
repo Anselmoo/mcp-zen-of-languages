@@ -30,5 +30,4 @@ def get_output_width(console: Console) -> int:
     Returns:
         int: Resolved column width that all renderables should use.
     """
-
     return min(console.width, MAX_OUTPUT_WIDTH)

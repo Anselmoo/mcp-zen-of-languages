@@ -173,7 +173,6 @@ def _format_file_prompt(result: AnalysisResult, violations: list[Violation]) -> 
     Returns:
         str: Multi-line Markdown prompt text ready for embedding in a ``FilePrompt``.
     """
-
     path = result.path or "<input>"
     lines = [
         f"### File: {path}",
@@ -234,7 +233,6 @@ def build_prompt_bundle(results: list[AnalysisResult]) -> PromptBundle:
     Returns:
         PromptBundle: File prompts, generic prompts, and big-picture analysis.
     """
-
     file_prompts: list[FilePrompt] = []
     for result in results:
         if not result.violations:

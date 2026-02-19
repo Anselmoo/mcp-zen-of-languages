@@ -268,6 +268,6 @@ def test_rules_tools_deep_inheritance_cycle():
 
 
 def test_reporting_prompt_bundle_generic_only():
-    # TODO: expand with more complex cases
+    # Keep a minimal smoke-case for the empty-input branch.
     output = build_prompt_bundle([])
     assert output.file_prompts == []

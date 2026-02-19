@@ -54,7 +54,6 @@ class DetectionResult(BaseModel):
         Returns:
             A dict with keys ``language``, ``confidence``, ``method``, and ``notes``.
         """
-
         return self.model_dump()
 
 

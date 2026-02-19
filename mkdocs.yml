@@ -265,6 +265,7 @@ nav:
   - Contributing:
       - contributing/index.md
       - Development: contributing/development.md
+      - Content Quality Guide: contributing/content-quality.md
       - MkDocs Material Modernization: contributing/mkdocs-material-modernization.md
       - Adding a Language: contributing/adding-language.md
       - Adding a Detector: contributing/adding-detector.md

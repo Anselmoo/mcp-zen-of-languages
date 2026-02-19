@@ -60,6 +60,14 @@ Every programming language has a philosophy — a sense of what "good code" look
 !!! tip "Why zen?"
     Most linters focus on formatting. Zen analysis goes deeper — it detects **architectural** and **idiomatic** issues: god classes, circular dependencies, callback hell, unsafe blocks, monkey-patching. The goal isn't nitpicking commas; it's surfacing the structural problems that slow teams down.
 
+## Why MCP
+
+--8<-- "README.md:why-mcp"
+
+## Zen Philosophy
+
+--8<-- "README.md:zen-philosophy"
+
 ## Quickstart
 
 ```bash
@@ -121,6 +129,13 @@ The MCP server exposes **13 tools** across five families, plus **3 resources** a
 </div>
 
 [:octicons-arrow-right-24: Full MCP Tools Reference](user-guide/mcp-tools-reference.md)
+
+## Choose Your Path
+
+- **New user**: [Quickstart](getting-started/quickstart.md) → [Configuration](user-guide/configuration.md) → [Understanding Violations](user-guide/understanding-violations.md)
+- **Maintainer**: [Project Analysis](user-guide/project-analysis.md) → [Prompt Generation](user-guide/prompt-generation.md) → [CLI Reference](user-guide/cli-reference.md)
+- **Contributor**: [Contributing](contributing/index.md) → [Development](contributing/development.md) → [Architecture](contributing/architecture.md)
+- **AI-agent workflow**: [MCP Integration](getting-started/mcp-integration.md) → [MCP Tools Reference](user-guide/mcp-tools-reference.md) → [Examples](user-guide/examples.md)
 
 ## Next Steps
 

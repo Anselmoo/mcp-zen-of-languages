@@ -83,6 +83,13 @@ Unlike single-file linting, project-level analysis can detect:
 - **Systemic issues** — patterns that repeat across many files
 - **Coverage gaps** — files or directories with no analysis results
 
+## MCP + CLI remediation loop
+
+1. Run `zen report path/to/project --export-json report.json` to create a baseline artifact.
+2. In your MCP client, call `generate_agent_tasks` with violations from top offenders.
+3. Apply fixes in focused batches (high severity first), then re-run `zen report`.
+4. Track score movement over time using the exported JSON in CI artifacts.
+
 ## See Also
 
 - [CLI Reference](cli-reference.md) — Full `zen report` flag reference

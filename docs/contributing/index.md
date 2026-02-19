@@ -51,6 +51,14 @@ Thanks for improving MCP Zen of Languages. Whether you're fixing a bug, adding a
 
     [Architecture](architecture.md)
 
+-   :material-text-box-check:{ .lg .middle } **Content Quality Guide**
+
+    ---
+
+    Hybrid docs-from-code ownership, editorial standards, and release checks.
+
+    [Content Quality Guide](content-quality.md)
+
 -   :material-palette:{ .lg .middle } **Rendering Guide**
 
     ---

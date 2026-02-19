@@ -202,6 +202,7 @@ invalid-method-override = "ignore"
 
 [tool.poe.tasks]
 check_docs_assets = "python scripts/check_docs_assets.py"
+check_content_quality = "python scripts/check_content_quality.py"
 check_docs_contrast = "python scripts/check_docs_contrast.py --build --mode check"
 check_docs_links = "python scripts/check_docs_links.py"
 check_language_structure = "python scripts/check_language_structure.py"

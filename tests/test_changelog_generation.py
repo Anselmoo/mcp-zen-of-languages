@@ -101,33 +101,47 @@ class TestBuildChangelogSection:
         return [("abc1234", s) for s in subjects]
 
     def test_contains_version_header(self):
-        section = _build(self.V, self._commits("feat: add something"), include_maintenance=False)
+        section = _build(
+            self.V, self._commits("feat: add something"), include_maintenance=False
+        )
         assert "## [0.2.0]" in section
 
     def test_feat_goes_to_added(self):
-        section = _build(self.V, self._commits("feat: new thing"), include_maintenance=False)
+        section = _build(
+            self.V, self._commits("feat: new thing"), include_maintenance=False
+        )
         assert "### Added" in section
         assert "new thing" in section
 
     def test_fix_goes_to_fixed(self):
-        section = _build(self.V, self._commits("fix: crash fix"), include_maintenance=False)
+        section = _build(
+            self.V, self._commits("fix: crash fix"), include_maintenance=False
+        )
         assert "### Fixed" in section
         assert "crash fix" in section
 
     def test_refactor_goes_to_changed(self):
-        section = _build(self.V, self._commits("refactor: clean up"), include_maintenance=False)
+        section = _build(
+            self.V, self._commits("refactor: clean up"), include_maintenance=False
+        )
         assert "### Changed" in section
 
     def test_docs_goes_to_documentation(self):
-        section = _build(self.V, self._commits("docs: update readme"), include_maintenance=False)
+        section = _build(
+            self.V, self._commits("docs: update readme"), include_maintenance=False
+        )
         assert "### Documentation" in section
 
     def test_maintenance_hidden_by_default(self):
-        section = _build(self.V, self._commits("chore: update lock"), include_maintenance=False)
+        section = _build(
+            self.V, self._commits("chore: update lock"), include_maintenance=False
+        )
         assert "### Maintenance" not in section
 
     def test_maintenance_shown_with_flag(self):
-        section = _build(self.V, self._commits("chore: update lock"), include_maintenance=True)
+        section = _build(
+            self.V, self._commits("chore: update lock"), include_maintenance=True
+        )
         assert "### Maintenance" in section
         assert "update lock" in section
 
@@ -154,7 +168,9 @@ class TestBuildChangelogSection:
         assert "Merge pull request" not in section
 
     def test_scope_rendered_bold(self):
-        section = _build(self.V, self._commits("fix(python): null ptr"), include_maintenance=False)
+        section = _build(
+            self.V, self._commits("fix(python): null ptr"), include_maintenance=False
+        )
         assert "**python**" in section
 
     def test_multiple_sections(self):

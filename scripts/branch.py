@@ -101,7 +101,9 @@ def _run(cmd: list[str], *, dry_run: bool, label: str) -> str:
 
 
 def _capture(cmd: list[str]) -> str:
-    return subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, check=False).stdout.strip()
+    return subprocess.run(
+        cmd, cwd=ROOT, capture_output=True, text=True, check=False
+    ).stdout.strip()
 
 
 def _branch_exists(branch: str) -> bool:

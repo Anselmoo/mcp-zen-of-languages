@@ -443,18 +443,18 @@ class RulesAdapter:
                             continue
                     deps_map.setdefault(str(a), []).append(str(b))
 
-                for node, deps in deps_map.items():
-                    if len(deps) > max_allowed:
-                        violations.append(
-                            Violation(
-                                principle=principle.principle,
-                                severity=principle.severity,
-                                message=(
-                                    f"Module '{node}' has {len(deps)} dependencies, "
-                                    f"exceeds maximum {max_allowed}"
-                                ),
-                            )
-                        )
+                violations.extend(
+                    Violation(
+                        principle=principle.principle,
+                        severity=principle.severity,
+                        message=(
+                            f"Module '{node}' has {len(deps)} dependencies, "
+                            f"exceeds maximum {max_allowed}"
+                        ),
+                    )
+                    for node, deps in deps_map.items()
+                    if len(deps) > max_allowed
+                )
             except Exception:  # noqa: BLE001
                 pass
 

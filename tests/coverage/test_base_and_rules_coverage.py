@@ -56,6 +56,7 @@ class BoomPipeline(DetectionPipeline):
     def run(self, context: AnalysisContext, config: AnalyzerConfig):
         msg = "boom"
         raise RuntimeError(msg)
+
     def build_pipeline(self):
         return BoomPipeline([])
 

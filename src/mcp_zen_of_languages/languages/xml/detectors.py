@@ -238,7 +238,11 @@ class XmlHierarchyDetector(ViolationDetector[XmlHierarchyConfig], LocationHelper
             list[Violation]: A single violation when ungrouped repeated elements are found.
         """
         if tag_counts := re.findall(r"<([A-Za-z0-9_]+)>", context.code):
-            duplicates = {tag for tag in tag_counts if tag_counts.count(tag) > MIN_TAG_OCCURRENCES_FOR_GROUP}
+            duplicates = {
+                tag
+                for tag in tag_counts
+                if tag_counts.count(tag) > MIN_TAG_OCCURRENCES_FOR_GROUP
+            }
             if duplicates and "<group>" not in context.code:
                 return [
                     self.build_violation(

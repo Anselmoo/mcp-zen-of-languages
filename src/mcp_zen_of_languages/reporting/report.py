@@ -273,7 +273,9 @@ def _format_analysis_markdown(results: list[AnalysisResult]) -> list[str]:
             _markdown_table(["Severity", "Principle", "Message", "Suggestion"], rows)
         )
         if len(result.violations) > MAX_VIOLATIONS_IN_TABLE:
-            lines.append(f"- ...and {len(result.violations) - MAX_VIOLATIONS_IN_TABLE} more violations.")
+            lines.append(
+                f"- ...and {len(result.violations) - MAX_VIOLATIONS_IN_TABLE} more violations."
+            )
     return lines
 
 

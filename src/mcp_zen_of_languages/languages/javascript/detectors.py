@@ -431,7 +431,10 @@ class JsModernFeaturesDetector(
             )
         for line in code.splitlines():
             matches = re.findall(r"\b(\w+)\.\w+", line)
-            if any(matches.count(name) >= MIN_REPEATED_ACCESS_COUNT for name in set(matches)):
+            if any(
+                matches.count(name) >= MIN_REPEATED_ACCESS_COUNT
+                for name in set(matches)
+            ):
                 violations.append(
                     self.build_violation(
                         config,

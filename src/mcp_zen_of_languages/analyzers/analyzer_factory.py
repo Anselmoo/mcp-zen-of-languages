@@ -114,15 +114,15 @@ def create_analyzer(
         return RustAnalyzer(config=config, pipeline_config=pipeline_config)
     if lang in {"js", "jsx", "javascript"}:
         return JavaScriptAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang in ("bash", "sh", "shell"):
+    if lang in {"bash", "sh", "shell"}:
         return BashAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang in ("powershell", "ps", "pwsh"):
+    if lang in {"powershell", "ps", "pwsh"}:
         return PowerShellAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang in ("ruby", "rb"):
+    if lang in {"ruby", "rb"}:
         return RubyAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang in ("cpp", "c++", "cc", "cxx"):
+    if lang in {"cpp", "c++", "cc", "cxx"}:
         return CppAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang in ("csharp", "cs"):
+    if lang in {"csharp", "cs"}:
         return CSharpAnalyzer(config=config, pipeline_config=pipeline_config)
     if lang in ("yaml", "yml"):
         return YamlAnalyzer(config=config, pipeline_config=pipeline_config)

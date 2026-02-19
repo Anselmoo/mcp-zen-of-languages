@@ -169,8 +169,15 @@ def _install_rich_traceback() -> None:
 @app.callback()
 def _configure_app(
     *,
-    quiet: Annotated[bool, typer.Option("--quiet", "-q", help="Suppress decorative output")] = False,
-    verbose: Annotated[bool, typer.Option("--verbose", "-v", help="Show rich tracebacks with local variables")] = False,
+    quiet: Annotated[
+        bool, typer.Option("--quiet", "-q", help="Suppress decorative output")
+    ] = False,
+    verbose: Annotated[
+        bool,
+        typer.Option(
+            "--verbose", "-v", help="Show rich tracebacks with local variables"
+        ),
+    ] = False,
 ) -> None:
     """Apply session-wide quiet/verbose flags before any subcommand runs.
 
@@ -1392,9 +1399,15 @@ def reports(
         None, "--export-log", help="Write log summary to file"
     ),
     *,
-    include_prompts: Annotated[bool, typer.Option("--include-prompts", help="Include remediation prompts")] = False,
-    skip_analysis: Annotated[bool, typer.Option("--skip-analysis", help="Skip analysis details in report")] = False,
-    skip_gaps: Annotated[bool, typer.Option("--skip-gaps", help="Skip gap analysis")] = False,
+    include_prompts: Annotated[
+        bool, typer.Option("--include-prompts", help="Include remediation prompts")
+    ] = False,
+    skip_analysis: Annotated[
+        bool, typer.Option("--skip-analysis", help="Skip analysis details in report")
+    ] = False,
+    skip_gaps: Annotated[
+        bool, typer.Option("--skip-gaps", help="Skip gap analysis")
+    ] = False,
 ) -> int:
     """Generate a comprehensive analysis report for a file or directory.
 
@@ -1567,8 +1580,12 @@ def list_rules(language: str = typer.Argument(..., help="Language identifier")) 
 @app.command(rich_help_panel="Configuration")
 def init(
     *,
-    force: Annotated[bool, typer.Option("--force", help="Overwrite existing config")] = False,
-    yes: Annotated[bool, typer.Option("--yes", help="Skip prompts and use defaults")] = False,
+    force: Annotated[
+        bool, typer.Option("--force", help="Overwrite existing config")
+    ] = False,
+    yes: Annotated[
+        bool, typer.Option("--yes", help="Skip prompts and use defaults")
+    ] = False,
     languages: list[str] | None = typer.Option(
         None, "--languages", help="Languages to include (repeatable)"
     ),

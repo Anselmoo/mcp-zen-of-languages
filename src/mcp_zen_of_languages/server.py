@@ -334,7 +334,9 @@ async def analyze_zen_violations(
     supported = sorted(supported_languages())
     if canonical_language not in supported:
         supported_list = ", ".join(supported)
-        msg = f"Unsupported language '{language}'. Supported languages: {supported_list}."
+        msg = (
+            f"Unsupported language '{language}'. Supported languages: {supported_list}."
+        )
         raise ValueError(msg)
 
     runtime_override = _runtime_overrides.get(canonical_language)
@@ -400,7 +402,9 @@ async def generate_prompts_tool(code: str, language: str) -> PromptBundle:
     supported = sorted(supported_languages())
     if canonical_language not in supported:
         supported_list = ", ".join(supported)
-        msg = f"Unsupported language '{language}'. Supported languages: {supported_list}."
+        msg = (
+            f"Unsupported language '{language}'. Supported languages: {supported_list}."
+        )
         raise ValueError(msg)
     analyzer = create_analyzer(
         canonical_language,

@@ -288,7 +288,7 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
                     return [
                         self.build_violation(
                             config,
-                            contains=match.group(1),
+                            contains=match[1],
                             location=Location(line=idx, column=match.start(1) + 1),
                             suggestion=f"Use {public_naming} for public members.",
                         )

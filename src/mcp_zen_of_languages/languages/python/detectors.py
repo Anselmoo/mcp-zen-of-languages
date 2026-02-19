@@ -516,7 +516,11 @@ class ContextManagerDetector(
                         start = max(0, lineno - 3)
                         end = min(len(lines), lineno + 2)
                         snippet = "\n".join(lines[start:end])
-                        prev_line = lines[lineno - 2] if lineno >= MIN_LINE_FOR_PREV_LOOKUP else ""
+                        prev_line = (
+                            lines[lineno - 2]
+                            if lineno >= MIN_LINE_FOR_PREV_LOOKUP
+                            else ""
+                        )
                         if (
                             "with open" not in snippet
                             and not prev_line.strip().startswith("with")

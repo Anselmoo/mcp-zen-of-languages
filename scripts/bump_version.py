@@ -275,7 +275,9 @@ def _update_changelog(
     include_maintenance: bool,
     dry_run: bool,
 ) -> None:
-    section = _build_changelog_section(new, commits, include_maintenance=include_maintenance)
+    section = _build_changelog_section(
+        new, commits, include_maintenance=include_maintenance
+    )
 
     # Count visible entries for the summary line
     added = sum(
@@ -451,7 +453,12 @@ def main() -> None:
     if not args.no_changelog:
         print("\n── Updating CHANGELOG.md ──────────────────────────────────────")
         commits = _git_log_since_tag()
-        _update_changelog(new, commits, include_maintenance=args.include_maintenance, dry_run=args.dry_run)
+        _update_changelog(
+            new,
+            commits,
+            include_maintenance=args.include_maintenance,
+            dry_run=args.dry_run,
+        )
 
     # 2. Refresh lockfile
     print("\n── Refreshing uv.lock ───────────────────────────────────────")

@@ -205,7 +205,7 @@ def test_get_banner_art_falls_back_when_pyfiglet_errors(monkeypatch):
     monkeypatch.setattr(
         console_module,
         "import_module",
-        lambda _name: (_ for _ in ()).throw(RuntimeError("boom")),
+        lambda _name: iter(()).throw(RuntimeError("boom")),
     )
     art = get_banner_art()
     assert "_____" in art

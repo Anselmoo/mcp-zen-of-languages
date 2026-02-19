@@ -46,7 +46,7 @@ def parse_python_with_treesitter(code: str) -> object | None:
             return None
         parser.set_language(PY_LANGUAGE)
         return parser.parse(bytes(code, "utf8"))
-    except Exception:
+    except Exception:  # noqa: BLE001
         # Fall back to builtin ast if any step fails; do not raise here to keep analysis robust
         return None
 

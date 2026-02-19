@@ -246,9 +246,10 @@ def generate() -> str:
     """
             ),
             "## Commands at a glance\n\n",
+            "| Command | Purpose |\n",
+            "|---------|--------|\n",
         )
     )
-    sections.extend(("| Command | Purpose |\n", "|---------|--------|\n"))
     for cmd_name, cmd in commands.items():
         first_line = _extract_first_paragraph(cmd.help or "")
         sections.append(f"| `zen {cmd_name}` | {first_line} |\n")
@@ -309,18 +310,17 @@ def generate() -> str:
 
             sections.append("---\n\n")
 
-    # --- Global options ---
-    sections.append("## Global Options\n\n")
-    sections.append("| Flag | Description |\n")
-    sections.append("|------|-------------|\n")
+    sections.extend(
+        (
+            "## Global Options\n\n",
+            "| Flag | Description |\n",
+            "|------|-------------|\n",
+        )
+    )
     for flag, desc in GLOBAL_OPTIONS:
         sections.append(f"| {flag} | {desc} |\n")
-    sections.append("\n")
-
-    # --- Exit codes ---
-    sections.append("## Exit Codes\n\n")
-    sections.append("| Code | Meaning |\n")
-    sections.append("|------|--------|\n")
+    sections.extend(("\n", "## Exit Codes\n\n"))
+    sections.extend(("| Code | Meaning |\n", "|------|--------|\n"))
     for code, meaning in EXIT_CODES:
         sections.append(f"| `{code}` | {meaning} |\n")
     sections.append("\n")

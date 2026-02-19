@@ -22,13 +22,15 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from pydantic import BaseModel, field_validator
 
-from mcp_zen_of_languages.languages.configs import DetectorConfig
+from mcp_zen_of_languages.languages.configs import DetectorConfig  # noqa: TC001
 from mcp_zen_of_languages.rules import get_language_zen
-from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
+
+if TYPE_CHECKING:
+    from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
 
 logger = logging.getLogger(__name__)
 logger.setLevel(
@@ -84,7 +86,8 @@ class PipelineConfig(BaseModel):
 
             adapter = REGISTRY.adapter()
             return [adapter.validate_python(item) for item in value]
-        raise TypeError("detectors must be a list")
+        msg = "detectors must be a list"
+        raise TypeError(msg)
 
     @classmethod
     def from_rules(cls, language: str) -> PipelineConfig:
@@ -114,7 +117,8 @@ class PipelineConfig(BaseModel):
 
         lang_zen = get_language_zen(language)
         if not lang_zen:
-            raise ValueError(f"No zen rules for language: {language}")
+            msg = f"No zen rules for language: {language}"
+            raise ValueError(msg)
         from mcp_zen_of_languages.analyzers.registry import REGISTRY
 
         detectors = REGISTRY.configs_from_rules(lang_zen)
@@ -174,7 +178,8 @@ def merge_pipeline_overrides(
     if overrides is None:
         return base
     if overrides.language != base.language:
-        raise ValueError("Override pipeline language mismatch")
+        msg = "Override pipeline language mismatch"
+        raise ValueError(msg)
     from mcp_zen_of_languages.analyzers.registry import REGISTRY
 
     merged = REGISTRY.merge_configs(base.detectors, overrides.detectors)

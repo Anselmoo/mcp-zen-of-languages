@@ -23,11 +23,12 @@ See Also:
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 
 from pydantic import BaseModel, Field
 
-from mcp_zen_of_languages.models import Violation
+if TYPE_CHECKING:
+    from mcp_zen_of_languages.models import Violation
 
 
 class RemediationPattern(BaseModel):

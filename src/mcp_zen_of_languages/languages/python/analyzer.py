@@ -16,6 +16,10 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
+    from mcp_zen_of_languages.models import (
+        CyclomaticSummary,
+        ParserResult,
+    )
 
 from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,
@@ -25,14 +29,9 @@ from mcp_zen_of_languages.analyzers.base import (
     LocationHelperMixin,
     PythonAnalyzerConfig,
 )
-from mcp_zen_of_languages.models import (
-    CyclomaticSummary,
-    ParserResult,
-)
 
-# ============================================================================
-# Python Analyzer
-# ============================================================================
+# Minimum number of whitespace-split tokens in an import statement to extract the module name
+MIN_IMPORT_PARTS = 2
 
 
 class PythonAnalyzer(BaseAnalyzer, LocationHelperMixin):
@@ -117,7 +116,7 @@ class PythonAnalyzer(BaseAnalyzer, LocationHelperMixin):
         try:
             raw = parse_python(code)
             return ParserNormalizer.normalize(raw)
-        except Exception:
+        except Exception:  # noqa: BLE001
             return None
 
     def compute_metrics(
@@ -185,16 +184,12 @@ class PythonAnalyzer(BaseAnalyzer, LocationHelperMixin):
             imports = []
             for line in context.code.splitlines():
                 stripped = line.strip()
-                if stripped.startswith("import "):
+                if stripped.startswith(("import ", "from ")):
                     parts = stripped.split()
-                    if len(parts) >= 2:
-                        imports.append(parts[1].split(".")[0])
-                elif stripped.startswith("from "):
-                    parts = stripped.split()
-                    if len(parts) >= 2:
+                    if len(parts) >= MIN_IMPORT_PARTS:
                         imports.append(parts[1].split(".")[0])
 
             file_imports = {(context.path or "<current>"): imports}
             return build_import_graph(file_imports)
-        except Exception:
+        except Exception:  # noqa: BLE001
             return None

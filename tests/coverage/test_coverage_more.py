@@ -116,13 +116,13 @@ def test_config_model_pipeline_for_with_override():
 def test_pipeline_merge_language_mismatch():
     base = type("Base", (), {"language": "python", "detectors": []})()
     override = type("Override", (), {"language": "go", "detectors": []})()
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Override pipeline language mismatch"):
         merge_pipeline_overrides(base, override)
 
 
 def test_registry_get_config_union_no_detectors():
     registry = DetectorRegistry()
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="No detectors registered"):
         registry.get_config_union()
 
 
@@ -374,7 +374,8 @@ def test_rules_adapter_check_dependencies_cycle_string():
 def test_rules_adapter_check_dependencies_cycle_bad_object():
     class BadCycle:
         def __iter__(self):
-            raise TypeError("bad")
+            msg = "bad"
+            raise TypeError(msg)
 
     principle = ZenPrinciple(
         id="python-333",
@@ -490,7 +491,8 @@ def test_rules_adapter_check_patterns_search_exception(monkeypatch):
         pattern = "TODO"
 
         def search(self, _):
-            raise RuntimeError("boom")
+            msg = "boom"
+            raise RuntimeError(msg)
 
     monkeypatch.setattr(ZenPrinciple, "compiled_patterns", lambda self: [BadPattern()])
     assert adapter._check_patterns("TODO", principle) == []
@@ -548,7 +550,7 @@ def test_registry_configs_from_rules_unknown_metric():
         source_url="https://example.com/src",
         principles=[principle],
     )
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Unknown metric keys for python-001"):
         registry.configs_from_rules(lang)
 
 
@@ -560,7 +562,7 @@ def test_registry_get_missing_detector():
 
 @pytest.mark.filterwarnings("ignore::DeprecationWarning")
 def test_analyzer_config_type_check():
-    with pytest.raises(Exception):
+    with pytest.raises(Exception, match="severity_threshold"):
         AnalyzerConfig.model_validate({"severity_threshold": "bad"})
 
 
@@ -643,7 +645,8 @@ def test_parser_normalizer_wraps_unknown():
     from mcp_zen_of_languages.languages.python.parser_normalizer import ParserNormalizer
 
     wrapped = ParserNormalizer.normalize({"tree": "raw"})
-    assert wrapped and wrapped.type == "unknown"
+    assert wrapped
+    assert wrapped.type == "unknown"
 
 
 def test_detector_config_select_violation_message_contains():
@@ -739,7 +742,8 @@ def test_server_analyze_repository_rust(tmp_path, monkeypatch):
     sample.write_text("fn main() {}", encoding="utf-8")
 
     def _boom(*args, **kwargs):
-        raise OSError("nope")
+        msg = "nope"
+        raise OSError(msg)
 
     monkeypatch.setattr(type(sample), "read_text", _boom)
     import asyncio
@@ -799,7 +803,8 @@ def test_python_analyzer_dependency_error(monkeypatch):
     analyzer = PythonAnalyzer()
 
     def _boom(*args, **kwargs):
-        raise RuntimeError("boom")
+        msg = "boom"
+        raise RuntimeError(msg)
 
     monkeypatch.setattr(
         "mcp_zen_of_languages.metrics.dependency_graph.build_import_graph", _boom
@@ -908,7 +913,7 @@ def test_main_entrypoint_module_execution(monkeypatch):
 
 
 @pytest.mark.parametrize(
-    "contents, expected",
+    ("contents", "expected"),
     [
         ("import os\n", ["os"]),
         ("from sys import path\n", ["sys"]),
@@ -1092,7 +1097,8 @@ def test_rules_adapter_check_dependencies_none():
 def test_rules_adapter_check_dependencies_cycle_exception():
     class BadCycles(dict):
         def get(self, key, default=None):
-            raise RuntimeError("boom")
+            msg = "boom"
+            raise RuntimeError(msg)
 
     principle = ZenPrinciple(
         id="python-020",
@@ -1122,7 +1128,8 @@ def test_rules_adapter_check_dependencies_cycle_exception():
 def test_rules_adapter_check_dependencies_bad_edge():
     class BadEdge:
         def __getattr__(self, name):
-            raise RuntimeError("boom")
+            msg = "boom"
+            raise RuntimeError(msg)
 
     principle = ZenPrinciple(
         id="python-030",

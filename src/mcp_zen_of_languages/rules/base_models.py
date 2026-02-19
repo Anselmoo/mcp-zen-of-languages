@@ -17,7 +17,7 @@ Key concepts:
 """
 
 import re
-from enum import Enum
+from enum import Enum, StrEnum
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, HttpUrl, field_validator
@@ -46,7 +46,7 @@ class SeverityLevel(int, Enum):
     CRITICAL_HIGH = 10
 
 
-class PrincipleCategory(str, Enum):
+class PrincipleCategory(StrEnum):
     """Taxonomy tag that groups related zen principles.
 
     Analyzers and reporters use these categories to organise output (e.g.
@@ -250,7 +250,7 @@ class ZenPrinciple(BaseModel):
         for p in patterns:
             try:
                 compiled.append(re.compile(p))
-            except Exception:
+            except re.error:
                 # Fall back to literal substring match by escaping
                 compiled.append(re.compile(re.escape(p)))
         return compiled
@@ -581,7 +581,7 @@ class AnalysisResult(BaseModel):
         Returns:
             ``ViolationReport`` entries at the critical severity level.
         """
-        return [v for v in self.violations if v.severity >= 9]
+        return [v for v in self.violations if v.severity >= SeverityLevel.CRITICAL_LOW]
 
     @property
     def violation_count(self) -> int:

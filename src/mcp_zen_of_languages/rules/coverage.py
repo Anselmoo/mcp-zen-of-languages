@@ -20,7 +20,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from mcp_zen_of_languages.languages.configs import DetectorConfig
+from mcp_zen_of_languages.languages.configs import DetectorConfig  # noqa: TC001
 from mcp_zen_of_languages.languages.rule_pattern import RulePatternDetector
 from mcp_zen_of_languages.rules import get_all_languages, get_language_zen
 
@@ -91,7 +91,8 @@ def build_rule_coverage(language: str) -> RuleCoverageMap:
 
     lang_zen = get_language_zen(language)
     if lang_zen is None:
-        raise ValueError(f"Unknown language: {language}")
+        msg = f"Unknown language: {language}"
+        raise ValueError(msg)
     rules: dict[str, list[str]] = {}
     for principle in lang_zen.principles:
         metas = REGISTRY.detectors_for_rule(principle.id, language)
@@ -119,7 +120,8 @@ def build_explicit_rule_coverage(language: str) -> RuleCoverageMap:
 
     lang_zen = get_language_zen(language)
     if lang_zen is None:
-        raise ValueError(f"Unknown language: {language}")
+        msg = f"Unknown language: {language}"
+        raise ValueError(msg)
     rules: dict[str, list[str]] = {}
     for principle in lang_zen.principles:
         metas = REGISTRY.detectors_for_rule(principle.id, language)
@@ -132,9 +134,8 @@ def build_explicit_rule_coverage(language: str) -> RuleCoverageMap:
         ):
             rules[principle.id] = detector_ids
         else:
-            raise ValueError(
-                f"Explicit coverage missing for {language} rule {principle.id}"
-            )
+            msg = f"Explicit coverage missing for {language} rule {principle.id}"
+            raise ValueError(msg)
     return RuleCoverageMap(language=language, rules=rules)
 
 
@@ -156,7 +157,8 @@ def build_rule_config_coverage(language: str) -> RuleConfigCoverageMap:
 
     lang_zen = get_language_zen(language)
     if lang_zen is None:
-        raise ValueError(f"Unknown language: {language}")
+        msg = f"Unknown language: {language}"
+        raise ValueError(msg)
     rules: dict[str, list[type[DetectorConfig]]] = {}
     for principle in lang_zen.principles:
         metas = REGISTRY.detectors_for_rule(principle.id, language)
@@ -192,7 +194,8 @@ def build_explicit_rule_config_coverage(language: str) -> RuleConfigCoverageMap:
 
     lang_zen = get_language_zen(language)
     if lang_zen is None:
-        raise ValueError(f"Unknown language: {language}")
+        msg = f"Unknown language: {language}"
+        raise ValueError(msg)
     rules: dict[str, list[type[DetectorConfig]]] = {}
     for principle in lang_zen.principles:
         metas = REGISTRY.detectors_for_rule(principle.id, language)
@@ -209,9 +212,8 @@ def build_explicit_rule_config_coverage(language: str) -> RuleConfigCoverageMap:
             seen.add(config_model)
             configs.append(config_model)
         if not configs:
-            raise ValueError(
-                f"Explicit config coverage missing for {language} rule {principle.id}"
-            )
+            msg = f"Explicit config coverage missing for {language} rule {principle.id}"
+            raise ValueError(msg)
         rules[principle.id] = configs
     return RuleConfigCoverageMap(language=language, rules=rules)
 

@@ -430,7 +430,7 @@ class CSharpNamingConventionDetector(
                     ]
             match = re.search(r"\bprivate\s+\w[\w<>,\s]*\s+([A-Za-z_]\w*)", line)
             if match and config.private_naming:
-                name = match.group(1)
+                name = match[1]
                 if not matches_style(name, config.private_naming):
                     return [
                         self.build_violation(

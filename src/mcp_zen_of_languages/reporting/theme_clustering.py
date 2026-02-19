@@ -26,9 +26,14 @@ See Also:
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel, Field
 
-from mcp_zen_of_languages.models import AnalysisResult, Violation
+from mcp_zen_of_languages.models import Violation  # noqa: TC001
+
+if TYPE_CHECKING:
+    from mcp_zen_of_languages.models import AnalysisResult
 
 THEME_TAGS: dict[str, list[str]] = {
     "Complexity": ["cyclomatic", "nesting", "long-function", "complexity", "god class"],

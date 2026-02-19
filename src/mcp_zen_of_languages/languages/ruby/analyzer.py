@@ -16,6 +16,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
+    from mcp_zen_of_languages.models import CyclomaticSummary, ParserResult
 
 from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,
@@ -23,7 +24,6 @@ from mcp_zen_of_languages.analyzers.base import (
     BaseAnalyzer,
     DetectionPipeline,
 )
-from mcp_zen_of_languages.models import CyclomaticSummary, ParserResult
 
 
 class RubyAnalyzer(BaseAnalyzer):

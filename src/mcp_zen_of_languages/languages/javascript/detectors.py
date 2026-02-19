@@ -34,6 +34,9 @@ from mcp_zen_of_languages.languages.configs import (
 )
 from mcp_zen_of_languages.models import Location, Violation
 
+# Minimum number of repeated property accesses on the same name to flag destructuring
+MIN_REPEATED_ACCESS_COUNT = 2
+
 
 class JsCallbackNestingDetector(
     ViolationDetector[JsCallbackNestingConfig], LocationHelperMixin
@@ -428,7 +431,10 @@ class JsModernFeaturesDetector(
             )
         for line in code.splitlines():
             matches = re.findall(r"\b(\w+)\.\w+", line)
-            if any(matches.count(name) >= 2 for name in set(matches)):
+            if any(
+                matches.count(name) >= MIN_REPEATED_ACCESS_COUNT
+                for name in set(matches)
+            ):
                 violations.append(
                     self.build_violation(
                         config,

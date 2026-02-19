@@ -74,7 +74,8 @@ def test_detection_pipeline_logs_errors(capsys):
             return "boom"
 
         def detect(self, context: AnalysisContext, config):
-            raise RuntimeError("boom")
+            msg = "boom"
+            raise RuntimeError(msg)
 
     pipeline = DetectionPipeline([BoomDetector()])
     pipeline.run(AnalysisContext(code="", language="python"), AnalyzerConfig())
@@ -85,7 +86,7 @@ def test_detection_pipeline_logs_errors(capsys):
 def test_pipeline_merge_override_language_mismatch():
     base = PipelineConfig.from_rules("python")
     overrides = PipelineConfig.from_rules("go")
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Override pipeline language mismatch"):
         merge_pipeline_overrides(base, overrides)
 
 
@@ -172,7 +173,8 @@ def test_rules_adapter_maintainability_threshold():
 def test_rules_adapter_compiled_pattern_errors():
     class BadPrinciple(ZenPrinciple):
         def compiled_patterns(self):
-            raise ValueError("boom")
+            msg = "boom"
+            raise ValueError(msg)
 
     adapter = RulesAdapter(language="python")
     principle = BadPrinciple(
@@ -201,13 +203,15 @@ def test_models_getitem_and_violation_access():
 
 def test_metrics_collector_error_path(monkeypatch):
     def boom(_: str):
-        raise RuntimeError("boom")
+        msg = "boom"
+        raise RuntimeError(msg)
 
     monkeypatch.setattr(
         "mcp_zen_of_languages.metrics.collector.compute_cyclomatic_complexity", boom
     )
     cc, mi, loc = MetricsCollector.collect("line\n")
-    assert cc is None and mi is None
+    assert cc is None
+    assert mi is None
     assert loc == 1
 
 
@@ -268,11 +272,8 @@ def test_rules_registry_helpers():
 
 def test_detector_registry_adapter_cache():
     registry = DetectorRegistry()
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="No detectors registered"):
         registry.get_config_union()
-
-
-def test_rules_adapter_missing_language_defaults():
     adapter = RulesAdapter(language="unknown")
     assert adapter.find_violations("def foo():\n    pass\n") == []
 

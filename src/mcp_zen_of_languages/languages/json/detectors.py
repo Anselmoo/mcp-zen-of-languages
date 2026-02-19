@@ -21,6 +21,9 @@ from mcp_zen_of_languages.languages.configs import (
 )
 from mcp_zen_of_languages.models import Location, Violation
 
+# Minimum array length required to check for schema consistency across items
+MIN_ARRAY_ITEMS_FOR_SCHEMA = 2
+
 
 class JsonStrictnessDetector(
     ViolationDetector[JsonStrictnessConfig], LocationHelperMixin
@@ -120,9 +123,9 @@ class JsonSchemaConsistencyDetector(
         """
         try:
             data = json.loads(context.code)
-        except Exception:
+        except (json.JSONDecodeError, ValueError):
             return []
-        if not isinstance(data, list) or len(data) < 2:
+        if not isinstance(data, list) or len(data) < MIN_ARRAY_ITEMS_FOR_SCHEMA:
             return []
         if not all(isinstance(item, dict) for item in data):
             return []
@@ -239,7 +242,7 @@ class JsonNullHandlingDetector(
         """
         try:
             data = json.loads(context.code)
-        except Exception:
+        except (json.JSONDecodeError, ValueError):
             return []
         if not isinstance(data, dict):
             return []
@@ -290,7 +293,7 @@ class JsonKeyCasingDetector(
         """
         try:
             data = json.loads(context.code)
-        except Exception:
+        except (json.JSONDecodeError, ValueError):
             return []
         if not isinstance(data, dict):
             return []
@@ -361,7 +364,7 @@ class JsonArrayOrderDetector(
 
         try:
             data = json.loads(context.code)
-        except Exception:
+        except (json.JSONDecodeError, ValueError):
             return []
         if contains_list(data):
             return [
@@ -387,10 +390,10 @@ class JsonArrayOrderDetector(
 
 
 __all__ = [
-    "JsonStrictnessDetector",
-    "JsonSchemaConsistencyDetector",
-    "JsonDateFormatDetector",
-    "JsonNullHandlingDetector",
-    "JsonKeyCasingDetector",
     "JsonArrayOrderDetector",
+    "JsonDateFormatDetector",
+    "JsonKeyCasingDetector",
+    "JsonNullHandlingDetector",
+    "JsonSchemaConsistencyDetector",
+    "JsonStrictnessDetector",
 ]

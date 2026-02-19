@@ -83,13 +83,13 @@ class BranchName:
 # ---------------------------------------------------------------------------
 
 
-def _run(cmd: list[str], dry_run: bool, label: str) -> str:
+def _run(cmd: list[str], *, dry_run: bool, label: str) -> str:
     pretty = " ".join(cmd)
     if dry_run:
         print(f"  [dry-run] Would run: {pretty}")
         return ""
     print(f"  $ {pretty}")
-    result = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+    result = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, check=False)
     if result.returncode != 0:
         print(result.stdout)
         print(result.stderr, file=sys.stderr)
@@ -101,7 +101,9 @@ def _run(cmd: list[str], dry_run: bool, label: str) -> str:
 
 
 def _capture(cmd: list[str]) -> str:
-    return subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True).stdout.strip()
+    return subprocess.run(
+        cmd, cwd=ROOT, capture_output=True, text=True, check=False
+    ).stdout.strip()
 
 
 def _branch_exists(branch: str) -> bool:

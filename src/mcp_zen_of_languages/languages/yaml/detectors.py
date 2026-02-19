@@ -457,12 +457,12 @@ class YamlStringStyleDetector(
 
 
 __all__ = [
+    "YamlCommentIntentDetector",
+    "YamlConsistencyDetector",
     "YamlDuplicateKeysDetector",
     "YamlIndentationDetector",
     "YamlKeyClarityDetector",
     "YamlLowercaseKeysDetector",
     "YamlNoTabsDetector",
-    "YamlConsistencyDetector",
-    "YamlCommentIntentDetector",
     "YamlStringStyleDetector",
 ]

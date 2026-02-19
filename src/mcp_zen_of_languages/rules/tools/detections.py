@@ -239,8 +239,7 @@ def detect_deep_nesting(code: str, max_depth: int = 3) -> tuple[bool, int]:
     for line in code.splitlines():
         stripped = line.lstrip("\t ")
         depth = (len(line) - len(stripped)) // 4
-        if depth > max_found:
-            max_found = depth
+        max_found = max(max_found, depth)
     return (max_found > max_depth, max_found)
 
 
@@ -431,7 +430,7 @@ def detect_dependency_cycles(
         """Recurse through the adjacency list, recording cycles when a node is revisited."""
         if node in path:
             idx = path.index(node)
-            cycle = path[idx:] + [node]
+            cycle = [*path[idx:], node]
             results.append(DependencyCycleFinding(cycle=cycle))
             return
         if node in seen:
@@ -545,7 +544,7 @@ def detect_missing_type_hints(code: str) -> list[ExplicitnessFinding]:
     results: list[ExplicitnessFinding] = []
     try:
         tree = ast.parse(code)
-    except Exception:
+    except SyntaxError:
         return results
     for node in ast.walk(tree):
         if isinstance(node, ast.FunctionDef):
@@ -575,7 +574,7 @@ def detect_namespace_usage(code: str) -> NamespaceFinding:
     export_count: int | None = None
     try:
         tree = ast.parse(code)
-    except Exception:
+    except SyntaxError:
         return NamespaceFinding(top_level_symbols=0, export_count=None)
     for node in tree.body:
         if isinstance(

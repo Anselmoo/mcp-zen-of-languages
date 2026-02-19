@@ -8,7 +8,10 @@ health indicator for the analysed file.
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.models import Violation
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from mcp_zen_of_languages.models import Violation
 
 
 def calculate_code_quality_score(violations: list[Violation]) -> float:

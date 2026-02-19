@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+from typing import ClassVar
+
+import pytest
 from pydantic import BaseModel
 
 from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
@@ -21,7 +24,8 @@ class _DummyAnalyzer(BaseAnalyzer):
 
     def parse_code(self, code: str):
         if "bad" in code:
-            raise ValueError("parse error")
+            msg = "parse error"
+            raise ValueError(msg)
         return _DummyParseResult()
 
     def compute_metrics(self, code: str, ast_tree):
@@ -29,7 +33,7 @@ class _DummyAnalyzer(BaseAnalyzer):
 
     def build_pipeline(self):
         class _Pipeline:
-            detectors = []
+            detectors: ClassVar[list] = []
 
             def run(self, context, config):
                 return []
@@ -66,12 +70,8 @@ def test_base_analyzer_analyze_success():
 
 def test_base_analyzer_handles_parse_error():
     analyzer = _DummyAnalyzer()
-    try:
+    with pytest.raises(ValueError, match="parse error"):
         analyzer.analyze("bad")
-    except ValueError as exc:
-        assert "parse error" in str(exc)
-    else:
-        raise AssertionError("Expected parse error")
 
 
 def test_base_analyzer_collects_results():

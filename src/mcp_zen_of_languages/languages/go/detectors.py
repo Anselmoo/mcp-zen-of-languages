@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from typing import TYPE_CHECKING
 
 from mcp_zen_of_languages.analyzers.base import AnalysisContext, ViolationDetector
 from mcp_zen_of_languages.languages.configs import (
@@ -19,7 +20,9 @@ from mcp_zen_of_languages.languages.configs import (
     GoPackageStateConfig,
     GoZeroValueConfig,
 )
-from mcp_zen_of_languages.models import Violation
+
+if TYPE_CHECKING:
+    from mcp_zen_of_languages.models import Violation
 
 
 class GoErrorHandlingDetector(ViolationDetector[GoErrorHandlingConfig]):
@@ -616,14 +619,14 @@ class GoInitUsageDetector(ViolationDetector[GoInitUsageConfig]):
 
 
 __all__ = [
+    "GoContextUsageDetector",
+    "GoDeferUsageDetector",
+    "GoErrorHandlingDetector",
     "GoGoroutineLeakDetector",
     "GoInitUsageDetector",
     "GoInterfacePointerDetector",
     "GoInterfaceReturnDetector",
-    "GoErrorHandlingDetector",
     "GoInterfaceSizeDetector",
-    "GoContextUsageDetector",
-    "GoDeferUsageDetector",
     "GoNamingConventionDetector",
     "GoPackageNamingDetector",
     "GoPackageStateDetector",

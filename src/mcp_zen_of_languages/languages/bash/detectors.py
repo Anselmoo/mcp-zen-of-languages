@@ -790,18 +790,18 @@ class BashUsageInfoDetector(
 
 
 __all__ = [
-    "BashStrictModeDetector",
-    "BashQuoteVariablesDetector",
-    "BashEvalUsageDetector",
-    "BashDoubleBracketsDetector",
+    "BashArgumentValidationDetector",
+    "BashArrayUsageDetector",
     "BashCommandSubstitutionDetector",
-    "BashReadonlyConstantsDetector",
+    "BashDoubleBracketsDetector",
+    "BashEvalUsageDetector",
     "BashExitCodeChecksDetector",
     "BashFunctionUsageDetector",
     "BashLocalVariablesDetector",
-    "BashArgumentValidationDetector",
     "BashMeaningfulNamesDetector",
+    "BashQuoteVariablesDetector",
+    "BashReadonlyConstantsDetector",
     "BashSignalHandlingDetector",
-    "BashArrayUsageDetector",
+    "BashStrictModeDetector",
     "BashUsageInfoDetector",
 ]

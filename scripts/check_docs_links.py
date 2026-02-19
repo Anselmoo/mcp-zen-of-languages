@@ -19,6 +19,8 @@ KEY_DOC_PAGES = [
 MARKDOWN_LINK_RE = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
 EXTERNAL_SCHEMES = ("http://", "https://", "mailto:")
 
+MIN_INTERNAL_LINKS = 3
+
 
 def _count_links(text: str) -> tuple[int, int]:
     links = MARKDOWN_LINK_RE.findall(text)
@@ -36,7 +38,7 @@ def _check_key_pages(errors: list[str]) -> None:
         if "## See Also" not in text:
             errors.append(f"{page}: missing '## See Also' section")
         internal, _external = _count_links(text)
-        if internal < 3:
+        if internal < MIN_INTERNAL_LINKS:
             errors.append(
                 f"{page}: expected at least 3 internal markdown links, found {internal}"
             )

@@ -21,16 +21,18 @@ See Also:
 
 from __future__ import annotations
 
-from typing import Literal, TypedDict
+from typing import TYPE_CHECKING, Literal, TypedDict
 
 from pydantic import BaseModel, Field
 
-from mcp_zen_of_languages.models import AnalysisResult
 from mcp_zen_of_languages.reporting.remediation_patterns import resolve_pattern
 from mcp_zen_of_languages.reporting.theme_clustering import (
     build_big_picture_analysis,
     classify_violation,
 )
+
+if TYPE_CHECKING:
+    from mcp_zen_of_languages.models import AnalysisResult
 
 
 class AgentTask(BaseModel):

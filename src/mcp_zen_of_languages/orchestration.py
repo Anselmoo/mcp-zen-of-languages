@@ -3,12 +3,9 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import Callable
-from pathlib import Path
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 
 from mcp_zen_of_languages.analyzers.analyzer_factory import create_analyzer
-from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
 from mcp_zen_of_languages.config import load_config
 from mcp_zen_of_languages.models import (
     AnalysisResult,
@@ -18,7 +15,16 @@ from mcp_zen_of_languages.models import (
 )
 from mcp_zen_of_languages.utils.language_detection import detect_language_by_extension
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from pathlib import Path
+
+    from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
+
 logger = logging.getLogger(__name__)
+
+# Minimum number of whitespace-split tokens in an import statement to extract the module name
+MIN_IMPORT_PARTS = 2
 
 
 def collect_targets(
@@ -51,13 +57,9 @@ def _extract_python_imports(text: str) -> list[str]:
     imports: list[str] = []
     for line in text.splitlines():
         stripped = line.strip()
-        if stripped.startswith("import "):
+        if stripped.startswith(("import ", "from ")):
             parts = stripped.split()
-            if len(parts) >= 2:
-                imports.append(parts[1].split(".")[0])
-        elif stripped.startswith("from "):
-            parts = stripped.split()
-            if len(parts) >= 2:
+            if len(parts) >= MIN_IMPORT_PARTS:
                 imports.append(parts[1].split(".")[0])
     return imports
 
@@ -142,7 +144,7 @@ def analyze_targets(
 
         try:
             repository_imports = build_repository_imports(files, language)
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001
             logger.warning("Failed import scan for %s files: %s", language, exc)
             repository_imports = {str(path): [] for path in files}
 

@@ -9,13 +9,11 @@ cap and visual style.
 
 from __future__ import annotations
 
-from rich.console import Console
-from rich.panel import Panel
-from rich.table import Table
+from typing import TYPE_CHECKING
+
 from rich.text import Text
 
 from mcp_zen_of_languages.models import AnalysisResult
-from mcp_zen_of_languages.reporting.models import ReportOutput
 
 from .console import console
 from .factories import zen_header_panel, zen_panel, zen_summary_table, zen_table
@@ -26,6 +24,13 @@ from .themes import (
     score_glyph,
     severity_badge,
 )
+
+if TYPE_CHECKING:
+    from rich.console import Console
+    from rich.panel import Panel
+    from rich.table import Table
+
+    from mcp_zen_of_languages.reporting.models import ReportOutput
 
 
 def _active_console(output_console: Console | None = None) -> Console:

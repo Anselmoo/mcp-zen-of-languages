@@ -359,7 +359,6 @@ class ViolationDetector[ConfigT: "DetectorConfig"](ABC):
             Zero or more violations discovered by this strategy. An empty
             list signals clean code for this detector's concern.
         """
-        pass
 
     @property
     @abstractmethod
@@ -374,7 +373,6 @@ class ViolationDetector[ConfigT: "DetectorConfig"](ABC):
             Short, unique name such as ``"cyclomatic_complexity"`` or
             ``"god_class"``.
         """
-        pass
 
     def build_violation(
         self,
@@ -519,7 +517,7 @@ class DetectionPipeline:
                 detector_config = detector.config or config
                 violations = detector.detect(context, detector_config)
                 all_violations.extend(violations)
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 # Log error but continue with other detectors
                 print(f"Error in detector {detector.name}: {e}")
 
@@ -584,7 +582,8 @@ class BaseAnalyzer(ABC):
                 ``AnalyzerConfig`` instance.
         """
         if config is not None and not isinstance(config, AnalyzerConfig):
-            raise TypeError("AnalyzerConfig instance required")
+            msg = "AnalyzerConfig instance required"
+            raise TypeError(msg)
         self.config: AnalyzerConfig = config or self.default_config()
         self.pipeline: DetectionPipeline = self.build_pipeline()
 
@@ -600,7 +599,6 @@ class BaseAnalyzer(ABC):
         Returns:
             Language-appropriate configuration with default thresholds.
         """
-        pass
 
     @abstractmethod
     def language(self) -> str:
@@ -614,7 +612,6 @@ class BaseAnalyzer(ABC):
             Lowercase language name used for rule lookup and result
             tagging.
         """
-        pass
 
     @abstractmethod
     def parse_code(self, code: str) -> ParserResult | None:
@@ -633,7 +630,6 @@ class BaseAnalyzer(ABC):
             analysis — metric computation and detectors will proceed
             with whatever data is available.
         """
-        pass
 
     @abstractmethod
     def compute_metrics(
@@ -658,7 +654,6 @@ class BaseAnalyzer(ABC):
             maintainability_index, lines_of_code)``. Any element may be
             ``None`` when the corresponding metric is unavailable.
         """
-        pass
 
     # Template Method - defines the algorithm structure
     def analyze(
@@ -759,7 +754,7 @@ class BaseAnalyzer(ABC):
             elif isinstance(raw_dep, dict):
                 try:
                     dep_analysis = DependencyAnalysis.model_validate(raw_dep)
-                except Exception:
+                except (ValueError, TypeError):
                     dep_analysis = None
 
             rules_violations = (
@@ -778,7 +773,7 @@ class BaseAnalyzer(ABC):
                 **adapter.summarize_violations(all_violations)
             )
             result.violations = all_violations
-        except Exception:
+        except Exception:  # noqa: BLE001
             # If adapter missing or fails, proceed without rules_summary
             pass
 
@@ -820,7 +815,8 @@ class BaseAnalyzer(ABC):
 
         lang_zen = get_language_zen(self.language())
         if lang_zen is None:
-            raise ValueError(f"No zen rules for language: {self.language()}")
+            msg = f"No zen rules for language: {self.language()}"
+            raise ValueError(msg)
         if self._pipeline_config is None:
             self._pipeline_config = PipelineConfig(
                 language=self.language(),
@@ -1056,7 +1052,7 @@ class LocationHelperMixin:
 
             if lineno is not None and col_offset is not None:
                 return Location(line=int(lineno), column=int(col_offset) + 1)
-        except Exception:
+        except (TypeError, ValueError):
             pass
 
         return None

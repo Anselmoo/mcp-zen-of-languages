@@ -10,8 +10,8 @@ caller opts out via the *enabled* flag.
 from __future__ import annotations
 
 import sys
-from collections.abc import Iterator
 from contextlib import contextmanager
+from typing import TYPE_CHECKING
 
 from rich.progress import (
     BarColumn,
@@ -24,9 +24,12 @@ from rich.progress import (
 
 from .console import console, is_quiet
 
+if TYPE_CHECKING:
+    from collections.abc import Iterator
+
 
 @contextmanager
-def analysis_progress(enabled: bool = True) -> Iterator[Progress | None]:
+def analysis_progress(*, enabled: bool = True) -> Iterator[Progress | None]:
     """Yield a transient Rich progress bar scoped to an analysis run.
 
     The progress bar is suppressed (yields ``None``) when any of the

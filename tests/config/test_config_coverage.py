@@ -8,7 +8,7 @@ def test_load_config_invalid_yaml(tmp_path):
     cfg_path.write_text("pipelines: bad", encoding="utf-8")
     try:
         load_config(str(cfg_path))
-    except Exception:
+    except Exception:  # noqa: BLE001
         assert True
 
 

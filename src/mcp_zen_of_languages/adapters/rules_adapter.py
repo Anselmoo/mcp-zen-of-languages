@@ -12,6 +12,8 @@ All data access uses Pydantic model attributes — never raw dictionary keys.
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel, Field
 
 from mcp_zen_of_languages.models import (
@@ -20,11 +22,24 @@ from mcp_zen_of_languages.models import (
     Violation,
 )
 from mcp_zen_of_languages.rules import get_language_zen
-from mcp_zen_of_languages.rules.base_models import (
-    DetectorConfig,
-    LanguageZenPrinciples,
-    ZenPrinciple,
-)
+
+if TYPE_CHECKING:
+    from mcp_zen_of_languages.rules.base_models import (
+        DetectorConfig,
+        LanguageZenPrinciples,
+        ZenPrinciple,
+    )
+
+# Severity tier thresholds (1-10 scale)
+SEVERITY_CRITICAL = 9
+SEVERITY_HIGH = 7
+SEVERITY_MEDIUM = 4
+
+# Dependency cycle display limit
+MAX_CYCLES_SHOWN = 3
+
+# Minimum tuple/list length to unpack as a dependency edge
+MIN_EDGE_PARTS = 2
 
 
 class RulesAdapterConfig(BaseModel):
@@ -375,11 +390,11 @@ class RulesAdapter:
                     else:
                         # Fallback single item
                         normalized_cycles.append([str(seq)])
-                except Exception:
+                except Exception:  # noqa: BLE001
                     continue
 
             cycles_list = normalized_cycles
-        except Exception:
+        except Exception:  # noqa: BLE001
             cycles_list = []
 
         # Check for circular dependencies
@@ -393,7 +408,7 @@ class RulesAdapter:
                     message=(
                         f"Circular dependencies detected: {cycle_count} cycle(s). "
                         f"Cycles: {', '.join(pretty)}"
-                        f"{'...' if cycle_count > 3 else ''}"
+                        f"{'...' if cycle_count > MAX_CYCLES_SHOWN else ''}"
                     ),
                 )
             )
@@ -417,30 +432,30 @@ class RulesAdapter:
 
                 for edge in raw_edges:
                     # edge may be tuple/list or model; normalize
-                    if isinstance(edge, (list, tuple)) and len(edge) >= 2:
+                    if isinstance(edge, (list, tuple)) and len(edge) >= MIN_EDGE_PARTS:
                         a, b = edge[0], edge[1]
                     else:
                         # Try to unpack dataclass-like objects
                         try:
                             a = getattr(edge, "from")
                             b = getattr(edge, "to")
-                        except Exception:
+                        except AttributeError:
                             continue
                     deps_map.setdefault(str(a), []).append(str(b))
 
-                for node, deps in deps_map.items():
-                    if len(deps) > max_allowed:
-                        violations.append(
-                            Violation(
-                                principle=principle.principle,
-                                severity=principle.severity,
-                                message=(
-                                    f"Module '{node}' has {len(deps)} dependencies, "
-                                    f"exceeds maximum {max_allowed}"
-                                ),
-                            )
-                        )
-            except Exception:
+                violations.extend(
+                    Violation(
+                        principle=principle.principle,
+                        severity=principle.severity,
+                        message=(
+                            f"Module '{node}' has {len(deps)} dependencies, "
+                            f"exceeds maximum {max_allowed}"
+                        ),
+                    )
+                    for node, deps in deps_map.items()
+                    if len(deps) > max_allowed
+                )
+            except Exception:  # noqa: BLE001
                 pass
 
         return violations
@@ -468,7 +483,7 @@ class RulesAdapter:
         # Use compiled patterns helper on the Pydantic model
         try:
             compiled = principle.compiled_patterns()
-        except Exception:
+        except (AttributeError, TypeError, ValueError):
             compiled = []
 
         for cre in compiled:
@@ -481,7 +496,7 @@ class RulesAdapter:
                             message=f"Detected anti-pattern matching: '{cre.pattern}'",
                         )
                     )
-            except Exception:
+            except Exception:  # noqa: BLE001
                 continue
 
         return violations
@@ -545,7 +560,7 @@ class RulesAdapter:
                     ):
                         try:
                             thresholds[k] = float(v)
-                        except Exception:
+                        except (ValueError, TypeError):
                             metadata[k] = v
             if p.detectable_patterns:
                 patterns.extend(p.detectable_patterns)
@@ -577,11 +592,11 @@ class RulesAdapter:
         }
 
         for violation in violations:
-            if violation.severity >= 9:
+            if violation.severity >= SEVERITY_CRITICAL:
                 summary["critical"] += 1
-            elif violation.severity >= 7:
+            elif violation.severity >= SEVERITY_HIGH:
                 summary["high"] += 1
-            elif violation.severity >= 4:
+            elif violation.severity >= SEVERITY_MEDIUM:
                 summary["medium"] += 1
             else:
                 summary["low"] += 1

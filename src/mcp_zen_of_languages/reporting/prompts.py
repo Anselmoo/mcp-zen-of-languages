@@ -23,7 +23,8 @@ See Also:
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.models import AnalysisResult, Violation
+from typing import TYPE_CHECKING
+
 from mcp_zen_of_languages.reporting.models import (
     FilePrompt,
     GenericPrompt,
@@ -38,6 +39,9 @@ from mcp_zen_of_languages.reporting.theme_clustering import (
     classify_violation,
 )
 
+if TYPE_CHECKING:
+    from mcp_zen_of_languages.models import AnalysisResult, Violation
+
 PROMPT_CONTEXT = "Remediate code quality violations in a multi-language codebase using zen principles."
 PROMPT_GOAL = (
     "Provide actionable, prioritized remediation steps with before/after guidance and "
@@ -49,6 +53,9 @@ PROMPT_REQUIREMENTS = [
     "Provide a short checklist for verifying the fix.",
     "Keep steps clear and testable.",
 ]
+
+# Maximum violations listed per file prompt before the "...and N more" line
+MAX_VIOLATIONS_SHOWN = 8
 
 GENERIC_PROMPTS_BY_LANGUAGE: dict[str, list[tuple[str, str]]] = {
     "bash": [
@@ -208,8 +215,8 @@ def _format_file_prompt(result: AnalysisResult, violations: list[Violation]) -> 
             lines.extend([f"  {line}" for line in pattern.after_pattern.splitlines()])
             lines.append("  ```")
         lines.append(f"  Acceptance: {acceptance}")
-    if len(violations) > 8:
-        lines.append(f"- ...and {len(violations) - 8} more.")
+    if len(violations) > MAX_VIOLATIONS_SHOWN:
+        lines.append(f"- ...and {len(violations) - MAX_VIOLATIONS_SHOWN} more.")
     return "\n".join(lines)
 
 

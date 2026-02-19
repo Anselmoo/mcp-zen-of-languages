@@ -31,8 +31,10 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
-from mcp_zen_of_languages.models import AnalysisResult
-from mcp_zen_of_languages.reporting.theme_clustering import BigPictureAnalysis
+from mcp_zen_of_languages.models import AnalysisResult  # noqa: TC001
+from mcp_zen_of_languages.reporting.theme_clustering import (
+    BigPictureAnalysis,  # noqa: TC001
+)
 
 
 class DetectorCoverageGap(BaseModel):

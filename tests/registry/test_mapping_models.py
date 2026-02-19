@@ -99,7 +99,7 @@ def test_bootstrap_from_mappings_requires_detector_map(monkeypatch):
         return types.SimpleNamespace()
 
     monkeypatch.setattr(importlib, "import_module", fake_import)
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Missing DETECTOR_MAP"):
         registry.bootstrap_from_mappings()
 
 

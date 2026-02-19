@@ -106,6 +106,7 @@ def _run_branch(*args: str) -> subprocess.CompletedProcess:
         capture_output=True,
         text=True,
         cwd=str(ROOT),
+        check=False,
     )
 
 

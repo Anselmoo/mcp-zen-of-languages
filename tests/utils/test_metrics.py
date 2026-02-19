@@ -6,7 +6,7 @@ from mcp_zen_of_languages.metrics.dependency_graph import build_import_graph
 
 
 def test_metrics_collector_collects():
-    cyclomatic, mi, loc = MetricsCollector.collect("def foo():\n    return 1\n")
+    cyclomatic, _mi, loc = MetricsCollector.collect("def foo():\n    return 1\n")
     assert loc > 0
     assert cyclomatic
 

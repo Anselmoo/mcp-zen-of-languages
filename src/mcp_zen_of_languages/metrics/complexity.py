@@ -38,7 +38,7 @@ def compute_cyclomatic_complexity(code: str) -> CyclomaticSummary:
         ]
         avg = sum(b.complexity for b in blocks) / len(blocks) if blocks else 0.0
         return CyclomaticSummary(blocks=results, average=avg)
-    except Exception:
+    except Exception:  # noqa: BLE001
         return CyclomaticSummary(blocks=[], average=0.0)
 
 
@@ -61,5 +61,5 @@ def compute_maintainability_index(code: str, *, multi: bool = False) -> float:
     try:
         mi = mi_visit(code=code, multi=multi)
         return float(mi)
-    except Exception:
+    except Exception:  # noqa: BLE001
         return 0.0

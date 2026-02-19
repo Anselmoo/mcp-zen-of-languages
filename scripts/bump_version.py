@@ -80,10 +80,12 @@ _SECTION_ORDER = [
     "Maintenance",
 ]
 
-
 # ---------------------------------------------------------------------------
 # Version helpers
 # ---------------------------------------------------------------------------
+
+SEMVER_PARTS = 3
+CHANGELOG_PREVIEW_LINES = 8
 
 
 @dataclass
@@ -95,7 +97,7 @@ class Version:
     @classmethod
     def parse(cls, s: str) -> Version:
         parts = s.strip().split(".")
-        if len(parts) != 3 or not all(p.isdigit() for p in parts):
+        if len(parts) != SEMVER_PARTS or not all(p.isdigit() for p in parts):
             msg = f"Invalid semver: {s!r}"
             raise ValueError(msg)
         return cls(int(parts[0]), int(parts[1]), int(parts[2]))
@@ -118,7 +120,8 @@ def _read_current_version() -> Version:
     text = PYPROJECT.read_text(encoding="utf-8")
     if m := VERSION_RE.search(text):
         return Version.parse(m.group(1))
-    raise RuntimeError("Could not find version = '...' in pyproject.toml")
+    msg = "Could not find version = '...' in pyproject.toml"
+    raise RuntimeError(msg)
 
 
 # ---------------------------------------------------------------------------
@@ -126,7 +129,7 @@ def _read_current_version() -> Version:
 # ---------------------------------------------------------------------------
 
 
-def _update_pyproject(new: Version, dry_run: bool) -> None:
+def _update_pyproject(new: Version, *, dry_run: bool) -> None:
     text = PYPROJECT.read_text(encoding="utf-8")
     updated = VERSION_RE.sub(f'version = "{new}"', text, count=1)
     if text == updated:
@@ -141,7 +144,7 @@ def _update_pyproject(new: Version, dry_run: bool) -> None:
         print(f'  ✓ {PYPROJECT.relative_to(ROOT)}  →  version = "{new}"')
 
 
-def _update_init(new: Version, dry_run: bool) -> None:
+def _update_init(new: Version, *, dry_run: bool) -> None:
     if not INIT_FILE.exists():
         print(f"  ⚠ {INIT_FILE.relative_to(ROOT)} not found — skipping")
         return
@@ -186,6 +189,7 @@ def _git_log_since_tag() -> list[tuple[str, str]]:
         cwd=ROOT,
         capture_output=True,
         text=True,
+        check=False,
     )
     tags = [t.strip() for t in tag_result.stdout.splitlines() if t.strip()]
     ref = f"{tags[0]}..HEAD" if tags else "HEAD"
@@ -195,6 +199,7 @@ def _git_log_since_tag() -> list[tuple[str, str]]:
         cwd=ROOT,
         capture_output=True,
         text=True,
+        check=False,
     )
     pairs: list[tuple[str, str]] = []
     for line in log_result.stdout.splitlines():
@@ -224,6 +229,7 @@ def _parse_conventional_commit(sha: str, subject: str) -> _ParsedCommit | None:
 def _build_changelog_section(
     version: Version,
     commits: list[tuple[str, str]],
+    *,
     include_maintenance: bool,
 ) -> str:
     """Render a Keep-a-Changelog ``## [version]`` block."""
@@ -265,10 +271,13 @@ def _build_changelog_section(
 def _update_changelog(
     new: Version,
     commits: list[tuple[str, str]],
+    *,
     include_maintenance: bool,
     dry_run: bool,
 ) -> None:
-    section = _build_changelog_section(new, commits, include_maintenance)
+    section = _build_changelog_section(
+        new, commits, include_maintenance=include_maintenance
+    )
 
     # Count visible entries for the summary line
     added = sum(
@@ -282,9 +291,9 @@ def _update_changelog(
 
     if dry_run:
         print(f"  [dry-run] Would prepend to {CHANGELOG.name}:")
-        for ln in section.splitlines()[:8]:
+        for ln in section.splitlines()[:CHANGELOG_PREVIEW_LINES]:
             print(f"    {ln}")
-        if len(section.splitlines()) > 8:
+        if len(section.splitlines()) > CHANGELOG_PREVIEW_LINES:
             print("    …")
         return
 
@@ -305,13 +314,13 @@ def _update_changelog(
 # ---------------------------------------------------------------------------
 
 
-def _run(cmd: list[str], dry_run: bool, label: str) -> None:
+def _run(cmd: list[str], *, dry_run: bool, label: str) -> None:
     pretty = " ".join(cmd)
     if dry_run:
         print(f"  [dry-run] Would run: {pretty}")
         return
     print(f"  $ {pretty}")
-    result = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+    result = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, check=False)
     if result.returncode != 0:
         print(result.stdout)
         print(result.stderr, file=sys.stderr)
@@ -327,6 +336,7 @@ def _branch_exists(branch: str) -> bool:
         cwd=ROOT,
         capture_output=True,
         text=True,
+        check=False,
     )
     return bool(result.stdout.strip())
 
@@ -337,6 +347,7 @@ def _current_branch() -> str:
         cwd=ROOT,
         capture_output=True,
         text=True,
+        check=False,
     )
     return result.stdout.strip()
 
@@ -347,6 +358,7 @@ def _working_tree_clean() -> bool:
         cwd=ROOT,
         capture_output=True,
         text=True,
+        check=False,
     )
     return result.stdout.strip() == ""
 
@@ -434,14 +446,19 @@ def main() -> None:
 
     # 1. Update files
     print("── Updating version strings ──────────────────────────────────")
-    _update_pyproject(new, args.dry_run)
-    _update_init(new, args.dry_run)
+    _update_pyproject(new, dry_run=args.dry_run)
+    _update_init(new, dry_run=args.dry_run)
 
     # 2a. Update changelog
     if not args.no_changelog:
         print("\n── Updating CHANGELOG.md ──────────────────────────────────────")
         commits = _git_log_since_tag()
-        _update_changelog(new, commits, args.include_maintenance, args.dry_run)
+        _update_changelog(
+            new,
+            commits,
+            include_maintenance=args.include_maintenance,
+            dry_run=args.dry_run,
+        )
 
     # 2. Refresh lockfile
     print("\n── Refreshing uv.lock ───────────────────────────────────────")

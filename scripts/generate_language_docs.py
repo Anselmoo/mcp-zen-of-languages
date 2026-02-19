@@ -66,6 +66,7 @@ LANGUAGES: list[tuple[str, str, str, str, str]] = [
     ("ruby", "Ruby", "material/language-ruby", "ruby.md", "ruby"),
     ("cpp", "C++", "material/language-cpp", "cpp.md", "cpp"),
     ("csharp", "C#", "material/language-csharp", "csharp.md", "csharp"),
+    ("dockerfile", "Dockerfile", "material/docker", "dockerfile.md", "dockerfile"),
 ]
 
 WORKFLOW_LANGUAGES: list[tuple[str, str, str]] = [
@@ -680,7 +681,7 @@ def render_index_page() -> str:
 
             Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
 
-            **TypeScript · Rust · Go · JavaScript · Bash · PowerShell · Ruby · C++ · C#**
+            **TypeScript · Rust · Go · JavaScript · Bash · PowerShell · Ruby · C++ · C# · Dockerfile**
 
         -   :material-source-branch:{ .lg .middle } **Workflow Automation**
 

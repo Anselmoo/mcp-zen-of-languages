@@ -168,6 +168,13 @@ GENERIC_PROMPTS_BY_LANGUAGE: dict[str, list[tuple[str, str]]] = {
             "and add timeouts/concurrency to avoid stale or risky runs.",
         ),
     ],
+    "dockerfile": [
+        (
+            "Container image hardening",
+            "Pin base image versions, run as non-root, avoid ENV/ARG secrets, and "
+            "use multi-stage builds with a .dockerignore file.",
+        ),
+    ],
 }
 
 

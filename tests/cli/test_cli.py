@@ -325,6 +325,7 @@ SAMPLES = {
     "toml": 'key = "value"\n',
     "json": '{"key": "value"}\n',
     "xml": "<root></root>\n",
+    "dockerfile": "FROM ubuntu:latest\nUSER root\n",
 }
 
 

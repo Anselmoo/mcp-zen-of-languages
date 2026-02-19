@@ -38,6 +38,17 @@ def test_detect_language_by_extension_unknown():
 def test_detect_language_by_extension_github_workflow():
     result = detect_language_by_extension(".github/workflows/ci.yml")
     assert result.language == "github-actions"
+
+
+def test_detect_language_by_extension_dockerfile_name():
+    result = detect_language_by_extension("Dockerfile.prod")
+    assert result.language == "dockerfile"
+    assert result.method == "extension"
+
+
+def test_detect_language_by_extension_docker_compose_name():
+    result = detect_language_by_extension("docker-compose.yml")
+    assert result.language == "dockerfile"
     assert result.method == "extension"
 
 

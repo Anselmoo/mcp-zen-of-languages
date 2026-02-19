@@ -71,6 +71,7 @@ def test_build_explicit_rule_coverage_languages() -> None:
         "toml",
         "json",
         "xml",
+        "dockerfile",
     ):
         coverage = build_explicit_rule_coverage(language)
         assert coverage.rules

@@ -28,7 +28,8 @@ Every language has its own philosophy — its own sense of what "good code" mean
 | [Ruby](ruby.md) | 11 | 11 | Regex | [Ruby Style Guide](https://rubystyle.guide/) |
 | [C++](cpp.md) | 13 | 13 | Regex | [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines) |
 | [C#](csharp.md) | 13 | 13 | Regex | [C# Coding Conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions) |
-| **Programming subtotal** | **131** | **143** | | |
+| [Dockerfile](dockerfile.md) | 8 | 8 | Regex | [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) |
+| **Programming subtotal** | **139** | **151** | | |
 
 ### Workflows & Automation
 
@@ -46,8 +47,8 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 ### Coverage Totals
 
-- **Principles (all categories):** 177
-- **Detectors + workflow checks:** 189
+- **Principles (all categories):** 185
+- **Detectors + workflow checks:** 197
 
 ## Maturity Tiers
 
@@ -67,7 +68,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
     Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
 
-    **TypeScript · Rust · Go · JavaScript · Bash · PowerShell · Ruby · C++ · C#**
+    **TypeScript · Rust · Go · JavaScript · Bash · PowerShell · Ruby · C++ · C# · Dockerfile**
 
 -   :material-source-branch:{ .lg .middle } **Workflow Automation**
 

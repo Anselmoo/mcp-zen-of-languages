@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from mcp_zen_of_languages.languages.dockerfile.analyzer import DockerfileAnalyzer
 from mcp_zen_of_languages.languages.javascript.analyzer import JavaScriptAnalyzer
 from mcp_zen_of_languages.languages.powershell.analyzer import PowerShellAnalyzer
 from mcp_zen_of_languages.languages.ruby.analyzer import RubyAnalyzer
@@ -42,3 +43,12 @@ def test_ruby_analyzer_parse_code():
 
     analyzer = StubRubyAnalyzer()
     assert analyzer.parse_code("def foo\nend") is None
+
+
+def test_dockerfile_analyzer_parse_code():
+    class StubDockerfileAnalyzer(DockerfileAnalyzer):
+        def build_pipeline(self):
+            return _pipeline_stub()
+
+    analyzer = StubDockerfileAnalyzer()
+    assert analyzer.parse_code("FROM ubuntu:22.04") is None

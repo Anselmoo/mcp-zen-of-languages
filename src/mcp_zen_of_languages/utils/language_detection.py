@@ -33,6 +33,7 @@ EXTENSION_LANGUAGE_MAP: dict[str, str] = {
     ".toml": "toml",
     ".json": "json",
     ".xml": "xml",
+    ".dockerfile": "dockerfile",
 }
 
 
@@ -76,8 +77,9 @@ def detect_language_by_extension(path: str) -> DetectionResult:
         for known extensions, or ``language="unknown"`` for unrecognised ones.
     """
     path_obj = Path(path)
-    ext = path_obj.suffix.lower()
     parts = path_obj.parts
+    ext = path_obj.suffix.lower()
+    file_name = path_obj.name.lower()
     if ext in {".yml", ".yaml"} and ".github" in parts and "workflows" in parts:
         github_index = parts.index(".github")
         if github_index + 1 < len(parts) and parts[github_index + 1] == "workflows":
@@ -87,6 +89,15 @@ def detect_language_by_extension(path: str) -> DetectionResult:
                 method="extension",
                 notes="Matched .github/workflows YAML path",
             )
+    if file_name == "dockerfile" or file_name.startswith("dockerfile."):
+        return DetectionResult(language="dockerfile", confidence=0.98, method="extension")
+    if file_name in {
+        "docker-compose.yml",
+        "docker-compose.yaml",
+        "compose.yml",
+        "compose.yaml",
+    }:
+        return DetectionResult(language="dockerfile", confidence=0.98, method="extension")
     lang = EXTENSION_LANGUAGE_MAP.get(ext, "unknown")
     return DetectionResult(language=lang, confidence=0.95, method="extension")
 

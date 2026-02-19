@@ -43,7 +43,6 @@ from __future__ import annotations
 
 import logging
 import os
-import sys
 from abc import ABC, abstractmethod
 from typing import Literal, TypeVar
 
@@ -518,15 +517,10 @@ class DetectionPipeline:
                 detector_config = detector.config or config
                 violations = detector.detect(context, detector_config)
                 all_violations.extend(violations)
-            except Exception as exc:  # noqa: BLE001
+            except Exception:
                 # Log error but continue with other detectors
                 detector_name = getattr(detector, "name", detector.__class__.__name__)
-                sys.stdout.write(f"Error in detector {detector_name}: {exc}\n")
-                logger.debug(
-                    "Detector %s failed during pipeline run",
-                    detector.__class__.__name__,
-                    exc_info=exc,
-                )
+                logger.exception("Error in detector %s", detector_name)
 
         return all_violations
 

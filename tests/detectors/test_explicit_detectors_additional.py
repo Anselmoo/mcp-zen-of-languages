@@ -24,6 +24,14 @@ from mcp_zen_of_languages.languages.configs import (
     CSharpPatternMatchingConfig,
     CSharpRecordConfig,
     CSharpVarConfig,
+    CssColorLiteralConfig,
+    CssGodStylesheetConfig,
+    CssImportChainConfig,
+    CssMagicPixelsConfig,
+    CssMediaQueryScaleConfig,
+    CssSpecificityConfig,
+    CssVendorPrefixConfig,
+    CssZIndexScaleConfig,
     GoGoroutineLeakConfig,
     GoInitUsageConfig,
     GoInterfacePointerConfig,
@@ -112,6 +120,16 @@ from mcp_zen_of_languages.languages.csharp.detectors import (
     CSharpPatternMatchingDetector,
     CSharpRecordDetector,
     CSharpVarDetector,
+)
+from mcp_zen_of_languages.languages.css.detectors import (
+    CssColorLiteralDetector,
+    CssGodStylesheetDetector,
+    CssImportChainDetector,
+    CssMagicPixelsDetector,
+    CssMediaQueryScaleDetector,
+    CssSpecificityDetector,
+    CssVendorPrefixDetector,
+    CssZIndexScaleDetector,
 )
 from mcp_zen_of_languages.languages.go.detectors import (
     GoContextUsageDetector,
@@ -628,6 +646,59 @@ def test_yaml_detectors_cover_paths():
         "title: hello world\n",
         "yaml",
         YamlStringStyleConfig(),
+    )
+
+
+def test_css_detectors_cover_paths():
+    assert run_detector(
+        CssSpecificityDetector(),
+        ".a { .b { .c { .d { color: red !important; } } } }\n",
+        "css",
+        CssSpecificityConfig().model_copy(
+            update={"max_selector_nesting": 3, "max_important_usages": 0},
+        ),
+    )
+    assert run_detector(
+        CssMagicPixelsDetector(),
+        ".a { padding: 12px; }\n",
+        "css",
+        CssMagicPixelsConfig(),
+    )
+    assert run_detector(
+        CssColorLiteralDetector(),
+        ".a { color: #ff00aa; }\n",
+        "css",
+        CssColorLiteralConfig(),
+    )
+    assert run_detector(
+        CssGodStylesheetDetector(),
+        ".a {}\n.b {}\n.c {}\n",
+        "css",
+        CssGodStylesheetConfig().model_copy(update={"max_stylesheet_lines": 1}),
+    )
+    assert run_detector(
+        CssImportChainDetector(),
+        "@import 'base';\n",
+        "css",
+        CssImportChainConfig(),
+    )
+    assert run_detector(
+        CssZIndexScaleDetector(),
+        ".modal { z-index: 9999; }\n",
+        "css",
+        CssZIndexScaleConfig().model_copy(update={"allowed_z_index_values": [0, 10]}),
+    )
+    assert run_detector(
+        CssVendorPrefixDetector(),
+        ".btn { -webkit-user-select: none; }\n",
+        "css",
+        CssVendorPrefixConfig(),
+    )
+    assert run_detector(
+        CssMediaQueryScaleDetector(),
+        "@media (min-width: 990px) { .x { display: block; } }\n",
+        "css",
+        CssMediaQueryScaleConfig(),
     )
 
 

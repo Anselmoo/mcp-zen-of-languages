@@ -919,6 +919,63 @@ class CSharpRecordConfig(DetectorConfig):
     type: Literal["cs-013"] = "cs-013"
 
 
+class CssSpecificityConfig(DetectorConfig):
+    """CSS selector nesting and ``!important`` overuse settings."""
+
+    type: Literal["css-001"] = "css-001"
+    max_selector_nesting: int = 3
+    max_important_usages: int = 0
+
+
+class CssMagicPixelsConfig(DetectorConfig):
+    """CSS raw pixel-literal usage settings."""
+
+    type: Literal["css-002"] = "css-002"
+    max_raw_pixel_literals: int = 0
+
+
+class CssColorLiteralConfig(DetectorConfig):
+    """CSS inline color-literal usage settings."""
+
+    type: Literal["css-003"] = "css-003"
+    max_color_literals: int = 0
+
+
+class CssGodStylesheetConfig(DetectorConfig):
+    """Maximum stylesheet line-count settings."""
+
+    type: Literal["css-004"] = "css-004"
+    max_stylesheet_lines: int = 300
+
+
+class CssImportChainConfig(DetectorConfig):
+    """CSS ``@import`` usage settings."""
+
+    type: Literal["css-005"] = "css-005"
+    max_import_statements: int = 0
+
+
+class CssZIndexScaleConfig(DetectorConfig):
+    """CSS z-index scale consistency settings."""
+
+    type: Literal["css-006"] = "css-006"
+    allowed_z_index_values: list[int] = [0, 1, 10, 100, 1000]
+
+
+class CssVendorPrefixConfig(DetectorConfig):
+    """Manual vendor-prefix usage settings."""
+
+    type: Literal["css-007"] = "css-007"
+    max_vendor_prefixed_properties: int = 0
+
+
+class CssMediaQueryScaleConfig(DetectorConfig):
+    """Media-query breakpoint scale settings."""
+
+    type: Literal["css-008"] = "css-008"
+    allowed_breakpoint_values: list[int] = [480, 768, 1024, 1280, 1440]
+
+
 class YamlIndentationConfig(DetectorConfig):
     """YAML indentation width enforcement settings.
 

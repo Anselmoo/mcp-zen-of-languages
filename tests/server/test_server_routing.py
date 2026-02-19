@@ -17,6 +17,7 @@ from mcp_zen_of_languages import server
         ("ruby", "puts 'hello'"),
         ("cpp", "#include <iostream>\nint main() { return 0; }"),
         ("csharp", "class Program { static void Main() {} }"),
+        ("css", ".btn { color: var(--text); }"),
         ("yaml", "name: value"),
         ("toml", "name = 'value'"),
         ("xml", "<root><item /></root>"),

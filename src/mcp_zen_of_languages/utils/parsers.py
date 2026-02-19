@@ -40,7 +40,7 @@ def parse_python_with_treesitter(code: str) -> object | None:
     # Language directly with a path in this environment. Instead, attempt to import a prebuilt
     # language module `build.my_languages` which exposes a `PY_LANGUAGE` object (convention used by CI)
     try:
-        from build.my_languages import PY_LANGUAGE  # type: ignore
+        from build.my_languages import PY_LANGUAGE  # type: ignore[import-not-found]
 
         if not hasattr(parser, "set_language"):
             return None

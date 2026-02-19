@@ -12,6 +12,7 @@ All data access uses Pydantic model attributes — never raw dictionary keys.
 
 from __future__ import annotations
 
+import logging
 from typing import TYPE_CHECKING
 
 from pydantic import BaseModel, Field
@@ -40,6 +41,7 @@ MAX_CYCLES_SHOWN = 3
 
 # Minimum tuple/list length to unpack as a dependency edge
 MIN_EDGE_PARTS = 2
+logger = logging.getLogger(__name__)
 
 
 class RulesAdapterConfig(BaseModel):
@@ -57,7 +59,7 @@ class RulesAdapterConfig(BaseModel):
         min_maintainability_index: Override for the minimum acceptable
             maintainability index (Radon scale).
         severity_threshold: Floor used by ``get_critical_violations`` to
-            filter low-severity findings.  Defaults to 5 (1–10 scale).
+            filter low-severity findings.  Defaults to 5 (1-10 scale).
     """
 
     max_nesting_depth: int | None = None
@@ -119,7 +121,7 @@ class RulesAdapter:
             code: Source code to analyse.
             cyclomatic_summary: Pre-computed cyclomatic-complexity metrics,
                 typically produced by ``radon``.
-            maintainability_index: Radon maintainability index (0–100 scale).
+            maintainability_index: Radon maintainability index (0-100 scale).
             dependency_analysis: Import-graph analysis produced by upstream
                 dependency resolution.
 
@@ -282,7 +284,7 @@ class RulesAdapter:
         """Flag source whose maintainability index falls below the required floor.
 
         Args:
-            maintainability_index: Radon MI score (0–100).  Lower values
+            maintainability_index: Radon MI score (0-100).  Lower values
                 indicate harder-to-maintain code.
             principle: Supplies severity and the fallback MI floor.
             metrics: Skipped when ``min_maintainability_index`` is absent.
@@ -388,8 +390,9 @@ class RulesAdapter:
                     else:
                         # Fallback single item
                         normalized_cycles.append([str(seq)])
-                except Exception:  # noqa: BLE001
-                    continue
+                except Exception as exc:  # noqa: BLE001
+                    logger.debug("Failed to normalize dependency cycle entry: %r", c, exc_info=exc)
+                    normalized_cycles.append([str(c)])
 
             cycles_list = normalized_cycles
         except Exception:  # noqa: BLE001
@@ -453,8 +456,8 @@ class RulesAdapter:
                     for node, deps in deps_map.items()
                     if len(deps) > max_allowed
                 )
-            except Exception:  # noqa: BLE001
-                pass
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("Failed to evaluate max_dependencies metric", exc_info=exc)
 
         return violations
 
@@ -494,8 +497,8 @@ class RulesAdapter:
                             message=f"Detected anti-pattern matching: '{cre.pattern}'",
                         )
                     )
-            except Exception:  # noqa: BLE001
-                continue
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("Pattern evaluation failed for %s", cre.pattern, exc_info=exc)
 
         return violations
 
@@ -573,7 +576,7 @@ class RulesAdapter:
     def summarize_violations(self, violations: list[Violation]) -> dict[str, int]:
         """Bucket violations into four severity bands and return per-band counts.
 
-        Bands: *critical* (9–10), *high* (7–8), *medium* (4–6), *low* (1–3).
+        Bands: *critical* (9-10), *high* (7-8), *medium* (4-6), *low* (1-3).
 
         Args:
             violations: Violation list to summarise.

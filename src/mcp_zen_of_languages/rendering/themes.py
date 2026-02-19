@@ -45,7 +45,7 @@ BOX_CODE = box.SQUARE
 
 
 def severity_style(severity: int) -> str:
-    """Map a numeric severity score (1–10) to a Rich style token.
+    """Map a numeric severity score (1-10) to a Rich style token.
 
     The mapping follows four tiers that correspond to the
     ``ZEN_THEME`` severity entries:
@@ -78,7 +78,7 @@ def severity_badge(severity: int) -> str:
     legacy Windows consoles.
 
     Args:
-        severity: Integer severity score (1–10) determining the badge tier.
+        severity: Integer severity score (1-10) determining the badge tier.
 
     Returns:
         str: Rich markup string that renders as a coloured badge when printed.

@@ -73,7 +73,7 @@ class DetectorMetadata(BaseModel):
 
     detector_id: str
     detector_class: type[ViolationDetector]
-    config_model: type[DetectorConfig] | type[AnalyzerConfig]
+    config_model: type[DetectorConfig | AnalyzerConfig]
     language: str
     rule_ids: list[str] = Field(default_factory=list)
     rule_map: dict[str, list[str]] = Field(default_factory=dict)
@@ -109,16 +109,13 @@ class DetectorMetadata(BaseModel):
             enabled_by_default=binding.enabled_by_default,
         )
 
-    def model_post_init(self, __context: object) -> None:
+    def model_post_init(self, __context: object, /) -> None:
         """Ensure ``rule_ids`` and ``rule_map`` are mutually consistent.
 
         If only one of the two was provided at construction time, the other
         is derived automatically: missing ``rule_map`` entries default to
         ``["*"]`` (cover all violation specs), and missing ``rule_ids``
         are extracted from ``rule_map`` keys.
-
-        Args:
-            __context: Pydantic internal validation context (unused).
         """
         if not self.rule_map and self.rule_ids:
             self.rule_map = {rule_id: ["*"] for rule_id in self.rule_ids}

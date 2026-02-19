@@ -29,7 +29,7 @@ Data flows through these layers as::
           → parse_code()          # Template hook
           → compute_metrics()     # Template hook
           → DetectionPipeline.run()
-            → ViolationDetector.detect()  × N
+            → ViolationDetector.detect()  x N
           → _build_result()
         → AnalysisResult
 
@@ -43,6 +43,7 @@ from __future__ import annotations
 
 import logging
 import os
+import sys
 from abc import ABC, abstractmethod
 from typing import Literal, TypeVar
 
@@ -87,17 +88,17 @@ class AnalyzerConfig(DetectorConfig):
     Attributes:
         type: Discriminator fixed to ``"analyzer_defaults"``.
         max_cyclomatic_complexity: Upper bound on average cyclomatic
-            complexity before a violation is emitted (1–50, default 10).
+            complexity before a violation is emitted (1-50, default 10).
         max_nesting_depth: Maximum permitted indentation nesting depth
-            (1–10, default 3).
+            (1-10, default 3).
         max_function_length: Line count ceiling for a single function
-            body (10–500, default 50).
+            body (10-500, default 50).
         max_class_length: Line count ceiling for a class definition
-            (1–1000, default 300).
+            (1-1000, default 300).
         max_magic_methods: Allowed dunder-method count per class
-            (0–50, default 3).
+            (0-50, default 3).
         severity_threshold: Minimum severity a violation must reach to
-            appear in final results (1–10, default 5).
+            appear in final results (1-10, default 5).
         enable_dependency_analysis: When ``True``, the analyzer builds a
             dependency graph before running detectors.
         enable_pattern_detection: When ``True``, the
@@ -238,7 +239,7 @@ class AnalysisContext(BaseModel):
         cyclomatic_summary: Aggregated cyclomatic-complexity statistics
             for every block in the source.
         maintainability_index: Halstead / McCabe maintainability score
-            (0–100 scale).
+            (0-100 scale).
         lines_of_code: Physical line count of the source text.
         dependency_analysis: Language-specific dependency graph payload,
             or ``None`` when dependency analysis is disabled.
@@ -410,7 +411,7 @@ class ViolationDetector[ConfigT: "DetectorConfig"](ABC):
                 ``select_violation_message`` to pick a matching template.
             index: Zero-based position selecting one template from the
                 config's ``violation_messages`` list (default ``0``).
-            severity: Override severity score (1–10). Falls back to the
+            severity: Override severity score (1-10). Falls back to the
                 config-level severity when omitted.
             location: Source location to attach to the violation, typically
                 produced by
@@ -517,9 +518,15 @@ class DetectionPipeline:
                 detector_config = detector.config or config
                 violations = detector.detect(context, detector_config)
                 all_violations.extend(violations)
-            except Exception as e:  # noqa: BLE001
+            except Exception as exc:  # noqa: BLE001
                 # Log error but continue with other detectors
-                print(f"Error in detector {detector.name}: {e}")
+                detector_name = getattr(detector, "name", detector.__class__.__name__)
+                sys.stdout.write(f"Error in detector {detector_name}: {exc}\n")
+                logger.debug(
+                    "Detector %s failed during pipeline run",
+                    detector.__class__.__name__,
+                    exc_info=exc,
+                )
 
         return all_violations
 
@@ -773,9 +780,9 @@ class BaseAnalyzer(ABC):
                 **adapter.summarize_violations(all_violations)
             )
             result.violations = all_violations
-        except Exception:  # noqa: BLE001
+        except Exception as exc:  # noqa: BLE001
             # If adapter missing or fails, proceed without rules_summary
-            pass
+            logger.debug("RulesAdapter integration failed; continuing", exc_info=exc)
 
         return result
 
@@ -918,7 +925,7 @@ class BaseAnalyzer(ABC):
     ) -> AnalysisResult:
         """Assemble the final ``AnalysisResult`` from context and violations.
 
-        Computes the overall quality score (``100 − 2 × total_severity``,
+        Computes the overall quality score (``100 - 2 x total_severity``,
         floored at 0) and packages metrics together with violations into
         the result model returned to callers.
 
@@ -950,10 +957,10 @@ class BaseAnalyzer(ABC):
         )
 
     def _calculate_overall_score(self, violations: list[Violation]) -> float:
-        """Derive a 0–100 quality score from accumulated violation severities.
+        """Derive a 0-100 quality score from accumulated violation severities.
 
         The formula is intentionally simple:
-        ``score = max(0, 100 − 2 × Σ severity)``.  A file with no
+        ``score = max(0, 100 - 2 x Σ severity)``.  A file with no
         violations scores a perfect 100; each severity point costs two
         score points.
 

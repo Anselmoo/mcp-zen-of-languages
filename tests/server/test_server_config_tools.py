@@ -33,7 +33,7 @@ async def test_get_supported_languages_includes_python():
 @pytest.mark.asyncio
 async def test_onboard_project_relaxed():
     guide = await server.onboard_project.fn(
-        "/tmp/project",
+        "project",
         primary_language="python",
         team_size="small",
         strictness="relaxed",

@@ -281,7 +281,7 @@ def detect_magic_methods_overuse(code: str) -> list[str]:
     Returns:
         Raw matched lines (including leading whitespace) for each dunder ``def``.
     """
-    return re.findall(r"^\s*def\s+__\w+__", code, flags=re.M)
+    return re.findall(r"^\s*def\s+__\w+__", code, flags=re.MULTILINE)
 
 
 def detect_multiple_implementations(files: dict[str, str]) -> list[DuplicateFinding]:
@@ -299,7 +299,7 @@ def detect_multiple_implementations(files: dict[str, str]) -> list[DuplicateFind
     """
     name_map: dict[str, list[str]] = {}
     for fname, code in files.items():
-        for m in re.finditer(r"^def\s+(\w+)", code, flags=re.M):
+        for m in re.finditer(r"^def\s+(\w+)", code, flags=re.MULTILINE):
             name = m.group(1)
             name_map.setdefault(name, []).append(fname)
     duplicates: list[DuplicateFinding] = [
@@ -377,7 +377,7 @@ def detect_deep_inheritance(
     """
     parent_map: dict[str, list[str]] = {}
     for code in code_map.values():
-        for m in re.finditer(r"^class\s+(\w+)\(([^\)]+)\)", code, flags=re.M):
+        for m in re.finditer(r"^class\s+(\w+)\(([^\)]+)\)", code, flags=re.MULTILINE):
             cls = m.group(1)
             parents = [p.strip().split()[0] for p in m.group(2).split(",") if p.strip()]
             parent_map[cls] = parents
@@ -517,7 +517,7 @@ def detect_inconsistent_naming_styles(code: str) -> list[ConsistencyFinding]:
         otherwise an empty list.
     """
     styles: set[str] = set()
-    for m in re.finditer(r"^def\s+([A-Za-z_][A-Za-z0-9_]*)", code, flags=re.M):
+    for m in re.finditer(r"^def\s+([A-Za-z_][A-Za-z0-9_]*)", code, flags=re.MULTILINE):
         name = m.group(1)
         if re.match(r"^_?[a-z][a-z0-9_]*$", name):
             styles.add("snake_case")

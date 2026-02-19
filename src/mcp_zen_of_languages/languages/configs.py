@@ -28,7 +28,7 @@ class DetectorConfig(BaseModel):
         principle_id: Optional zen principle identifier this detector enforces.
         principle: Human-readable name of the zen principle, used as a fallback
             violation message when no specific messages are configured.
-        severity: Violation severity on a 1–10 scale (1 = informational,
+        severity: Violation severity on a 1-10 scale (1 = informational,
             10 = critical).
         violation_messages: Ordered list of message templates; the first
             matching template is selected at report time.

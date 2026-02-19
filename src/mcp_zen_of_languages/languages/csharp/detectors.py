@@ -1,7 +1,7 @@
 """Zen-rule detectors for C# code quality, .NET idiom, and type-safety checks.
 
 Each detector implements the Strategy pattern as a ``ViolationDetector``
-subclass, targeting a specific C# anti-pattern.  Modern C# (8–12) provides
+subclass, targeting a specific C# anti-pattern.  Modern C# (8-12) provides
 nullable reference types, pattern matching, records, and async/await to
 replace legacy patterns; these detectors enforce that adoption.
 

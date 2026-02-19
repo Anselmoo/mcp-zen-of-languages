@@ -11,7 +11,7 @@ The resulting ``BigPictureAnalysis`` provides:
 * **Clusters** — ordered groups with severity totals and suggested fix order.
 * **Systemic patterns** — natural-language descriptions of dominant problem areas.
 * **Refactoring roadmap** — numbered action items derived from cluster ranking.
-* **Health score** — a 0–100 metric penalized by total violation severity.
+* **Health score** — a 0-100 metric penalized by total violation severity.
 * **Improvement trajectory** — guidance on which theme to tackle first.
 
 Downstream consumers include ``prompts.build_prompt_bundle`` (attaches big-picture
@@ -123,7 +123,7 @@ def build_big_picture_analysis(results: list[AnalysisResult]) -> BigPictureAnaly
 
     All violations across every ``AnalysisResult`` are classified by theme,
     aggregated into severity-weighted clusters, and ranked to produce a
-    refactoring roadmap.  A health score (0–100) is derived by penalising
+    refactoring roadmap.  A health score (0-100) is derived by penalising
     total severity weight, and an improvement trajectory string highlights
     the single theme whose resolution would yield the largest score lift.
 

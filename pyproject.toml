@@ -100,28 +100,6 @@ extend-ignore = [
     # Exception patterns
     # Modernization (fix incrementally)
     # Simplifications
-    # Security (review individually)
-    "S101", # assert
-    "S108", # hardcoded-temp-file
-    "S110", # try-except-pass
-    "S112", # try-except-continue
-    "S506", # unsafe-yaml-load
-    "S603", # subprocess-without-shell-equals-true
-    "S607", # start-process-with-partial-path
-    "S701", # jinja2-autoescape-false
-    # Miscellaneous
-    "FURB167", # regex-flag-alias
-    "PGH003",  # blanket-type-ignore
-    "PTH122",  # os-path-splitext
-    "PTH123",  # builtin-open
-    "PYI051",  # redundant-literal-union
-    "PYI055",  # unnecessary-type-union
-    "PYI063",  # pep-484-style-positional-only-parameter
-    "RUF001",  # ambiguous-unicode-character-string
-    "RUF002",  # ambiguous-unicode-character-docstring
-    "RUF007",  # pairwise-over-zipped
-    "T201",    # print
-    "ERA001",  # commented-out-code
 ]
 
 [tool.ruff.lint.per-file-ignores]

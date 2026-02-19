@@ -15,10 +15,10 @@ if TYPE_CHECKING:
 
 
 def calculate_code_quality_score(violations: list[Violation]) -> float:
-    """Derive a 0–100 quality score by penalising each violation proportionally to its severity.
+    """Derive a 0-100 quality score by penalising each violation proportionally to its severity.
 
-    Starts at 100 and subtracts ``2 × severity`` for every violation.
-    The 2× multiplier ensures that even a handful of high-severity
+    Starts at 100 and subtracts ``2 x severity`` for every violation.
+    The 2x multiplier ensures that even a handful of high-severity
     violations produce a noticeable drop, while minor issues degrade the
     score gently. The floor is clamped to 0 so the score never goes negative.
 

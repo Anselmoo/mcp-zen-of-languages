@@ -519,7 +519,7 @@ class GoPackageNamingDetector(ViolationDetector[GoPackageNamingConfig]):
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        if match := re.search(r"^\s*package\s+(\w+)", context.code, re.M):
+        if match := re.search(r"^\s*package\s+(\w+)", context.code, re.MULTILINE):
             name = match[1]
             if name.endswith("s") or "_" in name:
                 return [
@@ -564,7 +564,7 @@ class GoPackageStateDetector(ViolationDetector[GoPackageStateConfig]):
         Returns:
             list[Violation]: Violations detected for the analyzed context.
         """
-        if re.search(r"^\s*var\s+\w+", context.code, re.M):
+        if re.search(r"^\s*var\s+\w+", context.code, re.MULTILINE):
             return [
                 self.build_violation(
                     config,

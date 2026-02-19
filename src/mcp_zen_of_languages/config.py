@@ -53,7 +53,7 @@ class ConfigModel(BaseModel):
             powershell, cpp, csharp).  Adding an entry here causes
             ``load_config`` to auto-generate a pipeline for the language
             when the ``pipelines`` section is absent.
-        severity_threshold: Minimum severity score (1–10) a violation must
+        severity_threshold: Minimum severity score (1-10) a violation must
             reach to be included in analysis results.  Violations below
             this threshold are silently dropped.  Default is ``5``.
         pipelines: Per-language detector pipeline configurations.  Each
@@ -257,7 +257,7 @@ def load_config(path: str | None = None) -> ConfigModel:
     if not path:
         return default
     try:
-        with open(path) as f:
+        with Path(path).open() as f:
             data = yaml.safe_load(f) or {}
         merged = {**default.model_dump(), **data}
         env_severity_threshold = os.environ.get("ZEN_SEVERITY_THRESHOLD")

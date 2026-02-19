@@ -3,7 +3,7 @@
 Cyclomatic complexity is computed per-function via ``radon.complexity.cc_visit``
 and aggregated into a ``CyclomaticSummary``. The maintainability index uses
 ``radon.metrics.mi_visit``, which blends Halstead volume, cyclomatic complexity,
-and lines of code into a single 0–100 score following the Microsoft Visual
+and lines of code into a single 0-100 score following the Microsoft Visual
 Studio formula.
 """
 
@@ -43,7 +43,7 @@ def compute_cyclomatic_complexity(code: str) -> CyclomaticSummary:
 
 
 def compute_maintainability_index(code: str, *, multi: bool = False) -> float:
-    """Compute a 0–100 maintainability index using radon's ``mi_visit``.
+    """Compute a 0-100 maintainability index using radon's ``mi_visit``.
 
     The score combines Halstead volume, cyclomatic complexity, and source
     lines of code. Higher values indicate easier-to-maintain code; the

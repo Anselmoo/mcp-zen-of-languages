@@ -221,7 +221,7 @@ class Metrics(BaseModel):
 
     Attributes:
         cyclomatic: Full complexity profile with per-block detail.
-        maintainability_index: Halstead-derived maintainability score (0–100).
+        maintainability_index: Halstead-derived maintainability score (0-100).
         lines_of_code: Physical line count of the analysed source.
 
     Example:

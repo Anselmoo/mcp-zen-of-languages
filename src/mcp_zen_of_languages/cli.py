@@ -394,7 +394,7 @@ class ReportArgs(Protocol):
     path: str
     language: str | None
     config: str | None
-    format: Literal["markdown", "json", "both", "sarif"] | str
+    format: Literal["markdown", "json", "both", "sarif"]
     out: str | None
     export_json: str | None
     export_markdown: str | None
@@ -460,7 +460,7 @@ class ExportMappingArgs(Protocol):
 
     out: str | None
     languages: list[str] | None
-    format: Literal["terminal", "json"] | str
+    format: Literal["terminal", "json"]
 
 
 class PromptsArgs(Protocol):
@@ -498,7 +498,7 @@ class CheckArgs(Protocol):
     path: str
     language: str | None
     config: str | None
-    format: Literal["terminal", "json", "sarif"] | str
+    format: Literal["terminal", "json", "sarif"]
     out: str | None
     fail_on_severity: int | None
 
@@ -1180,7 +1180,7 @@ def _run_check(args: CheckArgs) -> int:
     if args.out and rendered is not None:
         Path(args.out).write_text(rendered, encoding="utf-8")
     elif rendered is not None:
-        print(rendered)
+        typer.echo(rendered)
 
     if args.fail_on_severity is not None:
         has_blocking = any(
@@ -1286,7 +1286,7 @@ def _run_export_mapping(args: ExportMappingArgs) -> int:
         export_mapping_json(args.out, args.languages)
         return 0
     if args.format == "json":
-        print(json.dumps(payload, indent=2))
+        typer.echo(json.dumps(payload, indent=2))
         return 0
     languages_payload = payload.get("languages", {})
     if not isinstance(languages_payload, dict):

@@ -6,7 +6,7 @@ from io import StringIO
 from pathlib import Path
 
 import pytest
-from jinja2 import Environment, StrictUndefined
+from jinja2 import Environment, StrictUndefined, select_autoescape
 from rich.console import Console
 
 from mcp_zen_of_languages import __version__, cli
@@ -25,7 +25,9 @@ FIXTURE_FILES = [
 ]
 GOLDEN_DIR = Path("tests/fixtures/golden")
 TEMPLATE_ENV = Environment(
-    autoescape=False, undefined=StrictUndefined, keep_trailing_newline=True
+    autoescape=select_autoescape(default_for_string=False),
+    undefined=StrictUndefined,
+    keep_trailing_newline=True,
 )
 FIXTURE_PATH = "tests/fixtures/medium_violations.py"
 

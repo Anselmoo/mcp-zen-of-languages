@@ -67,7 +67,7 @@ Each zen principle has four key attributes:
 
 - **Rule ID** — A stable identifier like `python-003` or `rust-008` used in configuration and reports
 - **Category** — Groups related principles (e.g., `ERROR_HANDLING`, `TYPE_SAFETY`, `IDIOMS`)
-- **Severity** — A 1–10 score indicating how critical violations are (9–10 = critical, 1–3 = informational)
+- **Severity** — A 1-10 score indicating how critical violations are (9-10 = critical, 1-3 = informational)
 - **Detectors** — One or more detector classes that find violations of this principle in your code
 
 You can tune severity thresholds and detector parameters per-language in your [`zen-config.yaml`](../configuration.md).

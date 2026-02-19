@@ -29,7 +29,7 @@ BranchName = branch.BranchName
 
 
 # ---------------------------------------------------------------------------
-# BranchName.slug()
+# BranchName slug tests
 # ---------------------------------------------------------------------------
 
 
@@ -75,7 +75,7 @@ class TestBranchNameSlug:
 
 
 # ---------------------------------------------------------------------------
-# BranchName.commit_title()
+# BranchName commit_title tests
 # ---------------------------------------------------------------------------
 
 
@@ -102,7 +102,7 @@ class TestCommitTitle:
 
 
 def _run_branch(*args: str) -> subprocess.CompletedProcess:
-    return subprocess.run(
+    return subprocess.run(  # noqa: S603
         [sys.executable, str(BRANCH_SCRIPT), *args],
         capture_output=True,
         text=True,

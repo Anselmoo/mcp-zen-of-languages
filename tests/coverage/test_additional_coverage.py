@@ -69,7 +69,7 @@ def test_main_entrypoint_module_executes(monkeypatch):
     assert called["run"] is True
 
 
-def test_detection_pipeline_logs_errors(capsys):
+def test_detection_pipeline_logs_errors(caplog):
     class BoomDetector(PlaceholderDetector):
         @property
         def name(self) -> str:
@@ -79,10 +79,10 @@ def test_detection_pipeline_logs_errors(capsys):
             msg = "boom"
             raise RuntimeError(msg)
 
+    caplog.set_level("ERROR")
     pipeline = DetectionPipeline([BoomDetector()])
     pipeline.run(AnalysisContext(code="", language="python"), AnalyzerConfig())
-    captured = capsys.readouterr()
-    assert "Error in detector boom" in captured.out
+    assert "Error in detector boom" in caplog.text
 
 
 def test_pipeline_merge_override_language_mismatch():
@@ -226,7 +226,7 @@ def test_dependency_graph_build_and_find_cycles():
     assert find_cycles(cycle_graph)
 
 
-def test_parser_normalizer_and_parse_python():
+def test_parse_python_returns_parser_result():
     parsed = parse_python("def foo():\n    pass\n")
     assert isinstance(parsed, ParserResult)
 

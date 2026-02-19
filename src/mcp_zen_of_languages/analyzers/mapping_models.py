@@ -62,7 +62,7 @@ class DetectorBinding(BaseModel):
 
     detector_id: str
     detector_class: type[ViolationDetector]
-    config_model: type[DetectorConfig] | type[AnalyzerConfig]
+    config_model: type[DetectorConfig | AnalyzerConfig]
     rule_ids: list[str] = Field(default_factory=list)
     rule_map: dict[str, list[str]] = Field(default_factory=dict)
     coverage: CoverageLevel = "partial"

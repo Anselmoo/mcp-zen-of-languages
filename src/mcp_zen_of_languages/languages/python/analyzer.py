@@ -95,27 +95,22 @@ class PythonAnalyzer(BaseAnalyzer, LocationHelperMixin):
         return "python"
 
     def parse_code(self, code: str) -> ParserResult | None:
-        """Parse Python source into a normalised AST representation.
+        """Parse Python source into a ``ParserResult`` representation.
 
-        Delegates to ``parse_python`` (stdlib ``ast.parse``) and then wraps
-        the result through ``ParserNormalizer`` so that all downstream
-        detectors receive a uniform ``ParserResult``.
+        Delegates to ``parse_python``, which already handles backend selection
+        and returns the canonical ``ParserResult`` consumed by detectors.
 
         Args:
             code: Raw Python source text to parse.
 
         Returns:
-            ParserResult | None: Normalised parse tree, or ``None`` if a
+            ParserResult | None: Parse tree, or ``None`` if a
                 ``SyntaxError`` or other parse failure occurs.
         """
-        from mcp_zen_of_languages.languages.python.parser_normalizer import (
-            ParserNormalizer,
-        )
         from mcp_zen_of_languages.utils.parsers import parse_python
 
         try:
-            raw = parse_python(code)
-            return ParserNormalizer.normalize(raw)
+            return parse_python(code)
         except Exception:  # noqa: BLE001
             return None
 

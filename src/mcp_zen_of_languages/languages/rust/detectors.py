@@ -268,7 +268,7 @@ class RustTypeSafetyDetector(ViolationDetector[RustTypeSafetyConfig]):
         types_pattern = "|".join(re.escape(t) for t in config.primitive_types)
         if not types_pattern:
             return violations
-        struct_pattern = re.compile(r"struct\s+\w+\s*\{(?P<body>[^}]*)\}", re.S)
+        struct_pattern = re.compile(r"struct\s+\w+\s*\{(?P<body>[^}]*)\}", re.DOTALL)
         for match in struct_pattern.finditer(context.code):
             body = match.group("body")
             if type_match := re.search(rf":\s*(?P<typ>{types_pattern})\b", body):

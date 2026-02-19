@@ -54,7 +54,7 @@ def main() -> int:
         print(f"ERROR: {MKDOCS_YML} not found")
         return 1
 
-    with open(MKDOCS_YML) as f:
+    with MKDOCS_YML.open() as f:
         config = yaml.load(f, Loader=_MkDocsLoader)
 
     nav = config.get("nav", [])

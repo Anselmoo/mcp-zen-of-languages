@@ -127,7 +127,7 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
             return []
         lines = context.code.splitlines()
         has_function = re.search(
-            r"^\s*(function\s+\w+|\w+\s*\(\)\s*\{)", context.code, re.M
+            r"^\s*(function\s+\w+|\w+\s*\(\)\s*\{)", context.code, re.MULTILINE
         )
         if len(lines) > max_length and not has_function:
             return [

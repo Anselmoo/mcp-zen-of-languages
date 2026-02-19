@@ -31,6 +31,7 @@ from mcp_zen_of_languages.rules.base_models import (
     ZenPrinciple,
 )
 from mcp_zen_of_languages.utils.parsers import (
+    parse_python,
     parse_python_with_builtin_ast,
 )
 
@@ -637,19 +638,13 @@ def test_rules_adapter_find_violations_missing_metrics():
     assert violations == []
 
 
-def test_parser_normalizer_returns_parser_result():
-    from mcp_zen_of_languages.languages.python.parser_normalizer import ParserNormalizer
-
-    parser_result = ParserResult(type="ast", tree={})
-    assert ParserNormalizer.normalize(parser_result) is parser_result
+def test_parse_python_returns_parser_result():
+    parsed = parse_python("def foo():\n    pass\n")
+    assert isinstance(parsed, ParserResult)
 
 
-def test_parser_normalizer_wraps_unknown():
-    from mcp_zen_of_languages.languages.python.parser_normalizer import ParserNormalizer
-
-    wrapped = ParserNormalizer.normalize({"tree": "raw"})
-    assert wrapped
-    assert wrapped.type == "unknown"
+def test_parse_python_returns_none_on_invalid_syntax():
+    assert parse_python("def bad(:\n    pass\n") is None
 
 
 def test_detector_config_select_violation_message_contains():

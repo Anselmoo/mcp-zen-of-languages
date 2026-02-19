@@ -8,7 +8,7 @@ lifecycle to route code to the appropriate language-specific pipeline.
 
 from __future__ import annotations
 
-import os
+from pathlib import Path
 
 from pydantic import BaseModel
 
@@ -72,7 +72,7 @@ def detect_language_by_extension(path: str) -> DetectionResult:
         A ``DetectionResult`` with ``method="extension"`` and confidence 0.95
         for known extensions, or ``language="unknown"`` for unrecognised ones.
     """
-    ext = os.path.splitext(path)[1].lower()
+    ext = Path(path).suffix.lower()
     lang = EXTENSION_LANGUAGE_MAP.get(ext, "unknown")
     return DetectionResult(language=lang, confidence=0.95, method="extension")
 

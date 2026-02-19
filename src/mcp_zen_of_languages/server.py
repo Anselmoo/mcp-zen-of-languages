@@ -305,7 +305,7 @@ async def analyze_zen_violations(
 
     Returns:
         AnalysisResult carrying metrics, a scored violation list, and the
-        computed ``overall_score`` (0–100 scale, higher is better).
+        computed ``overall_score`` (0-100 scale, higher is better).
 
     Example:
         ```python
@@ -592,7 +592,7 @@ async def generate_agent_tasks_tool(
             eligible source files are discovered recursively.
         languages (list[str] | None): Restrict scanning to these
             languages.  Omit to analyse only Python files by default.
-        min_severity (int): Severity floor (1–10 scale).  Violations
+        min_severity (int): Severity floor (1-10 scale).  Violations
             below this threshold are excluded from the task list.
 
     Returns:

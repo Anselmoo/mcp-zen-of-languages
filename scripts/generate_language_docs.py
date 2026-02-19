@@ -35,7 +35,7 @@ DOCS_DIR = ROOT / "docs" / "user-guide" / "languages"
 # ---------------------------------------------------------------------------
 # Language metadata
 # ---------------------------------------------------------------------------
-# (module_key, language_name, mkdocs_icon, docs_filename, config_key)
+# module_key, language_name, mkdocs_icon, docs_filename, config_key
 LANGUAGES: list[tuple[str, str, str, str, str]] = [
     ("python", "Python", "fontawesome/brands/python", "python.md", "python"),
     (
@@ -620,7 +620,7 @@ def render_index_page() -> str:
 
         - **Rule ID** — A stable identifier like `python-003` or `rust-008` used in configuration and reports
         - **Category** — Groups related principles (e.g., `ERROR_HANDLING`, `TYPE_SAFETY`, `IDIOMS`)
-        - **Severity** — A 1–10 score indicating how critical violations are (9–10 = critical, 1–3 = informational)
+        - **Severity** — A 1-10 score indicating how critical violations are (9-10 = critical, 1-3 = informational)
         - **Detectors** — One or more detector classes that find violations of this principle in your code
 
         You can tune severity thresholds and detector parameters per-language in your [`zen-config.yaml`](../configuration.md).

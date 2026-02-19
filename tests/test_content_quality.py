@@ -13,7 +13,7 @@ import sys
 
 def test_content_quality_checks() -> None:
     """Fail if content quality gate detects missing headings/snippets/markers."""
-    result = subprocess.run(
+    result = subprocess.run(  # noqa: S603
         [sys.executable, "scripts/check_content_quality.py"],
         capture_output=True,
         text=True,

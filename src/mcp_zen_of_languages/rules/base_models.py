@@ -10,7 +10,7 @@ Key concepts:
 * Each **ZenPrinciple** pairs a human-readable principle statement with
   machine-readable ``metrics``, ``detectable_patterns``, and ``violations``
   that drive the detection pipeline.
-* **Severity** (1–10) controls violation priority and is persisted into
+* **Severity** (1-10) controls violation priority and is persisted into
   every ``ViolationReport``.
 * ``LanguageZenPrinciples`` groups all principles for a language together
   with provenance metadata (philosophy, source URL).
@@ -24,14 +24,14 @@ from pydantic import BaseModel, ConfigDict, Field, HttpUrl, field_validator
 
 
 class SeverityLevel(int, Enum):
-    """Numeric severity scale (1–10) used to rank zen violations.
+    """Numeric severity scale (1-10) used to rank zen violations.
 
     Levels are grouped into four bands:
 
-    * **Informational** (1–3): Style suggestions with no functional impact.
-    * **Warning** (4–6): Likely maintainability or readability concerns.
-    * **Error** (7–8): Strong anti-patterns that hinder correctness.
-    * **Critical** (9–10): Severe violations requiring immediate attention.
+    * **Informational** (1-3): Style suggestions with no functional impact.
+    * **Warning** (4-6): Likely maintainability or readability concerns.
+    * **Error** (7-8): Strong anti-patterns that hinder correctness.
+    * **Critical** (9-10): Severe violations requiring immediate attention.
     """
 
     INFORMATIONAL_LOW = 1
@@ -131,7 +131,7 @@ class ZenPrinciple(BaseModel):
         principle: The idiomatic best-practice statement, written as a short
             imperative sentence.
         category: Taxonomy tag for grouping related principles.
-        severity: Impact score on a 1–10 scale (9–10 is critical).
+        severity: Impact score on a 1-10 scale (9-10 is critical).
         description: Paragraph-length explanation of *why* this principle
             matters.
         violations: Concrete symptoms that indicate a breach of the
@@ -335,7 +335,7 @@ class LanguageZenPrinciples(BaseModel):
         """Return principles at or above *min_severity*.
 
         Args:
-            min_severity: Inclusive lower bound on the 1–10 severity scale.
+            min_severity: Inclusive lower bound on the 1-10 severity scale.
 
         Returns:
             Principles whose ``severity`` is ≥ *min_severity*.
@@ -527,7 +527,7 @@ class ViolationReport(BaseModel):
     Attributes:
         principle_id: ID of the violated ``ZenPrinciple``.
         principle_name: Display name / statement of the principle.
-        severity: 1–10 severity copied from the principle.
+        severity: 1-10 severity copied from the principle.
         category: Taxonomy tag of the violated principle.
         location: Optional ``{"line": int, "column": int}`` pointing into
             the source file.
@@ -551,7 +551,7 @@ class ViolationReport(BaseModel):
 class AnalysisResult(BaseModel):
     """Aggregate outcome of analysing a source file against zen principles.
 
-    Contains the full violation list, a normalized 0–100 score, and any
+    Contains the full violation list, a normalized 0-100 score, and any
     metrics (complexity, LOC, etc.) computed during analysis.
 
     Attributes:

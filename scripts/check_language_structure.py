@@ -40,6 +40,14 @@ def _check_legacy_files(root: Path, label: str, errors: list[str]) -> None:
             errors.append(f"{label}: legacy marker in {path.name}")
 
 
+def _unexpected_python_modules(language_dir: Path) -> list[str]:
+    return sorted(
+        path.name
+        for path in language_dir.iterdir()
+        if path.is_file() and path.suffix == ".py" and path.name not in REQUIRED_FILES
+    )
+
+
 def main() -> int:
     repo_root = Path(__file__).resolve().parents[1]
     sys.path.insert(0, str(repo_root / "src"))
@@ -85,6 +93,11 @@ def main() -> int:
             continue
         if missing := sorted(REQUIRED_FILES - {p.name for p in entry.iterdir()}):
             errors.append(f"{entry.name}: missing {', '.join(missing)}")
+            continue
+        if unexpected_modules := _unexpected_python_modules(entry):
+            errors.append(
+                f"{entry.name}: unexpected python modules {unexpected_modules}"
+            )
             continue
         mapping_module_name = f"mcp_zen_of_languages.languages.{entry.name}.mapping"
         try:

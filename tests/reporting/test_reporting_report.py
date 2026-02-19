@@ -64,7 +64,7 @@ def test_format_gap_markdown_empty():
 
 def test_format_prompts_markdown_handles_missing():
     context = ReportContext(
-        target_path="/tmp",
+        target_path="tmp",
         languages=["python"],
         analysis_results=[],
         gap_analysis=GapAnalysis(detector_gaps=[], feature_gaps=[]),

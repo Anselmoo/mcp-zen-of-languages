@@ -636,7 +636,7 @@ class LineLengthDetector(ViolationDetector[LineLengthConfig], LocationHelperMixi
     Overly long lines force horizontal scrolling in editors, break side-by-
     side diffs in code review, and often signal that a statement is doing too
     much at once.  PEP 8 recommends 79 characters; most modern projects
-    settle on 88–120.
+    settle on 88-120.
 
     Implements the *"Beautiful is better than ugly"* zen principle:
     consistent line length produces a visually uniform codebase.
@@ -921,7 +921,9 @@ class NameStyleDetector(ViolationDetector[NameStyleConfig], LocationHelperMixin)
         principle = config.principle or config.principle_id or config.type
         severity = config.severity or 3
         message = config.select_violation_message(index=1)
-        for m in re.finditer(r"^def\s+([A-Za-z0-9_]+)", context.code, flags=re.M):
+        for m in re.finditer(
+            r"^def\s+([A-Za-z0-9_]+)", context.code, flags=re.MULTILINE
+        ):
             name = m.group(1)
             if not self._is_snake_case(name):
                 loc = self.find_location_by_substring(context.code, f"def {name}")
@@ -935,7 +937,7 @@ class NameStyleDetector(ViolationDetector[NameStyleConfig], LocationHelperMixin)
                     )
                 )
 
-        for m in re.finditer(r"^([A-Za-z0-9_]+)\s*=", context.code, flags=re.M):
+        for m in re.finditer(r"^([A-Za-z0-9_]+)\s*=", context.code, flags=re.MULTILINE):
             name = m.group(1)
             if name.isupper():
                 continue
@@ -1092,7 +1094,7 @@ class ShortVariableNamesDetector(
         """
         violations: list[Violation] = []
         min_len = config.min_identifier_length
-        for match in re.finditer(r"^(\w+)\s*=", context.code, flags=re.M):
+        for match in re.finditer(r"^(\w+)\s*=", context.code, flags=re.MULTILINE):
             name = match.group(1)
             if name.isupper() or len(name) >= min_len:
                 continue

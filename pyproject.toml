@@ -136,10 +136,6 @@ extend-ignore = [
     "D104", # undocumented-public-package
     "D105", # undocumented-public-magic-method
     "D107", # undocumented-public-init
-    "D200", # one-line-docstring
-    "D205", # blank-line-after-summary
-    "D403", # first-word-capitalized
-    "D415", # ends-in-punctuation
 ]
 
 [tool.ruff.lint.per-file-ignores]

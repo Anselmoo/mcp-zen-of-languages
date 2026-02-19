@@ -1,31 +1,27 @@
-"""Smoke test: ensure scripts/check_content_quality.py exits 0.
+"""Verify content quality checks stay passing as docs evolve.
 
-Catches accidental doc edits that would break the pre-commit / Poe quality gate
-before contributors hit the failure locally.
+Runs the content quality gate script and asserts it exits cleanly,
+ensuring that required headings, snippets, and generated markers remain
+intact in high-traffic documentation pages.
 """
 
 from __future__ import annotations
 
 import subprocess
 import sys
-from pathlib import Path
-
-ROOT = Path(__file__).resolve().parent.parent
 
 
-def test_content_quality_check_passes() -> None:
-    """scripts/check_content_quality.py must exit 0 against the current docs."""
+def test_content_quality_checks() -> None:
+    """Fail if content quality gate detects missing headings/snippets/markers."""
     result = subprocess.run(
         [sys.executable, "scripts/check_content_quality.py"],
         capture_output=True,
         text=True,
-        cwd=str(ROOT),
         check=False,
     )
     if result.returncode != 0:
         msg = (
-            "Content quality checks failed.\n"
-            "Run: uv run python scripts/check_content_quality.py\n\n"
-            f"Output:\n{result.stdout}{result.stderr}"
+            f"Content quality checks failed. Fix the reported issues:\n\n"
+            f"{result.stdout}\n{result.stderr}"
         )
         raise AssertionError(msg)

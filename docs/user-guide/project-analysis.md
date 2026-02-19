@@ -86,7 +86,7 @@ Unlike single-file linting, project-level analysis can detect:
 ## MCP + CLI remediation loop
 
 1. Run `zen report path/to/project --export-json report.json` to create a baseline artifact.
-2. In your MCP client, call `generate_agent_tasks` with violations from top offenders.
+2. In your MCP client, call `generate_agent_tasks` for the project path (optionally with a `min_severity` filter) so the agent can focus on top offenders.
 3. Apply fixes in focused batches (high severity first), then re-run `zen report`.
 4. Track score movement over time using the exported JSON in CI artifacts.
 

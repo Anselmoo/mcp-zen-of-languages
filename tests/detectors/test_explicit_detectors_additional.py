@@ -40,6 +40,7 @@ from mcp_zen_of_languages.languages.configs import (
     JsonDateFormatConfig,
     JsonKeyCasingConfig,
     JsonNullHandlingConfig,
+    JsonNullSprawlConfig,
     JsonSchemaConsistencyConfig,
     JsonStrictnessConfig,
     JsPureFunctionConfig,
@@ -145,6 +146,7 @@ from mcp_zen_of_languages.languages.json.detectors import (
     JsonDateFormatDetector,
     JsonKeyCasingDetector,
     JsonNullHandlingDetector,
+    JsonNullSprawlDetector,
     JsonSchemaConsistencyDetector,
     JsonStrictnessDetector,
 )
@@ -691,19 +693,19 @@ def test_json_detectors_cover_paths():
     )
     assert run_detector(
         JsonSchemaConsistencyDetector(),
-        '[{"a": 1}, {"b": 2}]',
+        '{"a":{"b":{"c":{"d":{"e":{"f":1}}}}}}',
         "json",
         JsonSchemaConsistencyConfig(),
     )
     assert run_detector(
         JsonDateFormatDetector(),
-        '{"date": "01/02/2024"}',
+        '{"a": 1, "a": 2}',
         "json",
         JsonDateFormatConfig(),
     )
     assert run_detector(
         JsonNullHandlingDetector(),
-        '{"value": null}',
+        '{"status":"active","state":"active","mode":"active"}',
         "json",
         JsonNullHandlingConfig(),
     )
@@ -715,9 +717,15 @@ def test_json_detectors_cover_paths():
     )
     assert run_detector(
         JsonArrayOrderDetector(),
-        '{"items": [1,2,3]}',
+        '{"items": [1,2,3,4,5]}',
         "json",
-        JsonArrayOrderConfig(),
+        JsonArrayOrderConfig(max_inline_array_size=4),
+    )
+    assert run_detector(
+        JsonNullSprawlDetector(),
+        '{"a": null, "b": null, "c": null, "d": null}',
+        "json",
+        JsonNullSprawlConfig(),
     )
 
 

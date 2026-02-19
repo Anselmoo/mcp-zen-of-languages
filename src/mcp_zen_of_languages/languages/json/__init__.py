@@ -1,6 +1,6 @@
 """JSON language package."""
 
-from .analyzer import JsonAnalyzer
+from .analyzer import JSONAnalyzer, JsonAnalyzer
 from .rules import JSON_ZEN
 
-__all__ = ["JSON_ZEN", "JsonAnalyzer"]
+__all__ = ["JSON_ZEN", "JSONAnalyzer", "JsonAnalyzer"]

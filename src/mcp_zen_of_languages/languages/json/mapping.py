@@ -11,6 +11,7 @@ from mcp_zen_of_languages.languages.configs import (
     JsonDateFormatConfig,
     JsonKeyCasingConfig,
     JsonNullHandlingConfig,
+    JsonNullSprawlConfig,
     JsonSchemaConsistencyConfig,
     JsonStrictnessConfig,
 )
@@ -19,6 +20,7 @@ from mcp_zen_of_languages.languages.json.detectors import (
     JsonDateFormatDetector,
     JsonKeyCasingDetector,
     JsonNullHandlingDetector,
+    JsonNullSprawlDetector,
     JsonSchemaConsistencyDetector,
     JsonStrictnessDetector,
 )
@@ -67,6 +69,13 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=JsonArrayOrderConfig,
             rule_ids=["json-006"],
             default_order=60,
+        ),
+        DetectorBinding(
+            detector_id="json-007",
+            detector_class=JsonNullSprawlDetector,
+            config_model=JsonNullSprawlConfig,
+            rule_ids=["json-007"],
+            default_order=70,
         ),
     ],
 )

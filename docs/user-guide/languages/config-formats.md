@@ -13,75 +13,81 @@ tags:
 
 Configuration files are code too — they're read by humans, versioned in git, and debugged at 2am during outages. MCP Zen of Languages analyzes four data formats with dedicated detectors for each.
 
-## JSON — 6 Principles, 6 Detectors
+## JSON — 7 Principles, 7 Detectors
 
 | Rule ID | Principle | Category | Severity |
 |---------|-----------|----------|:--------:|
-| `json-001` | Strictness enables interoperability | Correctness | 7 |
-| `json-002` | Structure implies Schema | Structure | 6 |
-| `json-003` | Dates should be standard | Correctness | 6 |
-| `json-004` | Null is a value, missing is unknown | Correctness | 5 |
+| `json-001` | Choose strictness intentionally | Correctness | 7 |
+| `json-002` | Keep object depth understandable | Structure | 6 |
+| `json-003` | Keys must be unique | Correctness | 8 |
+| `json-004` | Avoid magic string repetition | Clarity | 5 |
 | `json-005` | Keys are case-sensitive identifiers | Naming | 5 |
-| `json-006` | Arrays are ordered, Objects are not | Clarity | 4 |
+| `json-006` | Keep inline arrays bounded | Structure | 4 |
+| `json-007` | Prefer omission over null sprawl | Correctness | 5 |
 
-??? info "`json-001` — Strictness enables interoperability"
-    **Avoid comments and trailing commas for strict JSON compliance.**
+??? info "`json-001` — Choose strictness intentionally"
+    **Trailing commas should be rejected for JSON unless JSON5 is explicitly targeted.**
 
     **Common Violations:**
 
-    - Comments in JSON
-    - Trailing commas in objects/arrays
+    - Trailing commas in strict JSON mode
 
     **Detectable Patterns:**
 
-    - `//`
-    - `/\*`
     - `,\]`
     - `,\}`
 
-??? info "`json-002` — Structure implies Schema"
-    **Keep object shapes consistent within arrays.**
+??? info "`json-002` — Keep object depth understandable"
+    **Deeply nested objects/arrays are hard to reason about and validate.**
 
     **Common Violations:**
 
-    - Array objects with inconsistent keys
+    - Nesting depth exceeds configured threshold
 
-??? info "`json-003` — Dates should be standard"
-    **Use ISO 8601 date/time strings.**
-
-    **Common Violations:**
-
-    - Non-ISO date strings
-
-??? info "`json-004` — Null is a value, missing is unknown"
-    **Prefer explicit nulls for optional keys when applicable.**
+??? info "`json-003` — Keys must be unique"
+    **Duplicate object keys silently override values in many parsers.**
 
     **Common Violations:**
 
-    - Optional keys missing without nulls
+    - Duplicate keys in an object
+
+??? info "`json-004` — Avoid magic string repetition"
+    **Repeated string literals should be extracted or referenced consistently.**
+
+    **Common Violations:**
+
+    - Repeated magic string values
 
 ??? info "`json-005` — Keys are case-sensitive identifiers"
-    **Use consistent key casing (e.g., lower_snake or lowerCamel).**
+    **Avoid mixing camelCase, snake_case, and PascalCase at the same object level.**
 
     **Common Violations:**
 
-    - Mixed key casing
+    - Mixed key casing at same object level
 
-??? info "`json-006` — Arrays are ordered, Objects are not"
-    **Do not rely on object key order; use arrays when ordering matters.**
+??? info "`json-006` — Keep inline arrays bounded"
+    **Very large inline arrays are hard to review and often belong in separate data files.**
 
     **Common Violations:**
 
-    - Object keys imply ordering
+    - Oversized inline arrays
+
+??? info "`json-007` — Prefer omission over null sprawl"
+    **Excessive null usage usually indicates optional keys that can be omitted.**
+
+    **Common Violations:**
+
+    - Excessive null values across the document
 
 | Detector | What It Catches |
 |----------|-----------------|
-| **JsonStrictnessDetector** | Flags non-standard JSON extensions such as comments and trailing commas |
-| **JsonSchemaConsistencyDetector** | Detects inconsistent object shapes inside top-level JSON arrays |
-| **JsonDateFormatDetector** | Identifies date strings that deviate from ISO 8601 formatting |
-| **JsonNullHandlingDetector** | Reports top-level object keys whose values are explicitly ``null`` |
-| **JsonKeyCasingDetector** | Enforces consistent letter casing across all keys in a JSON object |
-| **JsonArrayOrderDetector** | Checks for ordered collections and duplicate keys that hint at misused objects |
+| **JsonStrictnessDetector** | Flag trailing commas when strict JSON output is expected |
+| **JsonSchemaConsistencyDetector** | Detect excessive JSON nesting depth |
+| **JsonDateFormatDetector** | Detect duplicate keys in JSON objects |
+| **JsonNullHandlingDetector** | Detect repeated magic-string values |
+| **JsonKeyCasingDetector** | Detect mixed key casing at the same object level |
+| **JsonArrayOrderDetector** | Detect oversized inline arrays |
+| **JsonNullSprawlDetector** | Detect excessive null values across JSON objects/arrays |
 
 ---
 

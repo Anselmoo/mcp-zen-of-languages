@@ -1049,27 +1049,32 @@ class TomlFloatIntegerConfig(DetectorConfig):
 
 
 class JsonStrictnessConfig(DetectorConfig):
-    """JSON strictness enforcement settings (comments, trailing commas)."""
+    """JSON/JSON5 strictness settings (trailing comma policy)."""
 
     type: Literal["json-001"] = "json-001"
+    target_format: Literal["json", "json5"] = "json"
+    allow_trailing_commas: bool = False
 
 
 class JsonSchemaConsistencyConfig(DetectorConfig):
-    """JSON array-object schema consistency settings."""
+    """JSON deep-nesting detection settings."""
 
     type: Literal["json-002"] = "json-002"
+    max_depth: int = 5
 
 
 class JsonDateFormatConfig(DetectorConfig):
-    """JSON ISO 8601 date format enforcement settings."""
+    """JSON duplicate-key detection settings."""
 
     type: Literal["json-003"] = "json-003"
 
 
 class JsonNullHandlingConfig(DetectorConfig):
-    """JSON explicit null-value detection settings."""
+    """JSON magic-string repetition detection settings."""
 
     type: Literal["json-004"] = "json-004"
+    min_repetition: int = 3
+    min_length: int = 4
 
 
 class JsonKeyCasingConfig(DetectorConfig):
@@ -1079,9 +1084,17 @@ class JsonKeyCasingConfig(DetectorConfig):
 
 
 class JsonArrayOrderConfig(DetectorConfig):
-    """JSON array-order and duplicate-key detection settings."""
+    """JSON oversized-inline-array detection settings."""
 
     type: Literal["json-006"] = "json-006"
+    max_inline_array_size: int = 20
+
+
+class JsonNullSprawlConfig(DetectorConfig):
+    """JSON null-sprawl detection settings."""
+
+    type: Literal["json-007"] = "json-007"
+    max_null_values: int = 3
 
 
 class XmlSemanticMarkupConfig(DetectorConfig):

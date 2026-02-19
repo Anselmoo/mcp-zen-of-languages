@@ -1272,7 +1272,7 @@ def _run_report(args: ReportArgs) -> int:
     return 0
 
 
-def _run_export_mapping(args: ExportMappingArgs) -> int:
+def _run_export_mapping(args: ExportMappingArgs) -> int:  # noqa: C901, PLR0912
     """Build and display the rule-to-detector mapping for registered languages.
 
     When ``--out`` is set, the mapping is written as JSON and the function
@@ -1365,7 +1365,7 @@ def _run_export_mapping(args: ExportMappingArgs) -> int:
 
 
 @app.command("reports", rich_help_panel="Analysis")
-def reports(
+def reports(  # noqa: PLR0913
     path: str = typer.Argument(..., help="File or directory to analyze"),
     language: str | None = typer.Option(None, help="Override language detection"),
     config: str | None = typer.Option(None, help="Path to zen-config.yaml"),
@@ -1453,7 +1453,7 @@ app.command("report", hidden=True, rich_help_panel="Analysis")(reports)
 
 
 @app.command("check", rich_help_panel="Analysis")
-def check(
+def check(  # noqa: PLR0913
     path: str = typer.Argument(..., help="File or directory to analyze"),
     language: str | None = typer.Option(None, help="Override language detection"),
     config: str | None = typer.Option(None, help="Path to zen-config.yaml"),
@@ -1499,7 +1499,7 @@ def check(
 
 
 @app.command("prompts", rich_help_panel="Analysis")
-def prompts(
+def prompts(  # noqa: PLR0913
     path: str = typer.Argument(..., help="File or directory to analyze"),
     language: str | None = typer.Option(None, help="Override language detection"),
     config: str | None = typer.Option(None, help="Path to zen-config.yaml"),

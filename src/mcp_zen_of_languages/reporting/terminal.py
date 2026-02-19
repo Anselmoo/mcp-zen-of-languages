@@ -134,7 +134,7 @@ def _build_generic_prompts_table(
     return table
 
 
-def _build_prompt_details_renderable(prompt: str, language: str, width: int) -> Group:
+def _build_prompt_details_renderable(prompt: str, language: str, width: int) -> Group:  # noqa: C901
     """Parse a Markdown prompt into a Rich ``Group`` with styled prose and code blocks.
 
     Code fences (``````` … ```````) are extracted and rendered as

@@ -370,7 +370,7 @@ def _working_tree_clean() -> bool:
 # ---------------------------------------------------------------------------
 
 
-def main() -> None:
+def main() -> None:  # noqa: C901, PLR0915
     parser = argparse.ArgumentParser(
         description="Bump version, refresh uv.lock, and create a release branch.",
         formatter_class=argparse.RawDescriptionHelpFormatter,

@@ -827,7 +827,7 @@ class NameStyleDetector(ViolationDetector[NameStyleConfig], LocationHelperMixin)
         """
         return "name_style"
 
-    def detect(
+    def detect(  # noqa: C901, PLR0912
         self,
         context: AnalysisContext,
         config: NameStyleConfig,
@@ -1030,7 +1030,7 @@ class ShortVariableNamesDetector(
         """
         return "short_variable_names"
 
-    def detect(
+    def detect(  # noqa: C901, PLR0912
         self,
         context: AnalysisContext,
         config: ShortVariableNamesConfig,

@@ -413,7 +413,7 @@ async def generate_prompts_tool(code: str, language: str) -> PromptBundle:
     return build_prompt_bundle([result])
 
 
-async def _analyze_repository_internal(
+async def _analyze_repository_internal(  # noqa: C901
     repo_path: str,
     languages: list[str] | None = None,
     max_files: int = 100,
@@ -659,7 +659,7 @@ async def check_architectural_patterns(code: str, language: str) -> PatternsResu
     annotations=READONLY_ANNOTATIONS,
     output_schema=_output_schema(ReportOutput),
 )
-async def generate_report_tool(
+async def generate_report_tool(  # noqa: PLR0913
     target_path: str,
     language: str | None = None,
     *,
@@ -870,7 +870,7 @@ async def get_config() -> ConfigStatus:
     annotations=MUTATING_ANNOTATIONS,
     output_schema=_output_schema(ConfigStatus),
 )
-async def set_config_override(
+async def set_config_override(  # noqa: PLR0913
     language: str,
     max_cyclomatic_complexity: int | None = None,
     max_nesting_depth: int | None = None,

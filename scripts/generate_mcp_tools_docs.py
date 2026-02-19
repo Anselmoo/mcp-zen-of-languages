@@ -47,7 +47,7 @@ def _extract_first_paragraph(docstring: str | None) -> str:
     return " ".join(lines)
 
 
-def _extract_args_section(docstring: str | None) -> list[tuple[str, str]]:
+def _extract_args_section(docstring: str | None) -> list[tuple[str, str]]:  # noqa: C901
     """Extract (param_name, description) pairs from the Args section."""
     if not docstring:
         return []
@@ -147,7 +147,7 @@ def _annotation_label(annotations: object | None) -> str:
 # ---------------------------------------------------------------------------
 
 
-def generate() -> str:
+def generate() -> str:  # noqa: C901, PLR0912, PLR0915
     """Generate the full markdown content from the live server."""
     # Import server to get tool/resource/prompt registrations
     from mcp_zen_of_languages.server import mcp

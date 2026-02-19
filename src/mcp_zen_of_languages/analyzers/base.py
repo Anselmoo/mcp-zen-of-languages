@@ -474,7 +474,7 @@ class DetectionPipeline:
             Factory that assembles the detector list from zen rules.
     """
 
-    def __init__(self, detectors: list[ViolationDetector]):
+    def __init__(self, detectors: list[ViolationDetector]) -> None:
         """Prepare the pipeline with an ordered detector sequence.
 
         Args:
@@ -565,7 +565,7 @@ class BaseAnalyzer(ABC):
             Configuration consumed by the analyzer and its detectors.
     """
 
-    def __init__(self, config: AnalyzerConfig | None = None):
+    def __init__(self, config: AnalyzerConfig | None = None) -> None:
         """Bootstrap the analyzer with configuration and a detector pipeline.
 
         If no *config* is supplied, the language-specific ``default_config()``

@@ -84,7 +84,7 @@ class RulesAdapter:
         ``rules.base_models.ZenPrinciple`` — canonical principle definitions.
     """
 
-    def __init__(self, language: str, config: RulesAdapterConfig | None = None):
+    def __init__(self, language: str, config: RulesAdapterConfig | None = None) -> None:
         """Bind the adapter to a language and optional threshold overrides.
 
         Loads the ``LanguageZenPrinciples`` for *language* from the global

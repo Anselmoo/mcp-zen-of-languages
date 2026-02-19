@@ -107,7 +107,6 @@ def classify_violation(violation: Violation) -> str:
     Returns:
         str: Theme label (e.g. ``"Complexity"``, ``"Documentation"``, ``"Other"``).
     """
-
     text = f"{violation.principle} {violation.message}".lower()
     return next(
         (
@@ -134,7 +133,6 @@ def build_big_picture_analysis(results: list[AnalysisResult]) -> BigPictureAnaly
     Returns:
         BigPictureAnalysis: Clusters, roadmap, health score, and trajectory guidance.
     """
-
     clusters_map: dict[str, list[Violation]] = {}
     total_weight = 0
     for result in results:

@@ -30,7 +30,6 @@ def build_violation_table(violations: list, path: str) -> Table:
         Table: ``BOX_CONTENT``-styled table with alternating ``""`` / ``"dim"``
             row styles for visual separation.
     """
-
     table = Table(
         title=f"Violations - {path}",
         box=BOX_CONTENT,

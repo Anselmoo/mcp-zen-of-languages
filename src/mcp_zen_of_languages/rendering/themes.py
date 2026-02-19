@@ -61,7 +61,6 @@ def severity_style(severity: int) -> str:
     Returns:
         str: Theme token name usable with Rich ``style=`` parameters.
     """
-
     if severity >= SEVERITY_CRITICAL:
         return "severity.critical"
     if severity >= SEVERITY_HIGH:
@@ -84,7 +83,6 @@ def severity_badge(severity: int) -> str:
     Returns:
         str: Rich markup string that renders as a coloured badge when printed.
     """
-
     if _use_emoji():
         if severity >= SEVERITY_CRITICAL:
             return "[severity.critical]🔴 CRIT[/]"
@@ -115,7 +113,6 @@ def pass_fail_glyph(*, passed: bool) -> str:
     Returns:
         str: Single-glyph string suitable for inline concatenation.
     """
-
     if _use_emoji():
         return "✅" if passed else "❌"
     return "[OK]" if passed else "[FAIL]"
@@ -129,7 +126,6 @@ def file_glyph() -> str:
     Returns:
         str: Single-character glyph suitable for inline concatenation.
     """
-
     return "📄" if _use_emoji() else "-"
 
 
@@ -142,7 +138,6 @@ def score_glyph() -> str:
     Returns:
         str: Single-character glyph suitable for inline concatenation.
     """
-
     return "⭐" if _use_emoji() else "*"
 
 
@@ -157,5 +152,4 @@ def _use_emoji() -> bool:
     Returns:
         bool: True on modern terminals; False on legacy Windows consoles.
     """
-
     return not Console().options.legacy_windows

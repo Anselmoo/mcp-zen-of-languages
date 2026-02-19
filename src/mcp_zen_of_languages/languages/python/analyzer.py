@@ -55,7 +55,7 @@ class PythonAnalyzer(BaseAnalyzer, LocationHelperMixin):
         self,
         config: AnalyzerConfig | None = None,
         pipeline_config: PipelineConfig | None = None,
-    ):
+    ) -> None:
         """Initialise the Python analyzer with optional config overrides.
 
         Args:

@@ -102,7 +102,6 @@ def create_analyzer(
         JSON                            ``json``
         =============================== ===================================
     """
-
     lang = language.lower()
     if lang in {"py", "python"}:
         return PythonAnalyzer(config=config, pipeline_config=pipeline_config)

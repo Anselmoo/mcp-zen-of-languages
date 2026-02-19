@@ -1,5 +1,4 @@
-"""
-Template for adding new language zen principles.
+"""Template for adding new language zen principles.
 
 Copy this file and rename it to {language}_zen.py
 Then fill in the principles for your target language.

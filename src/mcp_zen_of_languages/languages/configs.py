@@ -69,7 +69,6 @@ class DetectorConfig(BaseModel):
         Returns:
             str: The selected violation message text.
         """
-
         messages = self.violation_messages or []
         if contains:
             for message in messages:

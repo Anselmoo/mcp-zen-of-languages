@@ -4,21 +4,44 @@
   border-radius: var(--zen-radius-full);
   transition: background-color var(--zen-duration-fast) var(--zen-ease-out),
               border-color var(--zen-duration-fast) var(--zen-ease-out),
-              transform var(--zen-duration-fast) var(--zen-ease-out);
+              color var(--zen-duration-fast) var(--zen-ease-out),
+              translate var(--zen-duration-fast) var(--zen-ease-out);
 }
 
+/* Individual `translate` keeps mkdocs layout transforms intact */
 .md-button:hover {
-  transform: translateY(-1px);
+  translate: 0 -1px;
 }
 
+/* ── Secondary buttons — purple family (light) ──────────────────────────── */
 :is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset a.md-button:not(.md-button--primary) {
-  color: var(--caligo-light-text);
+  color: var(--caligo-accent-muted);
+  border-color: var(--caligo-accent-muted);
+  background-color: transparent;
 }
 
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset a.md-button:not(.md-button--primary):hover,
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset a.md-button:not(.md-button--primary):focus {
+  background-color: color-mix(in oklch, var(--caligo-accent-muted) 14%, transparent);
+  border-color: var(--caligo-accent);
+  color: var(--caligo-accent-dark);
+}
+
+/* ── Secondary buttons — purple family (dark) ───────────────────────────── */
 :is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset a.md-button:not(.md-button--primary) {
-  color: var(--caligo-fg-primary);
+  color: var(--caligo-accent);
+  border-color: var(--caligo-accent);
+  background-color: transparent;
 }
 
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset a.md-button:not(.md-button--primary):hover,
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset a.md-button:not(.md-button--primary):focus {
+  background-color: color-mix(in oklch, var(--caligo-accent) 16%, transparent);
+  border-color: var(--caligo-accent-soft);
+  color: var(--caligo-accent-soft);
+}
+
+/* ── Primary button ─────────────────────────────────────────────────────── */
 .md-button--primary {
   background-color: var(--md-primary-fg-color);
   color: var(--caligo-bg-base);
@@ -35,4 +58,24 @@
 .md-typeset a.md-button--primary:hover,
 .md-typeset a.md-button--primary:focus {
   color: var(--caligo-bg-base);
+}
+
+/* ── Cherry-accent button variant (.md-button--cherry) ──────────────────── */
+/* Usage: [Get Started]{ .md-button .md-button--cherry }                    */
+.md-button--cherry {
+  background-color: var(--caligo-cherry);
+  border-color: var(--caligo-cherry);
+  color: #ffffff;
+}
+
+.md-button--cherry:hover {
+  background-color: var(--caligo-cherry-dark);
+  border-color: var(--caligo-cherry-dark);
+  color: #ffffff;
+}
+
+.md-typeset a.md-button--cherry,
+.md-typeset a.md-button--cherry:hover,
+.md-typeset a.md-button--cherry:focus {
+  color: #ffffff;
 }

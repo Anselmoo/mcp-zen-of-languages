@@ -19,7 +19,7 @@ from rich import box
 from rich.console import Console
 from rich.theme import Theme
 
-# Severity tier thresholds (1–10 scale)
+# Severity tier thresholds (1-10 scale)
 SEVERITY_CRITICAL = 9
 SEVERITY_HIGH = 7
 SEVERITY_MEDIUM = 4

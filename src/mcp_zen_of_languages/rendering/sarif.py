@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from mcp_zen_of_languages.models import AnalysisResult
 
-# Severity tier thresholds (1–10 scale)
+# Severity tier thresholds (1-10 scale)
 SEVERITY_CRITICAL = 9
 SEVERITY_MEDIUM = 4
 

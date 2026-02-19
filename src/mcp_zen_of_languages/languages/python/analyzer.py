@@ -184,7 +184,7 @@ class PythonAnalyzer(BaseAnalyzer, LocationHelperMixin):
             imports = []
             for line in context.code.splitlines():
                 stripped = line.strip()
-                if stripped.startswith("import ") or stripped.startswith("from "):
+                if stripped.startswith(("import ", "from ")):
                     parts = stripped.split()
                     if len(parts) >= MIN_IMPORT_PARTS:
                         imports.append(parts[1].split(".")[0])

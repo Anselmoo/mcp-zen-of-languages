@@ -94,7 +94,7 @@ logger.setLevel(
 
 _THRESHOLDS = {"relaxed": 5, "moderate": 6, "strict": 7}
 
-# Severity tier thresholds (1–10 scale)
+# Severity tier thresholds (1-10 scale)
 SEVERITY_CRITICAL = 9
 SEVERITY_HIGH = 7
 SEVERITY_MEDIUM = 4

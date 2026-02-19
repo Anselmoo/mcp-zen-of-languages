@@ -57,7 +57,7 @@ def _extract_python_imports(text: str) -> list[str]:
     imports: list[str] = []
     for line in text.splitlines():
         stripped = line.strip()
-        if stripped.startswith("import ") or stripped.startswith("from "):
+        if stripped.startswith(("import ", "from ")):
             parts = stripped.split()
             if len(parts) >= MIN_IMPORT_PARTS:
                 imports.append(parts[1].split(".")[0])

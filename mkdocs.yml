@@ -265,11 +265,10 @@ nav:
   - Contributing:
       - contributing/index.md
       - Development: contributing/development.md
-      - MkDocs Material Modernization: contributing/mkdocs-material-modernization.md
+      - Zensical Migration: contributing/zensical-migration.md
       - Adding a Language: contributing/adding-language.md
       - Adding a Detector: contributing/adding-detector.md
       - Architecture: contributing/architecture.md
       - Rendering Style Guide: contributing/rendering-style-guide.md
-      - Material Examples: contributing/material-examples.md
   - Tags: tags.md
   - Changelog: changelog.md

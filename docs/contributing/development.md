@@ -58,7 +58,7 @@ pre-commit run --hook-stage pre-push --all-files
 ## Debugging tips
 
 - Use `uv run pytest -k <pattern> -xvs` for focused tests.
-- Run `uv run mkdocs serve` to preview docs locally.
+- Run `uv run zensical serve -f mkdocs.yml` to preview docs locally.
 
 !!! danger "Don't skip pre-commit"
 Pushing without running `pre-commit run --all-files` will likely trigger CI failures. The hooks check linting, docs links, orphan pages, Sphinx role leaks, and docs contrast.

@@ -86,7 +86,7 @@ repos:
         stages: [manual]
       - id: docs-build-strict
         name: Build docs (strict)
-        entry: uv run mkdocs build --strict
+        entry: uv run zensical build -f mkdocs.yml
         language: system
         pass_filenames: false
         always_run: true

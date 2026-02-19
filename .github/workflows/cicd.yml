@@ -307,7 +307,7 @@ jobs:
         env:
           MKDOCS_SOCIAL_ENABLED: "true"
           MKDOCS_GIT_REVISION_ENABLED: "true"
-        run: uv run mkdocs build --strict
+        run: uv run zensical build -f mkdocs.yml
 
       - name: Upload pages artifact
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'

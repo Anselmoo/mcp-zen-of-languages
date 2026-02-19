@@ -47,7 +47,7 @@ def parse_args() -> argparse.Namespace:
         "--site-dir",
         type=Path,
         default=DEFAULT_SITE_DIR,
-        help="Built MkDocs site directory.",
+        help="Built documentation site directory.",
     )
     parser.add_argument(
         "--report",
@@ -70,7 +70,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--build",
         action="store_true",
-        help="Build docs with mkdocs before running checks.",
+        help="Build docs with Zensical before running checks.",
     )
     parser.add_argument(
         "--limit-pages",
@@ -106,7 +106,7 @@ def build_docs() -> None:
     env.setdefault("MKDOCS_SOCIAL_ENABLED", "false")
     env.setdefault("MKDOCS_GIT_REVISION_ENABLED", "false")
     subprocess.run(
-        ["uv", "run", "mkdocs", "build", "--strict"],
+        ["uv", "run", "zensical", "build", "-f", "mkdocs.yml"],
         check=True,
         env=env,
     )

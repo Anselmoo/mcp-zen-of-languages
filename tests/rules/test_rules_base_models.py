@@ -3,10 +3,17 @@ from __future__ import annotations
 from mcp_zen_of_languages.models import DependencyAnalysis, DependencyCycle, Violation
 from mcp_zen_of_languages.rules import base_models
 
+DEFAULT_SEVERITY = 5
+
 
 def test_violation_get_and_getitem():
-    violation = Violation(principle="Test", severity=5, message="msg", suggestion="fix")
-    assert violation.get("severity") == 5
+    violation = Violation(
+        principle="Test",
+        severity=DEFAULT_SEVERITY,
+        message="msg",
+        suggestion="fix",
+    )
+    assert violation.get("severity") == DEFAULT_SEVERITY
     assert violation["message"] == "msg"
 
 
@@ -21,7 +28,7 @@ def test_registry_stats_from_registry():
         id="x-1",
         principle="Test",
         description="desc",
-        severity=5,
+        severity=DEFAULT_SEVERITY,
         category=base_models.PrincipleCategory.READABILITY,
         violations=[],
     )
@@ -43,7 +50,7 @@ def test_principle_helpers():
         id="x-1",
         principle="Test",
         description="desc",
-        severity=5,
+        severity=DEFAULT_SEVERITY,
         category=base_models.PrincipleCategory.READABILITY,
         violations=[],
     )
@@ -66,7 +73,7 @@ def test_detector_gap_helpers():
         id="x-1",
         principle="Test",
         description="desc",
-        severity=5,
+        severity=DEFAULT_SEVERITY,
         category=base_models.PrincipleCategory.READABILITY,
         violations=[],
     )

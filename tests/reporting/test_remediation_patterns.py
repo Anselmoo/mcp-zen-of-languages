@@ -9,6 +9,8 @@ from mcp_zen_of_languages.models import (
 from mcp_zen_of_languages.reporting.remediation_patterns import resolve_pattern
 from mcp_zen_of_languages.reporting.theme_clustering import build_big_picture_analysis
 
+MAX_HEALTH_SCORE = 100
+
 
 def _make_result(violations: list[Violation]) -> AnalysisResult:
     cyclomatic = CyclomaticSummary(blocks=[], average=0.0)
@@ -42,4 +44,4 @@ def test_big_picture_analysis_clusters():
     analysis = build_big_picture_analysis([_make_result(violations)])
     assert analysis.clusters
     assert analysis.refactoring_roadmap
-    assert analysis.health_score <= 100
+    assert analysis.health_score <= MAX_HEALTH_SCORE

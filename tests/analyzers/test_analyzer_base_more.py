@@ -3,6 +3,8 @@ from __future__ import annotations
 from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
 from mcp_zen_of_languages.models import CyclomaticSummary, Violation
 
+SINGLE_VIOLATION_SCORE = 90.0
+
 
 class _Analyzer(BaseAnalyzer):
     def default_config(self):
@@ -41,7 +43,7 @@ def test_analyze_includes_rules_summary_disabled():
 def test_calculate_overall_score_nonempty():
     analyzer = _Analyzer()
     violations = [Violation(principle="T", severity=5, message="msg")]
-    assert analyzer._calculate_overall_score(violations) == 90.0
+    assert analyzer._calculate_overall_score(violations) == SINGLE_VIOLATION_SCORE
 
 
 def test_create_context_sets_repository_imports():

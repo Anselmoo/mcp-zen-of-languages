@@ -7,6 +7,9 @@ from mcp_zen_of_languages.analyzers.base import (
 )
 from mcp_zen_of_languages.models import CyclomaticSummary, Location, Violation
 
+EMPTY_VIOLATIONS_SCORE = 100.0
+SINGLE_VIOLATION_SCORE = 90.0
+
 
 class _Analyzer(BaseAnalyzer, LocationHelperMixin):
     def default_config(self):
@@ -37,7 +40,7 @@ class _Analyzer(BaseAnalyzer, LocationHelperMixin):
 
 def test_calculate_overall_score_empty():
     analyzer = _Analyzer()
-    assert analyzer._calculate_overall_score([]) == 100.0
+    assert analyzer._calculate_overall_score([]) == EMPTY_VIOLATIONS_SCORE
 
 
 def test_location_helper_find_location():
@@ -62,7 +65,7 @@ def test_build_result_scores():
     context = AnalysisContext(code="def foo():\n    pass\n", language="python")
     violation = Violation(principle="T", severity=5, message="msg")
     result = analyzer._build_result(context, [violation])
-    assert result.overall_score == 90.0
+    assert result.overall_score == SINGLE_VIOLATION_SCORE
 
 
 def test_build_result_includes_metrics_defaults():

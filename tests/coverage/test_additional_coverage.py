@@ -53,6 +53,8 @@ from mcp_zen_of_languages.utils.language_detection import (
 )
 from mcp_zen_of_languages.utils.parsers import parse_python
 
+INVALID_COMMAND_EXIT_CODE = 2
+
 
 def test_main_entrypoint_module_executes(monkeypatch):
     import mcp_zen_of_languages.__main__ as main_module
@@ -118,7 +120,7 @@ def test_cli_render_report_output():
 
 def test_cli_main_unknown_command(tmp_path, capsys):
     exit_code = main(["list-rules", "unknown"])
-    assert exit_code == 2
+    assert exit_code == INVALID_COMMAND_EXIT_CODE
     captured = capsys.readouterr()
     assert "Unsupported language" in captured.err
 

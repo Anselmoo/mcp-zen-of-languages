@@ -8,16 +8,20 @@ from mcp_zen_of_languages.languages.configs import (
 )
 from mcp_zen_of_languages.languages.python.rules import PYTHON_ZEN
 
+LINE_LENGTH_SEVERITY = 4
+SPARSE_CODE_SEVERITY = 5
+OVERRIDDEN_LINE_LENGTH = 120
+
 
 def test_registry_configs_from_rules_contains_principle():
     configs = REGISTRY.configs_from_rules(PYTHON_ZEN)
     line_cfg = next(cfg for cfg in configs if cfg.type == "line_length")
     assert line_cfg.principle == "Beautiful is better than ugly"
-    assert line_cfg.severity == 4
+    assert line_cfg.severity == LINE_LENGTH_SEVERITY
     assert line_cfg.violation_messages
     missing_cfg = next(cfg for cfg in configs if cfg.type == "sparse_code")
     assert missing_cfg.principle == "Sparse is better than dense"
-    assert missing_cfg.severity == 5
+    assert missing_cfg.severity == SPARSE_CODE_SEVERITY
 
 
 def test_registry_configs_from_rules_all_python_rules():
@@ -50,8 +54,8 @@ def test_merge_pipeline_overrides_applies_value():
     base = PipelineConfig.from_rules("python")
     override = PipelineConfig(
         language="python",
-        detectors=[LineLengthConfig(max_line_length=120)],
+        detectors=[LineLengthConfig(max_line_length=OVERRIDDEN_LINE_LENGTH)],
     )
     merged = merge_pipeline_overrides(base, override)
     merged_line = next(cfg for cfg in merged.detectors if cfg.type == "line_length")
-    assert merged_line.max_line_length == 120
+    assert merged_line.max_line_length == OVERRIDDEN_LINE_LENGTH

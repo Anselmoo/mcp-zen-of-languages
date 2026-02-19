@@ -21,6 +21,9 @@ from mcp_zen_of_languages.reporting.report import generate_report
 from mcp_zen_of_languages.rules import get_principle_by_id
 from mcp_zen_of_languages.rules.base_models import PrincipleCategory, ZenPrinciple
 
+EMPTY_VIOLATIONS_SCORE = 100.0
+REPORT_FAILURE_EXIT_CODE = 2
+
 
 class DummyAnalyzer(BaseAnalyzer):
     def __init__(self):
@@ -101,7 +104,7 @@ def test_base_analyzer_errors_and_helpers():
         DummyAnalyzer(config=object())
 
     analyzer = DummyAnalyzer()
-    assert analyzer._calculate_overall_score([]) == 100.0
+    assert analyzer._calculate_overall_score([]) == EMPTY_VIOLATIONS_SCORE
 
     assert analyzer._create_context("", None, None, None).language == "python"
 
@@ -143,14 +146,14 @@ def test_config_pipeline_overrides(tmp_path):
 
 def test_cli_report_no_files(tmp_path, capsys):
     exit_code = main(["report", str(tmp_path)])
-    assert exit_code == 2
+    assert exit_code == REPORT_FAILURE_EXIT_CODE
     captured = capsys.readouterr()
     assert "No analyzable files" in captured.err
 
 
 def test_cli_report_missing_path(tmp_path, capsys):
     exit_code = main(["report", str(tmp_path / "missing")])
-    assert exit_code == 2
+    assert exit_code == REPORT_FAILURE_EXIT_CODE
     captured = capsys.readouterr()
     assert "Path not found" in captured.err
 

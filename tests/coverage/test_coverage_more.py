@@ -34,6 +34,9 @@ from mcp_zen_of_languages.utils.parsers import (
     parse_python_with_builtin_ast,
 )
 
+REPORT_FAILURE_EXIT_CODE = 2
+DEFAULT_VIOLATION_SEVERITY = 5
+
 
 class _DummyDetector(ViolationDetector[ExplicitnessConfig]):
     @property
@@ -80,7 +83,7 @@ def test_cli_run_report_invalid_path(capsys):
             "skip_gaps": False,
         },
     )()
-    assert cli._run_report(args) == 2
+    assert cli._run_report(args) == REPORT_FAILURE_EXIT_CODE
     captured = capsys.readouterr()
     assert "Path not found" in captured.err
 
@@ -222,7 +225,7 @@ def test_violation_detector_build_violation_defaults():
     detector = _DummyDetector()
     config = ExplicitnessConfig(type="explicitness")
     violation = detector.build_violation(config, contains="Missing")
-    assert violation.severity == 5
+    assert violation.severity == DEFAULT_VIOLATION_SEVERITY
 
 
 def test_parse_python_with_builtin_ast_syntax_error():

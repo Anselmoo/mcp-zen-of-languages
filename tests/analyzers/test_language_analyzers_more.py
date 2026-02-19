@@ -2,12 +2,14 @@ from __future__ import annotations
 
 from mcp_zen_of_languages.languages.python.analyzer import PythonAnalyzer
 
+EXPECTED_IMPORT_LINES = 2
+
 
 def test_python_analyzer_dependency_analysis(tmp_path):
     analyzer = PythonAnalyzer()
     code = "import os\nimport sys\n"
     result = analyzer.analyze(code, path=str(tmp_path / "sample.py"))
-    assert result.metrics.lines_of_code == 2
+    assert result.metrics.lines_of_code == EXPECTED_IMPORT_LINES
 
 
 def test_python_analyzer_handles_repository_imports(tmp_path):

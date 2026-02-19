@@ -5,6 +5,7 @@ import re
 from pathlib import Path
 
 SRC_PY_FILES = sorted(Path("src/mcp_zen_of_languages").rglob("*.py"))
+MIN_DOCSTRING_LENGTH = 20
 
 BANNED_DOCSTRING_PATTERNS = [
     r">>> 1 \+ 1",
@@ -203,14 +204,14 @@ def test_public_api_symbols_have_non_trivial_docstrings() -> None:
         ):
             continue
         module_doc = ast.get_docstring(tree)
-        if not module_doc or len(module_doc.strip()) < 20:
+        if not module_doc or len(module_doc.strip()) < MIN_DOCSTRING_LENGTH:
             offenders.append(f"{path}:module")
         for node in tree.body:
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
                 if node.name.startswith("_"):
                     continue
                 doc = ast.get_docstring(node)
-                if not doc or len(doc.strip()) < 20:
+                if not doc or len(doc.strip()) < MIN_DOCSTRING_LENGTH:
                     offenders.append(f"{path}:{node.lineno}:{node.name}")
     assert not offenders, (
         "Public modules/classes/functions must have non-trivial docstrings:\n"

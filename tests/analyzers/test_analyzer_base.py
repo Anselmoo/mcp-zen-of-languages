@@ -8,6 +8,8 @@ from pydantic import BaseModel
 from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
 from mcp_zen_of_languages.models import CyclomaticSummary
 
+EXPECTED_TWO_LINE_SOURCE = 2
+
 
 class _DummyParseResult(BaseModel):
     type: str = "dummy"
@@ -65,7 +67,7 @@ class _DummyAnalyzerWithResults(_DummyAnalyzer):
 def test_base_analyzer_analyze_success():
     analyzer = _DummyAnalyzer()
     result = analyzer.analyze("def foo():\n    pass\n")
-    assert result.metrics.lines_of_code == 2
+    assert result.metrics.lines_of_code == EXPECTED_TWO_LINE_SOURCE
 
 
 def test_base_analyzer_handles_parse_error():

@@ -10,6 +10,9 @@ def test_analysis_result_getitem():
         lines_of_code=1,
     )
     result = AnalysisResult(
-        language="python", metrics=metrics, violations=[], overall_score=100.0
+        language="python",
+        metrics=metrics,
+        violations=[],
+        overall_score=100.0,
     )
     assert result["language"] == "python"

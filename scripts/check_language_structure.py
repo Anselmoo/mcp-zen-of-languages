@@ -48,7 +48,7 @@ def _unexpected_python_modules(language_dir: Path) -> list[str]:
     )
 
 
-def main() -> int:
+def main() -> int:  # noqa: C901, PLR0912, PLR0915
     repo_root = Path(__file__).resolve().parents[1]
     sys.path.insert(0, str(repo_root / "src"))
 
@@ -96,7 +96,7 @@ def main() -> int:
             continue
         if unexpected_modules := _unexpected_python_modules(entry):
             errors.append(
-                f"{entry.name}: unexpected python modules {unexpected_modules}"
+                f"{entry.name}: unexpected python modules {unexpected_modules}",
             )
             continue
         mapping_module_name = f"mcp_zen_of_languages.languages.{entry.name}.mapping"
@@ -113,7 +113,7 @@ def main() -> int:
             continue
         if detector_map.language != entry.name:
             errors.append(
-                f"{entry.name}: DETECTOR_MAP language mismatch {detector_map.language}"
+                f"{entry.name}: DETECTOR_MAP language mismatch {detector_map.language}",
             )
             continue
         detectors_path = entry / "detectors.py"
@@ -130,7 +130,7 @@ def main() -> int:
         extra_exports = sorted(set(exported) - registry_detectors)
         if missing_exports or extra_exports:
             errors.append(
-                f"{entry.name}: __all__ mismatch missing={missing_exports} extra={extra_exports}"
+                f"{entry.name}: __all__ mismatch missing={missing_exports} extra={extra_exports}",
             )
         lang_zen = get_language_zen(entry.name)
         if lang_zen is None:
@@ -139,7 +139,7 @@ def main() -> int:
         missing_rule_ids, unknown_rule_ids = get_rule_id_coverage(lang_zen)
         if missing_rule_ids or unknown_rule_ids:
             errors.append(
-                f"{entry.name}: rule_id gaps missing={missing_rule_ids} unknown={unknown_rule_ids}"
+                f"{entry.name}: rule_id gaps missing={missing_rule_ids} unknown={unknown_rule_ids}",
             )
         rule_ids = {principle.id for principle in lang_zen.principles}
         rule_map_keys: set[str] = set()
@@ -149,7 +149,7 @@ def main() -> int:
             rule_map_keys.update(meta.rule_map.keys())
         if unknown_rule_keys := sorted(rule_map_keys - rule_ids):
             errors.append(
-                f"{entry.name}: rule_map references unknown rules {unknown_rule_keys}"
+                f"{entry.name}: rule_map references unknown rules {unknown_rule_keys}",
             )
         for principle in lang_zen.principles:
             specs = principle.violation_specs
@@ -176,13 +176,13 @@ def main() -> int:
                 unknown_specs.update(coverage_set - all_violation_ids)
             if unknown_specs:
                 errors.append(
-                    f"{entry.name}: {principle.id} unknown violation ids {sorted(unknown_specs)}"
+                    f"{entry.name}: {principle.id} unknown violation ids {sorted(unknown_specs)}",
                 )
             if full_coverage:
                 continue
             if missing_specs := sorted(required_ids - covered):
                 errors.append(
-                    f"{entry.name}: {principle.id} missing violations {missing_specs}"
+                    f"{entry.name}: {principle.id} missing violations {missing_specs}",
                 )
 
     if errors:

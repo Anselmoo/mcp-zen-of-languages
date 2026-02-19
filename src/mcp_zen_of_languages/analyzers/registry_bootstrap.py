@@ -134,7 +134,7 @@ if not REGISTRY.items():
             rules_to_register[language] = missing
 
     rule_configs = _build_rule_configs(
-        [rule_id for ids in rules_to_register.values() for rule_id in ids]
+        [rule_id for ids in rules_to_register.values() for rule_id in ids],
     )
     for language, rule_ids in rules_to_register.items():
         for rule_id in rule_ids:
@@ -146,5 +146,5 @@ if not REGISTRY.items():
                     language=language,
                     rule_ids=[rule_id],
                     default_order=900,
-                )
+                ),
             )

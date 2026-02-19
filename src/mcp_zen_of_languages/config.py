@@ -98,7 +98,7 @@ class ConfigModel(BaseModel):
             "powershell",
             "cpp",
             "csharp",
-        ]
+        ],
     )
     severity_threshold: int = 5
     pipelines: list[PipelineConfig] = Field(default_factory=list)
@@ -180,7 +180,7 @@ class ConfigModel(BaseModel):
         return base
 
 
-def load_config(path: str | None = None) -> ConfigModel:
+def load_config(path: str | None = None) -> ConfigModel:  # noqa: C901, PLR0912
     """Discover, load, and validate ``zen-config.yaml`` into a ``ConfigModel``.
 
     The discovery algorithm searches for ``zen-config.yaml`` using a
@@ -276,8 +276,8 @@ def load_config(path: str | None = None) -> ConfigModel:
                 update={
                     "pipelines": [
                         PipelineConfig.from_rules(lang) for lang in cfg.languages
-                    ]
-                }
+                    ],
+                },
             )
     except FileNotFoundError:
         return default

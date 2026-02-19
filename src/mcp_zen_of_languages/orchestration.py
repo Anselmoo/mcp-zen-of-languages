@@ -28,7 +28,8 @@ MIN_IMPORT_PARTS = 2
 
 
 def collect_targets(
-    target: Path, language_override: str | None
+    target: Path,
+    language_override: str | None,
 ) -> list[tuple[Path, str]]:
     """Discover analysable source files under a target path."""
     if target.is_file():
@@ -87,7 +88,9 @@ def _placeholder_result(language: str, path: str) -> AnalysisResult:
 
 
 def _file_read_error_result(
-    language: str, path: str, error: Exception
+    language: str,
+    path: str,
+    error: Exception,
 ) -> AnalysisResult:
     return AnalysisResult(
         language=language,
@@ -104,13 +107,13 @@ def _file_read_error_result(
                 message=f"Failed to read {path}: {error}",
                 suggestion="Ensure the file is readable and try again.",
                 files=[path],
-            )
+            ),
         ],
         overall_score=0.0,
     )
 
 
-def analyze_targets(
+def analyze_targets(  # noqa: C901, PLR0913
     targets: list[tuple[Path, str]],
     *,
     config_path: str | None = None,
@@ -154,7 +157,9 @@ def analyze_targets(
             except Exception as exc:
                 if include_read_errors:
                     logger.warning(
-                        "Failed to read %s during analysis scan: %s", path, exc
+                        "Failed to read %s during analysis scan: %s",
+                        path,
+                        exc,
                     )
                     results.append(_file_read_error_result(language, str(path), exc))
                     if progress_callback is not None:
@@ -166,7 +171,7 @@ def analyze_targets(
                     code,
                     path=str(path),
                     repository_imports=repository_imports,
-                )
+                ),
             )
             if progress_callback is not None:
                 progress_callback()

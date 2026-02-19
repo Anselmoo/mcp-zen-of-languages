@@ -62,7 +62,11 @@ def test_agent_tasks_table_empty():
 def test_render_prompt_panel_roundtrip_values():
     buffer = StringIO()
     capture_console = Console(
-        file=buffer, width=88, force_terminal=True, no_color=True, theme=ZEN_THEME
+        file=buffer,
+        width=88,
+        force_terminal=True,
+        no_color=True,
+        theme=ZEN_THEME,
     )
     metrics = Metrics(
         cyclomatic=CyclomaticSummary(blocks=[], average=0.0),
@@ -97,10 +101,10 @@ def test_render_prompt_panel_roundtrip_values():
                     "      return\n"
                     "  ```\n"
                 ),
-            )
+            ),
         ],
         generic_prompts=[
-            GenericPrompt(title="Quick", prompt="- Fix severity hotspots first.")
+            GenericPrompt(title="Quick", prompt="- Fix severity hotspots first."),
         ],
         big_picture=BigPictureAnalysis(
             health_score=67.5,
@@ -119,7 +123,11 @@ def test_render_prompt_panel_roundtrip_values():
 def test_render_prompt_panel_hides_raw_markdown_headers():
     buffer = StringIO()
     capture_console = Console(
-        file=buffer, width=88, force_terminal=True, no_color=True, theme=ZEN_THEME
+        file=buffer,
+        width=88,
+        force_terminal=True,
+        no_color=True,
+        theme=ZEN_THEME,
     )
     bundle = PromptBundle(
         file_prompts=[
@@ -127,7 +135,7 @@ def test_render_prompt_panel_hides_raw_markdown_headers():
                 path="x.py",
                 language="python",
                 prompt="### File: x.py\nContext: Demo prompt\n",
-            )
+            ),
         ],
         generic_prompts=[],
     )

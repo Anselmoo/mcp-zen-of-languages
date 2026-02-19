@@ -40,7 +40,7 @@ def _check_key_pages(errors: list[str]) -> None:
         internal, _external = _count_links(text)
         if internal < MIN_INTERNAL_LINKS:
             errors.append(
-                f"{page}: expected at least 3 internal markdown links, found {internal}"
+                f"{page}: expected at least 3 internal markdown links, found {internal}",
             )
 
 
@@ -51,12 +51,12 @@ def _check_language_pages(errors: list[str]) -> None:
         text = page.read_text(encoding="utf-8")
         if "drawn from [" not in text:
             errors.append(
-                f"{page}: missing linked source provenance in Zen Principles section"
+                f"{page}: missing linked source provenance in Zen Principles section",
             )
         _internal, external = _count_links(text)
         if external < 1:
             errors.append(
-                f"{page}: expected at least one external markdown link, found {external}"
+                f"{page}: expected at least one external markdown link, found {external}",
             )
 
 
@@ -67,7 +67,7 @@ def _check_mkdocs_magiclink(errors: list[str]) -> None:
     text = MKDOCS_CONFIG.read_text(encoding="utf-8")
     if "pymdownx.magiclink" not in text:
         errors.append(
-            f"{MKDOCS_CONFIG}: missing pymdownx.magiclink markdown extension config"
+            f"{MKDOCS_CONFIG}: missing pymdownx.magiclink markdown extension config",
         )
 
 

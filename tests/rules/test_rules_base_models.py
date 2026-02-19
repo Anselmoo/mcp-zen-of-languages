@@ -91,5 +91,5 @@ def test_detector_gap_helpers():
     assert unknown == []
     assert base_models.get_registry_detector_gaps({"x": language}) == {"x": ["x-1"]}
     assert base_models.get_registry_rule_id_gaps({"x": language}) == {
-        "x": {"missing": ["x-1"], "unknown": []}
+        "x": {"missing": ["x-1"], "unknown": []},
     }

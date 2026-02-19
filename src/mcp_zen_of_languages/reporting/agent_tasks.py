@@ -182,13 +182,13 @@ def build_agent_tasks(
                     effort=pattern.effort,
                     acceptance_criteria=acceptance,
                     theme=theme,
-                )
+                ),
             )
     raw_tasks.sort(
         key=lambda item: (
             theme_priority.get(str(item["theme"]), 99),
             -int(item["severity"]),
-        )
+        ),
     )
 
     tasks: list[AgentTask] = []
@@ -225,7 +225,7 @@ def build_agent_tasks(
                 theme=cluster.theme,
                 priority=cluster.suggested_order,
                 tasks=cluster_tasks,
-            )
+            ),
         )
 
     return AgentTaskList(

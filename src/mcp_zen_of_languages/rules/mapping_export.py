@@ -83,7 +83,8 @@ def build_rule_detector_mapping(
 
 
 def export_mapping_json(
-    output_path: str | Path, languages: list[str] | None = None
+    output_path: str | Path,
+    languages: list[str] | None = None,
 ) -> dict[str, Any]:
     """Write the rule-to-detector mapping to *output_path* as pretty-printed JSON.
 

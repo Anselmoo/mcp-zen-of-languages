@@ -56,7 +56,7 @@ def test_report_export_all_three(tmp_path):
             str(export_md),
             "--export-log",
             str(export_log),
-        ]
+        ],
     )
     assert exit_code == 0
     assert export_json.exists()
@@ -69,7 +69,14 @@ def test_report_export_with_out_flag(tmp_path):
     output = tmp_path / "report.out"
     export_json = tmp_path / "report.json"
     exit_code = cli.main(
-        ["report", str(sample), "--out", str(output), "--export-json", str(export_json)]
+        [
+            "report",
+            str(sample),
+            "--out",
+            str(output),
+            "--export-json",
+            str(export_json),
+        ],
     )
     assert exit_code == 0
     assert output.exists()

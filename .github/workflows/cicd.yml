@@ -14,6 +14,7 @@ on:
       - perf/**
       - style/**
       - build/**
+      - copilot/**
     tags: ["v*.*.*"]
   pull_request:
     branches: [main]

@@ -116,7 +116,7 @@ def test_build_explicit_rule_coverage_missing_detector(monkeypatch) -> None:
                 category=PrincipleCategory.CLARITY,
                 severity=5,
                 description="Test description",
-            )
+            ),
         ],
     )
 

@@ -78,7 +78,9 @@ class GoAnalyzer(BaseAnalyzer):
         return None
 
     def compute_metrics(
-        self, code: str, _ast_tree: ParserResult | None
+        self,
+        code: str,
+        _ast_tree: ParserResult | None,
     ) -> tuple[CyclomaticSummary | None, float | None, int]:
         """Compute complexity, maintainability, and line-count metrics.
 

@@ -51,7 +51,9 @@ def test_check_command_fail_on_severity(monkeypatch, tmp_path):
     )
 
     monkeypatch.setattr(
-        cli, "_collect_targets", lambda *_args, **_kwargs: [(sample, "python")]
+        cli,
+        "_collect_targets",
+        lambda *_args, **_kwargs: [(sample, "python")],
     )
     monkeypatch.setattr(cli, "_analyze_targets", lambda *_args, **_kwargs: [result])
 
@@ -77,18 +79,28 @@ def test_check_command_sarif_output(monkeypatch, tmp_path):
                 severity=8,
                 message="high",
                 location=Location(line=2, column=1),
-            )
+            ),
         ],
         overall_score=90.0,
     )
     monkeypatch.setattr(
-        cli, "_collect_targets", lambda *_args, **_kwargs: [(sample, "python")]
+        cli,
+        "_collect_targets",
+        lambda *_args, **_kwargs: [(sample, "python")],
     )
     monkeypatch.setattr(cli, "_analyze_targets", lambda *_args, **_kwargs: [result])
 
     assert (
         cli.main(
-            ["--quiet", "check", str(sample), "--format", "sarif", "--out", str(output)]
+            [
+                "--quiet",
+                "check",
+                str(sample),
+                "--format",
+                "sarif",
+                "--out",
+                str(output),
+            ],
         )
         == 0
     )
@@ -144,7 +156,7 @@ def test_report_command_outputs_json(tmp_path):
     sample.write_text("def foo():\n    pass\n", encoding="utf-8")
     output = tmp_path / "report.json"
     exit_code = cli.main(
-        ["report", str(sample), "--format", "json", "--out", str(output)]
+        ["report", str(sample), "--format", "json", "--out", str(output)],
     )
     assert exit_code == 0
     payload = json.loads(output.read_text(encoding="utf-8"))
@@ -317,7 +329,7 @@ def test_report_smoke_per_language(tmp_path, language):
             "json",
             "--out",
             str(output),
-        ]
+        ],
     )
     assert exit_code == 0
     assert output.exists()

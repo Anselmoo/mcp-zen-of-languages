@@ -82,7 +82,7 @@ def _build_feature_gaps() -> list[FeatureGap]:
                 suggested_next_step=(
                     "Add detector mappings for each uncovered language."
                 ),
-            )
+            ),
         )
 
     if missing_tests := _detectors_without_tests():
@@ -95,11 +95,11 @@ def _build_feature_gaps() -> list[FeatureGap]:
                 suggested_next_step=(
                     "Add detector-focused tests under tests/detectors."
                 ),
-            )
+            ),
         )
 
     if missing_server_routes := sorted(
-        factory_languages - set(_SERVER_ROUTED_LANGUAGES)
+        factory_languages - set(_SERVER_ROUTED_LANGUAGES),
     ):
         feature_gaps.append(
             FeatureGap(
@@ -111,7 +111,7 @@ def _build_feature_gaps() -> list[FeatureGap]:
                 suggested_next_step=(
                     "Route all factory-supported languages through create_analyzer."
                 ),
-            )
+            ),
         )
 
     return feature_gaps
@@ -146,7 +146,7 @@ def build_gap_analysis(languages: list[str]) -> GapAnalysis:
                         principle=principle.principle,
                         severity=principle.severity,
                         reason="No detector registered for rule.",
-                    )
+                    ),
                 )
                 continue
     feature_gaps = _build_feature_gaps()

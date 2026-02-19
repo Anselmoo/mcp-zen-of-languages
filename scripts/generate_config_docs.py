@@ -49,7 +49,7 @@ def main() -> None:
             "pipeline construction.\n",
             "- Language module folders are expected to include `__init__.py`, "
             "`analyzer.py`, `detectors.py`, `mapping.py`, and `rules.py`.\n",
-        )
+        ),
     )
     docs_path = Path(__file__).resolve().parents[1] / "docs" / "config.md"
     docs_path.write_text("".join(output), encoding="utf-8")

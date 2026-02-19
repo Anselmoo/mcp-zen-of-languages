@@ -83,23 +83,10 @@ target-version = "py312"
 [tool.ruff.lint]
 select = ["ALL"]
 extend-ignore = [
-    # --- Baseline suppressions (pre-existing violations, fix incrementally) ---
-    # Style / formatting
+    # Keep these permanently suppressed because they conflict with the Ruff formatter.
     "COM812", # missing-trailing-comma (formatter handles)
     "E501",   # line-too-long (formatter handles)
-    # Annotations
-    # Complexity / size
-    "C901",    # complex-structure
-    "PLR0911", # too-many-return-statements
-    "PLR0912", # too-many-branches
-    "PLR0913", # too-many-arguments
-    "PLR0915", # too-many-statements
-    # Import style
-    "PLC0415", # import-outside-top-level
-    "TID252",  # relative-imports
-    # Exception patterns
-    # Modernization (fix incrementally)
-    # Simplifications
+    "PLC0415", #  top-level of a file
 ]
 
 [tool.ruff.lint.per-file-ignores]
@@ -160,6 +147,16 @@ bump_major = "python scripts/bump_version.py major"
 bump_no_changelog = "python scripts/bump_version.py patch --no-changelog"
 changelog_preview = "python scripts/bump_version.py patch --dry-run"
 branch_new = "python scripts/branch.py new"
+branch_feat = "python scripts/branch.py new feat"
+branch_fix = "python scripts/branch.py new fix"
+branch_chore = "python scripts/branch.py new chore"
+branch_docs = "python scripts/branch.py new docs"
+branch_refactor = "python scripts/branch.py new refactor"
+branch_test = "python scripts/branch.py new test"
+branch_ci = "python scripts/branch.py new ci"
+branch_perf = "python scripts/branch.py new perf"
+branch_style = "python scripts/branch.py new style"
+branch_build = "python scripts/branch.py new build"
 branch_rescue = "python scripts/branch.py rescue"
 warn_missing_rule_coverage = "python scripts/warn_missing_rule_coverage.py"
 export_svg_assets = "python scripts/export_svg_assets.py"

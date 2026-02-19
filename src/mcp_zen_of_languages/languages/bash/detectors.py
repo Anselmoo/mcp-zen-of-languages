@@ -39,7 +39,8 @@ from mcp_zen_of_languages.models import Location, Violation
 
 
 class BashStrictModeDetector(
-    ViolationDetector[BashStrictModeConfig], LocationHelperMixin
+    ViolationDetector[BashStrictModeConfig],
+    LocationHelperMixin,
 ):
     """Detect scripts missing the unofficial Bash strict mode header.
 
@@ -64,7 +65,9 @@ class BashStrictModeDetector(
         return "bash_strict_mode"
 
     def detect(
-        self, context: AnalysisContext, config: BashStrictModeConfig
+        self,
+        context: AnalysisContext,
+        config: BashStrictModeConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -81,13 +84,14 @@ class BashStrictModeDetector(
                     config,
                     contains="set -euo pipefail",
                     suggestion="Add 'set -euo pipefail' near the top of the script.",
-                )
+                ),
             ]
         return []
 
 
 class BashQuoteVariablesDetector(
-    ViolationDetector[BashQuoteVariablesConfig], LocationHelperMixin
+    ViolationDetector[BashQuoteVariablesConfig],
+    LocationHelperMixin,
 ):
     """Detect unquoted variable expansions that cause word-splitting bugs.
 
@@ -112,7 +116,9 @@ class BashQuoteVariablesDetector(
         return "bash_quote_variables"
 
     def detect(
-        self, context: AnalysisContext, config: BashQuoteVariablesConfig
+        self,
+        context: AnalysisContext,
+        config: BashQuoteVariablesConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -137,7 +143,8 @@ class BashQuoteVariablesDetector(
 
 
 class BashEvalUsageDetector(
-    ViolationDetector[BashEvalUsageConfig], LocationHelperMixin
+    ViolationDetector[BashEvalUsageConfig],
+    LocationHelperMixin,
 ):
     """Detect usage of ``eval`` which enables code injection attacks.
 
@@ -162,7 +169,9 @@ class BashEvalUsageDetector(
         return "bash_eval_usage"
 
     def detect(
-        self, context: AnalysisContext, config: BashEvalUsageConfig
+        self,
+        context: AnalysisContext,
+        config: BashEvalUsageConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -187,7 +196,8 @@ class BashEvalUsageDetector(
 
 
 class BashDoubleBracketsDetector(
-    ViolationDetector[BashDoubleBracketsConfig], LocationHelperMixin
+    ViolationDetector[BashDoubleBracketsConfig],
+    LocationHelperMixin,
 ):
     """Detect single-bracket ``[ ]`` test expressions that should use ``[[ ]]``.
 
@@ -212,7 +222,9 @@ class BashDoubleBracketsDetector(
         return "bash_double_brackets"
 
     def detect(
-        self, context: AnalysisContext, config: BashDoubleBracketsConfig
+        self,
+        context: AnalysisContext,
+        config: BashDoubleBracketsConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -237,7 +249,8 @@ class BashDoubleBracketsDetector(
 
 
 class BashCommandSubstitutionDetector(
-    ViolationDetector[BashCommandSubstitutionConfig], LocationHelperMixin
+    ViolationDetector[BashCommandSubstitutionConfig],
+    LocationHelperMixin,
 ):
     """Detect legacy backtick command substitution syntax.
 
@@ -262,7 +275,9 @@ class BashCommandSubstitutionDetector(
         return "bash_command_substitution"
 
     def detect(
-        self, context: AnalysisContext, config: BashCommandSubstitutionConfig
+        self,
+        context: AnalysisContext,
+        config: BashCommandSubstitutionConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -287,7 +302,8 @@ class BashCommandSubstitutionDetector(
 
 
 class BashReadonlyConstantsDetector(
-    ViolationDetector[BashReadonlyConstantsConfig], LocationHelperMixin
+    ViolationDetector[BashReadonlyConstantsConfig],
+    LocationHelperMixin,
 ):
     """Detect ALL_CAPS assignments that are not declared ``readonly``.
 
@@ -312,7 +328,9 @@ class BashReadonlyConstantsDetector(
         return "bash_readonly_constants"
 
     def detect(
-        self, context: AnalysisContext, config: BashReadonlyConstantsConfig
+        self,
+        context: AnalysisContext,
+        config: BashReadonlyConstantsConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -337,7 +355,8 @@ class BashReadonlyConstantsDetector(
 
 
 class BashExitCodeChecksDetector(
-    ViolationDetector[BashExitCodeConfig], LocationHelperMixin
+    ViolationDetector[BashExitCodeConfig],
+    LocationHelperMixin,
 ):
     """Detect external commands whose exit codes are silently ignored.
 
@@ -361,8 +380,10 @@ class BashExitCodeChecksDetector(
         """
         return "bash-005"
 
-    def detect(
-        self, context: AnalysisContext, config: BashExitCodeConfig
+    def detect(  # noqa: C901
+        self,
+        context: AnalysisContext,
+        config: BashExitCodeConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -408,7 +429,7 @@ class BashExitCodeChecksDetector(
                         suggestion=(
                             "Check exit codes with `||`, `&&`, or explicit `$?` tests."
                         ),
-                    )
+                    ),
                 )
                 break
         return violations
@@ -437,7 +458,9 @@ class BashFunctionUsageDetector(ViolationDetector[Bash006Config], LocationHelper
         return "bash-006"
 
     def detect(
-        self, context: AnalysisContext, config: Bash006Config
+        self,
+        context: AnalysisContext,
+        config: Bash006Config,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -464,13 +487,14 @@ class BashFunctionUsageDetector(ViolationDetector[Bash006Config], LocationHelper
                     contains="function",
                     location=Location(line=1, column=1),
                     suggestion="Extract reusable logic into functions.",
-                )
+                ),
             ]
         return []
 
 
 class BashLocalVariablesDetector(
-    ViolationDetector[BashLocalVariablesConfig], LocationHelperMixin
+    ViolationDetector[BashLocalVariablesConfig],
+    LocationHelperMixin,
 ):
     """Detect function-scoped variables missing the ``local`` keyword.
 
@@ -494,7 +518,9 @@ class BashLocalVariablesDetector(
         return "bash-007"
 
     def detect(
-        self, context: AnalysisContext, config: BashLocalVariablesConfig
+        self,
+        context: AnalysisContext,
+        config: BashLocalVariablesConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -518,7 +544,8 @@ class BashLocalVariablesDetector(
             if not in_function:
                 continue
             if re.match(
-                r"^[A-Za-z_][A-Za-z0-9_]*=", stripped
+                r"^[A-Za-z_][A-Za-z0-9_]*=",
+                stripped,
             ) and not stripped.startswith("local "):
                 violations.append(
                     self.build_violation(
@@ -526,14 +553,15 @@ class BashLocalVariablesDetector(
                         contains="local",
                         location=Location(line=idx, column=1),
                         suggestion="Declare function variables with local.",
-                    )
+                    ),
                 )
                 break
         return violations
 
 
 class BashArgumentValidationDetector(
-    ViolationDetector[BashArgumentValidationConfig], LocationHelperMixin
+    ViolationDetector[BashArgumentValidationConfig],
+    LocationHelperMixin,
 ):
     """Detect scripts that use positional arguments without validation.
 
@@ -557,7 +585,9 @@ class BashArgumentValidationDetector(
         return "bash-010"
 
     def detect(
-        self, context: AnalysisContext, config: BashArgumentValidationConfig
+        self,
+        context: AnalysisContext,
+        config: BashArgumentValidationConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -578,13 +608,14 @@ class BashArgumentValidationDetector(
                     contains="$#",
                     location=Location(line=1, column=1),
                     suggestion="Validate arguments with `$#` checks or getopts.",
-                )
+                ),
             ]
         return []
 
 
 class BashMeaningfulNamesDetector(
-    ViolationDetector[Bash011Config], LocationHelperMixin
+    ViolationDetector[Bash011Config],
+    LocationHelperMixin,
 ):
     """Detect overly short or cryptic variable names in shell scripts.
 
@@ -609,7 +640,9 @@ class BashMeaningfulNamesDetector(
         return "bash-011"
 
     def detect(
-        self, context: AnalysisContext, config: Bash011Config
+        self,
+        context: AnalysisContext,
+        config: Bash011Config,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -636,14 +669,15 @@ class BashMeaningfulNamesDetector(
                         contains=name,
                         location=Location(line=idx, column=1),
                         suggestion="Use descriptive variable names.",
-                    )
+                    ),
                 )
                 break
         return violations
 
 
 class BashSignalHandlingDetector(
-    ViolationDetector[BashSignalHandlingConfig], LocationHelperMixin
+    ViolationDetector[BashSignalHandlingConfig],
+    LocationHelperMixin,
 ):
     """Detect scripts that lack ``trap`` handlers for cleanup on exit or signals.
 
@@ -667,7 +701,9 @@ class BashSignalHandlingDetector(
         return "bash-012"
 
     def detect(
-        self, context: AnalysisContext, config: BashSignalHandlingConfig
+        self,
+        context: AnalysisContext,
+        config: BashSignalHandlingConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -685,13 +721,14 @@ class BashSignalHandlingDetector(
                     contains="trap",
                     location=Location(line=1, column=1),
                     suggestion="Add trap handlers for cleanup and signals.",
-                )
+                ),
             ]
         return []
 
 
 class BashArrayUsageDetector(
-    ViolationDetector[BashArrayUsageConfig], LocationHelperMixin
+    ViolationDetector[BashArrayUsageConfig],
+    LocationHelperMixin,
 ):
     """Detect IFS-based string splitting used instead of proper Bash arrays.
 
@@ -716,7 +753,9 @@ class BashArrayUsageDetector(
         return "bash-013"
 
     def detect(
-        self, context: AnalysisContext, config: BashArrayUsageConfig
+        self,
+        context: AnalysisContext,
+        config: BashArrayUsageConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -734,13 +773,14 @@ class BashArrayUsageDetector(
                     contains="array",
                     location=Location(line=1, column=1),
                     suggestion='Prefer arrays and iterate with "${array[@]}".',
-                )
+                ),
             ]
         return []
 
 
 class BashUsageInfoDetector(
-    ViolationDetector[BashUsageInfoConfig], LocationHelperMixin
+    ViolationDetector[BashUsageInfoConfig],
+    LocationHelperMixin,
 ):
     """Detect scripts lacking a ``usage`` function or ``--help``/``-h`` flag.
 
@@ -764,7 +804,9 @@ class BashUsageInfoDetector(
         return "bash-014"
 
     def detect(
-        self, context: AnalysisContext, config: BashUsageInfoConfig
+        self,
+        context: AnalysisContext,
+        config: BashUsageInfoConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -776,7 +818,8 @@ class BashUsageInfoDetector(
             list[Violation]: Violations detected for the analyzed context.
         """
         if not re.search(r"\busage\b", context.code) and not re.search(
-            r"--help|-h", context.code
+            r"--help|-h",
+            context.code,
         ):
             return [
                 self.build_violation(
@@ -784,7 +827,7 @@ class BashUsageInfoDetector(
                     contains="usage",
                     location=Location(line=1, column=1),
                     suggestion="Provide a usage function or -h/--help flag.",
-                )
+                ),
             ]
         return []
 

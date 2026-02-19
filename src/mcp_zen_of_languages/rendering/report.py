@@ -51,7 +51,8 @@ def _active_console(output_console: Console | None = None) -> Console:
 
 
 def render_report_terminal(
-    report: ReportOutput, output_console: Console | None = None
+    report: ReportOutput,
+    output_console: Console | None = None,
 ) -> None:
     """Print a complete analysis report to the terminal as structured Rich panels.
 
@@ -82,8 +83,10 @@ def render_report_terminal(
     ]
     active_console.print(
         zen_header_panel(
-            *header_lines, title="Zen Report", output_console=active_console
-        )
+            *header_lines,
+            title="Zen Report",
+            output_console=active_console,
+        ),
     )
 
     summary = data.get("summary")
@@ -142,7 +145,9 @@ def _build_summary_table(summary: dict, width: int) -> Table:
 
 
 def _render_result_panel(
-    result: AnalysisResult, _width: int, output_console: Console
+    result: AnalysisResult,
+    _width: int,
+    output_console: Console,
 ) -> None:
     """Print a per-file analysis panel to the console.
 
@@ -165,7 +170,7 @@ def _render_result_panel(
                 Text("No violations detected.", style="dim"),
                 title=title,
                 output_console=output_console,
-            )
+            ),
         )
         return
     table = build_violation_table(result.violations, title)
@@ -241,7 +246,8 @@ def _build_prompt_panel(prompts: dict, width: int) -> Panel:
     table.add_column("Type", style="metric")
     table.add_column("Count")
     table.add_row(
-        "File prompts", str(len(file_prompts) if isinstance(file_prompts, list) else 0)
+        "File prompts",
+        str(len(file_prompts) if isinstance(file_prompts, list) else 0),
     )
     table.add_row(
         "Generic prompts",

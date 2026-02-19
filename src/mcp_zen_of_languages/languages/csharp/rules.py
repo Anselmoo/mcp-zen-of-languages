@@ -2,7 +2,11 @@
 
 from pydantic import HttpUrl
 
-from ...rules.base_models import LanguageZenPrinciples, PrincipleCategory, ZenPrinciple
+from mcp_zen_of_languages.rules.base_models import (
+    LanguageZenPrinciples,
+    PrincipleCategory,
+    ZenPrinciple,
+)
 
 CSHARP_ZEN = LanguageZenPrinciples(
     language="csharp",
@@ -10,7 +14,7 @@ CSHARP_ZEN = LanguageZenPrinciples(
     philosophy="Modern C# Best Practices (.NET 6+)",
     source_text="C# Coding Conventions",
     source_url=HttpUrl(
-        "https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions"
+        "https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions",
     ),
     principles=[
         ZenPrinciple(

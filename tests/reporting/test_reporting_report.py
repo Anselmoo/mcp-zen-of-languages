@@ -77,7 +77,10 @@ def test_generate_report_without_analysis_or_gaps(tmp_path):
     sample = tmp_path / "sample.py"
     sample.write_text("def foo():\n    pass\n", encoding="utf-8")
     report = generate_report(
-        str(sample), include_analysis=False, include_gaps=False, include_prompts=False
+        str(sample),
+        include_analysis=False,
+        include_gaps=False,
+        include_prompts=False,
     )
     assert "Gap Analysis" not in report.markdown
     assert report.data["analysis"] == []

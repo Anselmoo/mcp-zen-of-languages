@@ -2,7 +2,11 @@
 
 from pydantic import HttpUrl
 
-from ...rules.base_models import LanguageZenPrinciples, PrincipleCategory, ZenPrinciple
+from mcp_zen_of_languages.rules.base_models import (
+    LanguageZenPrinciples,
+    PrincipleCategory,
+    ZenPrinciple,
+)
 
 RUBY_ZEN = LanguageZenPrinciples(
     language="ruby",
@@ -24,7 +28,7 @@ RUBY_ZEN = LanguageZenPrinciples(
                 "Methods starting with capital letters",
             ],
             metrics={
-                "naming_convention": "snake_case for methods/variables, PascalCase for classes"
+                "naming_convention": "snake_case for methods/variables, PascalCase for classes",
             },
         ),
         ZenPrinciple(

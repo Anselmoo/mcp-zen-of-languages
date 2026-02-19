@@ -53,10 +53,10 @@ def analysis_results_to_sarif(
                             "physicalLocation": {
                                 "artifactLocation": {"uri": path},
                                 **({"region": region} if region is not None else {}),
-                            }
-                        }
+                            },
+                        },
                     ],
-                }
+                },
             )
 
     return {
@@ -71,9 +71,9 @@ def analysis_results_to_sarif(
                     "driver": {
                         "name": tool_name,
                         "rules": list(rules.values()),
-                    }
+                    },
                 },
                 "results": sarif_results,
-            }
+            },
         ],
     }

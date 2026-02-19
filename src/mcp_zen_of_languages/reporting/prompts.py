@@ -201,7 +201,7 @@ def _format_file_prompt(result: AnalysisResult, violations: list[Violation]) -> 
                 f"  Action: {pattern.action}",
                 f"  Idiom: {pattern.idiom_explanation}",
                 f"  Effort: {pattern.effort}",
-            ]
+            ],
         )
         if pattern.before_pattern:
             lines.append("  Before:")
@@ -243,14 +243,14 @@ def build_prompt_bundle(results: list[AnalysisResult]) -> PromptBundle:
                 path=result.path or "<input>",
                 language=result.language,
                 prompt=prompt,
-            )
+            ),
         )
 
     generic_prompts: list[GenericPrompt] = [
         GenericPrompt(
             title="Quick quality checklist",
             prompt="\n".join(f"- {item}" for item in QUALITY_CHECKLIST),
-        )
+        ),
     ]
     languages_seen = {result.language for result in results}
     for language in sorted(languages_seen):

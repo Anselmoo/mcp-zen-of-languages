@@ -58,7 +58,9 @@ class TsAnyUsageDetector(ViolationDetector[TsAnyUsageConfig], LocationHelperMixi
         return "ts_any_usage"
 
     def detect(
-        self, context: AnalysisContext, config: TsAnyUsageConfig
+        self,
+        context: AnalysisContext,
+        config: TsAnyUsageConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -78,7 +80,7 @@ class TsAnyUsageDetector(ViolationDetector[TsAnyUsageConfig], LocationHelperMixi
                     contains="any",
                     index=0,
                     suggestion="Use unknown or specific types instead of any.",
-                )
+                ),
             )
         return violations
 
@@ -104,7 +106,9 @@ class TsStrictModeDetector(ViolationDetector[TsStrictModeConfig]):
         return "ts_strict_mode"
 
     def detect(
-        self, _context: AnalysisContext, config: TsStrictModeConfig
+        self,
+        _context: AnalysisContext,
+        config: TsStrictModeConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -123,13 +127,14 @@ class TsStrictModeDetector(ViolationDetector[TsStrictModeConfig]):
                     contains="strict",
                     index=0,
                     suggestion="Enable strict compiler options in tsconfig.",
-                )
+                ),
             )
         return violations
 
 
 class TsInterfacePreferenceDetector(
-    ViolationDetector[TsInterfacePreferenceConfig], LocationHelperMixin
+    ViolationDetector[TsInterfacePreferenceConfig],
+    LocationHelperMixin,
 ):
     """Flags object-shaped type aliases that should be interfaces instead.
 
@@ -151,7 +156,9 @@ class TsInterfacePreferenceDetector(
         return "ts_interface_preference"
 
     def detect(
-        self, context: AnalysisContext, config: TsInterfacePreferenceConfig
+        self,
+        context: AnalysisContext,
+        config: TsInterfacePreferenceConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -171,7 +178,7 @@ class TsInterfacePreferenceDetector(
                     contains="Type aliases",
                     index=0,
                     suggestion="Prefer interfaces for object shapes.",
-                )
+                ),
             )
         return violations
 
@@ -197,7 +204,9 @@ class TsReturnTypeDetector(ViolationDetector[TsReturnTypeConfig], LocationHelper
         return "ts_return_types"
 
     def detect(
-        self, context: AnalysisContext, config: TsReturnTypeConfig
+        self,
+        context: AnalysisContext,
+        config: TsReturnTypeConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -219,7 +228,7 @@ class TsReturnTypeDetector(ViolationDetector[TsReturnTypeConfig], LocationHelper
                     contains="return type",
                     index=0,
                     suggestion="Add explicit return types for exported functions.",
-                )
+                ),
             )
         return violations
 
@@ -245,7 +254,9 @@ class TsReadonlyDetector(ViolationDetector[TsReadonlyConfig], LocationHelperMixi
         return "ts_readonly"
 
     def detect(
-        self, context: AnalysisContext, config: TsReadonlyConfig
+        self,
+        context: AnalysisContext,
+        config: TsReadonlyConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -268,7 +279,7 @@ class TsReadonlyDetector(ViolationDetector[TsReadonlyConfig], LocationHelperMixi
                     contains="readonly",
                     index=0,
                     suggestion="Use readonly for immutable properties and arrays.",
-                )
+                ),
             )
         return violations
 
@@ -293,7 +304,9 @@ class TsTypeGuardDetector(ViolationDetector[TsTypeGuardConfig], LocationHelperMi
         return "ts_type_guards"
 
     def detect(
-        self, context: AnalysisContext, config: TsTypeGuardConfig
+        self,
+        context: AnalysisContext,
+        config: TsTypeGuardConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -313,13 +326,14 @@ class TsTypeGuardDetector(ViolationDetector[TsTypeGuardConfig], LocationHelperMi
                     contains="assertions",
                     index=0,
                     suggestion="Prefer user-defined type guards over assertions.",
-                )
+                ),
             )
         return violations
 
 
 class TsUtilityTypesDetector(
-    ViolationDetector[TsUtilityTypesConfig], LocationHelperMixin
+    ViolationDetector[TsUtilityTypesConfig],
+    LocationHelperMixin,
 ):
     """Detects missed opportunities to use built-in utility types like ``Partial`` or ``Pick``.
 
@@ -341,7 +355,9 @@ class TsUtilityTypesDetector(
         return "ts_utility_types"
 
     def detect(
-        self, context: AnalysisContext, config: TsUtilityTypesConfig
+        self,
+        context: AnalysisContext,
+        config: TsUtilityTypesConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -365,13 +381,14 @@ class TsUtilityTypesDetector(
                     contains="utility",
                     index=0,
                     suggestion="Use built-in utility types for transformations.",
-                )
+                ),
             )
         return violations
 
 
 class TsNonNullAssertionDetector(
-    ViolationDetector[TsNonNullAssertionConfig], LocationHelperMixin
+    ViolationDetector[TsNonNullAssertionConfig],
+    LocationHelperMixin,
 ):
     """Flags excessive non-null assertion operators (``!``) that silence null safety.
 
@@ -393,7 +410,9 @@ class TsNonNullAssertionDetector(
         return "ts_non_null_assertions"
 
     def detect(
-        self, context: AnalysisContext, config: TsNonNullAssertionConfig
+        self,
+        context: AnalysisContext,
+        config: TsNonNullAssertionConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -414,7 +433,7 @@ class TsNonNullAssertionDetector(
                     contains="Non-null",
                     index=1,
                     suggestion="Handle null/undefined via checks instead of non-null assertions.",
-                )
+                ),
             )
         return violations
 
@@ -440,7 +459,9 @@ class TsEnumConstDetector(ViolationDetector[TsEnumConstConfig], LocationHelperMi
         return "ts_enum_const"
 
     def detect(
-        self, context: AnalysisContext, config: TsEnumConstConfig
+        self,
+        context: AnalysisContext,
+        config: TsEnumConstConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -460,13 +481,14 @@ class TsEnumConstDetector(ViolationDetector[TsEnumConstConfig], LocationHelperMi
                     contains="Plain objects",
                     index=0,
                     suggestion="Use enums or const assertions for constants.",
-                )
+                ),
             )
         return violations
 
 
 class TsUnknownOverAnyDetector(
-    ViolationDetector[TsUnknownOverAnyConfig], LocationHelperMixin
+    ViolationDetector[TsUnknownOverAnyConfig],
+    LocationHelperMixin,
 ):
     """Flags codebases that use ``any`` without ever using the safer ``unknown`` alternative.
 
@@ -488,7 +510,9 @@ class TsUnknownOverAnyDetector(
         return "ts_unknown_over_any"
 
     def detect(
-        self, context: AnalysisContext, config: TsUnknownOverAnyConfig
+        self,
+        context: AnalysisContext,
+        config: TsUnknownOverAnyConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -511,7 +535,7 @@ class TsUnknownOverAnyDetector(
                     contains="any",
                     index=0,
                     suggestion="Prefer unknown for uncertain types.",
-                )
+                ),
             )
         return violations
 

@@ -49,7 +49,9 @@ def _supports_color(stream: object) -> bool:
 
 console = Console(theme=ZEN_THEME, no_color=not _supports_color(sys.stdout))
 error_console = Console(
-    theme=ZEN_THEME, stderr=True, no_color=not _supports_color(sys.stderr)
+    theme=ZEN_THEME,
+    stderr=True,
+    no_color=not _supports_color(sys.stderr),
 )
 
 
@@ -86,7 +88,11 @@ def _render_banner_art() -> str:
     try:
         figlet_format = import_module("pyfiglet").figlet_format
         art = figlet_format(
-            "Zen", font="banner3-d", direction="auto", justify="center", width=55
+            "Zen",
+            font="banner3-d",
+            direction="auto",
+            justify="center",
+            width=55,
         ).rstrip()
     except Exception:  # noqa: BLE001
         art = ZEN_BANNER.strip()
@@ -158,7 +164,7 @@ def print_banner(output_console: Console | None = None) -> None:
             border_style="cyan",
             box=BOX_BANNER,
             width=width,
-        )
+        ),
     )
 
 
@@ -173,5 +179,7 @@ def print_error(message: str) -> None:
         message: Human-readable error description to display.
     """
     error_console.print(
-        f"{pass_fail_glyph(passed=False)} {message}", style="bold red", markup=False
+        f"{pass_fail_glyph(passed=False)} {message}",
+        style="bold red",
+        markup=False,
     )

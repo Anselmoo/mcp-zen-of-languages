@@ -39,6 +39,7 @@ def test_rules_adapter_dependency_cycle():
         cycles=[DependencyCycle(cycle=["a", "b", "a"])],
     )
     violations = adapter.find_violations(
-        "def foo():\n    pass\n", dependency_analysis=dep
+        "def foo():\n    pass\n",
+        dependency_analysis=dep,
     )
     assert isinstance(violations, list)

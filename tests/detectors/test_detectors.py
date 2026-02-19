@@ -227,7 +227,7 @@ def test_js_detectors_smoke():
     )
     context = AnalysisContext(code=code, language="javascript")
     nesting_config = JsCallbackNestingConfig().model_copy(
-        update={"max_callback_nesting": 1}
+        update={"max_callback_nesting": 1},
     )
     assert JsCallbackNestingDetector().detect(context, nesting_config)
     assert JsNoVarDetector().detect(context, JsNoVarConfig())
@@ -249,10 +249,12 @@ def test_powershell_detectors_smoke():
     code = "function customThing-Thing { }\n"
     context = AnalysisContext(code=code, language="powershell")
     assert PowerShellApprovedVerbDetector().detect(
-        context, PowerShellApprovedVerbConfig()
+        context,
+        PowerShellApprovedVerbConfig(),
     )
     assert PowerShellErrorHandlingDetector().detect(
-        context, PowerShellErrorHandlingConfig()
+        context,
+        PowerShellErrorHandlingConfig(),
     )
     assert PowerShellPascalCaseDetector().detect(context, PowerShellPascalCaseConfig())
 

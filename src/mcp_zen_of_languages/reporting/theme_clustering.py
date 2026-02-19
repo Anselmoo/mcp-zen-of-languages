@@ -159,14 +159,14 @@ def build_big_picture_analysis(results: list[AnalysisResult]) -> BigPictureAnaly
         top_cluster = clusters[0]
         systemic_patterns.append(
             f"High concentration of {top_cluster.theme} violations "
-            f"({len(top_cluster.violations)} findings)."
+            f"({len(top_cluster.violations)} findings).",
         )
     systemic_patterns.extend(
         [
             f"Secondary pressure in {cluster.theme} "
             f"({len(cluster.violations)} findings)."
             for cluster in clusters[1:3]
-        ]
+        ],
     )
 
     refactoring_roadmap = [

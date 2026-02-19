@@ -90,7 +90,8 @@ class DictDepAnalyzer(DummyAnalyzer):
 class DisabledPatternAnalyzer(DummyAnalyzer):
     def __init__(self):
         self._pipeline_config = PipelineConfig(
-            language="python", detectors=[LineLengthConfig()]
+            language="python",
+            detectors=[LineLengthConfig()],
         )
         super().__init__()
         self.config.enable_pattern_detection = False

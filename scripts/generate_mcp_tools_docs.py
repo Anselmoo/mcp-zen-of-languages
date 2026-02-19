@@ -47,7 +47,7 @@ def _extract_first_paragraph(docstring: str | None) -> str:
     return " ".join(lines)
 
 
-def _extract_args_section(docstring: str | None) -> list[tuple[str, str]]:
+def _extract_args_section(docstring: str | None) -> list[tuple[str, str]]:  # noqa: C901
     """Extract (param_name, description) pairs from the Args section."""
     if not docstring:
         return []
@@ -147,7 +147,7 @@ def _annotation_label(annotations: object | None) -> str:
 # ---------------------------------------------------------------------------
 
 
-def generate() -> str:
+def generate() -> str:  # noqa: C901, PLR0912, PLR0915
     """Generate the full markdown content from the live server."""
     # Import server to get tool/resource/prompt registrations
     from mcp_zen_of_languages.server import mcp
@@ -178,7 +178,7 @@ def generate() -> str:
         The MCP server exposes **tools**, **resources**, and **prompts** that AI agents
         and IDE integrations can invoke via the
         [Model Context Protocol](https://modelcontextprotocol.io/).
-    """)
+    """),
     )
 
     # --- Summary table ---
@@ -215,7 +215,7 @@ def generate() -> str:
         | **Tools**  | {len(tools)} |
         | **Resources** | {len(resources) + len(resource_templates)} |
         | **Prompts** | {len(prompts)} |
-    """)
+    """),
     )
 
     # --- Categorize tools ---
@@ -267,7 +267,7 @@ def generate() -> str:
             annotations = getattr(tool, "annotations", None)
             access = _annotation_label(annotations) if annotations else ""
             sections.append(
-                f"| [`{name}`](#{name.replace('_', '-')}) | {family} | {desc} | {access} |\n"
+                f"| [`{name}`](#{name.replace('_', '-')}) | {family} | {desc} | {access} |\n",
             )
 
     sections.append("\n")
@@ -344,7 +344,7 @@ def generate() -> str:
     if all_resources:
         sections.append("## :material-database-outline: Resources\n\n")
         sections.append(
-            "MCP resources are read-only data endpoints that clients can subscribe to.\n\n"
+            "MCP resources are read-only data endpoints that clients can subscribe to.\n\n",
         )
         sections.append("| URI | Name | Description |\n")
         sections.append("|-----|------|-------------|\n")
@@ -373,7 +373,7 @@ def generate() -> str:
     if prompts:
         sections.append("## :material-chat-outline: Prompts\n\n")
         sections.append(
-            "MCP prompts are pre-built templates that clients can render for user interaction.\n\n"
+            "MCP prompts are pre-built templates that clients can render for user interaction.\n\n",
         )
         for prompt in prompts:
             name = getattr(prompt, "name", "")
@@ -492,7 +492,7 @@ def generate() -> str:
             MCP-->>Agent: ConfigStatus (reset to defaults)
         ```
 
-    """)
+    """),
     )
 
     return "".join(sections)
@@ -505,7 +505,7 @@ def generate() -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Generate MCP tools reference docs from server.py"
+        description="Generate MCP tools reference docs from server.py",
     )
     parser.add_argument(
         "--check",

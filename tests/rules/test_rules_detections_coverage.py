@@ -14,6 +14,6 @@ def test_rules_detection_helpers():
     assert detect_long_functions("def foo():\n    pass\n", max_lines=0)
     assert detect_magic_methods_overuse("def __str__(self):\n    pass\n")
     assert detect_multiple_implementations(
-        {"a.py": "def foo():\n    pass\n", "b.py": "def foo():\n    pass\n"}
+        {"a.py": "def foo():\n    pass\n", "b.py": "def foo():\n    pass\n"},
     )
     assert detect_sparse_code("x = 1; y = 2", max_statements_per_line=1)

@@ -160,7 +160,9 @@ def test_rules_adapter_dependency_handling():
 
     custom_cycle = type("Cycle", (), {"cycle": ("a", "b")})()
     more = adapter._check_dependencies(
-        {"cycles": [custom_cycle]}, principle, {"detect_circular_dependencies": True}
+        {"cycles": [custom_cycle]},
+        principle,
+        {"detect_circular_dependencies": True},
     )
     assert more
 
@@ -210,7 +212,7 @@ def test_rules_adapter_detector_config_metadata_thresholds():
                 severity=5,
                 description="",
                 metrics={"max_function_length": "bad"},
-            )
+            ),
         ],
     )
     config = adapter.get_detector_config("long_functions")
@@ -241,7 +243,9 @@ def test_parse_python_returns_none_for_bad_code(monkeypatch):
 
     monkeypatch.setattr(parser_module, "parse_python_with_builtin_ast", _bad_ast)
     monkeypatch.setattr(
-        parser_module, "parse_python_with_treesitter", lambda code: None
+        parser_module,
+        "parse_python_with_treesitter",
+        lambda code: None,
     )
     assert parser_module.parse_python("def broken(") is None
 
@@ -249,7 +253,7 @@ def test_parse_python_returns_none_for_bad_code(monkeypatch):
 def test_filter_result_strips_rules_summary():
     result = cli._placeholder_result("python", None)
     result = result.model_copy(
-        update={"rules_summary": RulesSummary(critical=1, high=0, medium=0, low=0)}
+        update={"rules_summary": RulesSummary(critical=1, high=0, medium=0, low=0)},
     )
     filtered = cli._filter_result(result, 7)
     assert filtered.rules_summary is not None
@@ -297,7 +301,9 @@ def test_rules_adapter_check_dependencies_missing_edges():
         principles=[principle],
     )
     violations = adapter._check_dependencies(
-        {"edges": "bad"}, principle, {"max_dependencies": 1}
+        {"edges": "bad"},
+        principle,
+        {"max_dependencies": 1},
     )
     assert violations == []
 
@@ -322,7 +328,9 @@ def test_rules_adapter_check_dependencies_edge_objects():
     )
     edge = type("Edge", (), {"from": "a", "to": "b"})()
     violations = adapter._check_dependencies(
-        {"edges": [edge]}, principle, {"max_dependencies": 0}
+        {"edges": [edge]},
+        principle,
+        {"max_dependencies": 0},
     )
     assert violations
 
@@ -346,7 +354,9 @@ def test_rules_adapter_check_dependencies_no_cycles():
         principles=[principle],
     )
     violations = adapter._check_dependencies(
-        {}, principle, {"detect_circular_dependencies": True}
+        {},
+        principle,
+        {"detect_circular_dependencies": True},
     )
     assert violations == []
 
@@ -370,7 +380,9 @@ def test_rules_adapter_check_dependencies_cycle_string():
         principles=[principle],
     )
     violations = adapter._check_dependencies(
-        {"cycles": ["a"]}, principle, {"detect_circular_dependencies": True}
+        {"cycles": ["a"]},
+        principle,
+        {"detect_circular_dependencies": True},
     )
     assert violations
 
@@ -399,7 +411,9 @@ def test_rules_adapter_check_dependencies_cycle_bad_object():
         principles=[principle],
     )
     violations = adapter._check_dependencies(
-        {"cycles": [BadCycle()]}, principle, {"detect_circular_dependencies": True}
+        {"cycles": [BadCycle()]},
+        principle,
+        {"detect_circular_dependencies": True},
     )
     assert violations
 
@@ -579,7 +593,7 @@ def test_rules_adapter_get_critical_violations():
     adapter = RulesAdapter(language="python", config=None)
     adapter.config = type("Config", (), {"severity_threshold": 5})()
     violation = _DummyDetector().build_violation(
-        ExplicitnessConfig(type="explicitness", severity=6)
+        ExplicitnessConfig(type="explicitness", severity=6),
     )
     assert adapter.get_critical_violations([violation])
 
@@ -712,8 +726,10 @@ def test_server_analyze_repository_skips_missing_files(tmp_path):
 
         result = asyncio.run(
             analyze_repository.fn(
-                repo_path=str(tmp_path), languages=["python"], max_files=1
-            )
+                repo_path=str(tmp_path),
+                languages=["python"],
+                max_files=1,
+            ),
         )
     finally:
         missing.chmod(0o644)
@@ -728,7 +744,7 @@ def test_server_analyze_repository_placeholder_language(tmp_path):
     import asyncio
 
     result = asyncio.run(
-        analyze_repository.fn(repo_path=str(tmp_path), languages=["ruby"], max_files=1)
+        analyze_repository.fn(repo_path=str(tmp_path), languages=["ruby"], max_files=1),
     )
     assert result
 
@@ -747,7 +763,7 @@ def test_server_analyze_repository_rust(tmp_path, monkeypatch):
     import asyncio
 
     result = asyncio.run(
-        analyze_repository.fn(repo_path=str(tmp_path), languages=["rust"], max_files=1)
+        analyze_repository.fn(repo_path=str(tmp_path), languages=["rust"], max_files=1),
     )
     assert result
 
@@ -757,7 +773,8 @@ def test_report_generate_skip_sections(tmp_path):
     path.write_text("def foo():\n    pass", encoding="utf-8")
     report = cli._render_report_output(
         __import__(
-            "mcp_zen_of_languages.reporting.report", fromlist=["generate_report"]
+            "mcp_zen_of_languages.reporting.report",
+            fromlist=["generate_report"],
         ).generate_report(str(path), include_analysis=False, include_gaps=False),
         "both",
     )
@@ -805,10 +822,11 @@ def test_python_analyzer_dependency_error(monkeypatch):
         raise RuntimeError(msg)
 
     monkeypatch.setattr(
-        "mcp_zen_of_languages.metrics.dependency_graph.build_import_graph", _boom
+        "mcp_zen_of_languages.metrics.dependency_graph.build_import_graph",
+        _boom,
     )
     result = analyzer._build_dependency_analysis(
-        AnalysisContext(code="import os", language="python")
+        AnalysisContext(code="import os", language="python"),
     )
     assert result is None
 
@@ -941,10 +959,10 @@ def test_rules_tools_detect_dependency_cycles():
 
 def test_cli_filter_result_severity_summary():
     violation = _DummyDetector().build_violation(
-        ExplicitnessConfig(type="explicitness", severity=8)
+        ExplicitnessConfig(type="explicitness", severity=8),
     )
     result = cli._placeholder_result("python", None).model_copy(
-        update={"violations": [violation], "rules_summary": RulesSummary()}
+        update={"violations": [violation], "rules_summary": RulesSummary()},
     )
     filtered = cli._filter_result(result, 9)
     assert filtered.violations == []
@@ -1062,7 +1080,7 @@ def test_report_format_gap_markdown_with_gaps():
                 principle="Explicitness",
                 severity=5,
                 reason="Missing",
-            )
+            ),
         ],
         feature_gaps=[],
     )
@@ -1117,7 +1135,9 @@ def test_rules_adapter_check_dependencies_cycle_exception():
     )
     assert (
         adapter._check_dependencies(
-            BadCycles(), principle, {"detect_circular_dependencies": True}
+            BadCycles(),
+            principle,
+            {"detect_circular_dependencies": True},
         )
         == []
     )
@@ -1147,7 +1167,9 @@ def test_rules_adapter_check_dependencies_bad_edge():
         principles=[principle],
     )
     violations = adapter._check_dependencies(
-        {"edges": [BadEdge()]}, principle, {"max_dependencies": 0}
+        {"edges": [BadEdge()]},
+        principle,
+        {"max_dependencies": 0},
     )
     assert violations == []
 
@@ -1171,7 +1193,9 @@ def test_rules_adapter_check_dependencies_max_exception():
         principles=[principle],
     )
     violations = adapter._check_dependencies(
-        {"edges": [("a", "b")]}, principle, {"max_dependencies": "bad"}
+        {"edges": [("a", "b")]},
+        principle,
+        {"max_dependencies": "bad"},
     )
     assert violations == []
 
@@ -1179,7 +1203,7 @@ def test_rules_adapter_check_dependencies_max_exception():
 def test_rules_adapter_summarize_violations_low():
     adapter = RulesAdapter(language="python", config=None)
     violation = _DummyDetector().build_violation(
-        ExplicitnessConfig(type="explicitness", severity=1)
+        ExplicitnessConfig(type="explicitness", severity=1),
     )
     summary = adapter.summarize_violations([violation])
     assert summary["low"] == 1

@@ -42,7 +42,9 @@ def test_ts_strict_mode_detector():
 def test_ts_interface_preference_detector():
     code = "type Foo = { bar: string };"
     violations = run_detector(
-        TsInterfacePreferenceDetector(), code, config_for("ts_interface_preference")
+        TsInterfacePreferenceDetector(),
+        code,
+        config_for("ts_interface_preference"),
     )
     assert any("Type aliases" in v.message for v in violations)
 
@@ -50,7 +52,9 @@ def test_ts_interface_preference_detector():
 def test_ts_return_type_detector():
     code = "export function foo(x: number) { return x; }"
     violations = run_detector(
-        TsReturnTypeDetector(), code, config_for("ts_return_types")
+        TsReturnTypeDetector(),
+        code,
+        config_for("ts_return_types"),
     )
     assert any("return type" in v.message for v in violations)
 
@@ -71,7 +75,7 @@ def test_ts_type_guard_detector():
 def test_ts_utility_types_detector():
     code = "type Foo = { bar: string };"
     cfg = config_for("ts_utility_types").model_copy(
-        update={"min_utility_type_usage": 1, "min_object_type_aliases": 1}
+        update={"min_utility_type_usage": 1, "min_object_type_aliases": 1},
     )
     violations = run_detector(TsUtilityTypesDetector(), code, cfg)
     assert any("Manual type transformations" in v.message for v in violations)
@@ -80,7 +84,9 @@ def test_ts_utility_types_detector():
 def test_ts_non_null_assertion_detector():
     code = "const x = foo!;"
     violations = run_detector(
-        TsNonNullAssertionDetector(), code, config_for("ts_non_null_assertions")
+        TsNonNullAssertionDetector(),
+        code,
+        config_for("ts_non_null_assertions"),
     )
     assert any("Non-null assertions" in v.message for v in violations)
 
@@ -88,7 +94,9 @@ def test_ts_non_null_assertion_detector():
 def test_ts_non_null_assertion_detector_chained():
     code = "const x = foo!.bar!;"
     violations = run_detector(
-        TsNonNullAssertionDetector(), code, config_for("ts_non_null_assertions")
+        TsNonNullAssertionDetector(),
+        code,
+        config_for("ts_non_null_assertions"),
     )
     assert any("Non-null assertions" in v.message for v in violations)
 
@@ -102,6 +110,8 @@ def test_ts_enum_const_detector():
 def test_ts_unknown_over_any_detector():
     code = "let data: any;"
     violations = run_detector(
-        TsUnknownOverAnyDetector(), code, config_for("ts_unknown_over_any")
+        TsUnknownOverAnyDetector(),
+        code,
+        config_for("ts_unknown_over_any"),
     )
     assert any("any" in v.message for v in violations)

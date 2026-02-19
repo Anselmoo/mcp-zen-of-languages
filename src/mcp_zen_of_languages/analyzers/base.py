@@ -62,8 +62,10 @@ from mcp_zen_of_languages.models import (
 logger = logging.getLogger(__name__)
 logger.setLevel(
     getattr(
-        logging, os.environ.get("ZEN_LOG_LEVEL", "WARNING").upper(), logging.WARNING
-    )
+        logging,
+        os.environ.get("ZEN_LOG_LEVEL", "WARNING").upper(),
+        logging.WARNING,
+    ),
 )
 
 # ============================================================================
@@ -374,7 +376,7 @@ class ViolationDetector[ConfigT: "DetectorConfig"](ABC):
             ``"god_class"``.
         """
 
-    def build_violation(
+    def build_violation(  # noqa: PLR0913
         self,
         config: ConfigT,
         *,
@@ -486,7 +488,9 @@ class DetectionPipeline:
         self.detectors = detectors
 
     def run(
-        self, context: AnalysisContext, config: AnalyzerConfig | DetectorConfig
+        self,
+        context: AnalysisContext,
+        config: AnalyzerConfig | DetectorConfig,
     ) -> list[Violation]:
         """Execute every detector against the shared context and merge results.
 
@@ -634,7 +638,9 @@ class BaseAnalyzer(ABC):
 
     @abstractmethod
     def compute_metrics(
-        self, code: str, ast_tree: ParserResult | None
+        self,
+        code: str,
+        ast_tree: ParserResult | None,
     ) -> tuple[CyclomaticSummary | None, float | None, int]:
         """Compute quantitative code-quality metrics for the given source.
 
@@ -771,7 +777,7 @@ class BaseAnalyzer(ABC):
             # Merge pipeline violations with rules-derived violations
             all_violations = violations + rules_violations
             result.rules_summary = RulesSummary(
-                **adapter.summarize_violations(all_violations)
+                **adapter.summarize_violations(all_violations),
             )
             result.violations = all_violations
         except Exception as exc:  # noqa: BLE001
@@ -830,7 +836,8 @@ class BaseAnalyzer(ABC):
         )
         if self._pipeline_config:
             merged = REGISTRY.merge_configs(
-                base_config.detectors, self._pipeline_config.detectors
+                base_config.detectors,
+                self._pipeline_config.detectors,
             )
             pipeline_config = PipelineConfig(
                 language=base_config.language,
@@ -1022,7 +1029,9 @@ class LocationHelperMixin:
         return Location(line=1, column=1)
 
     def ast_node_to_location(
-        self, _ast_tree: ParserResult | None, node: object | None
+        self,
+        _ast_tree: ParserResult | None,
+        node: object | None,
     ) -> Location | None:
         """Extract a ``Location`` from a Python-style AST node.
 

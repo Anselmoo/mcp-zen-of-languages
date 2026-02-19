@@ -43,7 +43,8 @@ MAX_INLINE_PARAMS = 4
 
 
 class PowerShellApprovedVerbDetector(
-    ViolationDetector[PowerShellApprovedVerbConfig], LocationHelperMixin
+    ViolationDetector[PowerShellApprovedVerbConfig],
+    LocationHelperMixin,
 ):
     """Detect function names that use unapproved PowerShell verbs.
 
@@ -68,7 +69,9 @@ class PowerShellApprovedVerbDetector(
         return "powershell_approved_verbs"
 
     def detect(
-        self, context: AnalysisContext, config: PowerShellApprovedVerbConfig
+        self,
+        context: AnalysisContext,
+        config: PowerShellApprovedVerbConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -91,13 +94,14 @@ class PowerShellApprovedVerbDetector(
                         suggestion=(
                             "Use approved PowerShell verbs (Get/Set/New/Remove/etc.)."
                         ),
-                    )
+                    ),
                 )
         return violations
 
 
 class PowerShellErrorHandlingDetector(
-    ViolationDetector[PowerShellErrorHandlingConfig], LocationHelperMixin
+    ViolationDetector[PowerShellErrorHandlingConfig],
+    LocationHelperMixin,
 ):
     """Detect scripts that lack any form of error handling.
 
@@ -122,7 +126,9 @@ class PowerShellErrorHandlingDetector(
         return "powershell_error_handling"
 
     def detect(
-        self, context: AnalysisContext, config: PowerShellErrorHandlingConfig
+        self,
+        context: AnalysisContext,
+        config: PowerShellErrorHandlingConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -140,13 +146,14 @@ class PowerShellErrorHandlingDetector(
                     config,
                     contains="error",
                     suggestion="Add try/catch or -ErrorAction to handle errors.",
-                )
+                ),
             ]
         return []
 
 
 class PowerShellPascalCaseDetector(
-    ViolationDetector[PowerShellPascalCaseConfig], LocationHelperMixin
+    ViolationDetector[PowerShellPascalCaseConfig],
+    LocationHelperMixin,
 ):
     """Detect function names that violate PascalCase naming conventions.
 
@@ -170,7 +177,9 @@ class PowerShellPascalCaseDetector(
         return "powershell_pascal_case"
 
     def detect(
-        self, context: AnalysisContext, config: PowerShellPascalCaseConfig
+        self,
+        context: AnalysisContext,
+        config: PowerShellPascalCaseConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -192,13 +201,14 @@ class PowerShellPascalCaseDetector(
                             contains="PascalCase",
                             location=Location(line=idx, column=match.start(1) + 1),
                             suggestion="Use PascalCase for function names.",
-                        )
+                        ),
                     )
         return violations
 
 
 class PowerShellCmdletBindingDetector(
-    ViolationDetector[PowerShellCmdletBindingConfig], LocationHelperMixin
+    ViolationDetector[PowerShellCmdletBindingConfig],
+    LocationHelperMixin,
 ):
     """Detect advanced functions missing ``[CmdletBinding()]`` and ``param()``.
 
@@ -222,7 +232,9 @@ class PowerShellCmdletBindingDetector(
         return "powershell_cmdlet_binding"
 
     def detect(
-        self, context: AnalysisContext, config: PowerShellCmdletBindingConfig
+        self,
+        context: AnalysisContext,
+        config: PowerShellCmdletBindingConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -242,13 +254,14 @@ class PowerShellCmdletBindingDetector(
                     config,
                     contains="CmdletBinding",
                     suggestion="Add [CmdletBinding()] and a param() block.",
-                )
+                ),
             ]
         return []
 
 
 class PowerShellVerboseDebugDetector(
-    ViolationDetector[PowerShellVerboseDebugConfig], LocationHelperMixin
+    ViolationDetector[PowerShellVerboseDebugConfig],
+    LocationHelperMixin,
 ):
     """Detect ``Write-Host`` calls that should use ``Write-Verbose`` or ``Write-Debug``.
 
@@ -273,7 +286,9 @@ class PowerShellVerboseDebugDetector(
         return "powershell_verbose_debug"
 
     def detect(
-        self, context: AnalysisContext, config: PowerShellVerboseDebugConfig
+        self,
+        context: AnalysisContext,
+        config: PowerShellVerboseDebugConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -298,7 +313,8 @@ class PowerShellVerboseDebugDetector(
 
 
 class PowerShellPositionalParamsDetector(
-    ViolationDetector[PowerShellPositionalParamsConfig], LocationHelperMixin
+    ViolationDetector[PowerShellPositionalParamsConfig],
+    LocationHelperMixin,
 ):
     """Detect reliance on ``$args`` for positional parameter access.
 
@@ -322,7 +338,9 @@ class PowerShellPositionalParamsDetector(
         return "powershell_positional_params"
 
     def detect(
-        self, context: AnalysisContext, config: PowerShellPositionalParamsConfig
+        self,
+        context: AnalysisContext,
+        config: PowerShellPositionalParamsConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -347,7 +365,8 @@ class PowerShellPositionalParamsDetector(
 
 
 class PowerShellPipelineUsageDetector(
-    ViolationDetector[PowerShellPipelineUsageConfig], LocationHelperMixin
+    ViolationDetector[PowerShellPipelineUsageConfig],
+    LocationHelperMixin,
 ):
     """Detect ``ForEach-Object`` or ``foreach`` loops that should use pipelines.
 
@@ -372,7 +391,9 @@ class PowerShellPipelineUsageDetector(
         return "powershell_pipeline_usage"
 
     def detect(
-        self, context: AnalysisContext, config: PowerShellPipelineUsageConfig
+        self,
+        context: AnalysisContext,
+        config: PowerShellPipelineUsageConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -387,20 +408,23 @@ class PowerShellPipelineUsageDetector(
         if "|" in code:
             return []
         if re.search(r"\bForEach-Object\b", code, re.IGNORECASE) or re.search(
-            r"\bforeach\b", code, re.IGNORECASE
+            r"\bforeach\b",
+            code,
+            re.IGNORECASE,
         ):
             return [
                 self.build_violation(
                     config,
                     contains="pipeline",
                     suggestion="Prefer pipeline operations for object processing.",
-                )
+                ),
             ]
         return []
 
 
 class PowerShellShouldProcessDetector(
-    ViolationDetector[PowerShellShouldProcessConfig], LocationHelperMixin
+    ViolationDetector[PowerShellShouldProcessConfig],
+    LocationHelperMixin,
 ):
     """Detect destructive cmdlet verbs missing ``SupportsShouldProcess``.
 
@@ -425,7 +449,9 @@ class PowerShellShouldProcessDetector(
         return "powershell_should_process"
 
     def detect(
-        self, context: AnalysisContext, config: PowerShellShouldProcessConfig
+        self,
+        context: AnalysisContext,
+        config: PowerShellShouldProcessConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -445,13 +471,14 @@ class PowerShellShouldProcessDetector(
                     config,
                     contains="SupportsShouldProcess",
                     suggestion="Add [CmdletBinding(SupportsShouldProcess)] for safety.",
-                )
+                ),
             ]
         return []
 
 
 class PowerShellSplattingDetector(
-    ViolationDetector[PowerShellSplattingConfig], LocationHelperMixin
+    ViolationDetector[PowerShellSplattingConfig],
+    LocationHelperMixin,
 ):
     """Detect cmdlet calls with many inline parameters that should use splatting.
 
@@ -476,7 +503,9 @@ class PowerShellSplattingDetector(
         return "powershell_splatting"
 
     def detect(
-        self, context: AnalysisContext, config: PowerShellSplattingConfig
+        self,
+        context: AnalysisContext,
+        config: PowerShellSplattingConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -499,13 +528,14 @@ class PowerShellSplattingDetector(
                         contains="splatting",
                         location=Location(line=idx, column=1),
                         suggestion="Use splatting for long parameter lists.",
-                    )
+                    ),
                 )
         return violations
 
 
 class PowerShellParameterValidationDetector(
-    ViolationDetector[PowerShellParameterValidationConfig], LocationHelperMixin
+    ViolationDetector[PowerShellParameterValidationConfig],
+    LocationHelperMixin,
 ):
     """Detect ``param()`` blocks that lack ``[Validate*]`` attributes.
 
@@ -530,7 +560,9 @@ class PowerShellParameterValidationDetector(
         return "powershell_parameter_validation"
 
     def detect(
-        self, context: AnalysisContext, config: PowerShellParameterValidationConfig
+        self,
+        context: AnalysisContext,
+        config: PowerShellParameterValidationConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -548,13 +580,14 @@ class PowerShellParameterValidationDetector(
                     config,
                     contains="Validate",
                     suggestion="Add [Validate*] attributes for parameters.",
-                )
+                ),
             ]
         return []
 
 
 class PowerShellCommentHelpDetector(
-    ViolationDetector[PowerShellCommentHelpConfig], LocationHelperMixin
+    ViolationDetector[PowerShellCommentHelpConfig],
+    LocationHelperMixin,
 ):
     """Detect functions missing comment-based help with ``.SYNOPSIS``.
 
@@ -579,7 +612,9 @@ class PowerShellCommentHelpDetector(
         return "powershell_comment_help"
 
     def detect(
-        self, context: AnalysisContext, config: PowerShellCommentHelpConfig
+        self,
+        context: AnalysisContext,
+        config: PowerShellCommentHelpConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -596,13 +631,14 @@ class PowerShellCommentHelpDetector(
                     config,
                     contains=".SYNOPSIS",
                     suggestion="Add comment-based help with .SYNOPSIS and examples.",
-                )
+                ),
             ]
         return []
 
 
 class PowerShellAliasUsageDetector(
-    ViolationDetector[PowerShellAliasUsageConfig], LocationHelperMixin
+    ViolationDetector[PowerShellAliasUsageConfig],
+    LocationHelperMixin,
 ):
     """Detect built-in aliases (``gci``, ``ls``, ``%``, ``?``) used in scripts.
 
@@ -627,7 +663,9 @@ class PowerShellAliasUsageDetector(
         return "powershell_alias_usage"
 
     def detect(
-        self, context: AnalysisContext, config: PowerShellAliasUsageConfig
+        self,
+        context: AnalysisContext,
+        config: PowerShellAliasUsageConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -648,13 +686,14 @@ class PowerShellAliasUsageDetector(
                         contains=match[1],
                         location=Location(line=idx, column=match.start(1) + 1),
                         suggestion="Use full cmdlet names instead of aliases.",
-                    )
+                    ),
                 )
         return violations
 
 
 class PowerShellReturnObjectsDetector(
-    ViolationDetector[PowerShellReturnObjectsConfig], LocationHelperMixin
+    ViolationDetector[PowerShellReturnObjectsConfig],
+    LocationHelperMixin,
 ):
     """Detect functions that return formatted text instead of objects.
 
@@ -679,7 +718,9 @@ class PowerShellReturnObjectsDetector(
         return "powershell_return_objects"
 
     def detect(
-        self, context: AnalysisContext, config: PowerShellReturnObjectsConfig
+        self,
+        context: AnalysisContext,
+        config: PowerShellReturnObjectsConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -697,7 +738,7 @@ class PowerShellReturnObjectsDetector(
                         config,
                         contains=token,
                         suggestion="Return objects instead of formatted text.",
-                    )
+                    ),
                 ]
                 for token in ("Format-Table", "Out-String")
                 if token in context.code
@@ -707,7 +748,8 @@ class PowerShellReturnObjectsDetector(
 
 
 class PowerShellScopeUsageDetector(
-    ViolationDetector[PowerShellScopeUsageConfig], LocationHelperMixin
+    ViolationDetector[PowerShellScopeUsageConfig],
+    LocationHelperMixin,
 ):
     """Detect explicit ``$global:`` and ``$script:`` scope modifiers.
 
@@ -731,7 +773,9 @@ class PowerShellScopeUsageDetector(
         return "powershell_scope_usage"
 
     def detect(
-        self, context: AnalysisContext, config: PowerShellScopeUsageConfig
+        self,
+        context: AnalysisContext,
+        config: PowerShellScopeUsageConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -748,13 +792,14 @@ class PowerShellScopeUsageDetector(
                     config,
                     contains="scope",
                     suggestion="Be explicit and minimize scope usage.",
-                )
+                ),
             ]
         return []
 
 
 class PowerShellNullHandlingDetector(
-    ViolationDetector[PowerShellNullHandlingConfig], LocationHelperMixin
+    ViolationDetector[PowerShellNullHandlingConfig],
+    LocationHelperMixin,
 ):
     """Detect functions and param blocks that never check for ``$null``.
 
@@ -780,7 +825,9 @@ class PowerShellNullHandlingDetector(
         return "powershell_null_handling"
 
     def detect(
-        self, context: AnalysisContext, config: PowerShellNullHandlingConfig
+        self,
+        context: AnalysisContext,
+        config: PowerShellNullHandlingConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -798,7 +845,7 @@ class PowerShellNullHandlingDetector(
                     config,
                     contains="$null",
                     suggestion="Add explicit $null checks for safety.",
-                )
+                ),
             ]
         return []
 

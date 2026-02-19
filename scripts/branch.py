@@ -102,7 +102,11 @@ def _run(cmd: list[str], *, dry_run: bool, label: str) -> str:
 
 def _capture(cmd: list[str]) -> str:
     return subprocess.run(
-        cmd, cwd=ROOT, capture_output=True, text=True, check=False
+        cmd,
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
     ).stdout.strip()
 
 
@@ -181,7 +185,7 @@ def cmd_rescue(args: argparse.Namespace) -> None:
 
     print(
         f"\n{'[DRY RUN] ' if args.dry_run else ''}"
-        f"Rescue commits from '{origin_branch}' → '{branch_name}'\n"
+        f"Rescue commits from '{origin_branch}' → '{branch_name}'\n",
     )
 
     # Determine commits to rescue and the reset target
@@ -250,7 +254,7 @@ def cmd_rescue(args: argparse.Namespace) -> None:
     print(
         f"\n✅ Done!  {n} commit(s) rescued into '{branch_name}'.\n"
         f"   '{origin_branch}' has been reset to '{reset_target}'.\n"
-        f"   Suggested commit title (for future work):\n\n    {commit_title}\n"
+        f"   Suggested commit title (for future work):\n\n    {commit_title}\n",
     )
     if args.dry_run:
         print("[dry-run complete — no changes made]")

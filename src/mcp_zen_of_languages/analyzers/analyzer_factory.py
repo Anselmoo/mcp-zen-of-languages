@@ -30,6 +30,8 @@ if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.base import AnalyzerConfig, BaseAnalyzer
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
 
+    type AnalyzerClass = type[BaseAnalyzer]
+
 SUPPORTED_LANGUAGES: tuple[str, ...] = (
     "python",
     "typescript",
@@ -46,6 +48,39 @@ SUPPORTED_LANGUAGES: tuple[str, ...] = (
     "xml",
     "json",
 )
+
+_ANALYZERS_BY_ALIAS: dict[str, AnalyzerClass] = {
+    "python": PythonAnalyzer,
+    "py": PythonAnalyzer,
+    "typescript": TypeScriptAnalyzer,
+    "ts": TypeScriptAnalyzer,
+    "tsx": TypeScriptAnalyzer,
+    "javascript": JavaScriptAnalyzer,
+    "js": JavaScriptAnalyzer,
+    "jsx": JavaScriptAnalyzer,
+    "go": GoAnalyzer,
+    "rust": RustAnalyzer,
+    "rs": RustAnalyzer,
+    "bash": BashAnalyzer,
+    "sh": BashAnalyzer,
+    "shell": BashAnalyzer,
+    "powershell": PowerShellAnalyzer,
+    "ps": PowerShellAnalyzer,
+    "pwsh": PowerShellAnalyzer,
+    "ruby": RubyAnalyzer,
+    "rb": RubyAnalyzer,
+    "cpp": CppAnalyzer,
+    "c++": CppAnalyzer,
+    "cc": CppAnalyzer,
+    "cxx": CppAnalyzer,
+    "csharp": CSharpAnalyzer,
+    "cs": CSharpAnalyzer,
+    "yaml": YamlAnalyzer,
+    "yml": YamlAnalyzer,
+    "toml": TomlAnalyzer,
+    "xml": XmlAnalyzer,
+    "json": JsonAnalyzer,
+}
 
 
 def supported_languages() -> tuple[str, ...]:
@@ -103,33 +138,8 @@ def create_analyzer(
         =============================== ===================================
     """
     lang = language.lower()
-    if lang in {"py", "python"}:
-        return PythonAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang in {"ts", "tsx", "typescript"}:
-        return TypeScriptAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang == "go":
-        return GoAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang in {"rust", "rs"}:
-        return RustAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang in {"js", "jsx", "javascript"}:
-        return JavaScriptAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang in {"bash", "sh", "shell"}:
-        return BashAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang in {"powershell", "ps", "pwsh"}:
-        return PowerShellAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang in {"ruby", "rb"}:
-        return RubyAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang in {"cpp", "c++", "cc", "cxx"}:
-        return CppAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang in {"csharp", "cs"}:
-        return CSharpAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang in ("yaml", "yml"):
-        return YamlAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang == "toml":
-        return TomlAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang == "xml":
-        return XmlAnalyzer(config=config, pipeline_config=pipeline_config)
-    if lang == "json":
-        return JsonAnalyzer(config=config, pipeline_config=pipeline_config)
-    msg = f"Unsupported language: {language}"
-    raise ValueError(msg)
+    analyzer_class = _ANALYZERS_BY_ALIAS.get(lang)
+    if analyzer_class is None:
+        msg = f"Unsupported language: {language}"
+        raise ValueError(msg)
+    return analyzer_class(config=config, pipeline_config=pipeline_config)

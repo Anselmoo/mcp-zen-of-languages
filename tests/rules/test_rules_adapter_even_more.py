@@ -21,7 +21,9 @@ def test_check_maintainability_index_handles_key_error():
     adapter = RulesAdapter(language="python")
     principle = _build_principle(metrics={"min_maintainability_index": "bad"})
     results = adapter._check_maintainability_index(
-        0.0, principle, principle.metrics or {}
+        0.0,
+        principle,
+        principle.metrics or {},
     )
     assert results == []
 
@@ -30,7 +32,9 @@ def test_check_cyclomatic_complexity_handles_type_error():
     adapter = RulesAdapter(language="python")
     principle = _build_principle(metrics={"max_cyclomatic_complexity": "bad"})
     results = adapter._check_cyclomatic_complexity(
-        type("C", (), {})(), principle, principle.metrics or {}
+        type("C", (), {})(),
+        principle,
+        principle.metrics or {},
     )
     assert results == []
 

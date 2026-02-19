@@ -2,7 +2,11 @@
 
 from pydantic import HttpUrl
 
-from ...rules.base_models import LanguageZenPrinciples, PrincipleCategory, ZenPrinciple
+from mcp_zen_of_languages.rules.base_models import (
+    LanguageZenPrinciples,
+    PrincipleCategory,
+    ZenPrinciple,
+)
 
 POWERSHELL_ZEN = LanguageZenPrinciples(
     language="powershell",
@@ -72,7 +76,7 @@ POWERSHELL_ZEN = LanguageZenPrinciples(
                 "Inconsistent casing",
             ],
             metrics={
-                "naming_convention": "PascalCase for functions, camelCase for variables"
+                "naming_convention": "PascalCase for functions, camelCase for variables",
             },
         ),
         ZenPrinciple(

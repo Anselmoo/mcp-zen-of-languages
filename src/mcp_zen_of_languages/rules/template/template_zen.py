@@ -6,7 +6,11 @@ Then fill in the principles for your target language.
 
 from pydantic import HttpUrl
 
-from ..base_models import LanguageZenPrinciples, PrincipleCategory, ZenPrinciple
+from mcp_zen_of_languages.rules.base_models import (
+    LanguageZenPrinciples,
+    PrincipleCategory,
+    ZenPrinciple,
+)
 
 # Replace TEMPLATE with your language name (e.g., TYPESCRIPT, RUBY, GO)
 TEMPLATE_ZEN = LanguageZenPrinciples(

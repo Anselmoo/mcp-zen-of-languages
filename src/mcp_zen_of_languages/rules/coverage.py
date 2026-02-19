@@ -130,7 +130,7 @@ def build_explicit_rule_coverage(language: str) -> RuleCoverageMap:
                 meta.detector_id
                 for meta in metas
                 if meta.detector_class is not RulePatternDetector
-            }
+            },
         ):
             rules[principle.id] = detector_ids
         else:

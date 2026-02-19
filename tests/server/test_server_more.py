@@ -10,7 +10,9 @@ async def test_analyze_repository_unknown_language(tmp_path):
     file_path = tmp_path / "sample.unknown"
     file_path.write_text("data", encoding="utf-8")
     results = await server.analyze_repository.fn(
-        str(tmp_path), ["unknown"], max_files=1
+        str(tmp_path),
+        ["unknown"],
+        max_files=1,
     )
     assert results
     assert results[0].language == "unknown"
@@ -21,7 +23,9 @@ async def test_analyze_repository_typescript(tmp_path):
     file_path = tmp_path / "sample.ts"
     file_path.write_text("interface Foo {}", encoding="utf-8")
     results = await server.analyze_repository.fn(
-        str(tmp_path), ["typescript"], max_files=1
+        str(tmp_path),
+        ["typescript"],
+        max_files=1,
     )
     assert results
 

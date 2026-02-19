@@ -26,7 +26,8 @@ MIN_ARRAY_ITEMS_FOR_SCHEMA = 2
 
 
 class JsonStrictnessDetector(
-    ViolationDetector[JsonStrictnessConfig], LocationHelperMixin
+    ViolationDetector[JsonStrictnessConfig],
+    LocationHelperMixin,
 ):
     """Flags non-standard JSON extensions such as comments and trailing commas.
 
@@ -49,7 +50,9 @@ class JsonStrictnessDetector(
         return "json-001"
 
     def detect(
-        self, context: AnalysisContext, config: JsonStrictnessConfig
+        self,
+        context: AnalysisContext,
+        config: JsonStrictnessConfig,
     ) -> list[Violation]:
         """Scan each line for comments (``//``, ``/*``) and trailing commas before ``]`` or ``}``.
 
@@ -69,7 +72,7 @@ class JsonStrictnessDetector(
                         contains="comment",
                         location=Location(line=idx, column=line.find("/") + 1),
                         suggestion="Remove comments to keep JSON strict.",
-                    )
+                    ),
                 )
                 break
             if re.search(r",\s*[\]\}]", line):
@@ -79,14 +82,15 @@ class JsonStrictnessDetector(
                         contains="trailing comma",
                         location=Location(line=idx, column=1),
                         suggestion="Remove trailing commas in JSON.",
-                    )
+                    ),
                 )
                 break
         return violations
 
 
 class JsonSchemaConsistencyDetector(
-    ViolationDetector[JsonSchemaConsistencyConfig], LocationHelperMixin
+    ViolationDetector[JsonSchemaConsistencyConfig],
+    LocationHelperMixin,
 ):
     """Detects inconsistent object shapes inside top-level JSON arrays.
 
@@ -110,7 +114,9 @@ class JsonSchemaConsistencyDetector(
         return "json-002"
 
     def detect(
-        self, context: AnalysisContext, config: JsonSchemaConsistencyConfig
+        self,
+        context: AnalysisContext,
+        config: JsonSchemaConsistencyConfig,
     ) -> list[Violation]:
         """Parse the JSON document and compare key sets across array elements.
 
@@ -137,13 +143,14 @@ class JsonSchemaConsistencyDetector(
                     contains="schema",
                     location=Location(line=1, column=1),
                     suggestion="Ensure objects in arrays share a consistent schema.",
-                )
+                ),
             ]
         return []
 
 
 class JsonDateFormatDetector(
-    ViolationDetector[JsonDateFormatConfig], LocationHelperMixin
+    ViolationDetector[JsonDateFormatConfig],
+    LocationHelperMixin,
 ):
     """Identifies date strings that deviate from ISO 8601 formatting.
 
@@ -164,7 +171,9 @@ class JsonDateFormatDetector(
         return "json-003"
 
     def detect(
-        self, context: AnalysisContext, config: JsonDateFormatConfig
+        self,
+        context: AnalysisContext,
+        config: JsonDateFormatConfig,
     ) -> list[Violation]:
         """Search for non-ISO date patterns such as ``MM/DD/YYYY`` in string values.
 
@@ -184,7 +193,7 @@ class JsonDateFormatDetector(
                         contains="date",
                         location=Location(line=idx, column=1),
                         suggestion="Use ISO 8601 date strings.",
-                    )
+                    ),
                 )
                 break
         for idx, line in enumerate(context.code.splitlines(), start=1):
@@ -201,14 +210,15 @@ class JsonDateFormatDetector(
                         contains=value,
                         location=Location(line=idx, column=1),
                         suggestion="Use ISO 8601 date strings.",
-                    )
+                    ),
                 )
                 break
         return violations
 
 
 class JsonNullHandlingDetector(
-    ViolationDetector[JsonNullHandlingConfig], LocationHelperMixin
+    ViolationDetector[JsonNullHandlingConfig],
+    LocationHelperMixin,
 ):
     """Reports top-level object keys whose values are explicitly ``null``.
 
@@ -229,7 +239,9 @@ class JsonNullHandlingDetector(
         return "json-004"
 
     def detect(
-        self, context: AnalysisContext, config: JsonNullHandlingConfig
+        self,
+        context: AnalysisContext,
+        config: JsonNullHandlingConfig,
     ) -> list[Violation]:
         """Parse JSON and check whether any top-level values are ``None``.
 
@@ -253,13 +265,14 @@ class JsonNullHandlingDetector(
                     contains="null",
                     location=Location(line=1, column=1),
                     suggestion="Use explicit nulls for optional keys when needed.",
-                )
+                ),
             ]
         return []
 
 
 class JsonKeyCasingDetector(
-    ViolationDetector[JsonKeyCasingConfig], LocationHelperMixin
+    ViolationDetector[JsonKeyCasingConfig],
+    LocationHelperMixin,
 ):
     """Enforces consistent letter casing across all keys in a JSON object.
 
@@ -280,7 +293,9 @@ class JsonKeyCasingDetector(
         return "json-005"
 
     def detect(
-        self, context: AnalysisContext, config: JsonKeyCasingConfig
+        self,
+        context: AnalysisContext,
+        config: JsonKeyCasingConfig,
     ) -> list[Violation]:
         """Parse the JSON object and compare casing styles of its keys.
 
@@ -308,13 +323,14 @@ class JsonKeyCasingDetector(
                     contains="casing",
                     location=Location(line=1, column=1),
                     suggestion="Use consistent casing for JSON keys.",
-                )
+                ),
             ]
         return []
 
 
 class JsonArrayOrderDetector(
-    ViolationDetector[JsonArrayOrderConfig], LocationHelperMixin
+    ViolationDetector[JsonArrayOrderConfig],
+    LocationHelperMixin,
 ):
     """Checks for ordered collections and duplicate keys that hint at misused objects.
 
@@ -335,7 +351,9 @@ class JsonArrayOrderDetector(
         return "json-006"
 
     def detect(
-        self, context: AnalysisContext, config: JsonArrayOrderConfig
+        self,
+        context: AnalysisContext,
+        config: JsonArrayOrderConfig,
     ) -> list[Violation]:
         """Parse JSON and flag nested arrays or duplicate keys signalling order dependence.
 
@@ -373,7 +391,7 @@ class JsonArrayOrderDetector(
                     contains="array",
                     location=Location(line=1, column=1),
                     suggestion="Use arrays for ordered collections.",
-                )
+                ),
             ]
         if isinstance(data, dict):
             duplicates = [k for k, v in Counter(data.keys()).items() if v > 1]
@@ -384,7 +402,7 @@ class JsonArrayOrderDetector(
                         contains=duplicates[0],
                         location=Location(line=1, column=1),
                         suggestion="Use arrays for ordered collections.",
-                    )
+                    ),
                 ]
         return []
 

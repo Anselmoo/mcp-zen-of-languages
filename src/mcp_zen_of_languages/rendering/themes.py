@@ -34,7 +34,7 @@ ZEN_THEME = Theme(
         "metric": "magenta",
         "score": "bold white",
         "banner": "bold cyan",
-    }
+    },
 )
 
 BOX_BANNER = box.DOUBLE
@@ -83,21 +83,30 @@ def severity_badge(severity: int) -> str:
     Returns:
         str: Rich markup string that renders as a coloured badge when printed.
     """
-    if _use_emoji():
-        if severity >= SEVERITY_CRITICAL:
-            return "[severity.critical]🔴 CRIT[/]"
-        if severity >= SEVERITY_HIGH:
-            return "[severity.high]🟠 HIGH[/]"
-        if severity >= SEVERITY_MEDIUM:
-            return "[severity.medium]🔵 MED[/]"
-        return "[severity.low]⚪ LOW[/]"
     if severity >= SEVERITY_CRITICAL:
-        return "[severity.critical]● CRIT[/]"
-    if severity >= SEVERITY_HIGH:
-        return "[severity.high]▲ HIGH[/]"
-    if severity >= SEVERITY_MEDIUM:
-        return "[severity.medium]◆ MED[/]"
-    return "[severity.low]○ LOW[/]"
+        style, label = "severity.critical", "CRIT"
+    elif severity >= SEVERITY_HIGH:
+        style, label = "severity.high", "HIGH"
+    elif severity >= SEVERITY_MEDIUM:
+        style, label = "severity.medium", "MED"
+    else:
+        style, label = "severity.low", "LOW"
+    glyphs = (
+        {
+            "severity.critical": "🔴",
+            "severity.high": "🟠",
+            "severity.medium": "🔵",
+            "severity.low": "⚪",
+        }
+        if _use_emoji()
+        else {
+            "severity.critical": "●",
+            "severity.high": "▲",
+            "severity.medium": "◆",
+            "severity.low": "○",
+        }
+    )
+    return f"[{style}]{glyphs[style]} {label}[/]"
 
 
 def pass_fail_glyph(*, passed: bool) -> str:

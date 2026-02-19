@@ -304,7 +304,8 @@ class DetectorRegistry:
         return self._config_adapter
 
     def configs_from_rules(
-        self, lang_zen: LanguageZenPrinciples
+        self,
+        lang_zen: LanguageZenPrinciples,
     ) -> list[DetectorConfig]:
         """Project an entire language's zen principles into an ordered config list.
 
@@ -324,7 +325,7 @@ class DetectorRegistry:
         from mcp_zen_of_languages.analyzers import registry_bootstrap  # noqa: F401
 
         configs_by_type: dict[str, DetectorConfig] = {
-            "analyzer_defaults": AnalyzerConfig()
+            "analyzer_defaults": AnalyzerConfig(),
         }
         base_fields = set(DetectorConfig.model_fields)
 
@@ -374,7 +375,8 @@ class DetectorRegistry:
         return self._order_configs(configs_by_type)
 
     def create_pipeline_from_rules(
-        self, lang_zen: LanguageZenPrinciples
+        self,
+        lang_zen: LanguageZenPrinciples,
     ) -> DetectionPipeline:
         """Build a ready-to-run detection pipeline from zen principles.
 
@@ -474,7 +476,8 @@ class DetectorRegistry:
         return configs
 
     def _order_configs(
-        self, configs_by_type: dict[str, DetectorConfig]
+        self,
+        configs_by_type: dict[str, DetectorConfig],
     ) -> list[DetectorConfig]:
         """Sort configs by [`DetectorMetadata.default_order`][DetectorMetadata.default_order], ``analyzer_defaults`` first.
 
@@ -499,7 +502,7 @@ class DetectorRegistry:
             sorted(
                 configs_by_type.values(),
                 key=lambda cfg: (order_map.get(cfg.type, 0), cfg.type),
-            )
+            ),
         )
         return ordered
 

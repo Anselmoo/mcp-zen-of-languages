@@ -39,7 +39,8 @@ MIN_REPEATED_ACCESS_COUNT = 2
 
 
 class JsCallbackNestingDetector(
-    ViolationDetector[JsCallbackNestingConfig], LocationHelperMixin
+    ViolationDetector[JsCallbackNestingConfig],
+    LocationHelperMixin,
 ):
     """Detect deeply nested callbacks that create "callback hell".
 
@@ -64,7 +65,9 @@ class JsCallbackNestingDetector(
         return "js_callback_nesting"
 
     def detect(
-        self, context: AnalysisContext, config: JsCallbackNestingConfig
+        self,
+        context: AnalysisContext,
+        config: JsCallbackNestingConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -93,7 +96,7 @@ class JsCallbackNestingDetector(
                     suggestion=(
                         "Reduce nested callbacks by using async/await or Promises."
                     ),
-                )
+                ),
             ]
         return []
 
@@ -121,7 +124,9 @@ class JsNoVarDetector(ViolationDetector[JsNoVarConfig], LocationHelperMixin):
         return "js_no_var"
 
     def detect(
-        self, context: AnalysisContext, config: JsNoVarConfig
+        self,
+        context: AnalysisContext,
+        config: JsNoVarConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -146,7 +151,8 @@ class JsNoVarDetector(ViolationDetector[JsNoVarConfig], LocationHelperMixin):
 
 
 class JsStrictEqualityDetector(
-    ViolationDetector[JsStrictEqualityConfig], LocationHelperMixin
+    ViolationDetector[JsStrictEqualityConfig],
+    LocationHelperMixin,
 ):
     """Detect loose equality operators (``==`` / ``!=``) in JavaScript.
 
@@ -171,7 +177,9 @@ class JsStrictEqualityDetector(
         return "js_strict_equality"
 
     def detect(
-        self, context: AnalysisContext, config: JsStrictEqualityConfig
+        self,
+        context: AnalysisContext,
+        config: JsStrictEqualityConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -194,13 +202,14 @@ class JsStrictEqualityDetector(
                             contains="==",
                             location=Location(line=idx, column=match.start() + 1),
                             suggestion="Use === or !== instead of ==/!=.",
-                        )
+                        ),
                     )
         return violations
 
 
 class JsAsyncErrorHandlingDetector(
-    ViolationDetector[JsAsyncErrorHandlingConfig], LocationHelperMixin
+    ViolationDetector[JsAsyncErrorHandlingConfig],
+    LocationHelperMixin,
 ):
     """Detect async functions and promise chains with missing error handling.
 
@@ -225,7 +234,9 @@ class JsAsyncErrorHandlingDetector(
         return "js_async_error_handling"
 
     def detect(
-        self, context: AnalysisContext, config: JsAsyncErrorHandlingConfig
+        self,
+        context: AnalysisContext,
+        config: JsAsyncErrorHandlingConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -244,7 +255,7 @@ class JsAsyncErrorHandlingDetector(
                     config,
                     contains="catch",
                     suggestion="Handle async errors with try/catch or .catch().",
-                )
+                ),
             )
         lines = code.splitlines()
         for idx, line in enumerate(lines):
@@ -258,14 +269,15 @@ class JsAsyncErrorHandlingDetector(
                     config,
                     contains="catch",
                     suggestion="Always terminate promise chains with .catch().",
-                )
+                ),
             )
             break
         return violations
 
 
 class JsFunctionLengthDetector(
-    ViolationDetector[JsFunctionLengthConfig], LocationHelperMixin
+    ViolationDetector[JsFunctionLengthConfig],
+    LocationHelperMixin,
 ):
     """Detect JavaScript functions that exceed a configurable line-count limit.
 
@@ -289,7 +301,9 @@ class JsFunctionLengthDetector(
         return "js_function_length"
 
     def detect(
-        self, context: AnalysisContext, config: JsFunctionLengthConfig
+        self,
+        context: AnalysisContext,
+        config: JsFunctionLengthConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -317,13 +331,14 @@ class JsFunctionLengthDetector(
                             contains="function",
                             location=Location(line=idx, column=1),
                             suggestion=f"Keep functions <= {limit} lines.",
-                        )
+                        ),
                     )
         return violations
 
 
 class JsGlobalStateDetector(
-    ViolationDetector[JsGlobalStateConfig], LocationHelperMixin
+    ViolationDetector[JsGlobalStateConfig],
+    LocationHelperMixin,
 ):
     """Detect direct access to global mutable state via ``window``, ``globalThis``, or ``global``.
 
@@ -348,7 +363,9 @@ class JsGlobalStateDetector(
         return "js_global_state"
 
     def detect(
-        self, context: AnalysisContext, config: JsGlobalStateConfig
+        self,
+        context: AnalysisContext,
+        config: JsGlobalStateConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -373,7 +390,8 @@ class JsGlobalStateDetector(
 
 
 class JsModernFeaturesDetector(
-    ViolationDetector[JsModernFeaturesConfig], LocationHelperMixin
+    ViolationDetector[JsModernFeaturesConfig],
+    LocationHelperMixin,
 ):
     """Detect opportunities to adopt modern ES6+ language features.
 
@@ -398,7 +416,9 @@ class JsModernFeaturesDetector(
         return "js_modern_features"
 
     def detect(
-        self, context: AnalysisContext, config: JsModernFeaturesConfig
+        self,
+        context: AnalysisContext,
+        config: JsModernFeaturesConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -418,7 +438,7 @@ class JsModernFeaturesDetector(
                     contains="arrow functions",
                     index=0,
                     suggestion="Prefer arrow functions and other modern syntax.",
-                )
+                ),
             )
         if re.search(r"['\"][^'\"]+['\"]\s*\+|\+\s*['\"][^'\"]+['\"]", code):
             violations.append(
@@ -427,7 +447,7 @@ class JsModernFeaturesDetector(
                     contains="template literals",
                     index=0,
                     suggestion="Use template literals instead of string concatenation.",
-                )
+                ),
             )
         for line in code.splitlines():
             matches = re.findall(r"\b(\w+)\.\w+", line)
@@ -441,14 +461,15 @@ class JsModernFeaturesDetector(
                         contains="destructuring",
                         index=0,
                         suggestion="Use object destructuring for repeated property access.",
-                    )
+                    ),
                 )
                 break
         return violations
 
 
 class JsMagicNumbersDetector(
-    ViolationDetector[JsMagicNumbersConfig], LocationHelperMixin
+    ViolationDetector[JsMagicNumbersConfig],
+    LocationHelperMixin,
 ):
     """Detect unexplained numeric literals (magic numbers) in JavaScript code.
 
@@ -473,7 +494,9 @@ class JsMagicNumbersDetector(
         return "js_magic_numbers"
 
     def detect(
-        self, context: AnalysisContext, config: JsMagicNumbersConfig
+        self,
+        context: AnalysisContext,
+        config: JsMagicNumbersConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -490,7 +513,7 @@ class JsMagicNumbersDetector(
                     config,
                     contains="magic numbers",
                     suggestion="Use named constants instead of magic numbers.",
-                )
+                ),
             ]
         return []
 
@@ -557,13 +580,14 @@ class JsInheritanceDepthDetector(ViolationDetector[Js009Config], LocationHelperM
                         config,
                         contains="extends",
                         suggestion="Prefer composition over deep inheritance chains.",
-                    )
+                    ),
                 ]
         return []
 
 
 class JsPureFunctionDetector(
-    ViolationDetector[JsPureFunctionConfig], LocationHelperMixin
+    ViolationDetector[JsPureFunctionConfig],
+    LocationHelperMixin,
 ):
     """Detect in-place array mutations that break functional programming principles.
 
@@ -588,7 +612,9 @@ class JsPureFunctionDetector(
         return "js_pure_functions"
 
     def detect(
-        self, context: AnalysisContext, config: JsPureFunctionConfig
+        self,
+        context: AnalysisContext,
+        config: JsPureFunctionConfig,
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 
@@ -605,7 +631,7 @@ class JsPureFunctionDetector(
                     config,
                     contains="mutation",
                     suggestion="Prefer pure functions and immutable operations.",
-                )
+                ),
             ]
         return []
 
@@ -655,7 +681,7 @@ class JsMeaningfulNamesDetector(ViolationDetector[Js011Config], LocationHelperMi
                             contains=name,
                             location=Location(line=idx, column=match.start(1) + 1),
                             suggestion="Use clearer, longer identifiers.",
-                        )
+                        ),
                     ]
         return []
 

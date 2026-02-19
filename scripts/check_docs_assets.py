@@ -75,7 +75,7 @@ def _load_manifest_css(
         import_path = CSS_ROOT / relative_import
         if not import_path.exists():
             errors.append(
-                f"{CSS_MANIFEST_PATH}: import target not found: {import_path.as_posix()}"
+                f"{CSS_MANIFEST_PATH}: import target not found: {import_path.as_posix()}",
             )
             continue
         merged.append((relative_import, import_path.read_text(encoding="utf-8")))
@@ -93,13 +93,13 @@ def check_css(css_manifest: str) -> list[str]:
     if "prefers-reduced-motion" not in css:
         errors.append(
             f"{CSS_ROOT}: missing @media (prefers-reduced-motion) section "
-            "(expected in utilities/motion.css)"
+            "(expected in utilities/motion.css)",
         )
 
     if ":focus-visible" not in css:
         errors.append(
             f"{CSS_ROOT}: missing :focus-visible styles "
-            "(expected in utilities/focus.css)"
+            "(expected in utilities/focus.css)",
         )
 
     # Count !important outside @media print blocks, excluding exempt files
@@ -112,7 +112,7 @@ def check_css(css_manifest: str) -> list[str]:
     if important_count > MAX_IMPORTANT_COUNT:
         errors.append(
             f"{CSS_ROOT}: {important_count} !important declarations "
-            f"(max {MAX_IMPORTANT_COUNT}, excluding @media print and exempt files)"
+            f"(max {MAX_IMPORTANT_COUNT}, excluding @media print and exempt files)",
         )
 
     return errors
@@ -125,13 +125,13 @@ def check_js(js: str) -> list[str]:
     if "document$.subscribe" not in js:
         errors.append(
             f"{JS_PATH}: must use document$.subscribe() "
-            f"(not DOMContentLoaded) for instant navigation compatibility"
+            f"(not DOMContentLoaded) for instant navigation compatibility",
         )
 
     if "DOMContentLoaded" in js:
         errors.append(
             f"{JS_PATH}: uses DOMContentLoaded — "
-            f"breaks with navigation.instant; use document$.subscribe()"
+            f"breaks with navigation.instant; use document$.subscribe()",
         )
 
     return errors
@@ -147,12 +147,12 @@ def check_readme_assets(readme_content: str) -> list[str]:
         if png_path not in readme_content and svg_path not in readme_content:
             errors.append(
                 f"{README_PATH}: missing asset reference for '{asset_base}' "
-                f"(expected .png or .svg)"
+                f"(expected .png or .svg)",
             )
         if not Path(png_path).exists() and not Path(svg_path).exists():
             errors.append(
                 f"{README_PATH}: referenced asset missing for '{asset_base}' "
-                f"(expected .png or .svg file)"
+                f"(expected .png or .svg file)",
             )
 
     return errors

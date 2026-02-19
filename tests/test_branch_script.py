@@ -126,7 +126,12 @@ class TestNewCommandDryRun:
 
     def test_dry_run_with_scope(self):
         result = _run_branch(
-            "new", "fix", "crash on empty input", "--scope", "python", "--dry-run"
+            "new",
+            "fix",
+            "crash on empty input",
+            "--scope",
+            "python",
+            "--dry-run",
         )
         assert "fix/python-crash-on-empty-input" in result.stdout
         assert "fix(python): crash on empty input" in result.stdout

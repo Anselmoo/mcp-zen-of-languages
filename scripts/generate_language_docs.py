@@ -163,7 +163,7 @@ def _load_zen(module_key: str):
 def _load_detector_map(module_key: str):
     """Import DETECTOR_MAP for a language."""
     mod = importlib.import_module(
-        f"mcp_zen_of_languages.languages.{module_key}.mapping"
+        f"mcp_zen_of_languages.languages.{module_key}.mapping",
     )
     return mod.DETECTOR_MAP
 
@@ -210,7 +210,8 @@ def _build_mermaid(principles, detector_map) -> str:
     # Build detector nodes and edges (sorted for deterministic output)
     seen_detectors: list[str] = []
     for binding in sorted(
-        detector_map.bindings, key=lambda b: b.detector_class.__name__
+        detector_map.bindings,
+        key=lambda b: b.detector_class.__name__,
     ):
         det_name = binding.detector_class.__name__
         if det_name in seen_detectors:
@@ -223,14 +224,14 @@ def _build_mermaid(principles, detector_map) -> str:
                 f"    {rule_labels[rid]} --> {det_id}"
                 for rid in sorted(binding.rule_ids)
                 if rid in rule_labels
-            ]
+            ],
         )
 
     lines.extend(
         (
             "    classDef principle fill:#4051b5,color:#fff,stroke:none",
             "    classDef detector fill:#26a269,color:#fff,stroke:none",
-        )
+        ),
     )
     for p in principles:
         safe_id = p.id.replace("-", "_")
@@ -276,7 +277,7 @@ def _build_config_entries(_principles, detector_map) -> list[dict]:
                     "type": yaml_type,
                     "params": params,
                     "comments": comments,
-                }
+                },
             )
 
     return entries
@@ -373,7 +374,7 @@ def render_language_page(
             b.detector_class.__name__
             for b in detector_map.bindings
             if b.detector_id != "analyzer_defaults"
-        }
+        },
     )
 
     intro = _load_intro(module_key)
@@ -408,7 +409,7 @@ def render_language_page(
     )
 
 
-def render_config_formats_page(_env: Environment) -> str:
+def render_config_formats_page(_env: Environment) -> str:  # noqa: C901
     """Render the config-formats.md page for JSON/TOML/XML/YAML."""
     sections: list[str] = [
         textwrap.dedent(
@@ -427,8 +428,8 @@ def render_config_formats_page(_env: Environment) -> str:
         # Configuration Formats
 
         Configuration files are code too — they're read by humans, versioned in git, and debugged at 2am during outages. MCP Zen of Languages analyzes four data formats with dedicated detectors for each.
-    """
-        )
+    """,
+        ),
     ]
 
     for module_key, display_name in CONFIG_LANGUAGES:
@@ -441,7 +442,7 @@ def render_config_formats_page(_env: Environment) -> str:
                 b.detector_class.__name__
                 for b in detector_map.bindings
                 if b.detector_id != "analyzer_defaults"
-            }
+            },
         )
 
         section = f"## {display_name} — {len(zen.principles)} Principles, {num_detectors} Detectors\n\n"
@@ -495,7 +496,7 @@ def render_config_formats_page(_env: Environment) -> str:
     sections.append(
         "## See Also\n\n"
         "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
-        "- [Understanding Violations](../understanding-violations.md) — Severity scale reference\n"
+        "- [Understanding Violations](../understanding-violations.md) — Severity scale reference\n",
     )
 
     return "\n".join(sections)
@@ -513,7 +514,7 @@ def render_index_page() -> str:
                 b.detector_class.__name__
                 for b in detector_map.bindings
                 if b.detector_id != "analyzer_defaults"
-            }
+            },
         )
         parser = "AST" if module_key == "python" else "Regex"
         phil = zen.source_text if hasattr(zen, "source_text") else ""
@@ -527,7 +528,7 @@ def render_index_page() -> str:
                 parser,
                 phil,
                 source_url,
-            )
+            ),
         )
 
     # Config formats
@@ -542,7 +543,7 @@ def render_index_page() -> str:
                 b.detector_class.__name__
                 for b in detector_map.bindings
                 if b.detector_id != "analyzer_defaults"
-            }
+            },
         )
         config_total_p += len(zen.principles)
         config_total_d += num_det
@@ -655,9 +656,9 @@ def render_index_page() -> str:
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
-def main() -> int:
+def main() -> int:  # noqa: C901, PLR0912
     parser = argparse.ArgumentParser(
-        description="Generate language documentation pages from rules.py data."
+        description="Generate language documentation pages from rules.py data.",
     )
     parser.add_argument(
         "--check",

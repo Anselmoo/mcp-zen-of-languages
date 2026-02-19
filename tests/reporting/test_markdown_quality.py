@@ -29,7 +29,7 @@ def _sample_result() -> AnalysisResult:
                 principle="Flat is better than nested",
                 severity=7,
                 message="Nesting depth > 3 levels",
-            )
+            ),
         ],
         overall_score=80.0,
     )

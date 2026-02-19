@@ -23,7 +23,8 @@ from mcp_zen_of_languages.models import Location, Violation
 
 
 class YamlIndentationDetector(
-    ViolationDetector[YamlIndentationConfig], LocationHelperMixin
+    ViolationDetector[YamlIndentationConfig],
+    LocationHelperMixin,
 ):
     """Enforces uniform indentation width across all non-blank, non-comment lines.
 
@@ -44,7 +45,9 @@ class YamlIndentationDetector(
         return "yaml-001"
 
     def detect(
-        self, context: AnalysisContext, config: YamlIndentationConfig
+        self,
+        context: AnalysisContext,
+        config: YamlIndentationConfig,
     ) -> list[Violation]:
         """Check each non-blank line's leading spaces against the configured indent width.
 
@@ -71,7 +74,7 @@ class YamlIndentationDetector(
                         contains="indentation",
                         location=Location(line=idx, column=1),
                         suggestion=f"Use {indent_size}-space indentation consistently.",
-                    )
+                    ),
                 )
         return violations
 
@@ -95,7 +98,9 @@ class YamlNoTabsDetector(ViolationDetector[YamlNoTabsConfig], LocationHelperMixi
         return "yaml-002"
 
     def detect(
-        self, context: AnalysisContext, config: YamlNoTabsConfig
+        self,
+        context: AnalysisContext,
+        config: YamlNoTabsConfig,
     ) -> list[Violation]:
         """Scan every line for tab characters and report their positions.
 
@@ -120,7 +125,8 @@ class YamlNoTabsDetector(ViolationDetector[YamlNoTabsConfig], LocationHelperMixi
 
 
 class YamlDuplicateKeysDetector(
-    ViolationDetector[YamlDuplicateKeysConfig], LocationHelperMixin
+    ViolationDetector[YamlDuplicateKeysConfig],
+    LocationHelperMixin,
 ):
     """Catches repeated top-level mapping keys that cause silent data loss.
 
@@ -140,7 +146,9 @@ class YamlDuplicateKeysDetector(
         return "yaml-003"
 
     def detect(
-        self, context: AnalysisContext, config: YamlDuplicateKeysConfig
+        self,
+        context: AnalysisContext,
+        config: YamlDuplicateKeysConfig,
     ) -> list[Violation]:
         """Track top-level keys and flag any that appear more than once.
 
@@ -165,14 +173,15 @@ class YamlDuplicateKeysDetector(
                         contains=key,
                         location=Location(line=idx, column=1),
                         suggestion="Avoid duplicate keys in YAML mappings.",
-                    )
+                    ),
                 )
             seen.add(key)
         return violations
 
 
 class YamlLowercaseKeysDetector(
-    ViolationDetector[YamlLowercaseKeysConfig], LocationHelperMixin
+    ViolationDetector[YamlLowercaseKeysConfig],
+    LocationHelperMixin,
 ):
     """Enforces lowercase mapping keys throughout the YAML document.
 
@@ -192,7 +201,9 @@ class YamlLowercaseKeysDetector(
         return "yaml-004"
 
     def detect(
-        self, context: AnalysisContext, config: YamlLowercaseKeysConfig
+        self,
+        context: AnalysisContext,
+        config: YamlLowercaseKeysConfig,
     ) -> list[Violation]:
         """Scan mapping keys and flag any containing uppercase characters.
 
@@ -216,13 +227,14 @@ class YamlLowercaseKeysDetector(
                         contains=key,
                         location=Location(line=idx, column=1),
                         suggestion="Use lowercase keys for consistency.",
-                    )
+                    ),
                 )
         return violations
 
 
 class YamlKeyClarityDetector(
-    ViolationDetector[YamlKeyClarityConfig], LocationHelperMixin
+    ViolationDetector[YamlKeyClarityConfig],
+    LocationHelperMixin,
 ):
     """Flags overly short mapping keys that sacrifice readability for brevity.
 
@@ -242,7 +254,9 @@ class YamlKeyClarityDetector(
         return "yaml-005"
 
     def detect(
-        self, context: AnalysisContext, config: YamlKeyClarityConfig
+        self,
+        context: AnalysisContext,
+        config: YamlKeyClarityConfig,
     ) -> list[Violation]:
         """Check each key's length and flag the first one shorter than *min_key_length*.
 
@@ -266,14 +280,15 @@ class YamlKeyClarityDetector(
                         contains=key,
                         location=Location(line=idx, column=1),
                         suggestion="Use more descriptive YAML keys.",
-                    )
+                    ),
                 )
                 break
         return violations
 
 
 class YamlConsistencyDetector(
-    ViolationDetector[YamlConsistencyConfig], LocationHelperMixin
+    ViolationDetector[YamlConsistencyConfig],
+    LocationHelperMixin,
 ):
     """Ensures a single, consistent list-marker style is used throughout the document.
 
@@ -293,7 +308,9 @@ class YamlConsistencyDetector(
         return "yaml-006"
 
     def detect(
-        self, context: AnalysisContext, config: YamlConsistencyConfig
+        self,
+        context: AnalysisContext,
+        config: YamlConsistencyConfig,
     ) -> list[Violation]:
         """Collect list markers (``-`` vs ``*``) and flag mixed or disallowed usage.
 
@@ -318,7 +335,7 @@ class YamlConsistencyDetector(
                     contains="list markers",
                     location=Location(line=1, column=1),
                     suggestion="Use a consistent list marker style (e.g., '-').",
-                )
+                ),
             ]
         if (
             markers
@@ -331,13 +348,14 @@ class YamlConsistencyDetector(
                     contains="list markers",
                     location=Location(line=1, column=1),
                     suggestion="Use allowed YAML list markers only.",
-                )
+                ),
             ]
         return []
 
 
 class YamlCommentIntentDetector(
-    ViolationDetector[YamlCommentIntentConfig], LocationHelperMixin
+    ViolationDetector[YamlCommentIntentConfig],
+    LocationHelperMixin,
 ):
     """Ensures complex YAML files include explanatory comments.
 
@@ -357,7 +375,9 @@ class YamlCommentIntentDetector(
         return "yaml-007"
 
     def detect(
-        self, context: AnalysisContext, config: YamlCommentIntentConfig
+        self,
+        context: AnalysisContext,
+        config: YamlCommentIntentConfig,
     ) -> list[Violation]:
         """Count non-empty and comment lines, flagging when comment coverage is too low.
 
@@ -386,13 +406,14 @@ class YamlCommentIntentDetector(
                     contains="comment",
                     location=Location(line=1, column=1),
                     suggestion="Add comments to explain intent in complex YAML.",
-                )
+                ),
             ]
         return []
 
 
 class YamlStringStyleDetector(
-    ViolationDetector[YamlStringStyleConfig], LocationHelperMixin
+    ViolationDetector[YamlStringStyleConfig],
+    LocationHelperMixin,
 ):
     """Flags unquoted string values that contain spaces or special YAML characters.
 
@@ -416,7 +437,9 @@ class YamlStringStyleDetector(
         return "yaml-008"
 
     def detect(
-        self, context: AnalysisContext, config: YamlStringStyleConfig
+        self,
+        context: AnalysisContext,
+        config: YamlStringStyleConfig,
     ) -> list[Violation]:
         """Search for unquoted values containing spaces, colons, or hashes that need quoting.
 
@@ -450,7 +473,7 @@ class YamlStringStyleDetector(
                         contains=value,
                         location=Location(line=idx, column=1),
                         suggestion="Quote strings containing spaces or special characters.",
-                    )
+                    ),
                 )
                 break
         return violations

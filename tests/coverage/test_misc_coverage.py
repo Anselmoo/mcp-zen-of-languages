@@ -92,7 +92,7 @@ def test_language_zen_helpers():
                 severity=7,
                 description="desc",
                 violations=[],
-            )
+            ),
         ],
     )
     assert zen.principle_count == 1

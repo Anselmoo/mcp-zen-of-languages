@@ -8,6 +8,9 @@ from mcp_zen_of_languages.models import (
     Violation,
 )
 
+EXPECTED_FILES = 2
+EXPECTED_VIOLATIONS = 2
+
 
 def _make_result(path: str, violations: list[Violation]) -> AnalysisResult:
     cyclomatic = CyclomaticSummary(blocks=[], average=0.0)
@@ -31,8 +34,8 @@ def test_aggregate_results_counts_and_order():
         [Violation(principle="P", severity=4, message="msg", location=None)],
     )
     summary = cli._aggregate_results([result_a, result_b])
-    assert summary.total_files == 2
-    assert summary.total_violations == 2
+    assert summary.total_files == EXPECTED_FILES
+    assert summary.total_violations == EXPECTED_VIOLATIONS
     assert summary.severity_counts.critical == 1
     assert summary.severity_counts.medium == 1
     assert summary.worst_offenders[0].path == "a.py"

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from mcp_zen_of_languages.rules.tools import detections
 
+SPARSE_CODE_LINE_NUMBER = 2
+
 
 def test_detect_long_functions():
     code = "def foo():\n" + "\n".join(["    x = 1"] * 30) + "\n"
@@ -63,7 +65,7 @@ def test_detect_sparse_code_ignores_comments():
     code = "# a = 1; b = 2\na = 1; b = 2\n"
     results = detections.detect_sparse_code(code, max_statements_per_line=1)
     assert len(results) == 1
-    assert results[0].line == 2
+    assert results[0].line == SPARSE_CODE_LINE_NUMBER
 
 
 def test_detect_missing_type_hints_handles_syntax_error():

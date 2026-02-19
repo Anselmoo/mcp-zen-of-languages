@@ -16,6 +16,9 @@ from mcp_zen_of_languages.reporting.report import (
     generate_report,
 )
 
+EXPECTED_FILES = 2
+EXPECTED_VIOLATIONS = 2
+
 
 def _build_result(path: str, language: str, severity: int) -> AnalysisResult:
     return AnalysisResult(
@@ -34,8 +37,8 @@ def _build_result(path: str, language: str, severity: int) -> AnalysisResult:
 def test_summarize_results_counts_severity():
     results = [_build_result("a.py", "python", 9), _build_result("b.py", "python", 4)]
     summary = _summarize_results(results)
-    assert summary.total_files == 2
-    assert summary.total_violations == 2
+    assert summary.total_files == EXPECTED_FILES
+    assert summary.total_violations == EXPECTED_VIOLATIONS
     assert summary.severity_counts["critical"] == 1
     assert summary.severity_counts["medium"] == 1
 

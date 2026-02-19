@@ -17,6 +17,9 @@ from mcp_zen_of_languages.models import (
 )
 from mcp_zen_of_languages.rules import get_all_languages
 
+CONFIG_ALREADY_EXISTS_EXIT_CODE = 2
+SARIF_RESULT_LINE = 2
+
 
 def _assert_max_width(output: str, expected: int = 88) -> None:
     ansi_re = re.compile(r"\x1b\[[0-9;]*m")
@@ -95,7 +98,7 @@ def test_check_command_sarif_output(monkeypatch, tmp_path):
     region = payload["runs"][0]["results"][0]["locations"][0]["physicalLocation"][
         "region"
     ]
-    assert region["startLine"] == 2
+    assert region["startLine"] == SARIF_RESULT_LINE
     assert region["startColumn"] == 1
 
 
@@ -111,7 +114,7 @@ def test_init_requires_force(tmp_path, monkeypatch):
     existing = tmp_path / "zen-config.yaml"
     existing.write_text("languages:\n  - python\n", encoding="utf-8")
     exit_code = cli.main(["init"])
-    assert exit_code == 2
+    assert exit_code == CONFIG_ALREADY_EXISTS_EXIT_CODE
     exit_code = cli.main(["init", "--force"])
     assert exit_code == 0
     assert (tmp_path / "zen-config.yaml").read_text(encoding="utf-8")

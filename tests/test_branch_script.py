@@ -11,6 +11,7 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 ROOT = Path(__file__).resolve().parent.parent
 BRANCH_SCRIPT = ROOT / "scripts" / "branch.py"
+MAX_BRANCH_SLUG_LENGTH = 60
 
 
 def _import_branch():
@@ -60,7 +61,7 @@ class TestBranchNameSlug:
     def test_max_length(self):
         long_desc = "x" * 200
         slug_part = BranchName("feat", long_desc).slug().split("/", 1)[1]
-        assert len(slug_part) <= 60
+        assert len(slug_part) <= MAX_BRANCH_SLUG_LENGTH
 
     def test_no_trailing_dash(self):
         # description that ends with a special char after truncation

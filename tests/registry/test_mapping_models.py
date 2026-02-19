@@ -14,6 +14,8 @@ from mcp_zen_of_languages.analyzers.mapping_models import (
 from mcp_zen_of_languages.analyzers.registry import DetectorMetadata, DetectorRegistry
 from mcp_zen_of_languages.languages.configs import DetectorConfig
 
+DEFAULT_DETECTOR_ORDER = 5
+
 
 class DummyConfig(DetectorConfig):
     type: str = "dummy"
@@ -48,14 +50,14 @@ def test_detector_metadata_from_binding():
         detector_class=DummyDetector,
         config_model=DummyConfig,
         rule_ids=["python-001"],
-        default_order=5,
+        default_order=DEFAULT_DETECTOR_ORDER,
         enabled_by_default=False,
     )
     metadata = DetectorMetadata.from_binding(binding, "python")
 
     assert metadata.language == "python"
     assert metadata.rule_ids == ["python-001"]
-    assert metadata.default_order == 5
+    assert metadata.default_order == DEFAULT_DETECTOR_ORDER
     assert metadata.enabled_by_default is False
 
 

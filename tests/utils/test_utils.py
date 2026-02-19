@@ -7,6 +7,9 @@ from mcp_zen_of_languages.utils.language_detection import (
 )
 from mcp_zen_of_languages.utils.metric import calculate_code_quality_score
 
+SINGLE_CRITICAL_VIOLATION_SCORE = 80.0
+EMPTY_VIOLATIONS_SCORE = 100.0
+
 
 def test_detect_language_by_extension_known():
     result = detect_language_by_extension("example.py")
@@ -47,7 +50,7 @@ def test_detect_language_from_content_javascript_const():
 
 def test_calculate_code_quality_score_caps_at_zero():
     violations = [Violation(principle="T", severity=10, message="bad")]
-    assert calculate_code_quality_score(violations) == 80.0
+    assert calculate_code_quality_score(violations) == SINGLE_CRITICAL_VIOLATION_SCORE
     assert calculate_code_quality_score(violations * 20) == 0.0
 
 
@@ -60,4 +63,4 @@ def test_calculate_code_quality_score_reduces_by_severity():
 
 
 def test_calculate_code_quality_score_empty_input():
-    assert calculate_code_quality_score([]) == 100.0
+    assert calculate_code_quality_score([]) == EMPTY_VIOLATIONS_SCORE

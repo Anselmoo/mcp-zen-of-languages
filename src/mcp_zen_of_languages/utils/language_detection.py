@@ -36,6 +36,9 @@ EXTENSION_LANGUAGE_MAP: dict[str, str] = {
     ".dockerfile": "dockerfile",
 }
 
+GITLAB_CI_FILENAMES = {".gitlab-ci.yml", ".gitlab-ci.yaml"}
+YAML_EXTENSIONS = {".yml", ".yaml"}
+
 
 class DetectionResult(BaseModel):
     """Outcome of a language detection attempt, carrying the inferred language and reliability signals.
@@ -104,6 +107,10 @@ def detect_language_by_extension(path: str) -> DetectionResult:
             confidence=0.98,
             method="extension",
         )
+    if file_name in GITLAB_CI_FILENAMES:
+        return DetectionResult(language="gitlab_ci", confidence=0.99, method="extension")
+    if "gitlab-ci" in {part.lower() for part in parts} and ext in YAML_EXTENSIONS:
+        return DetectionResult(language="gitlab_ci", confidence=0.98, method="extension")
     lang = EXTENSION_LANGUAGE_MAP.get(ext, "unknown")
     return DetectionResult(language=lang, confidence=0.95, method="extension")
 

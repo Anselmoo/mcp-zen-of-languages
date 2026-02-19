@@ -46,6 +46,13 @@ def test_check_command_runs_scss(tmp_path):
     assert cli.main(["check", str(sample)]) == 0
 
 
+def test_check_command_runs_for_gitlab_ci_file(tmp_path):
+    sample = tmp_path / ".gitlab-ci.yml"
+    sample.write_text("build:\n  image: python:3.12-slim\n  script:\n    - echo ok\n")
+    exit_code = cli.main(["check", str(sample)])
+    assert exit_code == 0
+
+
 def test_check_command_fail_on_severity(monkeypatch, tmp_path):
     sample = tmp_path / "sample.py"
     sample.write_text("def foo():\n    pass\n", encoding="utf-8")
@@ -321,6 +328,8 @@ SAMPLES = {
     "csharp": "public class Foo {}\n",
     "css": ".button { color: var(--text); }\n",
     "yaml": "key: value\n",
+    "github-actions": "name: CI\non: push\njobs:\n  build:\n    runs-on: ubuntu-latest\n    timeout-minutes: 5\n    steps:\n      - run: echo hi\n        shell: bash\n",
+    "gitlab_ci": "build:\n  image: python\n  script:\n    - echo hello\n",
     "github-actions": "name: CI\non: push\njobs:\n  build:\n    runs-on: ubuntu-latest\n    timeout-minutes: 5\n    steps:\n      - run: echo hi\n        shell: bash\n",
     "toml": 'key = "value"\n',
     "json": '{"key": "value"}\n',

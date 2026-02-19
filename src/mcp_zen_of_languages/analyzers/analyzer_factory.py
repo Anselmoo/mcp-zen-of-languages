@@ -22,6 +22,7 @@ from mcp_zen_of_languages.languages.dockerfile.analyzer import DockerfileAnalyze
 from mcp_zen_of_languages.languages.github_actions.analyzer import (
     GitHubActionsAnalyzer,
 )
+from mcp_zen_of_languages.languages.gitlab_ci.analyzer import GitLabCIAnalyzer
 from mcp_zen_of_languages.languages.go.analyzer import GoAnalyzer
 from mcp_zen_of_languages.languages.javascript.analyzer import JavaScriptAnalyzer
 from mcp_zen_of_languages.languages.json.analyzer import JsonAnalyzer
@@ -59,6 +60,7 @@ SUPPORTED_LANGUAGES: tuple[str, ...] = (
     "toml",
     "xml",
     "json",
+    "gitlab_ci",
 )
 
 _ANALYZERS_BY_ALIAS: dict[str, AnalyzerClass] = {
@@ -102,6 +104,9 @@ _ANALYZERS_BY_ALIAS: dict[str, AnalyzerClass] = {
     "toml": TomlAnalyzer,
     "xml": XmlAnalyzer,
     "json": JsonAnalyzer,
+    "gitlab-ci": GitLabCIAnalyzer,
+    "gitlab_ci": GitLabCIAnalyzer,
+    "gitlabci": GitLabCIAnalyzer,
 }
 
 

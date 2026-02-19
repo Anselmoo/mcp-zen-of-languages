@@ -126,6 +126,13 @@ GENERIC_PROMPTS_BY_LANGUAGE: dict[str, list[tuple[str, str]]] = {
             "Locate ignored errors and ensure explicit checks are enforced.",
         ),
     ],
+    "gitlab_ci": [
+        (
+            "GitLab pipeline hardening",
+            "Pin images, replace only/except with rules, add needs/cache/expire_in, "
+            "and extract duplicated job setup into reusable templates.",
+        ),
+    ],
     "rust": [
         (
             "Reduce unsafe/unwrap usage",

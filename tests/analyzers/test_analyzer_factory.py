@@ -22,3 +22,5 @@ def test_create_analyzer_types():
     assert docker_compose.language() == "docker_compose"
     dockerfile = create_analyzer("dockerfile")
     assert dockerfile.language() == "dockerfile"
+    gitlab_ci = create_analyzer("gitlab-ci")
+    assert gitlab_ci.language() == "gitlab_ci"

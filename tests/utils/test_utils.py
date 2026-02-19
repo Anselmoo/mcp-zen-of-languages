@@ -29,6 +29,16 @@ def test_detect_language_by_extension_less():
     assert result.method == "extension"
 
 
+def test_detect_language_by_extension_gitlab_ci_root_file():
+    result = detect_language_by_extension(".gitlab-ci.yml")
+    assert result.language == "gitlab_ci"
+
+
+def test_detect_language_by_extension_gitlab_ci_directory():
+    result = detect_language_by_extension("gitlab-ci/jobs/build.yml")
+    assert result.language == "gitlab_ci"
+
+
 def test_detect_language_by_extension_unknown():
     result = detect_language_by_extension("example.unknown")
     assert result.language == "unknown"

@@ -54,6 +54,7 @@ def test_build_explicit_rule_config_coverage_languages() -> None:
         "cpp",
         "csharp",
         "yaml",
+        "gitlab_ci",
         "toml",
         "json",
         "xml",

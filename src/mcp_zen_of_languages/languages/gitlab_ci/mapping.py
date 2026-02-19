@@ -1,0 +1,108 @@
+"""Mapping module."""
+
+from __future__ import annotations
+
+from mcp_zen_of_languages.analyzers.mapping_models import (
+    DetectorBinding,
+    LanguageDetectorMap,
+)
+from mcp_zen_of_languages.languages.configs import (
+    GitLabCIAllowFailureConfig,
+    GitLabCIArtifactExpiryConfig,
+    GitLabCIDuplicatedBeforeScriptConfig,
+    GitLabCIExposedVariablesConfig,
+    GitLabCIGodPipelineConfig,
+    GitLabCIMissingCacheConfig,
+    GitLabCIMissingInterruptibleConfig,
+    GitLabCIMissingNeedsConfig,
+    GitLabCIOnlyExceptConfig,
+    GitLabCIUnpinnedImageConfig,
+)
+from mcp_zen_of_languages.languages.gitlab_ci.detectors import (
+    AllowFailureWithoutRulesDetector,
+    ArtifactExpiryDetector,
+    DuplicatedBeforeScriptDetector,
+    ExposedVariablesDetector,
+    GodPipelineDetector,
+    MissingCacheKeyDetector,
+    MissingInterruptibleDetector,
+    MissingNeedsDetector,
+    OnlyExceptDetector,
+    UnpinnedImageTagDetector,
+)
+
+DETECTOR_MAP = LanguageDetectorMap(
+    language="gitlab_ci",
+    bindings=[
+        DetectorBinding(
+            detector_id="gitlab-ci-001",
+            detector_class=UnpinnedImageTagDetector,
+            config_model=GitLabCIUnpinnedImageConfig,
+            rule_ids=["gitlab-ci-001"],
+            default_order=10,
+        ),
+        DetectorBinding(
+            detector_id="gitlab-ci-002",
+            detector_class=ExposedVariablesDetector,
+            config_model=GitLabCIExposedVariablesConfig,
+            rule_ids=["gitlab-ci-002"],
+            default_order=20,
+        ),
+        DetectorBinding(
+            detector_id="gitlab-ci-003",
+            detector_class=AllowFailureWithoutRulesDetector,
+            config_model=GitLabCIAllowFailureConfig,
+            rule_ids=["gitlab-ci-003"],
+            default_order=30,
+        ),
+        DetectorBinding(
+            detector_id="gitlab-ci-004",
+            detector_class=GodPipelineDetector,
+            config_model=GitLabCIGodPipelineConfig,
+            rule_ids=["gitlab-ci-004"],
+            default_order=40,
+        ),
+        DetectorBinding(
+            detector_id="gitlab-ci-005",
+            detector_class=DuplicatedBeforeScriptDetector,
+            config_model=GitLabCIDuplicatedBeforeScriptConfig,
+            rule_ids=["gitlab-ci-005"],
+            default_order=50,
+        ),
+        DetectorBinding(
+            detector_id="gitlab-ci-006",
+            detector_class=MissingInterruptibleDetector,
+            config_model=GitLabCIMissingInterruptibleConfig,
+            rule_ids=["gitlab-ci-006"],
+            default_order=60,
+        ),
+        DetectorBinding(
+            detector_id="gitlab-ci-007",
+            detector_class=MissingNeedsDetector,
+            config_model=GitLabCIMissingNeedsConfig,
+            rule_ids=["gitlab-ci-007"],
+            default_order=70,
+        ),
+        DetectorBinding(
+            detector_id="gitlab-ci-008",
+            detector_class=OnlyExceptDetector,
+            config_model=GitLabCIOnlyExceptConfig,
+            rule_ids=["gitlab-ci-008"],
+            default_order=80,
+        ),
+        DetectorBinding(
+            detector_id="gitlab-ci-009",
+            detector_class=MissingCacheKeyDetector,
+            config_model=GitLabCIMissingCacheConfig,
+            rule_ids=["gitlab-ci-009"],
+            default_order=90,
+        ),
+        DetectorBinding(
+            detector_id="gitlab-ci-010",
+            detector_class=ArtifactExpiryDetector,
+            config_model=GitLabCIArtifactExpiryConfig,
+            rule_ids=["gitlab-ci-010"],
+            default_order=100,
+        ),
+    ],
+)

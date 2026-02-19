@@ -1125,6 +1125,66 @@ class DockerComposeSecretHygieneConfig(DetectorConfig):
     type: Literal["docker-compose-004"] = "docker-compose-004"
 
 
+class GitLabCIUnpinnedImageConfig(DetectorConfig):
+    """GitLab CI unpinned image tag detection settings."""
+
+    type: Literal["gitlab-ci-001"] = "gitlab-ci-001"
+
+
+class GitLabCIExposedVariablesConfig(DetectorConfig):
+    """GitLab CI exposed variables detection settings."""
+
+    type: Literal["gitlab-ci-002"] = "gitlab-ci-002"
+
+
+class GitLabCIAllowFailureConfig(DetectorConfig):
+    """GitLab CI allow_failure-without-rules detection settings."""
+
+    type: Literal["gitlab-ci-003"] = "gitlab-ci-003"
+
+
+class GitLabCIGodPipelineConfig(DetectorConfig):
+    """GitLab CI god pipeline detection settings."""
+
+    type: Literal["gitlab-ci-004"] = "gitlab-ci-004"
+
+
+class GitLabCIDuplicatedBeforeScriptConfig(DetectorConfig):
+    """GitLab CI duplicated before_script detection settings."""
+
+    type: Literal["gitlab-ci-005"] = "gitlab-ci-005"
+
+
+class GitLabCIMissingInterruptibleConfig(DetectorConfig):
+    """GitLab CI interruptible detection settings."""
+
+    type: Literal["gitlab-ci-006"] = "gitlab-ci-006"
+
+
+class GitLabCIMissingNeedsConfig(DetectorConfig):
+    """GitLab CI missing needs detection settings."""
+
+    type: Literal["gitlab-ci-007"] = "gitlab-ci-007"
+
+
+class GitLabCIOnlyExceptConfig(DetectorConfig):
+    """GitLab CI only/except usage detection settings."""
+
+    type: Literal["gitlab-ci-008"] = "gitlab-ci-008"
+
+
+class GitLabCIMissingCacheConfig(DetectorConfig):
+    """GitLab CI missing cache-key detection settings."""
+
+    type: Literal["gitlab-ci-009"] = "gitlab-ci-009"
+
+
+class GitLabCIArtifactExpiryConfig(DetectorConfig):
+    """GitLab CI artifacts expire_in detection settings."""
+
+    type: Literal["gitlab-ci-010"] = "gitlab-ci-010"
+
+
 class TomlNoInlineTablesConfig(DetectorConfig):
     """TOML inline-table prohibition settings."""
 

@@ -375,9 +375,7 @@ class RulesAdapter:
 
             for c in iterable_cycles:
                 try:
-                    if hasattr(c, "cycle") and isinstance(
-                        c.cycle, (list, tuple)
-                    ):
+                    if hasattr(c, "cycle") and isinstance(c.cycle, (list, tuple)):
                         seq = c.cycle
                     elif isinstance(c, (list, tuple)):
                         seq = c

@@ -235,7 +235,7 @@ def remediation_prompt(language: str, violations: str) -> str:
     annotations=READONLY_ANNOTATIONS,
     output_schema=_output_schema(LanguagesResult),
 )
-async def detect_languages(_repo_path: str) -> LanguagesResult:
+async def detect_languages(repo_path: str) -> LanguagesResult:
     """Return the language identifiers listed in the active ``zen-config.yaml``.
 
     Unlike heuristic language-detection libraries, this tool does **not**
@@ -268,6 +268,7 @@ async def detect_languages(_repo_path: str) -> LanguagesResult:
 
     from mcp_zen_of_languages.models import LanguagesResult
 
+    _ = repo_path
     return LanguagesResult(languages=CONFIG.languages)
 
 
@@ -1001,7 +1002,7 @@ class OnboardingGuide(BaseModel):
 async def onboard_project(
     project_path: str,
     primary_language: str = "python",
-    _team_size: str = "small",
+    team_size: str = "small",
     strictness: str = "moderate",
 ) -> OnboardingGuide:
     """Generate a step-by-step onboarding guide tailored to a project's profile.
@@ -1048,6 +1049,7 @@ async def onboard_project(
             ``zen-config.yaml``.
 
     """
+    _ = team_size
     # Determine thresholds based on strictness
     thresholds = {
         "relaxed": {

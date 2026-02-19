@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/logo.png" alt="MCP Zen of Languages" width="460" />
+  <img src="https://github.com/Anselmoo/mcp-zen-of-languages/blob/59dcb31c4c3f38547f4a212be58704825177df19/docs/assets/logo.png" alt="MCP Zen of Languages" width="460" />
 </p>
 
 <h1 align="center">Zen of Languages</h1>
@@ -158,5 +158,5 @@ See [Adding a Language](https://anselmoo.github.io/mcp-zen-of-languages/contribu
 ---
 
 <p align="center">
-  <img src="docs/assets/hero-zen.png" alt="Zen garden — sumi-e landscape" width="100%" />
+  <img src="https://github.com/Anselmoo/mcp-zen-of-languages/blob/59dcb31c4c3f38547f4a212be58704825177df19/docs/assets/social-card-github.png" alt="Zen garden — sumi-e landscape" width="100%" />
 </p>

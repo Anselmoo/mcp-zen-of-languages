@@ -391,7 +391,11 @@ class RulesAdapter:
                         # Fallback single item
                         normalized_cycles.append([str(seq)])
                 except Exception as exc:  # noqa: BLE001
-                    logger.debug("Failed to normalize dependency cycle entry: %r", c, exc_info=exc)
+                    logger.debug(
+                        "Failed to normalize dependency cycle entry: %r",
+                        c,
+                        exc_info=exc,
+                    )
                     normalized_cycles.append([str(c)])
 
             cycles_list = normalized_cycles
@@ -498,7 +502,9 @@ class RulesAdapter:
                         )
                     )
             except Exception as exc:  # noqa: BLE001
-                logger.debug("Pattern evaluation failed for %s", cre.pattern, exc_info=exc)
+                logger.debug(
+                    "Pattern evaluation failed for %s", cre.pattern, exc_info=exc
+                )
 
         return violations
 

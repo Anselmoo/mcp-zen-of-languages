@@ -308,9 +308,7 @@ class TomlOrderDetector(ViolationDetector[TomlOrderConfig], LocationHelperMixin)
             if line.strip().startswith("[") and line.strip().endswith("]")
         ]
         if len(table_headers) >= MIN_TABLE_HEADERS_FOR_GAP:
-            gaps = [
-                b - a for a, b in itertools.pairwise(table_headers)
-            ]
+            gaps = [b - a for a, b in itertools.pairwise(table_headers)]
             if any(gap > MAX_TABLE_GAP_LINES for gap in gaps):
                 return [
                     self.build_violation(

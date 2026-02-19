@@ -921,7 +921,9 @@ class NameStyleDetector(ViolationDetector[NameStyleConfig], LocationHelperMixin)
         principle = config.principle or config.principle_id or config.type
         severity = config.severity or 3
         message = config.select_violation_message(index=1)
-        for m in re.finditer(r"^def\s+([A-Za-z0-9_]+)", context.code, flags=re.MULTILINE):
+        for m in re.finditer(
+            r"^def\s+([A-Za-z0-9_]+)", context.code, flags=re.MULTILINE
+        ):
             name = m.group(1)
             if not self._is_snake_case(name):
                 loc = self.find_location_by_substring(context.code, f"def {name}")

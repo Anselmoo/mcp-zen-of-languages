@@ -17,7 +17,13 @@ def test_check_language_structure_script() -> None:
 def test_unexpected_python_modules_detects_extra(tmp_path: Path) -> None:
     language_dir = tmp_path / "python"
     language_dir.mkdir()
-    for name in ["__init__.py", "analyzer.py", "detectors.py", "mapping.py", "rules.py"]:
+    for name in [
+        "__init__.py",
+        "analyzer.py",
+        "detectors.py",
+        "mapping.py",
+        "rules.py",
+    ]:
         (language_dir / name).write_text("", encoding="utf-8")
     (language_dir / "extra.py").write_text("", encoding="utf-8")
 
@@ -27,7 +33,13 @@ def test_unexpected_python_modules_detects_extra(tmp_path: Path) -> None:
 def test_unexpected_python_modules_ignores_non_python(tmp_path: Path) -> None:
     language_dir = tmp_path / "python"
     language_dir.mkdir()
-    for name in ["__init__.py", "analyzer.py", "detectors.py", "mapping.py", "rules.py"]:
+    for name in [
+        "__init__.py",
+        "analyzer.py",
+        "detectors.py",
+        "mapping.py",
+        "rules.py",
+    ]:
         (language_dir / name).write_text("", encoding="utf-8")
     (language_dir / "README.md").write_text("", encoding="utf-8")
     (language_dir / "notes").mkdir()

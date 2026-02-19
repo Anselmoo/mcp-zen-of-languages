@@ -44,9 +44,7 @@ def _unexpected_python_modules(language_dir: Path) -> list[str]:
     return sorted(
         path.name
         for path in language_dir.iterdir()
-        if path.is_file()
-        and path.suffix == ".py"
-        and path.name not in REQUIRED_FILES
+        if path.is_file() and path.suffix == ".py" and path.name not in REQUIRED_FILES
     )
 
 

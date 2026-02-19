@@ -65,6 +65,12 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
+      - id: check-content-quality
+        name: Check docs content quality
+        entry: uv run python scripts/check_content_quality.py
+        language: system
+        pass_filenames: false
+        always_run: true
       - id: check-sphinx-roles
         name: Check Sphinx role markup
         entry: uv run python scripts/check_sphinx_roles.py

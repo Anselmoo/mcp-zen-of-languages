@@ -265,6 +265,7 @@ nav:
   - Contributing:
       - contributing/index.md
       - Development: contributing/development.md
+      - Content Quality Guide: contributing/content-quality.md
       - Zensical Migration: contributing/zensical-migration.md
       - Adding a Language: contributing/adding-language.md
       - Adding a Detector: contributing/adding-detector.md

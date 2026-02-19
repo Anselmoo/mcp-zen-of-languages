@@ -36,6 +36,30 @@ Multi-language architectural and idiomatic code analysis, exposed as an **MCP se
 
 <!-- --8<-- [end:what-you-get] -->
 
+## Why MCP for Zen Analysis
+
+<!-- --8<-- [start:why-mcp] -->
+
+MCP turns zen analysis from a standalone report into an interactive engineering loop. Instead of copying output between tools, your editor/agent can call zen tools directly, inspect violations in context, generate remediation prompts, and apply fixes in one flow.
+
+- **Less context switching**: analyze, explain, and remediate without leaving your coding session.
+- **Higher-fidelity fixes**: prompts are generated from structured violations, not ad-hoc lint text.
+- **Team consistency**: MCP workflows make review behavior repeatable across IDEs and agents.
+
+<!-- --8<-- [end:why-mcp] -->
+
+## Zen Philosophy
+
+<!-- --8<-- [start:zen-philosophy] -->
+
+Zen of Languages treats idioms as engineering constraints, not style preferences. Every language guide encodes the practices that make code maintainable in that ecosystem, then scores violations by risk so teams can fix what matters first.
+
+- **Language-native quality** over one-size-fits-all linting.
+- **Architectural feedback** beyond formatting checks.
+- **Actionable prioritization** through severity-guided remediation.
+
+<!-- --8<-- [end:zen-philosophy] -->
+
 ## Quickstart
 
 <!-- --8<-- [start:quickstart] -->

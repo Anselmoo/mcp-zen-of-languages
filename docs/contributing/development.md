@@ -31,6 +31,7 @@ uv run ruff format --check
 uv run ty check src
 uv run pytest
 uv run python scripts/check_docs_contrast.py --build --mode check
+uv run python scripts/check_content_quality.py
 ```
 
 ## Developer tasks (Poe)
@@ -40,6 +41,7 @@ All `scripts/*.py` helpers are available through Poe tasks in `pyproject.toml`.
 ```bash
 uv run poe check_docs_links
 uv run poe check_orphan_docs
+uv run poe check_content_quality
 uv run poe generate_cli_docs
 uv run poe generate_mcp_tools_docs
 uv run poe export_svg_assets
@@ -62,6 +64,17 @@ pre-commit run --hook-stage pre-push --all-files
 
 !!! danger "Don't skip pre-commit"
 Pushing without running `pre-commit run --all-files` will likely trigger CI failures. The hooks check linting, docs links, orphan pages, Sphinx role leaks, and docs contrast.
+
+## Docs-from-code model
+
+Technical references are generated from source code and docstrings:
+
+- CLI reference from `cli.py` (`scripts/generate_cli_docs.py`)
+- MCP tools reference from `server.py` (`scripts/generate_mcp_tools_docs.py`)
+- Config reference from `AnalyzerConfig` (`scripts/generate_config_docs.py`)
+- API pages from mkdocstrings `:::` declarations in `docs/api/*.md`
+
+Narrative pages (README, docs home, onboarding flow, philosophy) stay human-authored Markdown. Keep duplicated strategic messaging in snippet blocks and include them with `--8<--`.
 
 ## Contrast policy (WCAG AA)
 

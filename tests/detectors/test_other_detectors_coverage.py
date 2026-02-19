@@ -117,7 +117,7 @@ from mcp_zen_of_languages.languages.typescript.detectors import (
 )
 
 
-def test_other_language_detectors_cover_paths():
+def test_other_language_detectors_cover_paths():  # noqa: PLR0915
     assert BashExitCodeChecksDetector().name == "bash-005"
     assert BashFunctionUsageDetector().name == "bash-006"
     assert BashLocalVariablesDetector().name == "bash-007"

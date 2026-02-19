@@ -376,7 +376,7 @@ class ViolationDetector[ConfigT: "DetectorConfig"](ABC):
             ``"god_class"``.
         """
 
-    def build_violation(
+    def build_violation(  # noqa: PLR0913
         self,
         config: ConfigT,
         *,

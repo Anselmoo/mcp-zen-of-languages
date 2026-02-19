@@ -28,7 +28,7 @@ if TYPE_CHECKING:
 # ── Panels ──────────────────────────────────────────────────────────
 
 
-def zen_panel(
+def zen_panel(  # noqa: PLR0913
     content: RenderableType,
     *,
     title: str | None = None,
@@ -107,7 +107,7 @@ def zen_header_panel(
 # ── Tables ──────────────────────────────────────────────────────────
 
 
-def zen_table(
+def zen_table(  # noqa: PLR0913
     *,
     title: str | None = None,
     box: _box_module.Box = BOX_CONTENT,

@@ -328,7 +328,7 @@ class RulesAdapter:
 
         return violations
 
-    def _check_dependencies(
+    def _check_dependencies(  # noqa: C901, PLR0912, PLR0915
         self,
         dependency_analysis: DependencyAnalysis | dict | None,
         principle: ZenPrinciple,

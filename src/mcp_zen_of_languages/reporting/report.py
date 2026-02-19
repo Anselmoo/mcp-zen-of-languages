@@ -317,7 +317,7 @@ def _format_prompts_markdown(context: ReportContext) -> list[str]:
     return lines
 
 
-def generate_report(
+def generate_report(  # noqa: PLR0913
     target_path: str,
     *,
     config_path: str | None = None,

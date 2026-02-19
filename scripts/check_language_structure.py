@@ -48,7 +48,7 @@ def _unexpected_python_modules(language_dir: Path) -> list[str]:
     )
 
 
-def main() -> int:
+def main() -> int:  # noqa: C901, PLR0912, PLR0915
     repo_root = Path(__file__).resolve().parents[1]
     sys.path.insert(0, str(repo_root / "src"))
 

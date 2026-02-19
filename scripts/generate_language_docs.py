@@ -409,7 +409,7 @@ def render_language_page(
     )
 
 
-def render_config_formats_page(_env: Environment) -> str:
+def render_config_formats_page(_env: Environment) -> str:  # noqa: C901
     """Render the config-formats.md page for JSON/TOML/XML/YAML."""
     sections: list[str] = [
         textwrap.dedent(
@@ -656,7 +656,7 @@ def render_index_page() -> str:
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
-def main() -> int:
+def main() -> int:  # noqa: C901, PLR0912
     parser = argparse.ArgumentParser(
         description="Generate language documentation pages from rules.py data.",
     )

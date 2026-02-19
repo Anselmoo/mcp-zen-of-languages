@@ -380,7 +380,7 @@ class BashExitCodeChecksDetector(
         """
         return "bash-005"
 
-    def detect(
+    def detect(  # noqa: C901
         self,
         context: AnalysisContext,
         config: BashExitCodeConfig,

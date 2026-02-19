@@ -113,7 +113,7 @@ def _file_read_error_result(
     )
 
 
-def analyze_targets(
+def analyze_targets(  # noqa: C901, PLR0913
     targets: list[tuple[Path, str]],
     *,
     config_path: str | None = None,

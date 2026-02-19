@@ -2,7 +2,11 @@
 
 from pydantic import HttpUrl
 
-from ...rules.base_models import LanguageZenPrinciples, PrincipleCategory, ZenPrinciple
+from mcp_zen_of_languages.rules.base_models import (
+    LanguageZenPrinciples,
+    PrincipleCategory,
+    ZenPrinciple,
+)
 
 TYPESCRIPT_ZEN = LanguageZenPrinciples(
     language="typescript",

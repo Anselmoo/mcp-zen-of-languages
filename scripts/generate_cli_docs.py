@@ -47,7 +47,7 @@ def _extract_first_paragraph(docstring: str | None) -> str:
     return " ".join(lines)
 
 
-def _extract_args_section(docstring: str | None) -> list[tuple[str, str]]:
+def _extract_args_section(docstring: str | None) -> list[tuple[str, str]]:  # noqa: C901
     """Extract (param_name, description) pairs from the Args section."""
     if not docstring:
         return []
@@ -197,7 +197,7 @@ GLOBAL_OPTIONS = [
 ]
 
 
-def generate() -> str:
+def generate() -> str:  # noqa: C901, PLR0912, PLR0915
     """Generate the full markdown content from the live CLI app."""
     import click
     import typer.main as typer_main

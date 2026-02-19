@@ -120,7 +120,7 @@ class PythonAnalyzer(BaseAnalyzer, LocationHelperMixin):
             return None
 
     def compute_metrics(
-        self, code: str, ast_tree: ParserResult | None
+        self, code: str, _ast_tree: ParserResult | None
     ) -> tuple[CyclomaticSummary | None, float | None, int]:
         """Collect cyclomatic complexity, maintainability index, and line count.
 

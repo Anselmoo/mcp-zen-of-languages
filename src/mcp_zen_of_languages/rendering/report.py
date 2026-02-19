@@ -145,7 +145,7 @@ def _build_summary_table(summary: dict, width: int) -> Table:
 
 
 def _render_result_panel(
-    result: AnalysisResult, width: int, output_console: Console
+    result: AnalysisResult, _width: int, output_console: Console
 ) -> None:
     """Print a per-file analysis panel to the console.
 
@@ -157,7 +157,8 @@ def _render_result_panel(
     Args:
         result: Single-file ``AnalysisResult`` containing ``path`` and
             ``violations``.
-        width: Column width for the enclosing panel.
+        _width: Reserved width parameter kept for call-site compatibility.
+            Panel width is derived from ``output_console``.
         output_console: Console instance to print the panel to.
     """
 

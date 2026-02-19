@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Detect orphan markdown files that exist in docs/ but are not in mkdocs.yml nav."""
 
 from __future__ import annotations
@@ -18,7 +17,7 @@ class _MkDocsLoader(yaml.SafeLoader):
 
 
 def _passthrough_constructor(
-    loader: yaml.Loader, tag_suffix: str, node: yaml.Node
+    _loader: yaml.Loader, _tag_suffix: str, _node: yaml.Node
 ) -> str:
     """Return empty string for any unknown tags — we only need the nav."""
     return ""

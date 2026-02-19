@@ -23,7 +23,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 from types import SimpleNamespace
-from typing import TYPE_CHECKING, Annotated, Literal, Protocol
+from typing import TYPE_CHECKING, Annotated, Any, Literal, Protocol, cast
 
 import click
 import typer
@@ -102,10 +102,11 @@ SEVERITY_MEDIUM = 4
 # Keep Typer's rich help panels aligned with the CLI rendering width contract.
 if typer_rich_utils.MAX_WIDTH is None or typer_rich_utils.MAX_WIDTH > MAX_OUTPUT_WIDTH:
     typer_rich_utils.MAX_WIDTH = MAX_OUTPUT_WIDTH
-setattr(typer_rich_utils, "STYLE_OPTIONS_PANEL_BORDER", "cyan")
-setattr(typer_rich_utils, "STYLE_COMMANDS_PANEL_BORDER", "cyan")
-setattr(typer_rich_utils, "STYLE_OPTIONS_TABLE_BOX", "ROUNDED")
-setattr(typer_rich_utils, "STYLE_COMMANDS_TABLE_BOX", "ROUNDED")
+_typer_rich_utils_any = cast("Any", typer_rich_utils)
+_typer_rich_utils_any.STYLE_OPTIONS_PANEL_BORDER = "cyan"
+_typer_rich_utils_any.STYLE_COMMANDS_PANEL_BORDER = "cyan"
+_typer_rich_utils_any.STYLE_OPTIONS_TABLE_BOX = "ROUNDED"
+_typer_rich_utils_any.STYLE_COMMANDS_TABLE_BOX = "ROUNDED"
 
 _ORIGINAL_RICH_FORMAT_HELP = typer_rich_utils.rich_format_help
 
@@ -137,7 +138,7 @@ def _rich_format_help_with_banner(
     _ORIGINAL_RICH_FORMAT_HELP(obj=obj, ctx=ctx, markup_mode=markup_mode)
 
 
-setattr(typer_rich_utils, "rich_format_help", _rich_format_help_with_banner)
+_typer_rich_utils_any.rich_format_help = _rich_format_help_with_banner
 
 app = typer.Typer(
     name="mcp-zen-of-languages",
@@ -1586,9 +1587,10 @@ def init(
     yes: Annotated[
         bool, typer.Option("--yes", help="Skip prompts and use defaults")
     ] = False,
-    languages: list[str] | None = typer.Option(
-        None, "--languages", help="Languages to include (repeatable)"
-    ),
+    languages: Annotated[
+        list[str] | None,
+        typer.Option("--languages", help="Languages to include (repeatable)"),
+    ] = None,
     strictness: Literal["relaxed", "moderate", "strict"] = typer.Option(
         "moderate",
         help="Strictness: relaxed|moderate|strict",
@@ -1627,9 +1629,9 @@ def init(
 @app.command("export-mapping", rich_help_panel="Configuration")
 def export_mapping(
     out: str | None = typer.Option(None, help="Write output to file"),
-    languages: list[str] | None = typer.Option(
-        None, "--languages", help="Filter by languages"
-    ),
+    languages: Annotated[
+        list[str] | None, typer.Option("--languages", help="Filter by languages")
+    ] = None,
     output_format: Literal["terminal", "json"] = typer.Option(
         "terminal", "--format", help="Output format", show_choices=True
     ),

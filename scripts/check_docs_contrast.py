@@ -132,7 +132,7 @@ def discover_pages(site_dir: Path) -> list[str]:
 class QuietHandler(SimpleHTTPRequestHandler):
     """HTTP handler with suppressed access logs."""
 
-    def log_message(self, fmt: str, *args: Any) -> None:
+    def log_message(self, _fmt: str, *_args: Any) -> None:
         return
 
 

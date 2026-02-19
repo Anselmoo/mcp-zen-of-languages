@@ -72,7 +72,7 @@ class CSharpAnalyzer(BaseAnalyzer):
         """
         return "csharp"
 
-    def parse_code(self, code: str) -> ParserResult | None:
+    def parse_code(self, _code: str) -> ParserResult | None:
         """Parse C# source into a structured syntax tree.
 
         Currently returns ``None`` because a Roslyn-based parser is not yet
@@ -87,7 +87,7 @@ class CSharpAnalyzer(BaseAnalyzer):
         return None
 
     def compute_metrics(
-        self, code: str, ast_tree: ParserResult | None
+        self, code: str, _ast_tree: ParserResult | None
     ) -> tuple[CyclomaticSummary | None, float | None, int]:
         """Compute complexity and size metrics for C# source code.
 
@@ -112,7 +112,7 @@ class CSharpAnalyzer(BaseAnalyzer):
         """
         return super().build_pipeline()
 
-    def _build_dependency_analysis(self, context: AnalysisContext) -> object | None:
+    def _build_dependency_analysis(self, _context: AnalysisContext) -> object | None:
         """Build cross-file dependency data for C# using/namespace graphs.
 
         Not yet implemented for C#; returns ``None``.

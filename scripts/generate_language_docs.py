@@ -243,7 +243,7 @@ def _build_mermaid(principles, detector_map) -> str:
 # ---------------------------------------------------------------------------
 # Config block generation
 # ---------------------------------------------------------------------------
-def _build_config_entries(principles, detector_map) -> list[dict]:
+def _build_config_entries(_principles, detector_map) -> list[dict]:
     """Build config YAML entries from metrics and detector bindings."""
     entries: list[dict] = []
     seen_types: set[str] = set()
@@ -408,7 +408,7 @@ def render_language_page(
     )
 
 
-def render_config_formats_page(env: Environment) -> str:
+def render_config_formats_page(_env: Environment) -> str:
     """Render the config-formats.md page for JSON/TOML/XML/YAML."""
     sections: list[str] = [
         textwrap.dedent(

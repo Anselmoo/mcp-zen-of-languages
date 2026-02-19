@@ -106,19 +106,9 @@ extend-ignore = [
     # Import style
     "PLC0415", # import-outside-top-level
     "TID252",  # relative-imports
-    # Boolean / argument patterns
-    "ARG001", # unused-function-argument
-    "ARG002", # unused-method-argument
-    "ARG005", # unused-lambda-argument
     # Exception patterns
     # Modernization (fix incrementally)
-    # Pylint conventions
-    "PLW0602", # global-variable-not-assigned
-    "PLW0603", # global-statement
-    "PLE0605", # invalid-all-format
     # Simplifications
-    # Private access / naming
-    "SLF001", # private-member-access
     # Security (review individually)
     "S101", # assert
     "S108", # hardcoded-temp-file
@@ -129,10 +119,6 @@ extend-ignore = [
     "S607", # start-process-with-partial-path
     "S701", # jinja2-autoescape-false
     # Miscellaneous
-    "B008",    # function-call-in-default-argument
-    "B009",    # get-attr-with-constant
-    "B010",    # set-attr-with-constant
-    "B017",    # assert-raises-exception
     "FURB167", # regex-flag-alias
     "PGH003",  # blanket-type-ignore
     "PTH122",  # os-path-splitext
@@ -144,12 +130,7 @@ extend-ignore = [
     "RUF002",  # ambiguous-unicode-character-docstring
     "RUF007",  # pairwise-over-zipped
     "T201",    # print
-    "TD002",   # missing-todo-author
-    "TD003",   # missing-todo-link
-    "FIX002",  # line-contains-fixme
     "ERA001",  # commented-out-code
-    "EXE001",  # shebang-not-executable
-    "INP001",  # implicit-namespace-package
     # --- Pre-existing docstring ignores ---
     "D100", # undocumented-public-module
     "D104", # undocumented-public-package

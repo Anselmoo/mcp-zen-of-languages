@@ -268,6 +268,7 @@ async def detect_languages(repo_path: str) -> LanguagesResult:
 
     from mcp_zen_of_languages.models import LanguagesResult
 
+    _ = repo_path
     return LanguagesResult(languages=CONFIG.languages)
 
 
@@ -1048,6 +1049,7 @@ async def onboard_project(
             ``zen-config.yaml``.
 
     """
+    _ = team_size
     # Determine thresholds based on strictness
     thresholds = {
         "relaxed": {
@@ -1209,14 +1211,16 @@ def _attach_legacy_test_compat() -> None:
 
     for tool_fn, annotations in tools_with_annotations:
         if not hasattr(tool_fn, "fn"):
-            setattr(tool_fn, "fn", tool_fn)
+            tool_fn.fn = tool_fn
         if not hasattr(tool_fn, "annotations"):
-            setattr(tool_fn, "annotations", annotations)
+            tool_fn.annotations = annotations
 
-    if not hasattr(mcp, "_resource_manager"):
-        setattr(mcp, "_resource_manager", _LegacyResourceManager())
-    if not hasattr(mcp, "_prompt_manager"):
-        setattr(mcp, "_prompt_manager", _LegacyPromptManager())
+    resource_manager_attr = "_resource_manager"
+    if not hasattr(mcp, resource_manager_attr):
+        setattr(mcp, resource_manager_attr, _LegacyResourceManager())
+    prompt_manager_attr = "_prompt_manager"
+    if not hasattr(mcp, prompt_manager_attr):
+        setattr(mcp, prompt_manager_attr, _LegacyPromptManager())
 
 
 _attach_legacy_test_compat()

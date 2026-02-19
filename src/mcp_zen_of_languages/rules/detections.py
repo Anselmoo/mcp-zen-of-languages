@@ -4,6 +4,7 @@ Legacy import path: `mcp_zen_of_languages.rules.detections`
 New canonical path: `mcp_zen_of_languages.rules.tools.detections`
 """
 
+from .tools import detections as _detections
 from .tools.detections import *  # noqa: F403
 
-__all__ = getattr(__import__(__name__), "__all__", None) or []
+__all__ = list(_detections.__all__)

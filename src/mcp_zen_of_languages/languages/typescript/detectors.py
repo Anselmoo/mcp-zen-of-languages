@@ -104,7 +104,7 @@ class TsStrictModeDetector(ViolationDetector[TsStrictModeConfig]):
         return "ts_strict_mode"
 
     def detect(
-        self, context: AnalysisContext, config: TsStrictModeConfig
+        self, _context: AnalysisContext, config: TsStrictModeConfig
     ) -> list[Violation]:
         """Detect violations for the current analysis context.
 

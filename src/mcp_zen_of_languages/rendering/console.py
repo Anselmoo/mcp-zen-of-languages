@@ -79,7 +79,7 @@ def _render_banner_art() -> str:
     """
 
     try:
-        figlet_format = getattr(import_module("pyfiglet"), "figlet_format")
+        figlet_format = import_module("pyfiglet").figlet_format
         art = figlet_format(
             "Zen", font="banner3-d", direction="auto", justify="center", width=55
         ).rstrip()
@@ -118,8 +118,7 @@ def set_quiet(*, value: bool) -> None:
         value: True to suppress banners and spinners, False to re-enable them.
     """
 
-    global _QUIET
-    _QUIET = value
+    globals()["_QUIET"] = value
 
 
 def is_quiet() -> bool:

@@ -79,7 +79,7 @@ class BashAnalyzer(BaseAnalyzer):
         """
         return "bash"
 
-    def parse_code(self, code: str) -> ParserResult | None:
+    def parse_code(self, _code: str) -> ParserResult | None:
         """Attempt to parse Bash source into a structured AST.
 
         Currently returns ``None`` because no Python-native Bash parser is
@@ -96,7 +96,7 @@ class BashAnalyzer(BaseAnalyzer):
         return None
 
     def compute_metrics(
-        self, code: str, ast_tree: ParserResult | None
+        self, code: str, _ast_tree: ParserResult | None
     ) -> tuple[CyclomaticSummary | None, float | None, int]:
         """Compute source-level metrics for the Bash file.
 
@@ -125,7 +125,7 @@ class BashAnalyzer(BaseAnalyzer):
         """
         return super().build_pipeline()
 
-    def _build_dependency_analysis(self, context: AnalysisContext) -> object | None:
+    def _build_dependency_analysis(self, _context: AnalysisContext) -> object | None:
         """Build cross-file dependency data for Bash ``source`` / ``.`` includes.
 
         Not yet implemented for Bash; returns ``None``.  Future versions may

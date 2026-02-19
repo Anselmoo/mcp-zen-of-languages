@@ -65,7 +65,7 @@ class RustAnalyzer(BaseAnalyzer):
         """
         return "rust"
 
-    def parse_code(self, code: str) -> ParserResult | None:
+    def parse_code(self, _code: str) -> ParserResult | None:
         """Parse source text into a language parser result when available.
 
         Args:
@@ -77,7 +77,7 @@ class RustAnalyzer(BaseAnalyzer):
         return None
 
     def compute_metrics(
-        self, code: str, ast_tree: ParserResult | None
+        self, code: str, _ast_tree: ParserResult | None
     ) -> tuple[CyclomaticSummary | None, float | None, int]:
         """Compute complexity, maintainability, and line-count metrics.
 
@@ -98,7 +98,7 @@ class RustAnalyzer(BaseAnalyzer):
         """
         return super().build_pipeline()
 
-    def _build_dependency_analysis(self, context: AnalysisContext) -> object | None:
+    def _build_dependency_analysis(self, _context: AnalysisContext) -> object | None:
         """Build dependency analysis data for cross-file checks.
 
         Args:

@@ -376,7 +376,7 @@ class RulesAdapter:
             for c in iterable_cycles:
                 try:
                     if hasattr(c, "cycle") and isinstance(
-                        getattr(c, "cycle"), (list, tuple)
+                        c.cycle, (list, tuple)
                     ):
                         seq = c.cycle
                     elif isinstance(c, (list, tuple)):
@@ -438,7 +438,7 @@ class RulesAdapter:
                         # Try to unpack dataclass-like objects
                         try:
                             a = getattr(edge, "from")
-                            b = getattr(edge, "to")
+                            b = edge.to
                         except AttributeError:
                             continue
                     deps_map.setdefault(str(a), []).append(str(b))

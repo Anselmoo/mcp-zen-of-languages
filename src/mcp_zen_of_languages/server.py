@@ -235,7 +235,7 @@ def remediation_prompt(language: str, violations: str) -> str:
     annotations=READONLY_ANNOTATIONS,
     output_schema=_output_schema(LanguagesResult),
 )
-async def detect_languages(repo_path: str) -> LanguagesResult:
+async def detect_languages(_repo_path: str) -> LanguagesResult:
     """Return the language identifiers listed in the active ``zen-config.yaml``.
 
     Unlike heuristic language-detection libraries, this tool does **not**
@@ -1001,7 +1001,7 @@ class OnboardingGuide(BaseModel):
 async def onboard_project(
     project_path: str,
     primary_language: str = "python",
-    team_size: str = "small",
+    _team_size: str = "small",
     strictness: str = "moderate",
 ) -> OnboardingGuide:
     """Generate a step-by-step onboarding guide tailored to a project's profile.
@@ -1209,14 +1209,16 @@ def _attach_legacy_test_compat() -> None:
 
     for tool_fn, annotations in tools_with_annotations:
         if not hasattr(tool_fn, "fn"):
-            setattr(tool_fn, "fn", tool_fn)
+            tool_fn.fn = tool_fn
         if not hasattr(tool_fn, "annotations"):
-            setattr(tool_fn, "annotations", annotations)
+            tool_fn.annotations = annotations
 
-    if not hasattr(mcp, "_resource_manager"):
-        setattr(mcp, "_resource_manager", _LegacyResourceManager())
-    if not hasattr(mcp, "_prompt_manager"):
-        setattr(mcp, "_prompt_manager", _LegacyPromptManager())
+    resource_manager_attr = "_resource_manager"
+    if not hasattr(mcp, resource_manager_attr):
+        setattr(mcp, resource_manager_attr, _LegacyResourceManager())
+    prompt_manager_attr = "_prompt_manager"
+    if not hasattr(mcp, prompt_manager_attr):
+        setattr(mcp, prompt_manager_attr, _LegacyPromptManager())
 
 
 _attach_legacy_test_compat()

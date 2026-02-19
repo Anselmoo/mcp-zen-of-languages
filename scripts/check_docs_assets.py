@@ -20,14 +20,9 @@ CSS_MANIFEST_PATH = CSS_ROOT / "extra.css"
 JS_PATH = Path("docs/javascripts/extra.js")
 README_PATH = Path("README.md")
 
-README_REQUIRED_PNGS: tuple[str, ...] = (
-    "docs/assets/logo.png",
-    "docs/assets/hero-zen.png",
-)
-
-README_FORBIDDEN_SVGS: tuple[str, ...] = (
-    "docs/assets/logo.svg",
-    "docs/assets/hero-zen.svg",
+README_REQUIRED_ASSET_BASES: tuple[str, ...] = (
+    "docs/assets/logo",
+    "docs/assets/social-card-github",
 )
 
 # Thresholds
@@ -146,21 +141,19 @@ def check_readme_assets(readme_content: str) -> list[str]:
     """Validate README hero/logo asset references and file existence."""
     errors: list[str] = []
 
-    errors.extend(
-        f"{README_PATH}: missing PNG asset reference '{png_path}'"
-        for png_path in README_REQUIRED_PNGS
-        if png_path not in readme_content
-    )
-    errors.extend(
-        f"{README_PATH}: referenced asset missing: {png_path}"
-        for png_path in README_REQUIRED_PNGS
-        if not Path(png_path).exists()
-    )
-    errors.extend(
-        f"{README_PATH}: found deprecated SVG reference '{svg_path}'"
-        for svg_path in README_FORBIDDEN_SVGS
-        if svg_path in readme_content
-    )
+    for asset_base in README_REQUIRED_ASSET_BASES:
+        png_path = f"{asset_base}.png"
+        svg_path = f"{asset_base}.svg"
+        if png_path not in readme_content and svg_path not in readme_content:
+            errors.append(
+                f"{README_PATH}: missing asset reference for '{asset_base}' "
+                f"(expected .png or .svg)"
+            )
+        if not Path(png_path).exists() and not Path(svg_path).exists():
+            errors.append(
+                f"{README_PATH}: referenced asset missing for '{asset_base}' "
+                f"(expected .png or .svg file)"
+            )
 
     return errors
 

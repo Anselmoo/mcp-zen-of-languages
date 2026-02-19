@@ -47,7 +47,7 @@ class PowerShellAnalyzer(BaseAnalyzer):
         self,
         config: AnalyzerConfig | None = None,
         pipeline_config: PipelineConfig | None = None,
-    ):
+    ) -> None:
         """Initialize the PowerShell analyzer with optional configuration.
 
         Args:

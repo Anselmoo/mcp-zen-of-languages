@@ -46,7 +46,7 @@ class JavaScriptAnalyzer(BaseAnalyzer):
         self,
         config: AnalyzerConfig | None = None,
         pipeline_config: PipelineConfig | None = None,
-    ):
+    ) -> None:
         """Initialize the JavaScript analyzer with optional configuration.
 
         Args:

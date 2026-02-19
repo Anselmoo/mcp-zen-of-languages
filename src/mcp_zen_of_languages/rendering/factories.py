@@ -64,7 +64,6 @@ def zen_panel(
     Returns:
         Panel: Styled Rich panel ready for ``console.print()``.
     """
-
     active = output_console or _default_console
     resolved_width = width or get_output_width(active)
     return Panel(
@@ -98,7 +97,6 @@ def zen_header_panel(
     Returns:
         Panel: Header panel styled with the default ``BOX_CONTENT`` box.
     """
-
     return zen_panel(
         "\n".join(lines),
         title=title,
@@ -142,7 +140,6 @@ def zen_table(
     Returns:
         Table: Width-capped Rich table ready for column and row additions.
     """
-
     active = output_console or _default_console
     resolved_width = width or get_output_width(active)
     kwargs: dict[str, object] = {
@@ -179,7 +176,6 @@ def zen_summary_table(
     Returns:
         Table: Heavy-bordered Rich table without a header row.
     """
-
     return zen_table(
         title=title,
         box=BOX_SUMMARY,

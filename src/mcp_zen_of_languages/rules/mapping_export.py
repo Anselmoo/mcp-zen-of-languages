@@ -35,7 +35,6 @@ def build_rule_detector_mapping(
     Returns:
         Nested dict ready for ``json.dumps`` serialisation.
     """
-
     data: dict[str, Any] = {
         "$schema": "rule_detector_mapping_schema",
         "$comment": "Generated from the live detector registry.",
@@ -95,7 +94,6 @@ def export_mapping_json(
     Returns:
         The same dict that was written to disk, for programmatic reuse.
     """
-
     data = build_rule_detector_mapping(languages)
     path = Path(output_path)
     path.write_text(json.dumps(data, indent=2), encoding="utf-8")

@@ -384,7 +384,7 @@ def detect_deep_inheritance(
     # compute chains
     results: list[InheritanceFinding] = []
 
-    def walk_chain(start, seen):
+    def walk_chain(start: str, seen: set[str]) -> list[list[str] | str]:
         """Recursively trace the inheritance path from *start* to its ancestors."""
         if start in seen:
             return [start]
@@ -426,7 +426,7 @@ def detect_dependency_cycles(
         adj.setdefault(a, []).append(b)
     results: list[DependencyCycleFinding] = []
 
-    def dfs(node, path, seen):
+    def dfs(node: str, path: list[str], seen: set[str]) -> None:
         """Recurse through the adjacency list, recording cycles when a node is revisited."""
         if node in path:
             idx = path.index(node)

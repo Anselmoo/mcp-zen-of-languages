@@ -175,7 +175,6 @@ def resolve_pattern(violation: Violation, language: str) -> RemediationPattern:
     Returns:
         RemediationPattern: Matched pattern with action, snippets, and criteria.
     """
-
     text = f"{violation.principle} {violation.message}".lower()
     for pattern in REMEDIATION_REGISTRY.get(language, []):
         if any(token in text for token in pattern.matchers):

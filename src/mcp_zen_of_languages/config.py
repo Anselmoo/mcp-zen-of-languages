@@ -131,7 +131,6 @@ class ConfigModel(BaseModel):
             ValidationError: If any nested detector entry fails
                 ``PipelineConfig.model_validate``.
         """
-
         if value is None:
             return []
         if not isinstance(value, list):
@@ -172,7 +171,6 @@ class ConfigModel(BaseModel):
             ``merge_pipeline_overrides``: Performs the per-detector-type
                 merge of base and override configs.
         """
-
         from mcp_zen_of_languages.analyzers.pipeline import merge_pipeline_overrides
 
         base = PipelineConfig.from_rules(language)

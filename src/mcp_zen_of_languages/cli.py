@@ -83,7 +83,7 @@ from mcp_zen_of_languages.utils.markdown_quality import normalize_markdown
 if TYPE_CHECKING:
     from rich.table import Table
 
-    from mcp_zen_of_languages.reporting.models import PromptBundle
+    from mcp_zen_of_languages.reporting.models import PromptBundle, ReportOutput
 
 logger = logging.getLogger(__name__)
 logger.setLevel(
@@ -133,7 +133,6 @@ def _rich_format_help_with_banner(
         ``_build_welcome_panel``: Renders the no-args welcome screen using
         the same banner art but a different Rich layout.
     """
-
     console.print(Text(get_banner_art(), style="bold cyan"))
     _ORIGINAL_RICH_FORMAT_HELP(obj=obj, ctx=ctx, markup_mode=markup_mode)
 
@@ -161,7 +160,6 @@ def _install_rich_traceback() -> None:
         [`_configure_app`][_configure_app]: The Typer callback that conditionally invokes
         this helper.
     """
-
     from rich.traceback import install as install_rich_traceback
 
     install_rich_traceback(show_locals=True)
@@ -194,7 +192,6 @@ def _configure_app(
     See Also:
         [`_install_rich_traceback`][_install_rich_traceback]: Activated when *verbose* is ``True``.
     """
-
     set_quiet(value=quiet)
     if verbose:
         _install_rich_traceback()
@@ -215,7 +212,6 @@ def _ns(**kwargs: object) -> SimpleNamespace:
     Returns:
         SimpleNamespace: Attribute-access wrapper over the supplied keyword pairs.
     """
-
     return SimpleNamespace(**kwargs)
 
 
@@ -237,7 +233,6 @@ def _parse_languages(value: str) -> list[str]:
         [`_detect_languages`][_detect_languages]: Auto-discovers languages when no explicit
         list is given.
     """
-
     tokens = [token.strip() for token in value.replace(",", " ").split()]
     return [token for token in tokens if token]
 
@@ -260,7 +255,6 @@ def _detect_languages(target: Path) -> list[str]:
     See Also:
         [`_collect_targets`][_collect_targets]: Performs the underlying recursive file walk.
     """
-
     languages = {language for _, language in _collect_targets(target, None)}
     return sorted(languages) if languages else ["python"]
 
@@ -278,7 +272,6 @@ def _normalize_strictness(strictness: str) -> str:
     Returns:
         str: One of ``"relaxed"``, ``"moderate"``, or ``"strict"``.
     """
-
     normalized = strictness.lower()
     return normalized if normalized in _THRESHOLDS else "moderate"
 
@@ -300,7 +293,6 @@ def _build_config_yaml(languages: list[str], strictness: str) -> str:
     See Also:
         [`_run_init`][_run_init]: Writes the generated YAML to disk.
     """
-
     unique_languages = list(dict.fromkeys(languages))
     threshold = _THRESHOLDS.get(strictness, _THRESHOLDS["moderate"])
     lines = ["languages:"]
@@ -324,7 +316,6 @@ def _write_vscode_mcp_config() -> Path:
         [`_run_init`][_run_init]: Optionally calls this helper when the user opts
         into VS Code integration.
     """
-
     config_path = Path(".vscode") / "mcp.json"
     config_path.parent.mkdir(parents=True, exist_ok=True)
     payload = {
@@ -357,7 +348,6 @@ def _build_welcome_panel() -> None:
         [`main`][main]: Calls this helper when *argv* is empty and quiet mode
         is off.
     """
-
     welcome_group = Group(
         Text(get_banner_art(), style="bold cyan"),
         Text(f"v{__version__}", style="dim"),
@@ -530,7 +520,6 @@ def _summarize_violations(violations: list) -> RulesSummary:
     See Also:
         [`_summarize_violation_dicts`][_summarize_violation_dicts]: Equivalent logic for raw dict violations.
     """
-
     summary = {
         "critical": 0,
         "high": 0,
@@ -566,7 +555,6 @@ def _summarize_violation_dicts(violations: list[dict]) -> RulesSummary:
     See Also:
         [`_summarize_violations`][_summarize_violations]: Equivalent logic for Pydantic violation models.
     """
-
     summary = {
         "critical": 0,
         "high": 0,
@@ -604,7 +592,6 @@ def _filter_result(result: AnalysisResult, min_severity: int | None) -> Analysis
     See Also:
         [`_summarize_violations`][_summarize_violations]: Recomputes the rules summary after filtering.
     """
-
     if min_severity is None:
         return result
     filtered = [v for v in result.violations if v.severity >= min_severity]
@@ -637,7 +624,6 @@ def _build_repository_imports(files: list[Path]) -> dict[str, list[str]]:
         [`_analyze_targets`][_analyze_targets]: Passes this mapping as
         ``repository_imports`` to Python analyzers.
     """
-
     return _shared_build_repository_imports(files, language="python")
 
 
@@ -660,7 +646,6 @@ def _placeholder_result(language: str, path: str | None) -> AnalysisResult:
         [`_analyze_targets`][_analyze_targets]: Falls back to this helper when
         ``create_analyzer`` raises ``ValueError``.
     """
-
     cyclomatic = CyclomaticSummary(blocks=[], average=0.0)
     metrics = Metrics(cyclomatic=cyclomatic, maintainability_index=0.0, lines_of_code=0)
     return AnalysisResult(
@@ -696,7 +681,6 @@ def _collect_targets(
         [`_detect_languages`][_detect_languages]: Uses this function to discover available
         languages in a directory tree.
     """
-
     return _shared_collect_targets(target, language_override)
 
 
@@ -725,7 +709,6 @@ def _analyze_targets(
         [`_build_repository_imports`][_build_repository_imports]: Supplies cross-file import context for
         Python analysis.
     """
-
     total_files = len(targets)
     with analysis_progress(enabled=total_files > 0) as progress:
         task_id: object | None = None
@@ -761,7 +744,6 @@ def _build_log_summary(report: object) -> str:
     See Also:
         [`_run_report`][_run_report]: Writes this string when ``--export-log`` is specified.
     """
-
     data = getattr(report, "data", {})
     if not isinstance(data, dict):
         return "target: n/a\nlanguages: n/a\n"
@@ -800,7 +782,6 @@ def _aggregate_results(results: list[AnalysisResult]) -> ProjectSummary:
     Returns:
         ProjectSummary: Totals, severity breakdown, and top-five worst offenders.
     """
-
     severity_counts = SeverityCounts()
     offenders: list[WorstOffender] = []
     unique_paths: set[str] = set()
@@ -852,7 +833,6 @@ def _format_prompt_markdown(bundle: PromptBundle) -> str:
     See Also:
         [`_run_prompts`][_run_prompts]: Calls this when ``--export-prompts`` is set.
     """
-
     lines = ["# Remediation Prompts", ""]
     if bundle.big_picture:
         lines.append("## Remediation Roadmap")
@@ -907,7 +887,6 @@ def _render_prompt_panel(bundle: PromptBundle, results: list[AnalysisResult]) ->
     See Also:
         [`_run_prompts`][_run_prompts]: Invokes this for terminal output in remediation mode.
     """
-
     render_prompt_panel(bundle, results)
 
 
@@ -928,7 +907,6 @@ def _build_agent_tasks_table(task_list: AgentTaskList) -> Table:
         [`_run_prompts`][_run_prompts]: Prints this table when running in ``"agent"`` or
         ``"both"`` mode.
     """
-
     return render_agent_tasks_table(task_list)
 
 
@@ -945,7 +923,6 @@ def _resolve_prompt_export_path(export: str | None) -> Path | None:
     Returns:
         Path | None: Resolved path, or ``None`` when *export* is falsy.
     """
-
     return Path(export) if export else None
 
 
@@ -969,7 +946,6 @@ def _run_prompts(args: PromptsArgs) -> int:
         [`_collect_targets`][_collect_targets]: Discovers analysable files.
         [`_analyze_targets`][_analyze_targets]: Runs the detector pipeline.
     """
-
     target = Path(args.path)
     if not target.exists():
         print_error(f"Path not found: {target}")
@@ -1027,7 +1003,6 @@ def _run_list_rules(args: ListRulesArgs) -> int:
     See Also:
         [`list_rules`][list_rules]: Typer command that delegates here.
     """
-
     zen = get_language_zen(args.language)
     if not zen:
         print_error(f"Unsupported language: {args.language}")
@@ -1071,7 +1046,6 @@ def _run_init_interactive(args: InitArgs) -> tuple[list[str], str, bool]:
         [`_run_init`][_run_init]: Calls this helper when stdin is a TTY and
         ``--yes`` was not passed.
     """
-
     from rich.prompt import Confirm, Prompt
 
     detected = _detect_languages(Path.cwd())
@@ -1117,7 +1091,6 @@ def _run_init(args: InitArgs) -> int:
         [`_run_init_interactive`][_run_init_interactive]: Collects user preferences interactively.
         [`_build_config_yaml`][_build_config_yaml]: Generates the YAML body.
     """
-
     target = Path("zen-config.yaml")
     if target.exists() and not args.force:
         print_error("zen-config.yaml already exists (use --force to overwrite).")
@@ -1145,7 +1118,7 @@ def _run_init(args: InitArgs) -> int:
     return 0
 
 
-def _render_report_output(report, fmt: str) -> str:
+def _render_report_output(report: ReportOutput, fmt: str) -> str:
     """Serialise a report object into the format selected by ``--format``.
 
     ``"json"`` returns indented JSON of the report's ``.data`` dict,
@@ -1162,7 +1135,6 @@ def _render_report_output(report, fmt: str) -> str:
     See Also:
         [`_run_report`][_run_report]: Uses this when ``--out`` is specified.
     """
-
     if fmt == "json":
         return json.dumps(report.data, indent=2)
     if fmt == "sarif":
@@ -1188,7 +1160,6 @@ def _run_check(args: CheckArgs) -> int:
         int: Exit code ``0`` on success, ``1`` when violations exceed
         ``--fail-on-severity``, and ``2`` for input errors.
     """
-
     target = Path(args.path)
     if not target.exists():
         print_error(f"Path not found: {target}")
@@ -1247,7 +1218,6 @@ def _run_report(args: ReportArgs) -> int:
         [`_render_report_output`][_render_report_output]: Serialises the report for ``--out``.
         [`_build_log_summary`][_build_log_summary]: Generates compact log text for ``--export-log``.
     """
-
     from mcp_zen_of_languages.reporting.report import generate_report
 
     target = Path(args.path)
@@ -1306,7 +1276,6 @@ def _run_export_mapping(args: ExportMappingArgs) -> int:
     See Also:
         [`export_mapping`][export_mapping]: Typer command that delegates here.
     """
-
     from mcp_zen_of_languages.rules.mapping_export import (
         build_rule_detector_mapping,
         export_mapping_json,
@@ -1438,7 +1407,6 @@ def reports(
     See Also:
         [`_run_report`][_run_report]: Contains the actual report orchestration logic.
     """
-
     args = _ns(
         path=path,
         language=language,
@@ -1490,7 +1458,6 @@ def check(
         int: Exit code ``0`` on success, ``1`` for severity-gated failure,
         and ``2`` for input/target errors.
     """
-
     args = _ns(
         path=path,
         language=language,
@@ -1540,7 +1507,6 @@ def prompts(
     See Also:
         [`_run_prompts`][_run_prompts]: Contains the actual prompt orchestration logic.
     """
-
     args = _ns(
         path=path,
         language=language,
@@ -1573,7 +1539,6 @@ def list_rules(language: str = typer.Argument(..., help="Language identifier")) 
     See Also:
         [`_run_list_rules`][_run_list_rules]: Contains the table-building logic.
     """
-
     args = _ns(language=language)
     return _run_list_rules(args)
 
@@ -1616,7 +1581,6 @@ def init(
     See Also:
         [`_run_init`][_run_init]: Contains the file-writing orchestration.
     """
-
     args = _ns(
         force=force,
         yes=yes,
@@ -1654,7 +1618,6 @@ def export_mapping(
     See Also:
         [`_run_export_mapping`][_run_export_mapping]: Contains the mapping-build and rendering logic.
     """
-
     args = _ns(out=out, languages=languages, format=output_format)
     return _run_export_mapping(args)
 
@@ -1676,7 +1639,6 @@ def main(argv: list[str] | None = None) -> int:
     See Also:
         ``_build_welcome_panel``: Rendered when no arguments are supplied.
     """
-
     if argv is None:
         argv = sys.argv[1:]
     if not argv:

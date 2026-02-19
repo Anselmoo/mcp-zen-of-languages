@@ -26,7 +26,7 @@ from .layout import get_output_width
 from .themes import BOX_BANNER, ZEN_THEME, pass_fail_glyph
 
 
-def _supports_color(stream) -> bool:
+def _supports_color(stream: object) -> bool:
     """Probe whether a file stream can render ANSI colour sequences.
 
     Checks the ``NO_COLOR`` env-var first (unconditional off), then
@@ -83,7 +83,6 @@ def _render_banner_art() -> str:
     Returns:
         str: Multi-line ASCII art string with appended subtitle.
     """
-
     try:
         figlet_format = import_module("pyfiglet").figlet_format
         art = figlet_format(
@@ -109,7 +108,6 @@ def get_banner_art() -> str:
     Returns:
         str: Multi-line ASCII art including the *"of Languages"* subtitle.
     """
-
     return _render_banner_art()
 
 
@@ -123,7 +121,6 @@ def set_quiet(*, value: bool) -> None:
     Args:
         value: True to suppress banners and spinners, False to re-enable them.
     """
-
     _STATE.quiet = value
 
 
@@ -133,7 +130,6 @@ def is_quiet() -> bool:
     Returns:
         bool: True when quiet mode has been activated via ``set_quiet``.
     """
-
     return _STATE.quiet
 
 
@@ -149,7 +145,6 @@ def print_banner(output_console: Console | None = None) -> None:
         output_console: Alternate console to print to; defaults to the
             module-level ``console`` singleton.
     """
-
     if _STATE.quiet or not sys.stdout.isatty():
         return
     target_console = output_console or console
@@ -177,7 +172,6 @@ def print_error(message: str) -> None:
     Args:
         message: Human-readable error description to display.
     """
-
     error_console.print(
         f"{pass_fail_glyph(passed=False)} {message}", style="bold red", markup=False
     )

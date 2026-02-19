@@ -64,7 +64,6 @@ def _active_console(output_console: Console | None = None) -> Console:
     Returns:
         Console: Active console instance for subsequent Rich operations.
     """
-
     return output_console or console
 
 
@@ -83,7 +82,6 @@ def _build_prompt_file_summary(
     Returns:
         Table: Rich table renderable with File / Issues / Summary columns.
     """
-
     active_console = _active_console(output_console)
     table = zen_table(title="File Summary", output_console=active_console)
     table.add_column("File", ratio=2, no_wrap=True)
@@ -122,7 +120,6 @@ def _build_generic_prompts_table(
     Returns:
         Table | None: Rich table renderable, or ``None`` when no generic prompts exist.
     """
-
     if not bundle.generic_prompts:
         return None
     active_console = _active_console(output_console)
@@ -152,7 +149,6 @@ def _build_prompt_details_renderable(prompt: str, language: str, width: int) -> 
     Returns:
         Group: Composite Rich renderable combining prose text and code panels.
     """
-
     renderables: list[RenderableType] = []
     prose_lines: list[str] = []
     code_lines: list[str] = []
@@ -221,7 +217,6 @@ def _render_file_prompt_panels(
         width: Available terminal width for panel sizing.
         output_console: Console used to print the panels.
     """
-
     for file_prompt in bundle.file_prompts:
         violation_count = file_prompt.prompt.count("\n- [") + int(
             file_prompt.prompt.strip().startswith("- [")
@@ -255,7 +250,6 @@ def render_prompt_panel(
         results: Analysis results used to populate the file summary table.
         output_console: Optional console override for testing or redirection.
     """
-
     active_console = _active_console(output_console)
     width = get_output_width(active_console)
     target_paths = sorted({result.path for result in results if result.path})
@@ -331,7 +325,6 @@ def build_agent_tasks_table(
     Returns:
         Table: Rich table renderable with ``#`` / ``File`` / ``Task`` columns.
     """
-
     active_console = _active_console(output_console)
     table = zen_table(
         title=f"Agent Tasks - {task_list.total_tasks}",

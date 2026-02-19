@@ -54,7 +54,6 @@ def normalize_markdown(text: str) -> str:
         Cleaned Markdown string with each line right-stripped and a single
         trailing newline appended.
     """
-
     cleaned_lines = [line.rstrip() for line in text.splitlines()]
     return "\n".join(cleaned_lines).strip() + "\n"
 
@@ -73,7 +72,6 @@ def _has_consistent_headings(lines: list[str]) -> bool:
         ``True`` when every heading is at most one level deeper than its
         predecessor, ``False`` on the first violation.
     """
-
     previous_level = 0
     for line in lines:
         match = _HEADING_RE.match(line)
@@ -100,7 +98,6 @@ def _has_consistent_bullets(lines: list[str]) -> bool:
         ``True`` when zero or one distinct marker character is used,
         ``False`` when both ``-`` and ``*`` appear.
     """
-
     markers = {match.group(1) for line in lines if (match := _BULLET_RE.match(line))}
     return len(markers) <= 1
 
@@ -119,7 +116,6 @@ def _code_blocks_have_language(lines: list[str]) -> bool:
         ``True`` when all fenced blocks include a language tag,
         ``False`` on the first bare opening fence.
     """
-
     in_code = False
     for line in lines:
         match = _FENCE_RE.match(line.strip())
@@ -148,7 +144,6 @@ def _tables_aligned(lines: list[str]) -> bool:
         ``True`` when all rows in every table block share the same pipe
         count, ``False`` on the first mismatch.
     """
-
     expected_columns: int | None = None
     for line in lines:
         stripped = line.strip()
@@ -180,7 +175,6 @@ def validate_markdown(text: str) -> MarkdownQuality:
         A ``MarkdownQuality`` model with a boolean field for each rule,
         suitable for programmatic inspection or rendering in diagnostics.
     """
-
     lines = text.splitlines()
     return MarkdownQuality(
         consistent_heading_levels=_has_consistent_headings(lines),

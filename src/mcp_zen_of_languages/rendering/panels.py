@@ -39,7 +39,6 @@ def build_project_summary_panel(summary: object) -> Panel:
         Panel: ``BOX_SUMMARY``-bordered panel containing a two-column
             metric table.
     """
-
     width = get_output_width(console)
     counts = getattr(summary, "severity_counts", None)
     critical = getattr(counts, "critical", getattr(summary, "critical", 0))
@@ -79,7 +78,6 @@ def build_worst_offenders_panel(offenders: Sequence[object]) -> Panel:
     Returns:
         Panel: Rounded-bordered panel containing the worst-offenders table.
     """
-
     width = get_output_width(console)
     table = Table(
         title="Worst Offenders",

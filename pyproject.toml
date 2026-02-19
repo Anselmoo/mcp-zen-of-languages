@@ -87,16 +87,7 @@ extend-ignore = [
     # Style / formatting
     "COM812", # missing-trailing-comma (formatter handles)
     "E501",   # line-too-long (formatter handles)
-    "D202",   # blank-line-after-function
-    "D212",   # multi-line-summary-first-line
     # Annotations
-    "ANN001", # missing-type-function-argument
-    "ANN002", # missing-type-args
-    "ANN003", # missing-type-kwargs
-    "ANN201", # missing-return-type-undocumented-public-function
-    "ANN202", # missing-return-type-private-function
-    "ANN204", # missing-return-type-special-method
-    "ANN401", # any-type
     # Complexity / size
     "C901",    # complex-structure
     "PLR0911", # too-many-return-statements
@@ -131,11 +122,6 @@ extend-ignore = [
     "RUF007",  # pairwise-over-zipped
     "T201",    # print
     "ERA001",  # commented-out-code
-    # --- Pre-existing docstring ignores ---
-    "D100", # undocumented-public-module
-    "D104", # undocumented-public-package
-    "D105", # undocumented-public-magic-method
-    "D107", # undocumented-public-init
 ]
 
 [tool.ruff.lint.per-file-ignores]

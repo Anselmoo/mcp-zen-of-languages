@@ -13,7 +13,7 @@ tags:
 
 Configuration files are code too — they're read by humans, versioned in git, and debugged at 2am during outages. MCP Zen of Languages analyzes four data formats with dedicated detectors for each.
 
-## JSON — 7 Principles, 7 Detectors
+## JSON — 9 Principles, 9 Detectors
 
 | Rule ID | Principle | Category | Severity |
 |---------|-----------|----------|:--------:|
@@ -24,6 +24,8 @@ Configuration files are code too — they're read by humans, versioned in git, a
 | `json-005` | Keys are case-sensitive identifiers | Naming | 5 |
 | `json-006` | Keep inline arrays bounded | Structure | 4 |
 | `json-007` | Prefer omission over null sprawl | Correctness | 5 |
+| `json-008` | Dates must follow ISO 8601 | Correctness | 6 |
+| `json-009` | Prefer key omission over explicit null | Clarity | 5 |
 
 ??? info "`json-001` — Choose strictness intentionally"
     **Trailing commas should be rejected for JSON unless JSON5 is explicitly targeted.**
@@ -79,15 +81,36 @@ Configuration files are code too — they're read by humans, versioned in git, a
 
     - Excessive null values across the document
 
+??? info "`json-008` — Dates must follow ISO 8601"
+    **Date strings should use ISO 8601 format (YYYY-MM-DD or YYYY-MM-DDTHH:MM:SSZ) for unambiguous, sortable representation. Locale-dependent formats such as MM/DD/YYYY create parsing ambiguity.**
+
+    **Common Violations:**
+
+    - Non-ISO 8601 date string detected
+
+    **Detectable Patterns:**
+
+    - `\d{1,2}/\d{1,2}/\d{2,4}`
+    - `\d{1,2}\.\d{1,2}\.\d{4}`
+
+??? info "`json-009` — Prefer key omission over explicit null"
+    **Top-level object keys whose value is explicitly null should be omitted entirely. Explicit null at the top level signals optional absence, which is better expressed by omitting the key.**
+
+    **Common Violations:**
+
+    - Top-level key set to explicit null
+
 | Detector | What It Catches |
 |----------|-----------------|
 | **JsonStrictnessDetector** | Flag trailing commas when strict JSON output is expected |
 | **JsonSchemaConsistencyDetector** | Detect excessive JSON nesting depth |
-| **JsonDateFormatDetector** | Detect duplicate keys in JSON objects |
-| **JsonNullHandlingDetector** | Detect repeated magic-string values |
+| **JsonDuplicateKeyDetector** | Detect duplicate keys in JSON objects |
+| **JsonMagicStringDetector** | Detect repeated magic-string values |
 | **JsonKeyCasingDetector** | Detect mixed key casing at the same object level |
 | **JsonArrayOrderDetector** | Detect oversized inline arrays |
 | **JsonNullSprawlDetector** | Detect excessive null values across JSON objects/arrays |
+| **JsonDateFormatDetector** | Identify date strings that deviate from ISO 8601 formatting |
+| **JsonNullHandlingDetector** | Report top-level object keys whose values are explicitly ``null`` |
 
 ---
 

@@ -4,7 +4,9 @@ from mcp_zen_of_languages.analyzers.base import AnalysisContext
 from mcp_zen_of_languages.languages.configs import (
     JsonArrayOrderConfig,
     JsonDateFormatConfig,
+    JsonDuplicateKeyConfig,
     JsonKeyCasingConfig,
+    JsonMagicStringConfig,
     JsonNullHandlingConfig,
     JsonNullSprawlConfig,
     JsonSchemaConsistencyConfig,
@@ -13,7 +15,9 @@ from mcp_zen_of_languages.languages.configs import (
 from mcp_zen_of_languages.languages.json.detectors import (
     JsonArrayOrderDetector,
     JsonDateFormatDetector,
+    JsonDuplicateKeyDetector,
     JsonKeyCasingDetector,
+    JsonMagicStringDetector,
     JsonNullHandlingDetector,
     JsonNullSprawlDetector,
     JsonSchemaConsistencyDetector,
@@ -47,20 +51,38 @@ def test_json_deep_nesting_violation():
 
 def test_json_duplicate_keys_violation():
     violations = _detect(
-        JsonDateFormatDetector(),
+        JsonDuplicateKeyDetector(),
         '{"a": 1, "a": 2}',
-        JsonDateFormatConfig(),
+        JsonDuplicateKeyConfig(),
     )
     assert violations
+
+
+def test_json_duplicate_keys_no_violation():
+    violations = _detect(
+        JsonDuplicateKeyDetector(),
+        '{"a": 1, "b": 2}',
+        JsonDuplicateKeyConfig(),
+    )
+    assert not violations
 
 
 def test_json_magic_string_repetition_violation():
     violations = _detect(
-        JsonNullHandlingDetector(),
+        JsonMagicStringDetector(),
         '{"status":"active","state":"active","mode":"active"}',
-        JsonNullHandlingConfig(min_repetition=3),
+        JsonMagicStringConfig(min_repetition=3),
     )
     assert violations
+
+
+def test_json_magic_string_no_violation():
+    violations = _detect(
+        JsonMagicStringDetector(),
+        '{"status":"active","state":"pending"}',
+        JsonMagicStringConfig(min_repetition=3),
+    )
+    assert not violations
 
 
 def test_json_inconsistent_key_casing_violation():
@@ -88,3 +110,57 @@ def test_json_null_sprawl_violation():
         JsonNullSprawlConfig(max_null_values=3),
     )
     assert violations
+
+
+def test_json_date_format_non_iso_violation():
+    violations = _detect(
+        JsonDateFormatDetector(),
+        '{"created_at": "03/15/2024", "name": "test"}',
+        JsonDateFormatConfig(),
+    )
+    assert violations
+
+
+def test_json_date_format_iso_no_violation():
+    violations = _detect(
+        JsonDateFormatDetector(),
+        '{"created_at": "2024-03-15", "name": "test"}',
+        JsonDateFormatConfig(),
+    )
+    assert not violations
+
+
+def test_json_date_format_iso_datetime_no_violation():
+    violations = _detect(
+        JsonDateFormatDetector(),
+        '{"timestamp": "2024-03-15T10:30:00Z"}',
+        JsonDateFormatConfig(),
+    )
+    assert not violations
+
+
+def test_json_null_handling_top_level_violation():
+    violations = _detect(
+        JsonNullHandlingDetector(),
+        '{"name": "test", "config": null}',
+        JsonNullHandlingConfig(max_top_level_nulls=0),
+    )
+    assert violations
+
+
+def test_json_null_handling_within_limit():
+    violations = _detect(
+        JsonNullHandlingDetector(),
+        '{"name": "test", "config": null}',
+        JsonNullHandlingConfig(max_top_level_nulls=1),
+    )
+    assert not violations
+
+
+def test_json_null_handling_non_object_no_violation():
+    violations = _detect(
+        JsonNullHandlingDetector(),
+        "[null, null, null]",
+        JsonNullHandlingConfig(max_top_level_nulls=0),
+    )
+    assert not violations

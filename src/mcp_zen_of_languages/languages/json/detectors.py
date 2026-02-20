@@ -18,7 +18,9 @@ from mcp_zen_of_languages.analyzers.base import (
 from mcp_zen_of_languages.languages.configs import (
     JsonArrayOrderConfig,
     JsonDateFormatConfig,
+    JsonDuplicateKeyConfig,
     JsonKeyCasingConfig,
+    JsonMagicStringConfig,
     JsonNullHandlingConfig,
     JsonNullSprawlConfig,
     JsonSchemaConsistencyConfig,
@@ -156,11 +158,16 @@ class JsonSchemaConsistencyDetector(
         return []
 
 
-class JsonDateFormatDetector(
-    ViolationDetector[JsonDateFormatConfig],
+class JsonDuplicateKeyDetector(
+    ViolationDetector[JsonDuplicateKeyConfig],
     LocationHelperMixin,
 ):
-    """Detect duplicate keys in JSON objects."""
+    """Detect duplicate keys in JSON objects.
+
+    Duplicate object keys silently override earlier values in most parsers,
+    leading to hard-to-diagnose bugs. This detector uses a parse-time
+    ``object_pairs_hook`` to catch duplicates before they are lost.
+    """
 
     @property
     def name(self) -> str:
@@ -170,7 +177,7 @@ class JsonDateFormatDetector(
     def detect(
         self,
         context: AnalysisContext,
-        config: JsonDateFormatConfig,
+        config: JsonDuplicateKeyConfig,
     ) -> list[Violation]:
         """Detect duplicate keys while preserving parse-time key order."""
         duplicates: list[str] = []
@@ -204,11 +211,18 @@ class JsonDateFormatDetector(
         return []
 
 
-class JsonNullHandlingDetector(
-    ViolationDetector[JsonNullHandlingConfig],
+class JsonMagicStringDetector(
+    ViolationDetector[JsonMagicStringConfig],
     LocationHelperMixin,
 ):
-    """Detect repeated magic-string values."""
+    """Detect repeated magic-string values.
+
+    Repeated literal strings scattered across a JSON file make maintenance
+    hazardous — updating one instance while missing others leads to
+    inconsistency. This detector flags string values that appear at least
+    ``min_repetition`` times and are at least ``min_length`` characters
+    long (ignoring semver-like strings such as ``^1.2.3``).
+    """
 
     @property
     def name(self) -> str:
@@ -218,7 +232,7 @@ class JsonNullHandlingDetector(
     def detect(
         self,
         context: AnalysisContext,
-        config: JsonNullHandlingConfig,
+        config: JsonMagicStringConfig,
     ) -> list[Violation]:
         """Detect repeated literal strings that behave like magic constants."""
         data = _load_json_document(context.code)
@@ -233,7 +247,11 @@ class JsonNullHandlingDetector(
         ]
         if not values:
             return []
-        repeated = [value for value, count in Counter(values).items() if count >= config.min_repetition]
+        repeated = [
+            value
+            for value, count in Counter(values).items()
+            if count >= config.min_repetition
+        ]
         if repeated:
             repeated_value = repeated[0]
             return [
@@ -243,7 +261,133 @@ class JsonNullHandlingDetector(
                         context.code,
                         f'"{repeated_value}"',
                     ),
-                    suggestion="Extract repeated string values into shared constants/$ref.",
+                    suggestion=(
+                        "Extract repeated string values into shared "
+                        "constants or $ref anchors."
+                    ),
+                ),
+            ]
+        return []
+
+
+# ISO 8601 full datetime or date-only (YYYY-MM-DD)
+_ISO_DATE_RE = re.compile(
+    r"^\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])"
+    r"(?:T(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?"
+    r"(?:Z|[+-](?:[01]\d|2[0-3]):[0-5]\d))?$"
+)
+# Locale-style dates: MM/DD/YYYY, DD.MM.YYYY, DD-MM-YYYY (NOT ISO)
+_NON_ISO_DATE_RE = re.compile(
+    r"^(?:\d{1,2}[/.]\d{1,2}[/.](\d{2}|\d{4})"
+    r"|\d{4}[/.]\d{1,2}[/.]\d{1,2})$"
+)
+
+
+def _iter_pairs(value: object) -> Iterator[tuple[str, str]]:
+    """Yield (key, string_value) pairs recursively from a parsed JSON document."""
+    if isinstance(value, dict):
+        for k, v in value.items():
+            if isinstance(k, str) and isinstance(v, str):
+                yield k, v
+            else:
+                yield from _iter_pairs(v)
+    elif isinstance(value, list):
+        for item in value:
+            yield from _iter_pairs(item)
+
+
+class JsonDateFormatDetector(
+    ViolationDetector[JsonDateFormatConfig],
+    LocationHelperMixin,
+):
+    """Identify date strings that deviate from ISO 8601 formatting.
+
+    JSON has no native date type, so dates are encoded as strings. Using
+    locale-dependent formats like ``MM/DD/YYYY`` creates ambiguity (is
+    ``02/03/2024`` the 2nd of March or the 3rd of February?). Prefer
+    ``YYYY-MM-DD`` or the full ``YYYY-MM-DDTHH:MM:SSZ`` for unambiguous,
+    sortable date representation.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier."""
+        return "json-008"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: JsonDateFormatConfig,
+    ) -> list[Violation]:
+        """Detect string values that look like dates but are not ISO 8601."""
+        data = _load_json_document(context.code)
+        if data is None:
+            return []
+        key_fragments = [kf.lower() for kf in config.common_date_keys]
+        for key, value in _iter_pairs(data):
+            key_lower = key.lower()
+            is_date_key = any(frag in key_lower for frag in key_fragments)
+            is_non_iso = bool(_NON_ISO_DATE_RE.fullmatch(value))
+            is_iso = bool(_ISO_DATE_RE.fullmatch(value))
+            # Flag explicit non-ISO dates and date-keyed fields that are not ISO.
+            if is_non_iso or (is_date_key and value and not is_iso):
+                return [
+                    self.build_violation(
+                        config,
+                        location=self.find_location_by_substring(
+                            context.code,
+                            f'"{value}"',
+                        ),
+                        suggestion=(
+                            "Use ISO 8601 format (YYYY-MM-DD or "
+                            "YYYY-MM-DDTHH:MM:SSZ) for date strings."
+                        ),
+                    ),
+                ]
+        return []
+
+
+class JsonNullHandlingDetector(
+    ViolationDetector[JsonNullHandlingConfig],
+    LocationHelperMixin,
+):
+    """Report top-level object keys whose values are explicitly ``null``.
+
+    Explicit ``null`` values in JSON can signal intentional absence or simply
+    forgotten clean-up. At the top level of a configuration document they
+    almost always mean the key should be omitted rather than set to null.
+    This detector flags documents where more than ``max_top_level_nulls``
+    top-level keys carry a null value.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier."""
+        return "json-009"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: JsonNullHandlingConfig,
+    ) -> list[Violation]:
+        """Detect top-level object keys explicitly set to null."""
+        data = _load_json_document(context.code)
+        if not isinstance(data, dict):
+            return []
+        null_keys = [k for k, v in data.items() if v is None]
+        if len(null_keys) > config.max_top_level_nulls:
+            first_null_key = null_keys[0]
+            return [
+                self.build_violation(
+                    config,
+                    location=self.find_location_by_substring(
+                        context.code,
+                        f'"{first_null_key}"',
+                    ),
+                    suggestion=(
+                        "Omit top-level keys instead of setting them "
+                        "explicitly to null."
+                    ),
                 ),
             ]
         return []
@@ -274,7 +418,9 @@ class JsonKeyCasingDetector(
             return [
                 self.build_violation(
                     config,
-                    location=self.find_location_by_substring(context.code, f'"{mixed_key}"'),
+                    location=self.find_location_by_substring(
+                        context.code, f'"{mixed_key}"'
+                    ),
                     suggestion="Use one key naming convention per object level.",
                 ),
             ]
@@ -351,7 +497,9 @@ class JsonNullSprawlDetector(
 __all__ = [
     "JsonArrayOrderDetector",
     "JsonDateFormatDetector",
+    "JsonDuplicateKeyDetector",
     "JsonKeyCasingDetector",
+    "JsonMagicStringDetector",
     "JsonNullHandlingDetector",
     "JsonNullSprawlDetector",
     "JsonSchemaConsistencyDetector",

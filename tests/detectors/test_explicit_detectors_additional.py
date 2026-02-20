@@ -38,7 +38,9 @@ from mcp_zen_of_languages.languages.configs import (
     JsModernFeaturesConfig,
     JsonArrayOrderConfig,
     JsonDateFormatConfig,
+    JsonDuplicateKeyConfig,
     JsonKeyCasingConfig,
+    JsonMagicStringConfig,
     JsonNullHandlingConfig,
     JsonNullSprawlConfig,
     JsonSchemaConsistencyConfig,
@@ -144,7 +146,9 @@ from mcp_zen_of_languages.languages.javascript.detectors import (
 from mcp_zen_of_languages.languages.json.detectors import (
     JsonArrayOrderDetector,
     JsonDateFormatDetector,
+    JsonDuplicateKeyDetector,
     JsonKeyCasingDetector,
+    JsonMagicStringDetector,
     JsonNullHandlingDetector,
     JsonNullSprawlDetector,
     JsonSchemaConsistencyDetector,
@@ -698,16 +702,28 @@ def test_json_detectors_cover_paths():
         JsonSchemaConsistencyConfig(),
     )
     assert run_detector(
-        JsonDateFormatDetector(),
+        JsonDuplicateKeyDetector(),
         '{"a": 1, "a": 2}',
+        "json",
+        JsonDuplicateKeyConfig(),
+    )
+    assert run_detector(
+        JsonMagicStringDetector(),
+        '{"status":"active","state":"active","mode":"active"}',
+        "json",
+        JsonMagicStringConfig(min_repetition=3),
+    )
+    assert run_detector(
+        JsonDateFormatDetector(),
+        '{"created_at": "03/15/2024"}',
         "json",
         JsonDateFormatConfig(),
     )
     assert run_detector(
         JsonNullHandlingDetector(),
-        '{"status":"active","state":"active","mode":"active"}',
+        '{"name": "test", "config": null}',
         "json",
-        JsonNullHandlingConfig(),
+        JsonNullHandlingConfig(max_top_level_nulls=0),
     )
     assert run_detector(
         JsonKeyCasingDetector(),

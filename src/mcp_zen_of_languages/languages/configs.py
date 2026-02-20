@@ -1063,14 +1063,19 @@ class JsonSchemaConsistencyConfig(DetectorConfig):
     max_depth: int = 5
 
 
-class JsonDateFormatConfig(DetectorConfig):
+class JsonDuplicateKeyConfig(DetectorConfig):
     """JSON duplicate-key detection settings."""
 
     type: Literal["json-003"] = "json-003"
 
 
-class JsonNullHandlingConfig(DetectorConfig):
-    """JSON magic-string repetition detection settings."""
+class JsonMagicStringConfig(DetectorConfig):
+    """JSON magic-string repetition detection settings.
+
+    Attributes:
+        min_repetition: Minimum occurrences of a string value to flag it.
+        min_length: Minimum string length to consider as a magic-string candidate.
+    """
 
     type: Literal["json-004"] = "json-004"
     min_repetition: int = 3
@@ -1091,10 +1096,47 @@ class JsonArrayOrderConfig(DetectorConfig):
 
 
 class JsonNullSprawlConfig(DetectorConfig):
-    """JSON null-sprawl detection settings."""
+    """JSON null-sprawl detection settings.
+
+    Attributes:
+        max_null_values: Maximum total null values permitted across the document.
+    """
 
     type: Literal["json-007"] = "json-007"
     max_null_values: int = 3
+
+
+class JsonDateFormatConfig(DetectorConfig):
+    """JSON ISO 8601 date-format enforcement settings.
+
+    Attributes:
+        common_date_keys: Key name fragments used to identify probable date fields.
+    """
+
+    type: Literal["json-008"] = "json-008"
+    common_date_keys: list[str] = [
+        "date",
+        "time",
+        "created",
+        "updated",
+        "modified",
+        "timestamp",
+        "expires",
+        "published",
+        "at",
+    ]
+
+
+class JsonNullHandlingConfig(DetectorConfig):
+    """JSON top-level explicit-null detection settings.
+
+    Attributes:
+        max_top_level_nulls: Maximum number of top-level object keys allowed to
+            be set explicitly to null before a violation is raised.
+    """
+
+    type: Literal["json-009"] = "json-009"
+    max_top_level_nulls: int = 0
 
 
 class XmlSemanticMarkupConfig(DetectorConfig):

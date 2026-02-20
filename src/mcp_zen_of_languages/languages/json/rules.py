@@ -72,5 +72,33 @@ JSON_ZEN = LanguageZenPrinciples(
             description="Excessive null usage usually indicates optional keys that can be omitted.",
             violations=["Excessive null values across the document"],
         ),
+        ZenPrinciple(
+            id="json-008",
+            principle="Dates must follow ISO 8601",
+            category=PrincipleCategory.CORRECTNESS,
+            severity=6,
+            description=(
+                "Date strings should use ISO 8601 format (YYYY-MM-DD or "
+                "YYYY-MM-DDTHH:MM:SSZ) for unambiguous, sortable representation. "
+                "Locale-dependent formats such as MM/DD/YYYY create parsing ambiguity."
+            ),
+            violations=["Non-ISO 8601 date string detected"],
+            detectable_patterns=[
+                r"\d{1,2}/\d{1,2}/\d{2,4}",
+                r"\d{1,2}\.\d{1,2}\.\d{4}",
+            ],
+        ),
+        ZenPrinciple(
+            id="json-009",
+            principle="Prefer key omission over explicit null",
+            category=PrincipleCategory.CLARITY,
+            severity=5,
+            description=(
+                "Top-level object keys whose value is explicitly null should be "
+                "omitted entirely. Explicit null at the top level signals optional "
+                "absence, which is better expressed by omitting the key."
+            ),
+            violations=["Top-level key set to explicit null"],
+        ),
     ],
 )

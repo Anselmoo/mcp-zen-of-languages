@@ -47,7 +47,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
     Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
 
-    **TypeScript · Rust · Go · JavaScript · CSS · Bash · PowerShell · Ruby · C++ · C#**
+    **TypeScript · Rust · Go · JavaScript · Bash · PowerShell · Ruby · C++ · C#**
 
 -   :material-file-cog:{ .lg .middle } **Config Validation**
 

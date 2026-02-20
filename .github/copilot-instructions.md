@@ -37,8 +37,14 @@ zen check myfile.py
 - Single test: `uv run pytest tests/test_server_routing.py::test_analyze_zen_violations_python`
 - Type check: `uv run ty check` (preferred over mypy)
 - Lint: `uv run ruff check`
-- Pre-commit (all): `uvx pre-commit run --all-files`
+- Pre-commit (all, mandatory before completion): `uvx pre-commit run --all-files`
 - Pre-push docs gate: `uvx pre-commit run --hook-stage pre-push --all-files`
+
+## Completion Gate (Required)
+
+- Do not claim work is complete until `uvx pre-commit run --all-files` passes.
+- If pre-commit fails, fix issues and re-run until all hooks pass.
+- In final responses, explicitly confirm pre-commit status.
 
 ## Key Patterns & Conventions
 

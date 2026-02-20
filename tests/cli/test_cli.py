@@ -34,6 +34,18 @@ def test_check_command_runs(tmp_path):
     assert exit_code == 0
 
 
+def test_check_command_runs_css(tmp_path):
+    sample = tmp_path / "styles.css"
+    sample.write_text(".btn { color: var(--text); }\n", encoding="utf-8")
+    assert cli.main(["check", str(sample)]) == 0
+
+
+def test_check_command_runs_scss(tmp_path):
+    sample = tmp_path / "styles.scss"
+    sample.write_text(".btn { .label { color: var(--text); } }\n", encoding="utf-8")
+    assert cli.main(["check", str(sample)]) == 0
+
+
 def test_check_command_fail_on_severity(monkeypatch, tmp_path):
     sample = tmp_path / "sample.py"
     sample.write_text("def foo():\n    pass\n", encoding="utf-8")
@@ -307,6 +319,7 @@ SAMPLES = {
     "powershell": "function Get-Foo {}\n",
     "cpp": "int main() { return 0; }\n",
     "csharp": "public class Foo {}\n",
+    "css": ".button { color: var(--text); }\n",
     "yaml": "key: value\n",
     "github-actions": "name: CI\non: push\njobs:\n  build:\n    runs-on: ubuntu-latest\n    timeout-minutes: 5\n    steps:\n      - run: echo hi\n        shell: bash\n",
     "toml": 'key = "value"\n',

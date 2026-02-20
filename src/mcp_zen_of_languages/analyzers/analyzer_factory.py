@@ -17,6 +17,7 @@ from mcp_zen_of_languages.languages.csharp.analyzer import CSharpAnalyzer
 from mcp_zen_of_languages.languages.github_actions.analyzer import (
     GitHubActionsAnalyzer,
 )
+from mcp_zen_of_languages.languages.css.analyzer import CssAnalyzer
 from mcp_zen_of_languages.languages.go.analyzer import GoAnalyzer
 from mcp_zen_of_languages.languages.javascript.analyzer import JavaScriptAnalyzer
 from mcp_zen_of_languages.languages.json.analyzer import JsonAnalyzer
@@ -46,6 +47,7 @@ SUPPORTED_LANGUAGES: tuple[str, ...] = (
     "ruby",
     "cpp",
     "csharp",
+    "css",
     "yaml",
     "github-actions",
     "toml",
@@ -79,6 +81,9 @@ _ANALYZERS_BY_ALIAS: dict[str, AnalyzerClass] = {
     "cxx": CppAnalyzer,
     "csharp": CSharpAnalyzer,
     "cs": CSharpAnalyzer,
+    "css": CssAnalyzer,
+    "scss": CssAnalyzer,
+    "less": CssAnalyzer,
     "yaml": YamlAnalyzer,
     "yml": YamlAnalyzer,
     "github-actions": GitHubActionsAnalyzer,
@@ -138,6 +143,7 @@ def create_analyzer(
         Ruby                            ``ruby``, ``rb``
         C++                             ``cpp``, ``c++``, ``cc``, ``cxx``
         C#                              ``csharp``, ``cs``
+        CSS                             ``css``, ``scss``, ``less``
         YAML                            ``yaml``, ``yml``
         GitHub Actions                  ``github-actions``, ``github_actions``, ``gha``
         TOML                            ``toml``

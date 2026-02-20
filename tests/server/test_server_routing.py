@@ -17,6 +17,7 @@ from mcp_zen_of_languages import server
         ("ruby", "puts 'hello'"),
         ("cpp", "#include <iostream>\nint main() { return 0; }"),
         ("csharp", "class Program { static void Main() {} }"),
+        ("css", ".btn { color: var(--text); }"),
         ("yaml", "name: value"),
         ("github-actions", "name: CI\non: push\njobs:\n  build:\n    runs-on: ubuntu-latest\n    timeout-minutes: 10\n    steps:\n      - run: echo hi\n        shell: bash"),
         ("toml", "name = 'value'"),

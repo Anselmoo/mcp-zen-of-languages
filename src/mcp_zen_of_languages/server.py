@@ -113,6 +113,8 @@ def _canonical_language(language: str) -> str:
         "cc": "cpp",
         "cxx": "cpp",
         "cs": "csharp",
+        "scss": "css",
+        "less": "css",
         "yml": "yaml",
         "github_actions": "github-actions",
         "gha": "github-actions",

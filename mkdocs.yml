@@ -64,6 +64,7 @@ theme:
       rust: material/language-rust
       go: material/language-go
       javascript: fontawesome/brands/js
+      css: material/language-css3
       cpp: material/language-cpp
       csharp: material/language-csharp
       ruby: material/language-ruby
@@ -199,6 +200,7 @@ extra:
     Rust: rust
     Go: go
     JavaScript: javascript
+    CSS: css
     C++: cpp
     C#: csharp
     Ruby: ruby
@@ -241,6 +243,7 @@ nav:
           - Rust: user-guide/languages/rust.md
           - Go: user-guide/languages/go.md
           - JavaScript: user-guide/languages/javascript.md
+          - CSS: user-guide/languages/css.md
           - Bash: user-guide/languages/bash.md
           - PowerShell: user-guide/languages/powershell.md
           - Ruby: user-guide/languages/ruby.md

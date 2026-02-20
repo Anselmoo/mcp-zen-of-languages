@@ -1,0 +1,1 @@
+Stylesheets can accumulate hidden complexity quickly — deeply nested selectors, hardcoded values, and oversized files that become difficult to maintain. These **8 principles** focus on keeping CSS, SCSS, and Less modular, token-driven, and consistent with frontend design-system practices.

@@ -111,6 +111,8 @@ async def test_analyze_zen_violations_applies_runtime_pipeline_override(monkeypa
         ("c++", "cpp"),
         ("cc", "cpp"),
         ("cxx", "cpp"),
+        ("scss", "css"),
+        ("less", "css"),
         ("yml", "yaml"),
         ("github_actions", "github-actions"),
         ("gha", "github-actions"),

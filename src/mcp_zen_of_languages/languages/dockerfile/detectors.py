@@ -241,9 +241,7 @@ class DockerfileLayerDisciplineDetector(
         context: AnalysisContext,
         config: DockerfileLayerDisciplineConfig,
     ) -> list[Violation]:
-        run_count = sum(
-            1 for line in context.code.splitlines() if _RUN_RE.match(line)
-        )
+        run_count = sum(1 for line in context.code.splitlines() if _RUN_RE.match(line))
         if run_count > config.max_run_instructions:
             return [
                 self.build_violation(

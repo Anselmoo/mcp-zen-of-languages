@@ -90,7 +90,9 @@ def detect_language_by_extension(path: str) -> DetectionResult:
                 notes="Matched .github/workflows YAML path",
             )
     if file_name == "dockerfile" or file_name.startswith("dockerfile."):
-        return DetectionResult(language="dockerfile", confidence=0.98, method="extension")
+        return DetectionResult(
+            language="dockerfile", confidence=0.98, method="extension"
+        )
     if file_name in {
         "docker-compose.yml",
         "docker-compose.yaml",

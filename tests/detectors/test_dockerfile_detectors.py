@@ -37,12 +37,16 @@ USER root
     context = AnalysisContext(code=code, language="dockerfile")
 
     assert DockerfileLatestTagDetector().detect(context, DockerfileLatestTagConfig())
-    assert DockerfileNonRootUserDetector().detect(context, DockerfileNonRootUserConfig())
+    assert DockerfileNonRootUserDetector().detect(
+        context, DockerfileNonRootUserConfig()
+    )
     assert DockerfileAddInstructionDetector().detect(
         context,
         DockerfileAddInstructionConfig(),
     )
-    assert DockerfileHealthcheckDetector().detect(context, DockerfileHealthcheckConfig())
+    assert DockerfileHealthcheckDetector().detect(
+        context, DockerfileHealthcheckConfig()
+    )
     assert DockerfileSecretHygieneDetector().detect(
         context,
         DockerfileSecretHygieneConfig(),

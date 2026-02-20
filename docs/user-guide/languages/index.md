@@ -25,8 +25,8 @@ Every language has its own philosophy — its own sense of what "good code" mean
 | [Ruby](ruby.md) | 11 | 11 | Regex | [Ruby Style Guide](https://rubystyle.guide/) |
 | [C++](cpp.md) | 13 | 13 | Regex | [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines) |
 | [C#](csharp.md) | 13 | 13 | Regex | [C# Coding Conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions) |
-| [Config formats](config-formats.md) | 28 | 28 | Regex | JSON (6), TOML (8), XML (6), YAML (8) |
-| **Total** | **151** | **163** | | |
+| [Config formats](config-formats.md) | 31 | 31 | Regex | JSON (9), TOML (8), XML (6), YAML (8) |
+| **Total** | **154** | **166** | | |
 
 ## Maturity Tiers
 

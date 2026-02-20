@@ -1,10 +1,14 @@
-"""Detectors for JSON document quality, enforcing strictness, schema consistency, and data formatting."""
+"""Detectors for JSON/JSON5 structural and semantic quality checks."""
 
 from __future__ import annotations
 
 import json
 import re
 from collections import Counter
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,
@@ -14,39 +18,78 @@ from mcp_zen_of_languages.analyzers.base import (
 from mcp_zen_of_languages.languages.configs import (
     JsonArrayOrderConfig,
     JsonDateFormatConfig,
+    JsonDuplicateKeyConfig,
     JsonKeyCasingConfig,
+    JsonMagicStringConfig,
     JsonNullHandlingConfig,
+    JsonNullSprawlConfig,
     JsonSchemaConsistencyConfig,
     JsonStrictnessConfig,
 )
 from mcp_zen_of_languages.models import Location, Violation
 
-# Minimum array length required to check for schema consistency across items
-MIN_ARRAY_ITEMS_FOR_SCHEMA = 2
+
+def _load_json_document(code: str) -> object | None:
+    """Parse JSON text and return Python objects, or ``None`` when invalid."""
+    try:
+        return json.loads(code)
+    except (json.JSONDecodeError, ValueError):
+        return None
+
+
+def _iter_values(value: object) -> Iterator[object]:
+    """Yield every nested value in a parsed JSON document."""
+    yield value
+    if isinstance(value, dict):
+        for item in value.values():
+            yield from _iter_values(item)
+    elif isinstance(value, list):
+        for item in value:
+            yield from _iter_values(item)
+
+
+def _json_key_style(key: str) -> str:
+    """Return a coarse key-casing style label."""
+    if key.islower() and "_" not in key:
+        return "lowercase"
+    if "_" in key and key.lower() == key:
+        return "snake_case"
+    if key and key[0].isupper() and "_" not in key:
+        return "PascalCase"
+    if key and key[0].islower() and any(ch.isupper() for ch in key) and "_" not in key:
+        return "camelCase"
+    return "other"
+
+
+def _find_mixed_key(node: object) -> str | None:
+    """Find the first key in a dict level that mixes casing conventions."""
+    if isinstance(node, dict):
+        styles = {
+            _json_key_style(key) for key in node if _json_key_style(key) != "other"
+        }
+        if len(styles) > 1:
+            return next((key for key in node if isinstance(key, str)), None)
+        for value in node.values():
+            mixed = _find_mixed_key(value)
+            if mixed:
+                return mixed
+    elif isinstance(node, list):
+        for value in node:
+            mixed = _find_mixed_key(value)
+            if mixed:
+                return mixed
+    return None
 
 
 class JsonStrictnessDetector(
     ViolationDetector[JsonStrictnessConfig],
     LocationHelperMixin,
 ):
-    """Flags non-standard JSON extensions such as comments and trailing commas.
-
-    Standard JSON (RFC 8259) forbids ``//`` line comments, ``/* */`` block
-    comments, and trailing commas after the last element in arrays or objects.
-    Many editors and parsers silently accept these extensions, but they cause
-    failures in strict parsers and interoperability problems across toolchains.
-
-    Note:
-        Only the first violation per category is reported to keep output concise.
-    """
+    """Flag trailing commas when strict JSON output is expected."""
 
     @property
     def name(self) -> str:
-        """Return ``'json-001'`` identifying the JSON strictness detector.
-
-        Returns:
-            str: The ``'json-001'`` rule identifier.
-        """
+        """Return the detector identifier."""
         return "json-001"
 
     def detect(
@@ -54,63 +97,32 @@ class JsonStrictnessDetector(
         context: AnalysisContext,
         config: JsonStrictnessConfig,
     ) -> list[Violation]:
-        """Scan each line for comments (``//``, ``/*``) and trailing commas before ``]`` or ``}``.
-
-        Args:
-            context: Analysis context holding the raw JSON text.
-            config: Strictness thresholds and violation message templates.
-
-        Returns:
-            list[Violation]: At most one violation per strictness category found.
-        """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if "//" in line or "/*" in line:
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="comment",
-                        location=Location(line=idx, column=line.find("/") + 1),
-                        suggestion="Remove comments to keep JSON strict.",
-                    ),
-                )
-                break
-            if re.search(r",\s*[\]\}]", line):
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains="trailing comma",
-                        location=Location(line=idx, column=1),
-                        suggestion="Remove trailing commas in JSON.",
-                    ),
-                )
-                break
-        return violations
+        """Detect strict-mode trailing comma violations."""
+        if config.target_format == "json5" or config.allow_trailing_commas:
+            return []
+        match = re.search(r",\s*[\]}]", context.code)
+        if match:
+            line = context.code.count("\n", 0, match.start()) + 1
+            return [
+                self.build_violation(
+                    config,
+                    contains="Trailing",
+                    location=Location(line=line, column=1),
+                    suggestion="Remove trailing commas or set target_format=json5.",
+                ),
+            ]
+        return []
 
 
 class JsonSchemaConsistencyDetector(
     ViolationDetector[JsonSchemaConsistencyConfig],
     LocationHelperMixin,
 ):
-    """Detects inconsistent object shapes inside top-level JSON arrays.
-
-    When a JSON document is an array of objects, each object should expose the
-    same set of keys so consumers can rely on a predictable schema.  Mixed key
-    sets indicate schema drift—some records may be missing required fields or
-    carrying stale ones—leading to brittle downstream processing.
-
-    Note:
-        Arrays with fewer than two objects, or documents that are not arrays,
-        are silently skipped.
-    """
+    """Detect excessive JSON nesting depth."""
 
     @property
     def name(self) -> str:
-        """Return ``'json-002'`` identifying the JSON schema consistency detector.
-
-        Returns:
-            str: The ``'json-002'`` rule identifier.
-        """
+        """Return the detector identifier."""
         return "json-002"
 
     def detect(
@@ -118,153 +130,264 @@ class JsonSchemaConsistencyDetector(
         context: AnalysisContext,
         config: JsonSchemaConsistencyConfig,
     ) -> list[Violation]:
-        """Parse the JSON document and compare key sets across array elements.
+        """Detect deep nesting beyond the configured threshold."""
+        data = _load_json_document(context.code)
+        if data is None:
+            return []
 
-        Args:
-            context: Analysis context holding the raw JSON text.
-            config: Schema consistency thresholds and violation message templates.
+        def max_depth(node: object, depth: int = 1) -> int:
+            if isinstance(node, dict):
+                if not node:
+                    return depth
+                return max(max_depth(value, depth + 1) for value in node.values())
+            if isinstance(node, list):
+                if not node:
+                    return depth
+                return max(max_depth(value, depth + 1) for value in node)
+            return depth
 
-        Returns:
-            list[Violation]: A single violation when objects in an array have divergent key sets.
-        """
-        try:
-            data = json.loads(context.code)
-        except (json.JSONDecodeError, ValueError):
-            return []
-        if not isinstance(data, list) or len(data) < MIN_ARRAY_ITEMS_FOR_SCHEMA:
-            return []
-        if not all(isinstance(item, dict) for item in data):
-            return []
-        key_sets = [frozenset(item.keys()) for item in data]
-        if len(set(key_sets)) > 1:
+        depth = max_depth(data)
+        if depth > config.max_depth:
             return [
                 self.build_violation(
                     config,
-                    contains="schema",
                     location=Location(line=1, column=1),
-                    suggestion="Ensure objects in arrays share a consistent schema.",
+                    suggestion=f"Reduce nesting depth to {config.max_depth} or below.",
                 ),
             ]
         return []
+
+
+class JsonDuplicateKeyDetector(
+    ViolationDetector[JsonDuplicateKeyConfig],
+    LocationHelperMixin,
+):
+    """Detect duplicate keys in JSON objects.
+
+    Duplicate object keys silently override earlier values in most parsers,
+    leading to hard-to-diagnose bugs. This detector uses a parse-time
+    ``object_pairs_hook`` to catch duplicates before they are lost.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier."""
+        return "json-003"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: JsonDuplicateKeyConfig,
+    ) -> list[Violation]:
+        """Detect duplicate keys while preserving parse-time key order."""
+        duplicates: list[str] = []
+
+        def track_duplicates(pairs: list[tuple[str, object]]) -> dict[str, object]:
+            seen: set[str] = set()
+            obj: dict[str, object] = {}
+            for key, value in pairs:
+                if key in seen and key not in duplicates:
+                    duplicates.append(key)
+                seen.add(key)
+                obj[key] = value
+            return obj
+
+        try:
+            json.loads(context.code, object_pairs_hook=track_duplicates)
+        except (json.JSONDecodeError, ValueError):
+            return []
+        if duplicates:
+            duplicate_key = duplicates[0]
+            return [
+                self.build_violation(
+                    config,
+                    location=self.find_location_by_substring(
+                        context.code,
+                        f'"{duplicate_key}"',
+                    ),
+                    suggestion="Keep object keys unique to avoid silent overrides.",
+                ),
+            ]
+        return []
+
+
+class JsonMagicStringDetector(
+    ViolationDetector[JsonMagicStringConfig],
+    LocationHelperMixin,
+):
+    """Detect repeated magic-string values.
+
+    Repeated literal strings scattered across a JSON file make maintenance
+    hazardous — updating one instance while missing others leads to
+    inconsistency. This detector flags string values that appear at least
+    ``min_repetition`` times and are at least ``min_length`` characters
+    long (ignoring semver-like strings such as ``^1.2.3``).
+    """
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier."""
+        return "json-004"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: JsonMagicStringConfig,
+    ) -> list[Violation]:
+        """Detect repeated literal strings that behave like magic constants."""
+        data = _load_json_document(context.code)
+        if data is None:
+            return []
+        values = [
+            value
+            for value in _iter_values(data)
+            if isinstance(value, str)
+            and len(value) >= config.min_length
+            and not re.fullmatch(r"[\^~]?\d+\.\d+\.\d+.*", value)
+        ]
+        if not values:
+            return []
+        repeated = [
+            value
+            for value, count in Counter(values).items()
+            if count >= config.min_repetition
+        ]
+        if repeated:
+            repeated_value = repeated[0]
+            return [
+                self.build_violation(
+                    config,
+                    location=self.find_location_by_substring(
+                        context.code,
+                        f'"{repeated_value}"',
+                    ),
+                    suggestion=(
+                        "Extract repeated string values into shared "
+                        "constants or $ref anchors."
+                    ),
+                ),
+            ]
+        return []
+
+
+# ISO 8601 full datetime or date-only (YYYY-MM-DD)
+_ISO_DATE_RE = re.compile(
+    r"^\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])"
+    r"(?:T(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?"
+    r"(?:Z|[+-](?:[01]\d|2[0-3]):[0-5]\d))?$"
+)
+# Locale-style dates: MM/DD/YYYY, DD.MM.YYYY, DD-MM-YYYY (NOT ISO)
+_NON_ISO_DATE_RE = re.compile(
+    r"^(?:\d{1,2}[/.]\d{1,2}[/.](\d{2}|\d{4})"
+    r"|\d{4}[/.]\d{1,2}[/.]\d{1,2})$"
+)
+
+
+def _iter_pairs(value: object) -> Iterator[tuple[str, str]]:
+    """Yield (key, string_value) pairs recursively from a parsed JSON document."""
+    if isinstance(value, dict):
+        for k, v in value.items():
+            if isinstance(k, str) and isinstance(v, str):
+                yield k, v
+            else:
+                yield from _iter_pairs(v)
+    elif isinstance(value, list):
+        for item in value:
+            yield from _iter_pairs(item)
 
 
 class JsonDateFormatDetector(
     ViolationDetector[JsonDateFormatConfig],
     LocationHelperMixin,
 ):
-    """Identifies date strings that deviate from ISO 8601 formatting.
+    """Identify date strings that deviate from ISO 8601 formatting.
 
-    JSON has no native date type, so dates are encoded as strings.  Using
+    JSON has no native date type, so dates are encoded as strings. Using
     locale-dependent formats like ``MM/DD/YYYY`` creates ambiguity (is
-    ``01/02/2024`` January 2nd or February 1st?).  This detector flags such
-    patterns and recommends ISO 8601 (``YYYY-MM-DD`` or ``YYYY-MM-DDTHH:MM:SSZ``)
-    for unambiguous, sortable date representation.
+    ``02/03/2024`` the 2nd of March or the 3rd of February?). Prefer
+    ``YYYY-MM-DD`` or the full ``YYYY-MM-DDTHH:MM:SSZ`` for unambiguous,
+    sortable date representation.
     """
 
     @property
     def name(self) -> str:
-        """Return ``'json-003'`` identifying the JSON date format detector.
-
-        Returns:
-            str: The ``'json-003'`` rule identifier.
-        """
-        return "json-003"
+        """Return the detector identifier."""
+        return "json-008"
 
     def detect(
         self,
         context: AnalysisContext,
         config: JsonDateFormatConfig,
     ) -> list[Violation]:
-        """Search for non-ISO date patterns such as ``MM/DD/YYYY`` in string values.
-
-        Args:
-            context: Analysis context holding the raw JSON text.
-            config: Date format thresholds and violation message templates.
-
-        Returns:
-            list[Violation]: Violations for the first non-ISO date occurrence found.
-        """
-        violations: list[Violation] = []
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            if re.search(r"\d{2}/\d{2}/\d{4}", line):
-                violations.append(
+        """Detect string values that look like dates but are not ISO 8601."""
+        data = _load_json_document(context.code)
+        if data is None:
+            return []
+        key_fragments = [kf.lower() for kf in config.common_date_keys]
+        for key, value in _iter_pairs(data):
+            key_lower = key.lower()
+            is_date_key = any(frag in key_lower for frag in key_fragments)
+            is_non_iso = bool(_NON_ISO_DATE_RE.fullmatch(value))
+            is_iso = bool(_ISO_DATE_RE.fullmatch(value))
+            # Flag explicit non-ISO dates and date-keyed fields that are not ISO.
+            if is_non_iso or (is_date_key and value and not is_iso):
+                return [
                     self.build_violation(
                         config,
-                        contains="date",
-                        location=Location(line=idx, column=1),
-                        suggestion="Use ISO 8601 date strings.",
+                        location=self.find_location_by_substring(
+                            context.code,
+                            f'"{value}"',
+                        ),
+                        suggestion=(
+                            "Use ISO 8601 format (YYYY-MM-DD or "
+                            "YYYY-MM-DDTHH:MM:SSZ) for date strings."
+                        ),
                     ),
-                )
-                break
-        for idx, line in enumerate(context.code.splitlines(), start=1):
-            match = re.search(r"\"([^\"]+)\"", line)
-            if not match:
-                continue
-            value = match[1]
-            if re.fullmatch(r"\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}Z?)?", value):
-                continue
-            if re.search(r"\d{2}/\d{2}/\d{4}", value):
-                violations.append(
-                    self.build_violation(
-                        config,
-                        contains=value,
-                        location=Location(line=idx, column=1),
-                        suggestion="Use ISO 8601 date strings.",
-                    ),
-                )
-                break
-        return violations
+                ]
+        return []
 
 
 class JsonNullHandlingDetector(
     ViolationDetector[JsonNullHandlingConfig],
     LocationHelperMixin,
 ):
-    """Reports top-level object keys whose values are explicitly ``null``.
+    """Report top-level object keys whose values are explicitly ``null``.
 
     Explicit ``null`` values in JSON can signal intentional absence or simply
-    uninitialized data.  When keys are optional, omitting them entirely is
-    often cleaner than including ``null``, which forces consumers to handle an
-    extra sentinel.  This detector highlights ``null`` usage so authors can
-    decide whether each case is intentional or accidental.
+    forgotten clean-up. At the top level of a configuration document they
+    almost always mean the key should be omitted rather than set to null.
+    This detector flags documents where more than ``max_top_level_nulls``
+    top-level keys carry a null value.
     """
 
     @property
     def name(self) -> str:
-        """Return ``'json-004'`` identifying the JSON null handling detector.
-
-        Returns:
-            str: The ``'json-004'`` rule identifier.
-        """
-        return "json-004"
+        """Return the detector identifier."""
+        return "json-009"
 
     def detect(
         self,
         context: AnalysisContext,
         config: JsonNullHandlingConfig,
     ) -> list[Violation]:
-        """Parse JSON and check whether any top-level values are ``None``.
-
-        Args:
-            context: Analysis context holding the raw JSON text.
-            config: Null-handling thresholds and violation message templates.
-
-        Returns:
-            list[Violation]: A single violation when at least one ``null`` value exists.
-        """
-        try:
-            data = json.loads(context.code)
-        except (json.JSONDecodeError, ValueError):
-            return []
+        """Detect top-level object keys explicitly set to null."""
+        data = _load_json_document(context.code)
         if not isinstance(data, dict):
             return []
-        if any(value is None for value in data.values()):
+        null_keys = [k for k, v in data.items() if v is None]
+        if len(null_keys) > config.max_top_level_nulls:
+            first_null_key = null_keys[0]
             return [
                 self.build_violation(
                     config,
-                    contains="null",
-                    location=Location(line=1, column=1),
-                    suggestion="Use explicit nulls for optional keys when needed.",
+                    location=self.find_location_by_substring(
+                        context.code,
+                        f'"{first_null_key}"',
+                    ),
+                    suggestion=(
+                        "Omit top-level keys instead of setting them "
+                        "explicitly to null."
+                    ),
                 ),
             ]
         return []
@@ -274,22 +397,11 @@ class JsonKeyCasingDetector(
     ViolationDetector[JsonKeyCasingConfig],
     LocationHelperMixin,
 ):
-    """Enforces consistent letter casing across all keys in a JSON object.
-
-    Mixing ``camelCase``, ``snake_case``, and ``PascalCase`` keys within the
-    same object makes the document harder to navigate and increases the chance
-    of typos in consuming code.  This detector classifies each key as
-    upper-containing or all-lowercase and flags the document when both styles
-    coexist.
-    """
+    """Detect mixed key casing at the same object level."""
 
     @property
     def name(self) -> str:
-        """Return ``'json-005'`` identifying the JSON key casing detector.
-
-        Returns:
-            str: The ``'json-005'`` rule identifier.
-        """
+        """Return the detector identifier."""
         return "json-005"
 
     def detect(
@@ -297,32 +409,19 @@ class JsonKeyCasingDetector(
         context: AnalysisContext,
         config: JsonKeyCasingConfig,
     ) -> list[Violation]:
-        """Parse the JSON object and compare casing styles of its keys.
-
-        Args:
-            context: Analysis context holding the raw JSON text.
-            config: Key casing thresholds and violation message templates.
-
-        Returns:
-            list[Violation]: A single violation when mixed casing styles are detected.
-        """
-        try:
-            data = json.loads(context.code)
-        except (json.JSONDecodeError, ValueError):
+        """Detect mixed key casing at the same object level."""
+        data = _load_json_document(context.code)
+        if data is None:
             return []
-        if not isinstance(data, dict):
-            return []
-        keys = list(data.keys())
-        casing = [
-            "upper" if any(ch.isupper() for ch in key) else "lower" for key in keys
-        ]
-        if len(set(casing)) > 1:
+        mixed_key = _find_mixed_key(data)
+        if mixed_key:
             return [
                 self.build_violation(
                     config,
-                    contains="casing",
-                    location=Location(line=1, column=1),
-                    suggestion="Use consistent casing for JSON keys.",
+                    location=self.find_location_by_substring(
+                        context.code, f'"{mixed_key}"'
+                    ),
+                    suggestion="Use one key naming convention per object level.",
                 ),
             ]
         return []
@@ -332,22 +431,11 @@ class JsonArrayOrderDetector(
     ViolationDetector[JsonArrayOrderConfig],
     LocationHelperMixin,
 ):
-    """Checks for ordered collections and duplicate keys that hint at misused objects.
-
-    JSON objects are unordered by specification, so relying on key insertion
-    order is fragile.  When data naturally forms an ordered sequence—or when
-    duplicate keys appear in an object—an array is a more appropriate
-    structure.  This detector surfaces both nested arrays and duplicate-key
-    objects to encourage intentional collection design.
-    """
+    """Detect oversized inline arrays."""
 
     @property
     def name(self) -> str:
-        """Return ``'json-006'`` identifying the JSON array order detector.
-
-        Returns:
-            str: The ``'json-006'`` rule identifier.
-        """
+        """Return the detector identifier."""
         return "json-006"
 
     def detect(
@@ -355,63 +443,65 @@ class JsonArrayOrderDetector(
         context: AnalysisContext,
         config: JsonArrayOrderConfig,
     ) -> list[Violation]:
-        """Parse JSON and flag nested arrays or duplicate keys signalling order dependence.
-
-        Args:
-            context: Analysis context holding the raw JSON text.
-            config: Array order thresholds and violation message templates.
-
-        Returns:
-            list[Violation]: A single violation when arrays or duplicate keys are found.
-        """
-
-        def contains_list(value: object) -> bool:
-            """Recursively check whether *value* contains a list at any depth.
-
-            Args:
-                value: A parsed JSON fragment (dict, list, or scalar).
-
-            Returns:
-                bool: ``True`` when a list is found anywhere within *value*.
-            """
-            if isinstance(value, list):
-                return True
-            if isinstance(value, dict):
-                return any(contains_list(item) for item in value.values())
-            return False
-
-        try:
-            data = json.loads(context.code)
-        except (json.JSONDecodeError, ValueError):
+        """Detect arrays that exceed the allowed inline size."""
+        data = _load_json_document(context.code)
+        if data is None:
             return []
-        if contains_list(data):
-            return [
-                self.build_violation(
-                    config,
-                    contains="array",
-                    location=Location(line=1, column=1),
-                    suggestion="Use arrays for ordered collections.",
-                ),
-            ]
-        if isinstance(data, dict):
-            duplicates = [k for k, v in Counter(data.keys()).items() if v > 1]
-            if duplicates:
+        for node in _iter_values(data):
+            if isinstance(node, list) and len(node) > config.max_inline_array_size:
                 return [
                     self.build_violation(
                         config,
-                        contains=duplicates[0],
                         location=Location(line=1, column=1),
-                        suggestion="Use arrays for ordered collections.",
+                        suggestion=(
+                            "Move large arrays to separate files or reduce inline "
+                            f"size to <= {config.max_inline_array_size}."
+                        ),
                     ),
                 ]
+        return []
+
+
+class JsonNullSprawlDetector(
+    ViolationDetector[JsonNullSprawlConfig],
+    LocationHelperMixin,
+):
+    """Detect excessive null values across JSON objects/arrays."""
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier."""
+        return "json-007"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: JsonNullSprawlConfig,
+    ) -> list[Violation]:
+        """Detect excessive use of null across a document."""
+        data = _load_json_document(context.code)
+        if data is None:
+            return []
+        null_count = sum(1 for value in _iter_values(data) if value is None)
+        if null_count > config.max_null_values:
+            return [
+                self.build_violation(
+                    config,
+                    location=Location(line=1, column=1),
+                    suggestion="Omit optional keys instead of spreading null values.",
+                ),
+            ]
         return []
 
 
 __all__ = [
     "JsonArrayOrderDetector",
     "JsonDateFormatDetector",
+    "JsonDuplicateKeyDetector",
     "JsonKeyCasingDetector",
+    "JsonMagicStringDetector",
     "JsonNullHandlingDetector",
+    "JsonNullSprawlDetector",
     "JsonSchemaConsistencyDetector",
     "JsonStrictnessDetector",
 ]

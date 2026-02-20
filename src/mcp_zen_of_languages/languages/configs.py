@@ -1106,27 +1106,37 @@ class TomlFloatIntegerConfig(DetectorConfig):
 
 
 class JsonStrictnessConfig(DetectorConfig):
-    """JSON strictness enforcement settings (comments, trailing commas)."""
+    """JSON/JSON5 strictness settings (trailing comma policy)."""
 
     type: Literal["json-001"] = "json-001"
+    target_format: Literal["json", "json5"] = "json"
+    allow_trailing_commas: bool = False
 
 
 class JsonSchemaConsistencyConfig(DetectorConfig):
-    """JSON array-object schema consistency settings."""
+    """JSON deep-nesting detection settings."""
 
     type: Literal["json-002"] = "json-002"
+    max_depth: int = 5
 
 
-class JsonDateFormatConfig(DetectorConfig):
-    """JSON ISO 8601 date format enforcement settings."""
+class JsonDuplicateKeyConfig(DetectorConfig):
+    """JSON duplicate-key detection settings."""
 
     type: Literal["json-003"] = "json-003"
 
 
-class JsonNullHandlingConfig(DetectorConfig):
-    """JSON explicit null-value detection settings."""
+class JsonMagicStringConfig(DetectorConfig):
+    """JSON magic-string repetition detection settings.
+
+    Attributes:
+        min_repetition: Minimum occurrences of a string value to flag it.
+        min_length: Minimum string length to consider as a magic-string candidate.
+    """
 
     type: Literal["json-004"] = "json-004"
+    min_repetition: int = 3
+    min_length: int = 4
 
 
 class JsonKeyCasingConfig(DetectorConfig):
@@ -1136,9 +1146,54 @@ class JsonKeyCasingConfig(DetectorConfig):
 
 
 class JsonArrayOrderConfig(DetectorConfig):
-    """JSON array-order and duplicate-key detection settings."""
+    """JSON oversized-inline-array detection settings."""
 
     type: Literal["json-006"] = "json-006"
+    max_inline_array_size: int = 20
+
+
+class JsonNullSprawlConfig(DetectorConfig):
+    """JSON null-sprawl detection settings.
+
+    Attributes:
+        max_null_values: Maximum total null values permitted across the document.
+    """
+
+    type: Literal["json-007"] = "json-007"
+    max_null_values: int = 3
+
+
+class JsonDateFormatConfig(DetectorConfig):
+    """JSON ISO 8601 date-format enforcement settings.
+
+    Attributes:
+        common_date_keys: Key name fragments used to identify probable date fields.
+    """
+
+    type: Literal["json-008"] = "json-008"
+    common_date_keys: list[str] = [
+        "date",
+        "time",
+        "created",
+        "updated",
+        "modified",
+        "timestamp",
+        "expires",
+        "published",
+        "at",
+    ]
+
+
+class JsonNullHandlingConfig(DetectorConfig):
+    """JSON top-level explicit-null detection settings.
+
+    Attributes:
+        max_top_level_nulls: Maximum number of top-level object keys allowed to
+            be set explicitly to null before a violation is raised.
+    """
+
+    type: Literal["json-009"] = "json-009"
+    max_top_level_nulls: int = 0
 
 
 class XmlSemanticMarkupConfig(DetectorConfig):

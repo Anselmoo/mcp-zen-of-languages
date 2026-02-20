@@ -106,3 +106,6 @@ class JsonAnalyzer(BaseAnalyzer):
             object | None: Always ``None``; JSON documents are self-contained.
         """
         return None
+
+
+JSONAnalyzer = JsonAnalyzer

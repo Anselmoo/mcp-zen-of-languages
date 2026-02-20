@@ -46,7 +46,7 @@ This guide starts with MCP workflows, then covers CLI usage, configuration, lang
 
     ---
 
-    14 languages, 151 principles, 163 detectors — each with its own zen philosophy.
+    Programming, workflow, and config coverage — each with its own zen philosophy.
 
     [Languages](languages/index.md)
 

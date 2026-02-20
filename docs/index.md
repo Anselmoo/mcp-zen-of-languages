@@ -11,7 +11,7 @@ tags:
 
 # MCP Zen of Languages
 
-Every programming language has a philosophy — a sense of what "good code" looks like. Python has [PEP 20](https://peps.python.org/pep-0020/). Rust has ownership semantics. Go has [proverbs](https://go-proverbs.github.io/). TypeScript has the type system. MCP Zen of Languages **encodes these philosophies into automated analysis** — 151 zen principles across 14 languages, enforced by 163 detectors, exposed as both a CLI and an MCP server.
+Every programming language has a philosophy — a sense of what "good code" looks like. Python has [PEP 20](https://peps.python.org/pep-0020/). Rust has ownership semantics. Go has [proverbs](https://go-proverbs.github.io/). TypeScript has the type system. MCP Zen of Languages **encodes these philosophies into automated analysis** across programming languages, workflow automation, and config formats — exposed as both a CLI and an MCP server.
 
 <div class="grid cards" markdown>
 
@@ -39,7 +39,7 @@ Every programming language has a philosophy — a sense of what "good code" look
 
     [MCP Integration](getting-started/mcp-integration.md)
 
--   :material-translate:{ .lg .middle } **Explore 14 languages**
+-   :material-translate:{ .lg .middle } **Explore language coverage**
 
     ---
 

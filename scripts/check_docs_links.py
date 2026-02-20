@@ -18,6 +18,10 @@ KEY_DOC_PAGES = [
 
 MARKDOWN_LINK_RE = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
 EXTERNAL_SCHEMES = ("http://", "https://", "mailto:")
+SOURCE_PROVENANCE_SECTION_RE = re.compile(
+    r"^##\s+Source Provenance\b(.*?)(?=^##\s+|\Z)",
+    re.MULTILINE | re.DOTALL,
+)
 
 MIN_INTERNAL_LINKS = 3
 
@@ -49,7 +53,13 @@ def _check_language_pages(errors: list[str]) -> None:
         if page.name in {"index.md", "config-formats.md"}:
             continue
         text = page.read_text(encoding="utf-8")
-        if "drawn from [" not in text:
+        has_legacy_pattern = "drawn from [" in text
+        section_match = SOURCE_PROVENANCE_SECTION_RE.search(text)
+        section_external_links = 0
+        if section_match:
+            _internal, section_external_links = _count_links(section_match.group(1))
+        has_provenance = has_legacy_pattern or section_external_links >= 1
+        if not has_provenance:
             errors.append(
                 f"{page}: missing linked source provenance in Zen Principles section",
             )

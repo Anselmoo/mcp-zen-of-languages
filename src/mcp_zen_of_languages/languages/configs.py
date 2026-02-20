@@ -1514,6 +1514,12 @@ class Cs008Config(DetectorConfig):
     private_naming: str | None = None
 
 
+class GitHubActionsWorkflowConfig(DetectorConfig):
+    """GitHub Actions workflow composite detector settings."""
+
+    type: Literal["gha-workflow"] = "gha-workflow"
+
+
 RULE_CONFIGS: dict[str, type[DetectorConfig]] = {
     "bash-006": Bash006Config,
     "bash-011": Bash011Config,

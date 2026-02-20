@@ -31,5 +31,13 @@
 {% endblock %}
 
 {% block announce %}
-  Build calm, precise code reviews across 14 languages.
+  <span style="display:inline-flex;align-items:center;gap:.4em;vertical-align:middle">
+    <span style="width:1em;height:1em;display:inline-flex">{% include ".icons/material/shield-check.svg" %}</span>
+    Build calm, precise code reviews
+    <span style="opacity:.5">&middot;</span>
+    <span style="width:1em;height:1em;display:inline-flex">{% include ".icons/material/code-braces.svg" %}</span>
+    Language + workflow coverage
+    <span style="opacity:.5">&middot;</span>
+    <span style="width:1em;height:1em;display:inline-flex">{% include ".icons/material/translate.svg" %}</span>
+  </span>
 {% endblock %}

@@ -75,7 +75,18 @@ def detect_language_by_extension(path: str) -> DetectionResult:
         A ``DetectionResult`` with ``method="extension"`` and confidence 0.95
         for known extensions, or ``language="unknown"`` for unrecognised ones.
     """
-    ext = Path(path).suffix.lower()
+    path_obj = Path(path)
+    ext = path_obj.suffix.lower()
+    parts = path_obj.parts
+    if ext in {".yml", ".yaml"} and ".github" in parts and "workflows" in parts:
+        github_index = parts.index(".github")
+        if github_index + 1 < len(parts) and parts[github_index + 1] == "workflows":
+            return DetectionResult(
+                language="github-actions",
+                confidence=0.99,
+                method="extension",
+                notes="Matched .github/workflows YAML path",
+            )
     lang = EXTENSION_LANGUAGE_MAP.get(ext, "unknown")
     return DetectionResult(language=lang, confidence=0.95, method="extension")
 

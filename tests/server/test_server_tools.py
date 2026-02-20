@@ -114,6 +114,8 @@ async def test_analyze_zen_violations_applies_runtime_pipeline_override(monkeypa
         ("scss", "css"),
         ("less", "css"),
         ("yml", "yaml"),
+        ("github_actions", "github-actions"),
+        ("gha", "github-actions"),
     ],
 )
 async def test_analyze_zen_violations_accepts_supported_aliases(

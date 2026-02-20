@@ -102,4 +102,4 @@ When adding a new language, register it in `analyzers/analyzer_factory.py`.
 
 - [Adding a Language](adding-language.md) — Implement the two abstract methods
 - [Adding a Detector](adding-detector.md) — Create a Strategy class and register it
-- [Languages](../user-guide/languages/index.md) — See all 163 detectors across 14 languages
+- [Languages](../user-guide/languages/index.md) — See programming, workflow, and config coverage at a glance

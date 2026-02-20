@@ -48,6 +48,15 @@ def _unexpected_python_modules(language_dir: Path) -> list[str]:
     )
 
 
+def _language_key(entry_name: str, languages: set[str]) -> str:
+    if entry_name in languages:
+        return entry_name
+    hyphenated = entry_name.replace("_", "-")
+    if hyphenated in languages:
+        return hyphenated
+    return entry_name
+
+
 def main() -> int:  # noqa: C901, PLR0912, PLR0915
     repo_root = Path(__file__).resolve().parents[1]
     sys.path.insert(0, str(repo_root / "src"))
@@ -88,7 +97,8 @@ def main() -> int:  # noqa: C901, PLR0912, PLR0915
             continue
         if entry.name != entry.name.lower():
             errors.append(f"{entry.name}: folder name must be lowercase")
-        if entry.name not in languages:
+        language_key = _language_key(entry.name, languages)
+        if language_key not in languages:
             errors.append(f"{entry.name}: no rules registry entry")
             continue
         if missing := sorted(REQUIRED_FILES - {p.name for p in entry.iterdir()}):
@@ -111,7 +121,7 @@ def main() -> int:  # noqa: C901, PLR0912, PLR0915
         if detector_map is None:
             errors.append(f"{entry.name}: DETECTOR_MAP missing from mapping.py")
             continue
-        if detector_map.language != entry.name:
+        if detector_map.language != language_key:
             errors.append(
                 f"{entry.name}: DETECTOR_MAP language mismatch {detector_map.language}",
             )
@@ -124,7 +134,7 @@ def main() -> int:  # noqa: C901, PLR0912, PLR0915
         registry_detectors = {
             meta.detector_class.__name__
             for meta in REGISTRY.items()
-            if meta.language == entry.name
+            if meta.language == language_key
         }
         missing_exports = sorted(registry_detectors - set(exported))
         extra_exports = sorted(set(exported) - registry_detectors)
@@ -132,7 +142,7 @@ def main() -> int:  # noqa: C901, PLR0912, PLR0915
             errors.append(
                 f"{entry.name}: __all__ mismatch missing={missing_exports} extra={extra_exports}",
             )
-        lang_zen = get_language_zen(entry.name)
+        lang_zen = get_language_zen(language_key)
         if lang_zen is None:
             errors.append(f"{entry.name}: missing rules definition")
             continue
@@ -144,7 +154,7 @@ def main() -> int:  # noqa: C901, PLR0912, PLR0915
         rule_ids = {principle.id for principle in lang_zen.principles}
         rule_map_keys: set[str] = set()
         for meta in REGISTRY.items():
-            if meta.language != entry.name:
+            if meta.language != language_key:
                 continue
             rule_map_keys.update(meta.rule_map.keys())
         if unknown_rule_keys := sorted(rule_map_keys - rule_ids):
@@ -165,7 +175,7 @@ def main() -> int:  # noqa: C901, PLR0912, PLR0915
             full_coverage = False
             unknown_specs: set[str] = set()
             for meta in REGISTRY.items():
-                if meta.language != entry.name:
+                if meta.language != language_key:
                     continue
                 coverage = meta.rule_map.get(principle.id, [])
                 if "*" in coverage:

@@ -1,0 +1,148 @@
+"""GitHub Actions workflow zen principles."""
+
+from pydantic import HttpUrl
+
+from mcp_zen_of_languages.rules.base_models import (
+    LanguageZenPrinciples,
+    PrincipleCategory,
+    ZenPrinciple,
+)
+
+GITHUB_ACTIONS_ZEN = LanguageZenPrinciples(
+    language="github-actions",
+    name="GitHub Actions",
+    philosophy="Secure, maintainable, and idiomatic CI workflows.",
+    source_text="GitHub Actions Workflow Syntax",
+    source_url=HttpUrl(
+        "https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions",
+    ),
+    principles=[
+        ZenPrinciple(
+            id="gha-001",
+            principle="Pin third-party actions by full commit SHA",
+            category=PrincipleCategory.SECURITY,
+            severity=9,
+            description="Unpinned action versions increase supply-chain risk.",
+            violations=["uses: owner/action@vX instead of full SHA pinning"],
+        ),
+        ZenPrinciple(
+            id="gha-002",
+            principle="Avoid pull_request_target checkout of untrusted head SHA",
+            category=PrincipleCategory.SECURITY,
+            severity=10,
+            description="pull_request_target with head SHA checkout can execute untrusted code.",
+            violations=[
+                "pull_request_target combined with github.event.pull_request.head.sha"
+            ],
+        ),
+        ZenPrinciple(
+            id="gha-003",
+            principle="Do not expose secrets in run blocks",
+            category=PrincipleCategory.SECURITY,
+            severity=10,
+            description="Secrets echoed in shell commands may leak to logs.",
+            violations=["echo ${{ secrets.* }} in run block"],
+        ),
+        ZenPrinciple(
+            id="gha-004",
+            principle="Avoid over-permissive or missing workflow permissions",
+            category=PrincipleCategory.SECURITY,
+            severity=8,
+            description="Missing or write-all workflow permissions increase token blast radius.",
+            violations=[
+                "permissions: write-all",
+                "missing top-level permissions block",
+            ],
+        ),
+        ZenPrinciple(
+            id="gha-005",
+            principle="Restrict GITHUB_TOKEN permissions per job",
+            category=PrincipleCategory.SECURITY,
+            severity=7,
+            description="Jobs should declare minimal permissions when workflow defaults are absent.",
+            violations=[
+                "job missing permissions while top-level permissions are absent"
+            ],
+        ),
+        ZenPrinciple(
+            id="gha-006",
+            principle="Split oversized workflows",
+            category=PrincipleCategory.ORGANIZATION,
+            severity=5,
+            description="Very large workflows are hard to maintain; extract reusable workflow_call units.",
+            violations=["single workflow file exceeds maintainable line threshold"],
+        ),
+        ZenPrinciple(
+            id="gha-007",
+            principle="Avoid duplicated step sequences across jobs",
+            category=PrincipleCategory.CONSISTENCY,
+            severity=5,
+            description="Repeated steps should be extracted into composite or reusable actions.",
+            violations=["identical steps repeated in multiple jobs"],
+        ),
+        ZenPrinciple(
+            id="gha-008",
+            principle="Set timeout-minutes on jobs",
+            category=PrincipleCategory.ROBUSTNESS,
+            severity=6,
+            description="Missing timeouts can leave runners blocked indefinitely.",
+            violations=["job without timeout-minutes"],
+        ),
+        ZenPrinciple(
+            id="gha-009",
+            principle="Use concurrency controls to cancel stale runs",
+            category=PrincipleCategory.PERFORMANCE,
+            severity=5,
+            description="Missing concurrency groups can waste runner capacity.",
+            violations=["workflow missing concurrency configuration"],
+        ),
+        ZenPrinciple(
+            id="gha-010",
+            principle="Avoid rigid, hardcoded matrix values",
+            category=PrincipleCategory.CONSISTENCY,
+            severity=4,
+            description="Prefer strategy patterns that scale via include/exclude when matrix grows.",
+            violations=["hardcoded matrix entries without include/exclude controls"],
+        ),
+        ZenPrinciple(
+            id="gha-011",
+            principle="Use GITHUB_OUTPUT instead of deprecated set-output",
+            category=PrincipleCategory.IDIOMS,
+            severity=7,
+            description="The ::set-output command is deprecated.",
+            violations=["::set-output used in run scripts"],
+        ),
+        ZenPrinciple(
+            id="gha-012",
+            principle="Use GITHUB_STATE and GITHUB_ENV instead of deprecated commands",
+            category=PrincipleCategory.IDIOMS,
+            severity=7,
+            description="::save-state and ::set-env are deprecated workflow commands.",
+            violations=["::save-state or ::set-env used in run scripts"],
+        ),
+        ZenPrinciple(
+            id="gha-013",
+            principle="Set explicit shell for run steps",
+            category=PrincipleCategory.CONSISTENCY,
+            severity=4,
+            description="Explicit shells avoid runner-dependent behavior.",
+            violations=["run step missing shell"],
+        ),
+        ZenPrinciple(
+            id="gha-014",
+            principle="Cache dependencies for installation-heavy steps",
+            category=PrincipleCategory.PERFORMANCE,
+            severity=4,
+            description="Dependency installation without cache slows workflows.",
+            violations=["pip install or npm ci without a cache strategy"],
+        ),
+        ZenPrinciple(
+            id="gha-015",
+            principle="Set artifact retention explicitly",
+            category=PrincipleCategory.ORGANIZATION,
+            severity=4,
+            description="Unset retention-days can accumulate storage unexpectedly.",
+            violations=["upload-artifact step missing retention-days"],
+        ),
+    ],
+)

@@ -68,6 +68,10 @@ LANGUAGES: list[tuple[str, str, str, str, str]] = [
     ("csharp", "C#", "material/language-csharp", "csharp.md", "csharp"),
 ]
 
+WORKFLOW_LANGUAGES: list[tuple[str, str, str]] = [
+    ("github_actions", "GitHub Actions", "github-actions.md"),
+]
+
 CONFIG_LANGUAGES: list[tuple[str, str]] = [
     ("json", "JSON"),
     ("toml", "TOML"),
@@ -510,12 +514,13 @@ def render_config_formats_page(_env: Environment) -> str:  # noqa: C901
 
 def render_index_page() -> str:
     """Render the index.md 'At a Glance' page from live data."""
-    rows: list[tuple[str, str, int, int, str, str, str]] = []
+    programming_rows: list[tuple[str, str, int, int, str, str, str]] = []
+    workflow_rows: list[tuple[str, str, int, int, str, str, str]] = []
 
     for module_key, lang_name, _icon, filename, _config_key in LANGUAGES:
         zen = _load_zen(module_key)
         detector_map = _load_detector_map(module_key)
-        num_det = len(
+        num_detectors = len(
             {
                 b.detector_class.__name__
                 for b in detector_map.bindings
@@ -523,21 +528,38 @@ def render_index_page() -> str:
             },
         )
         parser = "AST" if module_key == "python" else "Regex"
-        phil = zen.source_text if hasattr(zen, "source_text") else ""
+        philosophy = zen.source_text if hasattr(zen, "source_text") else ""
         source_url = str(zen.source_url) if hasattr(zen, "source_url") else ""
-        rows.append(
+        programming_rows.append(
             (
                 lang_name,
                 filename,
                 len(zen.principles),
-                num_det,
+                num_detectors,
                 parser,
-                phil,
+                philosophy,
                 source_url,
             ),
         )
 
-    # Config formats
+    for module_key, workflow_name, filename in WORKFLOW_LANGUAGES:
+        zen = _load_zen(module_key)
+        workflow_checks = len(zen.principles)
+        philosophy = zen.source_text if hasattr(zen, "source_text") else ""
+        source_url = str(zen.source_url) if hasattr(zen, "source_url") else ""
+        workflow_rows.append(
+            (
+                workflow_name,
+                filename,
+                len(zen.principles),
+                workflow_checks,
+                "YAML",
+                philosophy,
+                source_url,
+            ),
+        )
+
+    # Config formats (aggregated)
     config_total_p = 0
     config_total_d = 0
     config_parts: list[str] = []
@@ -555,8 +577,13 @@ def render_index_page() -> str:
         config_total_d += num_det
         config_parts.append(f"{display_name} ({len(zen.principles)})")
 
-    grand_p = sum(r[2] for r in rows) + config_total_p
-    grand_d = sum(r[3] for r in rows) + config_total_d
+    programming_total_p = sum(r[2] for r in programming_rows)
+    programming_total_d = sum(r[3] for r in programming_rows)
+    workflow_total_p = sum(r[2] for r in workflow_rows)
+    workflow_total_checks = sum(r[3] for r in workflow_rows)
+
+    grand_p = programming_total_p + workflow_total_p + config_total_p
+    grand_coverage = programming_total_d + workflow_total_checks + config_total_d
 
     page = textwrap.dedent("""\
         ---
@@ -574,18 +601,65 @@ def render_index_page() -> str:
 
         ## At a Glance
 
+        ### Programming Languages
+
         | Language | Principles | Detectors | Parser | Philosophy Origin |
         |----------|:----------:|:---------:|--------|-------------------|
     """)
 
-    for lang_name, filename, num_p, num_d, parser, phil, source_url in rows:
-        origin = f"[{phil}]({source_url})" if phil and source_url else phil
+    for (
+        lang_name,
+        filename,
+        num_p,
+        num_d,
+        parser,
+        philosophy,
+        source_url,
+    ) in programming_rows:
+        origin = (
+            f"[{philosophy}]({source_url})" if philosophy and source_url else philosophy
+        )
         page += (
             f"| [{lang_name}]({filename}) | {num_p} | {num_d} | {parser} | {origin} |\n"
         )
+    page += f"| **Programming subtotal** | **{programming_total_p}** | **{programming_total_d}** | | |\n"
+
+    page += "\n### Workflows & Automation\n\n"
+    page += "| Language | Principles | Workflow Checks | Parser | Philosophy Origin |\n"
+    page += "|----------|:----------:|:---------------:|--------|-------------------|\n"
+    for (
+        workflow_name,
+        filename,
+        num_p,
+        num_checks,
+        parser,
+        philosophy,
+        source_url,
+    ) in workflow_rows:
+        origin = (
+            f"[{philosophy}]({source_url})" if philosophy and source_url else philosophy
+        )
+        page += f"| [{workflow_name}]({filename}) | {num_p} | {num_checks} | {parser} | {origin} |\n"
+    page += f"| **Workflows subtotal** | **{workflow_total_p}** | **{workflow_total_checks}** | | |\n"
+
     config_detail = ", ".join(config_parts)
+    page += "\n### Config Formats\n\n"
+    page += (
+        "| Language Family | Principles | Detectors | Parser | Coverage Breakdown |\n"
+    )
+    page += (
+        "|-----------------|:----------:|:---------:|--------|--------------------|\n"
+    )
     page += f"| [Config formats](config-formats.md) | {config_total_p} | {config_total_d} | Regex | {config_detail} |\n"
-    page += f"| **Total** | **{grand_p}** | **{grand_d}** | | |\n"
+    page += (
+        f"| **Config subtotal** | **{config_total_p}** | **{config_total_d}** | | |\n"
+    )
+
+    page += (
+        "\n### Coverage Totals\n\n"
+        f"- **Principles (all categories):** {grand_p}\n"
+        f"- **Detectors + workflow checks:** {grand_coverage}\n"
+    )
 
     page += textwrap.dedent("""
         ## Maturity Tiers
@@ -607,6 +681,14 @@ def render_index_page() -> str:
             Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
 
             **TypeScript · Rust · Go · JavaScript · Bash · PowerShell · Ruby · C++ · C#**
+
+        -   :material-source-branch:{ .lg .middle } **Workflow Automation**
+
+            ---
+
+            CI/CD-specific security and maintainability checks for pipeline files and reusable workflow patterns.
+
+            **GitHub Actions**
 
         -   :material-file-cog:{ .lg .middle } **Config Validation**
 
@@ -645,6 +727,9 @@ def render_index_page() -> str:
 
         === "Scripting and automation?"
             [Bash](bash.md) and [PowerShell](powershell.md) catch the shell-scripting antipatterns that cause outages — unquoted variables, missing error handling, eval injection.
+
+        === "CI automation?"
+            [GitHub Actions](github-actions.md) focuses on workflow hardening: pinning actions, permission scoping, secret safety, and pipeline maintainability.
 
         === "Config files?"
             The [config formats](config-formats.md) page covers JSON, TOML, XML, and YAML — consistency checks, naming conventions, and format-specific best practices.

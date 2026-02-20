@@ -116,6 +116,8 @@ def _canonical_language(language: str) -> str:
         "scss": "css",
         "less": "css",
         "yml": "yaml",
+        "github_actions": "github-actions",
+        "gha": "github-actions",
     }
     return alias_map.get(lang, lang)
 

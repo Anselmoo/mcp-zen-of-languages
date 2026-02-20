@@ -1,0 +1,10 @@
+{
+  "config_detectors": 31,
+  "config_principles": 31,
+  "programming_detectors": 143,
+  "programming_principles": 131,
+  "total_coverage_points": 189,
+  "total_principles": 177,
+  "workflow_checks": 15,
+  "workflow_principles": 15
+}

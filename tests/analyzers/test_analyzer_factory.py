@@ -12,6 +12,8 @@ def test_create_analyzer_types():
     assert json.language() == "json"
     xml = create_analyzer("xml")
     assert xml.language() == "xml"
+    gha = create_analyzer("github-actions")
+    assert gha.language() == "github-actions"
     css = create_analyzer("css")
     assert css.language() == "css"
     scss = create_analyzer("scss")

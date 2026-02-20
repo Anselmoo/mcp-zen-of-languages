@@ -47,6 +47,12 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
+      - id: generate-implementation-counts
+        name: Generate implementation counts
+        entry: uv run python scripts/generate_implementation_counts.py
+        language: system
+        pass_filenames: false
+        always_run: true
       - id: warn-missing-rule-coverage
         name: Warn on missing rule coverage
         entry: uv run python scripts/warn_missing_rule_coverage.py
@@ -68,6 +74,12 @@ repos:
       - id: check-content-quality
         name: Check docs content quality
         entry: uv run python scripts/check_content_quality.py
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: check-implementation-counts
+        name: Check implementation count parity
+        entry: uv run python scripts/generate_implementation_counts.py --check
         language: system
         pass_filenames: false
         always_run: true

@@ -27,7 +27,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 | [C++](cpp.md) | 13 | 13 | Regex | [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines) |
 | [C#](csharp.md) | 13 | 13 | Regex | [C# Coding Conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions) |
 | [Config formats](config-formats.md) | 31 | 31 | Regex | JSON (9), TOML (8), XML (6), YAML (8) |
-| **Total** | **154** | **166** | | |
+| **Total** | **162** | **174** | | |
 
 ## Maturity Tiers
 
@@ -47,7 +47,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
     Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
 
-    **TypeScript · Rust · Go · JavaScript · Bash · PowerShell · Ruby · C++ · C#**
+    **TypeScript · Rust · Go · JavaScript · CSS · Bash · PowerShell · Ruby · C++ · C#**
 
 -   :material-file-cog:{ .lg .middle } **Config Validation**
 

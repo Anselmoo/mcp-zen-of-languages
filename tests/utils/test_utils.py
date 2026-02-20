@@ -23,6 +23,12 @@ def test_detect_language_by_extension_scss():
     assert result.method == "extension"
 
 
+def test_detect_language_by_extension_less():
+    result = detect_language_by_extension("styles.less")
+    assert result.language == "css"
+    assert result.method == "extension"
+
+
 def test_detect_language_by_extension_unknown():
     result = detect_language_by_extension("example.unknown")
     assert result.language == "unknown"

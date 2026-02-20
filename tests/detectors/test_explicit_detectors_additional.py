@@ -665,10 +665,24 @@ def test_css_detectors_cover_paths():
         ),
     )
     assert run_detector(
+        CssSpecificityDetector(),
+        ".button { color: red ! Important; }\n",
+        "css",
+        CssSpecificityConfig().model_copy(
+            update={"max_selector_nesting": 10, "max_important_usages": 0},
+        ),
+    )
+    assert run_detector(
         CssMagicPixelsDetector(),
         ".a { padding: 12px; }\n",
         "css",
         CssMagicPixelsConfig(),
+    )
+    assert run_detector(
+        CssMagicPixelsDetector(),
+        ".a { border-width: 0px; margin: 0.5px; }\n",
+        "css",
+        CssMagicPixelsConfig().model_copy(update={"max_raw_pixel_literals": 0}),
     )
     assert run_detector(
         CssColorLiteralDetector(),
@@ -702,7 +716,7 @@ def test_css_detectors_cover_paths():
     )
     assert run_detector(
         CssMediaQueryScaleDetector(),
-        "@media (min-width: 990px) { .x { display: block; } }\n",
+        "@media screen and\n(min-width: 990px) {\n  .x { display: block; }\n}\n",
         "css",
         CssMediaQueryScaleConfig(),
     )

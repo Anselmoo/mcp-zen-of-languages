@@ -1,6 +1,6 @@
 ---
 title: CSS
-description: "8 zen principles enforced by 8 detectors: Maintainable stylesheets through consistency and design tokens.."
+description: "8 zen principles enforced by 8 detectors: Maintainable stylesheets through consistency and design tokens."
 icon: material/language-css3
 tags:
   - CSS

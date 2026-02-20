@@ -156,7 +156,7 @@ See the full [MCP Tools Reference](https://anselmoo.github.io/mcp-zen-of-languag
 | **Stable**       | Python                           | Full parser + richest detector coverage |
 | **Beta**         | TypeScript, Go, Rust, JavaScript | Rule-driven pipelines, partial parsing  |
 | **Experimental** | Bash, PowerShell, Ruby, C++, C#  | Heuristic detectors                     |
-| **Data/Config**  | YAML, TOML, JSON, XML            | Structure and schema checks             |
+| **Data/Config**  | YAML, TOML, JSON, XML, GitHub Actions | Structure, schema, and workflow checks  |
 
 ## Configuration
 

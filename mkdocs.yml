@@ -246,6 +246,7 @@ nav:
           - Ruby: user-guide/languages/ruby.md
           - C++: user-guide/languages/cpp.md
           - "C#": user-guide/languages/csharp.md
+          - GitHub Actions: user-guide/languages/github-actions.md
           - Config Formats: user-guide/languages/config-formats.md
       - Understanding Violations: user-guide/understanding-violations.md
       - Prompt Generation: user-guide/prompt-generation.md

@@ -60,14 +60,25 @@ def _before_script_commands(block: TopLevelBlock) -> tuple[str, ...]:
             inside = True
             continue
         if inside:
+            if re.match(r"^\s*[A-Za-z0-9_.-]+\s*:", line):
+                break
             if re.match(r"^\s*-\s+", line):
                 commands.append(re.sub(r"^\s*-\s+", "", line).strip())
                 continue
             if line.strip() and not line.startswith((" ", "\t")):
                 break
-            if line.strip() and not re.match(r"^\s+", line):
-                break
     return tuple(commands)
+
+
+def _has_routing_keys(block: TopLevelBlock) -> bool:
+    return has_key(block, "rules") or has_key(block, "only") or has_key(block, "except")
+
+
+def _targets_merge_requests(block: TopLevelBlock) -> bool:
+    return any(
+        "merge_request" in line and not line.lstrip().startswith("#")
+        for line in block.lines
+    )
 
 
 class UnpinnedImageTagDetector(ViolationDetector[DetectorConfig], LocationHelperMixin):
@@ -114,21 +125,22 @@ class ExposedVariablesDetector(ViolationDetector[DetectorConfig], LocationHelper
         context: AnalysisContext,
         config: DetectorConfig,
     ) -> list[Violation]:
+        violations: list[Violation] = []
         for block in split_top_level_blocks(context.code):
             if block.name != "variables":
                 continue
             for offset, line in enumerate(block.lines[1:], start=1):
                 match = KEY_LINE_RE.match(line)
                 if match and SECRET_NAME_RE.search(match[1]):
-                    return [
+                    violations.append(
                         self.build_violation(
                             config,
                             contains=match[1],
                             location=Location(line=block.start_line + offset, column=1),
                             suggestion="Store secrets in masked/protected CI variables.",
                         ),
-                    ]
-        return []
+                    )
+        return violations
 
 
 class AllowFailureWithoutRulesDetector(
@@ -204,22 +216,24 @@ class DuplicatedBeforeScriptDetector(
         context: AnalysisContext,
         config: DetectorConfig,
     ) -> list[Violation]:
+        violations: list[Violation] = []
         seen: dict[tuple[str, ...], int] = {}
         for block in _job_blocks(context.code):
             commands = _before_script_commands(block)
             if not commands:
                 continue
             if commands in seen:
-                return [
+                violations.append(
                     self.build_violation(
                         config,
                         contains="before_script",
                         location=Location(line=block.start_line, column=1),
                         suggestion="Extract repeated before_script into hidden job + extends.",
                     ),
-                ]
+                )
+                continue
             seen[commands] = block.start_line
-        return []
+        return violations
 
 
 class MissingInterruptibleDetector(
@@ -239,6 +253,8 @@ class MissingInterruptibleDetector(
     ) -> list[Violation]:
         violations: list[Violation] = []
         for block in _job_blocks(context.code):
+            if _has_routing_keys(block) and not _targets_merge_requests(block):
+                continue
             line = find_key_line(block, "interruptible")
             if line is None or not re.search(
                 r"interruptible:\s*true",
@@ -297,6 +313,9 @@ class OnlyExceptDetector(ViolationDetector[DetectorConfig], LocationHelperMixin)
     ) -> list[Violation]:
         violations: list[Violation] = []
         for idx, line in enumerate(context.code.splitlines(), start=1):
+            stripped = line.lstrip()
+            if stripped.startswith("#"):
+                continue
             if re.match(r"^\s*(only|except)\s*:", line):
                 violations.append(
                     self.build_violation(

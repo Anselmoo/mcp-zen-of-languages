@@ -60,6 +60,9 @@ Every programming language has a philosophy — a sense of what "good code" look
 !!! tip "Why zen?"
     Most linters focus on formatting. Zen analysis goes deeper — it detects **architectural** and **idiomatic** issues: god classes, circular dependencies, callback hell, unsafe blocks, monkey-patching. The goal isn't nitpicking commas; it's surfacing the structural problems that slow teams down.
 
+!!! note "New: GitLab CI workflow analysis"
+    GitLab CI (`.gitlab-ci.yml` and `gitlab-ci/**/*.yml`) is now supported with dedicated zen rules for security, maintainability, and idiomatic pipeline practices.
+
 ## Why MCP
 
 --8<-- "README.md:why-mcp"

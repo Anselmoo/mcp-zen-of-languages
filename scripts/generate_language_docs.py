@@ -54,6 +54,7 @@ LANGUAGES: list[tuple[str, str, str, str, str]] = [
         "javascript.md",
         "javascript",
     ),
+    ("css", "CSS", "material/language-css3", "css.md", "css"),
     ("bash", "Bash", "material/console", "bash.md", "bash"),
     (
         "powershell",
@@ -102,6 +103,11 @@ SEE_ALSO: dict[str, str] = {
         "- [TypeScript](typescript.md) — Type-safe superset with additional principles\n"
         "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
         "- [Understanding Violations](../understanding-violations.md) — Severity scale reference"
+    ),
+    "css": (
+        "- [JavaScript](javascript.md) — Common frontend codebase counterpart\n"
+        "- [TypeScript](typescript.md) — Strongly-typed frontend language companion\n"
+        "- [Configuration](../configuration.md) — Per-language pipeline overrides"
     ),
     "bash": (
         "- [PowerShell](powershell.md) — Object-pipeline shell with different idioms\n"

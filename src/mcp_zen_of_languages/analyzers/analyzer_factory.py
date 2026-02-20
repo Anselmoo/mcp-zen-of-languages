@@ -14,6 +14,7 @@ from typing import TYPE_CHECKING
 from mcp_zen_of_languages.languages.bash.analyzer import BashAnalyzer
 from mcp_zen_of_languages.languages.cpp.analyzer import CppAnalyzer
 from mcp_zen_of_languages.languages.csharp.analyzer import CSharpAnalyzer
+from mcp_zen_of_languages.languages.css.analyzer import CssAnalyzer
 from mcp_zen_of_languages.languages.go.analyzer import GoAnalyzer
 from mcp_zen_of_languages.languages.javascript.analyzer import JavaScriptAnalyzer
 from mcp_zen_of_languages.languages.json.analyzer import JsonAnalyzer
@@ -43,6 +44,7 @@ SUPPORTED_LANGUAGES: tuple[str, ...] = (
     "ruby",
     "cpp",
     "csharp",
+    "css",
     "yaml",
     "toml",
     "xml",
@@ -75,6 +77,9 @@ _ANALYZERS_BY_ALIAS: dict[str, AnalyzerClass] = {
     "cxx": CppAnalyzer,
     "csharp": CSharpAnalyzer,
     "cs": CSharpAnalyzer,
+    "css": CssAnalyzer,
+    "scss": CssAnalyzer,
+    "less": CssAnalyzer,
     "yaml": YamlAnalyzer,
     "yml": YamlAnalyzer,
     "toml": TomlAnalyzer,
@@ -131,6 +136,7 @@ def create_analyzer(
         Ruby                            ``ruby``, ``rb``
         C++                             ``cpp``, ``c++``, ``cc``, ``cxx``
         C#                              ``csharp``, ``cs``
+        CSS                             ``css``, ``scss``, ``less``
         YAML                            ``yaml``, ``yml``
         TOML                            ``toml``
         XML                             ``xml``

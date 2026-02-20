@@ -20,13 +20,14 @@ Every language has its own philosophy — its own sense of what "good code" mean
 | [Rust](rust.md) | 12 | 13 | Regex | [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/) |
 | [Go](go.md) | 12 | 12 | Regex | [Effective Go](https://go.dev/doc/effective_go) |
 | [JavaScript](javascript.md) | 11 | 11 | Regex | [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript) |
+| [CSS](css.md) | 8 | 8 | Regex | [CSSWG + common modular CSS practices](https://www.w3.org/TR/CSS/) |
 | [Bash](bash.md) | 14 | 14 | Regex | [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html) |
 | [PowerShell](powershell.md) | 15 | 15 | Regex | [PoshCode Style Guide](https://github.com/PoshCode/PowerShellPracticeAndStyle) |
 | [Ruby](ruby.md) | 11 | 11 | Regex | [Ruby Style Guide](https://rubystyle.guide/) |
 | [C++](cpp.md) | 13 | 13 | Regex | [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines) |
 | [C#](csharp.md) | 13 | 13 | Regex | [C# Coding Conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions) |
 | [Config formats](config-formats.md) | 31 | 31 | Regex | JSON (9), TOML (8), XML (6), YAML (8) |
-| **Total** | **154** | **166** | | |
+| **Total** | **162** | **174** | | |
 
 ## Maturity Tiers
 

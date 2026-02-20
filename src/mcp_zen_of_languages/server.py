@@ -113,6 +113,8 @@ def _canonical_language(language: str) -> str:
         "cc": "cpp",
         "cxx": "cpp",
         "cs": "csharp",
+        "scss": "css",
+        "less": "css",
         "yml": "yaml",
     }
     return alias_map.get(lang, lang)

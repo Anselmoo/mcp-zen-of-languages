@@ -79,6 +79,13 @@ GENERIC_PROMPTS_BY_LANGUAGE: dict[str, list[tuple[str, str]]] = {
             "interpolation over concatenation.",
         ),
     ],
+    "css": [
+        (
+            "Design-token stylesheet hygiene",
+            "Reduce selector nesting, replace magic literals with tokens, and "
+            "standardize breakpoints and z-index scales.",
+        ),
+    ],
     "javascript": [
         (
             "Safer JavaScript",

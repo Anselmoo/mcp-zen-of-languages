@@ -24,16 +24,15 @@
 
 ---
 
-Multi-language architectural and idiomatic code analysis, exposed as an **MCP server** and a **CLI**. Zen of Languages codifies idiomatic best practices ("zen principles") for 14 languages into machine-readable rules, then detects violations automatically — so AI agents and developers get actionable, language-aware feedback in every review.
+Multi-language architectural and idiomatic code analysis, exposed as an **MCP server** and a **CLI**. Zen of Languages codifies idiomatic best practices ("zen principles") into machine-readable rules and workflow checks across programming languages, CI automation, and configuration formats — so AI agents and developers get actionable, language-aware feedback in every review.
 
 <!-- --8<-- [start:what-you-get] -->
 
-- **151 zen principles** across 14 languages
-- **163 focused detectors** with severity scoring
+- **177 zen principles** across programming, workflow, and config domains
+- **189 detector/check coverage points** with severity scoring
 - **MCP server** for IDE and agent workflows (13 tools, 3 resources, 1 prompt)
 - **CLI reports** with remediation prompts and JSON / Markdown export
 - **Rule-driven pipelines** configurable per language and project
-
 <!-- --8<-- [end:what-you-get] -->
 
 ## Why MCP for Zen Analysis

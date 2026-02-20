@@ -12,6 +12,10 @@ tags:
 
 GitHub Actions workflow files in `.github/workflows/*.yml` and `.github/workflows/*.yaml` are auto-detected as `github-actions` and analyzed with workflow-specific zen principles.
 
+## Source Provenance
+
+These workflow principles are drawn from [GitHub Actions Workflow Syntax](https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions) and operational hardening guidance in [Security hardening for GitHub Actions](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions).
+
 ## Principles Overview
 
 | Rule ID | Principle | Category | Severity |

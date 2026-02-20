@@ -13,6 +13,8 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 ## At a Glance
 
+### Programming Languages
+
 | Language | Principles | Detectors | Parser | Philosophy Origin |
 |----------|:----------:|:---------:|--------|-------------------|
 | [Python](python.md) | 12 | 23 | AST | [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/) |
@@ -26,8 +28,26 @@ Every language has its own philosophy — its own sense of what "good code" mean
 | [Ruby](ruby.md) | 11 | 11 | Regex | [Ruby Style Guide](https://rubystyle.guide/) |
 | [C++](cpp.md) | 13 | 13 | Regex | [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines) |
 | [C#](csharp.md) | 13 | 13 | Regex | [C# Coding Conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions) |
+| **Programming subtotal** | **131** | **143** | | |
+
+### Workflows & Automation
+
+| Language | Principles | Workflow Checks | Parser | Philosophy Origin |
+|----------|:----------:|:---------------:|--------|-------------------|
+| [GitHub Actions](github-actions.md) | 15 | 15 | YAML | [GitHub Actions Workflow Syntax](https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions) |
+| **Workflows subtotal** | **15** | **15** | | |
+
+### Config Formats
+
+| Language Family | Principles | Detectors | Parser | Coverage Breakdown |
+|-----------------|:----------:|:---------:|--------|--------------------|
 | [Config formats](config-formats.md) | 31 | 31 | Regex | JSON (9), TOML (8), XML (6), YAML (8) |
-| **Total** | **162** | **174** | | |
+| **Config subtotal** | **31** | **31** | | |
+
+### Coverage Totals
+
+- **Principles (all categories):** 177
+- **Detectors + workflow checks:** 189
 
 ## Maturity Tiers
 
@@ -48,6 +68,14 @@ Every language has its own philosophy — its own sense of what "good code" mean
     Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
 
     **TypeScript · Rust · Go · JavaScript · Bash · PowerShell · Ruby · C++ · C#**
+
+-   :material-source-branch:{ .lg .middle } **Workflow Automation**
+
+    ---
+
+    CI/CD-specific security and maintainability checks for pipeline files and reusable workflow patterns.
+
+    **GitHub Actions**
 
 -   :material-file-cog:{ .lg .middle } **Config Validation**
 
@@ -86,6 +114,9 @@ You can tune severity thresholds and detector parameters per-language in your [`
 
 === "Scripting and automation?"
     [Bash](bash.md) and [PowerShell](powershell.md) catch the shell-scripting antipatterns that cause outages — unquoted variables, missing error handling, eval injection.
+
+=== "CI automation?"
+    [GitHub Actions](github-actions.md) focuses on workflow hardening: pinning actions, permission scoping, secret safety, and pipeline maintainability.
 
 === "Config files?"
     The [config formats](config-formats.md) page covers JSON, TOML, XML, and YAML — consistency checks, naming conventions, and format-specific best practices.

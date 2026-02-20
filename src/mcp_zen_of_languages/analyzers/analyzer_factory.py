@@ -14,10 +14,10 @@ from typing import TYPE_CHECKING
 from mcp_zen_of_languages.languages.bash.analyzer import BashAnalyzer
 from mcp_zen_of_languages.languages.cpp.analyzer import CppAnalyzer
 from mcp_zen_of_languages.languages.csharp.analyzer import CSharpAnalyzer
+from mcp_zen_of_languages.languages.css.analyzer import CssAnalyzer
 from mcp_zen_of_languages.languages.github_actions.analyzer import (
     GitHubActionsAnalyzer,
 )
-from mcp_zen_of_languages.languages.css.analyzer import CssAnalyzer
 from mcp_zen_of_languages.languages.go.analyzer import GoAnalyzer
 from mcp_zen_of_languages.languages.javascript.analyzer import JavaScriptAnalyzer
 from mcp_zen_of_languages.languages.json.analyzer import JsonAnalyzer

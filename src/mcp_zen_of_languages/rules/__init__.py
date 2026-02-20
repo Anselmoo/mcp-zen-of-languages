@@ -60,8 +60,8 @@ def _initialize_registry() -> None:
     from mcp_zen_of_languages.languages.bash.rules import BASH_ZEN
     from mcp_zen_of_languages.languages.cpp.rules import CPP_ZEN
     from mcp_zen_of_languages.languages.csharp.rules import CSHARP_ZEN
-    from mcp_zen_of_languages.languages.github_actions.rules import GITHUB_ACTIONS_ZEN
     from mcp_zen_of_languages.languages.css.rules import CSS_ZEN
+    from mcp_zen_of_languages.languages.github_actions.rules import GITHUB_ACTIONS_ZEN
     from mcp_zen_of_languages.languages.go.rules import GO_ZEN
     from mcp_zen_of_languages.languages.javascript.rules import JAVASCRIPT_ZEN
     from mcp_zen_of_languages.languages.json.rules import JSON_ZEN

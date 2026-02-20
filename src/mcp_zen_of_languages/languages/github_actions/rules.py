@@ -31,7 +31,9 @@ GITHUB_ACTIONS_ZEN = LanguageZenPrinciples(
             category=PrincipleCategory.SECURITY,
             severity=10,
             description="pull_request_target with head SHA checkout can execute untrusted code.",
-            violations=["pull_request_target combined with github.event.pull_request.head.sha"],
+            violations=[
+                "pull_request_target combined with github.event.pull_request.head.sha"
+            ],
         ),
         ZenPrinciple(
             id="gha-003",
@@ -47,7 +49,10 @@ GITHUB_ACTIONS_ZEN = LanguageZenPrinciples(
             category=PrincipleCategory.SECURITY,
             severity=8,
             description="Missing or write-all workflow permissions increase token blast radius.",
-            violations=["permissions: write-all", "missing top-level permissions block"],
+            violations=[
+                "permissions: write-all",
+                "missing top-level permissions block",
+            ],
         ),
         ZenPrinciple(
             id="gha-005",
@@ -55,7 +60,9 @@ GITHUB_ACTIONS_ZEN = LanguageZenPrinciples(
             category=PrincipleCategory.SECURITY,
             severity=7,
             description="Jobs should declare minimal permissions when workflow defaults are absent.",
-            violations=["job missing permissions while top-level permissions are absent"],
+            violations=[
+                "job missing permissions while top-level permissions are absent"
+            ],
         ),
         ZenPrinciple(
             id="gha-006",

@@ -18,4 +18,3 @@ def test_create_analyzer_types():
     assert css.language() == "css"
     scss = create_analyzer("scss")
     assert scss.language() == "css"
-

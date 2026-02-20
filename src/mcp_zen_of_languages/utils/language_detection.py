@@ -78,11 +78,7 @@ def detect_language_by_extension(path: str) -> DetectionResult:
     path_obj = Path(path)
     ext = path_obj.suffix.lower()
     parts = path_obj.parts
-    if (
-        ext in {".yml", ".yaml"}
-        and ".github" in parts
-        and "workflows" in parts
-    ):
+    if ext in {".yml", ".yaml"} and ".github" in parts and "workflows" in parts:
         github_index = parts.index(".github")
         if github_index + 1 < len(parts) and parts[github_index + 1] == "workflows":
             return DetectionResult(

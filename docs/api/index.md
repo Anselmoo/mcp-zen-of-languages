@@ -27,7 +27,7 @@ Programmatic access to analyzers, detectors, pipeline, and MCP server tools. All
 
     ---
 
-    163 `ViolationDetector` implementations across 14 languages — each a Strategy class.
+    174 `ViolationDetector` implementations across 15 languages — each a Strategy class.
 
     [Detectors](detectors.md)
 
@@ -51,7 +51,7 @@ Programmatic access to analyzers, detectors, pipeline, and MCP server tools. All
 
     ---
 
-    151 `ZenPrinciple` models and rule-to-detector mappings across all languages.
+    161 `ZenPrinciple` models and rule-to-detector mappings across all languages.
 
     [Rules](rules.md)
 

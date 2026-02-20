@@ -23,7 +23,7 @@ Three commands, two minutes, and you'll have a full analysis with violations, se
 zen init  # (1)!
 ```
 
-1. Creates `zen-config.yaml` with sensible defaults for all 14 languages. Can also bootstrap `.vscode/mcp.json` for MCP integration.
+1. Creates `zen-config.yaml` with sensible defaults for all 15 languages. Can also bootstrap `.vscode/mcp.json` for MCP integration.
 
 This creates a `zen-config.yaml` in your project root. It enables all languages and sets default thresholds — you can [tune these later](../user-guide/configuration.md).
 

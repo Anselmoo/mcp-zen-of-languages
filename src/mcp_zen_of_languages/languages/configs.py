@@ -1101,6 +1101,30 @@ class DockerfileDockerignoreConfig(DetectorConfig):
     type: Literal["dockerfile-008"] = "dockerfile-008"
 
 
+class DockerComposeLatestTagConfig(DetectorConfig):
+    """Docker Compose latest-tag usage detection settings."""
+
+    type: Literal["docker-compose-001"] = "docker-compose-001"
+
+
+class DockerComposeNonRootUserConfig(DetectorConfig):
+    """Docker Compose non-root service user enforcement settings."""
+
+    type: Literal["docker-compose-002"] = "docker-compose-002"
+
+
+class DockerComposeHealthcheckConfig(DetectorConfig):
+    """Docker Compose healthcheck presence enforcement settings."""
+
+    type: Literal["docker-compose-003"] = "docker-compose-003"
+
+
+class DockerComposeSecretHygieneConfig(DetectorConfig):
+    """Docker Compose secret-exposure detection settings."""
+
+    type: Literal["docker-compose-004"] = "docker-compose-004"
+
+
 class TomlNoInlineTablesConfig(DetectorConfig):
     """TOML inline-table prohibition settings."""
 

@@ -15,6 +15,9 @@ from mcp_zen_of_languages.languages.bash.analyzer import BashAnalyzer
 from mcp_zen_of_languages.languages.cpp.analyzer import CppAnalyzer
 from mcp_zen_of_languages.languages.csharp.analyzer import CSharpAnalyzer
 from mcp_zen_of_languages.languages.css.analyzer import CssAnalyzer
+from mcp_zen_of_languages.languages.docker_compose.analyzer import (
+    DockerComposeAnalyzer,
+)
 from mcp_zen_of_languages.languages.dockerfile.analyzer import DockerfileAnalyzer
 from mcp_zen_of_languages.languages.github_actions.analyzer import (
     GitHubActionsAnalyzer,
@@ -49,6 +52,7 @@ SUPPORTED_LANGUAGES: tuple[str, ...] = (
     "cpp",
     "csharp",
     "css",
+    "docker_compose",
     "dockerfile",
     "yaml",
     "github-actions",
@@ -86,6 +90,8 @@ _ANALYZERS_BY_ALIAS: dict[str, AnalyzerClass] = {
     "css": CssAnalyzer,
     "scss": CssAnalyzer,
     "less": CssAnalyzer,
+    "docker_compose": DockerComposeAnalyzer,
+    "docker-compose": DockerComposeAnalyzer,
     "dockerfile": DockerfileAnalyzer,
     "docker": DockerfileAnalyzer,
     "yaml": YamlAnalyzer,
@@ -148,6 +154,7 @@ def create_analyzer(
         C++                             ``cpp``, ``c++``, ``cc``, ``cxx``
         C#                              ``csharp``, ``cs``
         CSS                             ``css``, ``scss``, ``less``
+        Docker Compose                  ``docker_compose``, ``docker-compose``
         Dockerfile                      ``dockerfile``, ``docker``
         YAML                            ``yaml``, ``yml``
         GitHub Actions                  ``github-actions``, ``github_actions``, ``gha``

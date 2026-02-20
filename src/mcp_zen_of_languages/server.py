@@ -118,6 +118,7 @@ def _canonical_language(language: str) -> str:
         "yml": "yaml",
         "github_actions": "github-actions",
         "gha": "github-actions",
+        "docker-compose": "docker_compose",
     }
     return alias_map.get(lang, lang)
 

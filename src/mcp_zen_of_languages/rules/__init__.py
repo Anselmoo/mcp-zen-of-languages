@@ -61,6 +61,7 @@ def _initialize_registry() -> None:
     from mcp_zen_of_languages.languages.cpp.rules import CPP_ZEN
     from mcp_zen_of_languages.languages.csharp.rules import CSHARP_ZEN
     from mcp_zen_of_languages.languages.css.rules import CSS_ZEN
+    from mcp_zen_of_languages.languages.docker_compose.rules import DOCKER_COMPOSE_ZEN
     from mcp_zen_of_languages.languages.dockerfile.rules import DOCKERFILE_ZEN
     from mcp_zen_of_languages.languages.github_actions.rules import GITHUB_ACTIONS_ZEN
     from mcp_zen_of_languages.languages.go.rules import GO_ZEN
@@ -87,6 +88,7 @@ def _initialize_registry() -> None:
             "cpp": CPP_ZEN,
             "csharp": CSHARP_ZEN,
             "css": CSS_ZEN,
+            "docker_compose": DOCKER_COMPOSE_ZEN,
             "dockerfile": DOCKERFILE_ZEN,
             "bash": BASH_ZEN,
             "powershell": POWERSHELL_ZEN,

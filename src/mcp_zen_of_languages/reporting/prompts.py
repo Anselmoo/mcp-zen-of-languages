@@ -175,6 +175,13 @@ GENERIC_PROMPTS_BY_LANGUAGE: dict[str, list[tuple[str, str]]] = {
             "use multi-stage builds with a .dockerignore file.",
         ),
     ],
+    "docker_compose": [
+        (
+            "Compose service hardening",
+            "Pin service image tags, avoid root users, define healthchecks, and keep "
+            "secret-like values out of inline environment blocks.",
+        ),
+    ],
 }
 
 

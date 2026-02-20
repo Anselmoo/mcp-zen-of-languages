@@ -18,5 +18,7 @@ def test_create_analyzer_types():
     assert css.language() == "css"
     scss = create_analyzer("scss")
     assert scss.language() == "css"
+    docker_compose = create_analyzer("docker-compose")
+    assert docker_compose.language() == "docker_compose"
     dockerfile = create_analyzer("dockerfile")
     assert dockerfile.language() == "dockerfile"

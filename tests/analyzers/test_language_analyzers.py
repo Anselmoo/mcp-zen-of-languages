@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from mcp_zen_of_languages.languages.docker_compose.analyzer import DockerComposeAnalyzer
 from mcp_zen_of_languages.languages.dockerfile.analyzer import DockerfileAnalyzer
 from mcp_zen_of_languages.languages.javascript.analyzer import JavaScriptAnalyzer
 from mcp_zen_of_languages.languages.powershell.analyzer import PowerShellAnalyzer
@@ -52,3 +53,12 @@ def test_dockerfile_analyzer_parse_code():
 
     analyzer = StubDockerfileAnalyzer()
     assert analyzer.parse_code("FROM ubuntu:22.04") is None
+
+
+def test_docker_compose_analyzer_parse_code():
+    class StubDockerComposeAnalyzer(DockerComposeAnalyzer):
+        def build_pipeline(self):
+            return _pipeline_stub()
+
+    analyzer = StubDockerComposeAnalyzer()
+    assert analyzer.parse_code("services:\n  web:\n    image: nginx:1.27") is None

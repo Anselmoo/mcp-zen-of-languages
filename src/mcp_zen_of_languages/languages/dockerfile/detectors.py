@@ -1,4 +1,4 @@
-"""Detectors for Dockerfile and docker-compose container build hygiene."""
+"""Detectors for Dockerfile container build hygiene."""
 # ruff: noqa: D102
 
 from __future__ import annotations

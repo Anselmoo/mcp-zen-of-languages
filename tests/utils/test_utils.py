@@ -48,7 +48,7 @@ def test_detect_language_by_extension_dockerfile_name():
 
 def test_detect_language_by_extension_docker_compose_name():
     result = detect_language_by_extension("docker-compose.yml")
-    assert result.language == "dockerfile"
+    assert result.language == "docker_compose"
     assert result.method == "extension"
 
 

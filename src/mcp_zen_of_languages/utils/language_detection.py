@@ -97,7 +97,11 @@ def detect_language_by_extension(path: str) -> DetectionResult:
         "compose.yml",
         "compose.yaml",
     }:
-        return DetectionResult(language="dockerfile", confidence=0.98, method="extension")
+        return DetectionResult(
+            language="docker_compose",
+            confidence=0.98,
+            method="extension",
+        )
     lang = EXTENSION_LANGUAGE_MAP.get(ext, "unknown")
     return DetectionResult(language=lang, confidence=0.95, method="extension")
 

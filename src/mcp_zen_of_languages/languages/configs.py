@@ -1052,6 +1052,79 @@ class YamlStringStyleConfig(DetectorConfig):
     require_quotes_for_specials: bool = True
 
 
+class DockerfileLatestTagConfig(DetectorConfig):
+    """Dockerfile latest-tag usage detection settings."""
+
+    type: Literal["dockerfile-001"] = "dockerfile-001"
+
+
+class DockerfileNonRootUserConfig(DetectorConfig):
+    """Dockerfile non-root runtime user enforcement settings."""
+
+    type: Literal["dockerfile-002"] = "dockerfile-002"
+
+
+class DockerfileAddInstructionConfig(DetectorConfig):
+    """Dockerfile ``ADD`` instruction preference settings."""
+
+    type: Literal["dockerfile-003"] = "dockerfile-003"
+
+
+class DockerfileHealthcheckConfig(DetectorConfig):
+    """Dockerfile healthcheck presence enforcement settings."""
+
+    type: Literal["dockerfile-004"] = "dockerfile-004"
+
+
+class DockerfileMultiStageConfig(DetectorConfig):
+    """Dockerfile multi-stage build preference settings."""
+
+    type: Literal["dockerfile-005"] = "dockerfile-005"
+
+
+class DockerfileSecretHygieneConfig(DetectorConfig):
+    """Dockerfile secret-exposure detection settings."""
+
+    type: Literal["dockerfile-006"] = "dockerfile-006"
+
+
+class DockerfileLayerDisciplineConfig(DetectorConfig):
+    """Dockerfile RUN-layer threshold settings."""
+
+    type: Literal["dockerfile-007"] = "dockerfile-007"
+    max_run_instructions: int = 5
+
+
+class DockerfileDockerignoreConfig(DetectorConfig):
+    """Dockerfile and ``.dockerignore`` coherence advisory settings."""
+
+    type: Literal["dockerfile-008"] = "dockerfile-008"
+
+
+class DockerComposeLatestTagConfig(DetectorConfig):
+    """Docker Compose latest-tag usage detection settings."""
+
+    type: Literal["docker-compose-001"] = "docker-compose-001"
+
+
+class DockerComposeNonRootUserConfig(DetectorConfig):
+    """Docker Compose non-root service user enforcement settings."""
+
+    type: Literal["docker-compose-002"] = "docker-compose-002"
+
+
+class DockerComposeHealthcheckConfig(DetectorConfig):
+    """Docker Compose healthcheck presence enforcement settings."""
+
+    type: Literal["docker-compose-003"] = "docker-compose-003"
+
+
+class DockerComposeSecretHygieneConfig(DetectorConfig):
+    """Docker Compose secret-exposure detection settings."""
+
+    type: Literal["docker-compose-004"] = "docker-compose-004"
+
+
 class TomlNoInlineTablesConfig(DetectorConfig):
     """TOML inline-table prohibition settings."""
 

@@ -26,6 +26,8 @@ from mcp_zen_of_languages import server
         ("toml", "name = 'value'"),
         ("xml", "<root><item /></root>"),
         ("json", '{"name": "value"}'),
+        ("docker_compose", "services:\n  web:\n    image: nginx:latest\n"),
+        ("dockerfile", "FROM ubuntu:latest\nUSER root\n"),
     ],
 )
 async def test_analyze_zen_violations_supported_languages(language: str, code: str):

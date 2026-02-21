@@ -1,0 +1,100 @@
+"""SQL zen principles as Pydantic models."""
+
+from pydantic import HttpUrl
+
+from mcp_zen_of_languages.rules.base_models import (
+    LanguageZenPrinciples,
+    PrincipleCategory,
+    ZenPrinciple,
+)
+
+SQL_ZEN = LanguageZenPrinciples(
+    language="sql",
+    name="SQL",
+    philosophy="Pragmatic SQL correctness, security, and performance hygiene",
+    source_text="ANSI SQL + production database best practices",
+    source_url=HttpUrl("https://www.iso.org/standard/76584.html"),
+    principles=[
+        ZenPrinciple(
+            id="sql-001",
+            principle="Never use SELECT *",
+            category=PrincipleCategory.PERFORMANCE,
+            severity=6,
+            description="Enumerate explicit columns to avoid fragile, over-fetching queries.",
+            violations=["SELECT * detected"],
+            detectable_patterns=[r"(?i)select\s+\*\s+from"],
+        ),
+        ZenPrinciple(
+            id="sql-002",
+            principle="Always include INSERT column lists",
+            category=PrincipleCategory.CORRECTNESS,
+            severity=7,
+            description="INSERT statements without a column list break on schema changes.",
+            violations=["INSERT INTO table VALUES (...) without explicit columns"],
+            detectable_patterns=[r"(?i)insert\s+into\s+\w+\s+values\s*\("],
+        ),
+        ZenPrinciple(
+            id="sql-003",
+            principle="Prefer parameterized SQL over dynamic concatenation",
+            category=PrincipleCategory.SECURITY,
+            severity=9,
+            description="Dynamic SQL string concatenation increases SQL injection risk.",
+            violations=["EXEC/EXECUTE with concatenated SQL string"],
+            detectable_patterns=[r"(?i)exec(?:ute)?\s*\(?.*['\"]\s*(?:\+|\|\|)"],
+            recommended_alternative="Use bind parameters or prepared statements instead of runtime SQL string assembly.",
+        ),
+        ZenPrinciple(
+            id="sql-004",
+            principle="Avoid NOLOCK and dirty reads",
+            category=PrincipleCategory.CORRECTNESS,
+            severity=8,
+            description="WITH (NOLOCK) can silently read uncommitted and inconsistent data.",
+            violations=["NOLOCK table hint used"],
+            detectable_patterns=[r"(?i)with\s*\(\s*nolock\s*\)"],
+        ),
+        ZenPrinciple(
+            id="sql-005",
+            principle="Avoid implicit type coercion in JOIN predicates",
+            category=PrincipleCategory.PERFORMANCE,
+            severity=6,
+            description="Type mismatches in JOIN conditions often force index-unfriendly scans.",
+            violations=["JOIN predicate applies CAST/CONVERT in comparison"],
+            detectable_patterns=[r"(?i)join[\s\S]*?on[\s\S]*?(cast\s*\(|convert\s*\()"],
+        ),
+        ZenPrinciple(
+            id="sql-006",
+            principle="Bound result sets with WHERE/LIMIT/TOP",
+            category=PrincipleCategory.PERFORMANCE,
+            severity=5,
+            description="Unbounded selects on large relations are costly and often accidental.",
+            violations=["SELECT query without WHERE, LIMIT, or TOP"],
+        ),
+        ZenPrinciple(
+            id="sql-007",
+            principle="Use descriptive table aliases",
+            category=PrincipleCategory.CLARITY,
+            severity=4,
+            description="Single-letter or cryptic aliases reduce readability and maintenance speed.",
+            violations=["Single-letter table alias detected"],
+        ),
+        ZenPrinciple(
+            id="sql-008",
+            principle="Keep transaction boundaries balanced",
+            category=PrincipleCategory.CORRECTNESS,
+            severity=8,
+            description="BEGIN TRANSACTION without COMMIT/ROLLBACK in the same file risks dangling transactions.",
+            violations=["BEGIN TRANSACTION without matching COMMIT or ROLLBACK"],
+            detectable_patterns=[r"(?i)\bbegin\s+tran(?:saction)?\b"],
+        ),
+        ZenPrinciple(
+            id="sql-009",
+            principle="Prefer explicit JOIN syntax over ANSI-89 comma joins",
+            category=PrincipleCategory.READABILITY,
+            severity=6,
+            description="Comma-separated FROM joins are deprecated and less explicit than JOIN ... ON.",
+            violations=["ANSI-89 comma join syntax detected"],
+            detectable_patterns=[r"(?i)from\s+[^;]*,\s*[^;]*where"],
+            recommended_alternative="Replace comma joins with explicit INNER JOIN/LEFT JOIN and ON predicates.",
+        ),
+    ],
+)

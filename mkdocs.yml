@@ -253,6 +253,7 @@ nav:
           - Bash: user-guide/languages/bash.md
           - PowerShell: user-guide/languages/powershell.md
           - Ruby: user-guide/languages/ruby.md
+          - SQL: user-guide/languages/sql.md
           - C++: user-guide/languages/cpp.md
           - "C#": user-guide/languages/csharp.md
           - Docker Compose: user-guide/languages/docker-compose.md

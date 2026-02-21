@@ -29,6 +29,11 @@ def test_detect_language_by_extension_less():
     assert result.method == "extension"
 
 
+def test_detect_language_by_extension_sql():
+    result = detect_language_by_extension("schema.ddl")
+    assert result.language == "sql"
+
+
 def test_detect_language_by_extension_markdown():
     result = detect_language_by_extension("README.md")
     assert result.language == "markdown"

@@ -26,12 +26,13 @@ Every language has its own philosophy — its own sense of what "good code" mean
 | [Bash](bash.md) | 14 | 14 | Regex | [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html) |
 | [PowerShell](powershell.md) | 15 | 15 | Regex | [PoshCode Style Guide](https://github.com/PoshCode/PowerShellPracticeAndStyle) |
 | [Ruby](ruby.md) | 11 | 11 | Regex | [Ruby Style Guide](https://rubystyle.guide/) |
+| [SQL](sql.md) | 9 | 9 | SQLGlot | [ANSI SQL + production database best practices](https://www.iso.org/standard/76584.html) |
 | [C++](cpp.md) | 13 | 13 | Regex | [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines) |
 | [C#](csharp.md) | 13 | 13 | Regex | [C# Coding Conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions) |
 | [Docker Compose](docker-compose.md) | 4 | 4 | Regex | [Compose Specification](https://compose-spec.io/) |
 | [Dockerfile](dockerfile.md) | 8 | 8 | Regex | [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) |
 | [Markdown / MDX](markdown.md) | 7 | 7 | Regex | [CommonMark + MDX authoring best practices](https://commonmark.org/) |
-| **Programming subtotal** | **150** | **162** | | |
+| **Programming subtotal** | **159** | **171** | | |
 
 ### Workflows & Automation
 
@@ -49,8 +50,8 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 ### Coverage Totals
 
-- **Principles (all categories):** 196
-- **Detectors + workflow checks:** 208
+- **Principles (all categories):** 205
+- **Detectors + workflow checks:** 217
 
 ## Maturity Tiers
 
@@ -70,7 +71,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
     Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
 
-    **TypeScript · Rust · Go · JavaScript · Bash · PowerShell · Ruby · C++ · C# · Docker Compose · Dockerfile**
+    **TypeScript · Rust · Go · JavaScript · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile**
 
 -   :material-source-branch:{ .lg .middle } **Workflow Automation**
 

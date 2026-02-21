@@ -30,6 +30,7 @@ from mcp_zen_of_languages.languages.powershell.analyzer import PowerShellAnalyze
 from mcp_zen_of_languages.languages.python.analyzer import PythonAnalyzer
 from mcp_zen_of_languages.languages.ruby.analyzer import RubyAnalyzer
 from mcp_zen_of_languages.languages.rust.analyzer import RustAnalyzer
+from mcp_zen_of_languages.languages.sql.analyzer import SqlAnalyzer
 from mcp_zen_of_languages.languages.toml.analyzer import TomlAnalyzer
 from mcp_zen_of_languages.languages.typescript.analyzer import TypeScriptAnalyzer
 from mcp_zen_of_languages.languages.xml.analyzer import XmlAnalyzer
@@ -60,6 +61,7 @@ SUPPORTED_LANGUAGES: tuple[str, ...] = (
     "toml",
     "xml",
     "json",
+    "sql",
     "markdown",
 )
 
@@ -104,6 +106,11 @@ _ANALYZERS_BY_ALIAS: dict[str, AnalyzerClass] = {
     "toml": TomlAnalyzer,
     "xml": XmlAnalyzer,
     "json": JsonAnalyzer,
+    "sql": SqlAnalyzer,
+    "postgresql": SqlAnalyzer,
+    "mysql": SqlAnalyzer,
+    "sqlite": SqlAnalyzer,
+    "mssql": SqlAnalyzer,
     "markdown": MarkdownAnalyzer,
     "mdx": MarkdownAnalyzer,
 }
@@ -165,6 +172,7 @@ def create_analyzer(
         TOML                            ``toml``
         XML                             ``xml``
         JSON                            ``json``
+        SQL                             ``sql``, ``postgresql``, ``mysql``, ``sqlite``, ``mssql``
         Markdown / MDX                  ``markdown``, ``mdx``
         =============================== ===================================
     """

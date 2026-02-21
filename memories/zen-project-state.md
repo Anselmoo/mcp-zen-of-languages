@@ -6,6 +6,49 @@ MCP Zen of Languages is a language-agnostic code quality analyzer inspired by la
 
 ## Recent Sessions
 
+### PR #60 SQL Detectors - Reviewer Feedback - Commit 4236efb
+
+**Date**: Current session
+
+**Changes Made**:
+1. SQL-001 (SELECT * projection) enhancement:
+   - Now only flags top-level projection stars (column selection)
+   - Ignores COUNT(*) aggregate function (valid pattern)
+   - More precise targeting of anti-pattern
+
+2. Location lookup improvements:
+   - Preserves matched casing for SELECT*/select keywords
+   - Preserves matched casing for NOLOCK/nolock hints
+   - Preserves matched casing for BEGIN TRANSACTION/begin transaction
+   - Uses regex match groups to capture exact matched text
+
+3. Unbounded query detector (sql-002):
+   - SELECT location lookup now case-insensitive
+   - Handles lowercase SQL code properly
+
+4. Transaction boundary detector (sql-003):
+   - Now uses `finditer` instead of `search`
+   - Captures first matched BEGIN lexeme for accurate location
+   - Improved location precision
+
+5. Test updates:
+   - Added COUNT(*) non-violation test case
+   - Added lowercase keyword location test cases
+   - Updated tests in `tests/detectors/test_sql_detectors.py`
+
+**Validation Status**:
+- ✅ SQL detector tests: `uv run --no-sync pytest --no-cov tests/detectors/test_sql_detectors.py` passed
+- ✅ Pre-commit all-files: passed
+- ✅ Code review: 1 non-blocking duplication suggestion
+- ✅ CodeQL: 0 alerts
+
+**Key Technical Insight**:
+Using regex match groups (e.g., `(SELECT\s*\*)` with `match.group(1)`) preserves the exact matched casing from the source code, providing better location accuracy and respecting the original code style. The distinction between projection stars (anti-pattern) and COUNT(*) (valid pattern) was properly implemented.
+
+**Status**: Completed and validated
+
+---
+
 ### PR #59 Follow-up Fix - Commit f7bfcdc
 
 **Date**: Current session

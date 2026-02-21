@@ -36,7 +36,7 @@ The CLI executable is `zen`. It is the local/CI interface for the same analysis 
 ### zen check {{ #check }}
 
 ```bash
-zen check <PATH> [--language <TEXT>] [--config <TEXT>] [--format terminal|json|sarif] [--out <TEXT>] [--fail-on-severity <INTEGER RANGE>]
+zen check <PATH> [--language <TEXT>] [--config <TEXT>] [--format terminal|json|sarif] [--out <TEXT>] [--fail-on-severity <INTEGER RANGE>] [--show-files]
 ```
 
 Run zen analysis for a path with optional CI gating and machine output.
@@ -50,6 +50,7 @@ Run zen analysis for a path with optional CI gating and machine output.
 | `--format terminal|json|sarif` | `terminal` | Output format |
 | `--out <TEXT>` | — | Write output to file |
 | `--fail-on-severity <INTEGER RANGE>` | — | Exit with code 1 when any violation has severity >= this threshold |
+| `--show-files` | — | Include per-file violation details in terminal output |
 
 **Returns:** int: Exit code ``0`` on success, ``1`` for severity-gated failure, and ``2`` for input/target errors.
 

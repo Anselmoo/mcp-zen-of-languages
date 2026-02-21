@@ -506,6 +506,7 @@ class CheckArgs(Protocol):
     format: Literal["terminal", "json", "sarif"]
     out: str | None
     fail_on_severity: int | None
+    show_files: bool
 
 
 def _summarize_violations(violations: list) -> RulesSummary:
@@ -772,6 +773,70 @@ def _build_log_summary(report: object) -> str:
             lines.append(f"medium: {counts.get('medium', 0)}")
             lines.append(f"low: {counts.get('low', 0)}")
     return "\n".join(lines) + "\n"
+
+
+def _build_check_terminal_summary(target: Path, results: list[AnalysisResult]) -> str:
+    """Create terminal/log summary text for ``zen check`` default output."""
+    payload = _build_check_report_data(target, results, include_analysis=False)
+    return _build_log_summary(SimpleNamespace(data=payload))
+
+
+def _build_check_report_data(
+    target: Path,
+    results: list[AnalysisResult],
+    *,
+    include_analysis: bool,
+) -> dict[str, object]:
+    """Build report-like payload data for check terminal rendering."""
+    summary = _aggregate_results(results)
+    payload: dict[str, object] = {
+        "target": str(target),
+        "languages": sorted({result.language for result in results}),
+        "summary": summary.model_dump(),
+    }
+    if include_analysis:
+        payload["analysis"] = [result.model_dump() for result in results]
+    return payload
+
+
+def _render_check_terminal_output(
+    target: Path,
+    results: list[AnalysisResult],
+    *,
+    show_files: bool,
+) -> None:
+    """Render ``zen check`` terminal output using shared Rich report components."""
+    payload = _build_check_report_data(target, results, include_analysis=show_files)
+    render_report_terminal(SimpleNamespace(data=payload, markdown=""))
+
+
+def _render_check_payload(
+    output_format: Literal["terminal", "json", "sarif"],
+    target: Path,
+    results: list[AnalysisResult],
+) -> tuple[str | None, str | None]:
+    """Build machine or terminal payloads for ``zen check`` output handling."""
+    if output_format == "json":
+        return json.dumps([result.model_dump() for result in results], indent=2), None
+    if output_format == "sarif":
+        return json.dumps(analysis_results_to_sarif(results), indent=2), None
+    return None, _build_check_terminal_summary(target, results)
+
+
+def _emit_check_output(
+    *,
+    out: str | None,
+    rendered: str | None,
+    terminal_summary: str | None,
+) -> None:
+    """Write/print check payloads for file and machine-readable formats."""
+    if out:
+        payload = rendered if rendered is not None else terminal_summary
+        if payload is not None:
+            Path(out).write_text(payload, encoding="utf-8")
+        return
+    if rendered is not None:
+        typer.echo(rendered)
 
 
 def _aggregate_results(results: list[AnalysisResult]) -> ProjectSummary:
@@ -1184,16 +1249,18 @@ def _run_check(args: CheckArgs) -> int:
         return 2
 
     results = _analyze_targets(targets, args.config)
-    rendered: str | None = None
-    if args.format == "json":
-        rendered = json.dumps([result.model_dump() for result in results], indent=2)
-    elif args.format == "sarif":
-        rendered = json.dumps(analysis_results_to_sarif(results), indent=2)
-
-    if args.out and rendered is not None:
-        Path(args.out).write_text(rendered, encoding="utf-8")
-    elif rendered is not None:
-        typer.echo(rendered)
+    rendered, terminal_summary = _render_check_payload(args.format, target, results)
+    _emit_check_output(
+        out=args.out,
+        rendered=rendered,
+        terminal_summary=terminal_summary,
+    )
+    if args.format == "terminal" and args.out is None and not is_quiet():
+        _render_check_terminal_output(
+            target,
+            results,
+            show_files=args.show_files,
+        )
 
     if args.fail_on_severity is not None:
         has_blocking = any(
@@ -1471,6 +1538,14 @@ def check(  # noqa: PLR0913
         max=10,
         help="Exit with code 1 when any violation has severity >= this threshold",
     ),
+    *,
+    show_files: Annotated[
+        bool,
+        typer.Option(
+            "--show-files",
+            help="Include per-file violation details in terminal output",
+        ),
+    ] = False,
 ) -> int:
     """Run zen analysis for a path with optional CI gating and machine output.
 
@@ -1482,6 +1557,7 @@ def check(  # noqa: PLR0913
         out (str | None): Optional file path for output payload.
         fail_on_severity (int | None): Exit with code ``1`` when any
             violation has severity greater than or equal to this threshold.
+        show_files (bool): Include per-file violation details in terminal output.
 
     Returns:
         int: Exit code ``0`` on success, ``1`` for severity-gated failure,
@@ -1494,6 +1570,7 @@ def check(  # noqa: PLR0913
         format=output_format,
         out=out,
         fail_on_severity=fail_on_severity,
+        show_files=show_files,
     )
     return _run_check(args)
 

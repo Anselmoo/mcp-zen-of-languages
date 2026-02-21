@@ -46,6 +46,111 @@ def test_check_command_runs_scss(tmp_path):
     assert cli.main(["check", str(sample)]) == 0
 
 
+def test_check_command_outputs_terminal_summary(monkeypatch, tmp_path, capsys):
+    sample = tmp_path / "sample.py"
+    sample.write_text("def foo():\n    pass\n", encoding="utf-8")
+
+    result = AnalysisResult(
+        language="python",
+        path=str(sample),
+        metrics=Metrics(
+            cyclomatic=CyclomaticSummary(blocks=[], average=0.0),
+            maintainability_index=100.0,
+            lines_of_code=1,
+        ),
+        violations=[
+            Violation(
+                principle="x",
+                severity=8,
+                message="default summary should hide this detail",
+            ),
+        ],
+        overall_score=90.0,
+    )
+
+    monkeypatch.setattr(
+        cli,
+        "_collect_targets",
+        lambda *_args, **_kwargs: [(sample, "python")],
+    )
+    monkeypatch.setattr(cli, "_analyze_targets", lambda *_args, **_kwargs: [result])
+
+    assert cli.main(["check", str(sample)]) == 0
+    output = capsys.readouterr().out
+    assert "Zen Report" in output
+    assert "Summary" in output
+    assert "Total files" in output
+    assert "Total violations" in output
+    assert "default summary should hide this detail" not in output
+
+
+def test_check_command_show_files_outputs_details(monkeypatch, tmp_path, capsys):
+    sample = tmp_path / "sample.py"
+    sample.write_text("def foo():\n    pass\n", encoding="utf-8")
+
+    result = AnalysisResult(
+        language="python",
+        path=str(sample),
+        metrics=Metrics(
+            cyclomatic=CyclomaticSummary(blocks=[], average=0.0),
+            maintainability_index=100.0,
+            lines_of_code=1,
+        ),
+        violations=[
+            Violation(
+                principle="x",
+                severity=8,
+                message="visible per-file detail",
+            ),
+        ],
+        overall_score=90.0,
+    )
+
+    monkeypatch.setattr(
+        cli,
+        "_collect_targets",
+        lambda *_args, **_kwargs: [(sample, "python")],
+    )
+    monkeypatch.setattr(cli, "_analyze_targets", lambda *_args, **_kwargs: [result])
+
+    assert cli.main(["check", str(sample), "--show-files"]) == 0
+    output = capsys.readouterr().out
+    assert "Zen Report" in output
+    assert "visible per-file detail" in output
+
+
+def test_check_command_terminal_summary_writes_out_file(monkeypatch, tmp_path, capsys):
+    sample = tmp_path / "sample.py"
+    sample.write_text("def foo():\n    pass\n", encoding="utf-8")
+    output = tmp_path / "check-summary.txt"
+
+    result = AnalysisResult(
+        language="python",
+        path=str(sample),
+        metrics=Metrics(
+            cyclomatic=CyclomaticSummary(blocks=[], average=0.0),
+            maintainability_index=100.0,
+            lines_of_code=1,
+        ),
+        violations=[Violation(principle="x", severity=8, message="high")],
+        overall_score=90.0,
+    )
+
+    monkeypatch.setattr(
+        cli,
+        "_collect_targets",
+        lambda *_args, **_kwargs: [(sample, "python")],
+    )
+    monkeypatch.setattr(cli, "_analyze_targets", lambda *_args, **_kwargs: [result])
+
+    assert cli.main(["--quiet", "check", str(sample), "--out", str(output)]) == 0
+    file_output = output.read_text(encoding="utf-8")
+    assert "target:" in file_output
+    assert "total_files: 1" in file_output
+    assert "total_violations: 1" in file_output
+    assert capsys.readouterr().out == ""
+
+
 def test_check_command_fail_on_severity(monkeypatch, tmp_path):
     sample = tmp_path / "sample.py"
     sample.write_text("def foo():\n    pass\n", encoding="utf-8")

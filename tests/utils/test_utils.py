@@ -52,6 +52,18 @@ def test_detect_language_by_extension_unknown():
     assert result.confidence < 1.0
 
 
+def test_detect_language_by_extension_latex():
+    result = detect_language_by_extension("report.tex")
+    assert result.language == "latex"
+    assert result.method == "extension"
+
+
+def test_detect_language_by_extension_bibtex():
+    result = detect_language_by_extension("refs.bib")
+    assert result.language == "latex"
+    assert result.method == "extension"
+
+
 def test_detect_language_by_extension_github_workflow():
     result = detect_language_by_extension(".github/workflows/ci.yml")
     assert result.language == "github-actions"

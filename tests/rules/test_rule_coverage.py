@@ -72,6 +72,7 @@ def test_build_explicit_rule_coverage_languages() -> None:
         "json",
         "sql",
         "xml",
+        "latex",
         "docker_compose",
         "dockerfile",
     ):

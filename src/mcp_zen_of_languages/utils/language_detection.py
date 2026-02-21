@@ -39,6 +39,10 @@ EXTENSION_LANGUAGE_MAP: dict[str, str] = {
     ".md": "markdown",
     ".markdown": "markdown",
     ".mdx": "markdown",
+    ".tex": "latex",
+    ".ltx": "latex",
+    ".sty": "latex",
+    ".bib": "latex",
     ".dockerfile": "dockerfile",
 }
 

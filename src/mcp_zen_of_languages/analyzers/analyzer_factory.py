@@ -25,6 +25,7 @@ from mcp_zen_of_languages.languages.github_actions.analyzer import (
 from mcp_zen_of_languages.languages.go.analyzer import GoAnalyzer
 from mcp_zen_of_languages.languages.javascript.analyzer import JavaScriptAnalyzer
 from mcp_zen_of_languages.languages.json.analyzer import JsonAnalyzer
+from mcp_zen_of_languages.languages.latex.analyzer import LatexAnalyzer
 from mcp_zen_of_languages.languages.markdown.analyzer import MarkdownAnalyzer
 from mcp_zen_of_languages.languages.powershell.analyzer import PowerShellAnalyzer
 from mcp_zen_of_languages.languages.python.analyzer import PythonAnalyzer
@@ -63,6 +64,7 @@ SUPPORTED_LANGUAGES: tuple[str, ...] = (
     "json",
     "sql",
     "markdown",
+    "latex",
 )
 
 _ANALYZERS_BY_ALIAS: dict[str, AnalyzerClass] = {
@@ -113,6 +115,12 @@ _ANALYZERS_BY_ALIAS: dict[str, AnalyzerClass] = {
     "mssql": SqlAnalyzer,
     "markdown": MarkdownAnalyzer,
     "mdx": MarkdownAnalyzer,
+    "latex": LatexAnalyzer,
+    "tex": LatexAnalyzer,
+    "ltx": LatexAnalyzer,
+    "sty": LatexAnalyzer,
+    "bib": LatexAnalyzer,
+    "bibtex": LatexAnalyzer,
 }
 
 
@@ -172,8 +180,10 @@ def create_analyzer(
         TOML                            ``toml``
         XML                             ``xml``
         JSON                            ``json``
+        LaTeX                           ``latex``, ``tex``, ``ltx``, ``sty``, ``bib``, ``bibtex``
         SQL                             ``sql``, ``postgresql``, ``mysql``, ``sqlite``, ``mssql``
         Markdown / MDX                  ``markdown``, ``mdx``
+        LaTeX                           ``latex``, ``tex``, ``ltx``, ``sty``
         =============================== ===================================
     """
     lang = language.lower()

@@ -121,6 +121,11 @@ def _canonical_language(language: str) -> str:
         "github_actions": "github-actions",
         "gha": "github-actions",
         "docker-compose": "docker_compose",
+        "tex": "latex",
+        "ltx": "latex",
+        "sty": "latex",
+        "bib": "latex",
+        "bibtex": "latex",
     }
     return alias_map.get(lang, lang)
 

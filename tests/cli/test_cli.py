@@ -432,6 +432,7 @@ SAMPLES = {
     "sql": "SELECT id FROM users;\n",
     "markdown": "# Title\n\nSee http://example.com\n",
     "xml": "<root></root>\n",
+    "latex": "\\documentclass{article}\n\\begin{document}Hello\\end{document}\n",
     "docker_compose": "services:\n  web:\n    image: nginx:latest\n",
     "dockerfile": "FROM ubuntu:latest\nUSER root\n",
 }

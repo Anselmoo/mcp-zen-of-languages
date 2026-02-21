@@ -113,7 +113,7 @@ def _file_read_error_result(
     )
 
 
-def analyze_targets(  # noqa: C901, PLR0913
+def analyze_targets(  # noqa: C901, PLR0912, PLR0913, PLR0915
     targets: list[tuple[Path, str]],
     *,
     config_path: str | None = None,
@@ -151,6 +151,41 @@ def analyze_targets(  # noqa: C901, PLR0913
             logger.warning("Failed import scan for %s files: %s", language, exc)
             repository_imports = {str(path): [] for path in files}
 
+        if language == "latex":
+            file_contents: dict[str, str] = {}
+            for path in files:
+                try:
+                    file_contents[str(path)] = path.read_text(encoding="utf-8")
+                except Exception as exc:
+                    if include_read_errors:
+                        logger.warning(
+                            "Failed to read %s during analysis scan: %s",
+                            path,
+                            exc,
+                        )
+                        results.append(
+                            _file_read_error_result(language, str(path), exc)
+                        )
+                        if progress_callback is not None:
+                            progress_callback()
+                        continue
+                    if progress_callback is not None:
+                        progress_callback()
+                    raise
+
+            for path_str, code in file_contents.items():
+                results.append(
+                    analyzer.analyze(
+                        code,
+                        path=path_str,
+                        other_files=file_contents,
+                        repository_imports=repository_imports,
+                    ),
+                )
+                if progress_callback is not None:
+                    progress_callback()
+            continue
+
         for path in files:
             try:
                 code = path.read_text(encoding="utf-8")
@@ -165,6 +200,8 @@ def analyze_targets(  # noqa: C901, PLR0913
                     if progress_callback is not None:
                         progress_callback()
                     continue
+                if progress_callback is not None:
+                    progress_callback()
                 raise
             results.append(
                 analyzer.analyze(

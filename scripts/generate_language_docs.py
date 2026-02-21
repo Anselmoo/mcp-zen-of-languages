@@ -79,6 +79,7 @@ LANGUAGES: list[tuple[str, str, str, str, str]] = [
         "docker_compose",
     ),
     ("dockerfile", "Dockerfile", "material/docker", "dockerfile.md", "dockerfile"),
+    ("latex", "LaTeX", "material/math-integral", "latex.md", "latex"),
     (
         "markdown",
         "Markdown / MDX",
@@ -167,6 +168,11 @@ SEE_ALSO: dict[str, str] = {
         "- [Config Formats](config-formats.md) — Principles for JSON, TOML, XML, and YAML\n"
         "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
         "- [Understanding Violations](../understanding-violations.md) — Severity scale reference"
+    ),
+    "latex": (
+        "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
+        "- [Understanding Violations](../understanding-violations.md) — Severity scale reference\n"
+        "- [Prompt Generation](../prompt-generation.md) — Generate AI remediation prompts"
     ),
 }
 
@@ -648,7 +654,7 @@ def render_index_page() -> str:
 
         ## At a Glance
 
-        ### Programming Languages
+        ### Programming & Markup Languages
 
         | Language | Principles | Detectors | Parser | Philosophy Origin |
         |----------|:----------:|:---------:|--------|-------------------|
@@ -669,7 +675,7 @@ def render_index_page() -> str:
         page += (
             f"| [{lang_name}]({filename}) | {num_p} | {num_d} | {parser} | {origin} |\n"
         )
-    page += f"| **Programming subtotal** | **{programming_total_p}** | **{programming_total_d}** | | |\n"
+    page += f"| **Programming & markup subtotal** | **{programming_total_p}** | **{programming_total_d}** | | |\n"
 
     page += "\n### Workflows & Automation\n\n"
     page += "| Language | Principles | Workflow Checks | Parser | Philosophy Origin |\n"
@@ -727,7 +733,15 @@ def render_index_page() -> str:
 
             Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
 
-            **TypeScript · Rust · Go · JavaScript · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile**
+            **TypeScript · Rust · Go · JavaScript · CSS · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile**
+
+        -   :material-language-markdown:{ .lg .middle } **Documentation & Markup**
+
+            ---
+
+            Markup-focused detectors for docs and technical writing quality, structure, and maintainability.
+
+            **Markdown / MDX · LaTeX**
 
         -   :material-source-branch:{ .lg .middle } **Workflow Automation**
 

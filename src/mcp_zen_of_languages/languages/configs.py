@@ -1350,6 +1350,60 @@ class XmlClosingTagsConfig(DetectorConfig):
     type: Literal["xml-006"] = "xml-006"
 
 
+class LatexMacroDefinitionConfig(DetectorConfig):
+    r"""LaTeX raw ``\def`` usage detection settings."""
+
+    type: Literal["latex-001"] = "latex-001"
+
+
+class LatexLabelRefDisciplineConfig(DetectorConfig):
+    """LaTeX label/reference consistency detection settings."""
+
+    type: Literal["latex-002"] = "latex-002"
+
+
+class LatexCaptionCompletenessConfig(DetectorConfig):
+    """LaTeX figure/table caption completeness settings."""
+
+    type: Literal["latex-003"] = "latex-003"
+
+
+class LatexBibliographyHygieneConfig(DetectorConfig):
+    """LaTeX bibliography hygiene detection settings."""
+
+    type: Literal["latex-004"] = "latex-004"
+
+
+class LatexWidthAbstractionConfig(DetectorConfig):
+    """LaTeX hardcoded absolute length detection settings."""
+
+    type: Literal["latex-005"] = "latex-005"
+
+
+class LatexSemanticMarkupConfig(DetectorConfig):
+    """LaTeX semantic markup preference detection settings."""
+
+    type: Literal["latex-006"] = "latex-006"
+
+
+class LatexIncludeLoopConfig(DetectorConfig):
+    """LaTeX include loop detection settings."""
+
+    type: Literal["latex-007"] = "latex-007"
+
+
+class LatexEncodingDeclarationConfig(DetectorConfig):
+    """LaTeX encoding declaration detection settings."""
+
+    type: Literal["latex-008"] = "latex-008"
+
+
+class LatexUnusedPackagesConfig(DetectorConfig):
+    """LaTeX unused package detection settings."""
+
+    type: Literal["latex-009"] = "latex-009"
+
+
 class GoErrorHandlingConfig(DetectorConfig):
     """Go error-handling enforcement settings.
 

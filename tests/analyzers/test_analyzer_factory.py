@@ -30,3 +30,9 @@ def test_create_analyzer_types():
     assert markdown.language() == "markdown"
     mdx = create_analyzer("mdx")
     assert mdx.language() == "markdown"
+    latex = create_analyzer("latex")
+    assert latex.language() == "latex"
+    tex = create_analyzer("tex")
+    assert tex.language() == "latex"
+    bibtex = create_analyzer("bibtex")
+    assert bibtex.language() == "latex"

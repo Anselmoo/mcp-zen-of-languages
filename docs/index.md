@@ -88,6 +88,52 @@ zen report path/to/project
 
 --8<-- "README.md:what-you-get"
 
+## Maturity Tiers
+
+<div class="grid cards" markdown>
+
+-   :material-check-all:{ .lg .middle } **Full Analysis**
+
+    ---
+
+    AST parsing, cyclomatic complexity, dependency graphs, maintainability index. The deepest analysis available.
+
+    **Python**
+
+-   :material-shield-check:{ .lg .middle } **Rule-Driven**
+
+    ---
+
+    Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
+
+    **TypeScript · Rust · Go · JavaScript · CSS · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile**
+
+-   :material-language-markdown:{ .lg .middle } **Documentation & Markup**
+
+    ---
+
+    Markup-focused detectors for docs and technical writing quality, structure, and maintainability.
+
+    **Markdown / MDX · LaTeX**
+
+-   :material-source-branch:{ .lg .middle } **Workflow Automation**
+
+    ---
+
+    CI/CD-specific security and maintainability checks for pipeline files and reusable workflow patterns.
+
+    **GitHub Actions**
+
+-   :material-file-cog:{ .lg .middle } **Config Validation**
+
+    ---
+
+    Schema and structure-focused detectors for data formats. Checks consistency, naming conventions, and format-specific best practices.
+
+    **JSON · TOML · XML · YAML**
+
+</div>
+
 ## MCP Tools at a Glance
 
 ![MCP tools workflow illustration](assets/illustration-mcp-tools.svg)

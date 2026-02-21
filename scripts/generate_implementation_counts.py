@@ -168,7 +168,7 @@ def _render_counts_bullets(counts: CoverageCounts) -> list[str]:
     return [
         (
             f"- **{counts.total_principles} zen principles** across programming, "
-            "workflow, and config domains"
+            "markup, workflow, and config domains"
         ),
         (
             f"- **{counts.total_coverage_points} detector/check coverage points** "

@@ -13,7 +13,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 ## At a Glance
 
-### Programming Languages
+### Programming & Markup Languages
 
 | Language | Principles | Detectors | Parser | Philosophy Origin |
 |----------|:----------:|:---------:|--------|-------------------|
@@ -33,7 +33,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 | [Dockerfile](dockerfile.md) | 8 | 8 | Regex | [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) |
 | [LaTeX](latex.md) | 9 | 9 | Regex | [LaTeX Project](https://www.latex-project.org/) |
 | [Markdown / MDX](markdown.md) | 7 | 7 | Regex | [CommonMark + MDX authoring best practices](https://commonmark.org/) |
-| **Programming subtotal** | **168** | **180** | | |
+| **Programming & markup subtotal** | **168** | **180** | | |
 
 ### Workflows & Automation
 
@@ -72,7 +72,15 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
     Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
 
-    **TypeScript · Rust · Go · JavaScript · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile · LaTeX**
+    **TypeScript · Rust · Go · JavaScript · CSS · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile**
+
+-   :material-language-markdown:{ .lg .middle } **Documentation & Markup**
+
+    ---
+
+    Markup-focused detectors for docs and technical writing quality, structure, and maintainability.
+
+    **Markdown / MDX · LaTeX**
 
 -   :material-source-branch:{ .lg .middle } **Workflow Automation**
 

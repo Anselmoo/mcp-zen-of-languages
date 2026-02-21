@@ -31,9 +31,9 @@ Every language has its own philosophy — its own sense of what "good code" mean
 | [C#](csharp.md) | 13 | 13 | Regex | [C# Coding Conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions) |
 | [Docker Compose](docker-compose.md) | 4 | 4 | Regex | [Compose Specification](https://compose-spec.io/) |
 | [Dockerfile](dockerfile.md) | 8 | 8 | Regex | [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) |
-| [Markdown / MDX](markdown.md) | 7 | 7 | Regex | [CommonMark + MDX authoring best practices](https://commonmark.org/) |
 | [LaTeX](latex.md) | 9 | 9 | Regex | [LaTeX Project](https://www.latex-project.org/) |
-| **Programming subtotal** | **152** | **164** | | |
+| [Markdown / MDX](markdown.md) | 7 | 7 | Regex | [CommonMark + MDX authoring best practices](https://commonmark.org/) |
+| **Programming subtotal** | **168** | **180** | | |
 
 ### Workflows & Automation
 
@@ -51,8 +51,8 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 ### Coverage Totals
 
-- **Principles (all categories):** 205
-- **Detectors + workflow checks:** 217
+- **Principles (all categories):** 214
+- **Detectors + workflow checks:** 226
 
 ## Maturity Tiers
 

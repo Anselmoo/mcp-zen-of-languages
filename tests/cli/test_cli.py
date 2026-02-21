@@ -328,7 +328,6 @@ SAMPLES = {
     "csharp": "public class Foo {}\n",
     "css": ".button { color: var(--text); }\n",
     "yaml": "key: value\n",
-    "github-actions": "name: CI\non: push\njobs:\n  build:\n    runs-on: ubuntu-latest\n    timeout-minutes: 5\n    steps:\n      - run: echo hi\n        shell: bash\n",
     "gitlab_ci": "build:\n  image: python\n  script:\n    - echo hello\n",
     "github-actions": "name: CI\non: push\njobs:\n  build:\n    runs-on: ubuntu-latest\n    timeout-minutes: 5\n    steps:\n      - run: echo hi\n        shell: bash\n",
     "toml": 'key = "value"\n',

@@ -34,7 +34,9 @@ def test_sql_select_star_detector_flags_violation():
 
 def test_sql_insert_column_list_detector_flags_values_only_insert():
     detector = SqlInsertColumnListDetector()
-    context = AnalysisContext(code="INSERT INTO users VALUES (1, 'alice');", language="sql")
+    context = AnalysisContext(
+        code="INSERT INTO users VALUES (1, 'alice');", language="sql"
+    )
 
     violations = detector.detect(context, SqlInsertColumnListConfig())
 
@@ -69,8 +71,7 @@ def test_sql_implicit_join_coercion_detector_flags_cast_in_join_on():
     detector = SqlImplicitJoinCoercionDetector()
     context = AnalysisContext(
         code=(
-            "SELECT * FROM orders o "
-            "JOIN users u ON CAST(o.user_id AS VARCHAR) = u.id;"
+            "SELECT * FROM orders o JOIN users u ON CAST(o.user_id AS VARCHAR) = u.id;"
         ),
         language="sql",
     )
@@ -116,10 +117,7 @@ def test_sql_transaction_boundary_detector_flags_missing_commit_or_rollback():
 def test_sql_ansi89_join_detector_flags_comma_join():
     detector = SqlAnsi89JoinDetector()
     context = AnalysisContext(
-        code=(
-            "SELECT a.id, b.name FROM orders a, users b "
-            "WHERE a.user_id = b.id;"
-        ),
+        code=("SELECT a.id, b.name FROM orders a, users b WHERE a.user_id = b.id;"),
         language="sql",
     )
 

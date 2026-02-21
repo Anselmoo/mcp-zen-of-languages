@@ -49,7 +49,9 @@ class SqlSelectStarDetector(
         """Return detector identifier."""
         return "sql-001"
 
-    def detect(self, context: AnalysisContext, config: SqlSelectStarConfig) -> list[Violation]:
+    def detect(
+        self, context: AnalysisContext, config: SqlSelectStarConfig
+    ) -> list[Violation]:
         """Detect star projections in select statements."""
         statements = _parse_statements(context.code, config.dialect)
         for statement in statements:
@@ -58,7 +60,9 @@ class SqlSelectStarDetector(
                     return [
                         self.build_violation(
                             config,
-                            location=self.find_location_by_substring(context.code, "SELECT *"),
+                            location=self.find_location_by_substring(
+                                context.code, "SELECT *"
+                            ),
                             suggestion="List explicit columns instead of using SELECT *.",
                         ),
                     ]
@@ -97,7 +101,9 @@ class SqlInsertColumnListDetector(
             return [
                 self.build_violation(
                     config,
-                    location=self.find_location_by_substring(context.code, match.group(0)),
+                    location=self.find_location_by_substring(
+                        context.code, match.group(0)
+                    ),
                     suggestion="Specify INSERT column names explicitly before VALUES.",
                 ),
             ]
@@ -115,14 +121,18 @@ class SqlDynamicSqlDetector(
         """Return detector identifier."""
         return "sql-003"
 
-    def detect(self, context: AnalysisContext, config: SqlDynamicSqlConfig) -> list[Violation]:
+    def detect(
+        self, context: AnalysisContext, config: SqlDynamicSqlConfig
+    ) -> list[Violation]:
         """Detect EXEC/EXECUTE patterns that concatenate SQL fragments."""
         pattern = r"(?is)\bexec(?:ute)?\b[^;\n]*(?:\+|\|\||concat\s*\()"
         if match := re.search(pattern, context.code):
             return [
                 self.build_violation(
                     config,
-                    location=self.find_location_by_substring(context.code, match.group(0)),
+                    location=self.find_location_by_substring(
+                        context.code, match.group(0)
+                    ),
                     suggestion="Use bind parameters and prepared statements.",
                 ),
             ]
@@ -140,7 +150,9 @@ class SqlNolockDetector(
         """Return detector identifier."""
         return "sql-004"
 
-    def detect(self, context: AnalysisContext, config: SqlNolockConfig) -> list[Violation]:
+    def detect(
+        self, context: AnalysisContext, config: SqlNolockConfig
+    ) -> list[Violation]:
         """Detect ``WITH (NOLOCK)`` occurrences."""
         if re.search(r"(?i)with\s*\(\s*nolock\s*\)", context.code):
             return [
@@ -175,7 +187,9 @@ class SqlImplicitJoinCoercionDetector(
             return [
                 self.build_violation(
                     config,
-                    location=self.find_location_by_substring(context.code, match.group(1)),
+                    location=self.find_location_by_substring(
+                        context.code, match.group(1)
+                    ),
                     suggestion="Align join key data types and avoid casting in JOIN predicates.",
                 ),
             ]
@@ -205,11 +219,15 @@ class SqlUnboundedQueryDetector(
                 has_where = select.args.get("where") is not None
                 has_limit = select.args.get("limit") is not None
                 has_top = select.args.get("limit_options") is not None
-                if select.args.get("from") is not None and not (has_where or has_limit or has_top):
+                if select.args.get("from") is not None and not (
+                    has_where or has_limit or has_top
+                ):
                     return [
                         self.build_violation(
                             config,
-                            location=self.find_location_by_substring(context.code, "SELECT"),
+                            location=self.find_location_by_substring(
+                                context.code, "SELECT"
+                            ),
                             suggestion="Add WHERE, LIMIT, or TOP clauses to bound result size.",
                         ),
                     ]
@@ -236,7 +254,9 @@ class SqlAliasClarityDetector(
         """Return detector identifier."""
         return "sql-007"
 
-    def detect(self, context: AnalysisContext, config: SqlAliasClarityConfig) -> list[Violation]:
+    def detect(
+        self, context: AnalysisContext, config: SqlAliasClarityConfig
+    ) -> list[Violation]:
         """Detect overly short aliases in FROM/JOIN clauses."""
         pattern = r"(?i)\b(?:from|join)\s+[\w.\[\]\"`]+\s+(?:as\s+)?([a-z][a-z0-9_]*)"
         for match in re.finditer(pattern, context.code):
@@ -293,14 +313,18 @@ class SqlAnsi89JoinDetector(
         """Return detector identifier."""
         return "sql-009"
 
-    def detect(self, context: AnalysisContext, config: SqlAnsi89JoinConfig) -> list[Violation]:
+    def detect(
+        self, context: AnalysisContext, config: SqlAnsi89JoinConfig
+    ) -> list[Violation]:
         """Detect comma-separated FROM clauses combined with WHERE joins."""
         pattern = r"(?is)\bselect\b[^;]*\bfrom\b[^;]*,[^;]*\bwhere\b"
         if match := re.search(pattern, context.code):
             return [
                 self.build_violation(
                     config,
-                    location=self.find_location_by_substring(context.code, match.group(0)),
+                    location=self.find_location_by_substring(
+                        context.code, match.group(0)
+                    ),
                     suggestion="Use explicit JOIN ... ON syntax instead of comma joins.",
                 ),
             ]

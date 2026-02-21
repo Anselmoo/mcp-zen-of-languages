@@ -541,7 +541,13 @@ def render_index_page() -> str:
                 if b.detector_id != "analyzer_defaults"
             },
         )
-        parser = "AST" if module_key == "python" else "SQLGlot" if module_key == "sql" else "Regex"
+        parser = (
+            "AST"
+            if module_key == "python"
+            else "SQLGlot"
+            if module_key == "sql"
+            else "Regex"
+        )
         philosophy = zen.source_text if hasattr(zen, "source_text") else ""
         source_url = str(zen.source_url) if hasattr(zen, "source_url") else ""
         programming_rows.append(

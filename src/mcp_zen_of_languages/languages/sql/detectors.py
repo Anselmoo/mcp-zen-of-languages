@@ -59,8 +59,7 @@ class SqlSelectStarDetector(
                 if any(
                     isinstance(expr, exp.Star)
                     or (
-                        isinstance(expr, exp.Column)
-                        and isinstance(expr.this, exp.Star)
+                        isinstance(expr, exp.Column) and isinstance(expr.this, exp.Star)
                     )
                     for expr in select.expressions
                 ):
@@ -264,7 +263,9 @@ class SqlUnboundedQueryDetector(
             return [
                 self.build_violation(
                     config,
-                    location=self.find_location_by_substring(context.code, select_lexeme),
+                    location=self.find_location_by_substring(
+                        context.code, select_lexeme
+                    ),
                     suggestion="Add WHERE, LIMIT, or TOP clauses to bound result size.",
                 ),
             ]

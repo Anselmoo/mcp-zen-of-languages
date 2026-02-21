@@ -17,6 +17,7 @@ from mcp_zen_of_languages.languages.configs import (
     NamespaceConfig,
     NestingDepthConfig,
     SparseCodeConfig,
+    UnusedArgumentUtilizationConfig,
 )
 from mcp_zen_of_languages.languages.python.detectors import (
     BareExceptDetector,
@@ -34,6 +35,7 @@ from mcp_zen_of_languages.languages.python.detectors import (
     NamespaceUsageDetector,
     NestingDepthDetector,
     SparseCodeDetector,
+    UnusedArgumentUtilizationDetector,
 )
 from mcp_zen_of_languages.models import (
     CyclomaticBlock,
@@ -116,6 +118,15 @@ x = 1; y = 2
         language="python",
     )
     assert ExplicitnessDetector().detect(explicit_context, ExplicitnessConfig())
+
+    unused_arg_context = AnalysisContext(
+        code="def get_orders(user_id, status):\n    return status\n",
+        language="python",
+    )
+    assert UnusedArgumentUtilizationDetector().detect(
+        unused_arg_context,
+        UnusedArgumentUtilizationConfig(),
+    )
 
     namespace_context = AnalysisContext(
         code="def a():\n    pass\n\ndef b():\n    pass\n\n__all__ = ['a', 'b']\n",

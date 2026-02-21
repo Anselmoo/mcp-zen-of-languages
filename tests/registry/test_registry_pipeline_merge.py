@@ -30,6 +30,7 @@ def test_registry_configs_from_rules_all_python_rules():
     assert "sparse_code" in types
     assert "consistency" in types
     assert "explicitness" in types
+    assert "unused_argument_utilization" in types
     assert "namespace_usage" in types
 
 

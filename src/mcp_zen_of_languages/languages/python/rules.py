@@ -200,5 +200,21 @@ PYTHON_ZEN = LanguageZenPrinciples(
                 "max_exports": 20,
             },
         ),
+        ZenPrinciple(
+            id="python-013",
+            principle="Every argument must have a purpose",
+            category=PrincipleCategory.CLARITY,
+            severity=4,
+            description="Requested function arguments should be integrated or removed",
+            violations=[
+                "Unused function arguments hide valuable context",
+                "Ignoring method context misses observability opportunities",
+                "Silencing unused parameters with '_' masks design errors",
+            ],
+            metrics={
+                "suggest_logging": True,
+                "exclude_abstract_methods": True,
+            },
+        ),
     ],
 )

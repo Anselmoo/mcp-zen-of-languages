@@ -31,6 +31,7 @@ from mcp_zen_of_languages.languages.configs import (
     ShortVariableNamesConfig,
     SparseCodeConfig,
     StarImportConfig,
+    UnusedArgumentUtilizationConfig,
 )
 from mcp_zen_of_languages.languages.python.detectors import (
     BareExceptDetector,
@@ -56,6 +57,7 @@ from mcp_zen_of_languages.languages.python.detectors import (
     ShortVariableNamesDetector,
     SparseCodeDetector,
     StarImportDetector,
+    UnusedArgumentUtilizationDetector,
 )
 
 DETECTOR_MAP = LanguageDetectorMap(
@@ -222,6 +224,13 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=ExplicitnessConfig,
             rule_ids=["python-010"],
             default_order=165,
+        ),
+        DetectorBinding(
+            detector_id="unused_argument_utilization",
+            detector_class=UnusedArgumentUtilizationDetector,
+            config_model=UnusedArgumentUtilizationConfig,
+            rule_ids=["python-013"],
+            default_order=168,
         ),
         DetectorBinding(
             detector_id="namespace_usage",

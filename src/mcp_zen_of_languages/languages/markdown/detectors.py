@@ -1,4 +1,5 @@
 """Detectors for Markdown/MDX documentation quality checks."""
+# ruff: noqa: D102
 
 from __future__ import annotations
 
@@ -94,7 +95,9 @@ class MarkdownHeadingHierarchyDetector(
         return []
 
 
-class MarkdownAltTextDetector(ViolationDetector[MarkdownAltTextConfig], LocationHelperMixin):
+class MarkdownAltTextDetector(
+    ViolationDetector[MarkdownAltTextConfig], LocationHelperMixin
+):
     """Detect Markdown image syntax with empty alt text."""
 
     @property
@@ -119,7 +122,9 @@ class MarkdownAltTextDetector(ViolationDetector[MarkdownAltTextConfig], Location
         return []
 
 
-class MarkdownBareUrlDetector(ViolationDetector[MarkdownBareUrlConfig], LocationHelperMixin):
+class MarkdownBareUrlDetector(
+    ViolationDetector[MarkdownBareUrlConfig], LocationHelperMixin
+):
     """Detect raw HTTP(S) URLs not wrapped in Markdown link syntax."""
 
     @property
@@ -199,7 +204,9 @@ class MarkdownFrontMatterDetector(
             for line in lines[1:frontmatter_end]
             if (match := _FRONTMATTER_RE.match(line.strip()))
         }
-        missing = [key for key in config.required_frontmatter_keys if key.lower() not in keys]
+        missing = [
+            key for key in config.required_frontmatter_keys if key.lower() not in keys
+        ]
         if missing:
             return [
                 self.build_violation(
@@ -325,9 +332,10 @@ def _extract_imported_identifiers(import_clause: str) -> set[str]:
             names.add(default_name)
         if remainder.startswith("{"):
             names |= _parse_named_imports(remainder)
-        elif remainder.startswith("*"):
-            if match := re.match(r"\*\s+as\s+([A-Za-z_][A-Za-z0-9_]*)", remainder):
-                names.add(match.group(1))
+        elif remainder.startswith("*") and (
+            match := re.match(r"\*\s+as\s+([A-Za-z_][A-Za-z0-9_]*)", remainder)
+        ):
+            names.add(match.group(1))
         return names
     if re.match(r"[A-Za-z_][A-Za-z0-9_]*$", clause):
         names.add(clause)

@@ -56,6 +56,7 @@ def test_build_explicit_rule_config_coverage_languages() -> None:
         "yaml",
         "toml",
         "json",
+        "sql",
         "xml",
         "docker_compose",
         "dockerfile",

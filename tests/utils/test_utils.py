@@ -29,6 +29,12 @@ def test_detect_language_by_extension_less():
     assert result.method == "extension"
 
 
+def test_detect_language_by_extension_sql():
+    result = detect_language_by_extension("schema.ddl")
+    assert result.language == "sql"
+    assert result.method == "extension"
+
+
 def test_detect_language_by_extension_unknown():
     result = detect_language_by_extension("example.unknown")
     assert result.language == "unknown"

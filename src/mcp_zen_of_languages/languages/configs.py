@@ -1593,6 +1593,70 @@ class GitHubActionsWorkflowConfig(DetectorConfig):
     type: Literal["gha-workflow"] = "gha-workflow"
 
 
+class SqlSelectStarConfig(DetectorConfig):
+    """SQL select-star detector settings."""
+
+    type: Literal["sql-001"] = "sql-001"
+    dialect: str = "postgres"
+
+
+class SqlInsertColumnListConfig(DetectorConfig):
+    """SQL insert-without-column-list detector settings."""
+
+    type: Literal["sql-002"] = "sql-002"
+    dialect: str = "postgres"
+
+
+class SqlDynamicSqlConfig(DetectorConfig):
+    """SQL dynamic concatenation detector settings."""
+
+    type: Literal["sql-003"] = "sql-003"
+    dialect: str = "postgres"
+
+
+class SqlNolockConfig(DetectorConfig):
+    """SQL NOLOCK usage detector settings."""
+
+    type: Literal["sql-004"] = "sql-004"
+    dialect: str = "postgres"
+
+
+class SqlImplicitJoinCoercionConfig(DetectorConfig):
+    """SQL join coercion detector settings."""
+
+    type: Literal["sql-005"] = "sql-005"
+    dialect: str = "postgres"
+
+
+class SqlUnboundedQueryConfig(DetectorConfig):
+    """SQL unbounded select detector settings."""
+
+    type: Literal["sql-006"] = "sql-006"
+    dialect: str = "postgres"
+
+
+class SqlAliasClarityConfig(DetectorConfig):
+    """SQL alias readability detector settings."""
+
+    type: Literal["sql-007"] = "sql-007"
+    min_alias_length: int = 2
+    dialect: str = "postgres"
+
+
+class SqlTransactionBoundaryConfig(DetectorConfig):
+    """SQL transaction balance detector settings."""
+
+    type: Literal["sql-008"] = "sql-008"
+    dialect: str = "postgres"
+
+
+class SqlAnsi89JoinConfig(DetectorConfig):
+    """SQL ANSI-89 comma-join detector settings."""
+
+    type: Literal["sql-009"] = "sql-009"
+    dialect: str = "postgres"
+
+
 RULE_CONFIGS: dict[str, type[DetectorConfig]] = {
     "bash-006": Bash006Config,
     "bash-011": Bash011Config,

@@ -114,6 +114,13 @@ GENERIC_PROMPTS_BY_LANGUAGE: dict[str, list[tuple[str, str]]] = {
             "modules or mixins.",
         ),
     ],
+    "sql": [
+        (
+            "Harden SQL query safety",
+            "Replace SELECT * and implicit joins with explicit columns and JOIN ... ON, "
+            "then parameterize dynamic SQL and enforce transaction boundaries.",
+        ),
+    ],
     "typescript": [
         (
             "Harden strictness",

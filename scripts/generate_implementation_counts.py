@@ -36,6 +36,7 @@ PROGRAMMING_LANGUAGES: list[tuple[str, str]] = [
     ("bash", "bash"),
     ("powershell", "powershell"),
     ("ruby", "ruby"),
+    ("sql", "sql"),
     ("cpp", "cpp"),
     ("csharp", "csharp"),
     ("docker_compose", "docker_compose"),

@@ -1,0 +1,1 @@
+SQL queries are production code: they shape correctness, latency, and security just as much as application logic. MCP Zen of Languages applies **9 practical SQL principles** that catch fragile query patterns before they become outages, regressions, or data quality incidents.

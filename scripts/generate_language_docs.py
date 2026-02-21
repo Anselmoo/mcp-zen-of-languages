@@ -64,6 +64,7 @@ LANGUAGES: list[tuple[str, str, str, str, str]] = [
         "powershell",
     ),
     ("ruby", "Ruby", "material/language-ruby", "ruby.md", "ruby"),
+    ("sql", "SQL", "material/database", "sql.md", "sql"),
     ("cpp", "C++", "material/language-cpp", "cpp.md", "cpp"),
     ("csharp", "C#", "material/language-csharp", "csharp.md", "csharp"),
     (
@@ -135,6 +136,11 @@ SEE_ALSO: dict[str, str] = {
         "- [Python](python.md) — Dynamic language with similar expressiveness goals\n"
         "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
         "- [Understanding Violations](../understanding-violations.md) — Severity scale reference"
+    ),
+    "sql": (
+        "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
+        "- [Understanding Violations](../understanding-violations.md) — Severity scale reference\n"
+        "- [Prompt Generation](../prompt-generation.md) — Generate SQL remediation guidance"
     ),
     "cpp": (
         "- [Rust](rust.md) — Memory-safe systems language with compile-time guarantees\n"
@@ -535,7 +541,7 @@ def render_index_page() -> str:
                 if b.detector_id != "analyzer_defaults"
             },
         )
-        parser = "AST" if module_key == "python" else "Regex"
+        parser = "AST" if module_key == "python" else "SQLGlot" if module_key == "sql" else "Regex"
         philosophy = zen.source_text if hasattr(zen, "source_text") else ""
         source_url = str(zen.source_url) if hasattr(zen, "source_url") else ""
         programming_rows.append(
@@ -688,7 +694,7 @@ def render_index_page() -> str:
 
             Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
 
-            **TypeScript · Rust · Go · JavaScript · Bash · PowerShell · Ruby · C++ · C# · Docker Compose · Dockerfile**
+            **TypeScript · Rust · Go · JavaScript · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile**
 
         -   :material-source-branch:{ .lg .middle } **Workflow Automation**
 

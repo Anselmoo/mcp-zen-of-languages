@@ -74,7 +74,7 @@ tags:
 
     **Detectable Patterns:**
 
-    - `````
+    - `\`\`\``
 
 ??? info "`md-005` — Keep front-matter complete when present"
     **If YAML front-matter exists, required metadata keys must be provided.**

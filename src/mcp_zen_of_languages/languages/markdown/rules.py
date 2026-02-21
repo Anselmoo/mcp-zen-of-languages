@@ -48,7 +48,7 @@ MARKDOWN_ZEN = LanguageZenPrinciples(
             severity=4,
             description="Fenced code blocks should declare a language for syntax highlighting.",
             violations=["Code fence missing language identifier"],
-            detectable_patterns=["```"],
+            detectable_patterns=[r"\`\`\`"],
         ),
         ZenPrinciple(
             id="md-005",

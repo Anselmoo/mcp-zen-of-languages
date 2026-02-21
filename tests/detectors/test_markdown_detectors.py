@@ -132,6 +132,17 @@ def test_mdx_default_export_detector_skips_plain_markdown():
     assert not violations
 
 
+def test_mdx_default_export_detector_ignores_fenced_export_in_markdown():
+    code = "```js\nexport default function () {}\n```\n"
+    violations = _detect(
+        MarkdownMdxNamedDefaultExportDetector(),
+        code,
+        MarkdownMdxNamedDefaultExportConfig(),
+        path="README.md",
+    )
+    assert not violations
+
+
 def test_mdx_import_hygiene_violation():
     code = 'import Card from "./Card"\n\n# Docs\n\nText only.\n'
     violations = _detect(
@@ -141,6 +152,17 @@ def test_mdx_import_hygiene_violation():
         path="page.mdx",
     )
     assert violations
+
+
+def test_mdx_import_hygiene_ignores_fenced_import_snippet():
+    code = "```jsx\nimport Card from './Card'\n```\n# Docs\n"
+    violations = _detect(
+        MarkdownMdxImportHygieneDetector(),
+        code,
+        MarkdownMdxImportHygieneConfig(),
+        path="README.md",
+    )
+    assert not violations
 
 
 def test_mdx_import_hygiene_allows_used_and_side_effect_imports():
@@ -158,6 +180,15 @@ def test_markdown_bare_url_detector_ignores_links_and_autolinks():
     violations = _detect(
         MarkdownBareUrlDetector(),
         "[Docs](https://example.com) and <https://example.org>",
+        MarkdownBareUrlConfig(),
+    )
+    assert not violations
+
+
+def test_markdown_bare_url_detector_ignores_inline_code_urls():
+    violations = _detect(
+        MarkdownBareUrlDetector(),
+        "Use `http://example.com` in examples.",
         MarkdownBareUrlConfig(),
     )
     assert not violations

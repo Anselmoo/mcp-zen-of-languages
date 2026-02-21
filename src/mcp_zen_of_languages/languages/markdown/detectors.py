@@ -25,6 +25,7 @@ _HEADING_RE = re.compile(r"^\s{0,3}(#{1,6})\s+\S")
 _IMAGE_RE = re.compile(r"!\[([^\]]*)\]\(([^)]+)\)")
 _MARKDOWN_LINK_RE = re.compile(r"\[[^\]]+\]\([^)]+\)")
 _ANGLE_URL_RE = re.compile(r"<https?://[^>]+>")
+_INLINE_CODE_RE = re.compile(r"`[^`\n]+`")
 _URL_RE = re.compile(r"https?://[^\s<>)\]]+")
 _FENCE_RE = re.compile(r"^\s*```(?P<lang>[^\s`]*)\s*$")
 _FRONTMATTER_RE = re.compile(r"^([A-Za-z_][\w-]*)\s*:")
@@ -60,7 +61,10 @@ def _iter_text_lines(code: str) -> list[tuple[int, str]]:
 def _is_mdx_context(context: AnalysisContext) -> bool:
     if context.path and context.path.lower().endswith(".mdx"):
         return True
-    return bool(re.search(r"^\s*(import|export)\s+", context.code, re.MULTILINE))
+    for _line_no, line in _iter_text_lines(context.code):
+        if re.match(r"^\s*(import|export)\s+", line):
+            return True
+    return False
 
 
 class MarkdownHeadingHierarchyDetector(
@@ -137,7 +141,10 @@ class MarkdownBareUrlDetector(
         config: MarkdownBareUrlConfig,
     ) -> list[Violation]:
         for line_no, line in _iter_text_lines(context.code):
-            sanitized = _MARKDOWN_LINK_RE.sub("", _ANGLE_URL_RE.sub("", line))
+            sanitized = _INLINE_CODE_RE.sub(
+                "",
+                _MARKDOWN_LINK_RE.sub("", _ANGLE_URL_RE.sub("", line)),
+            )
             if match := _URL_RE.search(sanitized):
                 return [
                     self.build_violation(

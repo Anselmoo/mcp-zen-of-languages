@@ -22,3 +22,7 @@ def test_create_analyzer_types():
     assert docker_compose.language() == "docker_compose"
     dockerfile = create_analyzer("dockerfile")
     assert dockerfile.language() == "dockerfile"
+    markdown = create_analyzer("markdown")
+    assert markdown.language() == "markdown"
+    mdx = create_analyzer("mdx")
+    assert mdx.language() == "markdown"

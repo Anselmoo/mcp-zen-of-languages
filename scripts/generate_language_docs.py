@@ -74,6 +74,13 @@ LANGUAGES: list[tuple[str, str, str, str, str]] = [
         "docker_compose",
     ),
     ("dockerfile", "Dockerfile", "material/docker", "dockerfile.md", "dockerfile"),
+    (
+        "markdown",
+        "Markdown / MDX",
+        "material/language-markdown",
+        "markdown.md",
+        "markdown",
+    ),
 ]
 
 WORKFLOW_LANGUAGES: list[tuple[str, str, str]] = [
@@ -145,6 +152,11 @@ SEE_ALSO: dict[str, str] = {
         "- [C++](cpp.md) — Unmanaged C-family counterpart\n"
         "- [TypeScript](typescript.md) — Another strongly-typed language with similar patterns\n"
         "- [Configuration](../configuration.md) — Per-language pipeline overrides"
+    ),
+    "markdown": (
+        "- [Config Formats](config-formats.md) — Principles for JSON, TOML, XML, and YAML\n"
+        "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
+        "- [Understanding Violations](../understanding-violations.md) — Severity scale reference"
     ),
 }
 

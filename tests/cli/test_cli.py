@@ -324,6 +324,7 @@ SAMPLES = {
     "github-actions": "name: CI\non: push\njobs:\n  build:\n    runs-on: ubuntu-latest\n    timeout-minutes: 5\n    steps:\n      - run: echo hi\n        shell: bash\n",
     "toml": 'key = "value"\n',
     "json": '{"key": "value"}\n',
+    "markdown": "# Title\n\nSee http://example.com\n",
     "xml": "<root></root>\n",
     "docker_compose": "services:\n  web:\n    image: nginx:latest\n",
     "dockerfile": "FROM ubuntu:latest\nUSER root\n",

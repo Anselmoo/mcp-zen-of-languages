@@ -34,3 +34,5 @@ def test_create_analyzer_types():
     assert latex.language() == "latex"
     tex = create_analyzer("tex")
     assert tex.language() == "latex"
+    bibtex = create_analyzer("bibtex")
+    assert bibtex.language() == "latex"

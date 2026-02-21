@@ -42,6 +42,7 @@ EXTENSION_LANGUAGE_MAP: dict[str, str] = {
     ".tex": "latex",
     ".ltx": "latex",
     ".sty": "latex",
+    ".bib": "latex",
     ".dockerfile": "dockerfile",
 }
 

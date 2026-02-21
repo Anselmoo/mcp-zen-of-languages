@@ -124,6 +124,8 @@ def _canonical_language(language: str) -> str:
         "tex": "latex",
         "ltx": "latex",
         "sty": "latex",
+        "bib": "latex",
+        "bibtex": "latex",
     }
     return alias_map.get(lang, lang)
 

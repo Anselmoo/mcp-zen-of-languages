@@ -113,7 +113,7 @@ def _file_read_error_result(
     )
 
 
-def analyze_targets(  # noqa: C901, PLR0913
+def analyze_targets(  # noqa: C901, PLR0912, PLR0913
     targets: list[tuple[Path, str]],
     *,
     config_path: str | None = None,
@@ -151,9 +151,10 @@ def analyze_targets(  # noqa: C901, PLR0913
             logger.warning("Failed import scan for %s files: %s", language, exc)
             repository_imports = {str(path): [] for path in files}
 
+        file_contents: dict[str, str] = {}
         for path in files:
             try:
-                code = path.read_text(encoding="utf-8")
+                file_contents[str(path)] = path.read_text(encoding="utf-8")
             except Exception as exc:
                 if include_read_errors:
                     logger.warning(
@@ -166,10 +167,16 @@ def analyze_targets(  # noqa: C901, PLR0913
                         progress_callback()
                     continue
                 raise
+
+        for path in files:
+            code = file_contents.get(str(path))
+            if code is None:
+                continue
             results.append(
                 analyzer.analyze(
                     code,
                     path=str(path),
+                    other_files=file_contents if language == "latex" else None,
                     repository_imports=repository_imports,
                 ),
             )

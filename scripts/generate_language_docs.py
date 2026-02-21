@@ -19,6 +19,10 @@ import textwrap
 from collections import Counter
 from pathlib import Path
 
+from generate_implementation_counts import (
+    sync_implementation_counts,
+    validate_documented_languages,
+)
 from jinja2 import Environment, FileSystemLoader
 
 # Maximum characters shown from a principle description in diagram labels
@@ -208,6 +212,17 @@ def _load_intro(module_key: str) -> str:
     """Load editorial intro from intros/{lang}.md or generate a fallback."""
     intro_path = INTROS_DIR / f"{module_key}.md"
     return intro_path.read_text().strip() if intro_path.exists() else ""
+
+
+def _validate_language_inventory() -> None:
+    """Ensure docs generator language inventories match canonical registry keys."""
+    validate_documented_languages(
+        {
+            *(module_key for module_key, *_ in LANGUAGES),
+            *(module_key for module_key, *_ in WORKFLOW_LANGUAGES),
+            *(module_key for module_key, _ in CONFIG_LANGUAGES),
+        },
+    )
 
 
 def _detector_first_line(detector_cls: type) -> str:
@@ -779,7 +794,7 @@ def render_index_page() -> str:
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
-def main() -> int:  # noqa: C901, PLR0912
+def main() -> int:  # noqa: C901, PLR0912, PLR0915
     parser = argparse.ArgumentParser(
         description="Generate language documentation pages from rules.py data.",
     )
@@ -795,6 +810,7 @@ def main() -> int:  # noqa: C901, PLR0912
         help="Generate for a single language (e.g. 'python').",
     )
     args = parser.parse_args()
+    _validate_language_inventory()
 
     env = Environment(
         loader=FileSystemLoader(str(TEMPLATES_DIR)),
@@ -851,6 +867,12 @@ def main() -> int:  # noqa: C901, PLR0912
         else:
             out_path.write_text(output)
             print(f"  wrote {out_path}")
+
+    if args.check:
+        if sync_implementation_counts(check=True) != 0:
+            changed.append("implementation-count-surfaces")
+    else:
+        sync_implementation_counts(check=False)
 
     if args.check and changed:
         print(f"\n{len(changed)} file(s) are stale. Run:")

@@ -26,7 +26,9 @@ from mcp_zen_of_languages.languages.latex.detectors import (
 
 
 def _detect(detector, code: str, config, **kwargs):
-    return detector.detect(AnalysisContext(code=code, language="latex", **kwargs), config)
+    return detector.detect(
+        AnalysisContext(code=code, language="latex", **kwargs), config
+    )
 
 
 def test_latex_macro_definition_detector_flags_def():

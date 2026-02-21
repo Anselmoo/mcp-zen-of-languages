@@ -218,7 +218,11 @@ class LatexBibliographyHygieneDetector(
             for key in raw.split(",")
             if key.strip()
         }
-        if bibitems and "\\bibliography{" not in context.code and "\\addbibresource{" not in context.code:
+        if (
+            bibitems
+            and "\\bibliography{" not in context.code
+            and "\\addbibresource{" not in context.code
+        ):
             return [
                 self.build_violation(
                     config,
@@ -377,7 +381,9 @@ class LatexEncodingDeclarationDetector(
         """Return violations for missing UTF-8 declaration intent."""
         lower = context.code.lower()
         has_utf8_inputenc = "\\usepackage[utf8]{inputenc}" in lower
-        uses_unicode_engine = "fontspec" in lower or "xelatex" in lower or "lualatex" in lower
+        uses_unicode_engine = (
+            "fontspec" in lower or "xelatex" in lower or "lualatex" in lower
+        )
         if not has_utf8_inputenc and not uses_unicode_engine:
             return [
                 self.build_violation(
@@ -416,7 +422,9 @@ class LatexUnusedPackagesDetector(
             package
             for package in packages
             if package in _PACKAGE_COMMAND_HINTS
-            and not any(command in context.code for command in _PACKAGE_COMMAND_HINTS[package])
+            and not any(
+                command in context.code for command in _PACKAGE_COMMAND_HINTS[package]
+            )
         ]
         if unused:
             return [

@@ -51,8 +51,8 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 ### Coverage Totals
 
-- **Principles (all categories):** 214
-- **Detectors + workflow checks:** 226
+- **Principles (all categories):** 215
+- **Detectors + workflow checks:** 227
 
 ## Maturity Tiers
 

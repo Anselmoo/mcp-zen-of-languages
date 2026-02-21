@@ -7,6 +7,7 @@ from mcp_zen_of_languages.languages.configs import (
     LongFunctionConfig,
     NamespaceConfig,
     NestingDepthConfig,
+    UnusedArgumentUtilizationConfig,
 )
 from mcp_zen_of_languages.languages.python.detectors import (
     ConsistencyDetector,
@@ -14,6 +15,7 @@ from mcp_zen_of_languages.languages.python.detectors import (
     LongFunctionDetector,
     NamespaceUsageDetector,
     NestingDepthDetector,
+    UnusedArgumentUtilizationDetector,
 )
 
 
@@ -64,3 +66,39 @@ def test_long_function_detector_flags():
     config = LongFunctionConfig().model_copy(update={"max_function_length": 1})
     violations = LongFunctionDetector().detect(context, config)
     assert violations
+
+
+def test_unused_argument_utilization_detector_override_suggests_logging():
+    code = (
+        "from typing import override\n\n"
+        "class Base:\n"
+        "    def process(self, context):\n"
+        "        raise NotImplementedError\n\n"
+        "class Child(Base):\n"
+        "    @override\n"
+        "    def process(self, context):\n"
+        "        return 1\n"
+    )
+    context = AnalysisContext(code=code, language="python")
+    violations = UnusedArgumentUtilizationDetector().detect(
+        context,
+        UnusedArgumentUtilizationConfig(),
+    )
+    assert violations
+    assert any("inherited" in v.suggestion for v in violations)
+
+
+def test_unused_argument_utilization_detector_excludes_abstract_methods():
+    code = (
+        "from abc import abstractmethod\n\n"
+        "class Base:\n"
+        "    @abstractmethod\n"
+        "    def process(self, context):\n"
+        "        ...\n"
+    )
+    context = AnalysisContext(code=code, language="python")
+    violations = UnusedArgumentUtilizationDetector().detect(
+        context,
+        UnusedArgumentUtilizationConfig(),
+    )
+    assert violations == []

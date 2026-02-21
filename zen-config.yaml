@@ -50,6 +50,9 @@ pipelines:
         max_line_length: 88
       - type: docstrings
       - type: context_manager
+      - type: unused_argument_utilization
+        suggest_logging: true
+        severity: 4
   - language: typescript
     detectors:
       - type: ts_any_usage

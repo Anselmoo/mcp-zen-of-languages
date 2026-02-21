@@ -49,6 +49,7 @@ from mcp_zen_of_languages.languages.configs import (
     ShortVariableNamesConfig,
     SparseCodeConfig,
     StarImportConfig,
+    UnusedArgumentUtilizationConfig,
 )
 from mcp_zen_of_languages.models import Location, ParserResult, Violation
 
@@ -2189,6 +2190,137 @@ class ExplicitnessDetector(ViolationDetector[ExplicitnessConfig], LocationHelper
         return violations
 
 
+class UnusedArgumentUtilizationDetector(
+    ViolationDetector[UnusedArgumentUtilizationConfig],
+    LocationHelperMixin,
+):
+    """Detect function parameters that are requested but never used."""
+
+    @property
+    def name(self) -> str:
+        """Return ``"unused_argument_utilization"`` for registry lookup."""
+        return "unused_argument_utilization"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: UnusedArgumentUtilizationConfig,
+    ) -> list[Violation]:
+        """Flag ignored function arguments and suggest purposeful integration."""
+        try:
+            tree = ast.parse(context.code)
+        except (SyntaxError, ValueError):
+            return []
+
+        violations: list[Violation] = []
+        principle = _principle_text(config)
+        severity = _severity_level(config)
+
+        for node in ast.walk(tree):
+            if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                continue
+            if self._is_abstract(node) and config.exclude_abstract_methods:
+                continue
+
+            argument_nodes = [
+                *node.args.posonlyargs,
+                *node.args.args,
+                *node.args.kwonlyargs,
+            ]
+            if node.args.vararg is not None:
+                argument_nodes.append(node.args.vararg)
+            if node.args.kwarg is not None:
+                argument_nodes.append(node.args.kwarg)
+
+            used_names = {
+                name.id
+                for name in ast.walk(node)
+                if isinstance(name, ast.Name) and isinstance(name.ctx, ast.Load)
+            }
+
+            has_logger = "logger" in used_names or any(
+                isinstance(attr, ast.Attribute)
+                and isinstance(attr.value, ast.Name)
+                and attr.value.id == "self"
+                and attr.attr == "logger"
+                for attr in ast.walk(node)
+            )
+
+            for arg in argument_nodes:
+                if arg.arg in {"self", "cls"} or arg.arg in used_names:
+                    continue
+                suggestion = self._suggestion(
+                    arg.arg,
+                    has_logger=has_logger,
+                    suggest_logging=config.suggest_logging,
+                    is_override=self._is_override(node),
+                )
+                violations.append(
+                    Violation(
+                        principle=principle,
+                        severity=severity,
+                        message=(
+                            f"Argument '{arg.arg}' carries valuable context but is ignored. "
+                            "Every argument must have a purpose."
+                        ),
+                        location=Location(line=arg.lineno, column=arg.col_offset),
+                        suggestion=suggestion,
+                    ),
+                )
+
+        return violations
+
+    @staticmethod
+    def _is_abstract(node: ast.FunctionDef | ast.AsyncFunctionDef) -> bool:
+        return any(
+            (isinstance(d, ast.Name) and d.id == "abstractmethod")
+            or (isinstance(d, ast.Attribute) and d.attr == "abstractmethod")
+            for d in node.decorator_list
+        )
+
+    @staticmethod
+    def _is_override(node: ast.FunctionDef | ast.AsyncFunctionDef) -> bool:
+        return any(
+            (isinstance(d, ast.Name) and d.id == "override")
+            or (isinstance(d, ast.Attribute) and d.attr == "override")
+            for d in node.decorator_list
+        )
+
+    @staticmethod
+    def _suggestion(
+        argument_name: str,
+        *,
+        has_logger: bool,
+        suggest_logging: bool,
+        is_override: bool,
+    ) -> str:
+        if is_override:
+            return (
+                f"Signature is likely inherited; add observational usage for '{argument_name}' "
+                "such as structured logging."
+            )
+        lower_name = argument_name.lower()
+        if suggest_logging and (
+            has_logger
+            or any(
+                token in lower_name for token in ("context", "ctx", "meta", "request")
+            )
+        ):
+            return (
+                f"Did you forget to use '{argument_name}'? Integrate it into logging, "
+                f"for example logger.debug('Using %s', {argument_name})."
+            )
+        if lower_name.endswith("_id"):
+            return (
+                f"Did you forget to use '{argument_name}' for filtering or correlation "
+                "logic (e.g., query predicates)?"
+            )
+        return (
+            f"Did you forget to use '{argument_name}'? Integrate it into logic or remove "
+            "the argument from the signature."
+        )
+
+
 class NamespaceUsageDetector(ViolationDetector[NamespaceConfig], LocationHelperMixin):
     """Detect modules with too many top-level symbols or ``__all__`` exports.
 
@@ -2289,4 +2421,5 @@ __all__ = [
     "ShortVariableNamesDetector",
     "SparseCodeDetector",
     "StarImportDetector",
+    "UnusedArgumentUtilizationDetector",
 ]

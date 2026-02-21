@@ -128,6 +128,21 @@ class ExplicitnessConfig(DetectorConfig):
     require_type_hints: bool = True
 
 
+class UnusedArgumentUtilizationConfig(DetectorConfig):
+    """Unused argument utilization settings.
+
+    Attributes:
+        suggest_logging: When ``True``, prefer logging/observability-oriented
+            suggestions for context-like parameters.
+        exclude_abstract_methods: When ``True``, ignore ``@abstractmethod``
+            signatures where implementation is intentionally absent.
+    """
+
+    type: Literal["unused_argument_utilization"] = "unused_argument_utilization"
+    suggest_logging: bool = True
+    exclude_abstract_methods: bool = True
+
+
 class NamespaceConfig(DetectorConfig):
     """Namespace and top-level symbol density settings.
 

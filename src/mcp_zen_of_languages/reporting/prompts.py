@@ -175,6 +175,13 @@ GENERIC_PROMPTS_BY_LANGUAGE: dict[str, list[tuple[str, str]]] = {
             "and ensure MDX imports/exports stay clean.",
         ),
     ],
+    "latex": [
+        (
+            "LaTeX document structure hygiene",
+            "Keep section hierarchy consistent, centralize package usage, and avoid "
+            "duplicated macro definitions to preserve readable, maintainable sources.",
+        ),
+    ],
     "github-actions": [
         (
             "GitHub Actions hardening",

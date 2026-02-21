@@ -1,5 +1,8 @@
 # MCP Zen of Languages - AI Agent Instructions
 
+> Use regularly `Serena` in the MCP Zen of Languages repository for code analysis, following the architecture and patterns established in the codebase. `Serena` allows saving tokens by writing, fetching, deleting, and reading memories which should be synchronized with plans.
+Always ensure that any code changes pass the pre-commit checks before claiming completion.
+
 ## Architecture Overview
 
 This is an MCP server for multi-language code analysis against "zen principles" (idiomatic best practices). Core components:

@@ -10,7 +10,7 @@ import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-from mcp_zen_of_languages.rules import get_language_zen
+from mcp_zen_of_languages.rules import get_all_languages, get_language_zen
 
 README_PATH = Path("README.md")
 DOCS_INDEX_PATH = Path("docs/index.md")
@@ -51,6 +51,8 @@ CONFIG_LANGUAGES: list[tuple[str, str]] = [
     ("yaml", "yaml"),
 ]
 
+LANGUAGE_KEY_ALIASES: dict[str, str] = {"github_actions": "github-actions"}
+
 STATIC_WHAT_YOU_GET_LINES = [
     "- **MCP server** for IDE and agent workflows (13 tools, 3 resources, 1 prompt)",
     "- **CLI reports** with remediation prompts and JSON / Markdown export",
@@ -70,6 +72,29 @@ class CoverageCounts:
     config_detectors: int
     total_principles: int
     total_coverage_points: int
+
+
+def normalize_language_key(language_key: str) -> str:
+    """Normalize script-local module keys to canonical registry language keys."""
+    return LANGUAGE_KEY_ALIASES.get(language_key, language_key)
+
+
+def validate_documented_languages(module_keys: set[str]) -> None:
+    """Ensure script inventories stay in sync with the canonical rules registry."""
+    documented = {normalize_language_key(key) for key in module_keys}
+    supported = set(get_all_languages())
+    missing = sorted(supported - documented)
+    extra = sorted(documented - supported)
+    if missing or extra:
+        details: list[str] = []
+        if missing:
+            details.append(f"missing={missing}")
+        if extra:
+            details.append(f"extra={extra}")
+        msg = "Language inventory is out of sync with rules registry: " + "; ".join(
+            details
+        )
+        raise ValueError(msg)
 
 
 def _count_principles(language_key: str) -> int:
@@ -95,6 +120,14 @@ def _count_detectors(module_key: str) -> int:
 
 def compute_counts() -> CoverageCounts:
     """Calculate live coverage counts from rule and detector mappings."""
+    validate_documented_languages(
+        {
+            *(module_key for module_key, _ in PROGRAMMING_LANGUAGES),
+            *(module_key for module_key, _ in WORKFLOW_LANGUAGES),
+            *(module_key for module_key, _ in CONFIG_LANGUAGES),
+        },
+    )
+
     programming_principles = sum(
         _count_principles(language_key) for _, language_key in PROGRAMMING_LANGUAGES
     )
@@ -280,8 +313,13 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    return sync_implementation_counts(check=args.check)
+
+
+def sync_implementation_counts(*, check: bool = False) -> int:
+    """Generate or validate implementation-count artifacts and docs surfaces."""
     counts = compute_counts()
-    return _run_check_mode(counts) if args.check else _run_generate_mode(counts)
+    return _run_check_mode(counts) if check else _run_generate_mode(counts)
 
 
 if __name__ == "__main__":

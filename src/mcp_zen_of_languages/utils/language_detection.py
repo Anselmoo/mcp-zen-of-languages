@@ -33,6 +33,9 @@ EXTENSION_LANGUAGE_MAP: dict[str, str] = {
     ".toml": "toml",
     ".json": "json",
     ".xml": "xml",
+    ".md": "markdown",
+    ".markdown": "markdown",
+    ".mdx": "markdown",
     ".dockerfile": "dockerfile",
 }
 

@@ -29,6 +29,18 @@ def test_detect_language_by_extension_less():
     assert result.method == "extension"
 
 
+def test_detect_language_by_extension_markdown():
+    result = detect_language_by_extension("README.md")
+    assert result.language == "markdown"
+    assert result.method == "extension"
+
+
+def test_detect_language_by_extension_mdx():
+    result = detect_language_by_extension("page.mdx")
+    assert result.language == "markdown"
+    assert result.method == "extension"
+
+
 def test_detect_language_by_extension_unknown():
     result = detect_language_by_extension("example.unknown")
     assert result.language == "unknown"

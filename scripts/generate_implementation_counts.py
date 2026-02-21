@@ -40,6 +40,7 @@ PROGRAMMING_LANGUAGES: list[tuple[str, str]] = [
     ("csharp", "csharp"),
     ("docker_compose", "docker_compose"),
     ("dockerfile", "dockerfile"),
+    ("markdown", "markdown"),
 ]
 WORKFLOW_LANGUAGES: list[tuple[str, str]] = [("github_actions", "github-actions")]
 CONFIG_LANGUAGES: list[tuple[str, str]] = [

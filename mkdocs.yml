@@ -71,6 +71,7 @@ theme:
       bash: material/console
       powershell: material/console-line
       json: material/code-json
+      markdown: material/language-markdown
       toml: material/code-json
       xml: material/code-tags
       yaml: material/code-json
@@ -209,6 +210,7 @@ extra:
     Bash: bash
     PowerShell: powershell
     JSON: json
+    Markdown: markdown
     TOML: toml
     XML: xml
     YAML: yaml
@@ -257,6 +259,7 @@ nav:
           - Dockerfile: user-guide/languages/dockerfile.md
           - GitHub Actions: user-guide/languages/github-actions.md
           - JSON / JSON5: user-guide/languages/json.md
+          - Markdown / MDX: user-guide/languages/markdown.md
           - Config Formats: user-guide/languages/config-formats.md
       - Understanding Violations: user-guide/understanding-violations.md
       - Prompt Generation: user-guide/prompt-generation.md

@@ -116,6 +116,8 @@ def _canonical_language(language: str) -> str:
         "scss": "css",
         "less": "css",
         "yml": "yaml",
+        "md": "markdown",
+        "mdx": "markdown",
         "github_actions": "github-actions",
         "gha": "github-actions",
         "docker-compose": "docker_compose",

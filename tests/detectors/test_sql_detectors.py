@@ -30,6 +30,18 @@ def test_sql_select_star_detector_flags_violation():
     violations = detector.detect(context, SqlSelectStarConfig())
 
     assert len(violations) == 1
+    assert violations[0].location is not None
+    assert violations[0].location.line == 1
+    assert violations[0].location.column == 1
+
+
+def test_sql_select_star_detector_ignores_count_star():
+    detector = SqlSelectStarDetector()
+    context = AnalysisContext(code="SELECT COUNT(*) FROM users;", language="sql")
+
+    violations = detector.detect(context, SqlSelectStarConfig())
+
+    assert violations == []
 
 
 def test_sql_insert_column_list_detector_flags_values_only_insert():
@@ -58,13 +70,15 @@ def test_sql_dynamic_sql_detector_flags_exec_concatenation():
 def test_sql_nolock_detector_flags_nolock_usage():
     detector = SqlNolockDetector()
     context = AnalysisContext(
-        code="SELECT id FROM users WITH (NOLOCK);",
+        code="SELECT id FROM users WITH (nolock);",
         language="sql",
     )
 
     violations = detector.detect(context, SqlNolockConfig())
 
     assert len(violations) == 1
+    assert violations[0].location is not None
+    assert violations[0].location.column > 1
 
 
 def test_sql_implicit_join_coercion_detector_flags_cast_in_join_on():
@@ -83,11 +97,13 @@ def test_sql_implicit_join_coercion_detector_flags_cast_in_join_on():
 
 def test_sql_unbounded_query_detector_flags_unrestricted_select():
     detector = SqlUnboundedQueryDetector()
-    context = AnalysisContext(code="SELECT id, email FROM users;", language="sql")
+    context = AnalysisContext(code="select id, email from users;", language="sql")
 
     violations = detector.detect(context, SqlUnboundedQueryConfig())
 
     assert len(violations) == 1
+    assert violations[0].location is not None
+    assert violations[0].location.column == 1
 
 
 def test_sql_alias_clarity_detector_flags_short_alias():
@@ -105,13 +121,15 @@ def test_sql_alias_clarity_detector_flags_short_alias():
 def test_sql_transaction_boundary_detector_flags_missing_commit_or_rollback():
     detector = SqlTransactionBoundaryDetector()
     context = AnalysisContext(
-        code="BEGIN TRANSACTION; INSERT INTO users(id) VALUES (1);",
+        code="begin transaction; INSERT INTO users(id) VALUES (1);",
         language="sql",
     )
 
     violations = detector.detect(context, SqlTransactionBoundaryConfig())
 
     assert len(violations) == 1
+    assert violations[0].location is not None
+    assert violations[0].location.column == 1
 
 
 def test_sql_ansi89_join_detector_flags_comma_join():

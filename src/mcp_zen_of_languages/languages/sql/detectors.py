@@ -56,21 +56,33 @@ class SqlSelectStarDetector(
         statements = _parse_statements(context.code, config.dialect)
         for statement in statements:
             for select in statement.find_all(exp.Select):
-                if any(expr.find(exp.Star) for expr in select.expressions):
+                if any(
+                    isinstance(expr, exp.Star)
+                    or (
+                        isinstance(expr, exp.Column)
+                        and isinstance(expr.this, exp.Star)
+                    )
+                    for expr in select.expressions
+                ):
+                    match = re.search(r"(?i)select\s+\*\s+from", context.code)
+                    location_token = match.group(0) if match else "SELECT *"
                     return [
                         self.build_violation(
                             config,
                             location=self.find_location_by_substring(
-                                context.code, "SELECT *"
+                                context.code, location_token
                             ),
                             suggestion="List explicit columns instead of using SELECT *.",
                         ),
                     ]
-        if re.search(r"(?i)select\s+\*\s+from", context.code):
+        if match := re.search(r"(?i)select\s+\*\s+from", context.code):
             return [
                 self.build_violation(
                     config,
-                    location=self.find_location_by_substring(context.code, "SELECT"),
+                    location=self.find_location_by_substring(
+                        context.code,
+                        match.group(0),
+                    ),
                     suggestion="List explicit columns instead of using SELECT *.",
                 ),
             ]
@@ -154,11 +166,15 @@ class SqlNolockDetector(
         self, context: AnalysisContext, config: SqlNolockConfig
     ) -> list[Violation]:
         """Detect ``WITH (NOLOCK)`` occurrences."""
-        if re.search(r"(?i)with\s*\(\s*nolock\s*\)", context.code):
+        match = re.search(r"(?i)with\s*\(\s*(nolock)\s*\)", context.code)
+        if match:
             return [
                 self.build_violation(
                     config,
-                    location=self.find_location_by_substring(context.code, "NOLOCK"),
+                    location=self.find_location_by_substring(
+                        context.code,
+                        match.group(1),
+                    ),
                     suggestion="Remove NOLOCK and use an appropriate transaction isolation level.",
                 ),
             ]
@@ -222,21 +238,33 @@ class SqlUnboundedQueryDetector(
                 if select.args.get("from") is not None and not (
                     has_where or has_limit or has_top
                 ):
+                    select_match = re.search(r"(?i)\bselect\b", context.code)
+                    select_lexeme = (
+                        context.code[select_match.start() : select_match.end()]
+                        if select_match
+                        else "SELECT"
+                    )
                     return [
                         self.build_violation(
                             config,
                             location=self.find_location_by_substring(
-                                context.code, "SELECT"
+                                context.code, select_lexeme
                             ),
                             suggestion="Add WHERE, LIMIT, or TOP clauses to bound result size.",
                         ),
                     ]
         pattern = r"(?is)\bselect\b(?![^;]*\b(top\s+\d+)\b)[^;]*\bfrom\b[^;]*(?!(?:[^;]*\b(where|limit)\b))"
         if re.search(pattern, context.code):
+            select_match = re.search(r"(?i)\bselect\b", context.code)
+            select_lexeme = (
+                context.code[select_match.start() : select_match.end()]
+                if select_match
+                else "SELECT"
+            )
             return [
                 self.build_violation(
                     config,
-                    location=self.find_location_by_substring(context.code, "SELECT"),
+                    location=self.find_location_by_substring(context.code, select_lexeme),
                     suggestion="Add WHERE, LIMIT, or TOP clauses to bound result size.",
                 ),
             ]
@@ -289,13 +317,14 @@ class SqlTransactionBoundaryDetector(
         config: SqlTransactionBoundaryConfig,
     ) -> list[Violation]:
         """Detect unmatched transaction beginnings."""
-        begins = re.findall(r"(?i)\bbegin\s+tran(?:saction)?\b", context.code)
-        ends = re.findall(r"(?i)\b(?:commit|rollback)\b", context.code)
+        begins = list(re.finditer(r"(?i)\bbegin\s+tran(?:saction)?\b", context.code))
+        ends = list(re.finditer(r"(?i)\b(?:commit|rollback)\b", context.code))
         if len(begins) > len(ends):
+            first_begin = begins[0].group(0)
             return [
                 self.build_violation(
                     config,
-                    location=self.find_location_by_substring(context.code, "BEGIN"),
+                    location=self.find_location_by_substring(context.code, first_begin),
                     suggestion="Ensure each BEGIN TRANSACTION has COMMIT or ROLLBACK in the same file.",
                 ),
             ]

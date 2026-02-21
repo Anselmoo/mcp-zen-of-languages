@@ -32,7 +32,8 @@ Every language has its own philosophy — its own sense of what "good code" mean
 | [Docker Compose](docker-compose.md) | 4 | 4 | Regex | [Compose Specification](https://compose-spec.io/) |
 | [Dockerfile](dockerfile.md) | 8 | 8 | Regex | [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) |
 | [Markdown / MDX](markdown.md) | 7 | 7 | Regex | [CommonMark + MDX authoring best practices](https://commonmark.org/) |
-| **Programming subtotal** | **159** | **171** | | |
+| [LaTeX](latex.md) | 9 | 9 | Regex | [LaTeX Project](https://www.latex-project.org/) |
+| **Programming subtotal** | **152** | **164** | | |
 
 ### Workflows & Automation
 
@@ -71,7 +72,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
     Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
 
-    **TypeScript · Rust · Go · JavaScript · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile**
+    **TypeScript · Rust · Go · JavaScript · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile · LaTeX**
 
 -   :material-source-branch:{ .lg .middle } **Workflow Automation**
 

@@ -28,6 +28,7 @@ from mcp_zen_of_languages import server
         ("json", '{"name": "value"}'),
         ("sql", "SELECT * FROM users;"),
         ("markdown", "# Title\n\nSome text.\n"),
+        ("latex", "\\documentclass{article}\n\\begin{document}Hello\\end{document}"),
         ("docker_compose", "services:\n  web:\n    image: nginx:latest\n"),
         ("dockerfile", "FROM ubuntu:latest\nUSER root\n"),
     ],

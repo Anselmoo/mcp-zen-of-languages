@@ -119,6 +119,7 @@ async def test_analyze_zen_violations_applies_runtime_pipeline_override(monkeypa
         ("github_actions", "github-actions"),
         ("gha", "github-actions"),
         ("docker-compose", "docker_compose"),
+        ("tex", "latex"),
     ],
 )
 async def test_analyze_zen_violations_accepts_supported_aliases(

@@ -1,0 +1,99 @@
+"""Detector bindings for LaTeX analysis."""
+
+from __future__ import annotations
+
+from mcp_zen_of_languages.analyzers.mapping_models import (
+    DetectorBinding,
+    LanguageDetectorMap,
+)
+from mcp_zen_of_languages.languages.configs import (
+    LatexBibliographyHygieneConfig,
+    LatexCaptionCompletenessConfig,
+    LatexEncodingDeclarationConfig,
+    LatexIncludeLoopConfig,
+    LatexLabelRefDisciplineConfig,
+    LatexMacroDefinitionConfig,
+    LatexSemanticMarkupConfig,
+    LatexUnusedPackagesConfig,
+    LatexWidthAbstractionConfig,
+)
+from mcp_zen_of_languages.languages.latex.detectors import (
+    LatexBibliographyHygieneDetector,
+    LatexCaptionCompletenessDetector,
+    LatexEncodingDeclarationDetector,
+    LatexIncludeLoopDetector,
+    LatexLabelRefDisciplineDetector,
+    LatexMacroDefinitionDetector,
+    LatexSemanticMarkupDetector,
+    LatexUnusedPackagesDetector,
+    LatexWidthAbstractionDetector,
+)
+
+DETECTOR_MAP = LanguageDetectorMap(
+    language="latex",
+    bindings=[
+        DetectorBinding(
+            detector_id="latex-001",
+            detector_class=LatexMacroDefinitionDetector,
+            config_model=LatexMacroDefinitionConfig,
+            rule_ids=["latex-001"],
+            default_order=10,
+        ),
+        DetectorBinding(
+            detector_id="latex-002",
+            detector_class=LatexLabelRefDisciplineDetector,
+            config_model=LatexLabelRefDisciplineConfig,
+            rule_ids=["latex-002"],
+            default_order=20,
+        ),
+        DetectorBinding(
+            detector_id="latex-003",
+            detector_class=LatexCaptionCompletenessDetector,
+            config_model=LatexCaptionCompletenessConfig,
+            rule_ids=["latex-003"],
+            default_order=30,
+        ),
+        DetectorBinding(
+            detector_id="latex-004",
+            detector_class=LatexBibliographyHygieneDetector,
+            config_model=LatexBibliographyHygieneConfig,
+            rule_ids=["latex-004"],
+            default_order=40,
+        ),
+        DetectorBinding(
+            detector_id="latex-005",
+            detector_class=LatexWidthAbstractionDetector,
+            config_model=LatexWidthAbstractionConfig,
+            rule_ids=["latex-005"],
+            default_order=50,
+        ),
+        DetectorBinding(
+            detector_id="latex-006",
+            detector_class=LatexSemanticMarkupDetector,
+            config_model=LatexSemanticMarkupConfig,
+            rule_ids=["latex-006"],
+            default_order=60,
+        ),
+        DetectorBinding(
+            detector_id="latex-007",
+            detector_class=LatexIncludeLoopDetector,
+            config_model=LatexIncludeLoopConfig,
+            rule_ids=["latex-007"],
+            default_order=70,
+        ),
+        DetectorBinding(
+            detector_id="latex-008",
+            detector_class=LatexEncodingDeclarationDetector,
+            config_model=LatexEncodingDeclarationConfig,
+            rule_ids=["latex-008"],
+            default_order=80,
+        ),
+        DetectorBinding(
+            detector_id="latex-009",
+            detector_class=LatexUnusedPackagesDetector,
+            config_model=LatexUnusedPackagesConfig,
+            rule_ids=["latex-009"],
+            default_order=90,
+        ),
+    ],
+)

@@ -67,6 +67,7 @@ def _initialize_registry() -> None:
     from mcp_zen_of_languages.languages.go.rules import GO_ZEN
     from mcp_zen_of_languages.languages.javascript.rules import JAVASCRIPT_ZEN
     from mcp_zen_of_languages.languages.json.rules import JSON_ZEN
+    from mcp_zen_of_languages.languages.latex.rules import LATEX_ZEN
     from mcp_zen_of_languages.languages.markdown.rules import MARKDOWN_ZEN
     from mcp_zen_of_languages.languages.powershell.rules import POWERSHELL_ZEN
     from mcp_zen_of_languages.languages.python.rules import PYTHON_ZEN
@@ -100,6 +101,7 @@ def _initialize_registry() -> None:
             "github-actions": GITHUB_ACTIONS_ZEN,
             "toml": TOML_ZEN,
             "xml": XML_ZEN,
+            "latex": LATEX_ZEN,
         },
     )
 

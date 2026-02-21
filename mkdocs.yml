@@ -74,6 +74,7 @@ theme:
       markdown: material/language-markdown
       toml: material/code-json
       xml: material/code-tags
+      latex: material/math-integral
       yaml: material/code-json
       docker_compose: material/docker
       dockerfile: material/docker
@@ -213,6 +214,7 @@ extra:
     Markdown: markdown
     TOML: toml
     XML: xml
+    LaTeX: latex
     YAML: yaml
     Dockerfile: dockerfile
     Docker Compose: docker_compose
@@ -258,6 +260,7 @@ nav:
           - "C#": user-guide/languages/csharp.md
           - Docker Compose: user-guide/languages/docker-compose.md
           - Dockerfile: user-guide/languages/dockerfile.md
+          - LaTeX: user-guide/languages/latex.md
           - GitHub Actions: user-guide/languages/github-actions.md
           - JSON / JSON5: user-guide/languages/json.md
           - Markdown / MDX: user-guide/languages/markdown.md

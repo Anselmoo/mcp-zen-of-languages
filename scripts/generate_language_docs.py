@@ -79,6 +79,7 @@ LANGUAGES: list[tuple[str, str, str, str, str]] = [
         "docker_compose",
     ),
     ("dockerfile", "Dockerfile", "material/docker", "dockerfile.md", "dockerfile"),
+    ("latex", "LaTeX", "material/math-integral", "latex.md", "latex"),
     (
         "markdown",
         "Markdown / MDX",
@@ -167,6 +168,11 @@ SEE_ALSO: dict[str, str] = {
         "- [Config Formats](config-formats.md) — Principles for JSON, TOML, XML, and YAML\n"
         "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
         "- [Understanding Violations](../understanding-violations.md) — Severity scale reference"
+    ),
+    "latex": (
+        "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
+        "- [Understanding Violations](../understanding-violations.md) — Severity scale reference\n"
+        "- [Prompt Generation](../prompt-generation.md) — Generate AI remediation prompts"
     ),
 }
 
@@ -727,7 +733,7 @@ def render_index_page() -> str:
 
             Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
 
-            **TypeScript · Rust · Go · JavaScript · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile**
+            **TypeScript · Rust · Go · JavaScript · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile · LaTeX**
 
         -   :material-source-branch:{ .lg .middle } **Workflow Automation**
 

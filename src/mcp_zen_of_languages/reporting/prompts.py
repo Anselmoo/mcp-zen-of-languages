@@ -168,6 +168,13 @@ GENERIC_PROMPTS_BY_LANGUAGE: dict[str, list[tuple[str, str]]] = {
             "and enforce schema validation for producer/consumer contracts.",
         ),
     ],
+    "markdown": [
+        (
+            "Documentation flow and accessibility",
+            "Keep heading levels sequential, add alt text for images, avoid bare URLs, "
+            "and ensure MDX imports/exports stay clean.",
+        ),
+    ],
     "github-actions": [
         (
             "GitHub Actions hardening",

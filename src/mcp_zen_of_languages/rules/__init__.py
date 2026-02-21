@@ -67,6 +67,7 @@ def _initialize_registry() -> None:
     from mcp_zen_of_languages.languages.go.rules import GO_ZEN
     from mcp_zen_of_languages.languages.javascript.rules import JAVASCRIPT_ZEN
     from mcp_zen_of_languages.languages.json.rules import JSON_ZEN
+    from mcp_zen_of_languages.languages.markdown.rules import MARKDOWN_ZEN
     from mcp_zen_of_languages.languages.powershell.rules import POWERSHELL_ZEN
     from mcp_zen_of_languages.languages.python.rules import PYTHON_ZEN
     from mcp_zen_of_languages.languages.ruby.rules import RUBY_ZEN
@@ -86,6 +87,7 @@ def _initialize_registry() -> None:
             "go": GO_ZEN,
             "json": JSON_ZEN,
             "sql": SQL_ZEN,
+            "markdown": MARKDOWN_ZEN,
             "rust": RUST_ZEN,
             "cpp": CPP_ZEN,
             "csharp": CSHARP_ZEN,

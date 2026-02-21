@@ -1269,6 +1269,51 @@ class JsonNullHandlingConfig(DetectorConfig):
     max_top_level_nulls: int = 0
 
 
+class MarkdownHeadingHierarchyConfig(DetectorConfig):
+    """Markdown heading hierarchy detector settings."""
+
+    type: Literal["md-001"] = "md-001"
+
+
+class MarkdownAltTextConfig(DetectorConfig):
+    """Markdown image alt-text detector settings."""
+
+    type: Literal["md-002"] = "md-002"
+
+
+class MarkdownBareUrlConfig(DetectorConfig):
+    """Markdown bare-URL detector settings."""
+
+    type: Literal["md-003"] = "md-003"
+
+
+class MarkdownCodeFenceLanguageConfig(DetectorConfig):
+    """Markdown fenced-code language-tag detector settings."""
+
+    type: Literal["md-004"] = "md-004"
+
+
+class MarkdownFrontMatterConfig(DetectorConfig):
+    """Markdown front-matter completeness detector settings."""
+
+    type: Literal["md-005"] = "md-005"
+    required_frontmatter_keys: list[str] = ["title", "description"]
+
+
+class MarkdownMdxNamedDefaultExportConfig(DetectorConfig):
+    """MDX anonymous default-export detector settings."""
+
+    type: Literal["md-006"] = "md-006"
+    mdx_only: bool = True
+
+
+class MarkdownMdxImportHygieneConfig(DetectorConfig):
+    """MDX import-hygiene detector settings."""
+
+    type: Literal["md-007"] = "md-007"
+    mdx_only: bool = True
+
+
 class XmlSemanticMarkupConfig(DetectorConfig):
     """XML semantic-vs-presentational markup detection settings."""
 

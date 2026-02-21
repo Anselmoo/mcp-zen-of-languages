@@ -28,8 +28,9 @@ Multi-language architectural and idiomatic code analysis, exposed as an **MCP se
 
 <!-- --8<-- [start:what-you-get] -->
 
-- **198 zen principles** across programming, workflow, and config domains
-- **210 detector/check coverage points** with severity scoring
+
+- **205 zen principles** across programming, workflow, and config domains
+- **217 detector/check coverage points** with severity scoring
 - **MCP server** for IDE and agent workflows (13 tools, 3 resources, 1 prompt)
 - **CLI reports** with remediation prompts and JSON / Markdown export
 - **Rule-driven pipelines** configurable per language and project

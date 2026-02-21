@@ -25,6 +25,7 @@ from mcp_zen_of_languages.languages.github_actions.analyzer import (
 from mcp_zen_of_languages.languages.go.analyzer import GoAnalyzer
 from mcp_zen_of_languages.languages.javascript.analyzer import JavaScriptAnalyzer
 from mcp_zen_of_languages.languages.json.analyzer import JsonAnalyzer
+from mcp_zen_of_languages.languages.markdown.analyzer import MarkdownAnalyzer
 from mcp_zen_of_languages.languages.powershell.analyzer import PowerShellAnalyzer
 from mcp_zen_of_languages.languages.python.analyzer import PythonAnalyzer
 from mcp_zen_of_languages.languages.ruby.analyzer import RubyAnalyzer
@@ -61,6 +62,7 @@ SUPPORTED_LANGUAGES: tuple[str, ...] = (
     "xml",
     "json",
     "sql",
+    "markdown",
 )
 
 _ANALYZERS_BY_ALIAS: dict[str, AnalyzerClass] = {
@@ -109,6 +111,8 @@ _ANALYZERS_BY_ALIAS: dict[str, AnalyzerClass] = {
     "mysql": SqlAnalyzer,
     "sqlite": SqlAnalyzer,
     "mssql": SqlAnalyzer,
+    "markdown": MarkdownAnalyzer,
+    "mdx": MarkdownAnalyzer,
 }
 
 
@@ -169,6 +173,7 @@ def create_analyzer(
         XML                             ``xml``
         JSON                            ``json``
         SQL                             ``sql``, ``postgresql``, ``mysql``, ``sqlite``, ``mssql``
+        Markdown / MDX                  ``markdown``, ``mdx``
         =============================== ===================================
     """
     lang = language.lower()

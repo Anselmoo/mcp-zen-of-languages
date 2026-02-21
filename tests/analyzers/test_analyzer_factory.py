@@ -26,3 +26,7 @@ def test_create_analyzer_types():
     assert sql.language() == "sql"
     postgres = create_analyzer("postgresql")
     assert postgres.language() == "sql"
+    markdown = create_analyzer("markdown")
+    assert markdown.language() == "markdown"
+    mdx = create_analyzer("mdx")
+    assert mdx.language() == "markdown"

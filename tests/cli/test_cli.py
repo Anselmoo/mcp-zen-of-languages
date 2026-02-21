@@ -325,6 +325,7 @@ SAMPLES = {
     "toml": 'key = "value"\n',
     "json": '{"key": "value"}\n',
     "sql": "SELECT id FROM users;\n",
+    "markdown": "# Title\n\nSee http://example.com\n",
     "xml": "<root></root>\n",
     "docker_compose": "services:\n  web:\n    image: nginx:latest\n",
     "dockerfile": "FROM ubuntu:latest\nUSER root\n",

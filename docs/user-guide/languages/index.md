@@ -34,7 +34,6 @@ Every language has its own philosophy — its own sense of what "good code" mean
 | [Markdown / MDX](markdown.md) | 7 | 7 | Regex | [CommonMark + MDX authoring best practices](https://commonmark.org/) |
 | **Programming subtotal** | **159** | **171** | | |
 
-
 ### Workflows & Automation
 
 | Language | Principles | Workflow Checks | Parser | Philosophy Origin |
@@ -53,7 +52,6 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 - **Principles (all categories):** 205
 - **Detectors + workflow checks:** 217
-
 
 ## Maturity Tiers
 

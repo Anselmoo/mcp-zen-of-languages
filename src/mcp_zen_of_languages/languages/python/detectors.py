@@ -2238,15 +2238,12 @@ class UnusedArgumentUtilizationDetector(
                 if isinstance(name, ast.Name) and isinstance(name.ctx, ast.Load)
             }
 
-            has_logger = (
-                "logger" in used_names
-                or any(
-                    isinstance(attr, ast.Attribute)
-                    and isinstance(attr.value, ast.Name)
-                    and attr.value.id == "self"
-                    and attr.attr == "logger"
-                    for attr in ast.walk(node)
-                )
+            has_logger = "logger" in used_names or any(
+                isinstance(attr, ast.Attribute)
+                and isinstance(attr.value, ast.Name)
+                and attr.value.id == "self"
+                and attr.attr == "logger"
+                for attr in ast.walk(node)
             )
 
             for arg in argument_nodes:
@@ -2311,7 +2308,7 @@ class UnusedArgumentUtilizationDetector(
         ):
             return (
                 f"Did you forget to use '{argument_name}'? Integrate it into logging, "
-                f"for example logger.debug({argument_name})."
+                f"for example logger.debug('Using %s', {argument_name})."
             )
         if lower_name.endswith("_id"):
             return (

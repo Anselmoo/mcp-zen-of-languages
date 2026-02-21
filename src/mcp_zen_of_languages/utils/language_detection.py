@@ -108,9 +108,13 @@ def detect_language_by_extension(path: str) -> DetectionResult:
             method="extension",
         )
     if file_name in GITLAB_CI_FILENAMES:
-        return DetectionResult(language="gitlab_ci", confidence=0.99, method="extension")
+        return DetectionResult(
+            language="gitlab_ci", confidence=0.99, method="extension"
+        )
     if "gitlab-ci" in {part.lower() for part in parts} and ext in YAML_EXTENSIONS:
-        return DetectionResult(language="gitlab_ci", confidence=0.98, method="extension")
+        return DetectionResult(
+            language="gitlab_ci", confidence=0.98, method="extension"
+        )
     lang = EXTENSION_LANGUAGE_MAP.get(ext, "unknown")
     return DetectionResult(language=lang, confidence=0.95, method="extension")
 

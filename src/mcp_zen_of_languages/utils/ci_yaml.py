@@ -31,7 +31,9 @@ def split_top_level_blocks(code: str) -> list[TopLevelBlock]:
     blocks: list[TopLevelBlock] = []
     for position, (name, start) in enumerate(keys):
         end = keys[position + 1][1] - 1 if position + 1 < len(keys) else len(lines)
-        blocks.append(TopLevelBlock(name=name, start_line=start, lines=lines[start - 1 : end]))
+        blocks.append(
+            TopLevelBlock(name=name, start_line=start, lines=lines[start - 1 : end])
+        )
     return blocks
 
 

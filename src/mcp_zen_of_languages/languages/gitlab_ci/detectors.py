@@ -32,7 +32,9 @@ GLOBAL_KEYS = {
     "after_script",
     "cache",
 }
-SECRET_NAME_RE = re.compile(r"(token|secret|password|passwd|api[_-]?key)", re.IGNORECASE)
+SECRET_NAME_RE = re.compile(
+    r"(token|secret|password|passwd|api[_-]?key)", re.IGNORECASE
+)
 DEPENDENCY_INSTALL_RE = re.compile(
     r"(pip install|npm ci|npm install|yarn install|pnpm install|bundle install|go mod download|cargo build)",
     re.IGNORECASE,
@@ -163,7 +165,9 @@ class AllowFailureWithoutRulesDetector(
             if _block_has_rules(block):
                 continue
             line = find_key_line(block, "allow_failure")
-            if line and re.search(r"allow_failure:\s*true", context.code.splitlines()[line - 1]):
+            if line and re.search(
+                r"allow_failure:\s*true", context.code.splitlines()[line - 1]
+            ):
                 violations.append(
                     self.build_violation(
                         config,
@@ -189,7 +193,9 @@ class GodPipelineDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
     ) -> list[Violation]:
         if len(context.code.splitlines()) <= LINE_THRESHOLD:
             return []
-        if any(block.name == "include" for block in split_top_level_blocks(context.code)):
+        if any(
+            block.name == "include" for block in split_top_level_blocks(context.code)
+        ):
             return []
         return [
             self.build_violation(

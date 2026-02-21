@@ -91,6 +91,7 @@ LANGUAGES: list[tuple[str, str, str, str, str]] = [
 
 WORKFLOW_LANGUAGES: list[tuple[str, str, str]] = [
     ("github_actions", "GitHub Actions", "github-actions.md"),
+    ("gitlab_ci", "GitLab CI", "gitlab-ci.md"),
 ]
 
 CONFIG_LANGUAGES: list[tuple[str, str]] = [

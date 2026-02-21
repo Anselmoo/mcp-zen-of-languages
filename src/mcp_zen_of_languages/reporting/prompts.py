@@ -203,6 +203,13 @@ GENERIC_PROMPTS_BY_LANGUAGE: dict[str, list[tuple[str, str]]] = {
             "secret-like values out of inline environment blocks.",
         ),
     ],
+    "gitlab_ci": [
+        (
+            "GitLab pipeline hardening",
+            "Pin images, replace only/except with rules, add needs/cache/expire_in, "
+            "and extract duplicated job setup into reusable templates.",
+        ),
+    ],
 }
 
 

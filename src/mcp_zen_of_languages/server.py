@@ -121,6 +121,8 @@ def _canonical_language(language: str) -> str:
         "github_actions": "github-actions",
         "gha": "github-actions",
         "docker-compose": "docker_compose",
+        "gitlab-ci": "gitlab_ci",
+        "gitlabci": "gitlab_ci",
         "tex": "latex",
         "ltx": "latex",
         "sty": "latex",

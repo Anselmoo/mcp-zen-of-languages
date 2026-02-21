@@ -44,7 +44,10 @@ PROGRAMMING_LANGUAGES: list[tuple[str, str]] = [
     ("markdown", "markdown"),
     ("latex", "latex"),
 ]
-WORKFLOW_LANGUAGES: list[tuple[str, str]] = [("github_actions", "github-actions")]
+WORKFLOW_LANGUAGES: list[tuple[str, str]] = [
+    ("github_actions", "github-actions"),
+    ("gitlab_ci", "gitlab_ci"),
+]
 CONFIG_LANGUAGES: list[tuple[str, str]] = [
     ("json", "json"),
     ("toml", "toml"),

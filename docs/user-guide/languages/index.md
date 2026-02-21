@@ -40,7 +40,8 @@ Every language has its own philosophy — its own sense of what "good code" mean
 | Language | Principles | Workflow Checks | Parser | Philosophy Origin |
 |----------|:----------:|:---------------:|--------|-------------------|
 | [GitHub Actions](github-actions.md) | 15 | 15 | YAML | [GitHub Actions Workflow Syntax](https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions) |
-| **Workflows subtotal** | **15** | **15** | | |
+| [GitLab CI](gitlab-ci.md) | 10 | 10 | YAML | [GitLab CI/CD documentation](https://docs.gitlab.com/ee/ci/) |
+| **Workflows subtotal** | **25** | **25** | | |
 
 ### Config Formats
 
@@ -51,8 +52,8 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 ### Coverage Totals
 
-- **Principles (all categories):** 214
-- **Detectors + workflow checks:** 226
+- **Principles (all categories):** 224
+- **Detectors + workflow checks:** 236
 
 ## Maturity Tiers
 

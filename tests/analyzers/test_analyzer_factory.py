@@ -36,3 +36,5 @@ def test_create_analyzer_types():
     assert tex.language() == "latex"
     bibtex = create_analyzer("bibtex")
     assert bibtex.language() == "latex"
+    gitlab_ci = create_analyzer("gitlab-ci")
+    assert gitlab_ci.language() == "gitlab_ci"

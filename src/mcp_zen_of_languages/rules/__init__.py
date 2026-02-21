@@ -64,6 +64,7 @@ def _initialize_registry() -> None:
     from mcp_zen_of_languages.languages.docker_compose.rules import DOCKER_COMPOSE_ZEN
     from mcp_zen_of_languages.languages.dockerfile.rules import DOCKERFILE_ZEN
     from mcp_zen_of_languages.languages.github_actions.rules import GITHUB_ACTIONS_ZEN
+    from mcp_zen_of_languages.languages.gitlab_ci.rules import GITLAB_CI_ZEN
     from mcp_zen_of_languages.languages.go.rules import GO_ZEN
     from mcp_zen_of_languages.languages.javascript.rules import JAVASCRIPT_ZEN
     from mcp_zen_of_languages.languages.json.rules import JSON_ZEN
@@ -99,6 +100,7 @@ def _initialize_registry() -> None:
             "powershell": POWERSHELL_ZEN,
             "yaml": YAML_ZEN,
             "github-actions": GITHUB_ACTIONS_ZEN,
+            "gitlab_ci": GITLAB_CI_ZEN,
             "toml": TOML_ZEN,
             "xml": XML_ZEN,
             "latex": LATEX_ZEN,

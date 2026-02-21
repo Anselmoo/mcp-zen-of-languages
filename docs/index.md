@@ -15,50 +15,53 @@ Every programming language has a philosophy — a sense of what "good code" look
 
 <div class="grid cards" markdown>
 
--   :material-rocket-launch:{ .lg .middle } **Start fast**
+- :material-rocket-launch:{ .lg .middle } **Start fast**
 
-    ---
+  ***
 
-    Install, initialize, and run your first analysis in under two minutes.
+  Install, initialize, and run your first analysis in under two minutes.
 
-    [Quickstart](getting-started/quickstart.md)
+  [Quickstart](getting-started/quickstart.md)
 
--   :material-console:{ .lg .middle } **Use the CLI**
+- :material-console:{ .lg .middle } **Use the CLI**
 
-    ---
+  ***
 
-    Run `zen` for local checks, exports, and CI automation with JSON/Markdown outputs.
+  Run `zen` for local checks, exports, and CI automation with JSON/Markdown outputs.
 
-    [CLI Reference](user-guide/cli-reference.md)
+  [CLI Reference](user-guide/cli-reference.md)
 
--   :material-api:{ .lg .middle } **Integrate via MCP**
+- :material-api:{ .lg .middle } **Integrate via MCP**
 
-    ---
+  ***
 
-    Connect to VS Code, Copilot, and other MCP-compatible clients for AI-assisted analysis.
+  Connect to VS Code, Copilot, and other MCP-compatible clients for AI-assisted analysis.
 
-    [MCP Integration](getting-started/mcp-integration.md)
+  [MCP Integration](getting-started/mcp-integration.md)
 
--   :material-translate:{ .lg .middle } **Explore language coverage**
+- :material-translate:{ .lg .middle } **Explore language coverage**
 
-    ---
+  ***
 
-    From Python's PEP 20 to Rust's ownership idioms — each language has its own zen.
+  From Python's PEP 20 to Rust's ownership idioms — each language has its own zen.
 
-    [Languages](user-guide/languages/index.md)
+  [Languages](user-guide/languages/index.md)
 
--   :material-wrench-cog:{ .lg .middle } **Solution workflow**
+- :material-wrench-cog:{ .lg .middle } **Solution workflow**
 
-    ---
+  ***
 
-    Analyze code, generate remediation prompts, and turn findings into actionable fixes.
+  Analyze code, generate remediation prompts, and turn findings into actionable fixes.
 
-    [Project Analysis](user-guide/project-analysis.md)
+  [Project Analysis](user-guide/project-analysis.md)
 
 </div>
 
 !!! tip "Why zen?"
-    Most linters focus on formatting. Zen analysis goes deeper — it detects **architectural** and **idiomatic** issues: god classes, circular dependencies, callback hell, unsafe blocks, monkey-patching. The goal isn't nitpicking commas; it's surfacing the structural problems that slow teams down.
+Most linters focus on formatting. Zen analysis goes deeper — it detects **architectural** and **idiomatic** issues: god classes, circular dependencies, callback hell, unsafe blocks, monkey-patching. The goal isn't nitpicking commas; it's surfacing the structural problems that slow teams down.
+
+!!! note "New: GitLab CI workflow analysis"
+GitLab CI (`.gitlab-ci.yml` and `gitlab-ci/**/*.yml`) is now supported with dedicated zen rules for security, maintainability, and idiomatic pipeline practices.
 
 ## Why MCP
 
@@ -92,45 +95,45 @@ zen report path/to/project
 
 <div class="grid cards" markdown>
 
--   :material-check-all:{ .lg .middle } **Full Analysis**
+- :material-check-all:{ .lg .middle } **Full Analysis**
 
-    ---
+  ***
 
-    AST parsing, cyclomatic complexity, dependency graphs, maintainability index. The deepest analysis available.
+  AST parsing, cyclomatic complexity, dependency graphs, maintainability index. The deepest analysis available.
 
-    **Python**
+  **Python**
 
--   :material-shield-check:{ .lg .middle } **Rule-Driven**
+- :material-shield-check:{ .lg .middle } **Rule-Driven**
 
-    ---
+  ***
 
-    Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
+  Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
 
-    **TypeScript · Rust · Go · JavaScript · CSS · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile**
+  **TypeScript · Rust · Go · JavaScript · CSS · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile**
 
--   :material-language-markdown:{ .lg .middle } **Documentation & Markup**
+- :material-language-markdown:{ .lg .middle } **Documentation & Markup**
 
-    ---
+  ***
 
-    Markup-focused detectors for docs and technical writing quality, structure, and maintainability.
+  Markup-focused detectors for docs and technical writing quality, structure, and maintainability.
 
-    **Markdown / MDX · LaTeX**
+  **Markdown / MDX · LaTeX**
 
--   :material-source-branch:{ .lg .middle } **Workflow Automation**
+- :material-source-branch:{ .lg .middle } **Workflow Automation**
 
-    ---
+  ***
 
-    CI/CD-specific security and maintainability checks for pipeline files and reusable workflow patterns.
+  CI/CD-specific security and maintainability checks for pipeline files and reusable workflow patterns.
 
-    **GitHub Actions**
+  **GitHub Actions**
 
--   :material-file-cog:{ .lg .middle } **Config Validation**
+- :material-file-cog:{ .lg .middle } **Config Validation**
 
-    ---
+  ***
 
-    Schema and structure-focused detectors for data formats. Checks consistency, naming conventions, and format-specific best practices.
+  Schema and structure-focused detectors for data formats. Checks consistency, naming conventions, and format-specific best practices.
 
-    **JSON · TOML · XML · YAML**
+  **JSON · TOML · XML · YAML**
 
 </div>
 
@@ -142,35 +145,35 @@ The MCP server exposes **13 tools** across five families, plus **3 resources** a
 
 <div class="grid cards" markdown>
 
--   :material-magnify:{ .lg .middle } **Analysis** (3 tools)
+- :material-magnify:{ .lg .middle } **Analysis** (3 tools)
 
-    ---
+  ***
 
-    `analyze_zen_violations` · `analyze_repository` · `check_architectural_patterns`
+  `analyze_zen_violations` · `analyze_repository` · `check_architectural_patterns`
 
--   :material-file-document-outline:{ .lg .middle } **Reporting** (3 tools)
+- :material-file-document-outline:{ .lg .middle } **Reporting** (3 tools)
 
-    ---
+  ***
 
-    `generate_prompts` · `generate_agent_tasks` · `generate_report`
+  `generate_prompts` · `generate_agent_tasks` · `generate_report`
 
--   :material-cog-outline:{ .lg .middle } **Configuration** (3 tools)
+- :material-cog-outline:{ .lg .middle } **Configuration** (3 tools)
 
-    ---
+  ***
 
-    `get_config` · `set_config_override` · `clear_config_overrides`
+  `get_config` · `set_config_override` · `clear_config_overrides`
 
--   :material-tag-text-outline:{ .lg .middle } **Metadata** (3 tools)
+- :material-tag-text-outline:{ .lg .middle } **Metadata** (3 tools)
 
-    ---
+  ***
 
-    `detect_languages` · `get_supported_languages` · `export_rule_detector_mapping`
+  `detect_languages` · `get_supported_languages` · `export_rule_detector_mapping`
 
--   :material-rocket-launch-outline:{ .lg .middle } **Onboarding** (1 tool)
+- :material-rocket-launch-outline:{ .lg .middle } **Onboarding** (1 tool)
 
-    ---
+  ***
 
-    `onboard_project` — initialise `zen-config.yaml` for any repository
+  `onboard_project` — initialise `zen-config.yaml` for any repository
 
 </div>
 

@@ -23,6 +23,7 @@ from mcp_zen_of_languages import server
             "github-actions",
             "name: CI\non: push\njobs:\n  build:\n    runs-on: ubuntu-latest\n    timeout-minutes: 10\n    steps:\n      - run: echo hi\n        shell: bash",
         ),
+        ("gitlab_ci", "build:\n  script:\n    - echo hello"),
         ("toml", "name = 'value'"),
         ("xml", "<root><item /></root>"),
         ("json", '{"name": "value"}'),

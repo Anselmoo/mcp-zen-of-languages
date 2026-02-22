@@ -10,6 +10,24 @@ tags:
 
 
 
+## Optional External Tool Augmentation
+
+!!! info "Consent-first external tooling"
+    External tool execution is optional and disabled by default. Use
+    `--enable-external-tools` (CLI) or `enable_external_tools=true` (MCP)
+    to opt in. Missing tools should return recommendations; no automatic
+    installs occur during analysis.
+
+| Tool | Default invocation | Output |
+|------|---------------------|--------|
+| `markdownlint` | `markdownlint --stdin --json` | JSON |
+| `prettier` | `prettier --check --stdin-filepath stdin.md` | Text / structured stderr |
+
+!!! tip "Temporary runner fallback"
+    For temporary execution via package runners, use
+    `--allow-temporary-runners` (CLI) or `allow_temporary_runners=true` (MCP).
+
+
 ## Zen Principles
 
 7 principles across 7 categories, drawn from [CommonMark + MDX authoring best practices](https://commonmark.org/).

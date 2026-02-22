@@ -375,6 +375,9 @@ class ExternalToolResult(BaseModel):
     tool: str
     status: str
     message: str
+    strategy: str | None = None
+    command: list[str] = Field(default_factory=list)
+    resolution_attempts: list[str] = Field(default_factory=list)
     recommendation: str | None = None
     returncode: int | None = None
     stdout: str | None = None
@@ -385,6 +388,7 @@ class ExternalAnalysisResult(BaseModel):
     """Optional external-analysis envelope attached to ``AnalysisResult``."""
 
     enabled: bool = False
+    temporary_runners_enabled: bool = False
     language: str
     quality_note: str
     tools: list[ExternalToolResult] = Field(default_factory=list)

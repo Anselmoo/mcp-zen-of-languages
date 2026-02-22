@@ -11,6 +11,7 @@ from mcp_zen_of_languages.models import CyclomaticSummary
 from mcp_zen_of_languages.utils.subprocess_runner import (
     SubprocessResult,
     SubprocessToolRunner,
+    ToolResolution,
 )
 
 
@@ -42,7 +43,14 @@ class _ExternalDummyAnalyzer(BaseAnalyzer):
 def test_external_analysis_disabled_exposes_opt_in_hint(monkeypatch):
     analyzer = _ExternalDummyAnalyzer()
     monkeypatch.setattr(
-        SubprocessToolRunner, "is_available", staticmethod(lambda _t: True)
+        SubprocessToolRunner,
+        "resolve_tool",
+        lambda self, tool, **_kwargs: ToolResolution(
+            tool=tool,
+            command=["ruff"],
+            strategy="path",
+            attempts=["path:ruff"],
+        ),
     )
 
     result = analyzer.analyze("x = 1", enable_external_tools=False)
@@ -56,7 +64,9 @@ def test_external_analysis_disabled_exposes_opt_in_hint(monkeypatch):
 def test_external_analysis_enabled_handles_unavailable_tool(monkeypatch):
     analyzer = _ExternalDummyAnalyzer()
     monkeypatch.setattr(
-        SubprocessToolRunner, "is_available", staticmethod(lambda _t: False)
+        SubprocessToolRunner,
+        "resolve_tool",
+        lambda self, tool, **_kwargs: ToolResolution(tool=tool, attempts=["path:ruff"]),
     )
 
     result = analyzer.analyze("x = 1", enable_external_tools=True)
@@ -70,16 +80,26 @@ def test_external_analysis_enabled_handles_unavailable_tool(monkeypatch):
 def test_external_analysis_enabled_runs_tool_when_available(monkeypatch):
     analyzer = _ExternalDummyAnalyzer()
     monkeypatch.setattr(
-        SubprocessToolRunner, "is_available", staticmethod(lambda _t: True)
+        SubprocessToolRunner,
+        "resolve_tool",
+        lambda self, tool, **_kwargs: ToolResolution(
+            tool=tool,
+            command=["ruff"],
+            strategy="path",
+            attempts=["path:ruff"],
+        ),
     )
     monkeypatch.setattr(
         SubprocessToolRunner,
         "run",
-        lambda self, tool, args, *, code="": SubprocessResult(
+        lambda self, tool, args, *, code="", **_kwargs: SubprocessResult(
             tool=tool,
             returncode=0,
             stdout="ok",
             stderr="",
+            strategy="path",
+            command=["ruff", *(args or [])],
+            resolution_attempts=["path:ruff"],
         ),
     )
 
@@ -94,12 +114,19 @@ def test_external_analysis_enabled_runs_tool_when_available(monkeypatch):
 def test_external_analysis_enabled_handles_execution_failure(monkeypatch):
     analyzer = _ExternalDummyAnalyzer()
     monkeypatch.setattr(
-        SubprocessToolRunner, "is_available", staticmethod(lambda _t: True)
+        SubprocessToolRunner,
+        "resolve_tool",
+        lambda self, tool, **_kwargs: ToolResolution(
+            tool=tool,
+            command=["ruff"],
+            strategy="path",
+            attempts=["path:ruff"],
+        ),
     )
     monkeypatch.setattr(
         SubprocessToolRunner,
         "run",
-        lambda self, tool, args, *, code="": None,
+        lambda self, tool, args, *, code="", **_kwargs: None,
     )
 
     result = analyzer.analyze("x = 1", enable_external_tools=True)
@@ -112,16 +139,26 @@ def test_external_analysis_truncates_long_tool_output(monkeypatch):
     analyzer = _ExternalDummyAnalyzer()
     long_output = "x" * 5000
     monkeypatch.setattr(
-        SubprocessToolRunner, "is_available", staticmethod(lambda _t: True)
+        SubprocessToolRunner,
+        "resolve_tool",
+        lambda self, tool, **_kwargs: ToolResolution(
+            tool=tool,
+            command=["ruff"],
+            strategy="path",
+            attempts=["path:ruff"],
+        ),
     )
     monkeypatch.setattr(
         SubprocessToolRunner,
         "run",
-        lambda self, tool, args, *, code="": SubprocessResult(
+        lambda self, tool, args, *, code="", **_kwargs: SubprocessResult(
             tool=tool,
             returncode=0,
             stdout=long_output,
             stderr=long_output,
+            strategy="path",
+            command=["ruff", *(args or [])],
+            resolution_attempts=["path:ruff"],
         ),
     )
 

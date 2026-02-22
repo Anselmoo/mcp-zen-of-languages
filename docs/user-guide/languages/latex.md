@@ -10,6 +10,20 @@ tags:
 
 
 
+## Optional External Tool Augmentation
+
+!!! info "Consent-first external tooling"
+    External tool execution is optional and disabled by default. Use
+    `--enable-external-tools` (CLI) or `enable_external_tools=true` (MCP)
+    to opt in. Missing tools should return recommendations; no automatic
+    installs occur during analysis.
+
+| Tool | Default invocation | Output |
+|------|---------------------|--------|
+| `chktex` | `chktex -q -v0 -` | Text / structured stderr |
+
+
+
 ## Zen Principles
 
 9 principles across 6 categories, drawn from [LaTeX Project](https://www.latex-project.org/).

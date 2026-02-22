@@ -10,6 +10,25 @@ tags:
 
 Stylesheets can accumulate hidden complexity quickly — deeply nested selectors, hardcoded values, and oversized files that become difficult to maintain. These **8 principles** focus on keeping CSS, SCSS, and Less modular, token-driven, and consistent with frontend design-system practices.
 
+## Optional External Tool Augmentation
+
+!!! info "Consent-first external tooling"
+    External tool execution is optional and disabled by default. Use
+    `--enable-external-tools` (CLI) or `enable_external_tools=true` (MCP)
+    to opt in. Missing tools should return recommendations; no automatic
+    installs occur during analysis.
+
+| Tool | Default invocation | Output |
+|------|---------------------|--------|
+| `biome` | `biome lint --stdin-file-path stdin.css --reporter json` | JSON |
+| `prettier` | `prettier --check --stdin-filepath stdin.css` | Text / structured stderr |
+| `stylelint` | `stylelint --stdin-filename stdin.css` | Text / structured stderr |
+
+!!! tip "Temporary runner fallback"
+    For temporary execution via package runners, use
+    `--allow-temporary-runners` (CLI) or `allow_temporary_runners=true` (MCP).
+
+
 ## Zen Principles
 
 8 principles across 5 categories, drawn from [CSSWG + common modular CSS practices](https://www.w3.org/TR/CSS/).

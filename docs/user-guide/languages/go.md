@@ -10,6 +10,20 @@ tags:
 
 Go's philosophy is radical simplicity: small interfaces, explicit errors, flat hierarchies. These **12 principles** come from [Effective Go](https://go.dev/doc/effective_go), the [Go Proverbs](https://go-proverbs.github.io/), and the collective wisdom of the Go community. They catch the patterns where Go's simplicity gets undermined.
 
+## Optional External Tool Augmentation
+
+!!! info "Consent-first external tooling"
+    External tool execution is optional and disabled by default. Use
+    `--enable-external-tools` (CLI) or `enable_external_tools=true` (MCP)
+    to opt in. Missing tools should return recommendations; no automatic
+    installs occur during analysis.
+
+| Tool | Default invocation | Output |
+|------|---------------------|--------|
+| `go` | `go vet ./...` | Text / structured stderr |
+
+
+
 ## Zen Principles
 
 12 principles across 8 categories, drawn from [Effective Go](https://go.dev/doc/effective_go).

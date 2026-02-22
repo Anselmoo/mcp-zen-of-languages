@@ -10,6 +10,20 @@ tags:
 
 Modern C++ (C++11 through C++20) is a fundamentally different language from the C-with-classes of the 1990s. These **13 principles** encode the [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/) philosophy: resource safety through RAII, type safety through smart pointers, and clarity through `auto`, `const`, and `override`.
 
+## Optional External Tool Augmentation
+
+!!! info "Consent-first external tooling"
+    External tool execution is optional and disabled by default. Use
+    `--enable-external-tools` (CLI) or `enable_external_tools=true` (MCP)
+    to opt in. Missing tools should return recommendations; no automatic
+    installs occur during analysis.
+
+| Tool | Default invocation | Output |
+|------|---------------------|--------|
+| `cppcheck` | `cppcheck --language=c++ -` | Text / structured stderr |
+
+
+
 ## Zen Principles
 
 13 principles across 7 categories, drawn from [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines).

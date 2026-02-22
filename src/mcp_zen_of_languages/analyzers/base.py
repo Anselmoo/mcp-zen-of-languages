@@ -703,7 +703,7 @@ class BaseAnalyzer(ABC):
         return AnalyzerCapabilities()
 
     # Template Method - defines the algorithm structure
-    def analyze(
+    def analyze(  # noqa: PLR0913
         self,
         code: str,
         path: str | None = None,
@@ -711,6 +711,7 @@ class BaseAnalyzer(ABC):
         repository_imports: dict[str, list[str]] | None = None,
         *,
         enable_external_tools: bool = False,
+        allow_temporary_tools: bool = False,
     ) -> AnalysisResult:
         """Run the full analysis workflow against a single source file.
 
@@ -747,6 +748,9 @@ class BaseAnalyzer(ABC):
                 detectors.
             enable_external_tools: Run allow-listed external linters/tools
                 in best-effort mode for additional diagnostics.
+            allow_temporary_tools: Allow temporary-runner strategies
+                (for example ``npx``/``uvx``) when direct/no-install
+                resolution is unavailable.
 
         Returns:
             Fully populated analysis result containing metrics,
@@ -782,6 +786,7 @@ class BaseAnalyzer(ABC):
         context.external_analysis = self._build_external_analysis(
             context,
             enable_external_tools=enable_external_tools,
+            allow_temporary_tools=allow_temporary_tools,
         )
 
         # 5. Run detection pipeline
@@ -997,6 +1002,7 @@ class BaseAnalyzer(ABC):
         context: AnalysisContext,
         *,
         enable_external_tools: bool,
+        allow_temporary_tools: bool,
     ) -> ExternalAnalysisResult | None:
         """Optionally run allow-listed external tools for deeper analysis quality."""
         from mcp_zen_of_languages.utils.subprocess_runner import (
@@ -1012,12 +1018,20 @@ class BaseAnalyzer(ABC):
         tool_results: list[ExternalToolResult] = []
         if not enable_external_tools:
             for tool_name in tool_map:
-                if runner.is_available(tool_name):
+                resolution = runner.resolve_tool(
+                    tool_name,
+                    language=self.language(),
+                    allow_temporary_tools=allow_temporary_tools,
+                )
+                if resolution.command is not None:
                     tool_results.append(
                         ExternalToolResult(
                             tool=tool_name,
                             status="available",
                             message="Available but not executed (opt-in required).",
+                            strategy=resolution.strategy,
+                            command=resolution.command,
+                            resolution_attempts=resolution.attempts,
                             recommendation=(
                                 f"Enable external tools to run '{tool_name}' and increase analysis depth."
                             ),
@@ -1028,7 +1042,8 @@ class BaseAnalyzer(ABC):
                         ExternalToolResult(
                             tool=tool_name,
                             status="unavailable",
-                            message="Tool not found on PATH; execution skipped.",
+                            message="Tool could not be resolved; execution skipped.",
+                            resolution_attempts=resolution.attempts,
                             recommendation=(
                                 f"Install '{tool_name}' and re-run with external tools enabled."
                             ),
@@ -1036,18 +1051,25 @@ class BaseAnalyzer(ABC):
                     )
             return ExternalAnalysisResult(
                 enabled=False,
+                temporary_runners_enabled=allow_temporary_tools,
                 language=self.language(),
                 quality_note="External tool analysis is disabled by default.",
                 tools=tool_results,
             )
 
         for tool_name, default_args in tool_map.items():
-            if not runner.is_available(tool_name):
+            resolution = runner.resolve_tool(
+                tool_name,
+                language=self.language(),
+                allow_temporary_tools=allow_temporary_tools,
+            )
+            if resolution.command is None:
                 tool_results.append(
                     ExternalToolResult(
                         tool=tool_name,
                         status="unavailable",
-                        message="Tool not found on PATH; execution skipped.",
+                        message="Tool could not be resolved; execution skipped.",
+                        resolution_attempts=resolution.attempts,
                         recommendation=(
                             f"Install '{tool_name}' to improve {self.language()} analysis quality."
                         ),
@@ -1055,13 +1077,22 @@ class BaseAnalyzer(ABC):
                 )
                 continue
 
-            run_result = runner.run(tool_name, default_args, code=context.code)
+            run_result = runner.run(
+                tool_name,
+                default_args,
+                code=context.code,
+                language=self.language(),
+                allow_temporary_tools=allow_temporary_tools,
+            )
             if run_result is None:
                 tool_results.append(
                     ExternalToolResult(
                         tool=tool_name,
                         status="execution_failed",
                         message="Tool execution failed or timed out.",
+                        strategy=resolution.strategy,
+                        command=resolution.command or [],
+                        resolution_attempts=resolution.attempts,
                         recommendation=(
                             f"Verify '{tool_name}' installation and rerun external analysis."
                         ),
@@ -1079,16 +1110,23 @@ class BaseAnalyzer(ABC):
                         if run_result.returncode == 0
                         else "Tool executed and reported diagnostics."
                     ),
+                    strategy=run_result.strategy,
+                    command=run_result.command,
+                    resolution_attempts=run_result.resolution_attempts,
                     returncode=run_result.returncode,
                     stdout=self._truncate_external_output(run_result.stdout),
                     stderr=self._truncate_external_output(run_result.stderr),
                 ),
             )
 
+        quality_note = "External tool analysis executed with best-effort behavior."
+        if allow_temporary_tools:
+            quality_note += " Temporary runners were enabled."
         return ExternalAnalysisResult(
             enabled=True,
+            temporary_runners_enabled=allow_temporary_tools,
             language=self.language(),
-            quality_note="External tool analysis executed with best-effort behavior.",
+            quality_note=quality_note,
             tools=tool_results,
         )
 

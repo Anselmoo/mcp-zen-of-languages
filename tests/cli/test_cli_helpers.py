@@ -126,7 +126,11 @@ def test_emit_external_tool_guidance_shows_opt_in_tip(capsys):
         overall_score=100.0,
     )
 
-    cli._emit_external_tool_guidance([result], enable_external_tools=False)
+    cli._emit_external_tool_guidance(
+        [result],
+        enable_external_tools=False,
+        allow_temporary_tools=False,
+    )
 
     output = capsys.readouterr().out
     assert "--enable-external-tools" in output
@@ -156,7 +160,11 @@ def test_emit_external_tool_guidance_shows_missing_tool_recommendation(capsys):
         ),
     )
 
-    cli._emit_external_tool_guidance([result], enable_external_tools=True)
+    cli._emit_external_tool_guidance(
+        [result],
+        enable_external_tools=True,
+        allow_temporary_tools=False,
+    )
 
     output = capsys.readouterr().out
     assert "Install 'ruff'" in output

@@ -10,6 +10,20 @@ tags:
 
 Shell scripts are the glue of infrastructure — and the source of some of the most insidious production bugs. An unquoted variable, a missing `set -e`, a rogue `eval` — these cause outages. These **14 principles** encode defensive shell scripting practices from the [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html) and [ShellCheck](https://www.shellcheck.net/) community.
 
+## Optional External Tool Augmentation
+
+!!! info "Consent-first external tooling"
+    External tool execution is optional and disabled by default. Use
+    `--enable-external-tools` (CLI) or `enable_external_tools=true` (MCP)
+    to opt in. Missing tools should return recommendations; no automatic
+    installs occur during analysis.
+
+| Tool | Default invocation | Output |
+|------|---------------------|--------|
+| `shellcheck` | `shellcheck - -f json` | JSON |
+
+
+
 ## Zen Principles
 
 14 principles across 10 categories, drawn from [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html).

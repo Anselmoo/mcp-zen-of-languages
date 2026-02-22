@@ -10,6 +10,20 @@ tags:
 
 Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullable reference types, collection expressions. These **13 principles** catch codebases stuck on older patterns and guide them toward the expressive, safe idioms that the .NET team recommends.
 
+## Optional External Tool Augmentation
+
+!!! info "Consent-first external tooling"
+    External tool execution is optional and disabled by default. Use
+    `--enable-external-tools` (CLI) or `enable_external_tools=true` (MCP)
+    to opt in. Missing tools should return recommendations; no automatic
+    installs occur during analysis.
+
+| Tool | Default invocation | Output |
+|------|---------------------|--------|
+| `dotnet` | `dotnet format --verify-no-changes` | Text / structured stderr |
+
+
+
 ## Zen Principles
 
 13 principles across 8 categories, drawn from [C# Coding Conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions).

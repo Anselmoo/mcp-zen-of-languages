@@ -13,6 +13,23 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 !!! tip "Deepest analysis available"
     Python is the only language with full **AST parsing**, **cyclomatic complexity** measurement, **maintainability index** scoring, and **dependency graph analysis**. Other languages use regex-based detection.
 
+## Optional External Tool Augmentation
+
+!!! info "Consent-first external tooling"
+    External tool execution is optional and disabled by default. Use
+    `--enable-external-tools` (CLI) or `enable_external_tools=true` (MCP)
+    to opt in. Missing tools should return recommendations; no automatic
+    installs occur during analysis.
+
+| Tool | Default invocation | Output |
+|------|---------------------|--------|
+| `ruff` | `ruff check --stdin-filename stdin.py -` | Text / structured stderr |
+
+!!! tip "Temporary runner fallback"
+    For temporary execution via package runners, use
+    `--allow-temporary-runners` (CLI) or `allow_temporary_runners=true` (MCP).
+
+
 ## Zen Principles
 
 12 principles across 10 categories, drawn from [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/).

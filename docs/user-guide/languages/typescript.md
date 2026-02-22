@@ -10,6 +10,25 @@ tags:
 
 TypeScript's power lies in its type system — but that power is easily undermined by `any` casts, missing return types, and non-null assertions. MCP Zen of Languages encodes **10 type-safety principles** that catch the patterns where TypeScript's guarantees quietly erode.
 
+## Optional External Tool Augmentation
+
+!!! info "Consent-first external tooling"
+    External tool execution is optional and disabled by default. Use
+    `--enable-external-tools` (CLI) or `enable_external_tools=true` (MCP)
+    to opt in. Missing tools should return recommendations; no automatic
+    installs occur during analysis.
+
+| Tool | Default invocation | Output |
+|------|---------------------|--------|
+| `biome` | `biome lint --stdin-file-path stdin.ts --reporter json` | JSON |
+| `eslint` | `eslint --stdin --format json` | JSON |
+| `prettier` | `prettier --check --stdin-filepath stdin.ts` | Text / structured stderr |
+
+!!! tip "Temporary runner fallback"
+    For temporary execution via package runners, use
+    `--allow-temporary-runners` (CLI) or `allow_temporary_runners=true` (MCP).
+
+
 ## Zen Principles
 
 10 principles across 4 categories, drawn from [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html).

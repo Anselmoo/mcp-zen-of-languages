@@ -102,6 +102,7 @@ SEVERITY_CRITICAL = 9
 SEVERITY_HIGH = 7
 SEVERITY_MEDIUM = 4
 EXTERNAL_TOOLS_DEFAULT = False
+TEMPORARY_RUNNERS_DEFAULT = False
 
 # Keep Typer's rich help panels aligned with the CLI rendering width contract.
 if typer_rich_utils.MAX_WIDTH is None or typer_rich_utils.MAX_WIDTH > MAX_OUTPUT_WIDTH:
@@ -498,6 +499,7 @@ class PromptsArgs(Protocol):
     export_agent: str | None
     severity: int | None
     enable_external_tools: bool
+    allow_temporary_tools: bool
 
 
 class CheckArgs(Protocol):
@@ -511,6 +513,7 @@ class CheckArgs(Protocol):
     fail_on_severity: int | None
     show_files: bool
     enable_external_tools: bool
+    allow_temporary_tools: bool
 
 
 def _summarize_violations(violations: list) -> RulesSummary:
@@ -700,6 +703,7 @@ def _analyze_targets(
     config_path: str | None,
     *,
     enable_external_tools: bool = False,
+    allow_temporary_tools: bool = False,
 ) -> list[AnalysisResult]:
     """Run every file through its language-specific analyser and collect results.
 
@@ -714,6 +718,8 @@ def _analyze_targets(
         config_path (str | None): Custom ``zen-config.yaml`` path, or ``None`` for auto-discovery.
         enable_external_tools (bool): Enable optional external language tools
             (best effort, no auto-install).
+        allow_temporary_tools (bool): Allow temporary-runner fallback
+            strategies (for example ``npx``/``uvx``) when enabled.
 
     Returns:
         list[AnalysisResult]: One result per input file, preserving target order within
@@ -740,6 +746,7 @@ def _analyze_targets(
             unsupported_language="placeholder",
             progress_callback=_advance_progress if total_files > 0 else None,
             enable_external_tools=enable_external_tools,
+            allow_temporary_tools=allow_temporary_tools,
         )
 
 
@@ -747,6 +754,7 @@ def _emit_external_tool_guidance(
     results: list[AnalysisResult],
     *,
     enable_external_tools: bool,
+    allow_temporary_tools: bool,
 ) -> None:
     """Print minimal external-tool guidance for consent-first workflows."""
     if is_quiet():
@@ -766,6 +774,12 @@ def _emit_external_tool_guidance(
             f"Use [bold]--enable-external-tools[/bold] for deeper checks in: {suggested}.",
         )
         return
+
+    if not allow_temporary_tools:
+        console.print(
+            "[yellow]Tip:[/yellow] For temporary runner fallback (npx/uvx), add "
+            "[bold]--allow-temporary-runners[/bold].",
+        )
 
     missing_messages: set[str] = set()
     for result in results:
@@ -1074,14 +1088,17 @@ def _run_prompts(args: PromptsArgs) -> int:
         print_error("No analyzable files found.")
         return 2
     enable_external_tools = getattr(args, "enable_external_tools", False)
+    allow_temporary_tools = getattr(args, "allow_temporary_tools", False)
     results = _analyze_targets(
         targets,
         args.config,
         enable_external_tools=enable_external_tools,
+        allow_temporary_tools=allow_temporary_tools,
     )
     _emit_external_tool_guidance(
         results,
         enable_external_tools=enable_external_tools,
+        allow_temporary_tools=allow_temporary_tools,
     )
     if args.severity is not None:
         results = [_filter_result(result, args.severity) for result in results]
@@ -1306,14 +1323,17 @@ def _run_check(args: CheckArgs) -> int:
         return 2
 
     enable_external_tools = getattr(args, "enable_external_tools", False)
+    allow_temporary_tools = getattr(args, "allow_temporary_tools", False)
     results = _analyze_targets(
         targets,
         args.config,
         enable_external_tools=enable_external_tools,
+        allow_temporary_tools=allow_temporary_tools,
     )
     _emit_external_tool_guidance(
         results,
         enable_external_tools=enable_external_tools,
+        allow_temporary_tools=allow_temporary_tools,
     )
     rendered, terminal_summary = _render_check_payload(args.format, target, results)
     _emit_check_output(
@@ -1620,6 +1640,14 @@ def check(  # noqa: PLR0913
             "missing tools emit recommendations)."
         ),
     ),
+    allow_temporary_runners: bool = typer.Option(
+        TEMPORARY_RUNNERS_DEFAULT,
+        "--allow-temporary-runners",
+        help=(
+            "Allow temporary runner fallback (for example npx/uvx) when "
+            "external tools are enabled."
+        ),
+    ),
 ) -> int:
     """Run zen analysis for a path with optional CI gating and machine output.
 
@@ -1634,6 +1662,8 @@ def check(  # noqa: PLR0913
         show_files (bool): Include per-file violation details in terminal output.
         enable_external_tools (bool): Opt-in execution of allow-listed external
             analysis tools.
+        allow_temporary_runners (bool): Permit temporary-runner fallback
+            strategies for optional external tools.
 
     Returns:
         int: Exit code ``0`` on success, ``1`` for severity-gated failure,
@@ -1648,6 +1678,7 @@ def check(  # noqa: PLR0913
         fail_on_severity=fail_on_severity,
         show_files=show_files,
         enable_external_tools=enable_external_tools,
+        allow_temporary_tools=allow_temporary_runners,
     )
     return _run_check(args)
 
@@ -1682,6 +1713,14 @@ def prompts(  # noqa: PLR0913
             "missing tools emit recommendations)."
         ),
     ),
+    allow_temporary_runners: bool = typer.Option(
+        TEMPORARY_RUNNERS_DEFAULT,
+        "--allow-temporary-runners",
+        help=(
+            "Allow temporary runner fallback (for example npx/uvx) when "
+            "external tools are enabled."
+        ),
+    ),
 ) -> int:
     """Turn analysis violations into actionable remediation prompts or agent tasks.
 
@@ -1700,6 +1739,8 @@ def prompts(  # noqa: PLR0913
         severity (int | None): Exclude violations below this severity threshold.
         enable_external_tools (bool): Opt-in execution of allow-listed external
             analysis tools.
+        allow_temporary_runners (bool): Permit temporary-runner fallback
+            strategies for optional external tools.
 
     Returns:
         int: Process exit code — ``0`` on success, ``2`` on input errors.
@@ -1716,6 +1757,7 @@ def prompts(  # noqa: PLR0913
         export_agent=export_agent,
         severity=severity,
         enable_external_tools=enable_external_tools,
+        allow_temporary_tools=allow_temporary_runners,
     )
     return _run_prompts(args)
 

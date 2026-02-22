@@ -2,7 +2,7 @@ import pytest
 
 from mcp_zen_of_languages.adapters.python_mvp import PythonMVPAdapter
 from mcp_zen_of_languages.core.detector import DOGMA_RULE_IDS, UniversalZenDetector
-from mcp_zen_of_languages.detectors import (
+from mcp_zen_of_languages.core.detectors import (
     ClutterDetector,
     ControlFlowDetector,
     SignatureDetector,

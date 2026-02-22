@@ -260,6 +260,20 @@ class DocstringConfig(DetectorConfig):
     type: Literal["docstrings"] = "docstrings"
 
 
+class GreyCommitConfig(DetectorConfig):
+    """Inline grey-commit comment detection settings.
+
+    Attributes:
+        max_inline_comment_length: Maximum inline comment length before it is
+            treated as prose that belongs in a docstring.
+        detect_grey_comments: Enable/disable grey commit inline comment checks.
+    """
+
+    type: Literal["grey_comments"] = "grey_comments"
+    max_inline_comment_length: int = 72
+    detect_grey_comments: bool = True
+
+
 class ContextManagerConfig(DetectorConfig):
     """Context manager (``with`` statement) usage detection settings."""
 

@@ -767,7 +767,9 @@ class GreyCommitCommentDetector(
             if not node.body or node.end_lineno is None:
                 continue
             body_start = node.lineno + 1
-            spans.append((body_start, node.end_lineno, ast.get_docstring(node) is not None))
+            spans.append(
+                (body_start, node.end_lineno, ast.get_docstring(node) is not None)
+            )
         return spans
 
     def _span_index(
@@ -853,7 +855,7 @@ class GreyCommitCommentDetector(
             return True
         if "type: ignore" in lowered or "noqa" in lowered:
             return True
-        return bool(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_-]*", text))
+        return bool(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", text))
 
 
 class LineLengthDetector(ViolationDetector[LineLengthConfig], LocationHelperMixin):
@@ -2485,6 +2487,7 @@ __all__ = [
     "ExplicitnessDetector",
     "FeatureEnvyDetector",
     "GodClassDetector",
+    "GreyCommitCommentDetector",
     "LineLengthDetector",
     "LongFunctionDetector",
     "MagicMethodDetector",

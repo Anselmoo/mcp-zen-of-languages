@@ -236,8 +236,8 @@ nav:
   - Getting Started:
       - getting-started/index.md
       - Installation: getting-started/installation.md
-      - Quickstart: getting-started/quickstart.md
       - MCP Integration: getting-started/mcp-integration.md
+      - Quickstart: getting-started/quickstart.md
       - Security: getting-started/security.md
   - User Guide:
       - user-guide/index.md

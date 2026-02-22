@@ -42,7 +42,7 @@ You'll go from zero to your first analysis in under two minutes. The path is sim
 </div>
 
 !!! tip "Recommended path"
-    Start with [Quickstart](quickstart.md) to understand the CLI output, then add [MCP Integration](mcp-integration.md) when you want AI-assisted remediation in your editor.
+    Start with [MCP Integration](mcp-integration.md) to connect your editor, then use [Quickstart](quickstart.md) to see your first analysis results. The [CLI](../user-guide/cli-reference.md) is available for local and CI workflows.
 
 !!! info "Supported languages"
     MCP Zen of Languages currently supports :material-language-python: **Python**, :material-language-typescript: **TypeScript**, and :material-language-rust: **Rust**. See the [Language Guides](../user-guide/languages/index.md) for idiomatic rules and configuration per language.

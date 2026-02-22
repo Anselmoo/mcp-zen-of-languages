@@ -9,7 +9,7 @@ tags:
 
 # MCP Integration
 
-The MCP server exposes zen analysis as tools that AI agents can call — analyze code, generate reports, and produce remediation prompts, all from within your editor.
+MCP Zen of Languages is designed as an **MCP server first**. The server exposes zen analysis as tools that AI agents can call — analyze code, generate reports, and produce remediation prompts, all from within your editor. This is the recommended way to use the project.
 
 ## Start the server
 

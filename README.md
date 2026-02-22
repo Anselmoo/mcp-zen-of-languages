@@ -24,7 +24,7 @@
 
 ---
 
-Multi-language architectural and idiomatic code analysis, exposed as an **MCP server** and a **CLI**. Zen of Languages codifies idiomatic best practices ("zen principles") into machine-readable rules and workflow checks across programming languages, CI automation, and configuration formats — so AI agents and developers get actionable, language-aware feedback in every review.
+An **MCP server for AI assistants** that brings multi-language idiomatic code analysis into your editor. Zen of Languages codifies best practices ("zen principles") into machine-readable rules across programming languages, CI automation, and configuration formats — so AI agents and developers get actionable, language-aware feedback in every review. Connect it to [Claude Desktop, VS Code, Cursor, or any MCP-compatible client](https://anselmoo.github.io/mcp-zen-of-languages/getting-started/mcp-integration/) and start analysing code in seconds.
 
 <!-- --8<-- [start:what-you-get] -->
 
@@ -93,6 +93,49 @@ Keep these names distinct to avoid setup confusion:
 
 ## Installation
 
+### MCP Integration
+
+Add the server to your MCP client configuration. For the full setup guide, see [MCP Integration](https://anselmoo.github.io/mcp-zen-of-languages/getting-started/mcp-integration/).
+
+**Claude Desktop** — add to `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "zen-of-languages": {
+      "command": "uvx",
+      "args": ["--from", "mcp-zen-of-languages", "zen-mcp-server"]
+    }
+  }
+}
+```
+
+**VS Code** — add to `.vscode/mcp.json`:
+
+```json
+{
+  "servers": {
+    "zen-of-languages": {
+      "command": "uvx",
+      "args": ["--from", "mcp-zen-of-languages", "zen-mcp-server"]
+    }
+  }
+}
+```
+
+**Cursor** — add to `.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "zen-of-languages": {
+      "command": "uvx",
+      "args": ["--from", "mcp-zen-of-languages", "zen-mcp-server"]
+    }
+  }
+}
+```
+
 ### One-Click (VS Code)
 
 <!-- --8<-- [start:vscode-integration] -->
@@ -107,14 +150,29 @@ Keep these names distinct to avoid setup confusion:
 ### Docker
 
 ```bash
-# CLI via Docker
-docker run --rm ghcr.io/anselmoo/mcp-zen-of-languages:latest zen --help
-
 # MCP server via Docker
 docker run --rm -i ghcr.io/anselmoo/mcp-zen-of-languages:latest
+
+# CLI via Docker
+docker run --rm ghcr.io/anselmoo/mcp-zen-of-languages:latest zen --help
 ```
 
-### From Source
+### CLI — First Code Anamnesis
+
+The CLI is a powerful tool for **first code anamnesis** — an initial diagnostic sweep of any codebase. Before wiring up MCP or choosing which files to focus on, run a single command to get a full-project health picture with severity-ranked violations, architectural smells, and remediation guidance.
+
+```bash
+# Install globally
+pip install mcp-zen-of-languages
+
+# Full-project diagnostic in one command
+zen report path/to/project --include-prompts
+
+# Export structured results for CI or dashboards
+zen report path/to/project --export-json report.json --export-markdown report.md
+```
+
+From source:
 
 ```bash
 git clone https://github.com/Anselmoo/mcp-zen-of-languages.git

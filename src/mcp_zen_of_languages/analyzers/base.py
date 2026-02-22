@@ -53,6 +53,8 @@ from mcp_zen_of_languages.languages.configs import DetectorConfig
 from mcp_zen_of_languages.models import (
     AnalysisResult,
     CyclomaticSummary,
+    ExternalAnalysisResult,
+    ExternalToolResult,
     Location,
     Metrics,
     ParserResult,
@@ -296,6 +298,7 @@ class AnalysisContext(BaseModel):
 
     # Analysis results
     dependency_analysis: object | None = None  # DependencyAnalysis model
+    external_analysis: object | None = None
     violations: list[Violation] = Field(default_factory=list)
 
     # Other files for cross-file analysis
@@ -706,6 +709,8 @@ class BaseAnalyzer(ABC):
         path: str | None = None,
         other_files: dict[str, str] | None = None,
         repository_imports: dict[str, list[str]] | None = None,
+        *,
+        enable_external_tools: bool = False,
     ) -> AnalysisResult:
         """Run the full analysis workflow against a single source file.
 
@@ -740,6 +745,8 @@ class BaseAnalyzer(ABC):
             repository_imports: Per-file import lists from the wider
                 repository, enabling coupling and dependency-fan
                 detectors.
+            enable_external_tools: Run allow-listed external linters/tools
+                in best-effort mode for additional diagnostics.
 
         Returns:
             Fully populated analysis result containing metrics,
@@ -772,6 +779,10 @@ class BaseAnalyzer(ABC):
         # 4. Build dependency analysis (optional)
         if self.config.enable_dependency_analysis:
             context.dependency_analysis = self._build_dependency_analysis(context)
+        context.external_analysis = self._build_external_analysis(
+            context,
+            enable_external_tools=enable_external_tools,
+        )
 
         # 5. Run detection pipeline
         violations = self.pipeline.run(context, self.config)
@@ -974,6 +985,113 @@ class BaseAnalyzer(ABC):
         )
         return None
 
+    @staticmethod
+    def _truncate_external_output(text: str, max_chars: int = 1000) -> str:
+        """Trim verbose tool output to keep result payloads bounded."""
+        if len(text) <= max_chars:
+            return text
+        return text[:max_chars] + "... [truncated]"
+
+    def _build_external_analysis(
+        self,
+        context: AnalysisContext,
+        *,
+        enable_external_tools: bool,
+    ) -> ExternalAnalysisResult | None:
+        """Optionally run allow-listed external tools for deeper analysis quality."""
+        from mcp_zen_of_languages.utils.subprocess_runner import (
+            KNOWN_TOOLS,
+            SubprocessToolRunner,
+        )
+
+        tool_map = KNOWN_TOOLS.get(self.language(), {})
+        if not tool_map:
+            return None
+
+        runner = SubprocessToolRunner()
+        tool_results: list[ExternalToolResult] = []
+        if not enable_external_tools:
+            for tool_name in tool_map:
+                if runner.is_available(tool_name):
+                    tool_results.append(
+                        ExternalToolResult(
+                            tool=tool_name,
+                            status="available",
+                            message="Available but not executed (opt-in required).",
+                            recommendation=(
+                                f"Enable external tools to run '{tool_name}' and increase analysis depth."
+                            ),
+                        ),
+                    )
+                else:
+                    tool_results.append(
+                        ExternalToolResult(
+                            tool=tool_name,
+                            status="unavailable",
+                            message="Tool not found on PATH; execution skipped.",
+                            recommendation=(
+                                f"Install '{tool_name}' and re-run with external tools enabled."
+                            ),
+                        ),
+                    )
+            return ExternalAnalysisResult(
+                enabled=False,
+                language=self.language(),
+                quality_note="External tool analysis is disabled by default.",
+                tools=tool_results,
+            )
+
+        for tool_name, default_args in tool_map.items():
+            if not runner.is_available(tool_name):
+                tool_results.append(
+                    ExternalToolResult(
+                        tool=tool_name,
+                        status="unavailable",
+                        message="Tool not found on PATH; execution skipped.",
+                        recommendation=(
+                            f"Install '{tool_name}' to improve {self.language()} analysis quality."
+                        ),
+                    ),
+                )
+                continue
+
+            run_result = runner.run(tool_name, default_args, code=context.code)
+            if run_result is None:
+                tool_results.append(
+                    ExternalToolResult(
+                        tool=tool_name,
+                        status="execution_failed",
+                        message="Tool execution failed or timed out.",
+                        recommendation=(
+                            f"Verify '{tool_name}' installation and rerun external analysis."
+                        ),
+                    ),
+                )
+                continue
+
+            status = "passed" if run_result.returncode == 0 else "reported_issues"
+            tool_results.append(
+                ExternalToolResult(
+                    tool=tool_name,
+                    status=status,
+                    message=(
+                        "Tool executed without reported issues."
+                        if run_result.returncode == 0
+                        else "Tool executed and reported diagnostics."
+                    ),
+                    returncode=run_result.returncode,
+                    stdout=self._truncate_external_output(run_result.stdout),
+                    stderr=self._truncate_external_output(run_result.stderr),
+                ),
+            )
+
+        return ExternalAnalysisResult(
+            enabled=True,
+            language=self.language(),
+            quality_note="External tool analysis executed with best-effort behavior.",
+            tools=tool_results,
+        )
+
     def _build_result(
         self,
         context: AnalysisContext,
@@ -1004,12 +1122,24 @@ class BaseAnalyzer(ABC):
             lines_of_code=context.lines_of_code,
         )
 
+        external_analysis: ExternalAnalysisResult | None = None
+        if isinstance(context.external_analysis, ExternalAnalysisResult):
+            external_analysis = context.external_analysis
+        elif isinstance(context.external_analysis, dict):
+            try:
+                external_analysis = ExternalAnalysisResult.model_validate(
+                    context.external_analysis,
+                )
+            except (TypeError, ValueError):
+                external_analysis = None
+
         return AnalysisResult(
             language=self.language(),
             path=context.path,
             metrics=metrics,
             violations=violations,
             overall_score=overall_score,
+            external_analysis=external_analysis,
         )
 
     def _calculate_overall_score(self, violations: list[Violation]) -> float:

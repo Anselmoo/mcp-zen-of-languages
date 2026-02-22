@@ -121,6 +121,7 @@ def analyze_targets(  # noqa: C901, PLR0912, PLR0913, PLR0915
     unsupported_language: Literal["skip", "placeholder"] = "skip",
     include_read_errors: bool = False,
     progress_callback: Callable[[], None] | None = None,
+    enable_external_tools: bool = False,
 ) -> list[AnalysisResult]:
     """Analyze targets grouped by language using the analyzer factory."""
     config = load_config(config_path)
@@ -175,11 +176,21 @@ def analyze_targets(  # noqa: C901, PLR0912, PLR0913, PLR0915
 
             for path_str, code in file_contents.items():
                 results.append(
-                    analyzer.analyze(
-                        code,
-                        path=path_str,
-                        other_files=file_contents,
-                        repository_imports=repository_imports,
+                    (
+                        analyzer.analyze(
+                            code,
+                            path=path_str,
+                            other_files=file_contents,
+                            repository_imports=repository_imports,
+                            enable_external_tools=True,
+                        )
+                        if enable_external_tools
+                        else analyzer.analyze(
+                            code,
+                            path=path_str,
+                            other_files=file_contents,
+                            repository_imports=repository_imports,
+                        )
                     ),
                 )
                 if progress_callback is not None:
@@ -204,10 +215,19 @@ def analyze_targets(  # noqa: C901, PLR0912, PLR0913, PLR0915
                     progress_callback()
                 raise
             results.append(
-                analyzer.analyze(
-                    code,
-                    path=str(path),
-                    repository_imports=repository_imports,
+                (
+                    analyzer.analyze(
+                        code,
+                        path=str(path),
+                        repository_imports=repository_imports,
+                        enable_external_tools=True,
+                    )
+                    if enable_external_tools
+                    else analyzer.analyze(
+                        code,
+                        path=str(path),
+                        repository_imports=repository_imports,
+                    )
                 ),
             )
             if progress_callback is not None:

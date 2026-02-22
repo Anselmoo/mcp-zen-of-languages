@@ -95,6 +95,46 @@ jobs:
       - name: Run tests
         run: uv run pytest -xvs
 
+  language-tests:
+    name: Language tests (${{ matrix.language }})
+    needs: lint
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: rust
+            pytest_target: tests/analyzers/test_rust_analyzer.py tests/detectors/test_rust_detectors.py tests/analyzers/test_dependency_analysis.py -k rust
+          - language: ruby
+            pytest_target: tests/analyzers/test_language_analyzers.py tests/analyzers/test_dependency_analysis.py tests/coverage/test_coverage_boost.py -k ruby
+          - language: go
+            pytest_target: tests/analyzers/test_go_analyzer.py tests/detectors/test_go_detectors.py tests/analyzers/test_dependency_analysis.py -k go
+          - language: javascript
+            pytest_target: tests/analyzers/test_language_analyzers.py tests/analyzers/test_dependency_analysis.py -k javascript
+          - language: typescript
+            pytest_target: tests/detectors/test_typescript_detectors.py tests/analyzers/test_dependency_analysis.py -k typescript
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+
+      - name: Sync dependencies
+        run: uv sync --all-groups --all-extras
+
+      - name: Run language-focused tests
+        run: uv run pytest -x -q ${{ matrix.pytest_target }}
+
   visual-regression:
     name: Visual regression
     needs: lint
@@ -121,7 +161,7 @@ jobs:
 
   docker-image-check:
     name: Docker image smoke check
-    needs: [test, visual-regression]
+    needs: [test, language-tests, visual-regression]
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
@@ -202,7 +242,7 @@ jobs:
 
   build:
     name: Build package
-    needs: [test, visual-regression]
+    needs: [test, language-tests, visual-regression]
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:

@@ -126,6 +126,9 @@ if runner.is_available("shellcheck"):
 - Security: allowlist of known tools (`KNOWN_TOOLS` mapping), no `shell=True`
 - Supported tools: `shellcheck`, `go vet`, `cargo clippy`, `ruff`, `eslint`
 - Individual analyzers opt-in; this is infrastructure only
+- **No hard installs**: analysis paths must never auto-install missing runtimes/linters
+- Missing-tool behavior: return clear info + recommendation (e.g., install command), then continue best-effort analysis
+- Consent-first UX: CLI/MCP should keep external tools disabled by default and advertise opt-in quality enhancement
 
 ## Agent & Prompt Strategy
 

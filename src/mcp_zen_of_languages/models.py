@@ -369,6 +369,27 @@ class ProjectSummary(BaseModel):
     worst_offenders: list[WorstOffender] = Field(default_factory=list)
 
 
+class ExternalToolResult(BaseModel):
+    """Execution metadata for one optional external analysis tool."""
+
+    tool: str
+    status: str
+    message: str
+    recommendation: str | None = None
+    returncode: int | None = None
+    stdout: str | None = None
+    stderr: str | None = None
+
+
+class ExternalAnalysisResult(BaseModel):
+    """Optional external-analysis envelope attached to ``AnalysisResult``."""
+
+    enabled: bool = False
+    language: str
+    quality_note: str
+    tools: list[ExternalToolResult] = Field(default_factory=list)
+
+
 class AnalysisResult(BaseModel):
     """Primary output produced by every language analyser.
 
@@ -417,6 +438,7 @@ class AnalysisResult(BaseModel):
     violations: list[Violation]
     overall_score: float
     rules_summary: RulesSummary | None = None
+    external_analysis: ExternalAnalysisResult | None = None
 
     def __getitem__(self, item: str) -> object:
         """Support bracket-style access (``result["field"]``).

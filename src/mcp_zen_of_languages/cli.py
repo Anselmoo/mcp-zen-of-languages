@@ -79,6 +79,7 @@ from mcp_zen_of_languages.reporting.terminal import (
 )
 from mcp_zen_of_languages.rules import get_language_zen
 from mcp_zen_of_languages.utils.markdown_quality import normalize_markdown
+from mcp_zen_of_languages.utils.subprocess_runner import KNOWN_TOOLS
 
 if TYPE_CHECKING:
     from rich.table import Table
@@ -100,6 +101,7 @@ _THRESHOLDS = {"relaxed": 5, "moderate": 6, "strict": 7}
 SEVERITY_CRITICAL = 9
 SEVERITY_HIGH = 7
 SEVERITY_MEDIUM = 4
+EXTERNAL_TOOLS_DEFAULT = False
 
 # Keep Typer's rich help panels aligned with the CLI rendering width contract.
 if typer_rich_utils.MAX_WIDTH is None or typer_rich_utils.MAX_WIDTH > MAX_OUTPUT_WIDTH:
@@ -495,6 +497,7 @@ class PromptsArgs(Protocol):
     export_prompts: str | None
     export_agent: str | None
     severity: int | None
+    enable_external_tools: bool
 
 
 class CheckArgs(Protocol):
@@ -507,6 +510,7 @@ class CheckArgs(Protocol):
     out: str | None
     fail_on_severity: int | None
     show_files: bool
+    enable_external_tools: bool
 
 
 def _summarize_violations(violations: list) -> RulesSummary:
@@ -694,6 +698,8 @@ def _collect_targets(
 def _analyze_targets(
     targets: list[tuple[Path, str]],
     config_path: str | None,
+    *,
+    enable_external_tools: bool = False,
 ) -> list[AnalysisResult]:
     """Run every file through its language-specific analyser and collect results.
 
@@ -706,6 +712,8 @@ def _analyze_targets(
     Args:
         targets (list[tuple[Path, str]]): ``(file, language)`` pairs produced by [`_collect_targets`][_collect_targets].
         config_path (str | None): Custom ``zen-config.yaml`` path, or ``None`` for auto-discovery.
+        enable_external_tools (bool): Enable optional external language tools
+            (best effort, no auto-install).
 
     Returns:
         list[AnalysisResult]: One result per input file, preserving target order within
@@ -731,7 +739,47 @@ def _analyze_targets(
             config_path=config_path,
             unsupported_language="placeholder",
             progress_callback=_advance_progress if total_files > 0 else None,
+            enable_external_tools=enable_external_tools,
         )
+
+
+def _emit_external_tool_guidance(
+    results: list[AnalysisResult],
+    *,
+    enable_external_tools: bool,
+) -> None:
+    """Print minimal external-tool guidance for consent-first workflows."""
+    if is_quiet():
+        return
+
+    languages = sorted({result.language for result in results})
+    supported_languages = [
+        language for language in languages if language in KNOWN_TOOLS
+    ]
+    if not supported_languages:
+        return
+
+    if not enable_external_tools:
+        suggested = ", ".join(supported_languages)
+        console.print(
+            "[yellow]Tip:[/yellow] External tools are optional. "
+            f"Use [bold]--enable-external-tools[/bold] for deeper checks in: {suggested}.",
+        )
+        return
+
+    missing_messages: set[str] = set()
+    for result in results:
+        ext = result.external_analysis
+        if ext is None:
+            continue
+        for tool in ext.tools:
+            if tool.status == "unavailable" and tool.recommendation:
+                missing_messages.add(
+                    f"{result.language}/{tool.tool}: {tool.recommendation}"
+                )
+
+    for message in sorted(missing_messages):
+        console.print(f"[yellow]Info:[/yellow] {message}")
 
 
 def _build_log_summary(report: object) -> str:
@@ -1025,7 +1073,16 @@ def _run_prompts(args: PromptsArgs) -> int:
     if not targets:
         print_error("No analyzable files found.")
         return 2
-    results = _analyze_targets(targets, args.config)
+    enable_external_tools = getattr(args, "enable_external_tools", False)
+    results = _analyze_targets(
+        targets,
+        args.config,
+        enable_external_tools=enable_external_tools,
+    )
+    _emit_external_tool_guidance(
+        results,
+        enable_external_tools=enable_external_tools,
+    )
     if args.severity is not None:
         results = [_filter_result(result, args.severity) for result in results]
 
@@ -1248,7 +1305,16 @@ def _run_check(args: CheckArgs) -> int:
         print_error("No analyzable files found.")
         return 2
 
-    results = _analyze_targets(targets, args.config)
+    enable_external_tools = getattr(args, "enable_external_tools", False)
+    results = _analyze_targets(
+        targets,
+        args.config,
+        enable_external_tools=enable_external_tools,
+    )
+    _emit_external_tool_guidance(
+        results,
+        enable_external_tools=enable_external_tools,
+    )
     rendered, terminal_summary = _render_check_payload(args.format, target, results)
     _emit_check_output(
         out=args.out,
@@ -1546,6 +1612,14 @@ def check(  # noqa: PLR0913
             help="Include per-file violation details in terminal output",
         ),
     ] = False,
+    enable_external_tools: bool = typer.Option(
+        EXTERNAL_TOOLS_DEFAULT,
+        "--enable-external-tools",
+        help=(
+            "Opt-in to run available external language tools (no auto-install; "
+            "missing tools emit recommendations)."
+        ),
+    ),
 ) -> int:
     """Run zen analysis for a path with optional CI gating and machine output.
 
@@ -1558,6 +1632,8 @@ def check(  # noqa: PLR0913
         fail_on_severity (int | None): Exit with code ``1`` when any
             violation has severity greater than or equal to this threshold.
         show_files (bool): Include per-file violation details in terminal output.
+        enable_external_tools (bool): Opt-in execution of allow-listed external
+            analysis tools.
 
     Returns:
         int: Exit code ``0`` on success, ``1`` for severity-gated failure,
@@ -1571,6 +1647,7 @@ def check(  # noqa: PLR0913
         out=out,
         fail_on_severity=fail_on_severity,
         show_files=show_files,
+        enable_external_tools=enable_external_tools,
     )
     return _run_check(args)
 
@@ -1596,6 +1673,15 @@ def prompts(  # noqa: PLR0913
         help="Write agent JSON to file",
     ),
     severity: int | None = typer.Option(None, help="Minimum severity threshold"),
+    *,
+    enable_external_tools: bool = typer.Option(
+        EXTERNAL_TOOLS_DEFAULT,
+        "--enable-external-tools",
+        help=(
+            "Opt-in to run available external language tools (no auto-install; "
+            "missing tools emit recommendations)."
+        ),
+    ),
 ) -> int:
     """Turn analysis violations into actionable remediation prompts or agent tasks.
 
@@ -1612,6 +1698,8 @@ def prompts(  # noqa: PLR0913
         export_prompts (str | None): Write remediation markdown to this path.
         export_agent (str | None): Write agent-task JSON to this path.
         severity (int | None): Exclude violations below this severity threshold.
+        enable_external_tools (bool): Opt-in execution of allow-listed external
+            analysis tools.
 
     Returns:
         int: Process exit code — ``0`` on success, ``2`` on input errors.
@@ -1627,6 +1715,7 @@ def prompts(  # noqa: PLR0913
         export_prompts=export_prompts,
         export_agent=export_agent,
         severity=severity,
+        enable_external_tools=enable_external_tools,
     )
     return _run_prompts(args)
 

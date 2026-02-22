@@ -17,6 +17,8 @@ from __future__ import annotations
 
 import ast
 import re
+import tokenize
+from io import StringIO
 from typing import TYPE_CHECKING
 
 from mcp_zen_of_languages.analyzers.base import (
@@ -39,6 +41,7 @@ from mcp_zen_of_languages.languages.configs import (
     ExplicitnessConfig,
     FeatureEnvyConfig,
     GodClassConfig,
+    GreyCommitConfig,
     LineLengthConfig,
     LongFunctionConfig,
     MagicMethodConfig,
@@ -57,6 +60,27 @@ if TYPE_CHECKING:
 
 # Minimum line number for which a "previous line" lookup is valid
 MIN_LINE_FOR_PREV_LOOKUP = 2
+_GREY_COMMIT_MARKERS = ("NOTE:", "TODO:", "REASON:", "IMPORTANT:", "BECAUSE:")
+_GREY_COMMIT_WHY_TERMS = (
+    "avoid",
+    "instead",
+    "because",
+    "should",
+    "must",
+    "we need to",
+)
+_GREY_COMMIT_CONTROL_FLOW_PREFIXES = (
+    "try:",
+    "except",
+    "if ",
+    "elif ",
+    "else:",
+    "match ",
+    "case ",
+    "for ",
+    "while ",
+)
+_GREY_COMMENT_BLOCK_MIN_LINES = 2
 
 
 def _principle_text(config: DetectorConfig) -> str:
@@ -648,6 +672,190 @@ class DocstringDetector(ViolationDetector[DocstringConfig], LocationHelperMixin)
                     ),
                 )
         return violations
+
+
+class GreyCommitCommentDetector(
+    ViolationDetector[GreyCommitConfig],
+    LocationHelperMixin,
+):
+    """Detect method-level inline comment narratives that belong in docstrings.
+
+    Args:
+        context: Analysis context containing the Python source text.
+        config: Detector thresholds and metadata for grey commit comments.
+
+    Returns:
+        list[Violation]: Violations for comment blocks that should be moved into
+            function or method docstrings.
+
+    Note:
+        The detector excludes shebangs, ``# noqa``, ``# type: ignore`` and
+        single-word annotation comments to minimize false positives.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return ``"grey_comments"`` for detector registry lookup."""
+        return "grey_comments"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: GreyCommitConfig,
+    ) -> list[Violation]:
+        """Parse comment tokens and flag docstring-grade inline rationale."""
+        if not config.detect_grey_comments:
+            return []
+
+        try:
+            tree = ast.parse(context.code)
+        except SyntaxError:
+            return []
+
+        function_spans = self._function_spans(tree)
+        comments_by_span: dict[int, list[tuple[int, str]]] = {}
+        for token in tokenize.generate_tokens(StringIO(context.code).readline):
+            if token.type != tokenize.COMMENT:
+                continue
+            line_no = token.start[0]
+            span_idx = self._span_index(line_no, function_spans)
+            if span_idx is None:
+                continue
+            text = token.string[1:].strip()
+            if self._is_ignored_comment(token.string, text):
+                continue
+            comments_by_span.setdefault(span_idx, []).append((line_no, text))
+
+        violations: list[Violation] = []
+        source_lines = context.code.splitlines()
+        for span_idx, comments in comments_by_span.items():
+            span = function_spans[span_idx]
+            blocks = self._comment_blocks(comments)
+            for block in blocks:
+                severity = self._block_severity(
+                    block,
+                    source_lines,
+                    config,
+                    has_docstring=span[2],
+                )
+                if severity is None:
+                    continue
+                loc = Location(line=block[0][0], column=1)
+                violations.append(
+                    Violation(
+                        principle=_principle_text(config),
+                        severity=severity,
+                        message=_violation_message(config, index=0),
+                        location=loc,
+                        suggestion=(
+                            "Move method-level rationale to the function docstring "
+                            "using Args:, Returns:, Raises:, and Note: sections "
+                            "where applicable."
+                        ),
+                    ),
+                )
+        return violations
+
+    def _function_spans(
+        self,
+        tree: ast.AST,
+    ) -> list[tuple[int, int, bool]]:
+        spans: list[tuple[int, int, bool]] = []
+        for node in ast.walk(tree):
+            if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                continue
+            if not node.body or node.end_lineno is None:
+                continue
+            body_start = node.lineno + 1
+            spans.append(
+                (body_start, node.end_lineno, ast.get_docstring(node) is not None)
+            )
+        return spans
+
+    def _span_index(
+        self,
+        line_no: int,
+        spans: list[tuple[int, int, bool]],
+    ) -> int | None:
+        best: int | None = None
+        best_size: int | None = None
+        for idx, (start, end, _) in enumerate(spans):
+            if not (start <= line_no <= end):
+                continue
+            size = end - start
+            if best is None or (best_size is not None and size < best_size):
+                best = idx
+                best_size = size
+        return best
+
+    def _comment_blocks(
+        self,
+        comments: list[tuple[int, str]],
+    ) -> list[list[tuple[int, str]]]:
+        sorted_comments = sorted(comments, key=lambda item: item[0])
+        blocks: list[list[tuple[int, str]]] = []
+        for line_no, text in sorted_comments:
+            if blocks and line_no == blocks[-1][-1][0] + 1:
+                blocks[-1].append((line_no, text))
+                continue
+            blocks.append([(line_no, text)])
+        return blocks
+
+    def _block_severity(
+        self,
+        block: list[tuple[int, str]],
+        source_lines: list[str],
+        config: GreyCommitConfig,
+        *,
+        has_docstring: bool,
+    ) -> int | None:
+        has_marker = any(
+            text.upper().startswith(_GREY_COMMIT_MARKERS) for _, text in block
+        )
+        has_long_line = any(
+            len(text) > config.max_inline_comment_length for _, text in block
+        )
+        has_rationale = any(
+            any(term in text.lower() for term in _GREY_COMMIT_WHY_TERMS)
+            for _, text in block
+        )
+        near_control_flow = any(
+            self._near_control_flow(line_no, source_lines) for line_no, _ in block
+        )
+        if len(block) < _GREY_COMMENT_BLOCK_MIN_LINES and not (
+            has_marker or has_long_line or has_rationale
+        ):
+            return None
+
+        severity = 3
+        if len(block) >= _GREY_COMMENT_BLOCK_MIN_LINES:
+            severity = 5
+        if has_marker:
+            severity = max(severity, 6)
+        if len(block) >= _GREY_COMMENT_BLOCK_MIN_LINES and not has_docstring:
+            severity = max(severity, 8)
+        if near_control_flow:
+            severity = max(severity, 5)
+        return severity
+
+    def _near_control_flow(self, line_no: int, source_lines: list[str]) -> bool:
+        for idx in (line_no - 2, line_no):
+            if not (0 <= idx < len(source_lines)):
+                continue
+            text = source_lines[idx].strip()
+            if text.startswith("#"):
+                continue
+            if text.startswith(_GREY_COMMIT_CONTROL_FLOW_PREFIXES):
+                return True
+        return False
+
+    def _is_ignored_comment(self, raw: str, text: str) -> bool:
+        lowered = text.lower()
+        if raw.lstrip().startswith("#!"):
+            return True
+        if "type: ignore" in lowered or "noqa" in lowered:
+            return True
+        return bool(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", text))
 
 
 class LineLengthDetector(ViolationDetector[LineLengthConfig], LocationHelperMixin):
@@ -2279,6 +2487,7 @@ __all__ = [
     "ExplicitnessDetector",
     "FeatureEnvyDetector",
     "GodClassDetector",
+    "GreyCommitCommentDetector",
     "LineLengthDetector",
     "LongFunctionDetector",
     "MagicMethodDetector",

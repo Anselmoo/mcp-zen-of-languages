@@ -200,5 +200,24 @@ PYTHON_ZEN = LanguageZenPrinciples(
                 "max_exports": 20,
             },
         ),
+        ZenPrinciple(
+            id="python-013",
+            principle="Documentation should live in docstrings, not inline grey commits",
+            category=PrincipleCategory.READABILITY,
+            severity=6,
+            description=(
+                "Method-level rationale comments inside function bodies should be "
+                "captured in docstrings so documentation tooling can render them"
+            ),
+            violations=[
+                "Inline narrative comment blocks in function bodies",
+                "Knowledge-marker comments such as NOTE/REASON/IMPORTANT in code bodies",
+                "Long prose comments that belong in function docstring Note sections",
+            ],
+            metrics={
+                "max_inline_comment_length": 72,
+                "detect_grey_comments": True,
+            },
+        ),
     ],
 )

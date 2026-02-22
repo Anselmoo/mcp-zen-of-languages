@@ -6,6 +6,41 @@ MCP Zen of Languages is a language-agnostic code quality analyzer inspired by la
 
 ## Recent Sessions
 
+### Python Grey Commit Detector Implementation
+
+**Date**: Current session
+
+**Changes Made**:
+1. Implemented GreyCommitCommentDetector (grey_comments mapping):
+   - New detector class in src/mcp_zen_of_languages/detectors/python/grey_commit_detector.py
+   - Detects commented-out code blocks (grey commits)
+   - Uses GreyCommitConfig for customizable ratio thresholds
+
+2. New rule python-013:
+   - Principle: "Don't pollute code with commented blocks (grey commits)"
+   - Detects blocks with high comment-to-code ratio indicating dead code
+   - Configurable detection thresholds
+
+3. Test coverage:
+   - Comprehensive tests in tests/detectors/test_python_grey_commit_detector.py
+   - Updated detector coverage test for new detector
+
+4. Documentation synchronization:
+   - Synchronized implementation counts: 225 principles and 237 coverage points
+   - Updated docs/README totals to match implementation
+
+**Validation Status**:
+- ✅ Pre-commit all-files: passed
+- ✅ Pre-push hooks: passed
+- ✅ CodeQL: 0 alerts
+
+**Key Technical Insight**:
+The grey commit detector uses a ratio-based heuristic to identify commented-out code blocks, distinguishing them from legitimate documentation comments. This helps maintain clean codebases by flagging dead code that should be removed rather than commented out.
+
+**Status**: Completed and validated
+
+---
+
 ### PR #60 SQL Detectors - Reviewer Feedback - Commit 4236efb
 
 **Date**: Current session

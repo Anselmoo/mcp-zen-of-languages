@@ -17,7 +17,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 | Language | Principles | Detectors | Parser | Philosophy Origin |
 |----------|:----------:|:---------:|--------|-------------------|
-| [Python](python.md) | 12 | 23 | AST | [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/) |
+| [Python](python.md) | 13 | 24 | AST | [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/) |
 | [TypeScript](typescript.md) | 10 | 10 | Regex | [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html) |
 | [Rust](rust.md) | 12 | 13 | Regex | [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/) |
 | [Go](go.md) | 12 | 12 | Regex | [Effective Go](https://go.dev/doc/effective_go) |
@@ -33,7 +33,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 | [Dockerfile](dockerfile.md) | 8 | 8 | Regex | [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) |
 | [LaTeX](latex.md) | 9 | 9 | Regex | [LaTeX Project](https://www.latex-project.org/) |
 | [Markdown / MDX](markdown.md) | 7 | 7 | Regex | [CommonMark + MDX authoring best practices](https://commonmark.org/) |
-| **Programming & markup subtotal** | **168** | **180** | | |
+| **Programming & markup subtotal** | **169** | **181** | | |
 
 ### Workflows & Automation
 
@@ -52,8 +52,8 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 ### Coverage Totals
 
-- **Principles (all categories):** 224
-- **Detectors + workflow checks:** 236
+- **Principles (all categories):** 225
+- **Detectors + workflow checks:** 237
 
 ## Maturity Tiers
 

@@ -29,4 +29,6 @@ class AnalyzerFactoryAdapter:
 
 def build_universal_adapters() -> dict[str, LanguageAdapter]:
     """Build adapters for all canonical languages in the analyzer factory."""
-    return {language: AnalyzerFactoryAdapter(language) for language in supported_languages()}
+    return {
+        language: AnalyzerFactoryAdapter(language) for language in supported_languages()
+    }

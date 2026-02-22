@@ -40,8 +40,12 @@ class ReporterInterface(Protocol):
 class UniversalZenDetector:
     """Universal coordinator that delegates parsing+analysis to language adapters."""
 
-    def __init__(self, adapters: dict[str, LanguageAdapter]) -> None:
-        """Initialize the detector with language-keyed adapters."""
+    def __init__(self, adapters: dict[str, LanguageAdapter] | None = None) -> None:
+        """Initialize the detector with explicit adapters or all supported languages."""
+        if adapters is None:
+            from mcp_zen_of_languages.adapters.universal import build_universal_adapters
+
+            adapters = build_universal_adapters()
         self._adapters = {name.lower(): adapter for name, adapter in adapters.items()}
 
     def analyze(

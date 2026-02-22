@@ -24,6 +24,18 @@ def test_universal_detector_python_mvp_cli_and_mcp_output() -> None:
     assert "violations" in mcp_output
 
 
+def test_universal_detector_default_adapters_cover_all_languages() -> None:
+    detector = UniversalZenDetector()
+
+    python_result = detector.analyze(
+        "def add(a, b):\n    return a + b\n", language="python"
+    )
+    ts_result = detector.analyze("const value: number = 1;", language="typescript")
+
+    assert python_result.language == "python"
+    assert ts_result.language == "typescript"
+
+
 def test_universal_detector_rejects_unsupported_language() -> None:
     detector = UniversalZenDetector(adapters={"python": PythonMVPAdapter()})
     with pytest.raises(ValueError, match="Unsupported language adapter"):

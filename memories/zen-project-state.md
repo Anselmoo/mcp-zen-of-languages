@@ -6,6 +6,52 @@ MCP Zen of Languages is a language-agnostic code quality analyzer inspired by la
 
 ## Recent Sessions
 
+---
+
+### PR #73 Follow-up: Universal Adapter Architecture - Commit 3465325
+
+**Date**: Current session
+
+**Context**:
+Addressed maintainer comment requiring that adapter/rule set must be universal for all languages rather than language-specific initialization.
+
+**Changes Made**:
+1. Universal adapter module:
+   - Created `src/mcp_zen_of_languages/adapters/universal.py`
+   - Implemented `AnalyzerFactoryAdapter` for universal language support
+   - Added `build_universal_adapters()` using `analyzer_factory.supported_languages()`
+   - Auto-generates adapters for all supported languages (Python, TypeScript, SQL, Markdown, etc.)
+
+2. UniversalZenDetector enhancement:
+   - Updated `core/detector.py` to auto-load all language adapters when `adapters=None`
+   - Default behavior now provides universal language support out-of-box
+   - No manual adapter configuration needed for standard use cases
+
+3. Module exports:
+   - Updated `adapters/__init__.py` to export universal adapter components
+   - Provides clean public API for universal adapter usage
+
+4. Test updates:
+   - Updated `tests/analyzers/test_universal_detector.py`
+   - Verified default detector handles Python analysis
+   - Verified default detector handles TypeScript analysis
+   - Confirms multi-language support works automatically
+
+**Validation Status**:
+- ✅ Targeted pytest: passed
+- ✅ Ruff: passed
+- ✅ Pre-commit all-files: passed
+- ✅ Code review: no comments
+- ✅ CodeQL: 0 alerts
+
+**Key Technical Insight**:
+The universal adapter pattern leverages the analyzer factory's language registry to dynamically build adapters for all supported languages. This eliminates the need for explicit adapter initialization and ensures consistent behavior across all languages. The architecture is extensible—adding a new language analyzer automatically adds its adapter to the universal set.
+
+**Architectural Impact**:
+This change shifts from explicit adapter management to implicit universal coverage, making the detector API simpler and more maintainable. It aligns with the principle that the tool should "just work" for all supported languages without configuration.
+
+**Status**: Completed and validated
+
 ### PR #60 SQL Detectors - Reviewer Feedback - Commit 4236efb
 
 **Date**: Current session

@@ -1,6 +1,6 @@
 [project]
 name = "mcp-zen-of-languages"
-version = "0.2.0"
+version = "0.3.0"
 description = "Multi-language architectural and idiomatic code analysis via CLI and MCP server."
 readme = "README.md"
 authors = [{ name = "Anselm Hahn", email = "Anselm.Hahn@gmail.com" }]

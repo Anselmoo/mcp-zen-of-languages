@@ -194,6 +194,150 @@ async def test_generate_agent_tasks_tool(tmp_path):
     assert tasks.total_tasks >= 1
 
 
+@pytest.mark.asyncio
+async def test_analyze_zen_violations_passes_external_tool_flag(monkeypatch):
+    captured: dict[str, bool] = {}
+
+    class _FakeAnalyzer:
+        def analyze(
+            self,
+            _code: str,
+            *,
+            enable_external_tools: bool = False,
+        ) -> AnalysisResult:
+            captured["enable_external_tools"] = enable_external_tools
+            return AnalysisResult(
+                language="python",
+                metrics=Metrics(
+                    cyclomatic=CyclomaticSummary(blocks=[], average=0.0),
+                    maintainability_index=100.0,
+                    lines_of_code=1,
+                ),
+                violations=[],
+                overall_score=100.0,
+            )
+
+    monkeypatch.setattr(
+        server, "create_analyzer", lambda *_args, **_kwargs: _FakeAnalyzer()
+    )
+    await server.analyze_zen_violations.fn(
+        "def foo():\n    pass\n",
+        "python",
+        None,
+        enable_external_tools=True,
+    )
+    assert captured["enable_external_tools"] is True
+
+
+@pytest.mark.asyncio
+async def test_generate_prompts_passes_external_tool_flag(monkeypatch):
+    captured: dict[str, bool] = {}
+
+    class _FakeAnalyzer:
+        def analyze(
+            self,
+            _code: str,
+            *,
+            enable_external_tools: bool = False,
+        ) -> AnalysisResult:
+            captured["enable_external_tools"] = enable_external_tools
+            return AnalysisResult(
+                language="python",
+                metrics=Metrics(
+                    cyclomatic=CyclomaticSummary(blocks=[], average=0.0),
+                    maintainability_index=100.0,
+                    lines_of_code=1,
+                ),
+                violations=[],
+                overall_score=100.0,
+            )
+
+    monkeypatch.setattr(
+        server, "create_analyzer", lambda *_args, **_kwargs: _FakeAnalyzer()
+    )
+    await server.generate_prompts_tool.fn(
+        "def foo(): pass",
+        "python",
+        enable_external_tools=True,
+    )
+    assert captured["enable_external_tools"] is True
+
+
+@pytest.mark.asyncio
+async def test_analyze_zen_violations_passes_allow_temporary_flag(monkeypatch):
+    captured: dict[str, bool] = {}
+
+    class _FakeAnalyzer:
+        def analyze(
+            self,
+            _code: str,
+            *,
+            enable_external_tools: bool = False,
+            allow_temporary_tools: bool = False,
+        ) -> AnalysisResult:
+            _ = enable_external_tools
+            captured["allow_temporary_tools"] = allow_temporary_tools
+            return AnalysisResult(
+                language="python",
+                metrics=Metrics(
+                    cyclomatic=CyclomaticSummary(blocks=[], average=0.0),
+                    maintainability_index=100.0,
+                    lines_of_code=1,
+                ),
+                violations=[],
+                overall_score=100.0,
+            )
+
+    monkeypatch.setattr(
+        server, "create_analyzer", lambda *_args, **_kwargs: _FakeAnalyzer()
+    )
+    await server.analyze_zen_violations.fn(
+        "def foo():\n    pass\n",
+        "python",
+        None,
+        enable_external_tools=True,
+        allow_temporary_runners=True,
+    )
+    assert captured["allow_temporary_tools"] is True
+
+
+@pytest.mark.asyncio
+async def test_generate_prompts_passes_allow_temporary_flag(monkeypatch):
+    captured: dict[str, bool] = {}
+
+    class _FakeAnalyzer:
+        def analyze(
+            self,
+            _code: str,
+            *,
+            enable_external_tools: bool = False,
+            allow_temporary_tools: bool = False,
+        ) -> AnalysisResult:
+            _ = enable_external_tools
+            captured["allow_temporary_tools"] = allow_temporary_tools
+            return AnalysisResult(
+                language="python",
+                metrics=Metrics(
+                    cyclomatic=CyclomaticSummary(blocks=[], average=0.0),
+                    maintainability_index=100.0,
+                    lines_of_code=1,
+                ),
+                violations=[],
+                overall_score=100.0,
+            )
+
+    monkeypatch.setattr(
+        server, "create_analyzer", lambda *_args, **_kwargs: _FakeAnalyzer()
+    )
+    await server.generate_prompts_tool.fn(
+        "def foo(): pass",
+        "python",
+        enable_external_tools=True,
+        allow_temporary_runners=True,
+    )
+    assert captured["allow_temporary_tools"] is True
+
+
 def test_server_registers_resources_and_prompt():
     resources = server.mcp._resource_manager._resources
     templates = server.mcp._resource_manager._templates

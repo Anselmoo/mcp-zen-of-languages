@@ -95,6 +95,107 @@ jobs:
       - name: Run tests
         run: uv run pytest -xvs
 
+  language-tests:
+    name: Language tests (${{ matrix.language }})
+    needs: lint
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: rust
+            pytest_target: tests/analyzers/test_rust_analyzer.py tests/detectors/test_rust_detectors.py tests/analyzers/test_dependency_analysis.py -k rust
+            install_cmd: ""
+          - language: ruby
+            pytest_target: tests/analyzers/test_language_analyzers.py tests/analyzers/test_dependency_analysis.py tests/coverage/test_coverage_boost.py -k ruby
+            install_cmd: gem install --no-document rubocop
+          - language: go
+            pytest_target: tests/analyzers/test_go_analyzer.py tests/detectors/test_go_detectors.py tests/analyzers/test_dependency_analysis.py -k go
+            install_cmd: ""
+          - language: javascript
+            pytest_target: tests/analyzers/test_language_analyzers.py tests/analyzers/test_dependency_analysis.py -k javascript
+            install_cmd: npm install -g eslint
+          - language: typescript
+            pytest_target: tests/detectors/test_typescript_detectors.py tests/analyzers/test_dependency_analysis.py -k typescript
+            install_cmd: npm install -g eslint
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+
+      - name: Sync dependencies
+        run: uv sync --all-groups --all-extras
+
+      - name: Set up Node.js
+        if: ${{ matrix.language == 'javascript' || matrix.language == 'typescript' }}
+        uses: actions/setup-node@v5
+        with:
+          node-version: "20"
+
+      - name: Set up Go
+        if: ${{ matrix.language == 'go' }}
+        uses: actions/setup-go@v6
+        with:
+          go-version: stable
+
+      - name: Set up Rust
+        if: ${{ matrix.language == 'rust' }}
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+
+      - name: Set up Ruby
+        if: ${{ matrix.language == 'ruby' }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+
+      - name: Install language linter/runtime prerequisites
+        if: ${{ matrix.install_cmd != '' }}
+        run: ${{ matrix.install_cmd }}
+
+      - name: Run language-focused tests
+        run: uv run pytest -x -q --no-cov ${{ matrix.pytest_target }}
+
+      - name: Subrun smoke check
+        env:
+          SMOKE_LANGUAGE: ${{ matrix.language }}
+        run: |
+          uv run python - <<'PY'
+          import os
+
+          from mcp_zen_of_languages.utils.subprocess_runner import SubprocessToolRunner
+
+          samples = {
+              "rust": "fn main() {}",
+              "ruby": "puts 'hello'",
+              "go": "package main\nfunc main() {}",
+              "javascript": "function demo(){return 1}",
+              "typescript": "const demo: number = 1;",
+          }
+
+          language = os.environ["SMOKE_LANGUAGE"]
+          code = samples.get(language, "")
+          runner = SubprocessToolRunner()
+          results = runner.run_for_language(language, code)
+          if not results:
+              raise SystemExit(
+                  f"No external tool executed for {language}; verify linter/runtime setup."
+              )
+          print(f"Subrun smoke passed for {language}: {', '.join(sorted(results))}")
+          PY
+
   visual-regression:
     name: Visual regression
     needs: lint
@@ -121,7 +222,7 @@ jobs:
 
   docker-image-check:
     name: Docker image smoke check
-    needs: [test, visual-regression]
+    needs: [test, language-tests, visual-regression]
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
@@ -202,7 +303,7 @@ jobs:
 
   build:
     name: Build package
-    needs: [test, visual-regression]
+    needs: [test, language-tests, visual-regression]
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:

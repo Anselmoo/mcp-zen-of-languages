@@ -10,6 +10,20 @@ tags:
 
 
 
+## Optional External Tool Augmentation
+
+!!! info "Consent-first external tooling"
+    External tool execution is optional and disabled by default. Use
+    `--enable-external-tools` (CLI) or `enable_external_tools=true` (MCP)
+    to opt in. Missing tools should return recommendations; no automatic
+    installs occur during analysis.
+
+| Tool | Default invocation | Output |
+|------|---------------------|--------|
+| `hadolint` | `hadolint -f json -` | JSON |
+
+
+
 ## Zen Principles
 
 8 principles across 5 categories, drawn from [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/).

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -10,10 +11,13 @@ if TYPE_CHECKING:
 
 from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,
+    AnalyzerCapabilities,
     AnalyzerConfig,
     BaseAnalyzer,
     DetectionPipeline,
 )
+
+_IMPORT_RE = re.compile(r"""@import\s+(?:url\s*\(\s*)?['"](.+?)['"]""")
 
 
 class CssAnalyzer(BaseAnalyzer):
@@ -36,6 +40,10 @@ class CssAnalyzer(BaseAnalyzer):
         """Return canonical language key."""
         return "css"
 
+    def capabilities(self) -> AnalyzerCapabilities:
+        """Declare support for ``@import`` dependency extraction."""
+        return AnalyzerCapabilities(supports_dependency_analysis=True)
+
     def parse_code(self, _code: str) -> ParserResult | None:
         """Return ``None`` for text-scanned stylesheet analysis."""
         return None
@@ -52,6 +60,22 @@ class CssAnalyzer(BaseAnalyzer):
         """Build detector pipeline from registered CSS detectors."""
         return super().build_pipeline()
 
-    def _build_dependency_analysis(self, _context: AnalysisContext) -> object | None:
-        """Return ``None`` since CSS dependency graphing is not implemented."""
-        return None
+    def _build_dependency_analysis(self, context: AnalysisContext) -> object | None:
+        """Extract ``@import`` directives and build a stylesheet dependency graph.
+
+        Args:
+            context: Current analysis context with stylesheet source text.
+
+        Returns:
+            DependencyAnalysis with import edges, or ``None`` when no imports found.
+        """
+        imports: list[str] = []
+        for line in context.code.splitlines():
+            m = _IMPORT_RE.search(line.strip())
+            if m:
+                imports.append(m.group(1))
+        if not imports:
+            return None
+        from mcp_zen_of_languages.metrics.dependency_graph import build_import_graph
+
+        return build_import_graph({(context.path or "<current>"): imports})

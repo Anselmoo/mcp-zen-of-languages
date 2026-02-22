@@ -2,18 +2,24 @@
 
 from __future__ import annotations
 
+import logging
+import xml.etree.ElementTree as ET
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
-    from mcp_zen_of_languages.models import CyclomaticSummary, ParserResult
+    from mcp_zen_of_languages.models import CyclomaticSummary
 
 from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,
+    AnalyzerCapabilities,
     AnalyzerConfig,
     BaseAnalyzer,
     DetectionPipeline,
 )
+from mcp_zen_of_languages.models import ParserResult
+
+logger = logging.getLogger(__name__)
 
 
 class XmlAnalyzer(BaseAnalyzer):
@@ -59,16 +65,25 @@ class XmlAnalyzer(BaseAnalyzer):
         """
         return "xml"
 
-    def parse_code(self, _code: str) -> ParserResult | None:
-        """Return ``None`` because XML analysis uses regex-based text scanning.
+    def capabilities(self) -> AnalyzerCapabilities:
+        """Declare support for XML structure parsing via stdlib ``xml.etree``."""
+        return AnalyzerCapabilities(supports_ast=True)
+
+    def parse_code(self, code: str) -> ParserResult | None:
+        """Parse XML text into an ElementTree via ``xml.etree.ElementTree``.
 
         Args:
-            code: Raw XML markup to analyze.
+            code: Raw XML markup to parse.
 
         Returns:
-            ParserResult | None: Always ``None`` for XML; detectors operate on raw text.
+            ParserResult wrapping the root Element, or ``None`` on parse failure.
         """
-        return None
+        try:
+            tree = ET.fromstring(code)  # noqa: S314
+            return ParserResult(type="xml", tree=tree)
+        except ET.ParseError:
+            logger.debug("Failed to parse XML")
+            return None
 
     def compute_metrics(
         self,

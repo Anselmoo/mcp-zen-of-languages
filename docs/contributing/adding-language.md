@@ -70,6 +70,24 @@ class KotlinAnalyzer(BaseAnalyzer):
 
 Most languages use regex-based detection (no AST parsing required). Only Python currently has full AST support.
 
+### 2.1 Declare analyzer capabilities
+
+Every analyzer can optionally override `capabilities()` to declare support for AST parsing, dependency analysis, and richer metrics.
+
+```python
+from mcp_zen_of_languages.analyzers.base import AnalyzerCapabilities
+
+class KotlinAnalyzer(BaseAnalyzer):
+    def capabilities(self) -> AnalyzerCapabilities:
+        return AnalyzerCapabilities(supports_ast=False)
+```
+
+Guidance:
+
+- Keep hook signatures (`parse_code`, `compute_metrics`, `_build_dependency_analysis`) intact even when implementations are placeholders.
+- Returning `None` from `parse_code` is valid for text-only analyzers; `BaseAnalyzer` records this via `AnalysisContext.ast_status`.
+- Override `capabilities()` when you add a real parser or dependency graph so detectors can branch on explicit support.
+
 ### 3. Create detectors
 
 Each detector implements `ViolationDetector` with a `detect()` method:

@@ -10,6 +10,20 @@ tags:
 
 Ruby is designed for programmer happiness — expressive, elegant, optimized for reading. But that expressiveness can become a liability when metaprogramming runs wild, method chains grow unreadable, or monkey-patching mutates core classes. These **11 principles** encode the idioms that keep Ruby code joyful to maintain.
 
+## Optional External Tool Augmentation
+
+!!! info "Consent-first external tooling"
+    External tool execution is optional and disabled by default. Use
+    `--enable-external-tools` (CLI) or `enable_external_tools=true` (MCP)
+    to opt in. Missing tools should return recommendations; no automatic
+    installs occur during analysis.
+
+| Tool | Default invocation | Output |
+|------|---------------------|--------|
+| `rubocop` | `rubocop --stdin stdin.rb --format json` | JSON |
+
+
+
 ## Zen Principles
 
 11 principles across 6 categories, drawn from [Ruby Style Guide](https://rubystyle.guide/).

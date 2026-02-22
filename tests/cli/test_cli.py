@@ -185,6 +185,83 @@ def test_check_command_fail_on_severity(monkeypatch, tmp_path):
     assert cli.main(["--quiet", "check", str(sample), "--fail-on-severity", "9"]) == 0
 
 
+def test_check_command_passes_enable_external_tools(monkeypatch, tmp_path):
+    sample = tmp_path / "sample.py"
+    sample.write_text("def foo():\n    pass\n", encoding="utf-8")
+    captured: dict[str, bool] = {}
+
+    result = AnalysisResult(
+        language="python",
+        path=str(sample),
+        metrics=Metrics(
+            cyclomatic=CyclomaticSummary(blocks=[], average=0.0),
+            maintainability_index=100.0,
+            lines_of_code=1,
+        ),
+        violations=[],
+        overall_score=100.0,
+    )
+
+    monkeypatch.setattr(
+        cli,
+        "_collect_targets",
+        lambda *_args, **_kwargs: [(sample, "python")],
+    )
+
+    def _fake_analyze_targets(*_args, **kwargs):
+        captured["enable_external_tools"] = kwargs.get("enable_external_tools", False)
+        return [result]
+
+    monkeypatch.setattr(cli, "_analyze_targets", _fake_analyze_targets)
+
+    assert cli.main(["--quiet", "check", str(sample), "--enable-external-tools"]) == 0
+    assert captured["enable_external_tools"] is True
+
+
+def test_check_command_passes_allow_temporary_runners(monkeypatch, tmp_path):
+    sample = tmp_path / "sample.py"
+    sample.write_text("def foo():\n    pass\n", encoding="utf-8")
+    captured: dict[str, bool] = {}
+
+    result = AnalysisResult(
+        language="python",
+        path=str(sample),
+        metrics=Metrics(
+            cyclomatic=CyclomaticSummary(blocks=[], average=0.0),
+            maintainability_index=100.0,
+            lines_of_code=1,
+        ),
+        violations=[],
+        overall_score=100.0,
+    )
+
+    monkeypatch.setattr(
+        cli,
+        "_collect_targets",
+        lambda *_args, **_kwargs: [(sample, "python")],
+    )
+
+    def _fake_analyze_targets(*_args, **kwargs):
+        captured["allow_temporary_tools"] = kwargs.get("allow_temporary_tools", False)
+        return [result]
+
+    monkeypatch.setattr(cli, "_analyze_targets", _fake_analyze_targets)
+
+    assert (
+        cli.main(
+            [
+                "--quiet",
+                "check",
+                str(sample),
+                "--enable-external-tools",
+                "--allow-temporary-runners",
+            ],
+        )
+        == 0
+    )
+    assert captured["allow_temporary_tools"] is True
+
+
 def test_check_command_sarif_output(monkeypatch, tmp_path):
     sample = tmp_path / "sample.py"
     sample.write_text("def foo():\n    pass\n", encoding="utf-8")
@@ -388,6 +465,97 @@ def test_prompt_alias_works(tmp_path):
     sample.write_text("def foo():\n    pass\n", encoding="utf-8")
     exit_code = cli.main(["--quiet", "prompt", str(sample), "--mode", "agent"])
     assert exit_code == 0
+
+
+def test_prompts_command_passes_enable_external_tools(monkeypatch, tmp_path):
+    sample = tmp_path / "sample.py"
+    sample.write_text("def foo():\n    pass\n", encoding="utf-8")
+    captured: dict[str, bool] = {}
+
+    result = AnalysisResult(
+        language="python",
+        path=str(sample),
+        metrics=Metrics(
+            cyclomatic=CyclomaticSummary(blocks=[], average=0.0),
+            maintainability_index=100.0,
+            lines_of_code=1,
+        ),
+        violations=[],
+        overall_score=100.0,
+    )
+
+    monkeypatch.setattr(
+        cli,
+        "_collect_targets",
+        lambda *_args, **_kwargs: [(sample, "python")],
+    )
+
+    def _fake_analyze_targets(*_args, **kwargs):
+        captured["enable_external_tools"] = kwargs.get("enable_external_tools", False)
+        return [result]
+
+    monkeypatch.setattr(cli, "_analyze_targets", _fake_analyze_targets)
+
+    assert (
+        cli.main(
+            [
+                "--quiet",
+                "prompts",
+                str(sample),
+                "--mode",
+                "agent",
+                "--enable-external-tools",
+            ],
+        )
+        == 0
+    )
+    assert captured["enable_external_tools"] is True
+
+
+def test_prompts_command_passes_allow_temporary_runners(monkeypatch, tmp_path):
+    sample = tmp_path / "sample.py"
+    sample.write_text("def foo():\n    pass\n", encoding="utf-8")
+    captured: dict[str, bool] = {}
+
+    result = AnalysisResult(
+        language="python",
+        path=str(sample),
+        metrics=Metrics(
+            cyclomatic=CyclomaticSummary(blocks=[], average=0.0),
+            maintainability_index=100.0,
+            lines_of_code=1,
+        ),
+        violations=[],
+        overall_score=100.0,
+    )
+
+    monkeypatch.setattr(
+        cli,
+        "_collect_targets",
+        lambda *_args, **_kwargs: [(sample, "python")],
+    )
+
+    def _fake_analyze_targets(*_args, **kwargs):
+        captured["allow_temporary_tools"] = kwargs.get("allow_temporary_tools", False)
+        return [result]
+
+    monkeypatch.setattr(cli, "_analyze_targets", _fake_analyze_targets)
+
+    assert (
+        cli.main(
+            [
+                "--quiet",
+                "prompts",
+                str(sample),
+                "--mode",
+                "agent",
+                "--enable-external-tools",
+                "--allow-temporary-runners",
+            ],
+        )
+        == 0
+    )
+    assert captured["allow_temporary_tools"] is True
 
 
 def test_list_rules_uses_compact_headers(capsys):

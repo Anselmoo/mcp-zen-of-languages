@@ -1,7 +1,13 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages import cli
-from mcp_zen_of_languages.models import AnalysisResult, CyclomaticSummary, Metrics
+from mcp_zen_of_languages.models import (
+    AnalysisResult,
+    CyclomaticSummary,
+    ExternalAnalysisResult,
+    ExternalToolResult,
+    Metrics,
+)
 
 
 def test_summarize_violations_counts():
@@ -107,3 +113,58 @@ def test_build_log_summary_outputs_counts():
     assert "total_violations: 2" in output
     assert "critical: 1" in output
     assert "medium: 1" in output
+
+
+def test_emit_external_tool_guidance_shows_opt_in_tip(capsys):
+    cyclomatic = CyclomaticSummary(blocks=[], average=0.0)
+    metrics = Metrics(cyclomatic=cyclomatic, maintainability_index=0.0, lines_of_code=1)
+    result = AnalysisResult(
+        language="python",
+        path="sample.py",
+        metrics=metrics,
+        violations=[],
+        overall_score=100.0,
+    )
+
+    cli._emit_external_tool_guidance(
+        [result],
+        enable_external_tools=False,
+        allow_temporary_tools=False,
+    )
+
+    output = capsys.readouterr().out
+    assert "--enable-external-tools" in output
+
+
+def test_emit_external_tool_guidance_shows_missing_tool_recommendation(capsys):
+    cyclomatic = CyclomaticSummary(blocks=[], average=0.0)
+    metrics = Metrics(cyclomatic=cyclomatic, maintainability_index=0.0, lines_of_code=1)
+    result = AnalysisResult(
+        language="python",
+        path="sample.py",
+        metrics=metrics,
+        violations=[],
+        overall_score=100.0,
+        external_analysis=ExternalAnalysisResult(
+            enabled=True,
+            language="python",
+            quality_note="best effort",
+            tools=[
+                ExternalToolResult(
+                    tool="ruff",
+                    status="unavailable",
+                    message="missing",
+                    recommendation="Install 'ruff' to improve analysis.",
+                ),
+            ],
+        ),
+    )
+
+    cli._emit_external_tool_guidance(
+        [result],
+        enable_external_tools=True,
+        allow_temporary_tools=False,
+    )
+
+    output = capsys.readouterr().out
+    assert "Install 'ruff'" in output

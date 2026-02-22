@@ -9,4 +9,5 @@ See Also:
     ``utils.markdown_quality``: Structural lint checks for generated Markdown reports.
     ``utils.metric``: Quality-score arithmetic consumed by result models.
     ``utils.parsers``: AST construction with tree-sitter / ``ast`` fallback.
+    ``utils.subprocess_runner``: Secure subprocess invocation for external linters/tools.
 """

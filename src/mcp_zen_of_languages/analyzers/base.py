@@ -44,6 +44,7 @@ from __future__ import annotations
 import logging
 import os
 from abc import ABC, abstractmethod
+from enum import StrEnum
 from typing import Literal, TypeVar
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -52,6 +53,8 @@ from mcp_zen_of_languages.languages.configs import DetectorConfig
 from mcp_zen_of_languages.models import (
     AnalysisResult,
     CyclomaticSummary,
+    ExternalAnalysisResult,
+    ExternalToolResult,
     Location,
     Metrics,
     ParserResult,
@@ -204,6 +207,22 @@ class RustAnalyzerConfig(AnalyzerConfig):
     detect_unsafe_blocks: bool = Field(default=True)
 
 
+class AstStatus(StrEnum):
+    """Status of AST availability for the current analysis run."""
+
+    unsupported = "unsupported"
+    parse_failed = "parse_failed"
+    parsed = "parsed"
+
+
+class AnalyzerCapabilities(BaseModel):
+    """Language capability flags surfaced to analysis context and detectors."""
+
+    supports_ast: bool = False
+    supports_dependency_analysis: bool = False
+    supports_metrics: bool = False
+
+
 # ============================================================================
 # Analysis Context (holds all intermediate data)
 # ============================================================================
@@ -224,7 +243,7 @@ class AnalysisContext(BaseModel):
     [`BaseAnalyzer.analyze`][mcp_zen_of_languages.analyzers.base.BaseAnalyzer.analyze]:
 
     1. **Created** with raw ``code`` and optional ``path``.
-    2. **Enriched** by ``parse_code()`` (sets ``ast_tree``).
+    2. **Enriched** by ``parse_code()`` (sets ``ast_tree`` and ``ast_status``).
     3. **Enriched** by ``compute_metrics()`` (sets ``cyclomatic_summary``,
        ``maintainability_index``, ``lines_of_code``).
     4. **Enriched** by ``_build_dependency_analysis()`` (sets
@@ -237,6 +256,10 @@ class AnalysisContext(BaseModel):
         language: Language identifier (e.g. ``"python"``, ``"typescript"``).
         ast_tree: Parsed syntax tree produced by the language-specific
             ``parse_code()`` hook, or ``None`` if parsing failed.
+        ast_status: Tri-state AST availability marker:
+            ``unsupported`` / ``parse_failed`` / ``parsed``.
+        capabilities: Analyzer capability declaration used to explain
+            which analysis surfaces are expected to be available.
         cyclomatic_summary: Aggregated cyclomatic-complexity statistics
             for every block in the source.
         maintainability_index: Halstead / McCabe maintainability score
@@ -265,6 +288,8 @@ class AnalysisContext(BaseModel):
 
     # Parsed artifacts
     ast_tree: ParserResult | None = None
+    ast_status: AstStatus = AstStatus.unsupported
+    capabilities: AnalyzerCapabilities = Field(default_factory=AnalyzerCapabilities)
 
     # Metrics
     cyclomatic_summary: CyclomaticSummary | None = None
@@ -273,6 +298,7 @@ class AnalysisContext(BaseModel):
 
     # Analysis results
     dependency_analysis: object | None = None  # DependencyAnalysis model
+    external_analysis: object | None = None
     violations: list[Violation] = Field(default_factory=list)
 
     # Other files for cross-file analysis
@@ -549,6 +575,7 @@ class BaseAnalyzer(ABC):
     | ``parse_code()`` | Turn raw source text into a language AST |
     | ``compute_metrics()`` | Produce cyclomatic, maintainability, LOC |
     | ``build_pipeline()`` | Assemble the detector list from zen rules |
+    | ``capabilities()`` | Declare AST/dependency/metrics support |
 
     Subclasses such as ``PythonAnalyzer`` implement *only* these hooks;
     the invariant orchestration logic is never duplicated.
@@ -662,13 +689,29 @@ class BaseAnalyzer(ABC):
             ``None`` when the corresponding metric is unavailable.
         """
 
+    def capabilities(self) -> AnalyzerCapabilities:
+        """Declare language features supported by this analyzer implementation.
+
+        The default implementation marks all advanced capabilities as
+        unsupported. Language analyzers with concrete parser or dependency
+        support override this method to advertise availability.
+
+        Returns:
+            AnalyzerCapabilities: Capability flags consumed by
+                ``AnalysisContext`` and downstream detectors.
+        """
+        return AnalyzerCapabilities()
+
     # Template Method - defines the algorithm structure
-    def analyze(
+    def analyze(  # noqa: PLR0913
         self,
         code: str,
         path: str | None = None,
         other_files: dict[str, str] | None = None,
         repository_imports: dict[str, list[str]] | None = None,
+        *,
+        enable_external_tools: bool = False,
+        allow_temporary_tools: bool = False,
     ) -> AnalysisResult:
         """Run the full analysis workflow against a single source file.
 
@@ -703,6 +746,11 @@ class BaseAnalyzer(ABC):
             repository_imports: Per-file import lists from the wider
                 repository, enabling coupling and dependency-fan
                 detectors.
+            enable_external_tools: Run allow-listed external linters/tools
+                in best-effort mode for additional diagnostics.
+            allow_temporary_tools: Allow temporary-runner strategies
+                (for example ``npx``/``uvx``) when direct/no-install
+                resolution is unavailable.
 
         Returns:
             Fully populated analysis result containing metrics,
@@ -719,6 +767,12 @@ class BaseAnalyzer(ABC):
 
         # 2. Parse code (language-specific hook)
         context.ast_tree = self.parse_code(code)
+        if context.capabilities.supports_ast:
+            context.ast_status = (
+                AstStatus.parsed
+                if context.ast_tree is not None
+                else AstStatus.parse_failed
+            )
 
         # 3. Compute metrics (language-specific hook)
         cc, mi, loc = self.compute_metrics(code, context.ast_tree)
@@ -729,6 +783,11 @@ class BaseAnalyzer(ABC):
         # 4. Build dependency analysis (optional)
         if self.config.enable_dependency_analysis:
             context.dependency_analysis = self._build_dependency_analysis(context)
+        context.external_analysis = self._build_external_analysis(
+            context,
+            enable_external_tools=enable_external_tools,
+            allow_temporary_tools=allow_temporary_tools,
+        )
 
         # 5. Run detection pipeline
         violations = self.pipeline.run(context, self.config)
@@ -889,15 +948,22 @@ class BaseAnalyzer(ABC):
             Minimally populated context ready for enrichment by
             ``parse_code()`` and ``compute_metrics()``.
         """
+        capabilities = self.capabilities()
         return AnalysisContext(
             code=code,
             path=path,
             language=self.language(),
+            capabilities=capabilities,
+            ast_status=(
+                AstStatus.parse_failed
+                if capabilities.supports_ast
+                else AstStatus.unsupported
+            ),
             other_files=other_files,
             repository_imports=repository_imports,
         )
 
-    def _build_dependency_analysis(self, _context: AnalysisContext) -> object | None:
+    def _build_dependency_analysis(self, context: AnalysisContext) -> object | None:
         """Build a language-specific dependency graph from the analysis context.
 
         The base implementation returns ``None`` (no dependency analysis).
@@ -917,7 +983,152 @@ class BaseAnalyzer(ABC):
             detectors, or ``None`` when the language does not support
             dependency analysis.
         """
+        logger.debug(
+            "%s: dependency analysis unsupported for %s",
+            self.language(),
+            context.path or "<snippet>",
+        )
         return None
+
+    @staticmethod
+    def _truncate_external_output(text: str, max_chars: int = 1000) -> str:
+        """Trim verbose tool output to keep result payloads bounded."""
+        if len(text) <= max_chars:
+            return text
+        return text[:max_chars] + "... [truncated]"
+
+    def _build_external_analysis(
+        self,
+        context: AnalysisContext,
+        *,
+        enable_external_tools: bool,
+        allow_temporary_tools: bool,
+    ) -> ExternalAnalysisResult | None:
+        """Optionally run allow-listed external tools for deeper analysis quality."""
+        from mcp_zen_of_languages.utils.subprocess_runner import (
+            KNOWN_TOOLS,
+            SubprocessToolRunner,
+        )
+
+        tool_map = KNOWN_TOOLS.get(self.language(), {})
+        if not tool_map:
+            return None
+
+        runner = SubprocessToolRunner()
+        tool_results: list[ExternalToolResult] = []
+        if not enable_external_tools:
+            for tool_name in tool_map:
+                resolution = runner.resolve_tool(
+                    tool_name,
+                    language=self.language(),
+                    allow_temporary_tools=allow_temporary_tools,
+                )
+                if resolution.command is not None:
+                    tool_results.append(
+                        ExternalToolResult(
+                            tool=tool_name,
+                            status="available",
+                            message="Available but not executed (opt-in required).",
+                            strategy=resolution.strategy,
+                            command=resolution.command,
+                            resolution_attempts=resolution.attempts,
+                            recommendation=(
+                                f"Enable external tools to run '{tool_name}' and increase analysis depth."
+                            ),
+                        ),
+                    )
+                else:
+                    tool_results.append(
+                        ExternalToolResult(
+                            tool=tool_name,
+                            status="unavailable",
+                            message="Tool could not be resolved; execution skipped.",
+                            resolution_attempts=resolution.attempts,
+                            recommendation=(
+                                f"Install '{tool_name}' and re-run with external tools enabled."
+                            ),
+                        ),
+                    )
+            return ExternalAnalysisResult(
+                enabled=False,
+                temporary_runners_enabled=allow_temporary_tools,
+                language=self.language(),
+                quality_note="External tool analysis is disabled by default.",
+                tools=tool_results,
+            )
+
+        for tool_name, default_args in tool_map.items():
+            resolution = runner.resolve_tool(
+                tool_name,
+                language=self.language(),
+                allow_temporary_tools=allow_temporary_tools,
+            )
+            if resolution.command is None:
+                tool_results.append(
+                    ExternalToolResult(
+                        tool=tool_name,
+                        status="unavailable",
+                        message="Tool could not be resolved; execution skipped.",
+                        resolution_attempts=resolution.attempts,
+                        recommendation=(
+                            f"Install '{tool_name}' to improve {self.language()} analysis quality."
+                        ),
+                    ),
+                )
+                continue
+
+            run_result = runner.run(
+                tool_name,
+                default_args,
+                code=context.code,
+                language=self.language(),
+                allow_temporary_tools=allow_temporary_tools,
+            )
+            if run_result is None:
+                tool_results.append(
+                    ExternalToolResult(
+                        tool=tool_name,
+                        status="execution_failed",
+                        message="Tool execution failed or timed out.",
+                        strategy=resolution.strategy,
+                        command=resolution.command or [],
+                        resolution_attempts=resolution.attempts,
+                        recommendation=(
+                            f"Verify '{tool_name}' installation and rerun external analysis."
+                        ),
+                    ),
+                )
+                continue
+
+            status = "passed" if run_result.returncode == 0 else "reported_issues"
+            tool_results.append(
+                ExternalToolResult(
+                    tool=tool_name,
+                    status=status,
+                    message=(
+                        "Tool executed without reported issues."
+                        if run_result.returncode == 0
+                        else "Tool executed and reported diagnostics."
+                    ),
+                    strategy=run_result.strategy,
+                    command=run_result.command,
+                    resolution_attempts=run_result.resolution_attempts,
+                    returncode=run_result.returncode,
+                    stdout=self._truncate_external_output(run_result.stdout),
+                    stderr=self._truncate_external_output(run_result.stderr),
+                ),
+            )
+
+        quality_note = "External tool analysis executed with best-effort behavior."
+        if allow_temporary_tools:
+            quality_note += " Temporary runners were enabled."
+        return ExternalAnalysisResult(
+            enabled=True,
+            temporary_runners_enabled=allow_temporary_tools,
+            language=self.language(),
+            quality_note=quality_note,
+            tools=tool_results,
+        )
 
     def _build_result(
         self,
@@ -949,12 +1160,24 @@ class BaseAnalyzer(ABC):
             lines_of_code=context.lines_of_code,
         )
 
+        external_analysis: ExternalAnalysisResult | None = None
+        if isinstance(context.external_analysis, ExternalAnalysisResult):
+            external_analysis = context.external_analysis
+        elif isinstance(context.external_analysis, dict):
+            try:
+                external_analysis = ExternalAnalysisResult.model_validate(
+                    context.external_analysis,
+                )
+            except (TypeError, ValueError):
+                external_analysis = None
+
         return AnalysisResult(
             language=self.language(),
             path=context.path,
             metrics=metrics,
             violations=violations,
             overall_score=overall_score,
+            external_analysis=external_analysis,
         )
 
     def _calculate_overall_score(self, violations: list[Violation]) -> float:

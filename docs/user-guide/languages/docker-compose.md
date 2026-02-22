@@ -10,6 +10,20 @@ tags:
 
 
 
+## Optional External Tool Augmentation
+
+!!! info "Consent-first external tooling"
+    External tool execution is optional and disabled by default. Use
+    `--enable-external-tools` (CLI) or `enable_external_tools=true` (MCP)
+    to opt in. Missing tools should return recommendations; no automatic
+    installs occur during analysis.
+
+| Tool | Default invocation | Output |
+|------|---------------------|--------|
+| `docker` | `docker compose -f - config -q` | Text / structured stderr |
+
+
+
 ## Zen Principles
 
 4 principles across 2 categories, drawn from [Compose Specification](https://compose-spec.io/).

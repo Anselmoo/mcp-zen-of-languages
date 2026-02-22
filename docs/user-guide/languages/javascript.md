@@ -10,6 +10,25 @@ tags:
 
 JavaScript has evolved enormously since ES6, but codebases often carry legacy patterns — `var` declarations, loose equality, callback pyramids. These **11 principles** encode modern JavaScript best practices drawn from the Airbnb Style Guide, Node.js best practices, and the functional programming community.
 
+## Optional External Tool Augmentation
+
+!!! info "Consent-first external tooling"
+    External tool execution is optional and disabled by default. Use
+    `--enable-external-tools` (CLI) or `enable_external_tools=true` (MCP)
+    to opt in. Missing tools should return recommendations; no automatic
+    installs occur during analysis.
+
+| Tool | Default invocation | Output |
+|------|---------------------|--------|
+| `biome` | `biome lint --stdin-file-path stdin.js --reporter json` | JSON |
+| `eslint` | `eslint --stdin --format json` | JSON |
+| `prettier` | `prettier --check --stdin-filepath stdin.js` | Text / structured stderr |
+
+!!! tip "Temporary runner fallback"
+    For temporary execution via package runners, use
+    `--allow-temporary-runners` (CLI) or `allow_temporary_runners=true` (MCP).
+
+
 ## Zen Principles
 
 11 principles across 10 categories, drawn from [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript).

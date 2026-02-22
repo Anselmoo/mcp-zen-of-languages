@@ -2,18 +2,24 @@
 
 from __future__ import annotations
 
+import json
+import logging
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
-    from mcp_zen_of_languages.models import CyclomaticSummary, ParserResult
+    from mcp_zen_of_languages.models import CyclomaticSummary
 
 from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,
+    AnalyzerCapabilities,
     AnalyzerConfig,
     BaseAnalyzer,
     DetectionPipeline,
 )
+from mcp_zen_of_languages.models import ParserResult
+
+logger = logging.getLogger(__name__)
 
 
 class JsonAnalyzer(BaseAnalyzer):
@@ -59,16 +65,25 @@ class JsonAnalyzer(BaseAnalyzer):
         """
         return "json"
 
-    def parse_code(self, _code: str) -> ParserResult | None:
-        """Return ``None`` because JSON analysis uses direct text scanning rather than AST parsing.
+    def capabilities(self) -> AnalyzerCapabilities:
+        """Declare support for JSON structure parsing via stdlib ``json``."""
+        return AnalyzerCapabilities(supports_ast=True)
+
+    def parse_code(self, code: str) -> ParserResult | None:
+        """Parse JSON text into a Python object via ``json.loads``.
 
         Args:
-            code: Raw JSON text to analyze.
+            code: Raw JSON text to parse.
 
         Returns:
-            ParserResult | None: Always ``None`` for JSON; detectors operate on raw text.
+            ParserResult wrapping the parsed object, or ``None`` on parse failure.
         """
-        return None
+        try:
+            tree = json.loads(code)
+            return ParserResult(type="json", tree=tree)
+        except (json.JSONDecodeError, ValueError):
+            logger.debug("Failed to parse JSON")
+            return None
 
     def compute_metrics(
         self,

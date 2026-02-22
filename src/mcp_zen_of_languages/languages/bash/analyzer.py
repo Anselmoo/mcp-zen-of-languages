@@ -12,6 +12,7 @@ See Also:
 
 from __future__ import annotations
 
+import re
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -20,10 +21,13 @@ if TYPE_CHECKING:
 
 from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,
+    AnalyzerCapabilities,
     AnalyzerConfig,
     BaseAnalyzer,
     DetectionPipeline,
 )
+
+_SOURCE_RE = re.compile(r"""^(?:source|\.)[ \t]+['"]?([^\s'"]+)['"]?""")
 
 
 class BashAnalyzer(BaseAnalyzer):
@@ -79,6 +83,10 @@ class BashAnalyzer(BaseAnalyzer):
         """
         return "bash"
 
+    def capabilities(self) -> AnalyzerCapabilities:
+        """Declare support for source/dot-source dependency extraction."""
+        return AnalyzerCapabilities(supports_dependency_analysis=True)
+
     def parse_code(self, _code: str) -> ParserResult | None:
         """Attempt to parse Bash source into a structured AST.
 
@@ -127,17 +135,25 @@ class BashAnalyzer(BaseAnalyzer):
         """
         return super().build_pipeline()
 
-    def _build_dependency_analysis(self, _context: AnalysisContext) -> object | None:
-        """Build cross-file dependency data for Bash ``source`` / ``.`` includes.
-
-        Not yet implemented for Bash; returns ``None``.  Future versions may
-        trace ``source`` and ``.`` directives to detect circular includes or
-        missing dependencies.
+    def _build_dependency_analysis(self, context: AnalysisContext) -> object | None:
+        """Extract ``source`` and ``.`` includes and build a dependency graph.
 
         Args:
             context: Current analysis context with source text and metrics.
 
         Returns:
-            object | None: Always ``None``; reserved for future cross-file analysis.
+            DependencyAnalysis with include edges, or ``None`` when no sources found.
         """
-        return None
+        imports: list[str] = []
+        for line in context.code.splitlines():
+            stripped = line.strip()
+            if stripped.startswith("#"):
+                continue
+            m = _SOURCE_RE.match(stripped)
+            if m:
+                imports.append(m.group(1))
+        if not imports:
+            return None
+        from mcp_zen_of_languages.metrics.dependency_graph import build_import_graph
+
+        return build_import_graph({(context.path or "<current>"): imports})

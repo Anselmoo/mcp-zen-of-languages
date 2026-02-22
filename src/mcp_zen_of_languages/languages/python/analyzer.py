@@ -23,6 +23,7 @@ if TYPE_CHECKING:
 
 from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,
+    AnalyzerCapabilities,
     AnalyzerConfig,
     BaseAnalyzer,
     DetectionPipeline,
@@ -93,6 +94,14 @@ class PythonAnalyzer(BaseAnalyzer, LocationHelperMixin):
             str: Always ``"python"``.
         """
         return "python"
+
+    def capabilities(self) -> AnalyzerCapabilities:
+        """Declare Python analyzer support for AST, dependencies, and metrics."""
+        return AnalyzerCapabilities(
+            supports_ast=True,
+            supports_dependency_analysis=True,
+            supports_metrics=True,
+        )
 
     def parse_code(self, code: str) -> ParserResult | None:
         """Parse Python source into a ``ParserResult`` representation.

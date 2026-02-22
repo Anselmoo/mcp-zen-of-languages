@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -10,9 +11,13 @@ if TYPE_CHECKING:
 
 from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,
+    AnalyzerCapabilities,
     AnalyzerConfig,
     BaseAnalyzer,
 )
+
+_FROM_RE = re.compile(r"^FROM\s+(\S+)", re.IGNORECASE)
+_COPY_FROM_RE = re.compile(r"^COPY\s+--from=(\S+)", re.IGNORECASE)
 
 
 class DockerfileAnalyzer(BaseAnalyzer):
@@ -35,6 +40,10 @@ class DockerfileAnalyzer(BaseAnalyzer):
         """Return the canonical language key."""
         return "dockerfile"
 
+    def capabilities(self) -> AnalyzerCapabilities:
+        """Declare support for FROM/COPY --from dependency extraction."""
+        return AnalyzerCapabilities(supports_dependency_analysis=True)
+
     def parse_code(self, _code: str) -> ParserResult | None:
         """Return ``None`` because Dockerfile checks are text-oriented."""
         return None
@@ -47,5 +56,27 @@ class DockerfileAnalyzer(BaseAnalyzer):
         """Return line-count metrics for Dockerfiles."""
         return None, None, len(code.splitlines())
 
-    def _build_dependency_analysis(self, _context: AnalysisContext) -> object | None:
-        return None
+    def _build_dependency_analysis(self, context: AnalysisContext) -> object | None:
+        """Extract ``FROM`` and ``COPY --from`` references as image dependencies.
+
+        Args:
+            context: Current analysis context with Dockerfile source text.
+
+        Returns:
+            DependencyAnalysis with image dependency edges, or ``None`` when none found.
+        """
+        imports: list[str] = []
+        for line in context.code.splitlines():
+            stripped = line.strip()
+            m = _FROM_RE.match(stripped)
+            if m:
+                imports.append(m.group(1))
+                continue
+            m = _COPY_FROM_RE.match(stripped)
+            if m:
+                imports.append(m.group(1))
+        if not imports:
+            return None
+        from mcp_zen_of_languages.metrics.dependency_graph import build_import_graph
+
+        return build_import_graph({(context.path or "<current>"): imports})

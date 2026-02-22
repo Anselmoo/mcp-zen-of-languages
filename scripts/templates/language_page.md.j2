@@ -10,6 +10,29 @@ tags:
 
 {{ intro }}
 
+{% if external_tools %}
+## Optional External Tool Augmentation
+
+!!! info "Consent-first external tooling"
+    External tool execution is optional and disabled by default. Use
+    `--enable-external-tools` (CLI) or `enable_external_tools=true` (MCP)
+    to opt in. Missing tools should return recommendations; no automatic
+    installs occur during analysis.
+
+| Tool | Default invocation | Output |
+|------|---------------------|--------|
+{% for entry in external_tools %}
+| `{{ entry.tool }}` | `{{ entry.command }}` | {{ entry.output_hint }} |
+{% endfor %}
+
+{% if has_temporary_runner %}
+!!! tip "Temporary runner fallback"
+    For temporary execution via package runners, use
+    `--allow-temporary-runners` (CLI) or `allow_temporary_runners=true` (MCP).
+{% endif %}
+
+{% endif %}
+
 ## Zen Principles
 
 {{ num_principles }} principles across {{ num_categories }} categories, drawn from {% if source_url %}[{{ source_text }}]({{ source_url }}){% else %}{{ source_text }}{% endif %}.

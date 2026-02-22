@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -10,10 +11,17 @@ if TYPE_CHECKING:
 
 from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,
+    AnalyzerCapabilities,
     AnalyzerConfig,
     BaseAnalyzer,
     DetectionPipeline,
     TypeScriptAnalyzerConfig,
+)
+
+_IMPORT_RE = re.compile(
+    r"""(?:import\s+(?:type\s+)?.*?\s+from\s+['"](.+?)['"]"""
+    r"""|import\s+['"](.+?)['"]"""
+    r"""|require\s*\(\s*['"](.+?)['"]\s*\))""",
 )
 
 
@@ -66,6 +74,10 @@ class TypeScriptAnalyzer(BaseAnalyzer):
         """
         return "typescript"
 
+    def capabilities(self) -> AnalyzerCapabilities:
+        """Declare support for import/require dependency extraction."""
+        return AnalyzerCapabilities(supports_dependency_analysis=True)
+
     def parse_code(self, _code: str) -> ParserResult | None:
         """Parse source text into a language parser result when available.
 
@@ -102,13 +114,23 @@ class TypeScriptAnalyzer(BaseAnalyzer):
         """
         return super().build_pipeline()
 
-    def _build_dependency_analysis(self, _context: AnalysisContext) -> object | None:
-        """Build dependency analysis data for cross-file checks.
+    def _build_dependency_analysis(self, context: AnalysisContext) -> object | None:
+        """Extract ``import``/``require`` dependencies and build an import graph.
 
         Args:
-            context (AnalysisContext): Analysis context containing source text and intermediate metrics.
+            context: Analysis context containing source text and intermediate metrics.
 
         Returns:
-            object | None: Language-specific dependency analysis payload, or ``None`` when unsupported.
+            DependencyAnalysis with import edges, or ``None`` when no imports found.
         """
-        return None
+        imports: list[str] = []
+        for line in context.code.splitlines():
+            for m in _IMPORT_RE.finditer(line):
+                dep = m.group(1) or m.group(2) or m.group(3)
+                if dep:
+                    imports.append(dep)
+        if not imports:
+            return None
+        from mcp_zen_of_languages.metrics.dependency_graph import build_import_graph
+
+        return build_import_graph({(context.path or "<current>"): imports})

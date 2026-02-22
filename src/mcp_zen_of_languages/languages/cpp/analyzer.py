@@ -11,6 +11,7 @@ See Also:
 
 from __future__ import annotations
 
+import re
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -19,10 +20,13 @@ if TYPE_CHECKING:
 
 from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,
+    AnalyzerCapabilities,
     AnalyzerConfig,
     BaseAnalyzer,
     DetectionPipeline,
 )
+
+_INCLUDE_RE = re.compile(r"""^#include\s+[<"](.+?)[>"]""")
 
 
 class CppAnalyzer(BaseAnalyzer):
@@ -71,6 +75,10 @@ class CppAnalyzer(BaseAnalyzer):
         """
         return "cpp"
 
+    def capabilities(self) -> AnalyzerCapabilities:
+        """Declare support for #include dependency extraction."""
+        return AnalyzerCapabilities(supports_dependency_analysis=True)
+
     def parse_code(self, _code: str) -> ParserResult | None:
         """Parse C++ source into a structured syntax tree.
 
@@ -114,15 +122,22 @@ class CppAnalyzer(BaseAnalyzer):
         """
         return super().build_pipeline()
 
-    def _build_dependency_analysis(self, _context: AnalysisContext) -> object | None:
-        """Build cross-file dependency data for C++ include/header graphs.
-
-        Not yet implemented for C++; returns ``None``.
+    def _build_dependency_analysis(self, context: AnalysisContext) -> object | None:
+        """Extract ``#include`` directives and build a header dependency graph.
 
         Args:
             context: Current analysis context with source text and metrics.
 
         Returns:
-            object | None: Always ``None`` until C++ dependency analysis is added.
+            DependencyAnalysis with include edges, or ``None`` when no includes found.
         """
-        return None
+        imports: list[str] = []
+        for line in context.code.splitlines():
+            m = _INCLUDE_RE.match(line.strip())
+            if m:
+                imports.append(m.group(1))
+        if not imports:
+            return None
+        from mcp_zen_of_languages.metrics.dependency_graph import build_import_graph
+
+        return build_import_graph({(context.path or "<current>"): imports})

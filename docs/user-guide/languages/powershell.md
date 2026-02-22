@@ -10,6 +10,20 @@ tags:
 
 PowerShell is a shell built around objects, pipelines, and cmdlet conventions. Code that ignores these conventions — using aliases in scripts, returning formatted strings, skipping `-WhatIf` support — breaks the pipeline and frustrates users. These **15 principles** come from the [PowerShell Best Practices](https://learn.microsoft.com/en-us/powershell/scripting/developer/cmdlet/cmdlet-development-guidelines) and the community's hard-won experience.
 
+## Optional External Tool Augmentation
+
+!!! info "Consent-first external tooling"
+    External tool execution is optional and disabled by default. Use
+    `--enable-external-tools` (CLI) or `enable_external_tools=true` (MCP)
+    to opt in. Missing tools should return recommendations; no automatic
+    installs occur during analysis.
+
+| Tool | Default invocation | Output |
+|------|---------------------|--------|
+| `pwsh` | `pwsh -Command Invoke-ScriptAnalyzer -ScriptDefinition $input` | Text / structured stderr |
+
+
+
 ## Zen Principles
 
 15 principles across 12 categories, drawn from [PoshCode Style Guide](https://github.com/PoshCode/PowerShellPracticeAndStyle).

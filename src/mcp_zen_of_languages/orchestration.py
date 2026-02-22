@@ -121,6 +121,8 @@ def analyze_targets(  # noqa: C901, PLR0912, PLR0913, PLR0915
     unsupported_language: Literal["skip", "placeholder"] = "skip",
     include_read_errors: bool = False,
     progress_callback: Callable[[], None] | None = None,
+    enable_external_tools: bool = False,
+    allow_temporary_tools: bool = False,
 ) -> list[AnalysisResult]:
     """Analyze targets grouped by language using the analyzer factory."""
     config = load_config(config_path)
@@ -174,12 +176,19 @@ def analyze_targets(  # noqa: C901, PLR0912, PLR0913, PLR0915
                     raise
 
             for path_str, code in file_contents.items():
+                analyze_kwargs: dict[str, object] = {
+                    "path": path_str,
+                    "other_files": file_contents,
+                    "repository_imports": repository_imports,
+                }
+                if enable_external_tools:
+                    analyze_kwargs["enable_external_tools"] = True
+                if allow_temporary_tools:
+                    analyze_kwargs["allow_temporary_tools"] = True
                 results.append(
                     analyzer.analyze(
                         code,
-                        path=path_str,
-                        other_files=file_contents,
-                        repository_imports=repository_imports,
+                        **analyze_kwargs,
                     ),
                 )
                 if progress_callback is not None:
@@ -203,11 +212,18 @@ def analyze_targets(  # noqa: C901, PLR0912, PLR0913, PLR0915
                 if progress_callback is not None:
                     progress_callback()
                 raise
+            analyze_kwargs = {
+                "path": str(path),
+                "repository_imports": repository_imports,
+            }
+            if enable_external_tools:
+                analyze_kwargs["enable_external_tools"] = True
+            if allow_temporary_tools:
+                analyze_kwargs["allow_temporary_tools"] = True
             results.append(
                 analyzer.analyze(
                     code,
-                    path=str(path),
-                    repository_imports=repository_imports,
+                    **analyze_kwargs,
                 ),
             )
             if progress_callback is not None:

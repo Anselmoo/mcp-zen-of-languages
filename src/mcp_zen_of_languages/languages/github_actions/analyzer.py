@@ -10,6 +10,7 @@ if TYPE_CHECKING:
 
 from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,
+    AnalyzerCapabilities,
     AnalyzerConfig,
     BaseAnalyzer,
     DetectionPipeline,
@@ -37,6 +38,10 @@ class GitHubActionsAnalyzer(BaseAnalyzer):
     def language(self) -> str:
         """Return canonical language identifier."""
         return "github-actions"
+
+    def capabilities(self) -> AnalyzerCapabilities:
+        """Declare GitHub Actions analyzer support for AST-like workflow parsing."""
+        return AnalyzerCapabilities(supports_ast=True)
 
     def parse_code(self, code: str) -> ParserResult | None:
         """Parse workflow YAML into a lightweight parser result wrapper."""

@@ -25,6 +25,8 @@ from generate_implementation_counts import (
 )
 from jinja2 import Environment, FileSystemLoader
 
+from mcp_zen_of_languages.utils.subprocess_runner import KNOWN_TOOLS
+
 # Maximum characters shown from a principle description in diagram labels
 PRINCIPLE_PREVIEW_LENGTH = 40
 
@@ -191,6 +193,14 @@ CONFIG_TIPS: dict[str, str] = {
     ),
 }
 
+TEMP_RUNNER_LANGUAGES: set[str] = {
+    "python",
+    "javascript",
+    "typescript",
+    "css",
+    "markdown",
+}
+
 
 # ---------------------------------------------------------------------------
 # Data loading helpers
@@ -246,6 +256,25 @@ def _detector_first_line(detector_cls: type) -> str:
 def _build_category_label(cat: str) -> str:
     """Convert enum value like 'error_handling' to 'Error Handling'."""
     return cat.replace("_", " ").title()
+
+
+def _build_external_tools(config_key: str) -> list[dict[str, str]]:
+    """Return template-ready external-tool rows for a language key."""
+    rows: list[dict[str, str]] = []
+    for tool, args in sorted(KNOWN_TOOLS.get(config_key, {}).items()):
+        output_hint = (
+            "JSON"
+            if any("json" in part.lower() for part in args)
+            else "Text / structured stderr"
+        )
+        rows.append(
+            {
+                "tool": tool,
+                "command": " ".join([tool, *args]) if args else tool,
+                "output_hint": output_hint,
+            },
+        )
+    return rows
 
 
 # ---------------------------------------------------------------------------
@@ -462,6 +491,8 @@ def render_language_page(
         detector_groups=detector_groups,
         config_entries=config_entries,
         config_tip=config_tip,
+        external_tools=_build_external_tools(config_key),
+        has_temporary_runner=(config_key in TEMP_RUNNER_LANGUAGES),
         mermaid_diagram=mermaid,
         see_also=see_also,
     )

@@ -295,6 +295,9 @@ async def analyze_zen_violations(
     code: str,
     language: str,
     severity_threshold: int | None = None,
+    *,
+    enable_external_tools: bool = False,
+    allow_temporary_runners: bool = False,
 ) -> AnalysisResult:
     r"""Run the full zen analysis pipeline on a single code snippet.
 
@@ -321,6 +324,10 @@ async def analyze_zen_violations(
         severity_threshold (int | None): Floor severity that downstream
             consumers (reports, task generators) should honour.  Falls back
             to ``CONFIG.severity_threshold`` when omitted.
+        enable_external_tools (bool): Opt-in execution of allow-listed
+            external language tools for deeper diagnostics.
+        allow_temporary_runners (bool): Permit temporary-runner fallback
+            strategies (for example ``npx``/``uvx``) for external tools.
 
     Returns:
         AnalysisResult carrying metrics, a scored violation list, and the
@@ -364,7 +371,12 @@ async def analyze_zen_violations(
         canonical_language,
         pipeline_config=_pipeline_with_runtime_overrides(canonical_language),
     )
-    result = analyzer.analyze(code)
+    analyze_kwargs: dict[str, object] = {}
+    if enable_external_tools:
+        analyze_kwargs["enable_external_tools"] = True
+    if allow_temporary_runners:
+        analyze_kwargs["allow_temporary_tools"] = True
+    result = analyzer.analyze(code, **analyze_kwargs)
     result.violations = [
         violation
         for violation in result.violations
@@ -381,7 +393,13 @@ async def analyze_zen_violations(
     annotations=READONLY_ANNOTATIONS,
     output_schema=_output_schema(PromptBundle),
 )
-async def generate_prompts_tool(code: str, language: str) -> PromptBundle:
+async def generate_prompts_tool(
+    code: str,
+    language: str,
+    *,
+    enable_external_tools: bool = False,
+    allow_temporary_runners: bool = False,
+) -> PromptBundle:
     """Analyse code and synthesise remediation prompts for each detected violation.
 
     Prompt generation is a two-phase process: the code is first analysed
@@ -399,6 +417,10 @@ async def generate_prompts_tool(code: str, language: str) -> PromptBundle:
             generation — should match the snippet passed to analysis.
         language (str): Language identifier used to select the correct
             analyzer and prompt templates (e.g. ``"python"``).
+        enable_external_tools (bool): Opt-in execution of allow-listed
+            external language tools during analysis.
+        allow_temporary_runners (bool): Permit temporary-runner fallback
+            strategies (for example ``npx``/``uvx``) for external tools.
 
     Returns:
         PromptBundle holding ``file_prompts`` with per-violation
@@ -423,15 +445,23 @@ async def generate_prompts_tool(code: str, language: str) -> PromptBundle:
         canonical_language,
         pipeline_config=_pipeline_with_runtime_overrides(canonical_language),
     )
-    result = analyzer.analyze(code)
+    analyze_kwargs: dict[str, object] = {}
+    if enable_external_tools:
+        analyze_kwargs["enable_external_tools"] = True
+    if allow_temporary_runners:
+        analyze_kwargs["allow_temporary_tools"] = True
+    result = analyzer.analyze(code, **analyze_kwargs)
     return build_prompt_bundle([result])
 
 
-async def _analyze_repository_internal(  # noqa: C901
+async def _analyze_repository_internal(  # noqa: C901, PLR0913
     repo_path: str,
     languages: list[str] | None = None,
     max_files: int = 100,
     ctx: fastmcp.Context | None = None,
+    *,
+    enable_external_tools: bool = False,
+    allow_temporary_runners: bool = False,
 ) -> list[RepositoryAnalysis]:
     """Orchestrate multi-file analysis across a repository tree.
 
@@ -458,6 +488,10 @@ async def _analyze_repository_internal(  # noqa: C901
             runaway analysis on very large repositories.
         ctx (fastmcp.Context | None): Optional FastMCP context used for
             progress updates and per-file log messages.
+        enable_external_tools (bool): Opt-in execution of allow-listed
+            external tools while analyzing files.
+        allow_temporary_runners (bool): Permit temporary-runner fallback
+            strategies for external tools.
 
     Returns:
         list[RepositoryAnalysis]: One entry per analysed file, each
@@ -517,6 +551,8 @@ async def _analyze_repository_internal(  # noqa: C901
         unsupported_language="placeholder",
         include_read_errors=True,
         progress_callback=_progress_callback if total_targets > 0 else None,
+        enable_external_tools=enable_external_tools,
+        allow_temporary_tools=allow_temporary_runners,
     )
     return [
         RepositoryAnalysis(
@@ -535,11 +571,14 @@ async def _analyze_repository_internal(  # noqa: C901
     tags={"analysis", "repository"},
     annotations=READONLY_ANNOTATIONS,
 )
-async def analyze_repository(
+async def analyze_repository(  # noqa: PLR0913
     repo_path: str,
     languages: list[str] | None = None,
     max_files: int = 100,
     ctx: fastmcp.Context | None = None,
+    *,
+    enable_external_tools: bool = False,
+    allow_temporary_runners: bool = False,
 ) -> list[RepositoryAnalysis]:
     """Analyse every eligible file in a repository and return per-file results.
 
@@ -558,6 +597,10 @@ async def analyze_repository(
             analyse, protecting against excessive runtime on monorepos.
         ctx (fastmcp.Context | None): Optional FastMCP context for progress
             and log updates during repository analysis.
+        enable_external_tools (bool): Opt-in execution of allow-listed
+            external tools while analyzing files.
+        allow_temporary_runners (bool): Permit temporary-runner fallback
+            strategies for external tools.
 
     Returns:
         List of ``RepositoryAnalysis`` entries, each pairing a file path
@@ -577,7 +620,14 @@ async def analyze_repository(
             Builds actionable remediation tasks from repository analysis.
 
     """
-    return await _analyze_repository_internal(repo_path, languages, max_files, ctx)
+    return await _analyze_repository_internal(
+        repo_path,
+        languages,
+        max_files,
+        ctx,
+        enable_external_tools=enable_external_tools,
+        allow_temporary_runners=allow_temporary_runners,
+    )
 
 
 @mcp.tool(
@@ -595,6 +645,9 @@ async def generate_agent_tasks_tool(
     repo_path: str,
     languages: list[str] | None = None,
     min_severity: int = 5,
+    *,
+    enable_external_tools: bool = False,
+    allow_temporary_runners: bool = False,
 ) -> AgentTaskList:
     """Convert repository-level violations into prioritised remediation tasks.
 
@@ -613,6 +666,10 @@ async def generate_agent_tasks_tool(
             languages.  Omit to analyse only Python files by default.
         min_severity (int): Severity floor (1-10 scale).  Violations
             below this threshold are excluded from the task list.
+        enable_external_tools (bool): Opt-in execution of allow-listed
+            external tools while gathering repository analysis.
+        allow_temporary_runners (bool): Permit temporary-runner fallback
+            strategies for external tools.
 
     Returns:
         AgentTaskList containing prioritised tasks ready for automated
@@ -626,7 +683,12 @@ async def generate_agent_tasks_tool(
             structured tasks.
 
     """
-    repo_results = await _analyze_repository_internal(repo_path, languages=languages)
+    repo_results = await _analyze_repository_internal(
+        repo_path,
+        languages=languages,
+        enable_external_tools=enable_external_tools,
+        allow_temporary_runners=allow_temporary_runners,
+    )
     analysis_results = [entry.result for entry in repo_results]
     return build_agent_tasks(
         analysis_results,

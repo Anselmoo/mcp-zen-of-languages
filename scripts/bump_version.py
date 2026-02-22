@@ -486,6 +486,9 @@ def main() -> None:  # noqa: C901, PLR0915
 
     # 5. Commit (unless --no-commit)
     if not args.no_commit:
+        # Re-stage any files modified by pre-commit hooks (e.g. trailing-whitespace
+        # or end-of-file fixers may touch staged files after ``git add``).
+        _run(["git", "add", "-u"], dry_run=args.dry_run, label="git add -u (re-stage)")
         commit_msg = f"chore: bump version to v{new}"
         _run(
             ["git", "commit", "-m", commit_msg],

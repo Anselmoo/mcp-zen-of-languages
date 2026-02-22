@@ -24,7 +24,7 @@
 
 ---
 
-An **MCP server for AI assistants** that brings multi-language idiomatic code analysis into your editor. Zen of Languages codifies best practices ("zen principles") into machine-readable rules across programming languages, CI automation, and configuration formats — so AI agents and developers get actionable, language-aware feedback in every review. Connect it to [Claude Desktop, VS Code, Cursor, or any MCP-compatible client](https://anselmoo.github.io/mcp-zen-of-languages/getting-started/mcp-integration/) and start analysing code in seconds.
+An **MCP server for AI assistants** that brings multi-language idiomatic code analysis into your editor. Zen of Languages codifies best practices ("zen principles") into machine-readable rules across programming languages, CI automation, and configuration formats — so AI agents and developers get actionable, language-aware feedback in every review. Connect it to [Claude Desktop, VS Code, Cursor, or any MCP-compatible client](https://anselmoo.github.io/mcp-zen-of-languages/getting-started/mcp-integration/) and start analyzing code in seconds.
 
 <!-- --8<-- [start:what-you-get] -->
 

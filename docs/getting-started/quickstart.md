@@ -19,7 +19,7 @@ Two minutes to your first analysis — whether you're working through an AI assi
 
 ## MCP path (editor + AI agent)
 
-The fastest way to use Zen of Languages is through an MCP-compatible client like VS Code with Copilot, Claude Desktop, or Cursor. Once the server is configured (see [Installation](installation.md)), ask your agent to analyse code directly.
+The fastest way to use Zen of Languages is through an MCP-compatible client like VS Code with Copilot, Claude Desktop, or Cursor. Once the server is configured (see [Installation](installation.md)), ask your agent to analyze code directly.
 
 ### Example conversation
 

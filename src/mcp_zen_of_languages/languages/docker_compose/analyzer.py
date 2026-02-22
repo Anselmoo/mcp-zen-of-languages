@@ -2,17 +2,24 @@
 
 from __future__ import annotations
 
+import logging
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
-    from mcp_zen_of_languages.models import CyclomaticSummary, ParserResult
+    from mcp_zen_of_languages.models import CyclomaticSummary
+
+import yaml
 
 from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,
+    AnalyzerCapabilities,
     AnalyzerConfig,
     BaseAnalyzer,
 )
+from mcp_zen_of_languages.models import ParserResult
+
+logger = logging.getLogger(__name__)
 
 
 class DockerComposeAnalyzer(BaseAnalyzer):
@@ -35,9 +42,25 @@ class DockerComposeAnalyzer(BaseAnalyzer):
         """Return the canonical language key."""
         return "docker_compose"
 
-    def parse_code(self, _code: str) -> ParserResult | None:
-        """Return ``None`` because compose checks are text-oriented."""
-        return None
+    def capabilities(self) -> AnalyzerCapabilities:
+        """Declare support for YAML structure parsing of compose files."""
+        return AnalyzerCapabilities(supports_ast=True)
+
+    def parse_code(self, code: str) -> ParserResult | None:
+        """Parse compose YAML into a structured mapping via ``yaml.safe_load``.
+
+        Args:
+            code: Raw docker-compose YAML text.
+
+        Returns:
+            ParserResult wrapping the parsed mapping, or ``None`` on parse failure.
+        """
+        try:
+            tree = yaml.safe_load(code)
+            return ParserResult(type="yaml", tree=tree)
+        except yaml.YAMLError:
+            logger.debug("Failed to parse Docker Compose YAML")
+            return None
 
     def compute_metrics(
         self,

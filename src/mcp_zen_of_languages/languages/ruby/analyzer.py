@@ -12,6 +12,7 @@ See Also:
 
 from __future__ import annotations
 
+import re
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -20,10 +21,13 @@ if TYPE_CHECKING:
 
 from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,
+    AnalyzerCapabilities,
     AnalyzerConfig,
     BaseAnalyzer,
     DetectionPipeline,
 )
+
+_REQUIRE_RE = re.compile(r"""^(?:require|require_relative|load)\s+['"](.+?)['"]""")
 
 
 class RubyAnalyzer(BaseAnalyzer):
@@ -72,6 +76,10 @@ class RubyAnalyzer(BaseAnalyzer):
         """
         return "ruby"
 
+    def capabilities(self) -> AnalyzerCapabilities:
+        """Declare support for require/require_relative dependency extraction."""
+        return AnalyzerCapabilities(supports_dependency_analysis=True)
+
     def parse_code(self, _code: str) -> ParserResult | None:
         """Parse Ruby source into a structured syntax tree.
 
@@ -114,15 +122,22 @@ class RubyAnalyzer(BaseAnalyzer):
         """
         return super().build_pipeline()
 
-    def _build_dependency_analysis(self, _context: AnalysisContext) -> object | None:
-        """Build cross-file dependency data for Ruby require/autoload graphs.
-
-        Not yet implemented for Ruby; returns ``None``.
+    def _build_dependency_analysis(self, context: AnalysisContext) -> object | None:
+        """Extract ``require`` / ``require_relative`` dependencies.
 
         Args:
             context: Current analysis context with source text and metrics.
 
         Returns:
-            object | None: Always ``None`` until Ruby dependency analysis is added.
+            DependencyAnalysis with require edges, or ``None`` when none found.
         """
-        return None
+        imports: list[str] = []
+        for line in context.code.splitlines():
+            m = _REQUIRE_RE.match(line.strip())
+            if m:
+                imports.append(m.group(1))
+        if not imports:
+            return None
+        from mcp_zen_of_languages.metrics.dependency_graph import build_import_graph
+
+        return build_import_graph({(context.path or "<current>"): imports})

@@ -12,6 +12,7 @@ See Also:
 
 from __future__ import annotations
 
+import re
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -20,10 +21,13 @@ if TYPE_CHECKING:
 
 from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,
+    AnalyzerCapabilities,
     AnalyzerConfig,
     BaseAnalyzer,
     DetectionPipeline,
 )
+
+_USING_RE = re.compile(r"^using\s+(?:static\s+)?([\w.]+)\s*;")
 
 
 class CSharpAnalyzer(BaseAnalyzer):
@@ -72,6 +76,10 @@ class CSharpAnalyzer(BaseAnalyzer):
         """
         return "csharp"
 
+    def capabilities(self) -> AnalyzerCapabilities:
+        """Declare support for ``using`` namespace dependency extraction."""
+        return AnalyzerCapabilities(supports_dependency_analysis=True)
+
     def parse_code(self, _code: str) -> ParserResult | None:
         """Parse C# source into a structured syntax tree.
 
@@ -114,15 +122,22 @@ class CSharpAnalyzer(BaseAnalyzer):
         """
         return super().build_pipeline()
 
-    def _build_dependency_analysis(self, _context: AnalysisContext) -> object | None:
-        """Build cross-file dependency data for C# using/namespace graphs.
-
-        Not yet implemented for C#; returns ``None``.
+    def _build_dependency_analysis(self, context: AnalysisContext) -> object | None:
+        """Extract ``using`` directives and build a namespace dependency graph.
 
         Args:
             context: Current analysis context with source text and metrics.
 
         Returns:
-            object | None: Always ``None`` until C# dependency analysis is added.
+            DependencyAnalysis with using edges, or ``None`` when no usings found.
         """
-        return None
+        imports: list[str] = []
+        for line in context.code.splitlines():
+            m = _USING_RE.match(line.strip())
+            if m:
+                imports.append(m.group(1))
+        if not imports:
+            return None
+        from mcp_zen_of_languages.metrics.dependency_graph import build_import_graph
+
+        return build_import_graph({(context.path or "<current>"): imports})

@@ -76,6 +76,60 @@ zen check myfile.py
 3. Register language-specific detectors
 4. Add to `analyzer_factory.py`
 5. Update `zen-config.yaml` example
+6. Implement `_build_dependency_analysis()` with regex-based import extraction (see below)
+7. Override `capabilities()` to declare `supports_ast` / `supports_dependency_analysis`
+
+## Dependency Analysis Pattern
+
+Every language analyzer should extract imports/includes/requires via regex and feed them into `build_import_graph()`:
+
+```python
+import re
+from mcp_zen_of_languages.analyzers.base import AnalysisContext, AnalyzerCapabilities
+
+_IMPORT_RE = re.compile(r"^import\s+(.+)")  # language-specific regex
+
+class MyAnalyzer(BaseAnalyzer):
+    def capabilities(self) -> AnalyzerCapabilities:
+        return AnalyzerCapabilities(supports_dependency_analysis=True)
+
+    def _build_dependency_analysis(self, context: AnalysisContext) -> object | None:
+        imports = []
+        for line in context.code.splitlines():
+            m = _IMPORT_RE.match(line.strip())
+            if m:
+                imports.append(m.group(1))
+        if not imports:
+            return None
+        from mcp_zen_of_languages.metrics.dependency_graph import build_import_graph
+        return build_import_graph({(context.path or "<current>"): imports})
+```
+
+Key conventions:
+- Module-level compiled regex constants (e.g. `_IMPORT_RE`)
+- Rename `_context` → `context` when activating the method
+- Skip comment lines before matching
+- Return `None` (not empty `DependencyAnalysis`) when no imports found
+
+## Subprocess Integration
+
+`utils/subprocess_runner.py` provides `SubprocessToolRunner` for external tool integration:
+
+```python
+from mcp_zen_of_languages.utils.subprocess_runner import SubprocessToolRunner
+
+runner = SubprocessToolRunner()
+if runner.is_available("shellcheck"):
+    result = runner.run("shellcheck", ["-"], code=script_code)
+```
+
+- Security: allowlist of known tools (`KNOWN_TOOLS` mapping), no `shell=True`
+- Supported tools: `shellcheck`, `go vet`, `cargo clippy`, `ruff`, `eslint`
+- Individual analyzers opt-in; this is infrastructure only
+
+## Agent & Prompt Strategy
+
+Existing `generate_agent_tasks` and `generate_prompts` MCP tools consume `AnalysisResult` objects. When analyzers produce richer results (real AST, dependency graphs, more violations), those automatically flow into agent tasks and remediation prompts—no new agent infrastructure is needed.
 
 ## Integration Points
 

@@ -12,6 +12,7 @@ See Also:
 
 from __future__ import annotations
 
+import re
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -20,10 +21,14 @@ if TYPE_CHECKING:
 
 from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,
+    AnalyzerCapabilities,
     AnalyzerConfig,
     BaseAnalyzer,
     DetectionPipeline,
 )
+
+_IMPORT_MODULE_RE = re.compile(r"^Import-Module\s+(\S+)", re.IGNORECASE)
+_DOT_SOURCE_RE = re.compile(r"""^\.\s+['"]?([^\s'"]+)['"]?""")
 
 
 class PowerShellAnalyzer(BaseAnalyzer):
@@ -78,6 +83,10 @@ class PowerShellAnalyzer(BaseAnalyzer):
         """
         return "powershell"
 
+    def capabilities(self) -> AnalyzerCapabilities:
+        """Declare support for Import-Module/dot-source dependency extraction."""
+        return AnalyzerCapabilities(supports_dependency_analysis=True)
+
     def parse_code(self, _code: str) -> ParserResult | None:
         """Attempt to parse PowerShell source into a structured AST.
 
@@ -126,17 +135,29 @@ class PowerShellAnalyzer(BaseAnalyzer):
         """
         return super().build_pipeline()
 
-    def _build_dependency_analysis(self, _context: AnalysisContext) -> object | None:
-        """Build cross-file dependency data for PowerShell module imports.
-
-        Not yet implemented for PowerShell; returns ``None``.  Future versions
-        may parse ``Import-Module`` and dot-sourcing to detect circular
-        dependencies.
+    def _build_dependency_analysis(self, context: AnalysisContext) -> object | None:
+        """Extract ``Import-Module`` and dot-sourcing dependencies.
 
         Args:
             context: Current analysis context with source text and metrics.
 
         Returns:
-            object | None: Always ``None``; reserved for future cross-file analysis.
+            DependencyAnalysis with module dependency edges, or ``None`` when none found.
         """
-        return None
+        imports: list[str] = []
+        for line in context.code.splitlines():
+            stripped = line.strip()
+            if stripped.startswith("#"):
+                continue
+            m = _IMPORT_MODULE_RE.match(stripped)
+            if m:
+                imports.append(m.group(1))
+                continue
+            m = _DOT_SOURCE_RE.match(stripped)
+            if m:
+                imports.append(m.group(1))
+        if not imports:
+            return None
+        from mcp_zen_of_languages.metrics.dependency_graph import build_import_graph
+
+        return build_import_graph({(context.path or "<current>"): imports})

@@ -2,18 +2,25 @@
 
 from __future__ import annotations
 
+import logging
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
-    from mcp_zen_of_languages.models import CyclomaticSummary, ParserResult
+    from mcp_zen_of_languages.models import CyclomaticSummary
+
+import yaml
 
 from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,
+    AnalyzerCapabilities,
     AnalyzerConfig,
     BaseAnalyzer,
     DetectionPipeline,
 )
+from mcp_zen_of_languages.models import ParserResult
+
+logger = logging.getLogger(__name__)
 
 
 class YamlAnalyzer(BaseAnalyzer):
@@ -60,16 +67,25 @@ class YamlAnalyzer(BaseAnalyzer):
         """
         return "yaml"
 
-    def parse_code(self, _code: str) -> ParserResult | None:
-        """Return ``None`` because YAML analysis uses line-oriented text scanning.
+    def capabilities(self) -> AnalyzerCapabilities:
+        """Declare support for YAML structure parsing via PyYAML."""
+        return AnalyzerCapabilities(supports_ast=True)
+
+    def parse_code(self, code: str) -> ParserResult | None:
+        """Parse YAML text into a structured mapping via ``yaml.safe_load``.
 
         Args:
-            code: Raw YAML text to analyze.
+            code: Raw YAML text to parse.
 
         Returns:
-            ParserResult | None: Always ``None`` for YAML; detectors operate on raw text.
+            ParserResult wrapping the parsed mapping, or ``None`` on parse failure.
         """
-        return None
+        try:
+            tree = yaml.safe_load(code)
+            return ParserResult(type="yaml", tree=tree)
+        except yaml.YAMLError:
+            logger.debug("Failed to parse YAML")
+            return None
 
     def compute_metrics(
         self,

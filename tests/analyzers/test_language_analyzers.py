@@ -61,4 +61,7 @@ def test_docker_compose_analyzer_parse_code():
             return _pipeline_stub()
 
     analyzer = StubDockerComposeAnalyzer()
-    assert analyzer.parse_code("services:\n  web:\n    image: nginx:1.27") is None
+    result = analyzer.parse_code("services:\n  web:\n    image: nginx:1.27")
+    assert result is not None
+    assert result.type == "yaml"
+    assert result.tree == {"services": {"web": {"image": "nginx:1.27"}}}

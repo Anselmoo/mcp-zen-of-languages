@@ -44,6 +44,7 @@ from __future__ import annotations
 import logging
 import os
 from abc import ABC, abstractmethod
+from enum import StrEnum
 from typing import Literal, TypeVar
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -204,6 +205,22 @@ class RustAnalyzerConfig(AnalyzerConfig):
     detect_unsafe_blocks: bool = Field(default=True)
 
 
+class AstStatus(StrEnum):
+    """Status of AST availability for the current analysis run."""
+
+    unsupported = "unsupported"
+    parse_failed = "parse_failed"
+    parsed = "parsed"
+
+
+class AnalyzerCapabilities(BaseModel):
+    """Language capability flags surfaced to analysis context and detectors."""
+
+    supports_ast: bool = False
+    supports_dependency_analysis: bool = False
+    supports_metrics: bool = False
+
+
 # ============================================================================
 # Analysis Context (holds all intermediate data)
 # ============================================================================
@@ -224,7 +241,7 @@ class AnalysisContext(BaseModel):
     [`BaseAnalyzer.analyze`][mcp_zen_of_languages.analyzers.base.BaseAnalyzer.analyze]:
 
     1. **Created** with raw ``code`` and optional ``path``.
-    2. **Enriched** by ``parse_code()`` (sets ``ast_tree``).
+    2. **Enriched** by ``parse_code()`` (sets ``ast_tree`` and ``ast_status``).
     3. **Enriched** by ``compute_metrics()`` (sets ``cyclomatic_summary``,
        ``maintainability_index``, ``lines_of_code``).
     4. **Enriched** by ``_build_dependency_analysis()`` (sets
@@ -237,6 +254,10 @@ class AnalysisContext(BaseModel):
         language: Language identifier (e.g. ``"python"``, ``"typescript"``).
         ast_tree: Parsed syntax tree produced by the language-specific
             ``parse_code()`` hook, or ``None`` if parsing failed.
+        ast_status: Tri-state AST availability marker:
+            ``unsupported`` / ``parse_failed`` / ``parsed``.
+        capabilities: Analyzer capability declaration used to explain
+            which analysis surfaces are expected to be available.
         cyclomatic_summary: Aggregated cyclomatic-complexity statistics
             for every block in the source.
         maintainability_index: Halstead / McCabe maintainability score
@@ -265,6 +286,8 @@ class AnalysisContext(BaseModel):
 
     # Parsed artifacts
     ast_tree: ParserResult | None = None
+    ast_status: AstStatus = AstStatus.unsupported
+    capabilities: AnalyzerCapabilities = Field(default_factory=AnalyzerCapabilities)
 
     # Metrics
     cyclomatic_summary: CyclomaticSummary | None = None
@@ -549,6 +572,7 @@ class BaseAnalyzer(ABC):
     | ``parse_code()`` | Turn raw source text into a language AST |
     | ``compute_metrics()`` | Produce cyclomatic, maintainability, LOC |
     | ``build_pipeline()`` | Assemble the detector list from zen rules |
+    | ``capabilities()`` | Declare AST/dependency/metrics support |
 
     Subclasses such as ``PythonAnalyzer`` implement *only* these hooks;
     the invariant orchestration logic is never duplicated.
@@ -662,6 +686,19 @@ class BaseAnalyzer(ABC):
             ``None`` when the corresponding metric is unavailable.
         """
 
+    def capabilities(self) -> AnalyzerCapabilities:
+        """Declare language features supported by this analyzer implementation.
+
+        The default implementation marks all advanced capabilities as
+        unsupported. Language analyzers with concrete parser or dependency
+        support override this method to advertise availability.
+
+        Returns:
+            AnalyzerCapabilities: Capability flags consumed by
+                ``AnalysisContext`` and downstream detectors.
+        """
+        return AnalyzerCapabilities()
+
     # Template Method - defines the algorithm structure
     def analyze(
         self,
@@ -719,6 +756,12 @@ class BaseAnalyzer(ABC):
 
         # 2. Parse code (language-specific hook)
         context.ast_tree = self.parse_code(code)
+        if context.capabilities.supports_ast:
+            context.ast_status = (
+                AstStatus.parsed
+                if context.ast_tree is not None
+                else AstStatus.parse_failed
+            )
 
         # 3. Compute metrics (language-specific hook)
         cc, mi, loc = self.compute_metrics(code, context.ast_tree)
@@ -889,15 +932,22 @@ class BaseAnalyzer(ABC):
             Minimally populated context ready for enrichment by
             ``parse_code()`` and ``compute_metrics()``.
         """
+        capabilities = self.capabilities()
         return AnalysisContext(
             code=code,
             path=path,
             language=self.language(),
+            capabilities=capabilities,
+            ast_status=(
+                AstStatus.parse_failed
+                if capabilities.supports_ast
+                else AstStatus.unsupported
+            ),
             other_files=other_files,
             repository_imports=repository_imports,
         )
 
-    def _build_dependency_analysis(self, _context: AnalysisContext) -> object | None:
+    def _build_dependency_analysis(self, context: AnalysisContext) -> object | None:
         """Build a language-specific dependency graph from the analysis context.
 
         The base implementation returns ``None`` (no dependency analysis).
@@ -917,6 +967,11 @@ class BaseAnalyzer(ABC):
             detectors, or ``None`` when the language does not support
             dependency analysis.
         """
+        logger.debug(
+            "%s: dependency analysis unsupported for %s",
+            self.language(),
+            context.path or "<snippet>",
+        )
         return None
 
     def _build_result(

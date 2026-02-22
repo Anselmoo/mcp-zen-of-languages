@@ -2,18 +2,24 @@
 
 from __future__ import annotations
 
+import logging
+import tomllib
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
-    from mcp_zen_of_languages.models import CyclomaticSummary, ParserResult
+    from mcp_zen_of_languages.models import CyclomaticSummary
 
 from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,
+    AnalyzerCapabilities,
     AnalyzerConfig,
     BaseAnalyzer,
     DetectionPipeline,
 )
+from mcp_zen_of_languages.models import ParserResult
+
+logger = logging.getLogger(__name__)
 
 
 class TomlAnalyzer(BaseAnalyzer):
@@ -60,16 +66,25 @@ class TomlAnalyzer(BaseAnalyzer):
         """
         return "toml"
 
-    def parse_code(self, _code: str) -> ParserResult | None:
-        """Return ``None`` because TOML analysis uses line-oriented text scanning.
+    def capabilities(self) -> AnalyzerCapabilities:
+        """Declare support for TOML structure parsing via stdlib ``tomllib``."""
+        return AnalyzerCapabilities(supports_ast=True)
+
+    def parse_code(self, code: str) -> ParserResult | None:
+        """Parse TOML text into a mapping via ``tomllib.loads``.
 
         Args:
-            code: Raw TOML text to analyze.
+            code: Raw TOML text to parse.
 
         Returns:
-            ParserResult | None: Always ``None`` for TOML; detectors operate on raw text.
+            ParserResult wrapping the parsed mapping, or ``None`` on parse failure.
         """
-        return None
+        try:
+            tree = tomllib.loads(code)
+            return ParserResult(type="toml", tree=tree)
+        except (tomllib.TOMLDecodeError, ValueError):
+            logger.debug("Failed to parse TOML")
+            return None
 
     def compute_metrics(
         self,

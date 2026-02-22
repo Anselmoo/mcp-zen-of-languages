@@ -12,6 +12,7 @@ if TYPE_CHECKING:
 
 from mcp_zen_of_languages.analyzers.base import (
     AnalysisContext,
+    AnalyzerCapabilities,
     AnalyzerConfig,
     BaseAnalyzer,
     DetectionPipeline,
@@ -38,6 +39,10 @@ class SqlAnalyzer(BaseAnalyzer):
     def language(self) -> str:
         """Return canonical language key."""
         return "sql"
+
+    def capabilities(self) -> AnalyzerCapabilities:
+        """Declare SQL analyzer support for AST parsing."""
+        return AnalyzerCapabilities(supports_ast=True)
 
     def parse_code(self, code: str) -> ParserResult | None:
         """Parse SQL source into sqlglot AST list when possible."""

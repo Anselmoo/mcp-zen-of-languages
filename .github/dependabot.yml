@@ -44,3 +44,18 @@ updates:
       prefix: "docker"
       include: "scope"
     open-pull-requests-limit: 5
+
+  - package-ecosystem: "devcontainers"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:45"
+      timezone: "UTC"
+    labels:
+      - "dependencies"
+      - "devcontainers"
+    commit-message:
+      prefix: "devcontainers"
+      include: "scope"
+    open-pull-requests-limit: 5

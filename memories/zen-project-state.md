@@ -8,6 +8,71 @@ MCP Zen of Languages is a language-agnostic code quality analyzer inspired by la
 
 ---
 
+### PR #73 Follow-up: Maintainer Review Comments - Commit f236a2b
+
+**Date**: Current session
+
+**Context**:
+Applied maintainer request to address review thread comments on PR #73.
+
+**Changes Made**:
+
+1. **core/universal_dogmas.py**:
+   - Switched from `lru_cache(maxsize=None)` to `functools.cache`
+   - More idiomatic Python 3.9+ caching pattern
+
+2. **tests/detectors/test_shared_keyword_detector.py**:
+   - Fixed test magic number by introducing `EXPECTED_MATCH_LINE` constant
+   - Improved test readability and maintainability
+
+3. **Core dogma stub detectors** (control_flow/signature/state_mutation/clutter):
+   - Changed to inherit from `ViolationDetector[DetectorConfig]`
+   - Added `name` property implementation
+   - Added `detect(context, config)` method implementation
+   - Initialized instance `rule_ids` in `__init__`
+   - Proper detector protocol compliance
+
+4. **tests/registry/test_universal_dogmas.py**:
+   - Adjusted validation to check for non-empty universal dogma mappings
+   - Verify mappings are subsets of canonical `DOGMA_RULE_IDS`
+   - No longer require every detector to map to all 10 dogmas
+   - More flexible dogma mapping validation
+
+5. **PHILOSOPHY.md**:
+   - Added "Identifier Mapping Reference" section
+   - Clarifies UniversalDogmaID enum names to dogma IDs/titles
+   - Improved developer documentation
+
+6. **.devcontainer/devcontainer.json**:
+   - Removed redundant commented block
+   - Clean configuration
+
+**Validation Results**:
+- ✅ Targeted tests: passed
+- ✅ Full pytest: 948 tests passed
+- ✅ Pre-commit all-files: passed
+- ✅ Pre-push hooks: passed (including docs build strict)
+- ✅ Code review: no comments
+- ✅ CodeQL: 0 alerts
+
+**CI Issues Resolved**:
+- Investigated CI failure from run 22318844465
+- Logs showed ruff failures
+- Fixed by this commit
+
+**Key Technical Insights**:
+- `functools.cache` is the preferred modern Python pattern over `lru_cache(maxsize=None)`
+- Stub detectors need full protocol implementation even if they don't actively detect
+- Flexible dogma mapping validation allows detectors to map to relevant dogmas only
+- Magic number extraction improves test maintainability
+
+**Architectural Impact**:
+This commit completes the universal dogma detector architecture by ensuring all stub detectors properly implement the `ViolationDetector` protocol. The more flexible dogma mapping validation allows for future detectors that may not map to all 10 universal dogmas.
+
+**Status**: Complete and validated. All maintainer review comments addressed.
+
+---
+
 ### PR #73 Follow-up: Universal Adapter Architecture - Commit 3465325
 
 **Date**: Current session

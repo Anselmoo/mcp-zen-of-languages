@@ -65,6 +65,7 @@ class DetectorBinding(BaseModel):
     config_model: type[DetectorConfig | AnalyzerConfig]
     rule_ids: list[str] = Field(default_factory=list)
     rule_map: dict[str, list[str]] = Field(default_factory=dict)
+    universal_dogma_ids: list[str] = Field(default_factory=list)
     coverage: CoverageLevel = "partial"
     default_order: int = 0
     enabled_by_default: bool = True

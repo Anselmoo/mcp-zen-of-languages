@@ -6,6 +6,7 @@ from mcp_zen_of_languages.analyzers.mapping_models import (
     DetectorBinding,
     LanguageDetectorMap,
 )
+from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
 from mcp_zen_of_languages.languages.configs import (
     LatexBibliographyHygieneConfig,
     LatexCaptionCompletenessConfig,
@@ -29,6 +30,7 @@ from mcp_zen_of_languages.languages.latex.detectors import (
     LatexWidthAbstractionDetector,
 )
 
+FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(
     language="latex",
     bindings=[
@@ -37,6 +39,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=LatexMacroDefinitionDetector,
             config_model=LatexMacroDefinitionConfig,
             rule_ids=["latex-001"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
         DetectorBinding(
@@ -44,6 +47,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=LatexLabelRefDisciplineDetector,
             config_model=LatexLabelRefDisciplineConfig,
             rule_ids=["latex-002"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=20,
         ),
         DetectorBinding(
@@ -51,6 +55,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=LatexCaptionCompletenessDetector,
             config_model=LatexCaptionCompletenessConfig,
             rule_ids=["latex-003"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=30,
         ),
         DetectorBinding(
@@ -58,6 +63,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=LatexBibliographyHygieneDetector,
             config_model=LatexBibliographyHygieneConfig,
             rule_ids=["latex-004"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=40,
         ),
         DetectorBinding(
@@ -65,6 +71,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=LatexWidthAbstractionDetector,
             config_model=LatexWidthAbstractionConfig,
             rule_ids=["latex-005"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=50,
         ),
         DetectorBinding(
@@ -72,6 +79,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=LatexSemanticMarkupDetector,
             config_model=LatexSemanticMarkupConfig,
             rule_ids=["latex-006"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=60,
         ),
         DetectorBinding(
@@ -79,6 +87,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=LatexIncludeLoopDetector,
             config_model=LatexIncludeLoopConfig,
             rule_ids=["latex-007"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=70,
         ),
         DetectorBinding(
@@ -86,6 +95,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=LatexEncodingDeclarationDetector,
             config_model=LatexEncodingDeclarationConfig,
             rule_ids=["latex-008"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=80,
         ),
         DetectorBinding(
@@ -93,6 +103,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=LatexUnusedPackagesDetector,
             config_model=LatexUnusedPackagesConfig,
             rule_ids=["latex-009"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=90,
         ),
     ],

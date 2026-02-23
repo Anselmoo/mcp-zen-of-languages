@@ -12,6 +12,7 @@ from mcp_zen_of_languages.analyzers.mapping_models import (
     LanguageDetectorMap,
 )
 from mcp_zen_of_languages.analyzers.registry import DetectorMetadata, DetectorRegistry
+from mcp_zen_of_languages.core.universal_dogmas import UniversalDogmaID
 from mcp_zen_of_languages.languages.configs import DetectorConfig
 
 DEFAULT_DETECTOR_ORDER = 5
@@ -40,6 +41,7 @@ def test_mapping_models_defaults():
     full_map = FullDetectorMap(languages={"python": lang_map})
 
     assert binding.rule_ids == []
+    assert binding.universal_dogma_ids == []
     assert binding.coverage == "partial"
     assert full_map.languages["python"].bindings[0].detector_id == "dummy"
 
@@ -57,6 +59,7 @@ def test_detector_metadata_from_binding():
 
     assert metadata.language == "python"
     assert metadata.rule_ids == ["python-001"]
+    assert UniversalDogmaID.UNAMBIGUOUS_NAME.value in metadata.universal_dogma_ids
     assert metadata.default_order == DEFAULT_DETECTOR_ORDER
     assert metadata.enabled_by_default is False
 

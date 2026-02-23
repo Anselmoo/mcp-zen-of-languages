@@ -4,21 +4,14 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Protocol
 
+from mcp_zen_of_languages.core.universal_dogmas import (
+    DOGMA_RULE_IDS as UNIVERSAL_DOGMA_RULE_IDS,
+)
+
 if TYPE_CHECKING:
     from mcp_zen_of_languages.models import AnalysisResult
 
-DOGMA_RULE_IDS: tuple[str, ...] = (
-    "ZEN-UTILIZE-ARGUMENTS",
-    "ZEN-EXPLICIT-INTENT",
-    "ZEN-RETURN-EARLY",
-    "ZEN-FAIL-FAST",
-    "ZEN-RIGHT-ABSTRACTION",
-    "ZEN-UNAMBIGUOUS-NAME",
-    "ZEN-VISIBLE-STATE",
-    "ZEN-STRICT-FENCES",
-    "ZEN-RUTHLESS-DELETION",
-    "ZEN-PROPORTIONATE-COMPLEXITY",
-)
+DOGMA_RULE_IDS: tuple[str, ...] = UNIVERSAL_DOGMA_RULE_IDS
 
 
 class LanguageAdapter(Protocol):

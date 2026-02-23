@@ -6,6 +6,7 @@ from mcp_zen_of_languages.analyzers.mapping_models import (
     DetectorBinding,
     LanguageDetectorMap,
 )
+from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
 from mcp_zen_of_languages.languages.bash.detectors import (
     BashArgumentValidationDetector,
     BashArrayUsageDetector,
@@ -39,6 +40,7 @@ from mcp_zen_of_languages.languages.configs import (
     BashUsageInfoConfig,
 )
 
+FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(
     language="bash",
     bindings=[
@@ -47,6 +49,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=BashStrictModeDetector,
             config_model=BashStrictModeConfig,
             rule_ids=["bash-001"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
         DetectorBinding(
@@ -54,6 +57,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=BashQuoteVariablesDetector,
             config_model=BashQuoteVariablesConfig,
             rule_ids=["bash-002"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=20,
         ),
         DetectorBinding(
@@ -61,6 +65,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=BashExitCodeChecksDetector,
             config_model=BashExitCodeConfig,
             rule_ids=["bash-005"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=25,
         ),
         DetectorBinding(
@@ -68,6 +73,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=BashFunctionUsageDetector,
             config_model=Bash006Config,
             rule_ids=["bash-006"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=27,
         ),
         DetectorBinding(
@@ -75,6 +81,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=BashLocalVariablesDetector,
             config_model=BashLocalVariablesConfig,
             rule_ids=["bash-007"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=28,
         ),
         DetectorBinding(
@@ -82,6 +89,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=BashEvalUsageDetector,
             config_model=BashEvalUsageConfig,
             rule_ids=["bash-008"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=30,
         ),
         DetectorBinding(
@@ -89,6 +97,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=BashDoubleBracketsDetector,
             config_model=BashDoubleBracketsConfig,
             rule_ids=["bash-003"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=40,
         ),
         DetectorBinding(
@@ -96,6 +105,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=BashCommandSubstitutionDetector,
             config_model=BashCommandSubstitutionConfig,
             rule_ids=["bash-004"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=50,
         ),
         DetectorBinding(
@@ -103,6 +113,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=BashReadonlyConstantsDetector,
             config_model=BashReadonlyConstantsConfig,
             rule_ids=["bash-009"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=60,
         ),
         DetectorBinding(
@@ -110,6 +121,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=BashArgumentValidationDetector,
             config_model=BashArgumentValidationConfig,
             rule_ids=["bash-010"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=70,
         ),
         DetectorBinding(
@@ -117,6 +129,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=BashMeaningfulNamesDetector,
             config_model=Bash011Config,
             rule_ids=["bash-011"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=80,
         ),
         DetectorBinding(
@@ -124,6 +137,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=BashSignalHandlingDetector,
             config_model=BashSignalHandlingConfig,
             rule_ids=["bash-012"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=90,
         ),
         DetectorBinding(
@@ -131,6 +145,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=BashArrayUsageDetector,
             config_model=BashArrayUsageConfig,
             rule_ids=["bash-013"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=100,
         ),
         DetectorBinding(
@@ -138,6 +153,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=BashUsageInfoDetector,
             config_model=BashUsageInfoConfig,
             rule_ids=["bash-014"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=110,
         ),
     ],

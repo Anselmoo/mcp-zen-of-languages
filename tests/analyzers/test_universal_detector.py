@@ -1,6 +1,10 @@
 import pytest
 
-from mcp_zen_of_languages.adapters.python_mvp import PythonMVPAdapter
+from mcp_zen_of_languages.adapters.universal import (
+    AnalyzerFactoryAdapter,
+    build_universal_adapters,
+)
+from mcp_zen_of_languages.analyzers.analyzer_factory import supported_languages
 from mcp_zen_of_languages.core.detector import DOGMA_RULE_IDS, UniversalZenDetector
 from mcp_zen_of_languages.core.detectors import (
     ClutterDetector,
@@ -10,34 +14,91 @@ from mcp_zen_of_languages.core.detectors import (
 )
 from mcp_zen_of_languages.transport.reporters import CliReporter, McpReporter
 
+UNIVERSAL_LANGUAGE_SNIPPETS = {
+    "python": "def add(a, b):\n    return a + b\n",
+    "typescript": "const value: number = 1;\n",
+    "javascript": "const value = 1;\n",
+    "go": "package main\n\nfunc add(a int, b int) int { return a + b }\n",
+    "rust": "fn add(a: i32, b: i32) -> i32 { a + b }\n",
+    "bash": "#!/usr/bin/env bash\necho 'hi'\n",
+    "powershell": "Write-Output 'hi'\n",
+    "ruby": "def add(a, b)\n  a + b\nend\n",
+    "cpp": "#include <iostream>\nint main() { return 0; }\n",
+    "csharp": "class Program { static void Main() { } }\n",
+    "css": "body { color: red; }\n",
+    "docker_compose": "services:\n  app:\n    image: alpine:latest\n",
+    "dockerfile": "FROM alpine:3.20\nRUN echo hi\n",
+    "yaml": "key: value\n",
+    "github-actions": (
+        "name: CI\n"
+        "on: [push]\n"
+        "jobs:\n"
+        "  build:\n"
+        "    runs-on: ubuntu-latest\n"
+        "    steps:\n"
+        "      - run: echo hi\n"
+    ),
+    "toml": 'name = "example"\n',
+    "xml": "<root><item>v</item></root>\n",
+    "json": '{"name":"example"}\n',
+    "sql": "SELECT 1;\n",
+    "markdown": "# Title\n\nText.\n",
+    "latex": ("\\documentclass{article}\n\\begin{document}\nHello\n\\end{document}\n"),
+    "gitlab_ci": "stages:\n  - build\nbuild:\n  stage: build\n  script:\n    - echo hi\n",
+}
 
-def test_universal_detector_python_mvp_cli_and_mcp_output() -> None:
-    detector = UniversalZenDetector(adapters={"python": PythonMVPAdapter()})
-    result = detector.analyze("def add(a, b):\n    return a + b\n", language="python")
+
+def test_universal_language_snippet_matrix_matches_supported_languages() -> None:
+    assert set(UNIVERSAL_LANGUAGE_SNIPPETS) == set(supported_languages())
+
+
+@pytest.mark.parametrize("language", ["python", "typescript", "yaml"])
+def test_universal_detector_single_language_adapter_cli_and_mcp_output(
+    language: str,
+) -> None:
+    detector = UniversalZenDetector(
+        adapters={language: AnalyzerFactoryAdapter(language)}
+    )
+    result = detector.analyze(
+        UNIVERSAL_LANGUAGE_SNIPPETS[language],
+        language=language,
+    )
 
     cli_output = CliReporter().report(result)
     mcp_output = McpReporter().report(result)
 
-    assert result.language == "python"
+    assert result.language == language
     assert "violations=" in cli_output
-    assert mcp_output["language"] == "python"
+    assert mcp_output["language"] == language
     assert "violations" in mcp_output
 
 
-def test_universal_detector_default_adapters_cover_all_languages() -> None:
+def test_universal_detector_default_adapter_keys_match_supported_languages() -> None:
+    assert set(build_universal_adapters()) == set(supported_languages())
+
+
+@pytest.mark.parametrize("language", supported_languages())
+def test_universal_detector_default_adapters_smoke_all_languages(
+    language: str,
+) -> None:
     detector = UniversalZenDetector()
-
-    python_result = detector.analyze(
-        "def add(a, b):\n    return a + b\n", language="python"
+    result = detector.analyze(
+        UNIVERSAL_LANGUAGE_SNIPPETS[language],
+        language=language,
     )
-    ts_result = detector.analyze("const value: number = 1;", language="typescript")
+    cli_output = CliReporter().report(result)
+    mcp_output = McpReporter().report(result)
 
-    assert python_result.language == "python"
-    assert ts_result.language == "typescript"
+    assert result.language == language
+    assert "violations=" in cli_output
+    assert mcp_output["language"] == language
+    assert "violations" in mcp_output
 
 
 def test_universal_detector_rejects_unsupported_language() -> None:
-    detector = UniversalZenDetector(adapters={"python": PythonMVPAdapter()})
+    detector = UniversalZenDetector(
+        adapters={"python": AnalyzerFactoryAdapter("python")}
+    )
     with pytest.raises(ValueError, match="Unsupported language adapter"):
         detector.analyze("x = 1", language="unknown")
 

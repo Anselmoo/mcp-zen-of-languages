@@ -6,6 +6,7 @@ from mcp_zen_of_languages.analyzers.mapping_models import (
     DetectorBinding,
     LanguageDetectorMap,
 )
+from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
 from mcp_zen_of_languages.languages.configs import (
     XmlAttributeUsageConfig,
     XmlClosingTagsConfig,
@@ -23,6 +24,7 @@ from mcp_zen_of_languages.languages.xml.detectors import (
     XmlValidityDetector,
 )
 
+FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(
     language="xml",
     bindings=[
@@ -31,6 +33,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=XmlSemanticMarkupDetector,
             config_model=XmlSemanticMarkupConfig,
             rule_ids=["xml-001"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
         DetectorBinding(
@@ -38,6 +41,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=XmlAttributeUsageDetector,
             config_model=XmlAttributeUsageConfig,
             rule_ids=["xml-002"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=20,
         ),
         DetectorBinding(
@@ -45,6 +49,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=XmlNamespaceDetector,
             config_model=XmlNamespaceConfig,
             rule_ids=["xml-003"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=30,
         ),
         DetectorBinding(
@@ -52,6 +57,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=XmlValidityDetector,
             config_model=XmlValidityConfig,
             rule_ids=["xml-004"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=40,
         ),
         DetectorBinding(
@@ -59,6 +65,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=XmlHierarchyDetector,
             config_model=XmlHierarchyConfig,
             rule_ids=["xml-005"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=50,
         ),
         DetectorBinding(
@@ -66,6 +73,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=XmlClosingTagsDetector,
             config_model=XmlClosingTagsConfig,
             rule_ids=["xml-006"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=60,
         ),
     ],

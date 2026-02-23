@@ -6,6 +6,7 @@ from mcp_zen_of_languages.analyzers.mapping_models import (
     DetectorBinding,
     LanguageDetectorMap,
 )
+from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
 from mcp_zen_of_languages.languages.configs import (
     GoContextUsageConfig,
     GoDeferUsageConfig,
@@ -35,6 +36,7 @@ from mcp_zen_of_languages.languages.go.detectors import (
     GoZeroValueDetector,
 )
 
+FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(
     language="go",
     bindings=[
@@ -43,6 +45,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoErrorHandlingDetector,
             config_model=GoErrorHandlingConfig,
             rule_ids=["go-001"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
         DetectorBinding(
@@ -50,6 +53,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoInterfaceSizeDetector,
             config_model=GoInterfaceSizeConfig,
             rule_ids=["go-010"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=20,
         ),
         DetectorBinding(
@@ -57,6 +61,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoContextUsageDetector,
             config_model=GoContextUsageConfig,
             rule_ids=["go-011"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=30,
         ),
         DetectorBinding(
@@ -64,6 +69,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoDeferUsageDetector,
             config_model=GoDeferUsageConfig,
             rule_ids=["go-007"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=40,
         ),
         DetectorBinding(
@@ -71,6 +77,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoNamingConventionDetector,
             config_model=GoNamingConventionConfig,
             rule_ids=["go-004"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=50,
         ),
         DetectorBinding(
@@ -78,6 +85,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoInterfaceReturnDetector,
             config_model=GoInterfaceReturnConfig,
             rule_ids=["go-002"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=60,
         ),
         DetectorBinding(
@@ -85,6 +93,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoZeroValueDetector,
             config_model=GoZeroValueConfig,
             rule_ids=["go-003"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=70,
         ),
         DetectorBinding(
@@ -92,6 +101,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoInterfacePointerDetector,
             config_model=GoInterfacePointerConfig,
             rule_ids=["go-005"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=80,
         ),
         DetectorBinding(
@@ -99,6 +109,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoGoroutineLeakDetector,
             config_model=GoGoroutineLeakConfig,
             rule_ids=["go-006"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=90,
         ),
         DetectorBinding(
@@ -106,6 +117,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoPackageNamingDetector,
             config_model=GoPackageNamingConfig,
             rule_ids=["go-008"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=100,
         ),
         DetectorBinding(
@@ -113,6 +125,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoPackageStateDetector,
             config_model=GoPackageStateConfig,
             rule_ids=["go-009"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=110,
         ),
         DetectorBinding(
@@ -120,6 +133,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoInitUsageDetector,
             config_model=GoInitUsageConfig,
             rule_ids=["go-012"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=120,
         ),
     ],

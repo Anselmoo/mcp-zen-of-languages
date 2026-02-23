@@ -6,6 +6,7 @@ from mcp_zen_of_languages.analyzers.mapping_models import (
     DetectorBinding,
     LanguageDetectorMap,
 )
+from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
 from mcp_zen_of_languages.languages.configs import (
     Cs008Config,
     CSharpAsyncAwaitConfig,
@@ -37,6 +38,7 @@ from mcp_zen_of_languages.languages.csharp.detectors import (
     CSharpVarDetector,
 )
 
+FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(
     language="csharp",
     bindings=[
@@ -45,6 +47,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CSharpAsyncAwaitDetector,
             config_model=CSharpAsyncAwaitConfig,
             rule_ids=["cs-004"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
         DetectorBinding(
@@ -52,6 +55,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CSharpStringInterpolationDetector,
             config_model=CSharpStringInterpolationConfig,
             rule_ids=["cs-006"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=20,
         ),
         DetectorBinding(
@@ -59,6 +63,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CSharpNullableDetector,
             config_model=CSharpNullableConfig,
             rule_ids=["cs-001"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=5,
         ),
         DetectorBinding(
@@ -66,6 +71,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CSharpExpressionBodiedDetector,
             config_model=CSharpExpressionBodiedConfig,
             rule_ids=["cs-002"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=15,
         ),
         DetectorBinding(
@@ -73,6 +79,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CSharpVarDetector,
             config_model=CSharpVarConfig,
             rule_ids=["cs-003"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=25,
         ),
         DetectorBinding(
@@ -80,6 +87,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CSharpPatternMatchingDetector,
             config_model=CSharpPatternMatchingConfig,
             rule_ids=["cs-005"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=35,
         ),
         DetectorBinding(
@@ -87,6 +95,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CSharpCollectionExpressionDetector,
             config_model=CSharpCollectionExpressionConfig,
             rule_ids=["cs-007"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=45,
         ),
         DetectorBinding(
@@ -94,6 +103,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CSharpNamingConventionDetector,
             config_model=Cs008Config,
             rule_ids=["cs-008"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=55,
         ),
         DetectorBinding(
@@ -101,6 +111,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CSharpDisposableDetector,
             config_model=CSharpDisposableConfig,
             rule_ids=["cs-009"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=65,
         ),
         DetectorBinding(
@@ -108,6 +119,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CSharpMagicNumberDetector,
             config_model=CSharpMagicNumberConfig,
             rule_ids=["cs-010"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=75,
         ),
         DetectorBinding(
@@ -115,6 +127,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CSharpLinqDetector,
             config_model=CSharpLinqConfig,
             rule_ids=["cs-011"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=85,
         ),
         DetectorBinding(
@@ -122,6 +135,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CSharpExceptionHandlingDetector,
             config_model=CSharpExceptionHandlingConfig,
             rule_ids=["cs-012"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=95,
         ),
         DetectorBinding(
@@ -129,6 +143,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CSharpRecordDetector,
             config_model=CSharpRecordConfig,
             rule_ids=["cs-013"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=105,
         ),
     ],

@@ -6,6 +6,7 @@ from mcp_zen_of_languages.analyzers.mapping_models import (
     DetectorBinding,
     LanguageDetectorMap,
 )
+from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
 from mcp_zen_of_languages.languages.configs import (
     SqlAliasClarityConfig,
     SqlAnsi89JoinConfig,
@@ -29,6 +30,7 @@ from mcp_zen_of_languages.languages.sql.detectors import (
     SqlUnboundedQueryDetector,
 )
 
+FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(
     language="sql",
     bindings=[
@@ -37,6 +39,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SqlSelectStarDetector,
             config_model=SqlSelectStarConfig,
             rule_ids=["sql-001"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
         DetectorBinding(
@@ -44,6 +47,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SqlInsertColumnListDetector,
             config_model=SqlInsertColumnListConfig,
             rule_ids=["sql-002"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=20,
         ),
         DetectorBinding(
@@ -51,6 +55,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SqlDynamicSqlDetector,
             config_model=SqlDynamicSqlConfig,
             rule_ids=["sql-003"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=30,
         ),
         DetectorBinding(
@@ -58,6 +63,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SqlNolockDetector,
             config_model=SqlNolockConfig,
             rule_ids=["sql-004"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=40,
         ),
         DetectorBinding(
@@ -65,6 +71,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SqlImplicitJoinCoercionDetector,
             config_model=SqlImplicitJoinCoercionConfig,
             rule_ids=["sql-005"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=50,
         ),
         DetectorBinding(
@@ -72,6 +79,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SqlUnboundedQueryDetector,
             config_model=SqlUnboundedQueryConfig,
             rule_ids=["sql-006"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=60,
         ),
         DetectorBinding(
@@ -79,6 +87,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SqlAliasClarityDetector,
             config_model=SqlAliasClarityConfig,
             rule_ids=["sql-007"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=70,
         ),
         DetectorBinding(
@@ -86,6 +95,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SqlTransactionBoundaryDetector,
             config_model=SqlTransactionBoundaryConfig,
             rule_ids=["sql-008"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=80,
         ),
         DetectorBinding(
@@ -93,6 +103,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SqlAnsi89JoinDetector,
             config_model=SqlAnsi89JoinConfig,
             rule_ids=["sql-009"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=90,
         ),
     ],

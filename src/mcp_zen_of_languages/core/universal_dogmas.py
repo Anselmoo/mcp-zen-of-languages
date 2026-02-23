@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from enum import StrEnum
-from functools import lru_cache
+from functools import cache
 from typing import TYPE_CHECKING
 
 from mcp_zen_of_languages.rules import get_language_zen
@@ -96,7 +96,7 @@ _KEYWORD_TO_DOGMAS: tuple[tuple[str, UniversalDogmaID], ...] = (
 )
 
 
-@lru_cache(maxsize=None)
+@cache
 def _principles_by_id(language: str) -> dict[str, ZenPrinciple]:
     lang_zen = get_language_zen(language)
     if not lang_zen:

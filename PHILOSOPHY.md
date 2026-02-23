@@ -25,3 +25,19 @@ These dogmas are guardrails that MCP tools can return as structured, teachable f
 
 This lets assistants move from "style warnings" to principled guidance:
 what is wrong, why it increases cognitive load, and how to refactor with intent.
+
+## Identifier Mapping Reference
+
+Universal dogma constants in code use enum-style names in
+`UniversalDogmaID` and map directly to the canonical IDs documented above:
+
+- `UTILIZE_ARGUMENTS` → `ZEN-UTILIZE-ARGUMENTS` (Dogma of Purpose)
+- `EXPLICIT_INTENT` → `ZEN-EXPLICIT-INTENT` (Dogma of Explicit Intent)
+- `RETURN_EARLY` → `ZEN-RETURN-EARLY` (Dogma of Flat Traversal)
+- `FAIL_FAST` → `ZEN-FAIL-FAST` (Dogma of Loud Failures)
+- `RIGHT_ABSTRACTION` → `ZEN-RIGHT-ABSTRACTION` (Dogma of Meaningful Abstraction)
+- `UNAMBIGUOUS_NAME` → `ZEN-UNAMBIGUOUS-NAME` (Dogma of Unambiguous Naming)
+- `VISIBLE_STATE` → `ZEN-VISIBLE-STATE` (Dogma of Visible State)
+- `STRICT_FENCES` → `ZEN-STRICT-FENCES` (Dogma of Strict Fences)
+- `RUTHLESS_DELETION` → `ZEN-RUTHLESS-DELETION` (Dogma of Ruthless Deletion)
+- `PROPORTIONATE_COMPLEXITY` → `ZEN-PROPORTIONATE-COMPLEXITY` (Dogma of Proportionate Complexity)

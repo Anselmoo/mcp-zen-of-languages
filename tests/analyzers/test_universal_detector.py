@@ -105,8 +105,8 @@ def test_universal_detector_rejects_unsupported_language() -> None:
 
 def test_dogma_stub_detectors_expose_expected_rule_ids() -> None:
     expected_dogmas = 10
-    assert "ZEN-FAIL-FAST" in ControlFlowDetector.rule_ids
-    assert "ZEN-UTILIZE-ARGUMENTS" in SignatureDetector.rule_ids
-    assert "ZEN-VISIBLE-STATE" in StateMutationDetector.rule_ids
-    assert "ZEN-RUTHLESS-DELETION" in ClutterDetector.rule_ids
+    assert "ZEN-FAIL-FAST" in ControlFlowDetector().rule_ids
+    assert "ZEN-UTILIZE-ARGUMENTS" in SignatureDetector().rule_ids
+    assert "ZEN-VISIBLE-STATE" in StateMutationDetector().rule_ids
+    assert "ZEN-RUTHLESS-DELETION" in ClutterDetector().rule_ids
     assert len(DOGMA_RULE_IDS) == expected_dogmas

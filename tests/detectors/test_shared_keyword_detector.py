@@ -6,6 +6,8 @@ from mcp_zen_of_languages.core.detectors.shared_keyword import (
 )
 from mcp_zen_of_languages.languages.configs import DetectorConfig
 
+EXPECTED_MATCH_LINE = 2
+
 
 def test_shared_keyword_detector_finds_configured_patterns() -> None:
     detector = SharedDogmaKeywordDetector()
@@ -21,7 +23,7 @@ def test_shared_keyword_detector_finds_configured_patterns() -> None:
     assert len(violations) == 1
     assert violations[0].message == "Dogma keyword match"
     assert violations[0].location is not None
-    assert violations[0].location.line == 2
+    assert violations[0].location.line == EXPECTED_MATCH_LINE
 
 
 def test_shared_keyword_detector_returns_empty_without_matches() -> None:

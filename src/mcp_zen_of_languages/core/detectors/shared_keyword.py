@@ -11,7 +11,9 @@ from mcp_zen_of_languages.languages.configs import DetectorConfig
 from mcp_zen_of_languages.models import Location, Violation
 
 
-class SharedDogmaKeywordDetector(ViolationDetector[DetectorConfig], LocationHelperMixin):
+class SharedDogmaKeywordDetector(
+    ViolationDetector[DetectorConfig], LocationHelperMixin
+):
     """Detect configured literal patterns in source text across any language."""
 
     @property

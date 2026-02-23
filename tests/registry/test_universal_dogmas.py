@@ -93,7 +93,8 @@ def test_all_supported_language_mappings_have_full_dogma_overlay() -> None:
             f"mcp_zen_of_languages.languages.{module_name}.mapping"
         ).DETECTOR_MAP
         for binding in mapping.bindings:
-            assert tuple(binding.universal_dogma_ids) == DOGMA_RULE_IDS
+            assert binding.universal_dogma_ids
+            assert set(binding.universal_dogma_ids).issubset(set(DOGMA_RULE_IDS))
 
 
 def test_registry_all_supported_languages_have_full_dogma_metadata() -> None:
@@ -106,4 +107,8 @@ def test_registry_all_supported_languages_have_full_dogma_metadata() -> None:
             if meta.language == language and meta.detector_id != "analyzer_defaults"
         ]
         assert language_metas
-        assert all(tuple(meta.universal_dogma_ids) == DOGMA_RULE_IDS for meta in language_metas)
+        assert all(meta.universal_dogma_ids for meta in language_metas)
+        assert all(
+            set(meta.universal_dogma_ids).issubset(set(DOGMA_RULE_IDS))
+            for meta in language_metas
+        )

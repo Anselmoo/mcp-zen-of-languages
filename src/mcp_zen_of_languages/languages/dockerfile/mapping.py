@@ -6,6 +6,7 @@ from mcp_zen_of_languages.analyzers.mapping_models import (
     DetectorBinding,
     LanguageDetectorMap,
 )
+from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
 from mcp_zen_of_languages.languages.configs import (
     DockerfileAddInstructionConfig,
     DockerfileDockerignoreConfig,
@@ -27,6 +28,7 @@ from mcp_zen_of_languages.languages.dockerfile.detectors import (
     DockerfileSecretHygieneDetector,
 )
 
+FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(
     language="dockerfile",
     bindings=[
@@ -35,6 +37,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=DockerfileLatestTagDetector,
             config_model=DockerfileLatestTagConfig,
             rule_ids=["dockerfile-001"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
         DetectorBinding(
@@ -42,6 +45,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=DockerfileNonRootUserDetector,
             config_model=DockerfileNonRootUserConfig,
             rule_ids=["dockerfile-002"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=20,
         ),
         DetectorBinding(
@@ -49,6 +53,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=DockerfileAddInstructionDetector,
             config_model=DockerfileAddInstructionConfig,
             rule_ids=["dockerfile-003"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=30,
         ),
         DetectorBinding(
@@ -56,6 +61,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=DockerfileHealthcheckDetector,
             config_model=DockerfileHealthcheckConfig,
             rule_ids=["dockerfile-004"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=40,
         ),
         DetectorBinding(
@@ -63,6 +69,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=DockerfileMultiStageDetector,
             config_model=DockerfileMultiStageConfig,
             rule_ids=["dockerfile-005"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=50,
         ),
         DetectorBinding(
@@ -70,6 +77,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=DockerfileSecretHygieneDetector,
             config_model=DockerfileSecretHygieneConfig,
             rule_ids=["dockerfile-006"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=60,
         ),
         DetectorBinding(
@@ -77,6 +85,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=DockerfileLayerDisciplineDetector,
             config_model=DockerfileLayerDisciplineConfig,
             rule_ids=["dockerfile-007"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=70,
         ),
         DetectorBinding(
@@ -84,6 +93,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=DockerfileDockerignoreDetector,
             config_model=DockerfileDockerignoreConfig,
             rule_ids=["dockerfile-008"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=80,
         ),
     ],

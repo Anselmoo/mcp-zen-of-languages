@@ -18,6 +18,10 @@ def test_get_principle_by_id_returns_principle():
     assert principle.id == "python-001"
 
 
+def test_get_principle_by_id_returns_none_for_unknown_id():
+    assert get_principle_by_id("unknown-principle-id") is None
+
+
 def test_get_all_principles_by_category():
     result = get_all_principles_by_category(PrincipleCategory.READABILITY)
     assert result

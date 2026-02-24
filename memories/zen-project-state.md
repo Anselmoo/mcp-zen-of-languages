@@ -6,6 +6,117 @@ MCP Zen of Languages is a language-agnostic code quality analyzer inspired by la
 
 ## Recent Sessions
 
+---
+
+### PR #73 Follow-up: Maintainer Review Comments - Commit f236a2b
+
+**Date**: Current session
+
+**Context**:
+Applied maintainer request to address review thread comments on PR #73.
+
+**Changes Made**:
+
+1. **core/universal_dogmas.py**:
+   - Switched from `lru_cache(maxsize=None)` to `functools.cache`
+   - More idiomatic Python 3.9+ caching pattern
+
+2. **tests/detectors/test_shared_keyword_detector.py**:
+   - Fixed test magic number by introducing `EXPECTED_MATCH_LINE` constant
+   - Improved test readability and maintainability
+
+3. **Core dogma stub detectors** (control_flow/signature/state_mutation/clutter):
+   - Changed to inherit from `ViolationDetector[DetectorConfig]`
+   - Added `name` property implementation
+   - Added `detect(context, config)` method implementation
+   - Initialized instance `rule_ids` in `__init__`
+   - Proper detector protocol compliance
+
+4. **tests/registry/test_universal_dogmas.py**:
+   - Adjusted validation to check for non-empty universal dogma mappings
+   - Verify mappings are subsets of canonical `DOGMA_RULE_IDS`
+   - No longer require every detector to map to all 10 dogmas
+   - More flexible dogma mapping validation
+
+5. **PHILOSOPHY.md**:
+   - Added "Identifier Mapping Reference" section
+   - Clarifies UniversalDogmaID enum names to dogma IDs/titles
+   - Improved developer documentation
+
+6. **.devcontainer/devcontainer.json**:
+   - Removed redundant commented block
+   - Clean configuration
+
+**Validation Results**:
+- ✅ Targeted tests: passed
+- ✅ Full pytest: 948 tests passed
+- ✅ Pre-commit all-files: passed
+- ✅ Pre-push hooks: passed (including docs build strict)
+- ✅ Code review: no comments
+- ✅ CodeQL: 0 alerts
+
+**CI Issues Resolved**:
+- Investigated CI failure from run 22318844465
+- Logs showed ruff failures
+- Fixed by this commit
+
+**Key Technical Insights**:
+- `functools.cache` is the preferred modern Python pattern over `lru_cache(maxsize=None)`
+- Stub detectors need full protocol implementation even if they don't actively detect
+- Flexible dogma mapping validation allows detectors to map to relevant dogmas only
+- Magic number extraction improves test maintainability
+
+**Architectural Impact**:
+This commit completes the universal dogma detector architecture by ensuring all stub detectors properly implement the `ViolationDetector` protocol. The more flexible dogma mapping validation allows for future detectors that may not map to all 10 universal dogmas.
+
+**Status**: Complete and validated. All maintainer review comments addressed.
+
+---
+
+### PR #73 Follow-up: Universal Adapter Architecture - Commit 3465325
+
+**Date**: Current session
+
+**Context**:
+Addressed maintainer comment requiring that adapter/rule set must be universal for all languages rather than language-specific initialization.
+
+**Changes Made**:
+1. Universal adapter module:
+   - Created `src/mcp_zen_of_languages/adapters/universal.py`
+   - Implemented `AnalyzerFactoryAdapter` for universal language support
+   - Added `build_universal_adapters()` using `analyzer_factory.supported_languages()`
+   - Auto-generates adapters for all supported languages (Python, TypeScript, SQL, Markdown, etc.)
+
+2. UniversalZenDetector enhancement:
+   - Updated `core/detector.py` to auto-load all language adapters when `adapters=None`
+   - Default behavior now provides universal language support out-of-box
+   - No manual adapter configuration needed for standard use cases
+
+3. Module exports:
+   - Updated `adapters/__init__.py` to export universal adapter components
+   - Provides clean public API for universal adapter usage
+
+4. Test updates:
+   - Updated `tests/analyzers/test_universal_detector.py`
+   - Verified default detector handles Python analysis
+   - Verified default detector handles TypeScript analysis
+   - Confirms multi-language support works automatically
+
+**Validation Status**:
+- ✅ Targeted pytest: passed
+- ✅ Ruff: passed
+- ✅ Pre-commit all-files: passed
+- ✅ Code review: no comments
+- ✅ CodeQL: 0 alerts
+
+**Key Technical Insight**:
+The universal adapter pattern leverages the analyzer factory's language registry to dynamically build adapters for all supported languages. This eliminates the need for explicit adapter initialization and ensures consistent behavior across all languages. The architecture is extensible—adding a new language analyzer automatically adds its adapter to the universal set.
+
+**Architectural Impact**:
+This change shifts from explicit adapter management to implicit universal coverage, making the detector API simpler and more maintainable. It aligns with the principle that the tool should "just work" for all supported languages without configuration.
+
+**Status**: Completed and validated
+
 ### PR #60 SQL Detectors - Reviewer Feedback - Commit 4236efb
 
 **Date**: Current session

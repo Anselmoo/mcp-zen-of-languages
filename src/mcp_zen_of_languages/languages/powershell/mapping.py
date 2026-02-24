@@ -6,6 +6,7 @@ from mcp_zen_of_languages.analyzers.mapping_models import (
     DetectorBinding,
     LanguageDetectorMap,
 )
+from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
 from mcp_zen_of_languages.languages.configs import (
     PowerShellAliasUsageConfig,
     PowerShellApprovedVerbConfig,
@@ -41,6 +42,7 @@ from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellVerboseDebugDetector,
 )
 
+FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(
     language="powershell",
     bindings=[
@@ -49,6 +51,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PowerShellApprovedVerbDetector,
             config_model=PowerShellApprovedVerbConfig,
             rule_ids=["ps-001"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
         DetectorBinding(
@@ -56,6 +59,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PowerShellErrorHandlingDetector,
             config_model=PowerShellErrorHandlingConfig,
             rule_ids=["ps-002"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=20,
         ),
         DetectorBinding(
@@ -63,6 +67,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PowerShellPascalCaseDetector,
             config_model=PowerShellPascalCaseConfig,
             rule_ids=["ps-004"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=30,
         ),
         DetectorBinding(
@@ -70,6 +75,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PowerShellCmdletBindingDetector,
             config_model=PowerShellCmdletBindingConfig,
             rule_ids=["ps-003"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=40,
         ),
         DetectorBinding(
@@ -77,6 +83,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PowerShellVerboseDebugDetector,
             config_model=PowerShellVerboseDebugConfig,
             rule_ids=["ps-005"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=50,
         ),
         DetectorBinding(
@@ -84,6 +91,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PowerShellPositionalParamsDetector,
             config_model=PowerShellPositionalParamsConfig,
             rule_ids=["ps-006"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=60,
         ),
         DetectorBinding(
@@ -91,6 +99,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PowerShellPipelineUsageDetector,
             config_model=PowerShellPipelineUsageConfig,
             rule_ids=["ps-007"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=70,
         ),
         DetectorBinding(
@@ -98,6 +107,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PowerShellShouldProcessDetector,
             config_model=PowerShellShouldProcessConfig,
             rule_ids=["ps-008"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=80,
         ),
         DetectorBinding(
@@ -105,6 +115,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PowerShellSplattingDetector,
             config_model=PowerShellSplattingConfig,
             rule_ids=["ps-009"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=90,
         ),
         DetectorBinding(
@@ -112,6 +123,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PowerShellParameterValidationDetector,
             config_model=PowerShellParameterValidationConfig,
             rule_ids=["ps-010"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=100,
         ),
         DetectorBinding(
@@ -119,6 +131,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PowerShellCommentHelpDetector,
             config_model=PowerShellCommentHelpConfig,
             rule_ids=["ps-011"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=110,
         ),
         DetectorBinding(
@@ -126,6 +139,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PowerShellAliasUsageDetector,
             config_model=PowerShellAliasUsageConfig,
             rule_ids=["ps-012"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=120,
         ),
         DetectorBinding(
@@ -133,6 +147,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PowerShellReturnObjectsDetector,
             config_model=PowerShellReturnObjectsConfig,
             rule_ids=["ps-013"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=130,
         ),
         DetectorBinding(
@@ -140,6 +155,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PowerShellScopeUsageDetector,
             config_model=PowerShellScopeUsageConfig,
             rule_ids=["ps-014"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=140,
         ),
         DetectorBinding(
@@ -147,6 +163,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PowerShellNullHandlingDetector,
             config_model=PowerShellNullHandlingConfig,
             rule_ids=["ps-015"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=150,
         ),
     ],

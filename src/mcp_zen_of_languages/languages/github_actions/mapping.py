@@ -6,11 +6,13 @@ from mcp_zen_of_languages.analyzers.mapping_models import (
     DetectorBinding,
     LanguageDetectorMap,
 )
+from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
 from mcp_zen_of_languages.languages.configs import GitHubActionsWorkflowConfig
 from mcp_zen_of_languages.languages.github_actions.detectors import (
     GitHubActionsWorkflowDetector,
 )
 
+FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(
     language="github-actions",
     bindings=[
@@ -35,6 +37,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                 "gha-014",
                 "gha-015",
             ],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
     ],

@@ -77,6 +77,7 @@ class DetectorMetadata(BaseModel):
     language: str
     rule_ids: list[str] = Field(default_factory=list)
     rule_map: dict[str, list[str]] = Field(default_factory=dict)
+    universal_dogma_ids: list[str] = Field(default_factory=list)
     default_order: int = 0
     enabled_by_default: bool = True
 
@@ -98,6 +99,11 @@ class DetectorMetadata(BaseModel):
         Returns:
             Registry-ready metadata for [`DetectorRegistry.register`][DetectorRegistry.register].
         """
+        from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule_ids
+
+        universal_dogma_ids = binding.universal_dogma_ids or list(
+            dogmas_for_rule_ids(language, binding.rule_ids)
+        )
         return cls(
             detector_id=binding.detector_id,
             detector_class=binding.detector_class,
@@ -105,6 +111,7 @@ class DetectorMetadata(BaseModel):
             language=language,
             rule_ids=list(binding.rule_ids),
             rule_map=dict(binding.rule_map),
+            universal_dogma_ids=universal_dogma_ids,
             default_order=binding.default_order,
             enabled_by_default=binding.enabled_by_default,
         )

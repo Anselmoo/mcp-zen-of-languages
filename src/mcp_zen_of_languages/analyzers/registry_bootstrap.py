@@ -24,6 +24,7 @@ from typing import Any, Literal
 from pydantic import create_model
 
 from mcp_zen_of_languages.analyzers.registry import REGISTRY, DetectorMetadata
+from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule
 from mcp_zen_of_languages.languages.configs import RULE_CONFIGS, DetectorConfig
 from mcp_zen_of_languages.languages.rule_pattern import RulePatternDetector
 from mcp_zen_of_languages.rules import get_all_languages, get_language_zen
@@ -145,6 +146,7 @@ if not REGISTRY.items():
                     config_model=rule_configs[rule_id],
                     language=language,
                     rule_ids=[rule_id],
+                    universal_dogma_ids=list(dogmas_for_rule(language, rule_id)),
                     default_order=900,
                 ),
             )

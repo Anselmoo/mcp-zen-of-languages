@@ -6,6 +6,7 @@ from mcp_zen_of_languages.analyzers.mapping_models import (
     DetectorBinding,
     LanguageDetectorMap,
 )
+from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
 from mcp_zen_of_languages.languages.configs import (
     TsAnyUsageConfig,
     TsEnumConstConfig,
@@ -31,6 +32,7 @@ from mcp_zen_of_languages.languages.typescript.detectors import (
     TsUtilityTypesDetector,
 )
 
+FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(
     language="typescript",
     bindings=[
@@ -39,6 +41,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsAnyUsageDetector,
             config_model=TsAnyUsageConfig,
             rule_ids=["ts-001"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
         DetectorBinding(
@@ -46,6 +49,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsStrictModeDetector,
             config_model=TsStrictModeConfig,
             rule_ids=["ts-002"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=20,
         ),
         DetectorBinding(
@@ -53,6 +57,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsInterfacePreferenceDetector,
             config_model=TsInterfacePreferenceConfig,
             rule_ids=["ts-003"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=30,
         ),
         DetectorBinding(
@@ -60,6 +65,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsReturnTypeDetector,
             config_model=TsReturnTypeConfig,
             rule_ids=["ts-004"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=40,
         ),
         DetectorBinding(
@@ -67,6 +73,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsReadonlyDetector,
             config_model=TsReadonlyConfig,
             rule_ids=["ts-005"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=50,
         ),
         DetectorBinding(
@@ -74,6 +81,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsTypeGuardDetector,
             config_model=TsTypeGuardConfig,
             rule_ids=["ts-006"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=60,
         ),
         DetectorBinding(
@@ -81,6 +89,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsUtilityTypesDetector,
             config_model=TsUtilityTypesConfig,
             rule_ids=["ts-007"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=70,
         ),
         DetectorBinding(
@@ -88,6 +97,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsNonNullAssertionDetector,
             config_model=TsNonNullAssertionConfig,
             rule_ids=["ts-008"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=80,
         ),
         DetectorBinding(
@@ -95,6 +105,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsEnumConstDetector,
             config_model=TsEnumConstConfig,
             rule_ids=["ts-009"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=90,
         ),
         DetectorBinding(
@@ -102,6 +113,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsUnknownOverAnyDetector,
             config_model=TsUnknownOverAnyConfig,
             rule_ids=["ts-010"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=100,
         ),
     ],

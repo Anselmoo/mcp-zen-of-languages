@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 320" role="img" aria-labelledby="zen-title zen-desc">
+  <title id="zen-title">Ten dogmas as zen stones along a river path</title>
+  <desc id="zen-desc">A section-style zen garden with a river path and ten organic stone forms labeled with the dogmas: Purpose, Explicit Intent, Flat Traversal, Loud Failures, Meaningful Abstraction, Unambiguous Naming, Visible State, Strict Fences, Ruthless Deletion, and Proportionate Complexity.</desc>
+  <defs>
+    <linearGradient id="zen-bg" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f2effb"/>
+      <stop offset="100%" stop-color="#e9e4f7"/>
+    </linearGradient>
+    <linearGradient id="zen-ground" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#e9e4f7"/>
+      <stop offset="100%" stop-color="#dfd8f2"/>
+    </linearGradient>
+    <linearGradient id="zen-path" x1="0" x2="1" y1="0.5" y2="0.5">
+      <stop offset="0%" stop-color="#b8bcff" stop-opacity="0.34"/>
+      <stop offset="55%" stop-color="#989cff"/>
+      <stop offset="100%" stop-color="#c9b3ff" stop-opacity="0.45"/>
+    </linearGradient>
+    <linearGradient id="stone-a" x1="0.2" x2="0.8" y1="0" y2="1">
+      <stop offset="0%" stop-color="#989cff"/>
+      <stop offset="100%" stop-color="#767bd8"/>
+    </linearGradient>
+    <linearGradient id="stone-b" x1="0.3" x2="0.7" y1="0" y2="1">
+      <stop offset="0%" stop-color="#c9b3ff"/>
+      <stop offset="100%" stop-color="#989cff"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="960" height="320" fill="url(#zen-bg)"/>
+
+  <path d="M0 70 C120 40, 230 60, 340 46 C460 32, 560 58, 680 42 C790 28, 880 48, 960 40 L960 96 L0 96Z" fill="#e9e4f7" opacity="0.45"/>
+  <path d="M0 90 C120 74, 240 86, 360 72 C480 58, 580 86, 700 72 C810 60, 900 78, 960 72 L960 112 L0 112Z" fill="#dfd8f2" opacity="0.35"/>
+
+  <g fill="none" stroke="#dfd8f2" stroke-linecap="round" opacity="0.55">
+    <path d="M0 248 C170 226, 340 270, 520 248 C700 226, 860 266, 960 246" stroke-width="4"/>
+    <path d="M0 264 C180 246, 360 280, 540 264 C720 248, 880 280, 960 266" stroke-width="3"/>
+    <path d="M0 278 C180 264, 360 292, 560 278 C760 264, 900 292, 960 278" stroke-width="2.2"/>
+  </g>
+
+  <path d="M58 234 C118 216, 168 228, 226 212 C286 196, 338 210, 398 190 C460 170, 522 184, 586 162 C652 140, 716 156, 786 136 C844 122, 892 124, 934 114" fill="none" stroke="url(#zen-path)" stroke-width="9" stroke-linecap="round"/>
+  <path d="M58 238 C118 220, 168 232, 226 216 C286 200, 338 214, 398 194 C460 174, 522 188, 586 166 C652 144, 716 160, 786 140 C844 126, 892 128, 934 118" fill="none" stroke="#dfd8f2" stroke-width="2.6" stroke-linecap="round" opacity="0.55"/>
+
+  <circle cx="740" cy="126" r="76" fill="none" stroke="#c9b3ff" stroke-width="3" stroke-dasharray="210 290" transform="rotate(-20 740 126)" opacity="0.24"/>
+
+  <g stroke="#767bd8" fill="none" opacity="0.26">
+    <line x1="26" y1="68" x2="26" y2="300" stroke-width="2.6"/>
+    <line x1="40" y1="96" x2="40" y2="300" stroke-width="2.1"/>
+    <path d="M24 142 Q12 132 6 120" stroke-width="1.3"/>
+    <path d="M28 188 Q16 178 10 166" stroke-width="1.1"/>
+    <path d="M42 168 Q54 158 60 146" stroke-width="1.1"/>
+  </g>
+  <g stroke="#b8bcff" fill="none" opacity="0.2">
+    <line x1="928" y1="74" x2="928" y2="300" stroke-width="2.3"/>
+    <line x1="942" y1="102" x2="942" y2="300" stroke-width="1.9"/>
+    <path d="M926 146 Q914 136 908 124" stroke-width="1.1"/>
+  </g>
+
+  <g fill="#221938" opacity="0.1">
+    <path d="M24 266 C36 260 55 260 69 264 C80 268 86 276 82 282 C77 288 61 291 46 288 C32 285 23 277 24 266 Z"/>
+    <path d="M116 210 C128 204 145 204 159 208 C170 212 176 219 172 225 C168 231 153 234 139 232 C126 229 116 221 116 210 Z"/>
+    <path d="M212 273 C225 266 245 266 260 270 C273 275 280 283 275 290 C270 297 252 301 236 298 C222 294 211 285 212 273 Z"/>
+    <path d="M307 194 C319 188 336 188 350 192 C361 196 367 203 363 209 C359 215 344 218 330 216 C317 213 307 205 307 194 Z"/>
+    <path d="M406 258 C419 251 438 251 453 255 C466 260 473 268 468 275 C463 282 445 285 430 282 C416 278 405 270 406 258 Z"/>
+    <path d="M503 181 C515 175 532 175 546 179 C557 183 563 190 559 196 C555 202 540 205 526 203 C513 200 503 192 503 181 Z"/>
+    <path d="M604 246 C617 239 636 239 651 243 C664 248 671 256 666 263 C661 270 643 273 628 270 C614 266 603 258 604 246 Z"/>
+    <path d="M703 169 C715 163 732 163 746 167 C757 171 763 178 759 184 C755 190 740 193 726 191 C713 188 703 180 703 169 Z"/>
+    <path d="M801 233 C814 226 833 226 848 230 C861 235 868 243 863 250 C858 257 840 260 825 257 C811 253 800 245 801 233 Z"/>
+    <path d="M877 161 C889 155 906 155 920 159 C931 163 937 170 933 176 C929 182 914 185 900 183 C887 180 877 172 877 161 Z"/>
+  </g>
+
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <g transform="translate(56 252) scale(1.2)">
+      <path d="M-34 -12 C-30 -24 -14 -30 4 -28 C20 -27 34 -18 36 -5 C38 8 27 20 10 23 C-8 26 -24 22 -33 12 C-39 5 -39 -4 -34 -12 Z" fill="url(#stone-a)"/>
+      <text x="0" y="3" font-size="9.2" fill="#f8f6ff">Purpose</text>
+    </g>
+    <g transform="translate(148 198) scale(1.3)">
+      <path d="M-30 -10 C-24 -22 -8 -26 8 -24 C24 -22 34 -12 35 1 C36 14 26 22 8 24 C-10 26 -24 20 -30 11 C-35 4 -35 -4 -30 -10 Z" fill="url(#stone-b)"/>
+      <text x="0" y="-1" font-size="7.4" fill="#f8f6ff">Explicit</text>
+      <text x="0" y="8.8" font-size="7.4" fill="#f8f6ff">Intent</text>
+    </g>
+    <g transform="translate(244 258) scale(1.2)">
+      <path d="M-32 -14 C-24 -26 -6 -29 12 -26 C26 -24 36 -14 36 -1 C35 12 26 22 10 24 C-8 26 -26 20 -34 9 C-40 0 -39 -9 -32 -14 Z" fill="url(#stone-a)"/>
+      <text x="0" y="3" font-size="8.2" fill="#f8f6ff">Flat Traversal</text>
+    </g>
+    <g transform="translate(340 184) scale(1.18)">
+      <path d="M-30 -10 C-24 -22 -8 -26 8 -24 C24 -22 34 -12 35 1 C36 14 26 22 8 24 C-10 26 -24 20 -30 11 C-35 4 -35 -4 -30 -10 Z" fill="url(#stone-b)"/>
+      <text x="0" y="3" font-size="8.3" fill="#f8f6ff">Loud Failures</text>
+    </g>
+    <g transform="translate(438 246) scale(1.2)">
+      <path d="M-34 -12 C-30 -24 -14 -30 4 -28 C20 -27 34 -18 36 -5 C38 8 27 20 10 23 C-8 26 -24 22 -33 12 C-39 5 -39 -4 -34 -12 Z" fill="url(#stone-a)"/>
+      <text x="0" y="-1" font-size="7.4" fill="#f8f6ff">Meaningful</text>
+      <text x="0" y="8.8" font-size="7.4" fill="#f8f6ff">Abstraction</text>
+    </g>
+    <g transform="translate(536 170) scale(1.18)">
+      <path d="M-30 -10 C-24 -22 -8 -26 8 -24 C24 -22 34 -12 35 1 C36 14 26 22 8 24 C-10 26 -24 20 -30 11 C-35 4 -35 -4 -30 -10 Z" fill="url(#stone-b)"/>
+      <text x="0" y="-1" font-size="7.2" fill="#f8f6ff">Unambiguous</text>
+      <text x="0" y="8.8" font-size="7.2" fill="#f8f6ff">Naming</text>
+    </g>
+    <g transform="translate(636 236) scale(1.2)">
+      <path d="M-32 -14 C-24 -26 -6 -29 12 -26 C26 -24 36 -14 36 -1 C35 12 26 22 10 24 C-8 26 -26 20 -34 9 C-40 0 -39 -9 -32 -14 Z" fill="url(#stone-a)"/>
+      <text x="0" y="3" font-size="8.2" fill="#f8f6ff">Visible State</text>
+    </g>
+    <g transform="translate(736 160) scale(1.3)">
+      <path d="M-30 -10 C-24 -22 -8 -26 8 -24 C24 -22 34 -12 35 1 C36 14 26 22 8 24 C-10 26 -24 20 -30 11 C-35 4 -35 -4 -30 -10 Z" fill="url(#stone-b)"/>
+      <text x="0" y="-1" font-size="7.2" fill="#f8f6ff">Strict</text>
+      <text x="0" y="8.8" font-size="7.2" fill="#f8f6ff">Fences</text>
+    </g>
+    <g transform="translate(834 224) scale(1.3)">
+      <path d="M-32 -14 C-24 -26 -6 -29 12 -26 C26 -24 36 -14 36 -1 C35 12 26 22 10 24 C-8 26 -26 20 -34 9 C-40 0 -39 -9 -32 -14 Z" fill="url(#stone-a)"/>
+      <text x="0" y="-1" font-size="7.2" fill="#f8f6ff">Ruthless</text>
+      <text x="0" y="8.8" font-size="7.2" fill="#f8f6ff">Deletion</text>
+    </g>
+    <g transform="translate(910 150) scale(1.16)">
+      <path d="M-30 -10 C-24 -22 -8 -26 8 -24 C24 -22 34 -12 35 1 C36 14 26 22 8 24 C-10 26 -24 20 -30 11 C-35 4 -35 -4 -30 -10 Z" fill="url(#stone-b)"/>
+      <text x="0" y="-1" font-size="7.1" fill="#f8f6ff">Proportionate</text>
+      <text x="0" y="8.8" font-size="7.1" fill="#f8f6ff">Complexity</text>
+    </g>
+  </g>
+
+  <g fill="#f1b0ff" opacity="0.35">
+    <circle cx="274" cy="116" r="2.4"/>
+    <circle cx="468" cy="96" r="2"/>
+    <circle cx="806" cy="90" r="2.1"/>
+  </g>
+  <g fill="#63c8ff" opacity="0.3">
+    <circle cx="350" cy="104" r="2.2"/>
+    <circle cx="624" cy="86" r="1.9"/>
+    <circle cx="884" cy="104" r="2"/>
+  </g>
+
+  <path d="M0 288 Q220 278, 480 288 Q740 298, 960 284 L960 320 L0 320Z" fill="url(#zen-ground)" opacity="0.58"/>
+  <g fill="#c9b3ff" opacity="0.12">
+    <circle cx="78" cy="306" r="1"/>
+    <circle cx="186" cy="312" r="1"/>
+    <circle cx="302" cy="308" r="1"/>
+    <circle cx="420" cy="313" r="1"/>
+    <circle cx="544" cy="307" r="1"/>
+    <circle cx="662" cy="312" r="1"/>
+    <circle cx="782" cy="308" r="1"/>
+    <circle cx="898" cy="313" r="1"/>
+  </g>
+</svg>

@@ -1,7 +1,7 @@
 # Philosophy: The 10 Dogmas of Zen for MCP Vibe Coding
 
 <p align="center">
-  <img src="assets/zen-dogmas.svg" alt="The 10 Dogmas of Zen — ten stones in a zen garden representing the core code quality principles" width="720" />
+  <img src="docs/assets/illustration-zen-dogma.svg" alt="The 10 Dogmas of Zen — ten stones in a zen garden representing the core code quality principles" width="720" />
 </p>
 
 `mcp-zen-of-languages` treats static analysis as **architectural coaching**, not just linting.

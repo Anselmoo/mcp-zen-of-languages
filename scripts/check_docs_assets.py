@@ -24,10 +24,21 @@ README_REQUIRED_ASSET_BASES: tuple[str, ...] = (
     "docs/assets/logo",
     "docs/assets/social-card-github",
 )
+SECTION_SVG_WIDTH = 960
+SECTION_SVG_HEIGHT = 320
+SECTION_SVG_TARGET_GLOBS: tuple[str, ...] = ("docs/assets/illustration-*.svg",)
+SECTION_SVG_TARGET_FILES: tuple[Path, ...] = (
+    Path("docs/assets/illustration-zen-dogma.svg"),
+)
 
 # Thresholds
 MAX_IMPORTANT_COUNT = 4  # excluding @media print block and exempt files
 IMPORT_RE = re.compile(r'@import\s+url\("(?P<path>[^"]+)"\);')
+SVG_VIEWBOX_RE = re.compile(
+    r'\bviewBox="\s*[-0-9.]+\s+[-0-9.]+\s+([0-9]+(?:\.[0-9]+)?)\s+([0-9]+(?:\.[0-9]+)?)\s*"',
+)
+SVG_WIDTH_RE = re.compile(r'\bwidth="([0-9]+(?:\.[0-9]+)?)')
+SVG_HEIGHT_RE = re.compile(r'\bheight="([0-9]+(?:\.[0-9]+)?)')
 
 # Files where !important is structurally required (e.g. overriding
 # third-party inline styles that cannot be beaten by specificity alone).
@@ -158,6 +169,50 @@ def check_readme_assets(readme_content: str) -> list[str]:
     return errors
 
 
+def _extract_svg_dimensions(svg_content: str) -> tuple[int, int] | None:
+    """Extract dimensions from viewBox or width/height attributes."""
+    if viewbox_match := SVG_VIEWBOX_RE.search(svg_content):
+        return int(float(viewbox_match[1])), int(float(viewbox_match[2]))
+
+    width_match = SVG_WIDTH_RE.search(svg_content)
+    height_match = SVG_HEIGHT_RE.search(svg_content)
+    if width_match and height_match:
+        return int(float(width_match[1])), int(float(height_match[1]))
+
+    return None
+
+
+def check_section_svg_dimensions() -> list[str]:
+    """Validate section-style SVG dimensions are consistent."""
+    errors: list[str] = []
+    targets: list[Path] = []
+
+    for glob_pattern in SECTION_SVG_TARGET_GLOBS:
+        targets.extend(sorted(Path().glob(glob_pattern)))
+    targets.extend(SECTION_SVG_TARGET_FILES)
+
+    for svg_path in targets:
+        if not svg_path.exists():
+            errors.append(f"{svg_path}: file not found")
+            continue
+
+        dimensions = _extract_svg_dimensions(svg_path.read_text(encoding="utf-8"))
+        if dimensions is None:
+            errors.append(
+                f"{svg_path}: missing readable viewBox or width/height attributes",
+            )
+            continue
+
+        width, height = dimensions
+        if (width, height) != (SECTION_SVG_WIDTH, SECTION_SVG_HEIGHT):
+            errors.append(
+                f"{svg_path}: expected {SECTION_SVG_WIDTH}x{SECTION_SVG_HEIGHT}, "
+                f"found {width}x{height}",
+            )
+
+    return errors
+
+
 def main() -> int:
     errors: list[str] = []
 
@@ -175,6 +230,7 @@ def main() -> int:
         errors.extend(check_readme_assets(README_PATH.read_text(encoding="utf-8")))
     else:
         errors.append(f"{README_PATH}: file not found")
+    errors.extend(check_section_svg_dimensions())
 
     if errors:
         print("❌ Docs asset quality checks failed:")

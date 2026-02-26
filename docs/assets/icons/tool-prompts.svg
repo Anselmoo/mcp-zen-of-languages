@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="tool-prompts-title">
+  <title id="tool-prompts-title">Prompts tool icon</title>
+  <rect width="64" height="64" rx="12" fill="#f2effb"/>
+  <path d="M14 18H50C52.2 18 54 19.8 54 22V38C54 40.2 52.2 42 50 42H34L24 50V42H14C11.8 42 10 40.2 10 38V22C10 19.8 11.8 18 14 18Z" fill="#c9b3ff" opacity="0.9"/>
+  <path d="M20 28H44M20 34H36" fill="none" stroke="#2b2044" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="47" cy="15" r="2" fill="#f1b0ff" opacity="0.6"/>
+</svg>

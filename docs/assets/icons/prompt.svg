@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="prompt-title">
+  <title id="prompt-title">Prompt icon</title>
+  <rect width="64" height="64" rx="12" fill="#f2effb"/>
+  <rect x="12" y="18" width="40" height="28" rx="6" fill="#c9b3ff"/>
+  <path d="M20 29L26 32L20 35M30 36H40" fill="none" stroke="#2b2044" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="46" cy="24" r="2" fill="#989cff"/>
+  <circle cx="50" cy="18" r="1.6" fill="#f1b0ff" opacity="0.7"/>
+</svg>

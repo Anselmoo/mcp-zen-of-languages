@@ -61,6 +61,7 @@ from mcp_zen_of_languages.models import (
     RulesSummary,
     Violation,
 )
+from mcp_zen_of_languages.telemetry import analysis_span
 
 logger = logging.getLogger(__name__)
 logger.setLevel(
@@ -513,6 +514,16 @@ class DetectionPipeline:
         """
         self.detectors = detectors
 
+    @staticmethod
+    def _detector_name(detector: ViolationDetector) -> str:
+        """Normalize detector names for logs and telemetry attributes."""
+        detector_name_attr = getattr(detector, "name", None)
+        if callable(detector_name_attr):
+            return str(detector_name_attr())
+        if isinstance(detector_name_attr, str):
+            return detector_name_attr
+        return detector.__class__.__name__
+
     def run(
         self,
         context: AnalysisContext,
@@ -545,11 +556,16 @@ class DetectionPipeline:
         for detector in self.detectors:
             try:
                 detector_config = detector.config or config
-                violations = detector.detect(context, detector_config)
+                detector_name = self._detector_name(detector)
+                with analysis_span(
+                    "detector.run",
+                    {"language": context.language, "detector": detector_name},
+                ):
+                    violations = detector.detect(context, detector_config)
                 all_violations.extend(violations)
             except Exception:
                 # Log error but continue with other detectors
-                detector_name = getattr(detector, "name", detector.__class__.__name__)
+                detector_name = self._detector_name(detector)
                 logger.exception("Error in detector %s", detector_name)
 
         return all_violations
@@ -757,93 +773,115 @@ class BaseAnalyzer(ABC):
             violations, an overall quality score, and (when available)
             a ``rules_summary``.
         """
-        # 1. Create analysis context
-        context = self._create_context(
-            code=code,
-            path=path,
-            other_files=other_files,
-            repository_imports=repository_imports,
-        )
-
-        # 2. Parse code (language-specific hook)
-        context.ast_tree = self.parse_code(code)
-        if context.capabilities.supports_ast:
-            context.ast_status = (
-                AstStatus.parsed
-                if context.ast_tree is not None
-                else AstStatus.parse_failed
+        with analysis_span(
+            "analyzer.analyze",
+            {"language": self.language(), "path": path or "<snippet>"},
+        ):
+            # 1. Create analysis context
+            context = self._create_context(
+                code=code,
+                path=path,
+                other_files=other_files,
+                repository_imports=repository_imports,
             )
 
-        # 3. Compute metrics (language-specific hook)
-        cc, mi, loc = self.compute_metrics(code, context.ast_tree)
-        context.cyclomatic_summary = cc
-        context.maintainability_index = mi
-        context.lines_of_code = loc
+            # 2. Parse code (language-specific hook)
+            with analysis_span("analyzer.parse", {"language": self.language()}):
+                context.ast_tree = self.parse_code(code)
+                if context.capabilities.supports_ast:
+                    context.ast_status = (
+                        AstStatus.parsed
+                        if context.ast_tree is not None
+                        else AstStatus.parse_failed
+                    )
 
-        # 4. Build dependency analysis (optional)
-        if self.config.enable_dependency_analysis:
-            context.dependency_analysis = self._build_dependency_analysis(context)
-        context.external_analysis = self._build_external_analysis(
-            context,
-            enable_external_tools=enable_external_tools,
-            allow_temporary_tools=allow_temporary_tools,
-        )
+            # 3. Compute metrics (language-specific hook)
+            with analysis_span("analyzer.metrics", {"language": self.language()}):
+                cc, mi, loc = self.compute_metrics(code, context.ast_tree)
+                context.cyclomatic_summary = cc
+                context.maintainability_index = mi
+                context.lines_of_code = loc
 
-        # 5. Run detection pipeline
-        violations = self.pipeline.run(context, self.config)
-
-        # 6. Build and return result
-        result = self._build_result(context, violations)
-
-        # 7. If RulesAdapter is available, attach rules_summary
-        try:
-            from mcp_zen_of_languages.adapters.rules_adapter import (
-                RulesAdapter,
-                RulesAdapterConfig,
-            )
-            from mcp_zen_of_languages.models import DependencyAnalysis
-
-            adapter_config = RulesAdapterConfig(
-                max_nesting_depth=self.config.max_nesting_depth,
-                max_cyclomatic_complexity=self.config.max_cyclomatic_complexity,
-                min_maintainability_index=None,
-            )
-
-            adapter = RulesAdapter(language=self.language(), config=adapter_config)
-
-            # Normalize dependency_analysis into DependencyAnalysis if possible to
-            # satisfy type-checker
-            dep_analysis: DependencyAnalysis | None = None
-            raw_dep = context.dependency_analysis
-            if isinstance(raw_dep, DependencyAnalysis):
-                dep_analysis = raw_dep
-            elif isinstance(raw_dep, dict):
-                try:
-                    dep_analysis = DependencyAnalysis.model_validate(raw_dep)
-                except (ValueError, TypeError):
-                    dep_analysis = None
-
-            rules_violations = (
-                adapter.find_violations(
-                    code=code,
-                    cyclomatic_summary=context.cyclomatic_summary,
-                    maintainability_index=context.maintainability_index,
-                    dependency_analysis=dep_analysis,
+            # 4. Build dependency analysis (optional)
+            with analysis_span("analyzer.dependencies", {"language": self.language()}):
+                if self.config.enable_dependency_analysis:
+                    context.dependency_analysis = self._build_dependency_analysis(
+                        context
+                    )
+                context.external_analysis = self._build_external_analysis(
+                    context,
+                    enable_external_tools=enable_external_tools,
+                    allow_temporary_tools=allow_temporary_tools,
                 )
-                if self.config.enable_pattern_detection
-                else []
-            )
-            # Merge pipeline violations with rules-derived violations
-            all_violations = violations + rules_violations
-            result.rules_summary = RulesSummary(
-                **adapter.summarize_violations(all_violations),
-            )
-            result.violations = all_violations
-        except Exception as exc:  # noqa: BLE001
-            # If adapter missing or fails, proceed without rules_summary
-            logger.debug("RulesAdapter integration failed; continuing", exc_info=exc)
 
-        return result
+            # 5. Run detection pipeline
+            with analysis_span(
+                "analyzer.pipeline",
+                {
+                    "language": self.language(),
+                    "detector_count": len(self.pipeline.detectors),
+                },
+            ):
+                violations = self.pipeline.run(context, self.config)
+
+            # 6. Build and return result
+            result = self._build_result(context, violations)
+
+            # 7. If RulesAdapter is available, attach rules_summary
+            try:
+                from mcp_zen_of_languages.adapters.rules_adapter import (
+                    RulesAdapter,
+                    RulesAdapterConfig,
+                )
+                from mcp_zen_of_languages.models import DependencyAnalysis
+
+                adapter_config = RulesAdapterConfig(
+                    max_nesting_depth=self.config.max_nesting_depth,
+                    max_cyclomatic_complexity=self.config.max_cyclomatic_complexity,
+                    min_maintainability_index=None,
+                )
+
+                adapter = RulesAdapter(language=self.language(), config=adapter_config)
+
+                # Normalize dependency_analysis into DependencyAnalysis if possible to
+                # satisfy type-checker
+                dep_analysis: DependencyAnalysis | None = None
+                raw_dep = context.dependency_analysis
+                if isinstance(raw_dep, DependencyAnalysis):
+                    dep_analysis = raw_dep
+                elif isinstance(raw_dep, dict):
+                    try:
+                        dep_analysis = DependencyAnalysis.model_validate(raw_dep)
+                    except (ValueError, TypeError):
+                        dep_analysis = None
+
+                with analysis_span(
+                    "analyzer.rules_adapter",
+                    {"language": self.language()},
+                ):
+                    rules_violations = (
+                        adapter.find_violations(
+                            code=code,
+                            cyclomatic_summary=context.cyclomatic_summary,
+                            maintainability_index=context.maintainability_index,
+                            dependency_analysis=dep_analysis,
+                        )
+                        if self.config.enable_pattern_detection
+                        else []
+                    )
+                # Merge pipeline violations with rules-derived violations
+                all_violations = violations + rules_violations
+                result.rules_summary = RulesSummary(
+                    **adapter.summarize_violations(all_violations),
+                )
+                result.violations = all_violations
+            except Exception as exc:  # noqa: BLE001
+                # If adapter missing or fails, proceed without rules_summary
+                logger.debug(
+                    "RulesAdapter integration failed; continuing", exc_info=exc
+                )
+
+            return result
 
     # Helper methods (can be overridden if needed)
 

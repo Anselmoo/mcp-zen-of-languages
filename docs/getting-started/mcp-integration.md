@@ -19,6 +19,10 @@ zen-mcp-server
 
 The server communicates via stdin/stdout using the MCP protocol. It doesn't serve HTTP — MCP clients connect to it as a subprocess.
 
+The server enables advanced FastMCP features: centralized middleware (logging, timing, rate limiting, response caching/limiting, duplicate-call suppression), OpenTelemetry-compatible spans, lifecycle hooks, and paginated listing (`list_page_size=100`) for scalable client discovery.
+
+When your client supports version targeting, use `analyze_zen_violations` and `generate_prompts` **v2.0** for stricter request-quality guardrails; v1.0 remains available for compatibility.
+
 ## Naming guide (important)
 
 | Concept | Value | Where it is used |
@@ -42,11 +46,9 @@ Use one-click install or add config manually.
       "mcp": {
         "servers": {
           "zen-of-languages": {
-            "command": "uv",
-            "args": ["run", "zen-mcp-server"],
-            "cwd": "${workspaceFolder}",
+            "command": "uvx",
+            "args": ["--from", "mcp-zen-of-languages", "zen-mcp-server"],
             "env": {
-              "PYTHONPATH": "${workspaceFolder}/src",
               "ZEN_CONFIG_PATH": "${workspaceFolder}/zen-config.yaml"
             }
           }

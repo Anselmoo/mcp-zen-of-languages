@@ -312,10 +312,9 @@ def _build_config_yaml(languages: list[str], strictness: str) -> str:
 def _write_vscode_mcp_config() -> Path:
     """Create ``.vscode/mcp.json`` so VS Code discovers the Zen MCP server.
 
-    Writes a workspace MCP JSON config pointing at ``uv run zen-mcp-server`` with
-    workspace-relative ``PYTHONPATH`` and ``ZEN_CONFIG_PATH`` environment
-    variables under ``mcp.servers``. The ``.vscode/`` directory is created if
-    absent.
+    Writes a workspace MCP JSON config pointing at
+    ``uvx --from mcp-zen-of-languages zen-mcp-server`` under
+    ``mcp.servers``. The ``.vscode/`` directory is created if absent.
 
     Returns:
         Path: Absolute path to the written ``.vscode/mcp.json`` file.
@@ -330,11 +329,9 @@ def _write_vscode_mcp_config() -> Path:
         "mcp": {
             "servers": {
                 "zen-of-languages": {
-                    "command": "uv",
-                    "args": ["run", "zen-mcp-server"],
-                    "cwd": "${workspaceFolder}",
+                    "command": "uvx",
+                    "args": ["--from", "mcp-zen-of-languages", "zen-mcp-server"],
                     "env": {
-                        "PYTHONPATH": "${workspaceFolder}/src",
                         "ZEN_CONFIG_PATH": "${workspaceFolder}/zen-config.yaml",
                     },
                 },

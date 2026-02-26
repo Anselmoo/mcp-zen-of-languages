@@ -164,6 +164,8 @@ branch_build = "python scripts/branch.py new build"
 branch_rescue = "python scripts/branch.py rescue"
 warn_missing_rule_coverage = "python scripts/warn_missing_rule_coverage.py"
 export_svg_assets = "python scripts/export_svg_assets.py"
+run_server = "zensical serve"
+build_docs = "zensical build"
 
 [tool.pytest.ini_options]
 addopts = "--cov=src/mcp_zen_of_languages --cov-report=term-missing --cov-fail-under=95"

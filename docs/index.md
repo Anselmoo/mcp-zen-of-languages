@@ -58,10 +58,10 @@ Every programming language has a philosophy — a sense of what "good code" look
 </div>
 
 !!! tip "Why zen?"
-Most linters focus on formatting. Zen analysis goes deeper — it detects **architectural** and **idiomatic** issues: god classes, circular dependencies, callback hell, unsafe blocks, monkey-patching. The goal isn't nitpicking commas; it's surfacing the structural problems that slow teams down.
+    Most linters focus on formatting. Zen analysis goes deeper — it detects **architectural** and **idiomatic** issues: god classes, circular dependencies, callback hell, unsafe blocks, monkey-patching. The goal isn't nitpicking commas; it's surfacing the structural problems that slow teams down.
 
 !!! note "New: GitLab CI workflow analysis"
-GitLab CI (`.gitlab-ci.yml` and `gitlab-ci/**/*.yml`) is now supported with dedicated zen rules for security, maintainability, and idiomatic pipeline practices.
+    GitLab CI (`.gitlab-ci.yml` and `gitlab-ci/**/*.yml`) is now supported with dedicated zen rules for security, maintainability, and idiomatic pipeline practices.
 
 ## Why MCP
 
@@ -141,21 +141,21 @@ zen report path/to/project
 
 ![MCP tools workflow illustration](assets/illustration-mcp-tools.svg)
 
-The MCP server exposes **13 tools** across five families, plus **3 resources** and **1 prompt**.
+The MCP server exposes **15 tools** (including versioned v1/v2 variants) across five families, plus **3 resources** and **1 prompt**.
 
 <div class="grid cards" markdown>
 
--   :material-magnify:{ .lg .middle } **Analysis** (3 tools)
+-   :material-magnify:{ .lg .middle } **Analysis** (4 tools)
 
     ---
 
-    `analyze_zen_violations` · `analyze_repository` · `check_architectural_patterns`
+    `analyze_zen_violations` (v1, v2) · `analyze_repository` · `check_architectural_patterns`
 
--   :material-file-document-outline:{ .lg .middle } **Reporting** (3 tools)
+-   :material-file-document-outline:{ .lg .middle } **Reporting** (4 tools)
 
     ---
 
-    `generate_prompts` · `generate_agent_tasks` · `generate_report`
+    `generate_prompts` (v1, v2) · `generate_agent_tasks` · `generate_report`
 
 -   :material-cog-outline:{ .lg .middle } **Configuration** (3 tools)
 

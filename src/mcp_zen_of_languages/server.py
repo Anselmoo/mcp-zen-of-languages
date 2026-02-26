@@ -30,9 +30,12 @@ Note:
 
 import logging
 import os
+from datetime import timedelta
 from pathlib import Path
+from typing import Any, cast
 
 import fastmcp
+from fastmcp.server.tasks import TaskConfig
 from mcp.types import ToolAnnotations
 from pydantic import BaseModel, TypeAdapter
 
@@ -66,7 +69,13 @@ from mcp_zen_of_languages.reporting.report import generate_report
 from mcp_zen_of_languages.rules import get_all_languages, get_language_zen
 from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
 
-mcp = fastmcp.FastMCP(name="zen_of_languages", version=__version__)
+mcp = fastmcp.FastMCP(
+    name="zen_of_languages",
+    version=__version__,
+    instructions="Multi-language architectural and idiomatic code analysis via CLI and MCP server.",
+    website_url="https://anselmoo.github.io/mcp-zen-of-languages/",
+)
+
 CONFIG = load_config(path=os.environ.get("ZEN_CONFIG_PATH"))
 logger = logging.getLogger(__name__)
 logger.setLevel(
@@ -87,6 +96,7 @@ MUTATING_ANNOTATIONS = ToolAnnotations(
     idempotentHint=False,
     destructiveHint=True,
 )
+BACKGROUND_TASK = TaskConfig(mode="optional", poll_interval=timedelta(seconds=5))
 
 
 def _output_schema(annotation: object) -> dict[str, object]:
@@ -570,6 +580,7 @@ async def _analyze_repository_internal(  # noqa: C901, PLR0913
     description="Analyze a repository path and return per-file analysis results.",
     tags={"analysis", "repository"},
     annotations=READONLY_ANNOTATIONS,
+    task=BACKGROUND_TASK,
 )
 async def analyze_repository(  # noqa: PLR0913
     repo_path: str,
@@ -640,6 +651,7 @@ async def analyze_repository(  # noqa: PLR0913
     tags={"agent", "tasks", "automation"},
     annotations=READONLY_ANNOTATIONS,
     output_schema=_output_schema(AgentTaskList),
+    task=BACKGROUND_TASK,
 )
 async def generate_agent_tasks_tool(
     repo_path: str,
@@ -734,6 +746,7 @@ async def check_architectural_patterns(code: str, language: str) -> PatternsResu
     tags={"reporting", "analysis"},
     annotations=READONLY_ANNOTATIONS,
     output_schema=_output_schema(ReportOutput),
+    task=BACKGROUND_TASK,
 )
 async def generate_report_tool(  # noqa: PLR0913
     target_path: str,
@@ -1260,6 +1273,18 @@ class _LegacyPromptManager:
         self._prompts = {"zen_remediation_prompt": remediation_prompt}
 
 
+def _attach_legacy_tool_annotations(
+    tool_fn: object,
+    annotations: ToolAnnotations,
+) -> None:
+    """Attach compatibility attributes expected by older tests."""
+    legacy_tool = cast("Any", tool_fn)
+    if not hasattr(legacy_tool, "fn"):
+        legacy_tool.fn = tool_fn
+    if not hasattr(legacy_tool, "annotations"):
+        legacy_tool.annotations = annotations
+
+
 def _attach_legacy_test_compat() -> None:
     """Expose legacy tool attributes used by the repository test suite."""
     tools_with_annotations = [
@@ -1279,10 +1304,7 @@ def _attach_legacy_test_compat() -> None:
     ]
 
     for tool_fn, annotations in tools_with_annotations:
-        if not hasattr(tool_fn, "fn"):
-            tool_fn.fn = tool_fn
-        if not hasattr(tool_fn, "annotations"):
-            tool_fn.annotations = annotations
+        _attach_legacy_tool_annotations(tool_fn, annotations)
 
     resource_manager_attr = "_resource_manager"
     if not hasattr(mcp, resource_manager_attr):

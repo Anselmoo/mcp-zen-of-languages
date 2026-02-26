@@ -30,7 +30,7 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "fastmcp>=2.14.4",
+    "fastmcp[tasks]>=3.0.2",
     "networkx>=3.6.1",
     "pydantic>=2.12.5",
     "pygments>=2.19.2",
@@ -59,7 +59,6 @@ build-backend = "uv_build"
 
 [dependency-groups]
 docs = [
-    "mkdocs>=1.6.0",
     "zensical>=0.0.23",
     "mkdocstrings[python]>=0.26.0",
     "mkdocs-minify-plugin>=0.8.0",

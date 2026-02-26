@@ -101,6 +101,8 @@ MUTATING_ANNOTATIONS = ToolAnnotations(
     destructiveHint=True,
 )
 BACKGROUND_TASK = TaskConfig(mode="optional", poll_interval=timedelta(seconds=5))
+ANALYZE_ZEN_VIOLATIONS_VERSION = "1.0"
+GENERATE_PROMPTS_VERSION = "1.0"
 
 
 def _output_schema(annotation: object) -> dict[str, object]:
@@ -299,7 +301,7 @@ async def detect_languages(repo_path: str) -> LanguagesResult:
 
 @mcp.tool(
     name="analyze_zen_violations",
-    version="1.0",
+    version=ANALYZE_ZEN_VIOLATIONS_VERSION,
     title="Analyze zen violations",
     description="Analyze a code snippet against zen rules and return analysis results.",
     tags={"analysis", "zen", "snippet"},
@@ -369,14 +371,15 @@ async def analyze_zen_violations(
     canonical_language = _canonical_language(language)
     with analysis_span(
         "analyze_zen_violations",
-        {"language": canonical_language, "tool.version": "1.0"},
+        {
+            "language": canonical_language,
+            "tool.version": ANALYZE_ZEN_VIOLATIONS_VERSION,
+        },
     ):
         supported = sorted(supported_languages())
         if canonical_language not in supported:
             supported_list = ", ".join(supported)
-            msg = (
-                f"Unsupported language '{language}'. Supported languages: {supported_list}."
-            )
+            msg = f"Unsupported language '{language}'. Supported languages: {supported_list}."
             raise ValueError(msg)
 
         runtime_override = _runtime_overrides.get(canonical_language)
@@ -406,7 +409,7 @@ async def analyze_zen_violations(
 
 @mcp.tool(
     name="generate_prompts",
-    version="1.0",
+    version=GENERATE_PROMPTS_VERSION,
     title="Generate remediation prompts",
     description="Generate remediation prompts from zen analysis results.",
     tags={"prompts", "remediation"},
@@ -456,14 +459,12 @@ async def generate_prompts_tool(
     canonical_language = _canonical_language(language)
     with analysis_span(
         "generate_prompts",
-        {"language": canonical_language, "tool.version": "1.0"},
+        {"language": canonical_language, "tool.version": GENERATE_PROMPTS_VERSION},
     ):
         supported = sorted(supported_languages())
         if canonical_language not in supported:
             supported_list = ", ".join(supported)
-            msg = (
-                f"Unsupported language '{language}'. Supported languages: {supported_list}."
-            )
+            msg = f"Unsupported language '{language}'. Supported languages: {supported_list}."
             raise ValueError(msg)
         analyzer = create_analyzer(
             canonical_language,

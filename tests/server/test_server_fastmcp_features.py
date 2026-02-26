@@ -13,6 +13,7 @@ LIST_PAGE_SIZE = 100
 
 
 def test_server_uses_pagination_and_middleware():
+    # FastMCP 3.0.x stores this constructor setting only on the private field.
     assert server.mcp._list_page_size == LIST_PAGE_SIZE
     assert any(isinstance(m, ErrorHandlingMiddleware) for m in server.mcp.middleware)
     assert any(isinstance(m, LoggingMiddleware) for m in server.mcp.middleware)

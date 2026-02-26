@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 import logging
 from time import perf_counter
-from typing import cast
 
 from fastmcp.server.middleware import CallNext, Middleware, MiddlewareContext
 
@@ -49,12 +48,11 @@ class TimingMiddleware(Middleware):
             return await call_next(context)
         finally:
             elapsed_ms = (perf_counter() - started) * 1000
-            message = cast("object", context.message)
             logger.info(
                 json.dumps(
                     {
                         "event": "mcp.tool.duration",
-                        "tool": getattr(message, "name", "unknown"),
+                        "tool": getattr(context.message, "name", "unknown"),
                         "duration_ms": round(elapsed_ms, 2),
                     }
                 )
@@ -73,7 +71,9 @@ class ErrorHandlingMiddleware(Middleware):
         try:
             return await call_next(context)
         except Exception:
-            logger.exception("Unhandled MCP request error for method=%s", context.method)
+            logger.exception(
+                "Unhandled MCP request error for method=%s", context.method
+            )
             raise
 
 

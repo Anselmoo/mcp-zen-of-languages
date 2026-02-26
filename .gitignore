@@ -245,7 +245,7 @@ Temporary Items
 
 
 # Exclude Serena
-.serena/
+# .serena/
 tmp/
 
 .vscode/*

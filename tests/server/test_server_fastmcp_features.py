@@ -14,6 +14,14 @@ from mcp_zen_of_languages.middleware import (
 )
 
 LIST_PAGE_SIZE = 100
+ICON_URL_PREFIX = "https://anselmoo.github.io/mcp-zen-of-languages/assets/icons/"
+
+
+def _icon_srcs(items: list[object]) -> list[str]:
+    srcs: list[str] = []
+    for item in items:
+        srcs.extend(icon.src for icon in getattr(item, "icons", []) or [])
+    return srcs
 
 
 def test_server_uses_pagination_and_middleware():
@@ -44,3 +52,30 @@ async def test_versioned_tool_metadata_is_exposed():
 async def test_analyze_v2_rejects_empty_code():
     with pytest.raises(ValueError, match="Empty code"):
         await server.analyze_zen_violations_v2.fn("", "python")
+
+
+@pytest.mark.asyncio
+async def test_tool_icon_metadata_uses_canonical_github_pages_urls():
+    icon_srcs = _icon_srcs(await server.mcp.list_tools())
+    assert icon_srcs
+    assert all(
+        src.startswith(ICON_URL_PREFIX) and src.endswith(".svg") for src in icon_srcs
+    )
+
+
+@pytest.mark.asyncio
+async def test_resource_icon_metadata_uses_canonical_github_pages_urls():
+    icon_srcs = _icon_srcs(await server.mcp.list_resources())
+    assert icon_srcs
+    assert all(
+        src.startswith(ICON_URL_PREFIX) and src.endswith(".svg") for src in icon_srcs
+    )
+
+
+@pytest.mark.asyncio
+async def test_prompt_icon_metadata_uses_canonical_github_pages_urls():
+    icon_srcs = _icon_srcs(await server.mcp.list_prompts())
+    assert icon_srcs
+    assert all(
+        src.startswith(ICON_URL_PREFIX) and src.endswith(".svg") for src in icon_srcs
+    )

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="zen-icon-title">
+  <title id="zen-icon-title">Zen icon</title>
+  <rect width="64" height="64" rx="12" fill="#f2effb"/>
+  <circle cx="32" cy="31" r="20" fill="none" stroke="#dfd8f2" stroke-width="1.5" stroke-dasharray="40 90" transform="rotate(70 32 31)" opacity="0.45"/>
+  <circle cx="32" cy="31" r="16" fill="none" stroke="#989cff" stroke-width="5" stroke-linecap="round" stroke-dasharray="84 26" transform="rotate(-34 32 31)" opacity="0.92"/>
+  <path d="M26 27L20 32L26 37M38 27L44 32L38 37" fill="none" stroke="#2b2044" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="47" cy="15" r="2" fill="#f1b0ff" opacity="0.55"/>
+</svg>

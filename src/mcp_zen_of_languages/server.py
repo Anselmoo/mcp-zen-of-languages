@@ -75,37 +75,37 @@ from mcp_zen_of_languages.telemetry import analysis_span
 
 SERVER_ICONS = [
     Icon(
-        src="https://anselmoo.github.io/mcp-zen-of-languages/assets/zen-icon.svg",
+        src="https://anselmoo.github.io/mcp-zen-of-languages/assets/icons/zen-icon.svg",
         mimeType="image/svg+xml",
     ),
 ]
 ANALYSIS_TOOL_ICONS = [
     Icon(
-        src="https://anselmoo.github.io/mcp-zen-of-languages/assets/tool-analysis.svg",
+        src="https://anselmoo.github.io/mcp-zen-of-languages/assets/icons/tool-analysis.svg",
         mimeType="image/svg+xml",
     ),
 ]
 PROMPT_TOOL_ICONS = [
     Icon(
-        src="https://anselmoo.github.io/mcp-zen-of-languages/assets/tool-prompts.svg",
+        src="https://anselmoo.github.io/mcp-zen-of-languages/assets/icons/tool-prompts.svg",
         mimeType="image/svg+xml",
     ),
 ]
 ONBOARDING_TOOL_ICONS = [
     Icon(
-        src="https://anselmoo.github.io/mcp-zen-of-languages/assets/tool-onboarding.svg",
+        src="https://anselmoo.github.io/mcp-zen-of-languages/assets/icons/tool-onboarding.svg",
         mimeType="image/svg+xml",
     ),
 ]
 RESOURCE_ICONS = [
     Icon(
-        src="https://anselmoo.github.io/mcp-zen-of-languages/assets/resource.svg",
+        src="https://anselmoo.github.io/mcp-zen-of-languages/assets/icons/resource.svg",
         mimeType="image/svg+xml",
     ),
 ]
 PROMPT_RESOURCE_ICONS = [
     Icon(
-        src="https://anselmoo.github.io/mcp-zen-of-languages/assets/prompt.svg",
+        src="https://anselmoo.github.io/mcp-zen-of-languages/assets/icons/prompt.svg",
         mimeType="image/svg+xml",
     ),
 ]

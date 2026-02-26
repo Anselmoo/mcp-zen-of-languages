@@ -34,6 +34,22 @@ prompts:
       main ensō, inner glow), brush-splatter dots near the gap for wabi-sabi texture,
       small stone cluster at bottom, warm pink accent dot (#f1b0ff) and cool blue dot
       (#63c8ff). SVG-ready, ~20 elements.
+  mcp_icon_pack:
+    output_dir: "docs/assets/icons"
+    output_files:
+      - zen-icon.svg
+      - tool-analysis.svg
+      - tool-prompts.svg
+      - tool-onboarding.svg
+      - resource.svg
+      - prompt.svg
+    prompt: >-
+      Consistent MCP icon pack in the existing Caligo zen aesthetic for docs/assets/icons:
+      one master mark (zen-icon.svg) plus five tool/resource marks
+      (tool-analysis.svg, tool-prompts.svg, tool-onboarding.svg, resource.svg, prompt.svg).
+      Keep each icon as clean vector line art with soft rounded geometry, visible at 16-64px,
+      ensō/wabi-sabi cues, and balanced warm/cool accents (#f1b0ff / #63c8ff) over accent
+      violet gradients (#989cff→#c9b3ff) on transparent backgrounds.
   hero:
     prompt: >-
       Wide hero illustration (1200×700) of a full zen garden scene: layered mountain

@@ -89,7 +89,7 @@ def _run(cmd: list[str], *, dry_run: bool, label: str) -> str:
         print(f"  [dry-run] Would run: {pretty}")
         return ""
     print(f"  $ {pretty}")
-    result = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, check=False)
+    result = subprocess.run(cmd, capture_output=True, text=True, check=False)
     if result.returncode != 0:
         print(result.stdout)
         print(result.stderr, file=sys.stderr)
@@ -103,7 +103,6 @@ def _run(cmd: list[str], *, dry_run: bool, label: str) -> str:
 def _capture(cmd: list[str]) -> str:
     return subprocess.run(
         cmd,
-        cwd=ROOT,
         capture_output=True,
         text=True,
         check=False,

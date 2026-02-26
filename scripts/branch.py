@@ -89,7 +89,7 @@ def _run(cmd: list[str], *, dry_run: bool, label: str) -> str:
         print(f"  [dry-run] Would run: {pretty}")
         return ""
     print(f"  $ {pretty}")
-    result = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, check=False)
+    result = subprocess.run(cmd, capture_output=True, text=True, check=False)
     if result.returncode != 0:
         print(result.stdout)
         print(result.stderr, file=sys.stderr)
@@ -103,7 +103,6 @@ def _run(cmd: list[str], *, dry_run: bool, label: str) -> str:
 def _capture(cmd: list[str]) -> str:
     return subprocess.run(
         cmd,
-        cwd=ROOT,
         capture_output=True,
         text=True,
         check=False,
@@ -143,21 +142,15 @@ def cmd_new(args: argparse.Namespace) -> None:
     print(f"  Branch : {branch_name}")
     print(f"  Title  : {commit_title}\n")
 
-    if not args.dry_run:
-        if not _working_tree_clean():
-            print(
-                "⚠  Working tree has uncommitted changes.\n"
-                "   Commit or stash them first, or use --dry-run to preview.",
-                file=sys.stderr,
-            )
-            sys.exit(1)
-        if _branch_exists(branch_name):
-            print(
-                f"⚠  Branch '{branch_name}' already exists.\n"
-                "   Delete it first or choose a different description.",
-                file=sys.stderr,
-            )
-            sys.exit(1)
+    if not args.dry_run and _branch_exists(branch_name):
+        print(
+            f"⚠  Branch '{branch_name}' already exists.\n"
+            "   Delete it first or choose a different description.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    has_changes = not args.dry_run and not _working_tree_clean()
 
     print("── Creating branch ───────────────────────────────────────────────")
     _run(
@@ -166,7 +159,10 @@ def cmd_new(args: argparse.Namespace) -> None:
         label="git checkout -b",
     )
 
-    print(f"\n✅ Done!  Suggested commit title:\n\n    {commit_title}\n")
+    if has_changes:
+        print("→  Uncommitted changes migrated to new branch.\n")
+
+    print(f"✅ Done!  Suggested commit title:\n\n    {commit_title}\n")
     if args.dry_run:
         print("[dry-run complete — no changes made]")
 

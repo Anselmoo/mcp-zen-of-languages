@@ -1,3 +1,15 @@
+## [0.4.0] – 2026-02-26
+
+### Added
+- Add philosophy document and update links in README; adjust argument names in analyzers (#90)
+- enhance language analyzers with AST parsing capabilities (#71)
+
+### Fixed
+- Improve branch creation checks and add tests for uncommitted changes (#87)
+
+### Documentation
+- MCP-first reorientation of README.md and installation docs (#70)
+
 ## [0.3.0] – 2026-02-22
 
 ### Added

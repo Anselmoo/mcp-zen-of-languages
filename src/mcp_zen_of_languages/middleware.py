@@ -165,6 +165,18 @@ class RateLimitingMiddleware(Middleware):
         self._calls: dict[str, deque[float]] = {}
         self._last_seen: dict[str, float] = {}
 
+    def _prune_stale_buckets(self, now: float) -> None:
+        """Drop stale buckets to bound memory in long-lived sessions."""
+        for key in list(self._calls):
+            bucket = self._calls.get(key)
+            if bucket is None:
+                continue
+            while bucket and now - bucket[0] > self.window_seconds:
+                bucket.popleft()
+            if not bucket:
+                self._calls.pop(key, None)
+                self._last_seen.pop(key, None)
+
     async def on_call_tool(
         self,
         context: MiddlewareContext[object],
@@ -172,18 +184,18 @@ class RateLimitingMiddleware(Middleware):
     ) -> object:
         """Enforce per-tool call ceilings per session and forward when allowed."""
         now = monotonic()
+        self._prune_stale_buckets(now)
         tool = _tool_name(context)
         key = f"{_session_key(context)}:{tool}"
+        if key not in self._calls and len(self._calls) >= self.max_buckets:
+            oldest_key = min(
+                self._last_seen.items(),
+                key=lambda item: item[1],
+            )[0]
+            self._calls.pop(oldest_key, None)
+            self._last_seen.pop(oldest_key, None)
         bucket = self._calls.setdefault(key, deque())
         self._last_seen[key] = now
-        had_entries = bool(bucket)
-        while bucket and now - bucket[0] > self.window_seconds:
-            bucket.popleft()
-        if had_entries and not bucket:
-            self._calls.pop(key, None)
-            self._last_seen.pop(key, None)
-            bucket = self._calls.setdefault(key, deque())
-            self._last_seen[key] = now
         if len(bucket) >= self.max_calls:
             msg = (
                 f"Rate limit exceeded for '{tool}' "
@@ -191,10 +203,6 @@ class RateLimitingMiddleware(Middleware):
             )
             raise ValueError(msg)
         bucket.append(now)
-        if len(self._calls) > self.max_buckets and self._last_seen:
-            oldest_key = min(self._last_seen, key=self._last_seen.get)
-            self._calls.pop(oldest_key, None)
-            self._last_seen.pop(oldest_key, None)
         return await call_next(context)
 
 
@@ -235,6 +243,12 @@ class DuplicateCallSuppressionMiddleware(Middleware):
         ]
         for session_id in stale_sessions:
             self._state.pop(session_id, None)
+        if session not in self._state and len(self._state) >= self.max_sessions:
+            oldest_session = min(
+                self._state,
+                key=lambda session_id: self._state[session_id][1],
+            )
+            self._state.pop(oldest_session, None)
         previous = self._state.get(session)
         if (
             previous is None
@@ -251,12 +265,6 @@ class DuplicateCallSuppressionMiddleware(Middleware):
                 "Rethink parameters or switch to repository-level analysis."
             )
             raise ValueError(msg)
-        if len(self._state) > self.max_sessions and self._state:
-            oldest_session = min(
-                self._state,
-                key=lambda session_id: self._state[session_id][1],
-            )
-            self._state.pop(oldest_session, None)
         return await call_next(context)
 
 

@@ -5,6 +5,7 @@ from types import SimpleNamespace
 import pytest
 from pydantic import BaseModel
 
+import mcp_zen_of_languages.middleware as middleware_module
 from mcp_zen_of_languages.middleware import (
     DuplicateCallSuppressionMiddleware,
     MiddlewareSettings,
@@ -104,7 +105,7 @@ async def test_duplicate_call_suppression_rejects_repeated_loops():
 
 
 @pytest.mark.asyncio
-async def test_duplicate_call_suppression_evicts_stale_sessions():
+async def test_duplicate_call_suppression_evicts_stale_sessions(monkeypatch):
     middleware = DuplicateCallSuppressionMiddleware(max_repeats=2, window_seconds=1)
     old_context = _tool_context(
         name="analyze_zen_violations",
@@ -120,8 +121,9 @@ async def test_duplicate_call_suppression_evicts_stale_sessions():
     async def call_next(_context: object) -> object:
         return {"ok": True}
 
+    times = iter([0.0, 2.0])
+    monkeypatch.setattr(middleware_module, "monotonic", lambda: next(times))
     await middleware.on_call_tool(old_context, call_next)
-    middleware._state["old-session"] = (middleware._state["old-session"][0], 0.0, 1)
     await middleware.on_call_tool(fresh_context, call_next)
     assert "old-session" not in middleware._state
     assert "fresh-session" in middleware._state

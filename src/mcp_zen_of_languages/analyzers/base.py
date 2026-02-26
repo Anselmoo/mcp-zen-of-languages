@@ -514,6 +514,16 @@ class DetectionPipeline:
         """
         self.detectors = detectors
 
+    @staticmethod
+    def _detector_name(detector: ViolationDetector) -> str:
+        """Normalize detector names for logs and telemetry attributes."""
+        detector_name_attr = getattr(detector, "name", None)
+        if callable(detector_name_attr):
+            return str(detector_name_attr())
+        if isinstance(detector_name_attr, str):
+            return detector_name_attr
+        return detector.__class__.__name__
+
     def run(
         self,
         context: AnalysisContext,
@@ -546,14 +556,7 @@ class DetectionPipeline:
         for detector in self.detectors:
             try:
                 detector_config = detector.config or config
-
-                detector_name_attr = getattr(detector, "name", None)
-                if callable(detector_name_attr):
-                    detector_name = str(detector_name_attr())
-                elif isinstance(detector_name_attr, str):
-                    detector_name = detector_name_attr
-                else:
-                    detector_name = detector.__class__.__name__
+                detector_name = self._detector_name(detector)
                 with analysis_span(
                     "detector.run",
                     {"language": context.language, "detector": detector_name},
@@ -562,14 +565,7 @@ class DetectionPipeline:
                 all_violations.extend(violations)
             except Exception:
                 # Log error but continue with other detectors
-                detector_name_attr = getattr(detector, "name", None)
-                detector_name = (
-                    str(detector_name_attr())
-                    if callable(detector_name_attr)
-                    else detector_name_attr
-                    if isinstance(detector_name_attr, str)
-                    else detector.__class__.__name__
-                )
+                detector_name = self._detector_name(detector)
                 logger.exception("Error in detector %s", detector_name)
 
         return all_violations

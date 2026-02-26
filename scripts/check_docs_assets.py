@@ -177,7 +177,7 @@ def _extract_svg_dimensions(svg_content: str) -> tuple[int, int] | None:
     width_match = SVG_WIDTH_RE.search(svg_content)
     height_match = SVG_HEIGHT_RE.search(svg_content)
     if width_match and height_match:
-        return int(float(width_match[1])), int(float(height_match[1]))
+        return int(float(width_match[1])), int(float(height_match[2]))
 
     return None
 

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -12,6 +13,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 BRANCH_SCRIPT = ROOT / "scripts" / "branch.py"
 MAX_BRANCH_SLUG_LENGTH = 60
+
+GIT: str = shutil.which("git") or "git"  # Fallback to PATH lookup
 
 
 def _import_branch():

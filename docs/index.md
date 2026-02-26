@@ -17,7 +17,7 @@ Every programming language has a philosophy — a sense of what "good code" look
 
 - :material-rocket-launch:{ .lg .middle } **Start fast**
 
-  ***
+  ---
 
   Install, initialize, and run your first analysis in under two minutes.
 
@@ -25,7 +25,7 @@ Every programming language has a philosophy — a sense of what "good code" look
 
 - :material-console:{ .lg .middle } **Use the CLI**
 
-  ***
+  ---
 
   Run `zen` for local checks, exports, and CI automation with JSON/Markdown outputs.
 
@@ -33,7 +33,7 @@ Every programming language has a philosophy — a sense of what "good code" look
 
 - :material-api:{ .lg .middle } **Integrate via MCP**
 
-  ***
+  ---
 
   Connect to VS Code, Copilot, and other MCP-compatible clients for AI-assisted analysis.
 
@@ -41,7 +41,7 @@ Every programming language has a philosophy — a sense of what "good code" look
 
 - :material-translate:{ .lg .middle } **Explore language coverage**
 
-  ***
+  ---
 
   From Python's PEP 20 to Rust's ownership idioms — each language has its own zen.
 
@@ -49,7 +49,7 @@ Every programming language has a philosophy — a sense of what "good code" look
 
 - :material-wrench-cog:{ .lg .middle } **Solution workflow**
 
-  ***
+  ---
 
   Analyze code, generate remediation prompts, and turn findings into actionable fixes.
 
@@ -97,7 +97,7 @@ zen report path/to/project
 
 - :material-check-all:{ .lg .middle } **Full Analysis**
 
-  ***
+  ---
 
   AST parsing, cyclomatic complexity, dependency graphs, maintainability index. The deepest analysis available.
 
@@ -105,7 +105,7 @@ zen report path/to/project
 
 - :material-shield-check:{ .lg .middle } **Rule-Driven**
 
-  ***
+  ---
 
   Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
 
@@ -113,7 +113,7 @@ zen report path/to/project
 
 - :material-language-markdown:{ .lg .middle } **Documentation & Markup**
 
-  ***
+  ---
 
   Markup-focused detectors for docs and technical writing quality, structure, and maintainability.
 
@@ -121,7 +121,7 @@ zen report path/to/project
 
 - :material-source-branch:{ .lg .middle } **Workflow Automation**
 
-  ***
+  ---
 
   CI/CD-specific security and maintainability checks for pipeline files and reusable workflow patterns.
 
@@ -129,7 +129,7 @@ zen report path/to/project
 
 - :material-file-cog:{ .lg .middle } **Config Validation**
 
-  ***
+  ---
 
   Schema and structure-focused detectors for data formats. Checks consistency, naming conventions, and format-specific best practices.
 
@@ -147,31 +147,31 @@ The MCP server exposes **13 tools** across five families, plus **3 resources** a
 
 - :material-magnify:{ .lg .middle } **Analysis** (3 tools)
 
-  ***
+  ---
 
   `analyze_zen_violations` · `analyze_repository` · `check_architectural_patterns`
 
 - :material-file-document-outline:{ .lg .middle } **Reporting** (3 tools)
 
-  ***
+  ---
 
   `generate_prompts` · `generate_agent_tasks` · `generate_report`
 
 - :material-cog-outline:{ .lg .middle } **Configuration** (3 tools)
 
-  ***
+  ---
 
   `get_config` · `set_config_override` · `clear_config_overrides`
 
 - :material-tag-text-outline:{ .lg .middle } **Metadata** (3 tools)
 
-  ***
+  ---
 
   `detect_languages` · `get_supported_languages` · `export_rule_detector_mapping`
 
 - :material-rocket-launch-outline:{ .lg .middle } **Onboarding** (1 tool)
 
-  ***
+  ---
 
   `onboard_project` — initialise `zen-config.yaml` for any repository
 

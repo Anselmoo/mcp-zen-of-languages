@@ -11,11 +11,45 @@ from time import monotonic, perf_counter
 from typing import TYPE_CHECKING
 
 from fastmcp.server.middleware import CallNext, Middleware, MiddlewareContext
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.storage import CacheBackend
 
 logger = logging.getLogger(__name__)
+
+
+class MiddlewareSettings(BaseModel):
+    """Validated environment-backed defaults for middleware guardrails."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    rate_limit_max_calls: int = Field(default=40, ge=1)
+    rate_limit_window_seconds: int = Field(default=30, ge=1)
+    repeat_limit: int = Field(default=6, ge=1)
+    cache_ttl_seconds: int = Field(default=30, ge=1)
+    response_max_bytes: int = Field(default=2_000_000, ge=1)
+
+    @classmethod
+    def from_env(cls) -> MiddlewareSettings:
+        """Load and validate middleware settings from environment variables."""
+        raw = {
+            "rate_limit_max_calls": os.environ.get("ZEN_RATE_LIMIT_MAX_CALLS", "40"),
+            "rate_limit_window_seconds": os.environ.get(
+                "ZEN_RATE_LIMIT_WINDOW_SECONDS", "30"
+            ),
+            "repeat_limit": os.environ.get("ZEN_REPEAT_LIMIT", "6"),
+            "cache_ttl_seconds": os.environ.get("ZEN_CACHE_TTL_SECONDS", "30"),
+            "response_max_bytes": os.environ.get("ZEN_RESPONSE_MAX_BYTES", "2000000"),
+        }
+        try:
+            return cls.model_validate(raw)
+        except ValidationError:
+            logger.warning(
+                "Invalid middleware env config detected; falling back to defaults.",
+                exc_info=True,
+            )
+            return cls()
 
 
 def _tool_name(context: MiddlewareContext[object]) -> str:
@@ -117,11 +151,19 @@ class ErrorHandlingMiddleware(Middleware):
 class RateLimitingMiddleware(Middleware):
     """Apply per-session tool-call rate limits using a sliding window."""
 
-    def __init__(self, max_calls: int = 40, window_seconds: int = 30) -> None:
+    def __init__(
+        self,
+        max_calls: int = 40,
+        window_seconds: int = 30,
+        *,
+        max_buckets: int = 4096,
+    ) -> None:
         """Initialize rate-limit thresholds for call frequency control."""
         self.max_calls = max_calls
         self.window_seconds = window_seconds
+        self.max_buckets = max_buckets
         self._calls: dict[str, deque[float]] = {}
+        self._last_seen: dict[str, float] = {}
 
     async def on_call_tool(
         self,
@@ -133,8 +175,15 @@ class RateLimitingMiddleware(Middleware):
         tool = _tool_name(context)
         key = f"{_session_key(context)}:{tool}"
         bucket = self._calls.setdefault(key, deque())
+        self._last_seen[key] = now
+        had_entries = bool(bucket)
         while bucket and now - bucket[0] > self.window_seconds:
             bucket.popleft()
+        if had_entries and not bucket:
+            self._calls.pop(key, None)
+            self._last_seen.pop(key, None)
+            bucket = self._calls.setdefault(key, deque())
+            self._last_seen[key] = now
         if len(bucket) >= self.max_calls:
             msg = (
                 f"Rate limit exceeded for '{tool}' "
@@ -142,16 +191,27 @@ class RateLimitingMiddleware(Middleware):
             )
             raise ValueError(msg)
         bucket.append(now)
+        if len(self._calls) > self.max_buckets and self._last_seen:
+            oldest_key = min(self._last_seen, key=self._last_seen.get)
+            self._calls.pop(oldest_key, None)
+            self._last_seen.pop(oldest_key, None)
         return await call_next(context)
 
 
 class DuplicateCallSuppressionMiddleware(Middleware):
     """Reject identical rapid tool-call loops and force workflow rethinking."""
 
-    def __init__(self, max_repeats: int = 6, window_seconds: int = 30) -> None:
+    def __init__(
+        self,
+        max_repeats: int = 6,
+        window_seconds: int = 30,
+        *,
+        max_sessions: int = 4096,
+    ) -> None:
         """Configure repeat thresholds for identical call suppression."""
         self.max_repeats = max_repeats
         self.window_seconds = window_seconds
+        self.max_sessions = max_sessions
         self._state: dict[str, tuple[str, float, int]] = {}
 
     async def on_call_tool(
@@ -168,6 +228,13 @@ class DuplicateCallSuppressionMiddleware(Middleware):
         fingerprint = sha256(f"{tool}:{fingerprint_raw}".encode()).hexdigest()
         session = _session_key(context)
         now = monotonic()
+        stale_sessions = [
+            session_id
+            for session_id, (_fingerprint, last_seen, _count) in self._state.items()
+            if now - last_seen > self.window_seconds
+        ]
+        for session_id in stale_sessions:
+            self._state.pop(session_id, None)
         previous = self._state.get(session)
         if (
             previous is None
@@ -184,6 +251,12 @@ class DuplicateCallSuppressionMiddleware(Middleware):
                 "Rethink parameters or switch to repository-level analysis."
             )
             raise ValueError(msg)
+        if len(self._state) > self.max_sessions and self._state:
+            oldest_session = min(
+                self._state,
+                key=lambda session_id: self._state[session_id][1],
+            )
+            self._state.pop(oldest_session, None)
         return await call_next(context)
 
 
@@ -230,7 +303,7 @@ class ResponseCachingMiddleware(Middleware):
         logger.info(
             json.dumps({"event": "mcp.cache.set", "tool": tool, "key": cache_key})
         )
-        return result
+        return normalized
 
     @staticmethod
     def _cache_key(tool: str, arguments: dict[str, object]) -> str:
@@ -266,23 +339,22 @@ class ResponseLimitingMiddleware(Middleware):
 
 def build_default_middleware(*, cache_backend: CacheBackend) -> list[Middleware]:
     """Return the default middleware chain for the MCP server."""
-    max_calls = int(os.environ.get("ZEN_RATE_LIMIT_MAX_CALLS", "40"))
-    window_seconds = int(os.environ.get("ZEN_RATE_LIMIT_WINDOW_SECONDS", "30"))
-    repeat_limit = int(os.environ.get("ZEN_REPEAT_LIMIT", "6"))
-    cache_ttl_seconds = int(os.environ.get("ZEN_CACHE_TTL_SECONDS", "30"))
-    max_response_bytes = int(os.environ.get("ZEN_RESPONSE_MAX_BYTES", "2000000"))
+    settings = MiddlewareSettings.from_env()
     return [
         ErrorHandlingMiddleware(),
         LoggingMiddleware(),
-        RateLimitingMiddleware(max_calls=max_calls, window_seconds=window_seconds),
+        RateLimitingMiddleware(
+            max_calls=settings.rate_limit_max_calls,
+            window_seconds=settings.rate_limit_window_seconds,
+        ),
         DuplicateCallSuppressionMiddleware(
-            max_repeats=repeat_limit,
-            window_seconds=window_seconds,
+            max_repeats=settings.repeat_limit,
+            window_seconds=settings.rate_limit_window_seconds,
         ),
         ResponseCachingMiddleware(
             cache_backend=cache_backend,
-            ttl_seconds=cache_ttl_seconds,
+            ttl_seconds=settings.cache_ttl_seconds,
         ),
         TimingMiddleware(),
-        ResponseLimitingMiddleware(max_response_bytes=max_response_bytes),
+        ResponseLimitingMiddleware(max_response_bytes=settings.response_max_bytes),
     ]

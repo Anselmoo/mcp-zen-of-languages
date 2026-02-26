@@ -20,9 +20,9 @@ def analysis_span(
     except ImportError:
         with nullcontext() as span:
             yield span
-
-    tracer = get_tracer()
-    with tracer.start_as_current_span(name) as span:
-        if attributes:
-            span.set_attributes(attributes)
-        yield span
+    else:
+        tracer = get_tracer()
+        with tracer.start_as_current_span(name) as span:
+            if attributes:
+                span.set_attributes(attributes)
+            yield span

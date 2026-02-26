@@ -47,6 +47,7 @@ from mcp_zen_of_languages.analyzers.analyzer_factory import (
 from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
 from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
 from mcp_zen_of_languages.config import load_config
+from mcp_zen_of_languages.middleware import build_default_middleware
 from mcp_zen_of_languages.models import (
     AnalysisResult,
     LanguagesResult,
@@ -68,12 +69,15 @@ from mcp_zen_of_languages.reporting.prompts import build_prompt_bundle
 from mcp_zen_of_languages.reporting.report import generate_report
 from mcp_zen_of_languages.rules import get_all_languages, get_language_zen
 from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
+from mcp_zen_of_languages.telemetry import analysis_span
 
 mcp = fastmcp.FastMCP(
     name="zen_of_languages",
     version=__version__,
     instructions="Multi-language architectural and idiomatic code analysis via CLI and MCP server.",
     website_url="https://anselmoo.github.io/mcp-zen-of-languages/",
+    middleware=build_default_middleware(),
+    list_page_size=100,
 )
 
 CONFIG = load_config(path=os.environ.get("ZEN_CONFIG_PATH"))
@@ -295,6 +299,7 @@ async def detect_languages(repo_path: str) -> LanguagesResult:
 
 @mcp.tool(
     name="analyze_zen_violations",
+    version="1.0",
     title="Analyze zen violations",
     description="Analyze a code snippet against zen rules and return analysis results.",
     tags={"analysis", "zen", "snippet"},
@@ -362,41 +367,46 @@ async def analyze_zen_violations(
 
     """
     canonical_language = _canonical_language(language)
-    supported = sorted(supported_languages())
-    if canonical_language not in supported:
-        supported_list = ", ".join(supported)
-        msg = (
-            f"Unsupported language '{language}'. Supported languages: {supported_list}."
+    with analysis_span(
+        "analyze_zen_violations",
+        {"language": canonical_language, "tool.version": "1.0"},
+    ):
+        supported = sorted(supported_languages())
+        if canonical_language not in supported:
+            supported_list = ", ".join(supported)
+            msg = (
+                f"Unsupported language '{language}'. Supported languages: {supported_list}."
+            )
+            raise ValueError(msg)
+
+        runtime_override = _runtime_overrides.get(canonical_language)
+        effective_threshold = severity_threshold
+        if effective_threshold is None and runtime_override is not None:
+            effective_threshold = runtime_override.severity_threshold
+        if effective_threshold is None:
+            effective_threshold = CONFIG.severity_threshold
+
+        analyzer = create_analyzer(
+            canonical_language,
+            pipeline_config=_pipeline_with_runtime_overrides(canonical_language),
         )
-        raise ValueError(msg)
-
-    runtime_override = _runtime_overrides.get(canonical_language)
-    effective_threshold = severity_threshold
-    if effective_threshold is None and runtime_override is not None:
-        effective_threshold = runtime_override.severity_threshold
-    if effective_threshold is None:
-        effective_threshold = CONFIG.severity_threshold
-
-    analyzer = create_analyzer(
-        canonical_language,
-        pipeline_config=_pipeline_with_runtime_overrides(canonical_language),
-    )
-    analyze_kwargs: dict[str, object] = {}
-    if enable_external_tools:
-        analyze_kwargs["enable_external_tools"] = True
-    if allow_temporary_runners:
-        analyze_kwargs["allow_temporary_tools"] = True
-    result = analyzer.analyze(code, **analyze_kwargs)
-    result.violations = [
-        violation
-        for violation in result.violations
-        if violation.severity >= effective_threshold
-    ]
-    return result
+        analyze_kwargs: dict[str, object] = {}
+        if enable_external_tools:
+            analyze_kwargs["enable_external_tools"] = True
+        if allow_temporary_runners:
+            analyze_kwargs["allow_temporary_tools"] = True
+        result = analyzer.analyze(code, **analyze_kwargs)
+        result.violations = [
+            violation
+            for violation in result.violations
+            if violation.severity >= effective_threshold
+        ]
+        return result
 
 
 @mcp.tool(
     name="generate_prompts",
+    version="1.0",
     title="Generate remediation prompts",
     description="Generate remediation prompts from zen analysis results.",
     tags={"prompts", "remediation"},
@@ -444,24 +454,28 @@ async def generate_prompts_tool(
 
     """
     canonical_language = _canonical_language(language)
-    supported = sorted(supported_languages())
-    if canonical_language not in supported:
-        supported_list = ", ".join(supported)
-        msg = (
-            f"Unsupported language '{language}'. Supported languages: {supported_list}."
+    with analysis_span(
+        "generate_prompts",
+        {"language": canonical_language, "tool.version": "1.0"},
+    ):
+        supported = sorted(supported_languages())
+        if canonical_language not in supported:
+            supported_list = ", ".join(supported)
+            msg = (
+                f"Unsupported language '{language}'. Supported languages: {supported_list}."
+            )
+            raise ValueError(msg)
+        analyzer = create_analyzer(
+            canonical_language,
+            pipeline_config=_pipeline_with_runtime_overrides(canonical_language),
         )
-        raise ValueError(msg)
-    analyzer = create_analyzer(
-        canonical_language,
-        pipeline_config=_pipeline_with_runtime_overrides(canonical_language),
-    )
-    analyze_kwargs: dict[str, object] = {}
-    if enable_external_tools:
-        analyze_kwargs["enable_external_tools"] = True
-    if allow_temporary_runners:
-        analyze_kwargs["allow_temporary_tools"] = True
-    result = analyzer.analyze(code, **analyze_kwargs)
-    return build_prompt_bundle([result])
+        analyze_kwargs: dict[str, object] = {}
+        if enable_external_tools:
+            analyze_kwargs["enable_external_tools"] = True
+        if allow_temporary_runners:
+            analyze_kwargs["allow_temporary_tools"] = True
+        result = analyzer.analyze(code, **analyze_kwargs)
+        return build_prompt_bundle([result])
 
 
 async def _analyze_repository_internal(  # noqa: C901, PLR0913
@@ -508,70 +522,74 @@ async def _analyze_repository_internal(  # noqa: C901, PLR0913
         carrying the file path, detected language, and its
         ``AnalysisResult``.
     """
-    repo = Path(repo_path)
-    if languages:
-        targets: list[tuple[Path, str]] = []
-        for language in languages:
-            canonical_language = _canonical_language(language)
-            targets.extend(_shared_collect_targets(repo, canonical_language))
-    else:
-        targets = _shared_collect_targets(repo, None)
+    with analysis_span(
+        "analyze_repository.internal",
+        {"repo_path": repo_path, "max_files": max_files},
+    ):
+        repo = Path(repo_path)
+        if languages:
+            targets: list[tuple[Path, str]] = []
+            for language in languages:
+                canonical_language = _canonical_language(language)
+                targets.extend(_shared_collect_targets(repo, canonical_language))
+        else:
+            targets = _shared_collect_targets(repo, None)
 
-    deduped_targets: list[tuple[Path, str]] = []
-    seen: set[tuple[str, str]] = set()
-    for path, language in targets:
-        key = (str(path), language)
-        if key in seen:
-            continue
-        seen.add(key)
-        deduped_targets.append((path, language))
+        deduped_targets: list[tuple[Path, str]] = []
+        seen: set[tuple[str, str]] = set()
+        for path, language in targets:
+            key = (str(path), language)
+            if key in seen:
+                continue
+            seen.add(key)
+            deduped_targets.append((path, language))
 
-    counts: dict[str, int] = {}
-    limited_targets: list[tuple[Path, str]] = []
-    for path, language in deduped_targets:
-        current = counts.get(language, 0)
-        if current >= max_files:
-            continue
-        counts[language] = current + 1
-        limited_targets.append((path, language))
+        counts: dict[str, int] = {}
+        limited_targets: list[tuple[Path, str]] = []
+        for path, language in deduped_targets:
+            current = counts.get(language, 0)
+            if current >= max_files:
+                continue
+            counts[language] = current + 1
+            limited_targets.append((path, language))
 
-    total_targets = len(limited_targets)
-    ordered_paths: list[Path] = []
-    if ctx is not None and total_targets:
-        ctx.report_progress(0, total_targets)
-        grouped_targets: dict[str, list[Path]] = {}
-        for path, language in limited_targets:
-            grouped_targets.setdefault(language, []).append(path)
-        for files in grouped_targets.values():
-            ordered_paths.extend(files)
-    progress_count = 0
+        total_targets = len(limited_targets)
+        ordered_paths: list[Path] = []
+        if ctx is not None and total_targets:
+            ctx.report_progress(0, total_targets)
+            grouped_targets: dict[str, list[Path]] = {}
+            for path, language in limited_targets:
+                grouped_targets.setdefault(language, []).append(path)
+            for files in grouped_targets.values():
+                ordered_paths.extend(files)
+        progress_count = 0
 
-    def _progress_callback() -> None:
-        nonlocal progress_count
-        if ctx is None or total_targets == 0:
-            return
-        progress_count += 1
-        if progress_count <= len(ordered_paths):
-            ctx.log(f"Analyzing {ordered_paths[progress_count - 1]}")
-        ctx.report_progress(progress_count, total_targets)
+        def _progress_callback() -> None:
+            nonlocal progress_count
+            if ctx is None or total_targets == 0:
+                return
+            progress_count += 1
+            if progress_count <= len(ordered_paths):
+                ctx.log(f"Analyzing {ordered_paths[progress_count - 1]}")
+            ctx.report_progress(progress_count, total_targets)
 
-    analysis_results = _shared_analyze_targets(
-        limited_targets,
-        pipeline_resolver=_pipeline_with_runtime_overrides,
-        unsupported_language="placeholder",
-        include_read_errors=True,
-        progress_callback=_progress_callback if total_targets > 0 else None,
-        enable_external_tools=enable_external_tools,
-        allow_temporary_tools=allow_temporary_runners,
-    )
-    return [
-        RepositoryAnalysis(
-            path=result.path or "",
-            language=result.language,
-            result=result,
+        analysis_results = _shared_analyze_targets(
+            limited_targets,
+            pipeline_resolver=_pipeline_with_runtime_overrides,
+            unsupported_language="placeholder",
+            include_read_errors=True,
+            progress_callback=_progress_callback if total_targets > 0 else None,
+            enable_external_tools=enable_external_tools,
+            allow_temporary_tools=allow_temporary_runners,
         )
-        for result in analysis_results
-    ]
+        return [
+            RepositoryAnalysis(
+                path=result.path or "",
+                language=result.language,
+                result=result,
+            )
+            for result in analysis_results
+        ]
 
 
 @mcp.tool(

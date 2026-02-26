@@ -19,6 +19,8 @@ zen-mcp-server
 
 The server communicates via stdin/stdout using the MCP protocol. It doesn't serve HTTP — MCP clients connect to it as a subprocess.
 
+The server enables FastMCP middleware for centralized request logging, timing, and error handling, and emits OpenTelemetry-compatible spans around key analysis tool paths. Tool/resource listing is paginated (`list_page_size=100`) for scalable client discovery.
+
 ## Naming guide (important)
 
 | Concept | Value | Where it is used |

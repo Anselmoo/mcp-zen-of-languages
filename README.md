@@ -57,7 +57,7 @@ Zen of Languages treats idioms as engineering constraints, not style preferences
 - **Architectural feedback** beyond formatting checks.
 - **Actionable prioritization** through severity-guided remediation.
 
-The project is guided by the **[10 Dogmas of Zen](PHILOSOPHY.md)** — a set of language-agnostic principles that drive every detector and architectural decision. Read the full philosophy document for anti-patterns, rationale, and detector mappings.
+The project is guided by the **[10 Dogmas of Zen](https://anselmoo.github.io/mcp-zen-of-languages/philosophy/)** — a set of language-agnostic principles that drive every detector and architectural decision. Read the full philosophy document for anti-patterns, rationale, and detector mappings.
 
 <p align="center">
   <img src="docs/assets/illustration-zen-dogma.svg" alt="The 10 Dogmas of Zen — code quality principles visualised as zen garden stones" width="600" />

@@ -113,7 +113,7 @@ class TsStrictModeDetector(ViolationDetector[TsStrictModeConfig]):
         """Detect violations for the current analysis context.
 
         Args:
-            context (AnalysisContext): Analysis context containing source text and intermediate metrics.
+            _context (AnalysisContext): Analysis context containing source text and intermediate metrics.
             config (TsStrictModeConfig): Typed detector or analyzer configuration that controls thresholds.
 
         Returns:

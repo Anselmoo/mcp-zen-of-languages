@@ -137,7 +137,7 @@ class PythonAnalyzer(BaseAnalyzer, LocationHelperMixin):
 
         Args:
             code: Python source text to measure.
-            ast_tree: Parsed syntax tree (currently unused by radon but
+            _ast_tree: Parsed syntax tree (currently unused by radon but
                 accepted for API symmetry with other language analyzers).
 
         Returns:

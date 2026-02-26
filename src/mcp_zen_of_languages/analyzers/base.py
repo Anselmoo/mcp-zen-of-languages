@@ -1303,7 +1303,7 @@ class LocationHelperMixin:
         convention.
 
         Args:
-            ast_tree: Parsed tree wrapper (currently unused but reserved
+            _ast_tree: Parsed tree wrapper (currently unused but reserved
                 for future tree-sitter adapters that need the root).
             node: AST node expected to carry ``lineno`` (int) and
                 ``col_offset`` (int) attributes.

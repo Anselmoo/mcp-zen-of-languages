@@ -82,7 +82,7 @@ class TypeScriptAnalyzer(BaseAnalyzer):
         """Parse source text into a language parser result when available.
 
         Args:
-            code (str): Source code text being parsed or analyzed.
+            _code (str): Source code text being parsed or analyzed.
 
         Returns:
             ParserResult | None: Normalized parser output, or ``None`` when parsing is unavailable.
@@ -99,7 +99,7 @@ class TypeScriptAnalyzer(BaseAnalyzer):
 
         Args:
             code (str): Source code text being parsed or analyzed.
-            ast_tree (ParserResult | None): Parsed syntax tree produced by the language parser, when available.
+            _ast_tree (ParserResult | None): Parsed syntax tree produced by the language parser, when available.
 
         Returns:
             tuple[CyclomaticSummary | None, float | None, int]: Tuple containing computed metrics in analyzer-defined order.

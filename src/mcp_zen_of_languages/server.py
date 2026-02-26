@@ -36,7 +36,7 @@ from typing import Any, cast
 
 import fastmcp
 from fastmcp.server.tasks import TaskConfig
-from mcp.types import ToolAnnotations
+from mcp.types import Icon, ToolAnnotations
 from pydantic import BaseModel, TypeAdapter
 
 from mcp_zen_of_languages import __version__
@@ -47,6 +47,7 @@ from mcp_zen_of_languages.analyzers.analyzer_factory import (
 from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
 from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
 from mcp_zen_of_languages.config import load_config
+from mcp_zen_of_languages.lifespan import zen_server_lifespan
 from mcp_zen_of_languages.middleware import build_default_middleware
 from mcp_zen_of_languages.models import (
     AnalysisResult,
@@ -69,16 +70,61 @@ from mcp_zen_of_languages.reporting.prompts import build_prompt_bundle
 from mcp_zen_of_languages.reporting.report import generate_report
 from mcp_zen_of_languages.rules import get_all_languages, get_language_zen
 from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
+from mcp_zen_of_languages.storage import create_cache_backend
 from mcp_zen_of_languages.telemetry import analysis_span
+
+SERVER_ICONS = [
+    Icon(
+        src="https://anselmoo.github.io/mcp-zen-of-languages/assets/zen-icon.svg",
+        mimeType="image/svg+xml",
+    ),
+]
+ANALYSIS_TOOL_ICONS = [
+    Icon(
+        src="https://anselmoo.github.io/mcp-zen-of-languages/assets/tool-analysis.svg",
+        mimeType="image/svg+xml",
+    ),
+]
+PROMPT_TOOL_ICONS = [
+    Icon(
+        src="https://anselmoo.github.io/mcp-zen-of-languages/assets/tool-prompts.svg",
+        mimeType="image/svg+xml",
+    ),
+]
+ONBOARDING_TOOL_ICONS = [
+    Icon(
+        src="https://anselmoo.github.io/mcp-zen-of-languages/assets/tool-onboarding.svg",
+        mimeType="image/svg+xml",
+    ),
+]
+RESOURCE_ICONS = [
+    Icon(
+        src="https://anselmoo.github.io/mcp-zen-of-languages/assets/resource.svg",
+        mimeType="image/svg+xml",
+    ),
+]
+PROMPT_RESOURCE_ICONS = [
+    Icon(
+        src="https://anselmoo.github.io/mcp-zen-of-languages/assets/prompt.svg",
+        mimeType="image/svg+xml",
+    ),
+]
+_CACHE_BACKEND = create_cache_backend()
 
 mcp = fastmcp.FastMCP(
     name="zen_of_languages",
     version=__version__,
-    instructions="Multi-language architectural and idiomatic code analysis via CLI and MCP server.",
+    instructions=(
+        "Multi-language architectural and idiomatic code analysis via MCP and CLI. "
+        "In MCP-capable clients, prefer MCP tool invocations over shelling out to CLI commands."
+    ),
     website_url="https://anselmoo.github.io/mcp-zen-of-languages/",
-    middleware=build_default_middleware(),
+    icons=SERVER_ICONS,
+    middleware=build_default_middleware(cache_backend=_CACHE_BACKEND),
+    lifespan=zen_server_lifespan,
     list_page_size=100,
 )
+mcp.zen_cache_backend = _CACHE_BACKEND
 
 CONFIG = load_config(path=os.environ.get("ZEN_CONFIG_PATH"))
 logger = logging.getLogger(__name__)
@@ -103,6 +149,8 @@ MUTATING_ANNOTATIONS = ToolAnnotations(
 BACKGROUND_TASK = TaskConfig(mode="optional", poll_interval=timedelta(seconds=5))
 ANALYZE_ZEN_VIOLATIONS_VERSION = "1.0"
 GENERATE_PROMPTS_VERSION = "1.0"
+ANALYZE_ZEN_VIOLATIONS_V2_VERSION = "2.0"
+GENERATE_PROMPTS_V2_VERSION = "2.0"
 
 
 def _output_schema(annotation: object) -> dict[str, object]:
@@ -186,6 +234,7 @@ class LanguagesResource(BaseModel):
     name="zen_config_resource",
     title="Zen config resource",
     description="Read-only resource exposing current configuration and active overrides.",
+    icons=RESOURCE_ICONS,
 )
 def config_resource() -> "ConfigStatus":
     """Return current configuration status as a read-only MCP resource."""
@@ -197,6 +246,7 @@ def config_resource() -> "ConfigStatus":
     name="zen_rules_resource",
     title="Zen rules resource",
     description="Read-only resource exposing canonical zen principles for a language.",
+    icons=RESOURCE_ICONS,
 )
 def rules_resource(language: str) -> LanguageZenPrinciples:
     """Return canonical zen principles for the requested language key."""
@@ -212,6 +262,7 @@ def rules_resource(language: str) -> LanguageZenPrinciples:
     name="zen_languages_resource",
     title="Zen languages resource",
     description="Read-only resource listing language principle and detector coverage counts.",
+    icons=RESOURCE_ICONS,
 )
 def languages_resource() -> LanguagesResource:
     """Return supported languages with principle and detector counts."""
@@ -239,6 +290,7 @@ def languages_resource() -> LanguagesResource:
     name="zen_remediation_prompt",
     title="Zen remediation prompt",
     description="Generate a remediation prompt scaffold for violations in a language.",
+    icons=PROMPT_RESOURCE_ICONS,
     tags={"prompts", "remediation"},
 )
 def remediation_prompt(language: str, violations: str) -> str:
@@ -304,6 +356,7 @@ async def detect_languages(repo_path: str) -> LanguagesResult:
     version=ANALYZE_ZEN_VIOLATIONS_VERSION,
     title="Analyze zen violations",
     description="Analyze a code snippet against zen rules and return analysis results.",
+    icons=ANALYSIS_TOOL_ICONS,
     tags={"analysis", "zen", "snippet"},
     annotations=READONLY_ANNOTATIONS,
     output_schema=_output_schema(AnalysisResult),
@@ -316,64 +369,74 @@ async def analyze_zen_violations(
     enable_external_tools: bool = False,
     allow_temporary_runners: bool = False,
 ) -> AnalysisResult:
-    r"""Run the full zen analysis pipeline on a single code snippet.
+    """Run v1.0 snippet analysis."""
+    return _analyze_snippet_internal(
+        code=code,
+        language=language,
+        tool_version=ANALYZE_ZEN_VIOLATIONS_VERSION,
+        severity_threshold=severity_threshold,
+        enable_external_tools=enable_external_tools,
+        allow_temporary_runners=allow_temporary_runners,
+        reject_empty_code=False,
+    )
 
-    This is the primary analysis entry-point.  The call progresses through
-    three stages:
 
-    1. **Language routing** — ``language`` is normalised and validated against
-       all analyzers supported by ``create_analyzer``.
-    2. **Analyzer creation** — ``create_analyzer`` builds a language-specific
-       analyzer wired with the pipeline configuration from ``CONFIG``.
-    3. **Pipeline execution** — the analyzer parses the source, computes
-       metrics, runs every registered detector, and returns an
-       ``AnalysisResult`` containing violations, metrics, and an overall
-       quality score.
+@mcp.tool(
+    name="analyze_zen_violations",
+    version=ANALYZE_ZEN_VIOLATIONS_V2_VERSION,
+    title="Analyze zen violations (v2)",
+    description=(
+        "Analyze a code snippet against zen rules with stricter request-quality "
+        "guardrails and richer telemetry metadata."
+    ),
+    icons=ANALYSIS_TOOL_ICONS,
+    tags={"analysis", "zen", "snippet", "v2"},
+    annotations=READONLY_ANNOTATIONS,
+    output_schema=_output_schema(AnalysisResult),
+)
+async def analyze_zen_violations_v2(
+    code: str,
+    language: str,
+    severity_threshold: int | None = None,
+    *,
+    enable_external_tools: bool = False,
+    allow_temporary_runners: bool = False,
+) -> AnalysisResult:
+    """Run v2.0 snippet analysis with non-empty code validation."""
+    return _analyze_snippet_internal(
+        code=code,
+        language=language,
+        tool_version=ANALYZE_ZEN_VIOLATIONS_V2_VERSION,
+        severity_threshold=severity_threshold,
+        enable_external_tools=enable_external_tools,
+        allow_temporary_runners=allow_temporary_runners,
+        reject_empty_code=True,
+    )
 
-    Unsupported languages fail fast with a validation error that includes
-    the list of supported language identifiers.
 
-    Args:
-        code (str): Raw source code to analyse — typically the full contents
-            of a single file read by the MCP client.
-        language (str): Target language identifier such as ``"python"`` or
-            ``"tsx"``.  Aliases like ``"ts"`` and ``"rs"`` are accepted.
-        severity_threshold (int | None): Floor severity that downstream
-            consumers (reports, task generators) should honour.  Falls back
-            to ``CONFIG.severity_threshold`` when omitted.
-        enable_external_tools (bool): Opt-in execution of allow-listed
-            external language tools for deeper diagnostics.
-        allow_temporary_runners (bool): Permit temporary-runner fallback
-            strategies (for example ``npx``/``uvx``) for external tools.
-
-    Returns:
-        AnalysisResult carrying metrics, a scored violation list, and the
-        computed ``overall_score`` (0-100 scale, higher is better).
-
-    Example:
-        ```python
-        result = await analyze_zen_violations(
-            code="def f(x):\\n  if x:\\n    if x > 1:\\n      pass",
-            language="python",
-        )
-        for v in result.violations:
-            print(v.rule_id, v.severity, v.message)
-        ```
-
-    See Also:
-        [`generate_prompts_tool`][mcp_zen_of_languages.server.generate_prompts_tool]:
-            Feeds an ``AnalysisResult`` into the prompt builder for
-            remediation guidance.
-        [`generate_report_tool`][mcp_zen_of_languages.server.generate_report_tool]:
-            Produces a full markdown report from file-level analysis.
-
-    """
+def _analyze_snippet_internal(  # noqa: PLR0913
+    *,
+    code: str,
+    language: str,
+    tool_version: str,
+    severity_threshold: int | None,
+    enable_external_tools: bool,
+    allow_temporary_runners: bool,
+    reject_empty_code: bool,
+) -> AnalysisResult:
+    """Shared analyzer implementation for versioned snippet tools."""
     canonical_language = _canonical_language(language)
+    if reject_empty_code and not code.strip():
+        msg = (
+            "Empty code is not accepted for analyze_zen_violations v2. "
+            "Pass a non-empty snippet or use analyze_repository."
+        )
+        raise ValueError(msg)
     with analysis_span(
         "analyze_zen_violations",
         {
             "language": canonical_language,
-            "tool.version": ANALYZE_ZEN_VIOLATIONS_VERSION,
+            "tool.version": tool_version,
         },
     ):
         supported = sorted(supported_languages())
@@ -412,6 +475,7 @@ async def analyze_zen_violations(
     version=GENERATE_PROMPTS_VERSION,
     title="Generate remediation prompts",
     description="Generate remediation prompts from zen analysis results.",
+    icons=PROMPT_TOOL_ICONS,
     tags={"prompts", "remediation"},
     annotations=READONLY_ANNOTATIONS,
     output_schema=_output_schema(PromptBundle),
@@ -423,43 +487,59 @@ async def generate_prompts_tool(
     enable_external_tools: bool = False,
     allow_temporary_runners: bool = False,
 ) -> PromptBundle:
-    """Analyse code and synthesise remediation prompts for each detected violation.
+    """Generate remediation prompts for v1.0 prompt generation."""
+    return _generate_prompts_internal(
+        code=code,
+        language=language,
+        tool_version=GENERATE_PROMPTS_VERSION,
+        enable_external_tools=enable_external_tools,
+        allow_temporary_runners=allow_temporary_runners,
+    )
 
-    Prompt generation is a two-phase process: the code is first analysed
-    exactly as ``analyze_zen_violations`` would, and the resulting
-    ``AnalysisResult`` is then fed into ``build_prompt_bundle`` which
-    produces both **file-specific** prompts (anchored to a particular
-    violation) and **generic** prompts (language-wide best-practice nudges).
 
-    MCP clients typically call this tool right after reviewing an
-    ``AnalysisResult`` to obtain copy-pasteable refactoring instructions
-    they can present to the developer or inject into an agent workflow.
+@mcp.tool(
+    name="generate_prompts",
+    version=GENERATE_PROMPTS_V2_VERSION,
+    title="Generate remediation prompts (v2)",
+    description=(
+        "Generate remediation prompts with MCP-first guidance metadata and v2 "
+        "versioned prompt semantics."
+    ),
+    icons=PROMPT_TOOL_ICONS,
+    tags={"prompts", "remediation", "v2"},
+    annotations=READONLY_ANNOTATIONS,
+    output_schema=_output_schema(PromptBundle),
+)
+async def generate_prompts_tool_v2(
+    code: str,
+    language: str,
+    *,
+    enable_external_tools: bool = False,
+    allow_temporary_runners: bool = False,
+) -> PromptBundle:
+    """Generate remediation prompts for v2.0 prompt generation."""
+    return _generate_prompts_internal(
+        code=code,
+        language=language,
+        tool_version=GENERATE_PROMPTS_V2_VERSION,
+        enable_external_tools=enable_external_tools,
+        allow_temporary_runners=allow_temporary_runners,
+    )
 
-    Args:
-        code (str): Source code whose violations will drive prompt
-            generation — should match the snippet passed to analysis.
-        language (str): Language identifier used to select the correct
-            analyzer and prompt templates (e.g. ``"python"``).
-        enable_external_tools (bool): Opt-in execution of allow-listed
-            external language tools during analysis.
-        allow_temporary_runners (bool): Permit temporary-runner fallback
-            strategies (for example ``npx``/``uvx``) for external tools.
 
-    Returns:
-        PromptBundle holding ``file_prompts`` with per-violation
-        remediation text and ``generic_prompts`` for broader guidance.
-
-    See Also:
-        [`analyze_zen_violations`][mcp_zen_of_languages.server.analyze_zen_violations]:
-            Produces the raw violations that drive prompt content.
-        [`generate_report_tool`][mcp_zen_of_languages.server.generate_report_tool]:
-            Embeds prompts alongside gap analysis in a full report.
-
-    """
+def _generate_prompts_internal(
+    *,
+    code: str,
+    language: str,
+    tool_version: str,
+    enable_external_tools: bool,
+    allow_temporary_runners: bool,
+) -> PromptBundle:
+    """Shared prompt-generation implementation for versioned prompt tools."""
     canonical_language = _canonical_language(language)
     with analysis_span(
         "generate_prompts",
-        {"language": canonical_language, "tool.version": GENERATE_PROMPTS_VERSION},
+        {"language": canonical_language, "tool.version": tool_version},
     ):
         supported = sorted(supported_languages())
         if canonical_language not in supported:
@@ -1097,6 +1177,7 @@ class OnboardingGuide(BaseModel):
     name="onboard_project",
     title="Onboard a new project",
     description="Get interactive onboarding guidance for setting up zen analysis on a project. Returns recommended configuration based on project characteristics.",
+    icons=ONBOARDING_TOOL_ICONS,
     tags={"onboarding", "setup"},
     annotations=READONLY_ANNOTATIONS,
     output_schema=_output_schema(OnboardingGuide),
@@ -1106,6 +1187,7 @@ async def onboard_project(
     primary_language: str = "python",
     team_size: str = "small",
     strictness: str = "moderate",
+    ctx: fastmcp.Context | None = None,
 ) -> OnboardingGuide:
     """Generate a step-by-step onboarding guide tailored to a project's profile.
 
@@ -1130,6 +1212,8 @@ async def onboard_project(
             threshold scaling.
         strictness (str): Preset name controlling all numeric thresholds
             (``"relaxed"``, ``"moderate"``, or ``"strict"``).
+        ctx (fastmcp.Context | None): Optional FastMCP context used for
+            elicitation when strictness or language values are ambiguous.
 
     Returns:
         OnboardingGuide with ordered steps, each carrying an action key
@@ -1173,13 +1257,46 @@ async def onboard_project(
             "line_length": 79,
         },
     }
-    t = thresholds.get(strictness, thresholds["moderate"])
+    strictness_value = strictness
+    if strictness_value not in thresholds and ctx is not None:
+        response = await ctx.elicit(
+            "Strictness is ambiguous. Choose one option:",
+            response_type=["relaxed", "moderate", "strict"],
+        )
+        if response.action == "accept":
+            strictness_value = str(response.data)
+    if strictness_value not in thresholds:
+        strictness_value = "moderate"
+    t = thresholds[strictness_value]
+
+    canonical_primary_language = _canonical_language(primary_language)
+    supported = sorted(supported_languages())
+    if canonical_primary_language not in supported and ctx is not None:
+        response = await ctx.elicit(
+            (
+                f"Primary language '{primary_language}' is unsupported. "
+                "Select a supported language:"
+            ),
+            response_type=supported,
+        )
+        if response.action == "accept":
+            canonical_primary_language = _canonical_language(str(response.data))
+    if canonical_primary_language not in supported:
+        supported_list = ", ".join(supported)
+        msg = (
+            f"Unsupported language '{primary_language}'. "
+            f"Supported languages: {supported_list}."
+        )
+        raise ValueError(msg)
 
     steps = [
         OnboardingStep(
             step=1,
             title="Configure zen-config.yaml",
-            description=f"Create or update zen-config.yaml in your project root with {strictness} settings.",
+            description=(
+                "Create or update zen-config.yaml in your project root with "
+                f"{strictness_value} settings."
+            ),
             action="create_config",
             example=f"max_cyclomatic_complexity: {t['complexity']}",
         ),
@@ -1188,28 +1305,34 @@ async def onboard_project(
             title="Set up VS Code integration",
             description="Add the MCP server configuration to .vscode/mcp.json for VS Code integration.",
             action="setup_vscode",
-            example='{"mcp": {"servers": {"zen-of-languages": {"command": "uv", "args": ["run", "zen-mcp-server"]}}}}',
+            example='{"servers":{"zen-of-languages":{"command":"uvx","args":["--from","mcp-zen-of-languages","zen-mcp-server"]}}}',
         ),
         OnboardingStep(
             step=3,
             title="Run initial analysis",
             description="Analyze your codebase to establish a baseline of zen violations.",
             action="analyze",
-            example=f"analyze_repository('{project_path}', languages=['{primary_language}'])",
+            example=f"analyze_repository('{project_path}', languages=['{canonical_primary_language}'])",
         ),
         OnboardingStep(
             step=4,
             title="Review and adjust thresholds",
             description="Based on initial results, adjust thresholds using set_config_override if needed.",
             action="tune_config",
-            example=f"set_config_override('{primary_language}', max_cyclomatic_complexity={t['complexity']})",
+            example=f"set_config_override('{canonical_primary_language}', max_cyclomatic_complexity={t['complexity']})",
         ),
         OnboardingStep(
             step=5,
-            title="Integrate with CI/CD",
-            description="Add zen analysis to your CI pipeline for continuous code quality monitoring.",
+            title="Integrate MCP analysis in CI/CD",
+            description=(
+                "Use MCP tool calls in CI agents for continuous code quality "
+                "monitoring; keep terminal CLI checks as optional fallback."
+            ),
             action="ci_integration",
-            example="zen check src/ --severity-threshold 7",
+            example=(
+                f"generate_agent_tasks('{project_path}', "
+                f"languages=['{canonical_primary_language}'], min_severity=7)"
+            ),
         ),
     ]
 
@@ -1217,15 +1340,15 @@ async def onboard_project(
         project_name=project_path.rsplit("/", maxsplit=1)[-1],
         steps=steps,
         recommended_config={
-            "language": primary_language,
+            "language": canonical_primary_language,
             "max_cyclomatic_complexity": t["complexity"],
             "max_nesting_depth": t["nesting"],
             "max_function_length": t["function_length"],
             "max_line_length": t["line_length"],
             "severity_threshold": 5
-            if strictness == "relaxed"
+            if strictness_value == "relaxed"
             else 6
-            if strictness == "moderate"
+            if strictness_value == "moderate"
             else 7,
         },
     )
@@ -1309,7 +1432,9 @@ def _attach_legacy_test_compat() -> None:
     tools_with_annotations = [
         (detect_languages, READONLY_ANNOTATIONS),
         (analyze_zen_violations, READONLY_ANNOTATIONS),
+        (analyze_zen_violations_v2, READONLY_ANNOTATIONS),
         (generate_prompts_tool, READONLY_ANNOTATIONS),
+        (generate_prompts_tool_v2, READONLY_ANNOTATIONS),
         (analyze_repository, READONLY_ANNOTATIONS),
         (generate_agent_tasks_tool, READONLY_ANNOTATIONS),
         (check_architectural_patterns, READONLY_ANNOTATIONS),

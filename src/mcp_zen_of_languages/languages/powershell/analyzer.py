@@ -58,11 +58,11 @@ class PowerShellAnalyzer(BaseAnalyzer):
         """Initialize the PowerShell analyzer with optional configuration.
 
         Args:
-            config (AnalyzerConfig | None): Threshold settings controlling detector sensitivity such as
-                approved verb lists and parameter validation requirements.
-            pipeline_config (PipelineConfig | None): Optional overrides that are merged on top of
+            config (AnalyzerConfig | None, optional): Threshold settings controlling detector sensitivity such as
+                approved verb lists and parameter validation requirements. Default to None.
+            pipeline_config (PipelineConfig | None, optional): Optional overrides that are merged on top of
                 rule-derived detector defaults, allowing per-project tuning
-                via ``zen-config.yaml``.
+                via ``zen-config.yaml``. Default to None.
         """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
@@ -144,7 +144,7 @@ class PowerShellAnalyzer(BaseAnalyzer):
             context (AnalysisContext): Current analysis context with source text and metrics.
 
         Returns:
-            DependencyAnalysis with module dependency edges, or ``None`` when none found.
+            object | None: DependencyAnalysis with module dependency edges, or ``None`` when none found.
         """
         imports: list[str] = []
         for line in context.code.splitlines():

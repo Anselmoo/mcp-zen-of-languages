@@ -330,7 +330,7 @@ async def detect_languages(repo_path: str) -> LanguagesResult:
             for future per-repo config resolution but currently unused.
 
     Returns:
-        LanguagesResult wrapping the list of language strings declared in
+        LanguagesResult: LanguagesResult wrapping the list of language strings declared in
         ``zen-config.yaml`` (e.g. ``["python", "typescript", "go"]``).
 
     Example:
@@ -370,7 +370,15 @@ async def analyze_zen_violations(
     enable_external_tools: bool = False,
     allow_temporary_runners: bool = False,
 ) -> AnalysisResult:
-    """Run v1.0 snippet analysis."""
+    """Run v1.0 snippet analysis.
+
+    Args:
+        code (str): Source code to analyse.
+        language (str): Programming language identifier.
+        severity_threshold (int | None, optional): Minimum severity to include. Default to None.
+        enable_external_tools (bool, optional): Opt-in execution of external linters. Default to False.
+        allow_temporary_runners (bool, optional): Allow temporary tool runners (e.g. npx/uvx). Default to False.
+    """
     return _analyze_snippet_internal(
         code=code,
         language=language,
@@ -403,7 +411,15 @@ async def analyze_zen_violations_v2(
     enable_external_tools: bool = False,
     allow_temporary_runners: bool = False,
 ) -> AnalysisResult:
-    """Run v2.0 snippet analysis with non-empty code validation."""
+    """Run v2.0 snippet analysis with non-empty code validation.
+
+    Args:
+        code (str): Source code to analyse.
+        language (str): Programming language identifier.
+        severity_threshold (int | None, optional): Severity threshold. Default to None.
+        enable_external_tools (bool, optional): Enable external tools. Default to False.
+        allow_temporary_runners (bool, optional): Allow temporary runners. Default to False.
+    """
     return _analyze_snippet_internal(
         code=code,
         language=language,
@@ -488,7 +504,14 @@ async def generate_prompts_tool(
     enable_external_tools: bool = False,
     allow_temporary_runners: bool = False,
 ) -> PromptBundle:
-    """Generate remediation prompts for v1.0 prompt generation."""
+    """Generate remediation prompts for v1.0 prompt generation.
+
+    Args:
+        code (str): Source code to analyse.
+        language (str): Programming language identifier.
+        enable_external_tools (bool, optional): Enable external tools. Default to False.
+        allow_temporary_runners (bool, optional): Allow temporary runners. Default to False.
+    """
     return _generate_prompts_internal(
         code=code,
         language=language,
@@ -518,7 +541,14 @@ async def generate_prompts_tool_v2(
     enable_external_tools: bool = False,
     allow_temporary_runners: bool = False,
 ) -> PromptBundle:
-    """Generate remediation prompts for v2.0 prompt generation."""
+    """Generate remediation prompts for v2.0 prompt generation.
+
+    Args:
+        code (str): Source code to analyse.
+        language (str): Programming language identifier.
+        enable_external_tools (bool, optional): Enable external tools. Default to False.
+        allow_temporary_runners (bool, optional): Allow temporary runners. Default to False.
+    """
     return _generate_prompts_internal(
         code=code,
         language=language,
@@ -588,16 +618,16 @@ async def _analyze_repository_internal(  # noqa: C901, PLR0913
     Args:
         repo_path (str): Absolute or relative path to the repository root
             whose source files will be discovered recursively.
-        languages (list[str] | None): Restrict analysis to these languages.
+        languages (list[str] | None, optional): Restrict analysis to these languages.
             Defaults to ``["python"]`` when omitted.
-        max_files (int): Cap on files analysed per language, preventing
-            runaway analysis on very large repositories.
-        ctx (fastmcp.Context | None): Optional FastMCP context used for
-            progress updates and per-file log messages.
-        enable_external_tools (bool): Opt-in execution of allow-listed
-            external tools while analyzing files.
-        allow_temporary_runners (bool): Permit temporary-runner fallback
-            strategies for external tools.
+        max_files (int, optional): Cap on files analysed per language, preventing
+            runaway analysis on very large repositories. Default to 100.
+        ctx (fastmcp.Context | None, optional): Optional FastMCP context used for
+            progress updates and per-file log messages. Default to None.
+        enable_external_tools (bool, optional): Opt-in execution of allow-listed
+            external tools while analyzing files. Default to False.
+        allow_temporary_runners (bool, optional): Permit temporary-runner fallback
+            strategies for external tools. Default to False.
 
     Returns:
         list[RepositoryAnalysis]: One entry per analysed file, each
@@ -702,19 +732,19 @@ async def analyze_repository(  # noqa: PLR0913
     Args:
         repo_path (str): Absolute path to the repository root.  The MCP
             client typically resolves this from the active workspace.
-        languages (list[str] | None): Restrict analysis to specific
+        languages (list[str] | None, optional): Restrict analysis to specific
             language identifiers.  Defaults to ``["python"]`` internally.
-        max_files (int): Per-language cap on the number of files to
-            analyse, protecting against excessive runtime on monorepos.
-        ctx (fastmcp.Context | None): Optional FastMCP context for progress
-            and log updates during repository analysis.
-        enable_external_tools (bool): Opt-in execution of allow-listed
-            external tools while analyzing files.
-        allow_temporary_runners (bool): Permit temporary-runner fallback
-            strategies for external tools.
+        max_files (int, optional): Per-language cap on the number of files to
+            analyse, protecting against excessive runtime on monorepos. Default to 100.
+        ctx (fastmcp.Context | None, optional): Optional FastMCP context for progress
+            and log updates during repository analysis. Default to None.
+        enable_external_tools (bool, optional): Opt-in execution of allow-listed
+            external tools while analyzing files. Default to False.
+        allow_temporary_runners (bool, optional): Permit temporary-runner fallback
+            strategies for external tools. Default to False.
 
     Returns:
-        List of ``RepositoryAnalysis`` entries, each pairing a file path
+        list[RepositoryAnalysis]: List of ``RepositoryAnalysis`` entries, each pairing a file path
         and language with its ``AnalysisResult``.
 
     Example:
@@ -774,17 +804,17 @@ async def generate_agent_tasks_tool(
     Args:
         repo_path (str): Absolute path to the repository to scan.  All
             eligible source files are discovered recursively.
-        languages (list[str] | None): Restrict scanning to these
-            languages.  Omit to analyse only Python files by default.
-        min_severity (int): Severity floor (1-10 scale).  Violations
-            below this threshold are excluded from the task list.
-        enable_external_tools (bool): Opt-in execution of allow-listed
-            external tools while gathering repository analysis.
-        allow_temporary_runners (bool): Permit temporary-runner fallback
-            strategies for external tools.
+        languages (list[str] | None, optional): Restrict scanning to these
+            languages.  Omit to analyse only Python files by default. Default to None.
+        min_severity (int, optional): Severity floor (1-10 scale).  Violations
+            below this threshold are excluded from the task list. Default to 5.
+        enable_external_tools (bool, optional): Opt-in execution of allow-listed
+            external tools while gathering repository analysis. Default to False.
+        allow_temporary_runners (bool, optional): Permit temporary-runner fallback
+            strategies for external tools. Default to False.
 
     Returns:
-        AgentTaskList containing prioritised tasks ready for automated
+        AgentTaskList: AgentTaskList containing prioritised tasks ready for automated
         remediation, sorted from highest to lowest severity.
 
     See Also:
@@ -872,19 +902,19 @@ async def generate_report_tool(  # noqa: PLR0913
     Args:
         target_path (str): Path to a single file or a directory.  When a
             directory is given, all eligible files inside are analysed.
-        language (str | None): Explicit language override.  When omitted,
-            the language is inferred from file extensions.
-        include_prompts (bool): Append remediation prompt sections derived
-            from ``build_prompt_bundle``.
-        include_analysis (bool): Include the violation-analysis body
-            showing per-rule findings.
-        include_gaps (bool): Include quality-gap and coverage-gap
-            summaries highlighting areas that need attention.
-        ctx (fastmcp.Context | None): Optional FastMCP context used to emit
-            progress and log updates for analyzed targets.
+        language (str | None, optional): Explicit language override.  When omitted,
+            the language is inferred from file extensions. Default to None.
+        include_prompts (bool, optional): Append remediation prompt sections derived
+            from ``build_prompt_bundle``. Default to False.
+        include_analysis (bool, optional): Include the violation-analysis body
+            showing per-rule findings. Default to True.
+        include_gaps (bool, optional): Include quality-gap and coverage-gap
+            summaries highlighting areas that need attention. Default to True.
+        ctx (fastmcp.Context | None, optional): Optional FastMCP context used to emit
+            progress and log updates for analyzed targets. Default to None.
 
     Returns:
-        ReportOutput with ``markdown`` (rendered report text) and ``data``
+        ReportOutput: ReportOutput with ``markdown`` (rendered report text) and ``data``
         (structured dict) ready for MCP client consumption.
 
     See Also:
@@ -930,12 +960,12 @@ async def export_rule_detector_mapping(
     want to list coverage per language.
 
     Args:
-        languages (list[str] | None): Restrict the export to these
+        languages (list[str] | None, optional): Restrict the export to these
             language identifiers.  When omitted, mappings for every
-            registered language are returned.
+            registered language are returned. Default to None.
 
     Returns:
-        Nested dictionary keyed by language, then by rule ID, with
+        dict: Nested dictionary keyed by language, then by rule ID, with
         detector metadata (class name, config schema) as values.
 
     See Also:
@@ -1004,7 +1034,7 @@ def _build_config_status() -> ConfigStatus:
     fields appear, and combines them with the base ``CONFIG`` values.
 
     Returns:
-        ConfigStatus reflecting the merged view of static configuration
+        ConfigStatus: ConfigStatus reflecting the merged view of static configuration
         and any session-scoped overrides currently in effect.
     """
     import os
@@ -1038,7 +1068,7 @@ async def get_config() -> ConfigStatus:
     that an override took effect before launching an analysis run.
 
     Returns:
-        ConfigStatus describing active languages, severity threshold,
+        ConfigStatus: ConfigStatus describing active languages, severity threshold,
         resolved config file path, and a per-language map of overrides.
 
     See Also:
@@ -1079,21 +1109,21 @@ async def set_config_override(  # noqa: PLR0913
     Args:
         language (str): Language whose thresholds should be adjusted
             (e.g. ``"python"``).
-        max_cyclomatic_complexity (int | None): Override the per-function
-            cyclomatic-complexity ceiling.
-        max_nesting_depth (int | None): Override the maximum allowed
-            nesting depth for control-flow blocks.
-        max_function_length (int | None): Override the maximum lines
+        max_cyclomatic_complexity (int | None, optional): Override the per-function
+            cyclomatic-complexity ceiling. Default to None.
+        max_nesting_depth (int | None, optional): Override the maximum allowed
+            nesting depth for control-flow blocks. Default to None.
+        max_function_length (int | None, optional): Override the maximum lines Default to None.
             permitted in a single function body.
-        max_class_length (int | None): Override the maximum lines
-            permitted in a single class definition.
-        max_line_length (int | None): Override the maximum character
-            width for a single source line.
-        severity_threshold (int | None): Override the minimum severity
-            at which violations are surfaced in results.
+        max_class_length (int | None, optional): Override the maximum lines
+            permitted in a single class definition. Default to None.
+        max_line_length (int | None, optional): Override the maximum character
+            width for a single source line. Default to None.
+        severity_threshold (int | None, optional): Override the minimum severity
+            at which violations are surfaced in results. Default to None.
 
     Returns:
-        ConfigStatus reflecting all overrides after this mutation,
+        ConfigStatus: ConfigStatus reflecting all overrides after this mutation,
         confirming the change took effect.
 
     See Also:
@@ -1131,7 +1161,7 @@ async def clear_config_overrides() -> ConfigStatus:
     static configuration file.
 
     Returns:
-        ConfigStatus after all override entries have been cleared.
+        ConfigStatus: ConfigStatus after all override entries have been cleared.
 
     """
     _runtime_overrides.clear()
@@ -1206,18 +1236,18 @@ async def onboard_project(
     Args:
         project_path (str): Absolute path to the project root, used to
             derive the project name and populate example commands.
-        primary_language (str): Language used for example snippets and
-            default pipeline selection (e.g. ``"python"``).
-        team_size (str): Descriptive team-size hint (``"small"``,
+        primary_language (str, optional): Language used for example snippets and
+            default pipeline selection (e.g. ``"python"``). Default to "python".
+        team_size (str, optional): Descriptive team-size hint (``"small"``,
             ``"medium"``, ``"large"``), reserved for future adaptive
-            threshold scaling.
-        strictness (str): Preset name controlling all numeric thresholds
-            (``"relaxed"``, ``"moderate"``, or ``"strict"``).
-        ctx (fastmcp.Context | None): Optional FastMCP context used for
-            elicitation when strictness or language values are ambiguous.
+            threshold scaling. Default to "small".
+        strictness (str, optional): Preset name controlling all numeric thresholds
+            (``"relaxed"``, ``"moderate"``, or ``"strict"``). Default to "moderate".
+        ctx (fastmcp.Context | None, optional): Optional FastMCP context used for
+            elicitation when strictness or language values are ambiguous. Default to None.
 
     Returns:
-        OnboardingGuide with ordered steps, each carrying an action key
+        OnboardingGuide: OnboardingGuide with ordered steps, each carrying an action key
         and example, plus a ``recommended_config`` dict ready to write
         into ``zen-config.yaml``.
 
@@ -1372,7 +1402,7 @@ async def get_supported_languages() -> dict[str, list[str]]:
     *how much* detector coverage each language currently has.
 
     Returns:
-        Dictionary mapping each language identifier (e.g. ``"python"``)
+        dict[str, list[str]]: Dictionary mapping each language identifier (e.g. ``"python"``)
         to the list of detector IDs wired up for that language.
 
     See Also:

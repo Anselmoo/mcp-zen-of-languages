@@ -42,10 +42,10 @@ class JsonAnalyzer(BaseAnalyzer):
         """Set up the JSON analyzer with optional threshold and pipeline overrides.
 
         Args:
-            config (AnalyzerConfig | None): Analyzer configuration controlling detection thresholds
-                such as strictness or schema consistency limits.
-            pipeline_config (PipelineConfig | None): Optional overrides that customize which JSON
-                detectors run and their individual settings.
+            config (AnalyzerConfig | None, optional): Analyzer configuration controlling detection thresholds
+                such as strictness or schema consistency limits. Default to None.
+            pipeline_config (PipelineConfig | None, optional): Optional overrides that customize which JSON
+                detectors run and their individual settings. Default to None.
         """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
@@ -77,7 +77,7 @@ class JsonAnalyzer(BaseAnalyzer):
             code (str): Raw JSON text to parse.
 
         Returns:
-            ParserResult wrapping the parsed object, or ``None`` on parse failure.
+            ParserResult | None: ParserResult wrapping the parsed object, or ``None`` on parse failure.
         """
         try:
             tree = json.loads(code)

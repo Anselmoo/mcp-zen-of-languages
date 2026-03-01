@@ -80,7 +80,7 @@ class PipelineConfig(BaseModel):
                 programmatic construction.
 
         Returns:
-            Typed detector config instances ready for pipeline execution.
+            list[DetectorConfig]: Typed detector config instances ready for pipeline execution.
 
         Raises:
             TypeError: If *value* is not a list.
@@ -107,7 +107,7 @@ class PipelineConfig(BaseModel):
                 (e.g. ``"python"``).
 
         Returns:
-            A fully populated ``PipelineConfig`` whose detector list reflects
+            PipelineConfig: A fully populated ``PipelineConfig`` whose detector list reflects
             all zen principles defined for the language.
 
         Raises:
@@ -142,7 +142,7 @@ def project_rules_to_configs(lang_zen: LanguageZenPrinciples) -> list[DetectorCo
             including metric thresholds and violation specs.
 
     Returns:
-        Ordered detector configs with thresholds populated from the rules.
+        list[DetectorConfig]: Ordered detector configs with thresholds populated from the rules.
 
     See Also:
         ``DetectorRegistry.configs_from_rules``
@@ -172,7 +172,7 @@ def merge_pipeline_overrides(
             to skip merging entirely.
 
     Returns:
-        A new ``PipelineConfig`` containing the merged detector list.
+        PipelineConfig: A new ``PipelineConfig`` containing the merged detector list.
 
     Raises:
         ValueError: If *overrides.language* doesn't match *base.language*.

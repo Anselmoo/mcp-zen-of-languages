@@ -31,7 +31,12 @@ class DockerComposeAnalyzer(BaseAnalyzer):
         config: AnalyzerConfig | None = None,
         pipeline_config: PipelineConfig | None = None,
     ) -> None:
-        """Initialize the Docker Compose analyzer."""
+        """Initialize the Docker Compose analyzer.
+
+        Args:
+            config (AnalyzerConfig | None, optional): Analyzer configuration overrides. Default to None.
+            pipeline_config (PipelineConfig | None, optional): Custom detection pipeline configuration. Default to None.
+        """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
 
@@ -54,7 +59,7 @@ class DockerComposeAnalyzer(BaseAnalyzer):
             code (str): Raw docker-compose YAML text.
 
         Returns:
-            ParserResult wrapping the parsed mapping, or ``None`` on parse failure.
+            ParserResult | None: ParserResult wrapping the parsed mapping, or ``None`` on parse failure.
         """
         try:
             tree = yaml.safe_load(code)

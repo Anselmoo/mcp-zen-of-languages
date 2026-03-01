@@ -31,11 +31,11 @@ def build_rule_detector_mapping(
     * ``reverse_mapping`` — ``{detector_id: [rule_id, …]}``.
 
     Args:
-        languages (list[str] | None): Restrict output to these language keys.  ``None`` includes
-            every language in the registry.
+        languages (list[str] | None, optional): Restrict output to these language keys.  ``None`` includes
+            every language in the registry. Default to None.
 
     Returns:
-        Nested dict ready for ``json.dumps`` serialisation.
+        dict[str, Any]: Nested dict ready for ``json.dumps`` serialisation.
     """
     data: dict[str, Any] = {
         "$schema": "rule_detector_mapping_schema",
@@ -92,10 +92,10 @@ def export_mapping_json(
 
     Args:
         output_path (str | Path): Destination file (created or overwritten).
-        languages (list[str] | None): Restrict to these language keys.  ``None`` includes all.
+        languages (list[str] | None, optional): Restrict to these language keys.  ``None`` includes all. Default to None.
 
     Returns:
-        The same dict that was written to disk, for programmatic reuse.
+        dict[str, Any]: The same dict that was written to disk, for programmatic reuse.
     """
     data = build_rule_detector_mapping(languages)
     path = Path(output_path)

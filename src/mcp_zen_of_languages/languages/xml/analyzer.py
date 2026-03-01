@@ -42,10 +42,10 @@ class XmlAnalyzer(BaseAnalyzer):
         """Set up the XML analyzer with optional threshold and pipeline overrides.
 
         Args:
-            config (AnalyzerConfig | None): Analyzer configuration controlling detection thresholds
-                such as hierarchy depth or namespace strictness.
-            pipeline_config (PipelineConfig | None): Optional overrides that customize which XML
-                detectors run and their individual settings.
+            config (AnalyzerConfig | None, optional): Analyzer configuration controlling detection thresholds
+                such as hierarchy depth or namespace strictness. Default to None.
+            pipeline_config (PipelineConfig | None, optional): Optional overrides that customize which XML
+                detectors run and their individual settings. Default to None.
         """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
@@ -77,7 +77,7 @@ class XmlAnalyzer(BaseAnalyzer):
             code (str): Raw XML markup to parse.
 
         Returns:
-            ParserResult wrapping the root Element, or ``None`` on parse failure.
+            ParserResult | None: ParserResult wrapping the root Element, or ``None`` on parse failure.
         """
         try:
             tree = ET.fromstring(code)  # noqa: S314

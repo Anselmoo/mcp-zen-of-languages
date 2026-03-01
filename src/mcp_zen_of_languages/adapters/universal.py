@@ -21,7 +21,12 @@ class AnalyzerFactoryAdapter:
         self.language = language
 
     def analyze(self, code: str, path: str | None = None) -> AnalysisResult:
-        """Analyze code with the configured language analyzer."""
+        """Analyze code with the configured language analyzer.
+
+        Args:
+            code (str): Source code to analyse.
+            path (str | None, optional): File path being analysed. Default to None.
+        """
         analyzer = create_analyzer(self.language)
         return analyzer.analyze(code, path=path)
 

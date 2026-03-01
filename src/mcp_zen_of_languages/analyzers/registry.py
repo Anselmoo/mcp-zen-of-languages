@@ -101,7 +101,7 @@ class DetectorMetadata(BaseModel):
             language (str): Language that owns this binding (e.g. ``"rust"``).
 
         Returns:
-            Registry-ready metadata for [`DetectorRegistry.register`][DetectorRegistry.register].
+            DetectorMetadata: Registry-ready metadata for [`DetectorRegistry.register`][DetectorRegistry.register].
         """
         from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule_ids
 
@@ -219,7 +219,7 @@ class DetectorRegistry:
         """Return a snapshot of every registered detector's metadata.
 
         Returns:
-            Shallow copy of all metadata entries in registration order.
+            list[DetectorMetadata]: Shallow copy of all metadata entries in registration order.
         """
         return list(self._registry.values())
 
@@ -231,7 +231,7 @@ class DetectorRegistry:
                 on the detector's config model.
 
         Returns:
-            The metadata for the requested detector.
+            DetectorMetadata: The metadata for the requested detector.
 
         Raises:
             KeyError: If *detector_id* is not registered.
@@ -254,7 +254,7 @@ class DetectorRegistry:
             language (str): Language scope for the lookup.
 
         Returns:
-            Metadata for every detector covering *rule_id* in *language*,
+            list[DetectorMetadata]: Metadata for every detector covering *rule_id* in *language*,
             or an empty list if none are registered.
         """
         if self._rule_index is None:
@@ -273,7 +273,7 @@ class DetectorRegistry:
         changes.
 
         Returns:
-            An ``Annotated`` union type suitable for
+            object: An ``Annotated`` union type suitable for
             [`TypeAdapter`][pydantic.TypeAdapter] construction.
 
         Raises:
@@ -305,7 +305,7 @@ class DetectorRegistry:
         registered before the discriminated union is constructed.
 
         Returns:
-            A ``TypeAdapter`` that validates raw dicts into the correct
+            TypeAdapter: A ``TypeAdapter`` that validates raw dicts into the correct
             ``DetectorConfig`` subclass by discriminator.
         """
         if self._config_adapter is None:
@@ -331,7 +331,7 @@ class DetectorRegistry:
             lang_zen (LanguageZenPrinciples): Complete zen principles for a single language.
 
         Returns:
-            Ordered detector configs sorted by [`DetectorMetadata.default_order`][DetectorMetadata.default_order],
+            list[DetectorConfig]: Ordered detector configs sorted by [`DetectorMetadata.default_order`][DetectorMetadata.default_order],
             with ``analyzer_defaults`` first.
         """
         from mcp_zen_of_languages.analyzers import registry_bootstrap  # noqa: F401
@@ -373,7 +373,7 @@ class DetectorRegistry:
             overrides (list[DetectorConfig]): User or programmatic overrides to layer on top.
 
         Returns:
-            Merged and re-ordered detector config list.
+            list[DetectorConfig]: Merged and re-ordered detector config list.
         """
         configs_by_type = {cfg.type: cfg for cfg in base}
         for override in overrides:
@@ -403,7 +403,7 @@ class DetectorRegistry:
             lang_zen (LanguageZenPrinciples): Complete zen principles for the target language.
 
         Returns:
-            Pipeline containing configured detector instances in execution
+            DetectionPipeline: Pipeline containing configured detector instances in execution
             order.
         """
         configs = self.configs_from_rules(lang_zen)
@@ -441,7 +441,7 @@ class DetectorRegistry:
                 mapping.
 
         Returns:
-            One typed config per detector registered for this principle,
+            list[DetectorConfig]: One typed config per detector registered for this principle,
             each populated with the applicable metric values, severity,
             and violation messages.
 
@@ -502,7 +502,7 @@ class DetectorRegistry:
             configs_by_type (dict[str, DetectorConfig]): Configs keyed by detector ``type``.
 
         Returns:
-            Deterministically ordered config list.
+            list[DetectorConfig]: Deterministically ordered config list.
         """
         configs_by_type = dict(configs_by_type)
         order_map = {meta.detector_id: meta.default_order for meta in self.items()}

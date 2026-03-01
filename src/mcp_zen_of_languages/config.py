@@ -210,8 +210,8 @@ def load_config(path: str | None = None) -> ConfigModel:  # noqa: C901, PLR0912
     language ships with a complete detector configuration.
 
     Args:
-        path (str | None): Filesystem path to ``zen-config.yaml``.  Pass
-            ``None`` (the default) to activate auto-discovery.
+        path (str | None, optional): Filesystem path to ``zen-config.yaml``.  Pass
+            ``None`` (the default) to activate auto-discovery. Default to None.
 
     Returns:
         ConfigModel: Validated ``ConfigModel`` reflecting the merged

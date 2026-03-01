@@ -403,7 +403,7 @@ class ViolationDetector[ConfigT: "DetectorConfig"](ABC):
         when a detector raises an unexpected exception.
 
         Returns:
-            Short, unique name such as ``"cyclomatic_complexity"`` or
+            str: Short, unique name such as ``"cyclomatic_complexity"`` or
             ``"god_class"``.
         """
 
@@ -437,21 +437,21 @@ class ViolationDetector[ConfigT: "DetectorConfig"](ABC):
         Args:
             config (DetectorConfig): Detector configuration carrying principle metadata,
                 severity, and violation-message templates.
-            message (str | None): Explicit violation message. When ``None``, the
-                message is auto-selected from the config's template list.
-            contains (str | None): Substring filter passed to
-                ``select_violation_message`` to pick a matching template.
-            index (int | None): Zero-based position selecting one template from the
-                config's ``violation_messages`` list (default ``0``).
-            severity (int | None): Override severity score (1-10). Falls back to the
-                config-level severity when omitted.
-            location (Location | None): Source location to attach to the violation, typically
+            message (str | None, optional): Explicit violation message. When ``None``, the
+                message is auto-selected from the config's template list. Default to None.
+            contains (str | None, optional): Substring filter passed to
+                ``select_violation_message`` to pick a matching template. Default to None.
+            index (int | None, optional): Zero-based position selecting one template from the
+                config's ``violation_messages`` list (default ``0``). Default to 0.
+            severity (int | None, optional): Override severity score (1-10). Falls back to the
+                config-level severity when omitted. Default to None.
+            location (Location | None, optional): Source location to attach to the violation, typically
                 produced by
-                [`LocationHelperMixin`][mcp_zen_of_languages.analyzers.base.LocationHelperMixin].
-            suggestion (str | None): Remediation hint shown alongside the violation in
-                reports and IDE integrations.
-            files (list[str] | None): Related file paths included for cross-file violations
-                such as duplicate-code detection.
+                [`LocationHelperMixin`][mcp_zen_of_languages.analyzers.base.LocationHelperMixin]. Default to None.
+            suggestion (str | None, optional): Remediation hint shown alongside the violation in
+                reports and IDE integrations. Default to None.
+            files (list[str] | None, optional): Related file paths included for cross-file violations
+                such as duplicate-code detection. Default to None.
 
         Returns:
             Violation: Fully populated ``Violation`` ready for collection by the
@@ -626,8 +626,8 @@ class BaseAnalyzer(ABC):
         ``analyze()`` invocation.
 
         Args:
-            config (AnalyzerConfig | None): Explicit analyzer configuration. When ``None``, the
-                subclass's ``default_config()`` is used.
+            config (AnalyzerConfig | None, optional): Explicit analyzer configuration. When ``None``, the
+                subclass's ``default_config()`` is used. Default to None.
 
         Raises:
             TypeError: If *config* is not ``None`` and not an
@@ -649,7 +649,7 @@ class BaseAnalyzer(ABC):
         pre-populated with sensible defaults.
 
         Returns:
-            Language-appropriate configuration with default thresholds.
+            AnalyzerConfig: Language-appropriate configuration with default thresholds.
         """
 
     @abstractmethod
@@ -661,7 +661,7 @@ class BaseAnalyzer(ABC):
         ``"rust"``).
 
         Returns:
-            Lowercase language name used for rule lookup and result
+            str: Lowercase language name used for rule lookup and result
             tagging.
         """
 
@@ -757,18 +757,18 @@ class BaseAnalyzer(ABC):
 
         Args:
             code (str): Complete source text to analyze.
-            path (str | None): Filesystem path of the source file, used for
-                cross-file detectors and result metadata.
-            other_files (dict[str, str] | None): Map of sibling file paths to
+            path (str | None, optional): Filesystem path of the source file, used for
+                cross-file detectors and result metadata. Default to None.
+            other_files (dict[str, str] | None, optional): Map of sibling file paths to
                 their contents, enabling detectors like duplicate-code that
-                compare across files.
-            repository_imports (dict[str, list[str]] | None): Per-file import
+                compare across files. Default to None.
+            repository_imports (dict[str, list[str]] | None, optional): Per-file import
                 lists from the wider repository, enabling coupling and
-                dependency-fan detectors.
-            enable_external_tools (bool): Run allow-listed external
-                linters/tools in best-effort mode for additional diagnostics.
-            allow_temporary_tools (bool): Allow temporary-runner strategies
-                (for example ``npx``/``uvx``) when direct/no-install
+                dependency-fan detectors. Default to None.
+            enable_external_tools (bool, optional): Run allow-listed external
+                linters/tools in best-effort mode for additional diagnostics. Default to False.
+            allow_temporary_tools (bool, optional): Allow temporary-runner strategies
+                (for example ``npx``/``uvx``) when direct/no-install Default to False.
                 resolution is unavailable.
 
         Returns:
@@ -896,7 +896,7 @@ class BaseAnalyzer(ABC):
         use-cases.
 
         Returns:
-            Ready-to-run pipeline containing all detectors registered
+            DetectionPipeline: Ready-to-run pipeline containing all detectors registered
             for this language.
 
         Raises:
@@ -1020,7 +1020,12 @@ class BaseAnalyzer(ABC):
 
     @staticmethod
     def _truncate_external_output(text: str, max_chars: int = 1000) -> str:
-        """Trim verbose tool output to keep result payloads bounded."""
+        """Trim verbose tool output to keep result payloads bounded.
+
+        Args:
+            text (str): Raw output text from an external tool.
+            max_chars (int, optional): Maximum characters to keep from external tool output. Default to 1000.
+        """
         if len(text) <= max_chars:
             return text
         return text[:max_chars] + "... [truncated]"

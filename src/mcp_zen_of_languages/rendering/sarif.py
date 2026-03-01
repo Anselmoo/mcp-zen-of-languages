@@ -24,7 +24,12 @@ def analysis_results_to_sarif(
     *,
     tool_name: str = "zen-of-languages",
 ) -> dict[str, object]:
-    """Convert analysis results into a SARIF 2.1.0 payload."""
+    """Convert analysis results into a SARIF 2.1.0 payload.
+
+    Args:
+        results (list[AnalysisResult]): Analysis results to convert.
+        tool_name (str, optional): SARIF tool identifier string. Default to "zen-of-languages".
+    """
     rules: dict[str, dict[str, object]] = {}
     sarif_results: list[dict[str, object]] = []
 

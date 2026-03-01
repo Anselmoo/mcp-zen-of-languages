@@ -30,7 +30,12 @@ class CssAnalyzer(BaseAnalyzer):
         config: AnalyzerConfig | None = None,
         pipeline_config: PipelineConfig | None = None,
     ) -> None:
-        """Initialize analyzer with optional config and pipeline overrides."""
+        """Initialize analyzer with optional config and pipeline overrides.
+
+        Args:
+            config (AnalyzerConfig | None, optional): Analyzer configuration overrides. Default to None.
+            pipeline_config (PipelineConfig | None, optional): Custom detection pipeline configuration. Default to None.
+        """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
 
@@ -69,7 +74,7 @@ class CssAnalyzer(BaseAnalyzer):
             context (AnalysisContext): Current analysis context with stylesheet source text.
 
         Returns:
-            DependencyAnalysis with import edges, or ``None`` when no imports found.
+            object | None: DependencyAnalysis with import edges, or ``None`` when no imports found.
         """
         imports: list[str] = []
         for line in context.code.splitlines():

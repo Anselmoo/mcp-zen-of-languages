@@ -70,7 +70,7 @@ class DetectionResult(BaseModel):
         """Serialize the detection result to a plain dictionary via Pydantic's ``model_dump``.
 
         Returns:
-            A dict with keys ``language``, ``confidence``, ``method``, and ``notes``.
+            dict: A dict with keys ``language``, ``confidence``, ``method``, and ``notes``.
         """
         return self.model_dump()
 
@@ -87,7 +87,7 @@ def detect_language_by_extension(path: str) -> DetectionResult:
         path (str): Filesystem path (absolute or relative) whose extension is inspected.
 
     Returns:
-        A ``DetectionResult`` with ``method="extension"`` and confidence 0.95
+        DetectionResult: A ``DetectionResult`` with ``method="extension"`` and confidence 0.95
         for known extensions, or ``language="unknown"`` for unrecognised ones.
     """
     path_obj = Path(path)

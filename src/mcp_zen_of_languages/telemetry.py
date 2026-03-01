@@ -16,7 +16,12 @@ def analysis_span(
     name: str,
     attributes: dict[str, str | int | float | bool] | None = None,
 ) -> Generator[object, None, None]:
-    """Create a telemetry span for analysis steps, falling back to no-op."""
+    """Create a telemetry span for analysis steps, falling back to no-op.
+
+    Args:
+        name (str): Span name for the trace.
+        attributes (dict[str, str | int | float | bool] | None, optional): Extra span attributes to attach. Default to None.
+    """
     try:
         from fastmcp.telemetry import get_tracer
     except ImportError:

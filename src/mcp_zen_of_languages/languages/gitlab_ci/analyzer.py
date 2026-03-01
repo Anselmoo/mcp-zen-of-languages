@@ -32,7 +32,12 @@ class GitLabCIAnalyzer(BaseAnalyzer):
         config: AnalyzerConfig | None = None,
         pipeline_config: PipelineConfig | None = None,
     ) -> None:
-        """Initialize analyzer with optional threshold and pipeline overrides."""
+        """Initialize analyzer with optional threshold and pipeline overrides.
+
+        Args:
+            config (AnalyzerConfig | None, optional): Analyzer configuration overrides. Default to None.
+            pipeline_config (PipelineConfig | None, optional): Custom detection pipeline configuration. Default to None.
+        """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
 
@@ -55,7 +60,7 @@ class GitLabCIAnalyzer(BaseAnalyzer):
             code (str): Raw GitLab CI YAML text.
 
         Returns:
-            ParserResult wrapping the parsed mapping, or ``None`` on parse failure.
+            ParserResult | None: ParserResult wrapping the parsed mapping, or ``None`` on parse failure.
         """
         try:
             tree = yaml.safe_load(code)

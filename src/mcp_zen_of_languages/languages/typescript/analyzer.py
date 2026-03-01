@@ -54,8 +54,8 @@ class TypeScriptAnalyzer(BaseAnalyzer):
         """Initialize instance.
 
         Args:
-            config (AnalyzerConfig | None): Typed detector or analyzer configuration that controls thresholds.
-            pipeline_config ('PipelineConfig' | None): Optional pipeline overrides used to customize detector configuration.
+            config (AnalyzerConfig | None, optional): Typed detector or analyzer configuration that controls thresholds. Default to None.
+            pipeline_config ('PipelineConfig' | None, optional): Optional pipeline overrides used to customize detector configuration. Default to None.
         """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
@@ -123,7 +123,7 @@ class TypeScriptAnalyzer(BaseAnalyzer):
             context (AnalysisContext): Analysis context containing source text and intermediate metrics.
 
         Returns:
-            DependencyAnalysis with import edges, or ``None`` when no imports found.
+            object | None: DependencyAnalysis with import edges, or ``None`` when no imports found.
         """
         imports: list[str] = []
         for line in context.code.splitlines():

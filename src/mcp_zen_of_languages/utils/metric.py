@@ -28,6 +28,6 @@ def calculate_code_quality_score(violations: list[Violation]) -> float:
             penalty calculation.
 
     Returns:
-        A float between 0.0 (heavily violated) and 100.0 (no violations).
+        float: A float between 0.0 (heavily violated) and 100.0 (no violations).
     """
     return max(0.0, 100.0 - (sum(v.severity for v in violations) * 2))

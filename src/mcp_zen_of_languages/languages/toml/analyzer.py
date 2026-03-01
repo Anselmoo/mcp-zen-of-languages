@@ -43,10 +43,10 @@ class TomlAnalyzer(BaseAnalyzer):
         """Set up the TOML analyzer with optional threshold and pipeline overrides.
 
         Args:
-            config (AnalyzerConfig | None): Analyzer configuration controlling detection thresholds
-                such as comment clarity or key casing limits.
-            pipeline_config (PipelineConfig | None): Optional overrides that customize which TOML
-                detectors run and their individual settings.
+            config (AnalyzerConfig | None, optional): Analyzer configuration controlling detection thresholds
+                such as comment clarity or key casing limits. Default to None.
+            pipeline_config (PipelineConfig | None, optional): Optional overrides that customize which TOML
+                detectors run and their individual settings. Default to None.
         """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
@@ -78,7 +78,7 @@ class TomlAnalyzer(BaseAnalyzer):
             code (str): Raw TOML text to parse.
 
         Returns:
-            ParserResult wrapping the parsed mapping, or ``None`` on parse failure.
+            ParserResult | None: ParserResult wrapping the parsed mapping, or ``None`` on parse failure.
         """
         try:
             tree = tomllib.loads(code)

@@ -52,17 +52,17 @@ def zen_panel(  # noqa: PLR0913
 
     Args:
         content (RenderableType): Any Rich renderable — ``Text``, ``Group``, ``Table``, etc.
-        title (str | None): Optional heading rendered in the top border.
-        subtitle (str | None): Optional text rendered in the bottom border.
-        box (_box_module.Box): Box drawing style; defaults to ``BOX_CONTENT`` (``ROUNDED``).
-        border_style (str): Rich colour token for the panel border.
-        output_console (Console | None): Console used to derive the width cap; falls back
-            to the module-level ``console`` singleton.
-        width (int | None): Explicit width override.  When ``None``, computed via
-            ``get_output_width()``.
-        expand (bool): When True the panel stretches to fill available width;
+        title (str | None, optional): Optional heading rendered in the top border. Default to None.
+        subtitle (str | None, optional): Optional text rendered in the bottom border. Default to None.
+        box (_box_module.Box, optional): Box drawing style; defaults to ``BOX_CONTENT`` (``ROUNDED``).
+        border_style (str, optional): Rich colour token for the panel border. Default to "cyan".
+        output_console (Console | None, optional): Console used to derive the width cap; falls back
+            to the module-level ``console`` singleton. Default to None.
+        width (int | None, optional): Explicit width override.  When ``None``, computed via
+            ``get_output_width()``. Default to None.
+        expand (bool, optional): When True the panel stretches to fill available width;
             defaults to ``False`` to honour *width* exactly.
-        padding (tuple[int, int]): Inner ``(vertical, horizontal)`` padding in character cells.
+        padding (tuple[int, int], optional): Inner ``(vertical, horizontal)`` padding in character cells. Default to (0, 1).
 
     Returns:
         Panel: Styled Rich panel ready for ``console.print()``.
@@ -95,7 +95,7 @@ def zen_header_panel(
     Args:
         *lines: Content lines rendered inside the panel body.
         title (str): Heading text rendered in the panel's top border.
-        output_console (Console | None): Console used to derive the width cap.
+        output_console (Console | None, optional): Console used to derive the width cap. Default to None.
 
     Returns:
         Panel: Header panel styled with the default ``BOX_CONTENT`` box.
@@ -129,16 +129,16 @@ def zen_table(  # noqa: PLR0913
     separation instead.
 
     Args:
-        title (str | None): Optional table caption rendered above the header row.
-        box (_box_module.Box): Box drawing style; defaults to ``BOX_CONTENT`` (``ROUNDED``).
-        show_header (bool): Whether to render the column header row.
-        show_lines (bool): Whether to draw horizontal rules between data rows.
-        output_console (Console | None): Console used to derive the width cap.
-        width (int | None): Explicit width override; computed via ``get_output_width``
-            when ``None``.
-        header_style (str | None): Rich style token applied to the header row;
+        title (str | None, optional): Optional table caption rendered above the header row. Default to None.
+        box (_box_module.Box, optional): Box drawing style; defaults to ``BOX_CONTENT`` (``ROUNDED``).
+        show_header (bool, optional): Whether to render the column header row. Default to True.
+        show_lines (bool, optional): Whether to draw horizontal rules between data rows. Default to False.
+        output_console (Console | None, optional): Console used to derive the width cap. Default to None.
+        width (int | None, optional): Explicit width override; computed via ``get_output_width``
+            when ``None``. Default to None.
+        header_style (str | None, optional): Rich style token applied to the header row; Default to "metric".
             defaults to ``"metric"`` (magenta).
-        row_styles (Sequence[str] | None): Alternating row styles for zebra-striped readability.
+        row_styles (Sequence[str] | None, optional): Alternating row styles for zebra-striped readability. Default to None.
 
     Returns:
         Table: Width-capped Rich table ready for column and row additions.
@@ -172,9 +172,9 @@ def zen_summary_table(
     ``zen_table`` with ``show_header=False`` and a ``None`` header style.
 
     Args:
-        title (str | None): Optional caption rendered above the table body.
-        output_console (Console | None): Console used to derive the width cap.
-        width (int | None): Explicit width override.
+        title (str | None, optional): Optional caption rendered above the table body. Default to None.
+        output_console (Console | None, optional): Console used to derive the width cap. Default to None.
+        width (int | None, optional): Explicit width override. Default to None.
 
     Returns:
         Table: Heavy-bordered Rich table without a header row.

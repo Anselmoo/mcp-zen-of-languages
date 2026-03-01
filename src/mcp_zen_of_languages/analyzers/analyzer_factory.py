@@ -147,13 +147,13 @@ def create_analyzer(
     Args:
         language (str): Language name or alias (case-insensitive).  Common
             aliases are accepted — see the table below.
-        config (AnalyzerConfig | None): Global analyzer thresholds; passed through to the
-            analyzer's ``__init__``.
-        pipeline_config (PipelineConfig | None): Optional detector-level overrides merged on
-            top of the rule-derived pipeline.
+        config (AnalyzerConfig | None, optional): Global analyzer thresholds; passed through to the
+            analyzer's ``__init__``. Default to None.
+        pipeline_config (PipelineConfig | None, optional): Optional detector-level overrides merged on
+            top of the rule-derived pipeline. Default to None.
 
     Returns:
-        A configured [`BaseAnalyzer`][mcp_zen_of_languages.analyzers.base.BaseAnalyzer]
+        BaseAnalyzer: A configured [`BaseAnalyzer`][mcp_zen_of_languages.analyzers.base.BaseAnalyzer]
         subclass ready to call ``analyze``.
 
     Raises:

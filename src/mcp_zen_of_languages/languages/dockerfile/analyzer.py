@@ -30,7 +30,12 @@ class DockerfileAnalyzer(BaseAnalyzer):
         config: AnalyzerConfig | None = None,
         pipeline_config: PipelineConfig | None = None,
     ) -> None:
-        """Initialize the Dockerfile analyzer."""
+        """Initialize the Dockerfile analyzer.
+
+        Args:
+            config (AnalyzerConfig | None, optional): Analyzer configuration overrides. Default to None.
+            pipeline_config (PipelineConfig | None, optional): Custom detection pipeline configuration. Default to None.
+        """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
 
@@ -65,7 +70,7 @@ class DockerfileAnalyzer(BaseAnalyzer):
             context (AnalysisContext): Current analysis context with Dockerfile source text.
 
         Returns:
-            DependencyAnalysis with image dependency edges, or ``None`` when none found.
+            object | None: DependencyAnalysis with image dependency edges, or ``None`` when none found.
         """
         imports: list[str] = []
         for line in context.code.splitlines():

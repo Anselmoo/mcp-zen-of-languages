@@ -55,8 +55,8 @@ class RubyAnalyzer(BaseAnalyzer):
         """Initialize instance.
 
         Args:
-            config (AnalyzerConfig | None): Typed detector or analyzer configuration that controls thresholds.
-            pipeline_config ('PipelineConfig' | None): Optional pipeline overrides used to customize detector configuration.
+            config (AnalyzerConfig | None, optional): Typed detector or analyzer configuration that controls thresholds. Default to None.
+            pipeline_config ('PipelineConfig' | None, optional): Optional pipeline overrides used to customize detector configuration. Default to None.
         """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
@@ -131,7 +131,7 @@ class RubyAnalyzer(BaseAnalyzer):
             context (AnalysisContext): Current analysis context with source text and metrics.
 
         Returns:
-            DependencyAnalysis with require edges, or ``None`` when none found.
+            object | None: DependencyAnalysis with require edges, or ``None`` when none found.
         """
         imports: list[str] = []
         for line in context.code.splitlines():

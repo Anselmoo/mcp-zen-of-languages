@@ -43,8 +43,8 @@ def _active_console(output_console: Console | None = None) -> Console:
     to repeat the fallback logic.
 
     Args:
-        output_console (Console | None): Optional override console; ``None`` means use the
-            module-level singleton.
+        output_console (Console | None, optional): Optional override console; ``None`` means use the
+            module-level singleton. Default to None.
 
     Returns:
         Console: The resolved Rich console instance.
@@ -66,7 +66,7 @@ def render_report_terminal(
         report (ReportOutput): Structured ``ReportOutput`` whose ``.data`` dict contains
             ``target``, ``languages``, ``summary``, ``analysis``, ``gaps``,
             and ``prompts`` keys.
-        output_console (Console | None): Alternate console to write to; defaults to the
+        output_console (Console | None, optional): Alternate console to write to; defaults to the
             module-level ``console`` singleton.
     """
     active_console = _active_console(output_console)

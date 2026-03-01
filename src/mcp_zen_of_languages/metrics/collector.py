@@ -38,7 +38,7 @@ class MetricsCollector:
             code (str): Python source text to measure.
 
         Returns:
-            A three-element tuple of ``(cyclomatic_summary, maintainability_index,
+            tuple[CyclomaticSummary | None, float | None, int]: A three-element tuple of ``(cyclomatic_summary, maintainability_index,
             lines_of_code)``. On radon errors the first two elements are ``None``
             while the line count is always populated.
         """

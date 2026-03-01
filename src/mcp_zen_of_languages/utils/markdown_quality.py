@@ -51,7 +51,7 @@ def normalize_markdown(text: str) -> str:
         text (str): Raw Markdown string, possibly with inconsistent line endings.
 
     Returns:
-        Cleaned Markdown string with each line right-stripped and a single
+        str: Cleaned Markdown string with each line right-stripped and a single
         trailing newline appended.
     """
     cleaned_lines = [line.rstrip() for line in text.splitlines()]
@@ -69,7 +69,7 @@ def _has_consistent_headings(lines: list[str]) -> bool:
         lines (list[str]): Pre-split Markdown lines to inspect.
 
     Returns:
-        ``True`` when every heading is at most one level deeper than its
+        bool: ``True`` when every heading is at most one level deeper than its
         predecessor, ``False`` on the first violation.
     """
     previous_level = 0
@@ -95,7 +95,7 @@ def _has_consistent_bullets(lines: list[str]) -> bool:
         lines (list[str]): Pre-split Markdown lines to inspect.
 
     Returns:
-        ``True`` when zero or one distinct marker character is used,
+        bool: ``True`` when zero or one distinct marker character is used,
         ``False`` when both ``-`` and ``*`` appear.
     """
     markers = {match.group(1) for line in lines if (match := _BULLET_RE.match(line))}
@@ -113,7 +113,7 @@ def _code_blocks_have_language(lines: list[str]) -> bool:
         lines (list[str]): Pre-split Markdown lines to inspect.
 
     Returns:
-        ``True`` when all fenced blocks include a language tag,
+        bool: ``True`` when all fenced blocks include a language tag,
         ``False`` on the first bare opening fence.
     """
     in_code = False
@@ -141,7 +141,7 @@ def _tables_aligned(lines: list[str]) -> bool:
         lines (list[str]): Pre-split Markdown lines to inspect.
 
     Returns:
-        ``True`` when all rows in every table block share the same pipe
+        bool: ``True`` when all rows in every table block share the same pipe
         count, ``False`` on the first mismatch.
     """
     expected_columns: int | None = None
@@ -172,7 +172,7 @@ def validate_markdown(text: str) -> MarkdownQuality:
         text (str): Complete Markdown string to validate.
 
     Returns:
-        A ``MarkdownQuality`` model with a boolean field for each rule,
+        MarkdownQuality: A ``MarkdownQuality`` model with a boolean field for each rule,
         suitable for programmatic inspection or rendering in diagnostics.
     """
     lines = text.splitlines()

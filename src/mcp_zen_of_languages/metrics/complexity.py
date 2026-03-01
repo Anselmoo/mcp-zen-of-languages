@@ -26,7 +26,7 @@ def compute_cyclomatic_complexity(code: str) -> CyclomaticSummary:
         code (str): Python source text to analyse.
 
     Returns:
-        A ``CyclomaticSummary`` containing individual ``CyclomaticBlock``
+        CyclomaticSummary: A ``CyclomaticSummary`` containing individual ``CyclomaticBlock``
         entries and the arithmetic mean complexity across all blocks.
         Returns an empty summary with ``average=0.0`` when radon cannot
         parse the input.
@@ -52,11 +52,11 @@ def compute_maintainability_index(code: str, *, multi: bool = False) -> float:
 
     Args:
         code (str): Python source text to evaluate.
-        multi (bool): When ``True``, radon counts multi-line strings as comments,
-            which can raise the score for heavily documented modules.
+        multi (bool, optional): When ``True``, radon counts multi-line strings as comments,
+            which can raise the score for heavily documented modules. Default to False.
 
     Returns:
-        A float between 0 and 100 representing the maintainability index.
+        float: A float between 0 and 100 representing the maintainability index.
         Returns ``0.0`` when radon cannot parse the input.
     """
     try:

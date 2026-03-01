@@ -83,7 +83,7 @@ def _severity_level(config: DetectorConfig, fallback: int = 5) -> int:
 
     Args:
         config (DetectorConfig): Detector configuration potentially carrying an explicit severity.
-        fallback (int): Default severity returned when the config has no override.
+        fallback (int, optional): Default severity returned when the config has no override. Default to 5.
 
     Returns:
         int: Severity level in the range 1 (informational) to 9 (critical).
@@ -105,9 +105,9 @@ def _violation_message(
 
     Args:
         config (DetectorConfig): Detector configuration carrying the rule's message variants.
-        contains (str | None): Optional substring to filter candidate messages before
-            selecting by index.
-        index (int): Zero-based index into the (possibly filtered) message list.
+        contains (str | None, optional): Optional substring to filter candidate messages before
+            selecting by index. Default to None.
+        index (int, optional): Zero-based index into the (possibly filtered) message list. Default to 0.
 
     Returns:
         str: The resolved violation message text.

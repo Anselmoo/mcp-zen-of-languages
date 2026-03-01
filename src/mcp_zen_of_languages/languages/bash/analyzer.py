@@ -57,12 +57,12 @@ class BashAnalyzer(BaseAnalyzer):
         """Initialize the Bash analyzer with optional configuration.
 
         Args:
-            config (AnalyzerConfig | None): Threshold settings controlling detector sensitivity such as
+            config (AnalyzerConfig | None, optional): Threshold settings controlling detector sensitivity such as
                 maximum script length without functions and minimum variable
-                name length.
-            pipeline_config (PipelineConfig | None): Optional overrides that are merged on top of
+                name length. Default to None.
+            pipeline_config (PipelineConfig | None, optional): Optional overrides that are merged on top of
                 rule-derived detector defaults, allowing per-project tuning
-                via ``zen-config.yaml``.
+                via ``zen-config.yaml``. Default to None.
         """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
@@ -144,7 +144,7 @@ class BashAnalyzer(BaseAnalyzer):
             context (AnalysisContext): Current analysis context with source text and metrics.
 
         Returns:
-            DependencyAnalysis with include edges, or ``None`` when no sources found.
+            object | None: DependencyAnalysis with include edges, or ``None`` when no sources found.
         """
         imports: list[str] = []
         for line in context.code.splitlines():

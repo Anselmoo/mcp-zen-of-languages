@@ -333,11 +333,11 @@ def generate_report(  # noqa: PLR0913
 
     Args:
         target_path (str): File or directory to analyse.
-        config_path (str | None): Optional path to a ``zen-config.yaml`` override file.
-        language (str | None): When set, restricts analysis to this single language.
-        include_prompts (bool): Attach per-file and generic remediation prompts.
-        include_analysis (bool): Run analyzers and include a violation summary.
-        include_gaps (bool): Perform detector coverage gap analysis.
+        config_path (str | None, optional): Optional path to a ``zen-config.yaml`` override file. Default to None.
+        language (str | None, optional): When set, restricts analysis to this single language. Default to None.
+        include_prompts (bool, optional): Attach per-file and generic remediation prompts. Default to False.
+        include_analysis (bool, optional): Run analyzers and include a violation summary. Default to True.
+        include_gaps (bool, optional): Perform detector coverage gap analysis. Default to True.
 
     Returns:
         ReportOutput: Markdown report text and equivalent machine-readable data dict.

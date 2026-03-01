@@ -22,7 +22,13 @@ class LanguageAdapter(Protocol):
     language: str
 
     def analyze(self, code: str, path: str | None = None) -> AnalysisResult:
-        """Return language-specific analysis for a source snippet."""
+        """Return language-specific analysis for a source snippet.
+
+        Args:
+            code (str): Source code to analyse.
+            language (str): Programming language identifier.
+            path (str | None, optional): File path being analysed. Default to None.
+        """
 
 
 class ReporterInterface(Protocol):
@@ -36,7 +42,11 @@ class UniversalZenDetector:
     """Universal coordinator that delegates parsing+analysis to language adapters."""
 
     def __init__(self, adapters: dict[str, LanguageAdapter] | None = None) -> None:
-        """Initialize the detector with explicit adapters or all supported languages."""
+        """Initialize the detector with explicit adapters or all supported languages.
+
+        Args:
+            adapters (dict[str, LanguageAdapter] | None, optional): Language-specific adapters. Default to None.
+        """
         if adapters is None:
             from mcp_zen_of_languages.adapters.universal import build_universal_adapters
 
@@ -49,7 +59,13 @@ class UniversalZenDetector:
         language: str,
         path: str | None = None,
     ) -> AnalysisResult:
-        """Analyze code via the adapter registered for ``language``."""
+        """Analyze code via the adapter registered for ``language``.
+
+        Args:
+            code (str): Source code to analyse.
+            language (str): Programming language identifier.
+            path (str | None, optional): Path. Default to None.
+        """
         adapter = self._adapters.get(language.lower())
         if adapter is None:
             msg = f"Unsupported language adapter: {language}"

@@ -44,10 +44,10 @@ class YamlAnalyzer(BaseAnalyzer):
         """Set up the YAML analyzer with optional threshold and pipeline overrides.
 
         Args:
-            config (AnalyzerConfig | None): Analyzer configuration controlling detection thresholds
-                such as indentation width or minimum key length.
-            pipeline_config (PipelineConfig | None): Optional overrides that customize which YAML
-                detectors run and their individual settings.
+            config (AnalyzerConfig | None, optional): Analyzer configuration controlling detection thresholds
+                such as indentation width or minimum key length. Default to None.
+            pipeline_config (PipelineConfig | None, optional): Optional overrides that customize which YAML
+                detectors run and their individual settings. Default to None.
         """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
@@ -79,7 +79,7 @@ class YamlAnalyzer(BaseAnalyzer):
             code (str): Raw YAML text to parse.
 
         Returns:
-            ParserResult wrapping the parsed mapping, or ``None`` on parse failure.
+            ParserResult | None: ParserResult wrapping the parsed mapping, or ``None`` on parse failure.
         """
         try:
             tree = yaml.safe_load(code)

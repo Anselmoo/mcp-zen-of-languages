@@ -151,7 +151,7 @@ def print_banner(output_console: Console | None = None) -> None:
     border, producing the distinctive header shown at CLI startup.
 
     Args:
-        output_console (Console | None): Alternate console to print to; defaults to the
+        output_console (Console | None, optional): Alternate console to print to; defaults to the
             module-level ``console`` singleton.
     """
     if _STATE.quiet or not sys.stdout.isatty():

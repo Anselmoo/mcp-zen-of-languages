@@ -114,7 +114,7 @@ def get_language_zen(language: str) -> "LanguageZenPrinciples | None":
         language (str): Case-insensitive language key (e.g. ``"Python"`` → ``"python"``).
 
     Returns:
-        The matching ``LanguageZenPrinciples``, or ``None``.
+        'LanguageZenPrinciples | None': The matching ``LanguageZenPrinciples``, or ``None``.
     """
     _initialize_registry()
     return ZEN_REGISTRY.get(language.lower())
@@ -124,7 +124,7 @@ def get_all_languages() -> list[str]:
     """Return every language key registered in ``ZEN_REGISTRY``.
 
     Returns:
-        Sorted insertion-order list of language keys.
+        list[str]: Sorted insertion-order list of language keys.
     """
     _initialize_registry()
     return list(ZEN_REGISTRY.keys())
@@ -137,7 +137,7 @@ def get_principle_by_id(principle_id: str) -> "ZenPrinciple | None":
         principle_id (str): Globally unique ID (e.g. ``"python-003"``).
 
     Returns:
-        The matching ``ZenPrinciple``, or ``None`` if no language defines it.
+        'ZenPrinciple | None': The matching ``ZenPrinciple``, or ``None`` if no language defines it.
     """
     _initialize_registry()
     for lang_zen in ZEN_REGISTRY.values():
@@ -155,7 +155,7 @@ def get_all_principles_by_category(
         category (PrincipleCategory): The ``PrincipleCategory`` to filter by.
 
     Returns:
-        ``{language_key: [ZenPrinciple, …]}`` — languages with no matches
+        dict[str, list[ZenPrinciple]]: ``{language_key: [ZenPrinciple, …]}`` — languages with no matches
         are omitted.
     """
     _initialize_registry()
@@ -170,7 +170,7 @@ def get_all_critical_principles() -> dict[str, list[ZenPrinciple]]:
     """Collect principles with severity ≥ 9 across all languages.
 
     Returns:
-        ``{language_key: [ZenPrinciple, …]}`` — languages with no critical
+        dict[str, list[ZenPrinciple]]: ``{language_key: [ZenPrinciple, …]}`` — languages with no critical
         principles are omitted.
     """
     _initialize_registry()

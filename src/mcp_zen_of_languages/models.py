@@ -110,7 +110,7 @@ class Violation(BaseModel):
         Args:
             key (str): Attribute name matching one of the model fields
                 (e.g. ``"principle"``, ``"severity"``).
-            default (object | None): Fallback returned when *key* does not
+            default (object | None, optional): Fallback returned when *key* does not
                 correspond to an existing attribute.  Defaults to ``None``.
 
         Returns:

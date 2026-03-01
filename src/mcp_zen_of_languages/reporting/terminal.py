@@ -62,7 +62,7 @@ def _active_console(output_console: Console | None = None) -> Console:
     ensuring consistent theme and width settings across the rendering session.
 
     Args:
-        output_console (Console | None): Optional console override for testing or redirection.
+        output_console (Console | None, optional): Optional console override for testing or redirection. Default to None.
 
     Returns:
         Console: Active console instance for subsequent Rich operations.
@@ -81,7 +81,7 @@ def _build_prompt_file_summary(
 
     Args:
         results (list[AnalysisResult]): Analysis results to summarise, one row per file with violations.
-        output_console (Console | None): Optional console override for width calculation.
+        output_console (Console | None, optional): Optional console override for width calculation. Default to None.
 
     Returns:
         Table: Rich table renderable with File / Issues / Summary columns.
@@ -120,7 +120,7 @@ def _build_generic_prompts_table(
 
     Args:
         bundle (PromptBundle): Prompt bundle whose ``generic_prompts`` are rendered.
-        output_console (Console | None): Optional console override for width calculation.
+        output_console (Console | None, optional): Optional console override for width calculation. Default to None.
 
     Returns:
         Table | None: Rich table renderable, or ``None`` when no generic prompts exist.
@@ -261,7 +261,7 @@ def render_prompt_panel(
     Args:
         bundle (PromptBundle): Prompt bundle containing all remediation guidance.
         results (list[AnalysisResult]): Analysis results used to populate the file summary table.
-        output_console (Console | None): Optional console override for testing or redirection.
+        output_console (Console | None, optional): Optional console override for testing or redirection. Default to None.
     """
     active_console = _active_console(output_console)
     width = get_output_width(active_console)
@@ -336,7 +336,7 @@ def build_agent_tasks_table(
 
     Args:
         task_list (AgentTaskList): Agent task list to render.
-        output_console (Console | None): Optional console override for width calculation.
+        output_console (Console | None, optional): Optional console override for width calculation. Default to None.
 
     Returns:
         Table: Rich table renderable with ``#`` / ``File`` / ``Task`` columns.

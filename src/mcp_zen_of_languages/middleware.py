@@ -166,7 +166,14 @@ class RateLimitingMiddleware(Middleware):
         *,
         max_buckets: int = 4096,
     ) -> None:
-        """Initialize rate-limit thresholds for call frequency control."""
+        """Initialize rate-limit thresholds for call frequency control.
+
+        Args:
+            cache_backend (CacheBackend): Storage backend for cached responses.
+            max_calls (int, optional): Maximum tool calls allowed per window. Default to 40.
+            window_seconds (int, optional): Sliding window duration in seconds. Default to 30.
+            max_buckets (int, optional): Maximum tracked session buckets before pruning. Default to 4096.
+        """
         self.max_calls = max_calls
         self.window_seconds = window_seconds
         self.max_buckets = max_buckets
@@ -224,7 +231,14 @@ class DuplicateCallSuppressionMiddleware(Middleware):
         *,
         max_sessions: int = 4096,
     ) -> None:
-        """Configure repeat thresholds for identical call suppression."""
+        """Configure repeat thresholds for identical call suppression.
+
+        Args:
+            cache_backend (CacheBackend): Storage backend for cached responses.
+            max_repeats (int, optional): Maximum identical consecutive calls before rejection. Default to 6.
+            window_seconds (int, optional): Window seconds. Default to 30.
+            max_sessions (int, optional): Maximum tracked sessions before pruning. Default to 4096.
+        """
         self.max_repeats = max_repeats
         self.window_seconds = window_seconds
         self.max_sessions = max_sessions
@@ -286,7 +300,13 @@ class ResponseCachingMiddleware(Middleware):
         ttl_seconds: int = 30,
         tools: set[str] | None = None,
     ) -> None:
-        """Initialize short-window cache behavior and cacheable tool set."""
+        """Initialize short-window cache behavior and cacheable tool set.
+
+        Args:
+            cache_backend (CacheBackend): Storage backend for cached responses.
+            ttl_seconds (int, optional): Time-to-live in seconds for cached results. Default to 30.
+            tools (set[str] | None, optional): Restrict caching to specific tool names. Default to None.
+        """
         self.cache_backend = cache_backend
         self.ttl_seconds = ttl_seconds
         self.tools = tools or {
@@ -332,7 +352,12 @@ class ResponseLimitingMiddleware(Middleware):
     """Reject oversized responses to keep editor clients responsive."""
 
     def __init__(self, max_response_bytes: int = 2_000_000) -> None:
-        """Configure maximum response payload size in bytes."""
+        """Configure maximum response payload size in bytes.
+
+        Args:
+            cache_backend (CacheBackend): Storage backend for cached responses.
+            max_response_bytes (int, optional): Maximum response size in bytes before truncation. Default to 2000000.
+        """
         self.max_response_bytes = max_response_bytes
 
     async def on_call_tool(

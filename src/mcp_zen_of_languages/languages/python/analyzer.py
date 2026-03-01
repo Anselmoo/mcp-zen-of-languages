@@ -58,12 +58,12 @@ class PythonAnalyzer(BaseAnalyzer, LocationHelperMixin):
         """Initialise the Python analyzer with optional config overrides.
 
         Args:
-            config (AnalyzerConfig | None): Typed analyzer configuration controlling thresholds such as
+            config (AnalyzerConfig | None, optional): Typed analyzer configuration controlling thresholds such as
                 max cyclomatic complexity or nesting depth.  When ``None``,
-                ``default_config()`` supplies sensible defaults.
-            pipeline_config (PipelineConfig | None): Pipeline-level overrides merged on top of the
+                ``default_config()`` supplies sensible defaults. Default to None.
+            pipeline_config (PipelineConfig | None, optional): Pipeline-level overrides merged on top of the
                 rule-derived detector defaults.  Typically loaded from the
-                ``pipelines:`` section of ``zen-config.yaml``.
+                ``pipelines:`` section of ``zen-config.yaml``. Default to None.
         """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)

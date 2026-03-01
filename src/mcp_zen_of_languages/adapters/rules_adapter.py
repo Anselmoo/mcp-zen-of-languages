@@ -95,9 +95,9 @@ class RulesAdapter:
         Args:
             language (str): Lowercase language key (e.g. ``"python"``,
                 ``"rust"``).
-            config (RulesAdapterConfig | None): Threshold overrides.  When
+            config (RulesAdapterConfig | None, optional): Threshold overrides.  When
                 ``None``, a default ``RulesAdapterConfig`` with all overrides
-                unset is created.
+                unset is created. Default to None.
         """
         self.language = language
         self.config = config or RulesAdapterConfig()
@@ -128,12 +128,12 @@ class RulesAdapter:
 
         Args:
             code (str): Source code to analyse.
-            cyclomatic_summary (CyclomaticSummary | None): Pre-computed
-                cyclomatic-complexity metrics, typically produced by ``radon``.
-            maintainability_index (float | None): Radon maintainability index
-                (0-100 scale).
-            dependency_analysis (DependencyAnalysis | None): Import-graph
-                analysis produced by upstream dependency resolution.
+            cyclomatic_summary (CyclomaticSummary | None, optional): Pre-computed
+                cyclomatic-complexity metrics, typically produced by ``radon``. Default to None.
+            maintainability_index (float | None, optional): Radon maintainability index
+                (0-100 scale). Default to None.
+            dependency_analysis (DependencyAnalysis | None, optional): Import-graph
+                analysis produced by upstream dependency resolution. Default to None.
 
         Returns:
             list[Violation]: All violations found across every registered
@@ -544,7 +544,7 @@ class RulesAdapter:
                 ``"cyclomatic_complexity"``).
 
         Returns:
-            A ``DetectorConfig`` ready to be passed into a
+            DetectorConfig: A ``DetectorConfig`` ready to be passed into a
             ``ViolationDetector.detect`` call.
 
         See Also:
@@ -600,7 +600,7 @@ class RulesAdapter:
             violations (list[Violation]): Violation list to summarise.
 
         Returns:
-            Dict with keys ``"critical"``, ``"high"``, ``"medium"``, ``"low"``
+            dict[str, int]: Dict with keys ``"critical"``, ``"high"``, ``"medium"``, ``"low"``
             mapped to integer counts.
         """
         summary = {

@@ -64,9 +64,9 @@ class DetectorConfig(BaseModel):
         discriminator if no messages are configured.
 
         Args:
-            contains (str | None): Optional substring to match against available messages.
-            index (int): Zero-based position selecting a message when no substring
-                match is requested.
+            contains (str | None, optional): Optional substring to match against available messages. Default to None.
+            index (int, optional): Zero-based position selecting a message when no substring
+                match is requested. Default to 0.
 
         Returns:
             str: The selected violation message text.

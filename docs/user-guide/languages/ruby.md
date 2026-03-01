@@ -39,23 +39,24 @@ Ruby is designed for programmer happiness — expressive, elegant, optimized for
 
 </div>
 
-| Rule ID | Principle | Category | Severity |
-|---------|-----------|----------|:--------:|
-| `ruby-001` | Convention over configuration | Idioms | 7 |
-| `ruby-002` | DRY (Don't Repeat Yourself) | Architecture | 8 |
-| `ruby-003` | Prefer blocks over lambdas/procs | Idioms | 6 |
-| `ruby-004` | Avoid monkey-patching core classes | Architecture | 9 |
-| `ruby-005` | Use meaningful method names with ?/! convention | Readability | 7 |
-| `ruby-006` | Keep method chains readable | Readability | 6 |
-| `ruby-007` | Prefer symbols over strings for keys | Idioms | 5 |
-| `ruby-008` | Use guard clauses | Structure | 6 |
-| `ruby-009` | Avoid needless metaprogramming | Complexity | 8 |
-| `ruby-010` | Use Ruby's expressive syntax | Idioms | 6 |
-| `ruby-011` | Prefer fail over raise for exceptions | Error Handling | 5 |
+| Rule ID | Principle | Category | Severity | Dogma |
+|---------|-----------|----------|:--------:|-------|
+| `ruby-001` | Convention over configuration | Idioms | 7 | `ZEN-RIGHT-ABSTRACTION` |
+| `ruby-002` | DRY (Don't Repeat Yourself) | Architecture | 8 | `ZEN-RIGHT-ABSTRACTION` |
+| `ruby-003` | Prefer blocks over lambdas/procs | Idioms | 6 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-PROPORTIONATE-COMPLEXITY` |
+| `ruby-004` | Avoid monkey-patching core classes | Architecture | 9 | `ZEN-RIGHT-ABSTRACTION` |
+| `ruby-005` | Use meaningful method names with ?/! convention | Readability | 7 | `ZEN-UNAMBIGUOUS-NAME` |
+| `ruby-006` | Keep method chains readable | Readability | 6 | `ZEN-UNAMBIGUOUS-NAME` |
+| `ruby-007` | Prefer symbols over strings for keys | Idioms | 5 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-UNAMBIGUOUS-NAME` |
+| `ruby-008` | Use guard clauses | Structure | 6 | `ZEN-RETURN-EARLY` |
+| `ruby-009` | Avoid needless metaprogramming | Complexity | 8 | `ZEN-PROPORTIONATE-COMPLEXITY` |
+| `ruby-010` | Use Ruby's expressive syntax | Idioms | 6 | `ZEN-RIGHT-ABSTRACTION` |
+| `ruby-011` | Prefer fail over raise for exceptions | Error Handling | 5 | `ZEN-FAIL-FAST` |
 
 ??? info "`ruby-001` — Convention over configuration"
     **Follow Ruby naming and structural conventions**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - camelCase instead of snake_case
@@ -72,6 +73,7 @@ Ruby is designed for programmer happiness — expressive, elegant, optimized for
 ??? info "`ruby-002` — DRY (Don't Repeat Yourself)"
     **Eliminate code duplication through abstraction**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Duplicated code blocks (>5 lines)
@@ -87,6 +89,7 @@ Ruby is designed for programmer happiness — expressive, elegant, optimized for
 ??? info "`ruby-003` — Prefer blocks over lambdas/procs"
     **Use blocks for most iteration and callbacks**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-PROPORTIONATE-COMPLEXITY`
     **Common Violations:**
 
     - Lambda where block would be clearer
@@ -101,6 +104,7 @@ Ruby is designed for programmer happiness — expressive, elegant, optimized for
 ??? info "`ruby-004` — Avoid monkey-patching core classes"
     **Don't modify String, Array, or other core classes**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Reopening String class
@@ -117,6 +121,7 @@ Ruby is designed for programmer happiness — expressive, elegant, optimized for
 ??? info "`ruby-005` — Use meaningful method names with ?/! convention"
     **Methods ending in ? return boolean, ! indicate mutation**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
     **Common Violations:**
 
     - Boolean methods without ?
@@ -131,6 +136,7 @@ Ruby is designed for programmer happiness — expressive, elegant, optimized for
 ??? info "`ruby-006` — Keep method chains readable"
     **Limit method chaining to 3-4 calls**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
     **Common Violations:**
 
     - Method chains > 4 calls
@@ -146,6 +152,7 @@ Ruby is designed for programmer happiness — expressive, elegant, optimized for
 ??? info "`ruby-007` — Prefer symbols over strings for keys"
     **Use symbols for hash keys and identifiers**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-UNAMBIGUOUS-NAME`
     **Common Violations:**
 
     - String keys in hashes
@@ -160,6 +167,7 @@ Ruby is designed for programmer happiness — expressive, elegant, optimized for
 ??? info "`ruby-008` — Use guard clauses"
     **Return early to avoid deep nesting**
 
+    **Universal Dogmas:** `ZEN-RETURN-EARLY`
     **Common Violations:**
 
     - Deep nested if-else
@@ -176,6 +184,7 @@ Ruby is designed for programmer happiness — expressive, elegant, optimized for
 ??? info "`ruby-009` — Avoid needless metaprogramming"
     **Use metaprogramming sparingly and only when necessary**
 
+    **Universal Dogmas:** `ZEN-PROPORTIONATE-COMPLEXITY`
     **Common Violations:**
 
     - define_method without clear benefit
@@ -194,6 +203,7 @@ Ruby is designed for programmer happiness — expressive, elegant, optimized for
 ??? info "`ruby-010` — Use Ruby's expressive syntax"
     **Leverage Ruby's readable constructs**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - for loops instead of .each
@@ -209,6 +219,7 @@ Ruby is designed for programmer happiness — expressive, elegant, optimized for
 ??? info "`ruby-011` — Prefer fail over raise for exceptions"
     **Use fail to indicate programmer errors**
 
+    **Universal Dogmas:** `ZEN-FAIL-FAST`
     **Common Violations:**
 
     - Using raise for logic errors

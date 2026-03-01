@@ -48,23 +48,24 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 
 </div>
 
-| Rule ID | Principle | Category | Severity |
-|---------|-----------|----------|:--------:|
-| `js-001` | Avoid callback hell | Async | 8 |
-| `js-002` | Prefer const over let, never var | Immutability | 7 |
-| `js-003` | Use strict equality | Correctness | 8 |
-| `js-004` | Avoid global state | Architecture | 9 |
-| `js-005` | Functions should do one thing | Design | 7 |
-| `js-006` | Use modern ES6+ features | Idioms | 6 |
-| `js-007` | Handle errors explicitly | Error Handling | 9 |
-| `js-008` | Avoid magic numbers and strings | Clarity | 6 |
-| `js-009` | Prefer composition over inheritance | Architecture | 7 |
-| `js-010` | Keep functions pure when possible | Functional | 6 |
-| `js-011` | Use meaningful names | Readability | 8 |
+| Rule ID | Principle | Category | Severity | Dogma |
+|---------|-----------|----------|:--------:|-------|
+| `js-001` | Avoid callback hell | Async | 8 | `ZEN-FAIL-FAST`, `ZEN-RETURN-EARLY` |
+| `js-002` | Prefer const over let, never var | Immutability | 7 | `ZEN-VISIBLE-STATE` |
+| `js-003` | Use strict equality | Correctness | 8 | `ZEN-EXPLICIT-INTENT` |
+| `js-004` | Avoid global state | Architecture | 9 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-VISIBLE-STATE` |
+| `js-005` | Functions should do one thing | Design | 7 | `ZEN-RIGHT-ABSTRACTION` |
+| `js-006` | Use modern ES6+ features | Idioms | 6 | `ZEN-RIGHT-ABSTRACTION` |
+| `js-007` | Handle errors explicitly | Error Handling | 9 | `ZEN-FAIL-FAST`, `ZEN-EXPLICIT-INTENT` |
+| `js-008` | Avoid magic numbers and strings | Clarity | 6 | `ZEN-EXPLICIT-INTENT`, `ZEN-UNAMBIGUOUS-NAME` |
+| `js-009` | Prefer composition over inheritance | Architecture | 7 | `ZEN-RIGHT-ABSTRACTION` |
+| `js-010` | Keep functions pure when possible | Functional | 6 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-VISIBLE-STATE` |
+| `js-011` | Use meaningful names | Readability | 8 | `ZEN-UNAMBIGUOUS-NAME` |
 
 ??? info "`js-001` — Avoid callback hell"
     **Use modern async patterns instead of nested callbacks**
 
+    **Universal Dogmas:** `ZEN-FAIL-FAST`, `ZEN-RETURN-EARLY`
     **Common Violations:**
 
     - Nested callbacks > 2 levels
@@ -83,6 +84,7 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 ??? info "`js-002` — Prefer const over let, never var"
     **Use const by default for immutability**
 
+    **Universal Dogmas:** `ZEN-VISIBLE-STATE`
     **Common Violations:**
 
     - Using var keyword
@@ -97,6 +99,7 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 ??? info "`js-003` — Use strict equality"
     **Always use === and !== to avoid type coercion bugs**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Using == or !=
@@ -110,6 +113,7 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 ??? info "`js-004` — Avoid global state"
     **Minimize global variables and shared mutable state**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-VISIBLE-STATE`
     **Common Violations:**
 
     - Global variable declarations
@@ -126,6 +130,7 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 ??? info "`js-005` — Functions should do one thing"
     **Single Responsibility Principle for functions**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Functions > 50 lines
@@ -142,6 +147,7 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 ??? info "`js-006` — Use modern ES6+ features"
     **Leverage destructuring, arrow functions, template literals**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - String concatenation instead of template literals
@@ -157,6 +163,7 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 ??? info "`js-007` — Handle errors explicitly"
     **Always handle promise rejections and errors**
 
+    **Universal Dogmas:** `ZEN-FAIL-FAST`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Promises without .catch()
@@ -172,6 +179,7 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 ??? info "`js-008` — Avoid magic numbers and strings"
     **Use named constants for literal values**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`, `ZEN-UNAMBIGUOUS-NAME`
     **Common Violations:**
 
     - Hardcoded numbers with unclear meaning
@@ -186,6 +194,7 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 ??? info "`js-009` — Prefer composition over inheritance"
     **Use object composition and mixins instead of deep class hierarchies**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Inheritance chains > 2 levels
@@ -201,6 +210,7 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 ??? info "`js-010` — Keep functions pure when possible"
     **Minimize side effects and favor pure functions**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-VISIBLE-STATE`
     **Common Violations:**
 
     - Functions modifying external state
@@ -215,6 +225,7 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 ??? info "`js-011` — Use meaningful names"
     **Variable and function names should clearly express intent**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
     **Common Violations:**
 
     - Single letter variables (except loop counters)

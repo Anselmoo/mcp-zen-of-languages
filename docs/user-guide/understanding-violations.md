@@ -105,8 +105,19 @@ Reports use emoji badges for quick scanning:
 4. **Tune thresholds** — if a rule is too noisy for your codebase, adjust in [configuration](configuration.md)
 5. **Set CI thresholds** — use `severity_threshold` to block PRs only on high-severity issues
 
+## MCP Workflow
+
+Dogma-tagged violations power a three-step MCP loop:
+
+1. **Analyze** — `analyze_zen_violations` returns severity-scored violations tagged with [dogma identifiers](../getting-started/philosophy.md).
+2. **Explain** — `generate_prompts` produces remediation instructions grounded in the specific violated dogma.
+3. **Act** — `generate_agent_tasks` creates a prioritised task list an AI agent can execute directly.
+
+This turns static findings into a closed feedback loop: analyze in your IDE, generate prompts, apply fixes — without switching context.
+
 ## See Also
 
 - [Configuration](configuration.md) — How to tune severity thresholds
 - [Prompt Generation](prompt-generation.md) — Generate AI remediation from violations
+- [Philosophy](../getting-started/philosophy.md) — The 10 Dogmas that classify every violation
 - [Languages](languages/index.md) — See every principle and detector per language

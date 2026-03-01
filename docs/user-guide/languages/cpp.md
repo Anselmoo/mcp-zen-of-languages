@@ -40,25 +40,26 @@ Modern C++ (C++11 through C++20) is a fundamentally different language from the 
 
 </div>
 
-| Rule ID | Principle | Category | Severity |
-|---------|-----------|----------|:--------:|
-| `cpp-001` | Use RAII for resource management | Resource Management | 9 |
-| `cpp-002` | Prefer smart pointers over raw pointers | Memory Management | 9 |
-| `cpp-003` | Use auto for type deduction | Idioms | 6 |
-| `cpp-004` | Prefer nullptr over NULL or 0 | Correctness | 7 |
-| `cpp-005` | Use range-based for loops | Idioms | 6 |
-| `cpp-006` | Avoid manual memory allocation | Memory Management | 9 |
-| `cpp-007` | Use const correctness | Correctness | 8 |
-| `cpp-008` | Avoid C-style casts | Type Safety | 7 |
-| `cpp-009` | Follow Rule of Zero/Three/Five | Design | 8 |
-| `cpp-010` | Use std::move for rvalue references | Performance | 7 |
-| `cpp-011` | Avoid global variables | Design | 8 |
-| `cpp-012` | Use override and final keywords | Correctness | 7 |
-| `cpp-013` | Prefer std::optional over null pointers | Design | 6 |
+| Rule ID | Principle | Category | Severity | Dogma |
+|---------|-----------|----------|:--------:|-------|
+| `cpp-001` | Use RAII for resource management | Resource Management | 9 | `ZEN-STRICT-FENCES` |
+| `cpp-002` | Prefer smart pointers over raw pointers | Memory Management | 9 | `ZEN-VISIBLE-STATE` |
+| `cpp-003` | Use auto for type deduction | Idioms | 6 | `ZEN-RIGHT-ABSTRACTION` |
+| `cpp-004` | Prefer nullptr over NULL or 0 | Correctness | 7 | `ZEN-EXPLICIT-INTENT` |
+| `cpp-005` | Use range-based for loops | Idioms | 6 | `ZEN-RIGHT-ABSTRACTION` |
+| `cpp-006` | Avoid manual memory allocation | Memory Management | 9 | `ZEN-VISIBLE-STATE` |
+| `cpp-007` | Use const correctness | Correctness | 8 | `ZEN-EXPLICIT-INTENT` |
+| `cpp-008` | Avoid C-style casts | Type Safety | 7 | `ZEN-EXPLICIT-INTENT` |
+| `cpp-009` | Follow Rule of Zero/Three/Five | Design | 8 | `ZEN-RIGHT-ABSTRACTION` |
+| `cpp-010` | Use std::move for rvalue references | Performance | 7 | `ZEN-PROPORTIONATE-COMPLEXITY` |
+| `cpp-011` | Avoid global variables | Design | 8 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-VISIBLE-STATE` |
+| `cpp-012` | Use override and final keywords | Correctness | 7 | `ZEN-EXPLICIT-INTENT` |
+| `cpp-013` | Prefer std::optional over null pointers | Design | 6 | `ZEN-RIGHT-ABSTRACTION` |
 
 ??? info "`cpp-001` — Use RAII for resource management"
     **Resources should be tied to object lifetime**
 
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`
     **Common Violations:**
 
     - Manual new/delete
@@ -79,6 +80,7 @@ Modern C++ (C++11 through C++20) is a fundamentally different language from the 
 ??? info "`cpp-002` — Prefer smart pointers over raw pointers"
     **Use unique_ptr, shared_ptr for ownership**
 
+    **Universal Dogmas:** `ZEN-VISIBLE-STATE`
     **Common Violations:**
 
     - new/delete in modern code
@@ -94,6 +96,7 @@ Modern C++ (C++11 through C++20) is a fundamentally different language from the 
 ??? info "`cpp-003` — Use auto for type deduction"
     **Let the compiler deduce obvious types**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Verbose type declarations when auto works
@@ -107,6 +110,7 @@ Modern C++ (C++11 through C++20) is a fundamentally different language from the 
 ??? info "`cpp-004` — Prefer nullptr over NULL or 0"
     **Use nullptr for pointer initialization**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Using NULL macro
@@ -122,6 +126,7 @@ Modern C++ (C++11 through C++20) is a fundamentally different language from the 
 ??? info "`cpp-005` — Use range-based for loops"
     **Prefer for(auto& item : container)**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Index-based iteration
@@ -136,6 +141,7 @@ Modern C++ (C++11 through C++20) is a fundamentally different language from the 
 ??? info "`cpp-006` — Avoid manual memory allocation"
     **Use containers and smart pointers**
 
+    **Universal Dogmas:** `ZEN-VISIBLE-STATE`
     **Common Violations:**
 
     - malloc/free in C++ code
@@ -153,6 +159,7 @@ Modern C++ (C++11 through C++20) is a fundamentally different language from the 
 ??? info "`cpp-007` — Use const correctness"
     **Mark everything const that can be const**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Non-const member functions that don't modify
@@ -167,6 +174,7 @@ Modern C++ (C++11 through C++20) is a fundamentally different language from the 
 ??? info "`cpp-008` — Avoid C-style casts"
     **Use static_cast, dynamic_cast, const_cast**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - C-style casts: (Type)value
@@ -181,6 +189,7 @@ Modern C++ (C++11 through C++20) is a fundamentally different language from the 
 ??? info "`cpp-009` — Follow Rule of Zero/Three/Five"
     **Properly manage special member functions**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Custom destructor without copy/move control
@@ -197,6 +206,7 @@ Modern C++ (C++11 through C++20) is a fundamentally different language from the 
 ??? info "`cpp-010` — Use std::move for rvalue references"
     **Enable move semantics for efficiency**
 
+    **Universal Dogmas:** `ZEN-PROPORTIONATE-COMPLEXITY`
     **Common Violations:**
 
     - Copying when moving would work
@@ -210,6 +220,7 @@ Modern C++ (C++11 through C++20) is a fundamentally different language from the 
 ??? info "`cpp-011` — Avoid global variables"
     **Minimize mutable global state**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-VISIBLE-STATE`
     **Common Violations:**
 
     - Mutable global variables
@@ -224,6 +235,7 @@ Modern C++ (C++11 through C++20) is a fundamentally different language from the 
 ??? info "`cpp-012` — Use override and final keywords"
     **Explicitly mark virtual function overrides**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Virtual functions without override
@@ -237,6 +249,7 @@ Modern C++ (C++11 through C++20) is a fundamentally different language from the 
 ??? info "`cpp-013` — Prefer std::optional over null pointers"
     **Use std::optional for optional values**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Pointers for optional values

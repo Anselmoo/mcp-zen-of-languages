@@ -44,19 +44,20 @@ tags:
 
 </div>
 
-| Rule ID | Principle | Category | Severity |
-|---------|-----------|----------|:--------:|
-| `md-001` | Preserve heading hierarchy | Structure | 6 |
-| `md-002` | Images require meaningful alt text | Usability | 8 |
-| `md-003` | Avoid bare URLs in prose | Clarity | 5 |
-| `md-004` | Fence code blocks with explicit language tags | Documentation | 4 |
-| `md-005` | Keep front-matter complete when present | Configuration | 6 |
-| `md-006` | Use named default exports in MDX | Correctness | 6 |
-| `md-007` | Keep MDX imports hygienic | Organization | 5 |
+| Rule ID | Principle | Category | Severity | Dogma |
+|---------|-----------|----------|:--------:|-------|
+| `md-001` | Preserve heading hierarchy | Structure | 6 | `ZEN-RETURN-EARLY` |
+| `md-002` | Images require meaningful alt text | Usability | 8 | `ZEN-UNAMBIGUOUS-NAME` |
+| `md-003` | Avoid bare URLs in prose | Clarity | 5 | `ZEN-EXPLICIT-INTENT` |
+| `md-004` | Fence code blocks with explicit language tags | Documentation | 4 | `ZEN-UNAMBIGUOUS-NAME`, `ZEN-EXPLICIT-INTENT` |
+| `md-005` | Keep front-matter complete when present | Configuration | 6 | `ZEN-EXPLICIT-INTENT` |
+| `md-006` | Use named default exports in MDX | Correctness | 6 | `ZEN-EXPLICIT-INTENT`, `ZEN-UNAMBIGUOUS-NAME` |
+| `md-007` | Keep MDX imports hygienic | Organization | 5 | `ZEN-STRICT-FENCES` |
 
 ??? info "`md-001` — Preserve heading hierarchy"
     **Headings should not skip levels (for example H1 directly to H3).**
 
+    **Universal Dogmas:** `ZEN-RETURN-EARLY`
     **Common Violations:**
 
     - Heading level jump greater than one level
@@ -64,6 +65,7 @@ tags:
 ??? info "`md-002` — Images require meaningful alt text"
     **Every Markdown image should include non-empty alternative text.**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
     **Common Violations:**
 
     - Image markdown with empty alt text
@@ -75,6 +77,7 @@ tags:
 ??? info "`md-003` — Avoid bare URLs in prose"
     **Raw URLs should be wrapped as Markdown links or angle-bracket autolinks.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Bare URL in prose text
@@ -86,6 +89,7 @@ tags:
 ??? info "`md-004` — Fence code blocks with explicit language tags"
     **Fenced code blocks should declare a language for syntax highlighting.**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Code fence missing language identifier
@@ -97,6 +101,7 @@ tags:
 ??? info "`md-005` — Keep front-matter complete when present"
     **If YAML front-matter exists, required metadata keys must be provided.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Front-matter is missing required keys
@@ -110,6 +115,7 @@ tags:
 ??? info "`md-006` — Use named default exports in MDX"
     **Avoid anonymous default exports in MDX modules.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`, `ZEN-UNAMBIGUOUS-NAME`
     **Common Violations:**
 
     - Unnamed default export in MDX
@@ -117,6 +123,7 @@ tags:
 ??? info "`md-007` — Keep MDX imports hygienic"
     **Imported MDX components should be used in JSX or module code.**
 
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`
     **Common Violations:**
 
     - Imported MDX component is never used

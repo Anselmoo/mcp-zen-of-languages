@@ -47,16 +47,20 @@ tags:
 </div>
 {% endif %}
 
-| Rule ID | Principle | Category | Severity |
-|---------|-----------|----------|:--------:|
+| Rule ID | Principle | Category | Severity | Dogma |
+|---------|-----------|----------|:--------:|-------|
 {% for p in principles %}
-| `{{ p.id }}` | {{ p.principle }} | {{ p.category }} | {{ p.severity }} |
+| `{{ p.id }}` | {{ p.principle }} | {{ p.category }} | {{ p.severity }} | {% for d in p.dogmas %}`{{ d }}`{% if not loop.last %}, {% endif %}{% endfor %} |
 {% endfor %}
 
 {% for p in principles %}
 ??? info "`{{ p.id }}` — {{ p.principle }}"
     **{{ p.description }}**
 
+{% if p.dogmas %}
+    **Universal Dogmas:** {% for d in p.dogmas %}`{{ d }}`{% if not loop.last %}, {% endif %}{% endfor %}
+
+{% endif %}
 {% if p.violations %}
     **Common Violations:**
 

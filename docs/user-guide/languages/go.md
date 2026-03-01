@@ -41,24 +41,25 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
 
 </div>
 
-| Rule ID | Principle | Category | Severity |
-|---------|-----------|----------|:--------:|
-| `go-001` | Errors are values | Error Handling | 9 |
-| `go-002` | Accept interfaces, return structs | Design | 7 |
-| `go-003` | Make the zero value useful | Design | 6 |
-| `go-004` | Use short variable names | Readability | 5 |
-| `go-005` | Don't use pointer to interface | Design | 8 |
-| `go-006` | Avoid goroutine leaks | Concurrency | 9 |
-| `go-007` | Use defer for cleanup | Idioms | 7 |
-| `go-008` | Package names are singular | Organization | 5 |
-| `go-009` | Avoid package-level state | Architecture | 7 |
-| `go-010` | Keep interfaces small | Design | 7 |
-| `go-011` | Use context for cancellation | Concurrency | 8 |
-| `go-012` | Avoid init() when possible | Initialization | 6 |
+| Rule ID | Principle | Category | Severity | Dogma |
+|---------|-----------|----------|:--------:|-------|
+| `go-001` | Errors are values | Error Handling | 9 | `ZEN-FAIL-FAST`, `ZEN-EXPLICIT-INTENT` |
+| `go-002` | Accept interfaces, return structs | Design | 7 | `ZEN-RIGHT-ABSTRACTION` |
+| `go-003` | Make the zero value useful | Design | 6 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-EXPLICIT-INTENT` |
+| `go-004` | Use short variable names | Readability | 5 | `ZEN-UNAMBIGUOUS-NAME` |
+| `go-005` | Don't use pointer to interface | Design | 8 | `ZEN-RIGHT-ABSTRACTION` |
+| `go-006` | Avoid goroutine leaks | Concurrency | 9 | `ZEN-VISIBLE-STATE` |
+| `go-007` | Use defer for cleanup | Idioms | 7 | `ZEN-RIGHT-ABSTRACTION` |
+| `go-008` | Package names are singular | Organization | 5 | `ZEN-STRICT-FENCES`, `ZEN-UNAMBIGUOUS-NAME` |
+| `go-009` | Avoid package-level state | Architecture | 7 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-VISIBLE-STATE` |
+| `go-010` | Keep interfaces small | Design | 7 | `ZEN-RIGHT-ABSTRACTION` |
+| `go-011` | Use context for cancellation | Concurrency | 8 | `ZEN-VISIBLE-STATE` |
+| `go-012` | Avoid init() when possible | Initialization | 6 | `ZEN-EXPLICIT-INTENT` |
 
 ??? info "`go-001` — Errors are values"
     **Handle errors explicitly, don't panic**
 
+    **Universal Dogmas:** `ZEN-FAIL-FAST`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Ignoring error returns
@@ -74,6 +75,7 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
 ??? info "`go-002` — Accept interfaces, return structs"
     **Function parameters should be interfaces, returns concrete types**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Returning interfaces from functions
@@ -87,6 +89,7 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
 ??? info "`go-003` — Make the zero value useful"
     **Structs should be usable without explicit initialization**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Structs requiring explicit initialization
@@ -100,6 +103,7 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
 ??? info "`go-004` — Use short variable names"
     **Prefer short, contextual names in limited scopes**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
     **Common Violations:**
 
     - Long variable names in small scopes
@@ -109,6 +113,7 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
 ??? info "`go-005` — Don't use pointer to interface"
     **Interfaces are already pointers, don't add ***
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - *Interface type parameters
@@ -122,6 +127,7 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
 ??? info "`go-006` — Avoid goroutine leaks"
     **Always ensure goroutines can terminate**
 
+    **Universal Dogmas:** `ZEN-VISIBLE-STATE`
     **Common Violations:**
 
     - Goroutines without cancellation
@@ -136,6 +142,7 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
 ??? info "`go-007` — Use defer for cleanup"
     **Defer resource cleanup immediately after acquisition**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Manual cleanup scattered in code
@@ -145,6 +152,7 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
 ??? info "`go-008` — Package names are singular"
     **Package names should be lowercase, singular nouns**
 
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`, `ZEN-UNAMBIGUOUS-NAME`
     **Common Violations:**
 
     - Plural package names (utils → util)
@@ -159,6 +167,7 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
 ??? info "`go-009` — Avoid package-level state"
     **Minimize global variables and package-level mutable state**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-VISIBLE-STATE`
     **Common Violations:**
 
     - Mutable package-level variables
@@ -172,6 +181,7 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
 ??? info "`go-010` — Keep interfaces small"
     **Prefer many small interfaces over large ones**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Interfaces with > 3 methods
@@ -187,6 +197,7 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
 ??? info "`go-011` — Use context for cancellation"
     **Pass context.Context for cancellation and deadlines**
 
+    **Universal Dogmas:** `ZEN-VISIBLE-STATE`
     **Common Violations:**
 
     - Long-running functions without context
@@ -196,6 +207,7 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
 ??? info "`go-012` — Avoid init() when possible"
     **Prefer explicit initialization over init()**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Complex logic in init()

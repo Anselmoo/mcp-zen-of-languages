@@ -41,25 +41,26 @@ Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullab
 
 </div>
 
-| Rule ID | Principle | Category | Severity |
-|---------|-----------|----------|:--------:|
-| `cs-001` | Use nullable reference types | Type Safety | 8 |
-| `cs-002` | Use expression-bodied members | Idioms | 5 |
-| `cs-003` | Prefer var for local variables | Readability | 5 |
-| `cs-004` | Use async/await properly | Async | 9 |
-| `cs-005` | Use pattern matching | Idioms | 6 |
-| `cs-006` | Prefer string interpolation | Readability | 6 |
-| `cs-007` | Use collection expressions | Idioms | 5 |
-| `cs-008` | Follow naming conventions | Readability | 7 |
-| `cs-009` | Use IDisposable and using statements | Resource Management | 9 |
-| `cs-010` | Avoid magic numbers | Clarity | 6 |
-| `cs-011` | Use LINQ appropriately | Idioms | 7 |
-| `cs-012` | Handle exceptions properly | Error Handling | 8 |
-| `cs-013` | Use records for DTOs | Design | 6 |
+| Rule ID | Principle | Category | Severity | Dogma |
+|---------|-----------|----------|:--------:|-------|
+| `cs-001` | Use nullable reference types | Type Safety | 8 | `ZEN-EXPLICIT-INTENT` |
+| `cs-002` | Use expression-bodied members | Idioms | 5 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-VISIBLE-STATE`, `ZEN-PROPORTIONATE-COMPLEXITY` |
+| `cs-003` | Prefer var for local variables | Readability | 5 | `ZEN-UNAMBIGUOUS-NAME`, `ZEN-EXPLICIT-INTENT` |
+| `cs-004` | Use async/await properly | Async | 9 | `ZEN-FAIL-FAST` |
+| `cs-005` | Use pattern matching | Idioms | 6 | `ZEN-RIGHT-ABSTRACTION` |
+| `cs-006` | Prefer string interpolation | Readability | 6 | `ZEN-UNAMBIGUOUS-NAME`, `ZEN-PROPORTIONATE-COMPLEXITY` |
+| `cs-007` | Use collection expressions | Idioms | 5 | `ZEN-RIGHT-ABSTRACTION` |
+| `cs-008` | Follow naming conventions | Readability | 7 | `ZEN-UNAMBIGUOUS-NAME` |
+| `cs-009` | Use IDisposable and using statements | Resource Management | 9 | `ZEN-STRICT-FENCES`, `ZEN-VISIBLE-STATE` |
+| `cs-010` | Avoid magic numbers | Clarity | 6 | `ZEN-EXPLICIT-INTENT`, `ZEN-UNAMBIGUOUS-NAME`, `ZEN-VISIBLE-STATE` |
+| `cs-011` | Use LINQ appropriately | Idioms | 7 | `ZEN-RIGHT-ABSTRACTION` |
+| `cs-012` | Handle exceptions properly | Error Handling | 8 | `ZEN-FAIL-FAST` |
+| `cs-013` | Use records for DTOs | Design | 6 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-PROPORTIONATE-COMPLEXITY` |
 
 ??? info "`cs-001` — Use nullable reference types"
     **Enable nullable reference types for null safety**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Not enabling nullable in project
@@ -74,6 +75,7 @@ Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullab
 ??? info "`cs-002` — Use expression-bodied members"
     **Use => for simple properties and methods**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-VISIBLE-STATE`, `ZEN-PROPORTIONATE-COMPLEXITY`
     **Common Violations:**
 
     - Full method bodies for one-line methods
@@ -87,6 +89,7 @@ Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullab
 ??? info "`cs-003` — Prefer var for local variables"
     **Use var when type is obvious from right side**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Explicit types when var would be clear
@@ -100,6 +103,7 @@ Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullab
 ??? info "`cs-004` — Use async/await properly"
     **Follow async best practices, avoid blocking**
 
+    **Universal Dogmas:** `ZEN-FAIL-FAST`
     **Common Violations:**
 
     - .Result or .Wait() on Tasks
@@ -116,6 +120,7 @@ Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullab
 ??? info "`cs-005` — Use pattern matching"
     **Leverage modern pattern matching features**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Type checks with 'is' followed by cast
@@ -130,6 +135,7 @@ Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullab
 ??? info "`cs-006` — Prefer string interpolation"
     **Use $"" instead of string.Format or concatenation**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`, `ZEN-PROPORTIONATE-COMPLEXITY`
     **Common Violations:**
 
     - String.Format for simple formatting
@@ -144,6 +150,7 @@ Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullab
 ??? info "`cs-007` — Use collection expressions"
     **Use [] for collection initialization (C# 12+)**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - new List<T> { } when [] works
@@ -158,6 +165,7 @@ Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullab
 ??? info "`cs-008` — Follow naming conventions"
     **PascalCase for public, camelCase for private**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
     **Common Violations:**
 
     - camelCase for public members
@@ -175,6 +183,7 @@ Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullab
 ??? info "`cs-009` — Use IDisposable and using statements"
     **Properly dispose resources with using**
 
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`, `ZEN-VISIBLE-STATE`
     **Common Violations:**
 
     - Not using 'using' for IDisposable
@@ -190,6 +199,7 @@ Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullab
 ??? info "`cs-010` — Avoid magic numbers"
     **Use named constants or enums**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`, `ZEN-UNAMBIGUOUS-NAME`, `ZEN-VISIBLE-STATE`
     **Common Violations:**
 
     - Hardcoded numbers in logic
@@ -204,6 +214,7 @@ Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullab
 ??? info "`cs-011` — Use LINQ appropriately"
     **Leverage LINQ for collection operations**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Manual loops instead of LINQ
@@ -218,6 +229,7 @@ Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullab
 ??? info "`cs-012` — Handle exceptions properly"
     **Catch specific exceptions, don't swallow errors**
 
+    **Universal Dogmas:** `ZEN-FAIL-FAST`
     **Common Violations:**
 
     - Empty catch blocks
@@ -233,6 +245,7 @@ Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullab
 ??? info "`cs-013` — Use records for DTOs"
     **Use record types for data transfer objects**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-PROPORTIONATE-COMPLEXITY`
     **Common Violations:**
 
     - Classes for simple DTOs

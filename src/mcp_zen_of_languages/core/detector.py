@@ -25,8 +25,7 @@ class LanguageAdapter(Protocol):
         """Return language-specific analysis for a source snippet.
 
         Note:
-            The Programming language identifier is defined as a class attribute
-            and not an argument to this method because the adapter instance is registered under a specific language in the UniversalZenDetector.
+            The Programming language identifier is defined as a class attribute and not an argument to this method because the adapter instance is registered under a specific language in the UniversalZenDetector.
             The analyze method is then called with code and path, and the adapter implementation can assume the language context based on its registration.
 
         Args:

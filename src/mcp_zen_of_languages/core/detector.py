@@ -24,9 +24,13 @@ class LanguageAdapter(Protocol):
     def analyze(self, code: str, path: str | None = None) -> AnalysisResult:
         """Return language-specific analysis for a source snippet.
 
+        Note:
+            The Programming language identifier is defined as a class attribute
+            and not an argument to this method because the adapter instance is registered under a specific language in the UniversalZenDetector.
+            The analyze method is then called with code and path, and the adapter implementation can assume the language context based on its registration.
+
         Args:
             code (str): Source code to analyse.
-            language (str): Programming language identifier.
             path (str | None, optional): File path being analysed. Default to None.
         """
 
@@ -35,7 +39,10 @@ class ReporterInterface(Protocol):
     """Reporter contract for transport-specific output formatting."""
 
     def report(self, result: AnalysisResult) -> str | dict[str, object]:
-        """Format analysis output for the target transport."""
+        """Format analysis output for the target transport.
+
+        result (AnalysisResult): The analysis result for every language analyser.
+        """
 
 
 class UniversalZenDetector:

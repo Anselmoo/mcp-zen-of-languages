@@ -443,6 +443,94 @@ class TsUnknownOverAnyConfig(DetectorConfig):
     max_any_for_unknown: int = 0
 
 
+class TsOptionalChainingConfig(DetectorConfig):
+    """TypeScript optional-chaining enforcement settings.
+
+    Attributes:
+        max_manual_null_checks: Maximum manual null-check chains allowed.
+    """
+
+    type: Literal["ts_optional_chaining"] = "ts_optional_chaining"
+    max_manual_null_checks: int = 0
+
+
+class TsIndexLoopConfig(DetectorConfig):
+    """TypeScript index-loop enforcement settings.
+
+    Attributes:
+        max_index_loops: Maximum C-style index loops allowed.
+    """
+
+    type: Literal["ts_index_loops"] = "ts_index_loops"
+    max_index_loops: int = 0
+
+
+class TsPromiseChainConfig(DetectorConfig):
+    """TypeScript promise-chain enforcement settings.
+
+    Attributes:
+        max_promise_chains: Maximum raw promise chains allowed.
+    """
+
+    type: Literal["ts_promise_chains"] = "ts_promise_chains"
+    max_promise_chains: int = 0
+
+
+class TsDefaultExportConfig(DetectorConfig):
+    """TypeScript default-export enforcement settings.
+
+    Attributes:
+        max_default_exports: Maximum default exports allowed.
+    """
+
+    type: Literal["ts_default_exports"] = "ts_default_exports"
+    max_default_exports: int = 0
+
+
+class TsCatchAllTypeConfig(DetectorConfig):
+    """TypeScript catch-all type enforcement settings.
+
+    Attributes:
+        max_catch_all_types: Maximum catch-all type annotations allowed.
+    """
+
+    type: Literal["ts_catch_all_types"] = "ts_catch_all_types"
+    max_catch_all_types: int = 0
+
+
+class TsConsoleUsageConfig(DetectorConfig):
+    """TypeScript console-usage enforcement settings.
+
+    Attributes:
+        max_console_usages: Maximum console.* calls allowed.
+    """
+
+    type: Literal["ts_console_usage"] = "ts_console_usage"
+    max_console_usages: int = 0
+
+
+class TsRequireImportConfig(DetectorConfig):
+    """TypeScript require-import enforcement settings.
+
+    Attributes:
+        max_require_calls: Maximum require() calls allowed.
+    """
+
+    type: Literal["ts_require_imports"] = "ts_require_imports"
+    max_require_calls: int = 0
+
+
+class TsStringConcatConfig(DetectorConfig):
+    """TypeScript string-concatenation enforcement settings.
+
+    Attributes:
+        max_string_concats: Maximum string concatenation patterns allowed.
+    """
+
+    type: Literal["ts_string_concats"] = "ts_string_concats"
+    max_string_concats: int = 0
+
+
 class JsCallbackNestingConfig(DetectorConfig):
     """JavaScript callback-nesting depth enforcement settings.
 

@@ -81,6 +81,8 @@
 | TypeScript | `ts-006` | Leverage type guards | 7 |
 | TypeScript | `ts-008` | Avoid non-null assertions | 8 |
 | TypeScript | `ts-010` | Prefer unknown over any for uncertain types | 7 |
+| TypeScript | `ts-015` | Avoid catch-all types like Object or {} | 6 |
+| TypeScript | `ts-016` | Avoid console usage in production code | 4 |
 | XML | `xml-001` | Mark up meaning, not presentation | 5 |
 | XML | `xml-003` | Namespaces prevent local collisions | 6 |
 | XML | `xml-004` | Validity supersedes well-formedness | 6 |
@@ -107,6 +109,8 @@
 | Python | `python-003` | Simple is better than complex | 8 |
 | Python | `python-005` | Flat is better than nested | 8 |
 | Ruby | `ruby-008` | Use guard clauses | 6 |
+| TypeScript | `ts-011` | Use optional chaining instead of manual null checks | 5 |
+| TypeScript | `ts-013` | Prefer async/await over raw promise chains | 6 |
 | XML | `xml-002` | Attributes for metadata, Elements for data | 5 |
 | XML | `xml-005` | Hierarchy represents ownership | 4 |
 
@@ -139,6 +143,10 @@
 | Rust | `rust-014` | Error types should implement standard error traits | 8 |
 | TypeScript | `ts-004` | Always specify return types | 7 |
 | TypeScript | `ts-010` | Prefer unknown over any for uncertain types | 7 |
+| TypeScript | `ts-012` | Prefer for-of and array methods over index loops | 4 |
+| TypeScript | `ts-013` | Prefer async/await over raw promise chains | 6 |
+| TypeScript | `ts-016` | Avoid console usage in production code | 4 |
+| TypeScript | `ts-018` | Use template literals instead of string concatenation | 3 |
 
 ### Meaningful Abstraction — `ZEN-RIGHT-ABSTRACTION`
 
@@ -195,6 +203,9 @@
 | TypeScript | `ts-003` | Prefer interfaces over type aliases for objects | 5 |
 | TypeScript | `ts-007` | Use utility types | 6 |
 | TypeScript | `ts-009` | Use enums or const assertions appropriately | 6 |
+| TypeScript | `ts-011` | Use optional chaining instead of manual null checks | 5 |
+| TypeScript | `ts-012` | Prefer for-of and array methods over index loops | 4 |
+| TypeScript | `ts-017` | Use ES module imports instead of require() | 5 |
 
 ### Unambiguous Naming — `ZEN-UNAMBIGUOUS-NAME`
 
@@ -238,6 +249,8 @@
 | TOML | `toml-001` | Avoid inline tables | 6 |
 | TOML | `toml-004` | Avoid trailing commas | 5 |
 | TypeScript | `ts-003` | Prefer interfaces over type aliases for objects | 5 |
+| TypeScript | `ts-014` | Prefer named exports over default exports | 4 |
+| TypeScript | `ts-018` | Use template literals instead of string concatenation | 3 |
 | XML | `xml-003` | Namespaces prevent local collisions | 6 |
 | YAML | `yaml-001` | Use consistent indentation | 6 |
 | YAML | `yaml-002` | Avoid tabs in indentation | 7 |
@@ -311,6 +324,7 @@
 | Python | `python-012` | Namespaces are one honking great idea | 7 |
 | SQL | `sql-003` | Prefer parameterized SQL over dynamic concatenation | 9 |
 | TOML | `toml-006` | Order implies importance | 4 |
+| TypeScript | `ts-014` | Prefer named exports over default exports | 4 |
 | XML | `xml-003` | Namespaces prevent local collisions | 6 |
 
 ### Proportionate Complexity — `ZEN-PROPORTIONATE-COMPLEXITY`

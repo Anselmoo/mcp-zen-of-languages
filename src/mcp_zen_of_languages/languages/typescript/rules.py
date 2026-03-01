@@ -181,5 +181,125 @@ TYPESCRIPT_ZEN = LanguageZenPrinciples(
                 "max_any_for_unknown": 0,
             },
         ),
+        ZenPrinciple(
+            id="ts-011",
+            principle="Use optional chaining instead of manual null checks",
+            category=PrincipleCategory.IDIOMS,
+            severity=5,
+            description="Optional chaining (?.) simplifies nested property access and avoids verbose guard clauses",
+            violations=[
+                "Manual && chains for nested access",
+                "Verbose null/undefined checks before property access",
+                "Nested ternaries for safe property access",
+            ],
+            metrics={
+                "max_manual_null_checks": 0,
+            },
+        ),
+        ZenPrinciple(
+            id="ts-012",
+            principle="Prefer for-of and array methods over index loops",
+            category=PrincipleCategory.IDIOMS,
+            severity=4,
+            description="Modern iteration is more readable and less error-prone than C-style for loops",
+            violations=[
+                "Using for(let i=0; ...) when for-of suffices",
+                "Index-based iteration over arrays",
+                "Manual length-based loops",
+            ],
+            metrics={
+                "max_index_loops": 0,
+            },
+        ),
+        ZenPrinciple(
+            id="ts-013",
+            principle="Prefer async/await over raw promise chains",
+            category=PrincipleCategory.ASYNC,
+            severity=6,
+            description="async/await produces flatter, more readable asynchronous code than .then() chains",
+            violations=[
+                "Using .then() chains instead of await",
+                "Nested .then() callbacks",
+                "Mixing .then() and async/await styles",
+            ],
+            metrics={
+                "max_promise_chains": 0,
+            },
+        ),
+        ZenPrinciple(
+            id="ts-014",
+            principle="Prefer named exports over default exports",
+            category=PrincipleCategory.ORGANIZATION,
+            severity=4,
+            description="Named exports improve refactoring support and IDE auto-imports",
+            violations=[
+                "Using export default for modules",
+                "Default-exporting classes or functions",
+                "Inconsistent export styles in a project",
+            ],
+            metrics={
+                "max_default_exports": 0,
+            },
+        ),
+        ZenPrinciple(
+            id="ts-015",
+            principle="Avoid catch-all types like Object or {}",
+            category=PrincipleCategory.TYPE_SAFETY,
+            severity=6,
+            description="Catch-all types bypass the type system; use precise types or Record instead",
+            violations=[
+                "Typing as Object or object",
+                "Using {} as a type annotation",
+                "Overly broad type parameters",
+            ],
+            metrics={
+                "max_catch_all_types": 0,
+            },
+        ),
+        ZenPrinciple(
+            id="ts-016",
+            principle="Avoid console usage in production code",
+            category=PrincipleCategory.CLARITY,
+            severity=4,
+            description="Use a structured logging framework instead of console.log for production code",
+            violations=[
+                "console.log for debugging left in code",
+                "console.error instead of proper error handling",
+                "console.warn without structured logging",
+            ],
+            metrics={
+                "max_console_usages": 0,
+            },
+        ),
+        ZenPrinciple(
+            id="ts-017",
+            principle="Use ES module imports instead of require()",
+            category=PrincipleCategory.IDIOMS,
+            severity=5,
+            description="ES module syntax enables tree-shaking and static analysis",
+            violations=[
+                "Using require() in TypeScript files",
+                "Mixing require and import styles",
+                "CommonJS patterns in modern TypeScript",
+            ],
+            metrics={
+                "max_require_calls": 0,
+            },
+        ),
+        ZenPrinciple(
+            id="ts-018",
+            principle="Use template literals instead of string concatenation",
+            category=PrincipleCategory.READABILITY,
+            severity=3,
+            description="Template literals are more readable and less error-prone than + concatenation",
+            violations=[
+                "String concatenation with + operator",
+                "Multi-part string building with +",
+                "Variable interpolation via concatenation",
+            ],
+            metrics={
+                "max_string_concats": 0,
+            },
+        ),
     ],
 )

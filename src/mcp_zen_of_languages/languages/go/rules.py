@@ -11,15 +11,15 @@ GO_ZEN = LanguageZenPrinciples(
     language="go",
     name="Go",
     philosophy="Simplicity, Clarity, and Pragmatism",
-    source_text="Effective Go",
-    source_url=HttpUrl("https://go.dev/doc/effective_go"),
+    source_text="Effective Go & The Zen of Go",
+    source_url=HttpUrl("https://the-zen-of-go.netlify.app/"),
     principles=[
         ZenPrinciple(
             id="go-001",
             principle="Errors are values",
             category=PrincipleCategory.ERROR_HANDLING,
             severity=9,
-            description="Handle errors explicitly, don't panic",
+            description="Handle errors explicitly, don\'t panic",
             violations=[
                 "Ignoring error returns",
                 "_ assignment for errors",
@@ -70,10 +70,10 @@ GO_ZEN = LanguageZenPrinciples(
         ),
         ZenPrinciple(
             id="go-005",
-            principle="Don't use pointer to interface",
+            principle="Don\'t use pointer to interface",
             category=PrincipleCategory.DESIGN,
             severity=8,
-            description="Interfaces are already pointers, don't add *",
+            description="Interfaces are already pointers, don\'t add *",
             violations=[
                 "*Interface type parameters",
                 "Pointer to interface return types",
@@ -113,7 +113,7 @@ GO_ZEN = LanguageZenPrinciples(
             severity=5,
             description="Package names should be lowercase, singular nouns",
             violations=[
-                "Plural package names (utils → util)",
+                "Plural package names (utils \u2192 util)",
                 "CamelCase package names",
                 "Underscores in package names",
             ],
@@ -169,6 +169,130 @@ GO_ZEN = LanguageZenPrinciples(
                 "Side effects in init()",
             ],
             detectable_patterns=["func init("],
+        ),
+        ZenPrinciple(
+            id="go-013",
+            principle="Organize by responsibility",
+            category=PrincipleCategory.ORGANIZATION,
+            severity=6,
+            description=(
+                "Group code by domain responsibility, not by technical layer"
+            ),
+            violations=[
+                "Organizing packages by type (models/, controllers/)",
+                "Deeply nested package hierarchies",
+                "Circular package dependencies",
+                "Package names reflecting technical role instead of domain",
+            ],
+            detectable_patterns=["package models", "package controllers"],
+        ),
+        ZenPrinciple(
+            id="go-014",
+            principle="Embed for composition, not inheritance",
+            category=PrincipleCategory.STRUCTURE,
+            severity=7,
+            description=(
+                "Use struct embedding for composing behaviors, "
+                "not faking OOP inheritance"
+            ),
+            violations=[
+                "Deep embedding chains exceeding two levels",
+                "Embedding structs solely to access their fields",
+                "Name collisions from overlapping embedded methods",
+            ],
+            detectable_patterns=["type Foo struct { Bar"],
+            metrics={"max_embedding_depth": 2},
+        ),
+        ZenPrinciple(
+            id="go-015",
+            principle="Communicate by sharing memory through channels",
+            category=PrincipleCategory.CONCURRENCY,
+            severity=8,
+            description=(
+                "Prefer channels over shared-memory synchronization primitives"
+            ),
+            violations=[
+                "Using sync.Mutex where a channel would be clearer",
+                "Shared mutable state accessed by multiple goroutines",
+                "Missing synchronization around concurrent map access",
+            ],
+            detectable_patterns=["sync.Mutex", "sync.RWMutex"],
+        ),
+        ZenPrinciple(
+            id="go-016",
+            principle="Avoid unnecessary complexity",
+            category=PrincipleCategory.COMPLEXITY,
+            severity=7,
+            description=(
+                "Prefer straightforward solutions; "
+                "complexity must be justified"
+            ),
+            violations=[
+                "Deeply nested control flow exceeding three levels",
+                "Functions longer than 50 lines",
+                "Cyclomatic complexity above 10 per function",
+            ],
+            metrics={"max_nesting_depth": 3, "max_function_lines": 50},
+        ),
+        ZenPrinciple(
+            id="go-017",
+            principle="Handle every error path",
+            category=PrincipleCategory.CORRECTNESS,
+            severity=9,
+            description=(
+                "Ensure all error branches are explicitly handled, "
+                "not just the happy path"
+            ),
+            violations=[
+                "Returning early without wrapping or annotating the error",
+                "Silently swallowing errors inside deferred calls",
+                "Using log.Fatal in library code instead of returning an error",
+            ],
+        ),
+        ZenPrinciple(
+            id="go-018",
+            principle="Avoid premature optimization",
+            category=PrincipleCategory.PERFORMANCE,
+            severity=5,
+            description=(
+                "Write clear code first; optimize only after "
+                "profiling proves a bottleneck"
+            ),
+            violations=[
+                "Unsafe pointer tricks without benchmark justification",
+                "Manual memory pooling where sync.Pool is not warranted",
+                "Replacing readable code with micro-optimizations "
+                "lacking profiling data",
+            ],
+        ),
+        ZenPrinciple(
+            id="go-019",
+            principle="Design for testability",
+            category=PrincipleCategory.DESIGN,
+            severity=7,
+            description=(
+                "Structure code so that dependencies can be replaced in tests"
+            ),
+            violations=[
+                "Hard-coded external service calls with no interface seam",
+                "Global state that prevents parallel test execution",
+                "Unexported helpers that duplicate test setup across packages",
+            ],
+        ),
+        ZenPrinciple(
+            id="go-020",
+            principle="Write self-documenting code",
+            category=PrincipleCategory.READABILITY,
+            severity=5,
+            description=(
+                "Let clear naming and structure replace the need "
+                "for most comments"
+            ),
+            violations=[
+                "Comments that restate the code instead of explaining intent",
+                "Exported symbols missing GoDoc-style comments",
+                "Magic numbers without named constants",
+            ],
         ),
     ],
 )

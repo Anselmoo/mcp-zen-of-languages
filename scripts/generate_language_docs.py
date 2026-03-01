@@ -25,6 +25,7 @@ from generate_implementation_counts import (
 )
 from jinja2 import Environment, FileSystemLoader
 
+from mcp_zen_of_languages.core.universal_dogmas import infer_dogmas_for_principle
 from mcp_zen_of_languages.utils.subprocess_runner import KNOWN_TOOLS
 
 # Maximum characters shown from a principle description in diagram labels
@@ -418,6 +419,8 @@ def _prepare_principle(p) -> dict:
         else:
             violations.append(str(v))
 
+    dogmas = infer_dogmas_for_principle(p)
+
     return {
         "id": p.id,
         "principle": p.principle,
@@ -428,6 +431,7 @@ def _prepare_principle(p) -> dict:
         "detectable_patterns": p.detectable_patterns or [],
         "metrics": p.metrics or {},
         "recommended_alternative": p.recommended_alternative,
+        "dogmas": list(dogmas),
     }
 
 
@@ -498,7 +502,7 @@ def render_language_page(
     )
 
 
-def render_config_formats_page(_env: Environment) -> str:  # noqa: C901
+def render_config_formats_page(_env: Environment) -> str:  # noqa: C901, PLR0912
     """Render the config-formats.md page for JSON/TOML/XML/YAML."""
     sections: list[str] = [
         textwrap.dedent(
@@ -537,16 +541,22 @@ def render_config_formats_page(_env: Environment) -> str:  # noqa: C901
         section = f"## {display_name} — {len(zen.principles)} Principles, {num_detectors} Detectors\n\n"
 
         # Principles table
-        section += "| Rule ID | Principle | Category | Severity |\n"
-        section += "|---------|-----------|----------|:--------:|\n"
+        section += "| Rule ID | Principle | Category | Severity | Dogma |\n"
+        section += "|---------|-----------|----------|:--------:|-------|\n"
         for p in principles:
-            section += f"| `{p['id']}` | {p['principle']} | {p['category']} | {p['severity']} |\n"
+            dogma_str = (
+                ", ".join(f"`{d}`" for d in p["dogmas"]) if p.get("dogmas") else ""
+            )
+            section += f"| `{p['id']}` | {p['principle']} | {p['category']} | {p['severity']} | {dogma_str} |\n"
         section += "\n"
 
         # Expandable details
         for p in principles:
             section += f'??? info "`{p["id"]}` — {p["principle"]}"\n'
             section += f"    **{p['description']}**\n\n"
+            if p.get("dogmas"):
+                dogma_str = ", ".join(f"`{d}`" for d in p["dogmas"])
+                section += f"    **Universal Dogmas:** {dogma_str}\n\n"
             if p["violations"]:
                 section += "    **Common Violations:**\n\n"
                 for v in p["violations"]:

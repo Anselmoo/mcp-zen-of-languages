@@ -45,27 +45,28 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
 
 </div>
 
-| Rule ID | Principle | Category | Severity |
-|---------|-----------|----------|:--------:|
-| `ps-001` | Use approved verbs | Naming | 7 |
-| `ps-002` | Use proper error handling | Error Handling | 9 |
-| `ps-003` | Use cmdlet binding and parameters | Design | 8 |
-| `ps-004` | Use PascalCase for function names | Naming | 7 |
-| `ps-005` | Use Write-Verbose and Write-Debug | Debugging | 6 |
-| `ps-006` | Avoid positional parameters | Readability | 7 |
-| `ps-007` | Use pipeline properly | Idioms | 7 |
-| `ps-008` | Use -WhatIf and -Confirm support | Safety | 8 |
-| `ps-009` | Use splatting for readability | Readability | 6 |
-| `ps-010` | Validate parameters properly | Robustness | 8 |
-| `ps-011` | Use comment-based help | Documentation | 7 |
-| `ps-012` | Avoid aliases in scripts | Clarity | 6 |
-| `ps-013` | Return objects, not formatted text | Design | 8 |
-| `ps-014` | Use script scope carefully | Scope | 7 |
-| `ps-015` | Handle null values explicitly | Correctness | 7 |
+| Rule ID | Principle | Category | Severity | Dogma |
+|---------|-----------|----------|:--------:|-------|
+| `ps-001` | Use approved verbs | Naming | 7 | `ZEN-UNAMBIGUOUS-NAME` |
+| `ps-002` | Use proper error handling | Error Handling | 9 | `ZEN-FAIL-FAST` |
+| `ps-003` | Use cmdlet binding and parameters | Design | 8 | `ZEN-RIGHT-ABSTRACTION` |
+| `ps-004` | Use PascalCase for function names | Naming | 7 | `ZEN-UNAMBIGUOUS-NAME` |
+| `ps-005` | Use Write-Verbose and Write-Debug | Debugging | 6 | `ZEN-EXPLICIT-INTENT` |
+| `ps-006` | Avoid positional parameters | Readability | 7 | `ZEN-UNAMBIGUOUS-NAME` |
+| `ps-007` | Use pipeline properly | Idioms | 7 | `ZEN-RIGHT-ABSTRACTION` |
+| `ps-008` | Use -WhatIf and -Confirm support | Safety | 8 | `ZEN-FAIL-FAST` |
+| `ps-009` | Use splatting for readability | Readability | 6 | `ZEN-UNAMBIGUOUS-NAME` |
+| `ps-010` | Validate parameters properly | Robustness | 8 | `ZEN-FAIL-FAST` |
+| `ps-011` | Use comment-based help | Documentation | 7 | `ZEN-UNAMBIGUOUS-NAME` |
+| `ps-012` | Avoid aliases in scripts | Clarity | 6 | `ZEN-EXPLICIT-INTENT`, `ZEN-UNAMBIGUOUS-NAME` |
+| `ps-013` | Return objects, not formatted text | Design | 8 | `ZEN-RIGHT-ABSTRACTION` |
+| `ps-014` | Use script scope carefully | Scope | 7 | `ZEN-STRICT-FENCES`, `ZEN-EXPLICIT-INTENT` |
+| `ps-015` | Handle null values explicitly | Correctness | 7 | `ZEN-EXPLICIT-INTENT`, `ZEN-FAIL-FAST` |
 
 ??? info "`ps-001` — Use approved verbs"
     **Function names should use approved PowerShell verbs**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
     **Common Violations:**
 
     - Non-standard verbs in function names
@@ -82,6 +83,7 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
 ??? info "`ps-002` — Use proper error handling"
     **Use try/catch/finally and -ErrorAction**
 
+    **Universal Dogmas:** `ZEN-FAIL-FAST`
     **Common Violations:**
 
     - Commands without error handling
@@ -97,6 +99,7 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
 ??? info "`ps-003` — Use cmdlet binding and parameters"
     **Functions should use [CmdletBinding()] and proper parameters**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Functions without [CmdletBinding()]
@@ -114,6 +117,7 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
 ??? info "`ps-004` — Use PascalCase for function names"
     **Follow PowerShell naming conventions**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
     **Common Violations:**
 
     - camelCase function names
@@ -130,6 +134,7 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
 ??? info "`ps-005` — Use Write-Verbose and Write-Debug"
     **Use proper output streams for logging**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Using Write-Host for logging
@@ -147,6 +152,7 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
 ??? info "`ps-006` — Avoid positional parameters"
     **Always use named parameters in scripts**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
     **Common Violations:**
 
     - Positional parameter usage
@@ -163,6 +169,7 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
 ??? info "`ps-007` — Use pipeline properly"
     **Leverage PowerShell pipeline for object processing**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - ForEach-Object loops instead of pipeline
@@ -179,6 +186,7 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
 ??? info "`ps-008` — Use -WhatIf and -Confirm support"
     **Implement ShouldProcess for destructive operations**
 
+    **Universal Dogmas:** `ZEN-FAIL-FAST`
     **Common Violations:**
 
     - Destructive commands without -WhatIf
@@ -195,6 +203,7 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
 ??? info "`ps-009` — Use splatting for readability"
     **Use splatting for multiple parameters**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
     **Common Violations:**
 
     - Long parameter lists inline
@@ -211,6 +220,7 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
 ??? info "`ps-010` — Validate parameters properly"
     **Use parameter validation attributes**
 
+    **Universal Dogmas:** `ZEN-FAIL-FAST`
     **Common Violations:**
 
     - No [ValidateNotNull()]
@@ -228,6 +238,7 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
 ??? info "`ps-011` — Use comment-based help"
     **Include .SYNOPSIS, .DESCRIPTION, .EXAMPLE**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
     **Common Violations:**
 
     - Functions without help comments
@@ -242,6 +253,7 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
 ??? info "`ps-012` — Avoid aliases in scripts"
     **Use full cmdlet names, not aliases**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`, `ZEN-UNAMBIGUOUS-NAME`
     **Common Violations:**
 
     - Using aliases like 'gci' instead of Get-ChildItem
@@ -259,6 +271,7 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
 ??? info "`ps-013` — Return objects, not formatted text"
     **Return structured objects for pipeline compatibility**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Returning formatted strings
@@ -277,6 +290,7 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
 ??? info "`ps-014` — Use script scope carefully"
     **Be explicit about variable scope**
 
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Unintended global variables
@@ -292,6 +306,7 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
 ??? info "`ps-015` — Handle null values explicitly"
     **Check for null before operations**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`, `ZEN-FAIL-FAST`
     **Common Violations:**
 
     - Not checking for $null

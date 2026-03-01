@@ -53,6 +53,12 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
+      - id: generate-dogma-mapping
+        name: Generate dogma mapping docs
+        entry: uv run python scripts/generate_dogma_mapping.py
+        language: system
+        pass_filenames: false
+        always_run: true
       - id: warn-missing-rule-coverage
         name: Warn on missing rule coverage
         entry: uv run python scripts/warn_missing_rule_coverage.py

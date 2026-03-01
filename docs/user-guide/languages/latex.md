@@ -39,21 +39,22 @@ tags:
 
 </div>
 
-| Rule ID | Principle | Category | Severity |
-|---------|-----------|----------|:--------:|
-| `latex-001` | Prefer \newcommand over \def | Correctness | 7 |
-| `latex-002` | Keep labels and references consistent | Correctness | 8 |
-| `latex-003` | Require captions in figures and tables | Documentation | 6 |
-| `latex-004` | Maintain bibliography hygiene | Organization | 6 |
-| `latex-005` | Avoid hardcoded absolute lengths | Consistency | 5 |
-| `latex-006` | Prefer semantic emphasis commands | Clarity | 4 |
-| `latex-007` | Prevent circular \input and \include chains | Architecture | 8 |
-| `latex-008` | Declare UTF-8 encoding intent | Correctness | 5 |
-| `latex-009` | Remove unused packages | Organization | 5 |
+| Rule ID | Principle | Category | Severity | Dogma |
+|---------|-----------|----------|:--------:|-------|
+| `latex-001` | Prefer \newcommand over \def | Correctness | 7 | `ZEN-EXPLICIT-INTENT` |
+| `latex-002` | Keep labels and references consistent | Correctness | 8 | `ZEN-EXPLICIT-INTENT` |
+| `latex-003` | Require captions in figures and tables | Documentation | 6 | `ZEN-UNAMBIGUOUS-NAME` |
+| `latex-004` | Maintain bibliography hygiene | Organization | 6 | `ZEN-STRICT-FENCES` |
+| `latex-005` | Avoid hardcoded absolute lengths | Consistency | 5 | `ZEN-EXPLICIT-INTENT` |
+| `latex-006` | Prefer semantic emphasis commands | Clarity | 4 | `ZEN-EXPLICIT-INTENT` |
+| `latex-007` | Prevent circular \input and \include chains | Architecture | 8 | `ZEN-RIGHT-ABSTRACTION` |
+| `latex-008` | Declare UTF-8 encoding intent | Correctness | 5 | `ZEN-EXPLICIT-INTENT` |
+| `latex-009` | Remove unused packages | Organization | 5 | `ZEN-STRICT-FENCES` |
 
 ??? info "`latex-001` — Prefer \newcommand over \def"
     **Use checked macro definitions to avoid accidental redefinitions.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Raw \def usage for user macros
@@ -61,6 +62,7 @@ tags:
 ??? info "`latex-002` — Keep labels and references consistent"
     **Every label should be referenced and every reference should resolve.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Unused labels or unresolved \ref/\eqref targets
@@ -68,6 +70,7 @@ tags:
 ??? info "`latex-003` — Require captions in figures and tables"
     **Figure and table environments should include captions for context.**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
     **Common Violations:**
 
     - Figure/table without \caption
@@ -75,6 +78,7 @@ tags:
 ??? info "`latex-004` — Maintain bibliography hygiene"
     **Prefer citation keys with bibliography files and avoid uncited entries.**
 
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`
     **Common Violations:**
 
     - Manual \bibitem blocks or uncited bibliography items
@@ -82,6 +86,7 @@ tags:
 ??? info "`latex-005` — Avoid hardcoded absolute lengths"
     **Prefer relative lengths such as \textwidth and \linewidth.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Absolute units like pt/cm/mm/in in layout-sensitive commands
@@ -89,6 +94,7 @@ tags:
 ??? info "`latex-006` — Prefer semantic emphasis commands"
     **Use semantic markup over direct visual styling commands.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - \textit or \textbf used as semantic emphasis
@@ -96,6 +102,7 @@ tags:
 ??? info "`latex-007` — Prevent circular \input and \include chains"
     **Included files must not create recursive include loops.**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Circular \input/\include dependency
@@ -103,6 +110,7 @@ tags:
 ??? info "`latex-008` — Declare UTF-8 encoding intent"
     **Declare UTF-8 input encoding unless using LuaTeX/XeTeX native flow.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Missing UTF-8 encoding declaration
@@ -110,6 +118,7 @@ tags:
 ??? info "`latex-009` — Remove unused packages"
     **Declared packages should have commands used in the document.**
 
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`
     **Common Violations:**
 
     - \usepackage declarations with no usage

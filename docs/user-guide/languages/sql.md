@@ -25,21 +25,22 @@ SQL queries are production code: they shape correctness, latency, and security j
 
 </div>
 
-| Rule ID | Principle | Category | Severity |
-|---------|-----------|----------|:--------:|
-| `sql-001` | Never use SELECT * | Performance | 6 |
-| `sql-002` | Always include INSERT column lists | Correctness | 7 |
-| `sql-003` | Prefer parameterized SQL over dynamic concatenation | Security | 9 |
-| `sql-004` | Avoid NOLOCK and dirty reads | Correctness | 8 |
-| `sql-005` | Avoid implicit type coercion in JOIN predicates | Performance | 6 |
-| `sql-006` | Bound result sets with WHERE/LIMIT/TOP | Performance | 5 |
-| `sql-007` | Use descriptive table aliases | Clarity | 4 |
-| `sql-008` | Keep transaction boundaries balanced | Correctness | 8 |
-| `sql-009` | Prefer explicit JOIN syntax over ANSI-89 comma joins | Readability | 6 |
+| Rule ID | Principle | Category | Severity | Dogma |
+|---------|-----------|----------|:--------:|-------|
+| `sql-001` | Never use SELECT * | Performance | 6 | `ZEN-PROPORTIONATE-COMPLEXITY`, `ZEN-EXPLICIT-INTENT` |
+| `sql-002` | Always include INSERT column lists | Correctness | 7 | `ZEN-EXPLICIT-INTENT`, `ZEN-VISIBLE-STATE` |
+| `sql-003` | Prefer parameterized SQL over dynamic concatenation | Security | 9 | `ZEN-STRICT-FENCES` |
+| `sql-004` | Avoid NOLOCK and dirty reads | Correctness | 8 | `ZEN-EXPLICIT-INTENT` |
+| `sql-005` | Avoid implicit type coercion in JOIN predicates | Performance | 6 | `ZEN-PROPORTIONATE-COMPLEXITY`, `ZEN-EXPLICIT-INTENT` |
+| `sql-006` | Bound result sets with WHERE/LIMIT/TOP | Performance | 5 | `ZEN-PROPORTIONATE-COMPLEXITY` |
+| `sql-007` | Use descriptive table aliases | Clarity | 4 | `ZEN-EXPLICIT-INTENT`, `ZEN-UNAMBIGUOUS-NAME` |
+| `sql-008` | Keep transaction boundaries balanced | Correctness | 8 | `ZEN-EXPLICIT-INTENT` |
+| `sql-009` | Prefer explicit JOIN syntax over ANSI-89 comma joins | Readability | 6 | `ZEN-UNAMBIGUOUS-NAME`, `ZEN-EXPLICIT-INTENT` |
 
 ??? info "`sql-001` — Never use SELECT *"
     **Enumerate explicit columns to avoid fragile, over-fetching queries.**
 
+    **Universal Dogmas:** `ZEN-PROPORTIONATE-COMPLEXITY`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - SELECT * detected
@@ -51,6 +52,7 @@ SQL queries are production code: they shape correctness, latency, and security j
 ??? info "`sql-002` — Always include INSERT column lists"
     **INSERT statements without a column list break on schema changes.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`, `ZEN-VISIBLE-STATE`
     **Common Violations:**
 
     - INSERT INTO table VALUES (...) without explicit columns
@@ -62,6 +64,7 @@ SQL queries are production code: they shape correctness, latency, and security j
 ??? info "`sql-003` — Prefer parameterized SQL over dynamic concatenation"
     **Dynamic SQL string concatenation increases SQL injection risk.**
 
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`
     **Common Violations:**
 
     - EXEC/EXECUTE with concatenated SQL string
@@ -76,6 +79,7 @@ SQL queries are production code: they shape correctness, latency, and security j
 ??? info "`sql-004` — Avoid NOLOCK and dirty reads"
     **WITH (NOLOCK) can silently read uncommitted and inconsistent data.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - NOLOCK table hint used
@@ -87,6 +91,7 @@ SQL queries are production code: they shape correctness, latency, and security j
 ??? info "`sql-005` — Avoid implicit type coercion in JOIN predicates"
     **Type mismatches in JOIN conditions often force index-unfriendly scans.**
 
+    **Universal Dogmas:** `ZEN-PROPORTIONATE-COMPLEXITY`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - JOIN predicate applies CAST/CONVERT in comparison
@@ -98,6 +103,7 @@ SQL queries are production code: they shape correctness, latency, and security j
 ??? info "`sql-006` — Bound result sets with WHERE/LIMIT/TOP"
     **Unbounded selects on large relations are costly and often accidental.**
 
+    **Universal Dogmas:** `ZEN-PROPORTIONATE-COMPLEXITY`
     **Common Violations:**
 
     - SELECT query without WHERE, LIMIT, or TOP
@@ -105,6 +111,7 @@ SQL queries are production code: they shape correctness, latency, and security j
 ??? info "`sql-007` — Use descriptive table aliases"
     **Single-letter or cryptic aliases reduce readability and maintenance speed.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`, `ZEN-UNAMBIGUOUS-NAME`
     **Common Violations:**
 
     - Single-letter table alias detected
@@ -112,6 +119,7 @@ SQL queries are production code: they shape correctness, latency, and security j
 ??? info "`sql-008` — Keep transaction boundaries balanced"
     **BEGIN TRANSACTION without COMMIT/ROLLBACK in the same file risks dangling transactions.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - BEGIN TRANSACTION without matching COMMIT or ROLLBACK
@@ -123,6 +131,7 @@ SQL queries are production code: they shape correctness, latency, and security j
 ??? info "`sql-009` — Prefer explicit JOIN syntax over ANSI-89 comma joins"
     **Comma-separated FROM joins are deprecated and less explicit than JOIN ... ON.**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - ANSI-89 comma join syntax detected

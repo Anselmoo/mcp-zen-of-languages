@@ -43,20 +43,21 @@ Stylesheets can accumulate hidden complexity quickly — deeply nested selectors
 
 </div>
 
-| Rule ID | Principle | Category | Severity |
-|---------|-----------|----------|:--------:|
-| `css-001` | Avoid specificity creep | Architecture | 7 |
-| `css-002` | Avoid magic pixel values | Design | 6 |
-| `css-003` | Limit inline color literals | Consistency | 6 |
-| `css-004` | Keep stylesheets modular | Organization | 5 |
-| `css-005` | Prefer modern import strategy | Performance | 6 |
-| `css-006` | Use a z-index scale | Consistency | 6 |
-| `css-007` | Avoid manual vendor prefixes | Consistency | 5 |
-| `css-008` | Use a consistent breakpoint scale | Consistency | 5 |
+| Rule ID | Principle | Category | Severity | Dogma |
+|---------|-----------|----------|:--------:|-------|
+| `css-001` | Avoid specificity creep | Architecture | 7 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-RETURN-EARLY` |
+| `css-002` | Avoid magic pixel values | Design | 6 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-EXPLICIT-INTENT` |
+| `css-003` | Limit inline color literals | Consistency | 6 | `ZEN-EXPLICIT-INTENT` |
+| `css-004` | Keep stylesheets modular | Organization | 5 | `ZEN-STRICT-FENCES` |
+| `css-005` | Prefer modern import strategy | Performance | 6 | `ZEN-PROPORTIONATE-COMPLEXITY` |
+| `css-006` | Use a z-index scale | Consistency | 6 | `ZEN-EXPLICIT-INTENT` |
+| `css-007` | Avoid manual vendor prefixes | Consistency | 5 | `ZEN-EXPLICIT-INTENT` |
+| `css-008` | Use a consistent breakpoint scale | Consistency | 5 | `ZEN-EXPLICIT-INTENT` |
 
 ??? info "`css-001` — Avoid specificity creep"
     **Deep selector nesting and !important overuse make styles brittle.**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-RETURN-EARLY`
     **Common Violations:**
 
     - Deeply nested selectors
@@ -72,6 +73,7 @@ Stylesheets can accumulate hidden complexity quickly — deeply nested selectors
 ??? info "`css-002` — Avoid magic pixel values"
     **Prefer design tokens and CSS variables over raw px values.**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Raw pixel values used directly
@@ -85,6 +87,7 @@ Stylesheets can accumulate hidden complexity quickly — deeply nested selectors
 ??? info "`css-003` — Limit inline color literals"
     **Prefer design tokens/variables over hardcoded color literals.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Inline hex/rgb/hsl color literal used
@@ -98,6 +101,7 @@ Stylesheets can accumulate hidden complexity quickly — deeply nested selectors
 ??? info "`css-004` — Keep stylesheets modular"
     **Very large stylesheet files should be split into modules.**
 
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`
     **Common Violations:**
 
     - Stylesheet exceeds line threshold
@@ -111,6 +115,7 @@ Stylesheets can accumulate hidden complexity quickly — deeply nested selectors
 ??? info "`css-005` — Prefer modern import strategy"
     **Avoid @import chains where @use/module composition is better.**
 
+    **Universal Dogmas:** `ZEN-PROPORTIONATE-COMPLEXITY`
     **Common Violations:**
 
     - @import usage detected
@@ -124,6 +129,7 @@ Stylesheets can accumulate hidden complexity quickly — deeply nested selectors
 ??? info "`css-006` — Use a z-index scale"
     **Arbitrary z-index values should follow a shared scale.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - z-index value outside approved scale
@@ -137,6 +143,7 @@ Stylesheets can accumulate hidden complexity quickly — deeply nested selectors
 ??? info "`css-007` — Avoid manual vendor prefixes"
     **Manual prefixes are typically handled by autoprefixer.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Manual vendor-prefixed property used
@@ -150,6 +157,7 @@ Stylesheets can accumulate hidden complexity quickly — deeply nested selectors
 ??? info "`css-008` — Use a consistent breakpoint scale"
     **Media query breakpoints should align to a defined scale.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Media query breakpoint not in approved scale

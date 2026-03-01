@@ -35,16 +35,17 @@ tags:
 
 </div>
 
-| Rule ID | Principle | Category | Severity |
-|---------|-----------|----------|:--------:|
-| `docker-compose-001` | Avoid latest tags in image definitions | Security | 8 |
-| `docker-compose-002` | Run services as non-root user | Security | 9 |
-| `docker-compose-003` | Declare service healthchecks | Robustness | 7 |
-| `docker-compose-004` | Keep secrets out of environment literals | Security | 9 |
+| Rule ID | Principle | Category | Severity | Dogma |
+|---------|-----------|----------|:--------:|-------|
+| `docker-compose-001` | Avoid latest tags in image definitions | Security | 8 | `ZEN-STRICT-FENCES` |
+| `docker-compose-002` | Run services as non-root user | Security | 9 | `ZEN-STRICT-FENCES`, `ZEN-EXPLICIT-INTENT` |
+| `docker-compose-003` | Declare service healthchecks | Robustness | 7 | `ZEN-FAIL-FAST` |
+| `docker-compose-004` | Keep secrets out of environment literals | Security | 9 | `ZEN-STRICT-FENCES` |
 
 ??? info "`docker-compose-001` — Avoid latest tags in image definitions"
     **Pin service image versions to avoid unplanned upgrades.**
 
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`
     **Common Violations:**
 
     - image uses latest tag
@@ -59,6 +60,7 @@ tags:
 ??? info "`docker-compose-002` — Run services as non-root user"
     **Service user should not be root unless explicitly justified.**
 
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - user is root or uid 0
@@ -70,6 +72,7 @@ tags:
 ??? info "`docker-compose-003` — Declare service healthchecks"
     **Services should define healthcheck probes for reliability.**
 
+    **Universal Dogmas:** `ZEN-FAIL-FAST`
     **Common Violations:**
 
     - missing healthcheck key
@@ -81,6 +84,7 @@ tags:
 ??? info "`docker-compose-004` — Keep secrets out of environment literals"
     **Secret-like keys should not be embedded directly in environment values.**
 
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`
     **Common Violations:**
 
     - secret-like key in environment block

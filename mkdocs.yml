@@ -233,9 +233,9 @@ extra_javascript:
 
 nav:
   - Home: index.md
-  - Philosophy: philosophy.md
   - Getting Started:
       - getting-started/index.md
+      - Philosophy: getting-started/philosophy.md
       - Installation: getting-started/installation.md
       - MCP Integration: getting-started/mcp-integration.md
       - Quickstart: getting-started/quickstart.md

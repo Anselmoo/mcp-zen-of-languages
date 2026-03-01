@@ -49,24 +49,25 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 
 </div>
 
-| Rule ID | Principle | Category | Severity |
-|---------|-----------|----------|:--------:|
-| `python-001` | Beautiful is better than ugly | Readability | 4 |
-| `python-002` | Explicit is better than implicit | Clarity | 7 |
-| `python-003` | Simple is better than complex | Complexity | 8 |
-| `python-004` | Complex is better than complicated | Architecture | 7 |
-| `python-005` | Flat is better than nested | Structure | 8 |
-| `python-006` | Sparse is better than dense | Readability | 5 |
-| `python-007` | Readability counts | Readability | 9 |
-| `python-008` | Special cases aren't special enough to break the rules | Consistency | 6 |
-| `python-009` | Errors should never pass silently | Error Handling | 9 |
-| `python-010` | In the face of ambiguity, refuse the temptation to guess | Correctness | 7 |
-| `python-011` | There should be one-- and preferably only one --obvious way to do it | Idioms | 6 |
-| `python-012` | Namespaces are one honking great idea | Organization | 7 |
+| Rule ID | Principle | Category | Severity | Dogma |
+|---------|-----------|----------|:--------:|-------|
+| `python-001` | Beautiful is better than ugly | Readability | 4 | `ZEN-UNAMBIGUOUS-NAME` |
+| `python-002` | Explicit is better than implicit | Clarity | 7 | `ZEN-EXPLICIT-INTENT` |
+| `python-003` | Simple is better than complex | Complexity | 8 | `ZEN-PROPORTIONATE-COMPLEXITY`, `ZEN-RETURN-EARLY`, `ZEN-RIGHT-ABSTRACTION` |
+| `python-004` | Complex is better than complicated | Architecture | 7 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-PROPORTIONATE-COMPLEXITY` |
+| `python-005` | Flat is better than nested | Structure | 8 | `ZEN-RETURN-EARLY` |
+| `python-006` | Sparse is better than dense | Readability | 5 | `ZEN-UNAMBIGUOUS-NAME`, `ZEN-VISIBLE-STATE` |
+| `python-007` | Readability counts | Readability | 9 | `ZEN-UNAMBIGUOUS-NAME` |
+| `python-008` | Special cases aren't special enough to break the rules | Consistency | 6 | `ZEN-EXPLICIT-INTENT`, `ZEN-FAIL-FAST` |
+| `python-009` | Errors should never pass silently | Error Handling | 9 | `ZEN-FAIL-FAST`, `ZEN-EXPLICIT-INTENT` |
+| `python-010` | In the face of ambiguity, refuse the temptation to guess | Correctness | 7 | `ZEN-EXPLICIT-INTENT` |
+| `python-011` | There should be one-- and preferably only one --obvious way to do it | Idioms | 6 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-VISIBLE-STATE` |
+| `python-012` | Namespaces are one honking great idea | Organization | 7 | `ZEN-STRICT-FENCES`, `ZEN-UNAMBIGUOUS-NAME` |
 
 ??? info "`python-001` — Beautiful is better than ugly"
     **Code should be aesthetically pleasing and well-formatted**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
     **Common Violations:**
 
     - Inconsistent indentation
@@ -85,6 +86,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 ??? info "`python-002` — Explicit is better than implicit"
     **Code behavior should be obvious and unambiguous**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Using global variables without declaration
@@ -102,6 +104,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 ??? info "`python-003` — Simple is better than complex"
     **Favor straightforward solutions over complicated ones**
 
+    **Universal Dogmas:** `ZEN-PROPORTIONATE-COMPLEXITY`, `ZEN-RETURN-EARLY`, `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - High cyclomatic complexity (>10)
@@ -118,6 +121,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 ??? info "`python-004` — Complex is better than complicated"
     **When complexity is necessary, keep it organized and understandable**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-PROPORTIONATE-COMPLEXITY`
     **Common Violations:**
 
     - Tangled dependencies
@@ -127,6 +131,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 ??? info "`python-005` — Flat is better than nested"
     **Avoid deep nesting of control structures**
 
+    **Universal Dogmas:** `ZEN-RETURN-EARLY`
     **Common Violations:**
 
     - Nesting depth > 3 levels
@@ -142,6 +147,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 ??? info "`python-006` — Sparse is better than dense"
     **Code should have appropriate spacing and not be cramped**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`, `ZEN-VISIBLE-STATE`
     **Common Violations:**
 
     - Multiple statements on one line
@@ -158,6 +164,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 ??? info "`python-007` — Readability counts"
     **Code is read more often than written**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
     **Common Violations:**
 
     - Functions longer than 50 lines
@@ -175,6 +182,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 ??? info "`python-008` — Special cases aren't special enough to break the rules"
     **Maintain consistency even for edge cases**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`, `ZEN-FAIL-FAST`
     **Common Violations:**
 
     - Inconsistent error handling patterns
@@ -190,6 +198,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 ??? info "`python-009` — Errors should never pass silently"
     **Always handle errors explicitly**
 
+    **Universal Dogmas:** `ZEN-FAIL-FAST`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Bare except clauses
@@ -205,6 +214,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 ??? info "`python-010` — In the face of ambiguity, refuse the temptation to guess"
     **Be explicit rather than making assumptions**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Implicit type assumptions
@@ -220,6 +230,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 ??? info "`python-011` — There should be one-- and preferably only one --obvious way to do it"
     **Prefer pythonic idioms over alternatives**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-VISIBLE-STATE`
     **Common Violations:**
 
     - Using range(len()) instead of enumerate
@@ -235,6 +246,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 ??? info "`python-012` — Namespaces are one honking great idea"
     **Use namespaces to organize code clearly**
 
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`, `ZEN-UNAMBIGUOUS-NAME`
     **Common Violations:**
 
     - Polluting global namespace

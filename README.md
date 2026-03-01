@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/Anselmoo/mcp-zen-of-languages/blob/59dcb31c4c3f38547f4a212be58704825177df19/docs/assets/logo.png" alt="MCP Zen of Languages" width="460" />
+  <img src="https://raw.githubusercontent.com/Anselmoo/mcp-zen-of-languages/main/docs/assets/logo.png" alt="MCP Zen of Languages" width="460" />
 </p>
 
 <h1 align="center">Zen of Languages</h1>
@@ -60,7 +60,7 @@ Zen of Languages treats idioms as engineering constraints, not style preferences
 The project is guided by the **[10 Dogmas of Zen](https://anselmoo.github.io/mcp-zen-of-languages/philosophy/)** — a set of language-agnostic principles that drive every detector and architectural decision. Read the full philosophy document for anti-patterns, rationale, and detector mappings.
 
 <p align="center">
-  <img src="docs/assets/illustration-zen-dogma.svg" alt="The 10 Dogmas of Zen — code quality principles visualised as zen garden stones" width="600" />
+  <img src="https://raw.githubusercontent.com/Anselmoo/mcp-zen-of-languages/main/docs/assets/illustration-zen-dogma.svg" alt="The 10 Dogmas of Zen — code quality principles visualised as zen garden stones" width="600" />
 </p>
 
 <!-- --8<-- [end:zen-philosophy] -->
@@ -246,5 +246,5 @@ See [Adding a Language](https://anselmoo.github.io/mcp-zen-of-languages/contribu
 ---
 
 <p align="center">
-  <img src="https://github.com/Anselmoo/mcp-zen-of-languages/blob/59dcb31c4c3f38547f4a212be58704825177df19/docs/assets/social-card-github.png" alt="Zen garden — sumi-e landscape" width="100%" />
+  <img src="https://raw.githubusercontent.com/Anselmoo/mcp-zen-of-languages/main/docs/assets/social-card-github.png" alt="Zen garden — sumi-e landscape" width="100%" />
 </p>

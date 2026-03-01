@@ -38,20 +38,21 @@ tags:
 
 </div>
 
-| Rule ID | Principle | Category | Severity |
-|---------|-----------|----------|:--------:|
-| `dockerfile-001` | Avoid latest tags in base images | Security | 8 |
-| `dockerfile-002` | Run containers as non-root user | Security | 9 |
-| `dockerfile-003` | Prefer COPY over ADD unless extra features are needed | Correctness | 6 |
-| `dockerfile-004` | Declare HEALTHCHECK for production images | Robustness | 7 |
-| `dockerfile-005` | Use multi-stage builds for compiled workloads | Performance | 6 |
-| `dockerfile-006` | Keep secrets out of ENV and ARG instructions | Security | 9 |
-| `dockerfile-007` | Maintain layer discipline | Performance | 5 |
-| `dockerfile-008` | Keep .dockerignore coherent with broad context copies | Configuration | 4 |
+| Rule ID | Principle | Category | Severity | Dogma |
+|---------|-----------|----------|:--------:|-------|
+| `dockerfile-001` | Avoid latest tags in base images | Security | 8 | `ZEN-STRICT-FENCES` |
+| `dockerfile-002` | Run containers as non-root user | Security | 9 | `ZEN-STRICT-FENCES` |
+| `dockerfile-003` | Prefer COPY over ADD unless extra features are needed | Correctness | 6 | `ZEN-EXPLICIT-INTENT` |
+| `dockerfile-004` | Declare HEALTHCHECK for production images | Robustness | 7 | `ZEN-FAIL-FAST` |
+| `dockerfile-005` | Use multi-stage builds for compiled workloads | Performance | 6 | `ZEN-PROPORTIONATE-COMPLEXITY` |
+| `dockerfile-006` | Keep secrets out of ENV and ARG instructions | Security | 9 | `ZEN-STRICT-FENCES` |
+| `dockerfile-007` | Maintain layer discipline | Performance | 5 | `ZEN-PROPORTIONATE-COMPLEXITY` |
+| `dockerfile-008` | Keep .dockerignore coherent with broad context copies | Configuration | 4 | `ZEN-EXPLICIT-INTENT` |
 
 ??? info "`dockerfile-001` — Avoid latest tags in base images"
     **Pin base image versions to avoid unplanned upgrades.**
 
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`
     **Common Violations:**
 
     - FROM image:latest
@@ -66,6 +67,7 @@ tags:
 ??? info "`dockerfile-002` — Run containers as non-root user"
     **Final image should set a non-root USER directive.**
 
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`
     **Common Violations:**
 
     - Missing USER directive
@@ -81,6 +83,7 @@ tags:
 ??? info "`dockerfile-003` — Prefer COPY over ADD unless extra features are needed"
     **ADD has surprising behavior for archives and remote URLs.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Using ADD for plain local copy
@@ -95,6 +98,7 @@ tags:
 ??? info "`dockerfile-004` — Declare HEALTHCHECK for production images"
     **Health checks improve orchestration reliability and recovery.**
 
+    **Universal Dogmas:** `ZEN-FAIL-FAST`
     **Common Violations:**
 
     - Missing HEALTHCHECK instruction
@@ -106,6 +110,7 @@ tags:
 ??? info "`dockerfile-005` — Use multi-stage builds for compiled workloads"
     **Compiled builds should separate build and runtime stages.**
 
+    **Universal Dogmas:** `ZEN-PROPORTIONATE-COMPLEXITY`
     **Common Violations:**
 
     - Single-stage Dockerfile for compiled build commands
@@ -113,6 +118,7 @@ tags:
 ??? info "`dockerfile-006` — Keep secrets out of ENV and ARG instructions"
     **Credentials in Dockerfile instructions leak into image metadata/layers.**
 
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`
     **Common Violations:**
 
     - ENV with secret-like key
@@ -121,6 +127,7 @@ tags:
 ??? info "`dockerfile-007` — Maintain layer discipline"
     **Excessive RUN layers increase image size and cache fragmentation.**
 
+    **Universal Dogmas:** `ZEN-PROPORTIONATE-COMPLEXITY`
     **Common Violations:**
 
     - Too many RUN instructions
@@ -134,6 +141,7 @@ tags:
 ??? info "`dockerfile-008` — Keep .dockerignore coherent with broad context copies"
     **Broad context copies should be paired with .dockerignore hygiene.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - COPY/ADD from build context without .dockerignore

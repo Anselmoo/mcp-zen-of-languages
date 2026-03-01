@@ -42,24 +42,25 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
 
 </div>
 
-| Rule ID | Principle | Category | Severity |
-|---------|-----------|----------|:--------:|
-| `rust-001` | Avoid unwrap() and expect() in production code | Error Handling | 9 |
-| `rust-002` | Use the type system to prevent bugs | Type Safety | 8 |
-| `rust-003` | Prefer iterators over loops | Idioms | 7 |
-| `rust-004` | Clone sparingly | Performance | 7 |
-| `rust-005` | Use #[must_use] for important return types | Correctness | 6 |
-| `rust-006` | Implement Debug for all public types | Debugging | 6 |
-| `rust-007` | Use newtype pattern for type safety | Design | 7 |
-| `rust-008` | Avoid unsafe unless necessary | Safety | 9 |
-| `rust-009` | Use std traits appropriately | Idioms | 7 |
-| `rust-010` | Prefer enums over booleans for state | Design | 7 |
-| `rust-011` | Use lifetimes judiciously | Ownership | 6 |
-| `rust-012` | Avoid Rc<RefCell<T>> unless necessary | Design | 7 |
+| Rule ID | Principle | Category | Severity | Dogma |
+|---------|-----------|----------|:--------:|-------|
+| `rust-001` | Avoid unwrap() and expect() in production code | Error Handling | 9 | `ZEN-FAIL-FAST` |
+| `rust-002` | Use the type system to prevent bugs | Type Safety | 8 | `ZEN-EXPLICIT-INTENT`, `ZEN-VISIBLE-STATE` |
+| `rust-003` | Prefer iterators over loops | Idioms | 7 | `ZEN-RIGHT-ABSTRACTION` |
+| `rust-004` | Clone sparingly | Performance | 7 | `ZEN-PROPORTIONATE-COMPLEXITY` |
+| `rust-005` | Use #[must_use] for important return types | Correctness | 6 | `ZEN-EXPLICIT-INTENT` |
+| `rust-006` | Implement Debug for all public types | Debugging | 6 | `ZEN-EXPLICIT-INTENT` |
+| `rust-007` | Use newtype pattern for type safety | Design | 7 | `ZEN-RIGHT-ABSTRACTION` |
+| `rust-008` | Avoid unsafe unless necessary | Safety | 9 | `ZEN-FAIL-FAST` |
+| `rust-009` | Use std traits appropriately | Idioms | 7 | `ZEN-RIGHT-ABSTRACTION` |
+| `rust-010` | Prefer enums over booleans for state | Design | 7 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-EXPLICIT-INTENT`, `ZEN-VISIBLE-STATE` |
+| `rust-011` | Use lifetimes judiciously | Ownership | 6 | `ZEN-VISIBLE-STATE`, `ZEN-EXPLICIT-INTENT` |
+| `rust-012` | Avoid Rc<RefCell<T>> unless necessary | Design | 7 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-VISIBLE-STATE` |
 
 ??? info "`rust-001` — Avoid unwrap() and expect() in production code"
     **Use proper error handling with Result and Option**
 
+    **Universal Dogmas:** `ZEN-FAIL-FAST`
     **Common Violations:**
 
     - unwrap() in library code
@@ -78,6 +79,7 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
 ??? info "`rust-002` — Use the type system to prevent bugs"
     **Leverage Rust's type system for compile-time guarantees**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`, `ZEN-VISIBLE-STATE`
     **Common Violations:**
 
     - Using primitive types when newtype would be safer
@@ -94,6 +96,7 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
 ??? info "`rust-003` — Prefer iterators over loops"
     **Use iterator methods for functional, zero-cost abstractions**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Manual for loops over collections
@@ -109,6 +112,7 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
 ??? info "`rust-004` — Clone sparingly"
     **Avoid unnecessary cloning, prefer borrowing**
 
+    **Universal Dogmas:** `ZEN-PROPORTIONATE-COMPLEXITY`
     **Common Violations:**
 
     - Cloning when references work
@@ -119,6 +123,7 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
 ??? info "`rust-005` — Use #[must_use] for important return types"
     **Mark Result and critical types as must_use**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Result types without must_use
@@ -132,6 +137,7 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
 ??? info "`rust-006` — Implement Debug for all public types"
     **Derive or implement Debug for better debugging**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Public structs without Debug
@@ -145,6 +151,7 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
 ??? info "`rust-007` — Use newtype pattern for type safety"
     **Wrap primitives in newtypes for semantic clarity**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Using raw integers for IDs
@@ -158,6 +165,7 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
 ??? info "`rust-008` — Avoid unsafe unless necessary"
     **Minimize unsafe code and document invariants**
 
+    **Universal Dogmas:** `ZEN-FAIL-FAST`
     **Common Violations:**
 
     - Unnecessary unsafe blocks
@@ -173,6 +181,7 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
 ??? info "`rust-009` — Use std traits appropriately"
     **Implement standard traits (Display, From, Into, etc.)**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Custom conversion instead of From/Into
@@ -188,6 +197,7 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
 ??? info "`rust-010` — Prefer enums over booleans for state"
     **Use enums to make state explicit**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-EXPLICIT-INTENT`, `ZEN-VISIBLE-STATE`
     **Common Violations:**
 
     - Boolean flags for state
@@ -201,6 +211,7 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
 ??? info "`rust-011` — Use lifetimes judiciously"
     **Let the compiler infer when possible, be explicit when needed**
 
+    **Universal Dogmas:** `ZEN-VISIBLE-STATE`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Unnecessary lifetime annotations
@@ -215,6 +226,7 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
 ??? info "`rust-012` — Avoid Rc<RefCell<T>> unless necessary"
     **Prefer ownership or references over runtime borrowing**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-VISIBLE-STATE`
     **Common Violations:**
 
     - Overuse of Rc<RefCell<T>>

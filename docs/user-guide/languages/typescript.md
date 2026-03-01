@@ -42,22 +42,23 @@ TypeScript's power lies in its type system — but that power is easily undermin
 
 </div>
 
-| Rule ID | Principle | Category | Severity |
-|---------|-----------|----------|:--------:|
-| `ts-001` | Avoid 'any' type | Type Safety | 9 |
-| `ts-002` | Use strict mode | Configuration | 9 |
-| `ts-003` | Prefer interfaces over type aliases for objects | Idioms | 5 |
-| `ts-004` | Always specify return types | Type Safety | 7 |
-| `ts-005` | Use readonly when appropriate | Immutability | 6 |
-| `ts-006` | Leverage type guards | Type Safety | 7 |
-| `ts-007` | Use utility types | Idioms | 6 |
-| `ts-008` | Avoid non-null assertions | Type Safety | 8 |
-| `ts-009` | Use enums or const assertions appropriately | Idioms | 6 |
-| `ts-010` | Prefer unknown over any for uncertain types | Type Safety | 7 |
+| Rule ID | Principle | Category | Severity | Dogma |
+|---------|-----------|----------|:--------:|-------|
+| `ts-001` | Avoid 'any' type | Type Safety | 9 | `ZEN-EXPLICIT-INTENT` |
+| `ts-002` | Use strict mode | Configuration | 9 | `ZEN-EXPLICIT-INTENT` |
+| `ts-003` | Prefer interfaces over type aliases for objects | Idioms | 5 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-UNAMBIGUOUS-NAME`, `ZEN-PROPORTIONATE-COMPLEXITY` |
+| `ts-004` | Always specify return types | Type Safety | 7 | `ZEN-EXPLICIT-INTENT`, `ZEN-FAIL-FAST` |
+| `ts-005` | Use readonly when appropriate | Immutability | 6 | `ZEN-VISIBLE-STATE` |
+| `ts-006` | Leverage type guards | Type Safety | 7 | `ZEN-EXPLICIT-INTENT` |
+| `ts-007` | Use utility types | Idioms | 6 | `ZEN-RIGHT-ABSTRACTION` |
+| `ts-008` | Avoid non-null assertions | Type Safety | 8 | `ZEN-EXPLICIT-INTENT` |
+| `ts-009` | Use enums or const assertions appropriately | Idioms | 6 | `ZEN-RIGHT-ABSTRACTION` |
+| `ts-010` | Prefer unknown over any for uncertain types | Type Safety | 7 | `ZEN-EXPLICIT-INTENT`, `ZEN-FAIL-FAST` |
 
 ??? info "`ts-001` — Avoid 'any' type"
     **Use proper types instead of any to maintain type safety**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Explicit any annotations
@@ -85,6 +86,7 @@ TypeScript's power lies in its type system — but that power is easily undermin
 ??? info "`ts-002` — Use strict mode"
     **Enable strict TypeScript compiler options**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - strict: false in tsconfig
@@ -102,6 +104,7 @@ TypeScript's power lies in its type system — but that power is easily undermin
 ??? info "`ts-003` — Prefer interfaces over type aliases for objects"
     **Use interfaces for object shapes, types for unions/primitives**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-UNAMBIGUOUS-NAME`, `ZEN-PROPORTIONATE-COMPLEXITY`
     **Common Violations:**
 
     - Type aliases for simple object shapes
@@ -120,6 +123,7 @@ TypeScript's power lies in its type system — but that power is easily undermin
 ??? info "`ts-004` — Always specify return types"
     **Explicit return types improve readability and catch errors**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`, `ZEN-FAIL-FAST`
     **Common Violations:**
 
     - Public functions without return type
@@ -135,6 +139,7 @@ TypeScript's power lies in its type system — but that power is easily undermin
 ??? info "`ts-005` — Use readonly when appropriate"
     **Mark immutable properties as readonly**
 
+    **Universal Dogmas:** `ZEN-VISIBLE-STATE`
     **Common Violations:**
 
     - Properties that should be readonly
@@ -151,6 +156,7 @@ TypeScript's power lies in its type system — but that power is easily undermin
 ??? info "`ts-006` — Leverage type guards"
     **Use type guards for runtime type checking**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Type assertions without validation
@@ -169,6 +175,7 @@ TypeScript's power lies in its type system — but that power is easily undermin
 ??? info "`ts-007` — Use utility types"
     **Leverage built-in utility types (Partial, Pick, Omit, etc.)**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Manual type transformations
@@ -185,6 +192,7 @@ TypeScript's power lies in its type system — but that power is easily undermin
 ??? info "`ts-008` — Avoid non-null assertions"
     **Handle null/undefined properly instead of using !**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Excessive use of ! operator
@@ -205,6 +213,7 @@ TypeScript's power lies in its type system — but that power is easily undermin
 ??? info "`ts-009` — Use enums or const assertions appropriately"
     **Use const enums or const assertions for constant values**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Plain objects for enumerations
@@ -220,6 +229,7 @@ TypeScript's power lies in its type system — but that power is easily undermin
 ??? info "`ts-010` — Prefer unknown over any for uncertain types"
     **Use unknown when type is truly unknown, forces type checking**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`, `ZEN-FAIL-FAST`
     **Common Violations:**
 
     - Using any for API responses

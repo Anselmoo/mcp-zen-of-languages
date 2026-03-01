@@ -15,20 +15,22 @@ Configuration files are code too — they're read by humans, versioned in git, a
 
 ## JSON — 9 Principles, 9 Detectors
 
-| Rule ID | Principle | Category | Severity |
-|---------|-----------|----------|:--------:|
-| `json-001` | Choose strictness intentionally | Correctness | 7 |
-| `json-002` | Keep object depth understandable | Structure | 6 |
-| `json-003` | Keys must be unique | Correctness | 8 |
-| `json-004` | Avoid magic string repetition | Clarity | 5 |
-| `json-005` | Keys are case-sensitive identifiers | Naming | 5 |
-| `json-006` | Keep inline arrays bounded | Structure | 4 |
-| `json-007` | Prefer omission over null sprawl | Correctness | 5 |
-| `json-008` | Dates must follow ISO 8601 | Correctness | 6 |
-| `json-009` | Prefer key omission over explicit null | Clarity | 5 |
+| Rule ID | Principle | Category | Severity | Dogma |
+|---------|-----------|----------|:--------:|-------|
+| `json-001` | Choose strictness intentionally | Correctness | 7 | `ZEN-EXPLICIT-INTENT` |
+| `json-002` | Keep object depth understandable | Structure | 6 | `ZEN-RETURN-EARLY` |
+| `json-003` | Keys must be unique | Correctness | 8 | `ZEN-EXPLICIT-INTENT` |
+| `json-004` | Avoid magic string repetition | Clarity | 5 | `ZEN-EXPLICIT-INTENT` |
+| `json-005` | Keys are case-sensitive identifiers | Naming | 5 | `ZEN-UNAMBIGUOUS-NAME` |
+| `json-006` | Keep inline arrays bounded | Structure | 4 | `ZEN-RETURN-EARLY` |
+| `json-007` | Prefer omission over null sprawl | Correctness | 5 | `ZEN-EXPLICIT-INTENT` |
+| `json-008` | Dates must follow ISO 8601 | Correctness | 6 | `ZEN-EXPLICIT-INTENT` |
+| `json-009` | Prefer key omission over explicit null | Clarity | 5 | `ZEN-EXPLICIT-INTENT` |
 
 ??? info "`json-001` — Choose strictness intentionally"
     **Trailing commas should be rejected for JSON unless JSON5 is explicitly targeted.**
+
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
 
     **Common Violations:**
 
@@ -42,12 +44,16 @@ Configuration files are code too — they're read by humans, versioned in git, a
 ??? info "`json-002` — Keep object depth understandable"
     **Deeply nested objects/arrays are hard to reason about and validate.**
 
+    **Universal Dogmas:** `ZEN-RETURN-EARLY`
+
     **Common Violations:**
 
     - Nesting depth exceeds configured threshold
 
 ??? info "`json-003` — Keys must be unique"
     **Duplicate object keys silently override values in many parsers.**
+
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
 
     **Common Violations:**
 
@@ -56,12 +62,16 @@ Configuration files are code too — they're read by humans, versioned in git, a
 ??? info "`json-004` — Avoid magic string repetition"
     **Repeated string literals should be extracted or referenced consistently.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
+
     **Common Violations:**
 
     - Repeated magic string values
 
 ??? info "`json-005` — Keys are case-sensitive identifiers"
     **Avoid mixing camelCase, snake_case, and PascalCase at the same object level.**
+
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
 
     **Common Violations:**
 
@@ -70,6 +80,8 @@ Configuration files are code too — they're read by humans, versioned in git, a
 ??? info "`json-006` — Keep inline arrays bounded"
     **Very large inline arrays are hard to review and often belong in separate data files.**
 
+    **Universal Dogmas:** `ZEN-RETURN-EARLY`
+
     **Common Violations:**
 
     - Oversized inline arrays
@@ -77,12 +89,16 @@ Configuration files are code too — they're read by humans, versioned in git, a
 ??? info "`json-007` — Prefer omission over null sprawl"
     **Excessive null usage usually indicates optional keys that can be omitted.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
+
     **Common Violations:**
 
     - Excessive null values across the document
 
 ??? info "`json-008` — Dates must follow ISO 8601"
     **Date strings should use ISO 8601 format (YYYY-MM-DD or YYYY-MM-DDTHH:MM:SSZ) for unambiguous, sortable representation. Locale-dependent formats such as MM/DD/YYYY create parsing ambiguity.**
+
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
 
     **Common Violations:**
 
@@ -95,6 +111,8 @@ Configuration files are code too — they're read by humans, versioned in git, a
 
 ??? info "`json-009` — Prefer key omission over explicit null"
     **Top-level object keys whose value is explicitly null should be omitted entirely. Explicit null at the top level signals optional absence, which is better expressed by omitting the key.**
+
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
 
     **Common Violations:**
 
@@ -117,19 +135,21 @@ Configuration files are code too — they're read by humans, versioned in git, a
 
 ## TOML — 8 Principles, 8 Detectors
 
-| Rule ID | Principle | Category | Severity |
-|---------|-----------|----------|:--------:|
-| `toml-001` | Avoid inline tables | Readability | 6 |
-| `toml-002` | Avoid duplicate keys | Correctness | 8 |
-| `toml-003` | Use lowercase keys | Consistency | 5 |
-| `toml-004` | Avoid trailing commas | Readability | 5 |
-| `toml-005` | Clarity is paramount | Clarity | 5 |
-| `toml-006` | Order implies importance | Organization | 4 |
-| `toml-007` | Time is specific | Correctness | 6 |
-| `toml-008` | Floats are not integers | Correctness | 6 |
+| Rule ID | Principle | Category | Severity | Dogma |
+|---------|-----------|----------|:--------:|-------|
+| `toml-001` | Avoid inline tables | Readability | 6 | `ZEN-UNAMBIGUOUS-NAME` |
+| `toml-002` | Avoid duplicate keys | Correctness | 8 | `ZEN-EXPLICIT-INTENT` |
+| `toml-003` | Use lowercase keys | Consistency | 5 | `ZEN-EXPLICIT-INTENT` |
+| `toml-004` | Avoid trailing commas | Readability | 5 | `ZEN-UNAMBIGUOUS-NAME` |
+| `toml-005` | Clarity is paramount | Clarity | 5 | `ZEN-EXPLICIT-INTENT` |
+| `toml-006` | Order implies importance | Organization | 4 | `ZEN-STRICT-FENCES` |
+| `toml-007` | Time is specific | Correctness | 6 | `ZEN-EXPLICIT-INTENT` |
+| `toml-008` | Floats are not integers | Correctness | 6 | `ZEN-EXPLICIT-INTENT` |
 
 ??? info "`toml-001` — Avoid inline tables"
     **Inline tables are harder to read; use full tables instead.**
+
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
 
     **Common Violations:**
 
@@ -138,12 +158,16 @@ Configuration files are code too — they're read by humans, versioned in git, a
 ??? info "`toml-002` — Avoid duplicate keys"
     **Duplicate keys can overwrite previous values.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
+
     **Common Violations:**
 
     - Duplicate key definitions
 
 ??? info "`toml-003` — Use lowercase keys"
     **Lowercase keys improve consistency across configurations.**
+
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
 
     **Common Violations:**
 
@@ -152,12 +176,16 @@ Configuration files are code too — they're read by humans, versioned in git, a
 ??? info "`toml-004` — Avoid trailing commas"
     **Trailing commas reduce readability in TOML arrays/tables.**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
+
     **Common Violations:**
 
     - Trailing commas before closing brackets
 
 ??? info "`toml-005` — Clarity is paramount"
     **Explain magic values with comments.**
+
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
 
     **Common Violations:**
 
@@ -172,6 +200,8 @@ Configuration files are code too — they're read by humans, versioned in git, a
 ??? info "`toml-006` — Order implies importance"
     **Group related keys together before arrays or tables.**
 
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`
+
     **Common Violations:**
 
     - Repeated table headers spread apart
@@ -179,12 +209,16 @@ Configuration files are code too — they're read by humans, versioned in git, a
 ??? info "`toml-007` — Time is specific"
     **Use ISO 8601 timestamps for dates.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
+
     **Common Violations:**
 
     - Non-ISO date strings
 
 ??? info "`toml-008` — Floats are not integers"
     **Use integer types where appropriate, avoid decimal .0 values.**
+
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
 
     **Common Violations:**
 
@@ -206,17 +240,19 @@ Configuration files are code too — they're read by humans, versioned in git, a
 
 ## XML — 6 Principles, 6 Detectors
 
-| Rule ID | Principle | Category | Severity |
-|---------|-----------|----------|:--------:|
-| `xml-001` | Mark up meaning, not presentation | Clarity | 5 |
-| `xml-002` | Attributes for metadata, Elements for data | Structure | 5 |
-| `xml-003` | Namespaces prevent local collisions | Correctness | 6 |
-| `xml-004` | Validity supersedes well-formedness | Correctness | 6 |
-| `xml-005` | Hierarchy represents ownership | Structure | 4 |
-| `xml-006` | Closing tags complete the thought | Correctness | 5 |
+| Rule ID | Principle | Category | Severity | Dogma |
+|---------|-----------|----------|:--------:|-------|
+| `xml-001` | Mark up meaning, not presentation | Clarity | 5 | `ZEN-EXPLICIT-INTENT` |
+| `xml-002` | Attributes for metadata, Elements for data | Structure | 5 | `ZEN-RETURN-EARLY` |
+| `xml-003` | Namespaces prevent local collisions | Correctness | 6 | `ZEN-EXPLICIT-INTENT`, `ZEN-UNAMBIGUOUS-NAME`, `ZEN-STRICT-FENCES` |
+| `xml-004` | Validity supersedes well-formedness | Correctness | 6 | `ZEN-EXPLICIT-INTENT` |
+| `xml-005` | Hierarchy represents ownership | Structure | 4 | `ZEN-RETURN-EARLY` |
+| `xml-006` | Closing tags complete the thought | Correctness | 5 | `ZEN-EXPLICIT-INTENT` |
 
 ??? info "`xml-001` — Mark up meaning, not presentation"
     **Prefer semantic tags over presentational markup.**
+
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
 
     **Common Violations:**
 
@@ -225,12 +261,16 @@ Configuration files are code too — they're read by humans, versioned in git, a
 ??? info "`xml-002` — Attributes for metadata, Elements for data"
     **Use attributes for metadata and elements for structured data.**
 
+    **Universal Dogmas:** `ZEN-RETURN-EARLY`
+
     **Common Violations:**
 
     - Large text content stored in attributes
 
 ??? info "`xml-003` — Namespaces prevent local collisions"
     **Declare namespaces when using prefixed elements.**
+
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`, `ZEN-UNAMBIGUOUS-NAME`, `ZEN-STRICT-FENCES`
 
     **Common Violations:**
 
@@ -239,6 +279,8 @@ Configuration files are code too — they're read by humans, versioned in git, a
 ??? info "`xml-004` — Validity supersedes well-formedness"
     **Provide schema references for validation.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
+
     **Common Violations:**
 
     - Missing schema declaration
@@ -246,12 +288,16 @@ Configuration files are code too — they're read by humans, versioned in git, a
 ??? info "`xml-005` — Hierarchy represents ownership"
     **Use nested structures to represent ownership.**
 
+    **Universal Dogmas:** `ZEN-RETURN-EARLY`
+
     **Common Violations:**
 
     - Flat repeated elements without grouping
 
 ??? info "`xml-006` — Closing tags complete the thought"
     **Avoid self-closing tags when content is expected.**
+
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
 
     **Common Violations:**
 
@@ -271,19 +317,21 @@ Configuration files are code too — they're read by humans, versioned in git, a
 
 ## YAML — 8 Principles, 8 Detectors
 
-| Rule ID | Principle | Category | Severity |
-|---------|-----------|----------|:--------:|
-| `yaml-001` | Use consistent indentation | Readability | 6 |
-| `yaml-002` | Avoid tabs in indentation | Readability | 7 |
-| `yaml-003` | Avoid duplicate keys | Correctness | 8 |
-| `yaml-004` | Use lowercase keys | Consistency | 5 |
-| `yaml-005` | Keys should be self-explanatory | Naming | 5 |
-| `yaml-006` | Consistency provides comfort | Consistency | 5 |
-| `yaml-007` | Comments explain intent | Documentation | 4 |
-| `yaml-008` | Strings should look like strings | Clarity | 6 |
+| Rule ID | Principle | Category | Severity | Dogma |
+|---------|-----------|----------|:--------:|-------|
+| `yaml-001` | Use consistent indentation | Readability | 6 | `ZEN-UNAMBIGUOUS-NAME` |
+| `yaml-002` | Avoid tabs in indentation | Readability | 7 | `ZEN-UNAMBIGUOUS-NAME` |
+| `yaml-003` | Avoid duplicate keys | Correctness | 8 | `ZEN-EXPLICIT-INTENT` |
+| `yaml-004` | Use lowercase keys | Consistency | 5 | `ZEN-EXPLICIT-INTENT` |
+| `yaml-005` | Keys should be self-explanatory | Naming | 5 | `ZEN-UNAMBIGUOUS-NAME` |
+| `yaml-006` | Consistency provides comfort | Consistency | 5 | `ZEN-EXPLICIT-INTENT` |
+| `yaml-007` | Comments explain intent | Documentation | 4 | `ZEN-UNAMBIGUOUS-NAME` |
+| `yaml-008` | Strings should look like strings | Clarity | 6 | `ZEN-EXPLICIT-INTENT` |
 
 ??? info "`yaml-001` — Use consistent indentation"
     **Indentation should be consistent to avoid structural mistakes.**
+
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
 
     **Common Violations:**
 
@@ -299,6 +347,8 @@ Configuration files are code too — they're read by humans, versioned in git, a
 ??? info "`yaml-002` — Avoid tabs in indentation"
     **YAML indentation should use spaces, not tabs.**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
+
     **Common Violations:**
 
     - Tab characters in indentation
@@ -310,6 +360,8 @@ Configuration files are code too — they're read by humans, versioned in git, a
 ??? info "`yaml-003` — Avoid duplicate keys"
     **Duplicate keys can cause data loss when parsing.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
+
     **Common Violations:**
 
     - Duplicate mapping keys
@@ -317,12 +369,16 @@ Configuration files are code too — they're read by humans, versioned in git, a
 ??? info "`yaml-004` — Use lowercase keys"
     **Lowercase keys improve consistency across configurations.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
+
     **Common Violations:**
 
     - Uppercase characters in keys
 
 ??? info "`yaml-005` — Keys should be self-explanatory"
     **Prefer descriptive keys over terse abbreviations.**
+
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
 
     **Common Violations:**
 
@@ -337,6 +393,8 @@ Configuration files are code too — they're read by humans, versioned in git, a
 ??? info "`yaml-006` — Consistency provides comfort"
     **Use a consistent list style throughout the file.**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
+
     **Common Violations:**
 
     - Mixed list markers (- and *)
@@ -349,6 +407,8 @@ Configuration files are code too — they're read by humans, versioned in git, a
 
 ??? info "`yaml-007` — Comments explain intent"
     **Document complex sections with comments.**
+
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
 
     **Common Violations:**
 
@@ -363,6 +423,8 @@ Configuration files are code too — they're read by humans, versioned in git, a
 
 ??? info "`yaml-008` — Strings should look like strings"
     **Quote strings with spaces or special characters.**
+
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
 
     **Common Violations:**
 

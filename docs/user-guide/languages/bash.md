@@ -43,26 +43,27 @@ Shell scripts are the glue of infrastructure — and the source of some of the m
 
 </div>
 
-| Rule ID | Principle | Category | Severity |
-|---------|-----------|----------|:--------:|
-| `bash-001` | Always use set -euo pipefail | Error Handling | 9 |
-| `bash-002` | Quote all variables | Correctness | 8 |
-| `bash-003` | Use [[ ]] over [ ] | Idioms | 7 |
-| `bash-004` | Use $() over backticks | Readability | 6 |
-| `bash-005` | Check command exit codes | Error Handling | 8 |
-| `bash-006` | Use functions for reusable code | Organization | 6 |
-| `bash-007` | Use local variables in functions | Scope | 7 |
-| `bash-008` | Avoid eval | Security | 9 |
-| `bash-009` | Use readonly for constants | Immutability | 6 |
-| `bash-010` | Validate input and arguments | Robustness | 8 |
-| `bash-011` | Use meaningful variable names | Readability | 7 |
-| `bash-012` | Handle signals properly | Robustness | 7 |
-| `bash-013` | Use arrays instead of string splitting | Correctness | 7 |
-| `bash-014` | Include usage information | Usability | 6 |
+| Rule ID | Principle | Category | Severity | Dogma |
+|---------|-----------|----------|:--------:|-------|
+| `bash-001` | Always use set -euo pipefail | Error Handling | 9 | `ZEN-FAIL-FAST` |
+| `bash-002` | Quote all variables | Correctness | 8 | `ZEN-EXPLICIT-INTENT` |
+| `bash-003` | Use [[ ]] over [ ] | Idioms | 7 | `ZEN-RIGHT-ABSTRACTION` |
+| `bash-004` | Use $() over backticks | Readability | 6 | `ZEN-UNAMBIGUOUS-NAME`, `ZEN-RETURN-EARLY` |
+| `bash-005` | Check command exit codes | Error Handling | 8 | `ZEN-FAIL-FAST` |
+| `bash-006` | Use functions for reusable code | Organization | 6 | `ZEN-STRICT-FENCES` |
+| `bash-007` | Use local variables in functions | Scope | 7 | `ZEN-STRICT-FENCES` |
+| `bash-008` | Avoid eval | Security | 9 | `ZEN-STRICT-FENCES` |
+| `bash-009` | Use readonly for constants | Immutability | 6 | `ZEN-VISIBLE-STATE`, `ZEN-EXPLICIT-INTENT` |
+| `bash-010` | Validate input and arguments | Robustness | 8 | `ZEN-FAIL-FAST` |
+| `bash-011` | Use meaningful variable names | Readability | 7 | `ZEN-UNAMBIGUOUS-NAME` |
+| `bash-012` | Handle signals properly | Robustness | 7 | `ZEN-FAIL-FAST` |
+| `bash-013` | Use arrays instead of string splitting | Correctness | 7 | `ZEN-EXPLICIT-INTENT` |
+| `bash-014` | Include usage information | Usability | 6 | `ZEN-UNAMBIGUOUS-NAME` |
 
 ??? info "`bash-001` — Always use set -euo pipefail"
     **Enable strict error handling at script start**
 
+    **Universal Dogmas:** `ZEN-FAIL-FAST`
     **Common Violations:**
 
     - Scripts without set -e
@@ -80,6 +81,7 @@ Shell scripts are the glue of infrastructure — and the source of some of the m
 ??? info "`bash-002` — Quote all variables"
     **Always quote variable expansions to prevent word splitting**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Unquoted $variable
@@ -98,6 +100,7 @@ Shell scripts are the glue of infrastructure — and the source of some of the m
 ??? info "`bash-003` — Use [[ ]] over [ ]"
     **Prefer [[ ]] for conditional expressions**
 
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Using [ ] for tests
@@ -115,6 +118,7 @@ Shell scripts are the glue of infrastructure — and the source of some of the m
 ??? info "`bash-004` — Use $() over backticks"
     **Prefer $() for command substitution**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`, `ZEN-RETURN-EARLY`
     **Common Violations:**
 
     - Using backticks `command`
@@ -131,6 +135,7 @@ Shell scripts are the glue of infrastructure — and the source of some of the m
 ??? info "`bash-005` — Check command exit codes"
     **Always verify command success**
 
+    **Universal Dogmas:** `ZEN-FAIL-FAST`
     **Common Violations:**
 
     - Not checking $? after commands
@@ -147,6 +152,7 @@ Shell scripts are the glue of infrastructure — and the source of some of the m
 ??? info "`bash-006` — Use functions for reusable code"
     **Extract repeated code into functions**
 
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`
     **Common Violations:**
 
     - Duplicated code blocks
@@ -162,6 +168,7 @@ Shell scripts are the glue of infrastructure — and the source of some of the m
 ??? info "`bash-007` — Use local variables in functions"
     **Declare function variables as local**
 
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`
     **Common Violations:**
 
     - Function variables without local
@@ -175,6 +182,7 @@ Shell scripts are the glue of infrastructure — and the source of some of the m
 ??? info "`bash-008` — Avoid eval"
     **Don't use eval except when absolutely necessary**
 
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`
     **Common Violations:**
 
     - eval usage
@@ -188,6 +196,7 @@ Shell scripts are the glue of infrastructure — and the source of some of the m
 ??? info "`bash-009` — Use readonly for constants"
     **Mark constants as readonly**
 
+    **Universal Dogmas:** `ZEN-VISIBLE-STATE`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Constants without readonly
@@ -201,6 +210,7 @@ Shell scripts are the glue of infrastructure — and the source of some of the m
 ??? info "`bash-010` — Validate input and arguments"
     **Check script arguments and user input**
 
+    **Universal Dogmas:** `ZEN-FAIL-FAST`
     **Common Violations:**
 
     - No argument count validation
@@ -215,6 +225,7 @@ Shell scripts are the glue of infrastructure — and the source of some of the m
 ??? info "`bash-011` — Use meaningful variable names"
     **Avoid single-letter or cryptic names**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
     **Common Violations:**
 
     - Single letter variables (except i, j in loops)
@@ -230,6 +241,7 @@ Shell scripts are the glue of infrastructure — and the source of some of the m
 ??? info "`bash-012` — Handle signals properly"
     **Use trap for cleanup and signal handling**
 
+    **Universal Dogmas:** `ZEN-FAIL-FAST`
     **Common Violations:**
 
     - No trap for cleanup
@@ -247,6 +259,7 @@ Shell scripts are the glue of infrastructure — and the source of some of the m
 ??? info "`bash-013` — Use arrays instead of string splitting"
     **Store lists in arrays, not space-separated strings**
 
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Splitting strings on spaces
@@ -264,6 +277,7 @@ Shell scripts are the glue of infrastructure — and the source of some of the m
 ??? info "`bash-014` — Include usage information"
     **Provide help text and usage examples**
 
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
     **Common Violations:**
 
     - Scripts without usage function

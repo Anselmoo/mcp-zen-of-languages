@@ -167,7 +167,7 @@ def render_mapping(mapping: dict[str, list[tuple[str, str, str, int]]]) -> str:
             )
         lines.append("")
 
-    return "\n".join(lines) + "\n" if lines else ""
+    return "\n".join(lines).rstrip("\n") + "\n" if lines else ""
 
 
 def main() -> int:

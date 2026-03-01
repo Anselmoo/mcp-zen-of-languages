@@ -318,4 +318,3 @@
 | SQL | `sql-005` | Avoid implicit type coercion in JOIN predicates | 6 |
 | SQL | `sql-006` | Bound result sets with WHERE/LIMIT/TOP | 5 |
 | TypeScript | `ts-003` | Prefer interfaces over type aliases for objects | 5 |
-

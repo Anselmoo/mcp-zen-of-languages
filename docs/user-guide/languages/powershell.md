@@ -489,7 +489,7 @@ languages:
   powershell:
     enabled: true
     pipeline:
-      - type: powershell-approved-verbs
+      - type: powershell_approved_verbs
         approved_verbs: ['get', 'set', 'new', 'remove', 'add', 'clear', 'start', 'stop']
 ```
 

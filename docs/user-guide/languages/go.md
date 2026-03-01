@@ -1,6 +1,6 @@
 ---
 title: Go
-description: "20 zen principles enforced by 20 detectors: Simplicity, Clarity, and Pragmatism."
+description: "20 zen principles enforced by 21 detectors: Simplicity, Clarity, and Pragmatism."
 icon: material/language-go
 tags:
   - Go
@@ -365,7 +365,7 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **GoTestPresenceDetector** | Flags exported functions without accompanying test functions | `go-017` |
+| **GoEarlyReturnDetector** | Flags ``err == nil`` guards that nest the happy path instead of returning early | `go-017` |
 
 ### Design
 
@@ -375,13 +375,19 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
 | **GoInterfaceReturnDetector** | Flags functions that return interface types instead of concrete structs | `go-002` |
 | **GoZeroValueDetector** | Flags ``New*`` constructor functions where making the zero value usable would be simpler | `go-003` |
 | **GoInterfacePointerDetector** | Detects pointers to interfaces, which are almost always a mistake in Go | `go-005` |
-| **GoModerationDetector** | Flags excessive goroutine spawning within a single file | `go-019` |
+| **GoTestPresenceDetector** | Flags exported functions without accompanying test functions | `go-019` |
 
 ### Error Handling
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
 | **GoErrorHandlingDetector** | Flags ignored errors, unchecked ``err`` variables, and ``panic()`` calls in Go code | `go-001` |
+
+### General
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **GoModerationDetector** | Flags excessive goroutine spawning within a single file |  |
 
 ### Idioms
 
@@ -419,7 +425,7 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **GoEarlyReturnDetector** | Flags ``err == nil`` guards that nest the happy path instead of returning early | `go-014` |
+| **GoEmbeddingDepthDetector** | Flags structs with too many anonymously embedded types | `go-014` |
 
 
 ??? example "Principle → Detector Wiring"
@@ -454,7 +460,9 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
     det_GoDeferUsageDetector["GoDeferUsageDetector"]
     go_007 --> det_GoDeferUsageDetector
     det_GoEarlyReturnDetector["GoEarlyReturnDetector"]
-    go_014 --> det_GoEarlyReturnDetector
+    go_017 --> det_GoEarlyReturnDetector
+    det_GoEmbeddingDepthDetector["GoEmbeddingDepthDetector"]
+    go_014 --> det_GoEmbeddingDepthDetector
     det_GoErrorHandlingDetector["GoErrorHandlingDetector"]
     go_001 --> det_GoErrorHandlingDetector
     det_GoGoroutineLeakDetector["GoGoroutineLeakDetector"]
@@ -470,7 +478,6 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
     det_GoMaintainabilityDetector["GoMaintainabilityDetector"]
     go_020 --> det_GoMaintainabilityDetector
     det_GoModerationDetector["GoModerationDetector"]
-    go_019 --> det_GoModerationDetector
     det_GoNamingConventionDetector["GoNamingConventionDetector"]
     go_004 --> det_GoNamingConventionDetector
     det_GoOrganizeResponsibilityDetector["GoOrganizeResponsibilityDetector"]
@@ -482,7 +489,7 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
     det_GoSimplicityDetector["GoSimplicityDetector"]
     go_016 --> det_GoSimplicityDetector
     det_GoTestPresenceDetector["GoTestPresenceDetector"]
-    go_017 --> det_GoTestPresenceDetector
+    go_019 --> det_GoTestPresenceDetector
     det_GoZeroValueDetector["GoZeroValueDetector"]
     go_003 --> det_GoZeroValueDetector
     classDef principle fill:#4051b5,color:#fff,stroke:none
@@ -512,6 +519,7 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
     class det_GoContextUsageDetector detector
     class det_GoDeferUsageDetector detector
     class det_GoEarlyReturnDetector detector
+    class det_GoEmbeddingDepthDetector detector
     class det_GoErrorHandlingDetector detector
     class det_GoGoroutineLeakDetector detector
     class det_GoInitUsageDetector detector
@@ -536,23 +544,23 @@ languages:
   go:
     enabled: true
     pipeline:
-      - type: go-error-handling
+      - type: go_error_handling
         max_ignored_errors: 0
-      - type: go-interface-size
+      - type: go_interface_size
         max_interface_methods: 3
-      - type: go-context-usage
+      - type: go_context_usage
         require_context: True
-      - type: go-defer-usage
+      - type: go_defer_usage
         detect_defer_in_loop: True
         detect_missing_defer: True
-      - type: go-naming-convention
+      - type: go_naming_convention
         detect_long_names: True
-      - type: go-early-return
+      - type: go_embedding_depth
         max_embedding_depth: 2
-      - type: go-simplicity
+      - type: go_simplicity
         max_nesting_depth: 3
         max_function_lines: 50
-      - type: go-moderation
+      - type: go_moderation
         max_goroutine_spawns: 5
 ```
 

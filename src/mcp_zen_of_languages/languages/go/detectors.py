@@ -13,6 +13,7 @@ from mcp_zen_of_languages.languages.configs import GoConcurrencyCallerConfig
 from mcp_zen_of_languages.languages.configs import GoContextUsageConfig
 from mcp_zen_of_languages.languages.configs import GoDeferUsageConfig
 from mcp_zen_of_languages.languages.configs import GoEarlyReturnConfig
+from mcp_zen_of_languages.languages.configs import GoEmbeddingDepthConfig
 from mcp_zen_of_languages.languages.configs import GoErrorHandlingConfig
 from mcp_zen_of_languages.languages.configs import GoGoroutineLeakConfig
 from mcp_zen_of_languages.languages.configs import GoInitUsageConfig
@@ -739,6 +740,88 @@ class GoEarlyReturnDetector(ViolationDetector[GoEarlyReturnConfig]):
         return []
 
 
+class GoEmbeddingDepthDetector(ViolationDetector[GoEmbeddingDepthConfig]):
+    r"""Flags structs with too many anonymously embedded types.
+
+    Go allows embedding struct types without a field name.  Deep
+    embedding chains make the type hierarchy hard to reason about and
+    introduce implicit method promotion conflicts.  This detector
+    counts anonymous (embedded) fields inside each struct definition
+    and flags files where any struct exceeds ``max_embedding_depth``.
+
+    An anonymous embedded field is a struct field with no explicit name —
+    only a type (e.g. ``io.Reader`` or ``*Base``).  Named fields such as
+    ``Name Type`` are excluded because they follow the ``\w+ \w+`` pattern.
+    """
+
+    # Matches anonymous embedded fields: optional pointer, optional pkg prefix,
+    # then a single type name — no second identifier after the type.
+    _EMBEDDED_RE = re.compile(r"^\s+\*?(?:\w+\.)*\w+\s*(?://.*)?$", re.MULTILINE)
+    # Matches named fields: two distinct identifiers separated by whitespace.
+    _NAMED_RE = re.compile(r"^\s+\w+\s+\S", re.MULTILINE)
+
+    @property
+    def name(self) -> str:
+        """Return detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "go_embedding_depth"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: GoEmbeddingDepthConfig,
+    ) -> list[Violation]:
+        """Detect excessive struct embedding depth.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (GoEmbeddingDepthConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Detected violations.
+        """
+        # Extract lines from top-level struct bodies.  We scan line-by-line
+        # between `type X struct {` and the matching `}` at indent level 0,
+        # so nested inline struct definitions are naturally excluded.
+        in_struct = False
+        brace_depth = 0
+        struct_lines: list[str] = []
+        for line in context.code.splitlines():
+            if not in_struct:
+                if re.match(r"^type\s+\w+\s+struct\s*\{", line):
+                    in_struct = True
+                    brace_depth = line.count("{") - line.count("}")
+                    struct_lines = []
+            else:
+                brace_depth += line.count("{") - line.count("}")
+                if brace_depth <= 0:
+                    # End of top-level struct body — count embedded fields.
+                    body = "\n".join(struct_lines)
+                    named = set(self._NAMED_RE.findall(body))
+                    embedded = [
+                        ln
+                        for ln in self._EMBEDDED_RE.findall(body)
+                        if ln.strip().split()[0]
+                        not in {n.strip().split()[0] for n in named}
+                    ]
+                    if len(embedded) > config.max_embedding_depth:
+                        return [
+                            self.build_violation(
+                                config,
+                                contains="struct",
+                                suggestion="Limit embedding depth; prefer explicit composition.",
+                            ),
+                        ]
+                    in_struct = False
+                elif brace_depth == 1:
+                    # Top-level struct field lines only (skip nested struct lines).
+                    struct_lines.append(line)
+        return []
+
+
 class GoConcurrencyCallerDetector(ViolationDetector[GoConcurrencyCallerConfig]):
     """Flags functions that spawn goroutines internally.
 
@@ -1000,6 +1083,7 @@ __all__ = [
     "GoContextUsageDetector",
     "GoDeferUsageDetector",
     "GoEarlyReturnDetector",
+    "GoEmbeddingDepthDetector",
     "GoErrorHandlingDetector",
     "GoGoroutineLeakDetector",
     "GoInitUsageDetector",

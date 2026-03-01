@@ -933,7 +933,8 @@ class TsAsyncAwaitDetector(
             list[Violation]: Violations found.
         """
         violations: list[Violation] = []
-        if re.search(r"\.then\s*\(", context.code):
+        finding = detect_ts_promise_chains(context.code)
+        if finding.count > config.max_then_chains:
             violations.append(
                 self.build_violation(
                     config,

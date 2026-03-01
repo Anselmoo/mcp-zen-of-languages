@@ -576,68 +576,68 @@ languages:
   typescript:
     enabled: true
     pipeline:
-      - type: ts-any-usage
+      - type: ts_any_usage
         max_any_usages: 0
         detect_explicit_any: True
         detect_assertions_any: True
         detect_any_arrays: True
-      - type: ts-strict-mode
+      - type: ts_strict_mode
         require_strict: True
         require_no_implicit_any: True
         require_strict_null_checks: True
-      - type: ts-interface-preference
+      - type: ts_interface_preference
         max_object_type_aliases: 0
-      - type: ts-return-types
+      - type: ts_return_types
         require_return_types: True
-      - type: ts-readonly
+      - type: ts_readonly
         require_readonly_properties: True
         min_readonly_occurrences: 1
-      - type: ts-type-guards
+      - type: ts_type_guards
         max_type_assertions: 0
-      - type: ts-utility-types
+      - type: ts_utility_types
         min_utility_type_usage: 1
         min_object_type_aliases: 2
-      - type: ts-non-null-assertions
+      - type: ts_non_null_assertions
         max_non_null_assertions: 0
-      - type: ts-enum-const
+      - type: ts_enum_const
         max_plain_enum_objects: 0
-      - type: ts-unknown-over-any
+      - type: ts_unknown_over_any
         max_any_for_unknown: 0
-      - type: ts-optional-chaining
+      - type: ts_optional_chaining
         max_manual_null_checks: 0
-      - type: ts-index-loops
+      - type: ts_index_loops
         max_index_loops: 0
-      - type: ts-promise-chains
+      - type: ts_promise_chains
         max_promise_chains: 0
-      - type: ts-default-exports
+      - type: ts_default_exports
         max_default_exports: 0
-      - type: ts-catch-all-types
+      - type: ts_catch_all_types
         max_catch_all_types: 0
-      - type: ts-console-usage
+      - type: ts_console_usage
         max_console_usages: 0
-      - type: ts-require-imports
+      - type: ts_require_imports
         max_require_calls: 0
-      - type: ts-string-concats
+      - type: ts_string_concats
         max_string_concats: 0
-      - type: ts-for-of
+      - type: ts_for_of
         max_index_loops: 0
         max_index_based_loops: 0
-      - type: ts-async-await
+      - type: ts_async_await
         max_promise_chains: 2
         max_then_chains: 0
-      - type: ts-named-export
+      - type: ts_named_export
         max_default_exports: 0
         max_default_export_usages: 0
-      - type: ts-object-type
+      - type: ts_object_type
         max_catch_all_types: 0
         max_object_types: 0
-      - type: ts-no-console
+      - type: ts_no_console
         max_console_usages: 0
         max_console_statements: 0
-      - type: ts-import-order
+      - type: ts_import_order
         max_require_calls: 0
         max_require_usages: 0
-      - type: ts-template-literal
+      - type: ts_template_literal
         max_string_concats: 3
         max_string_concatenations: 0
 ```

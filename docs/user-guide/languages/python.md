@@ -65,12 +65,12 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 | `python-011` | There should be one-- and preferably only one --obvious way to do it | Idioms | 6 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-VISIBLE-STATE` |
 | `python-012` | Namespaces are one honking great idea | Organization | 7 | `ZEN-STRICT-FENCES`, `ZEN-UNAMBIGUOUS-NAME` |
 | `python-013` | Practicality beats purity | Design | 5 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-PROPORTIONATE-COMPLEXITY` |
-| `python-014` | Errors should never pass silently | Correctness | 8 | `ZEN-EXPLICIT-INTENT`, `ZEN-FAIL-FAST` |
+| `python-014` | Unless explicitly silenced | Correctness | 8 | `ZEN-EXPLICIT-INTENT`, `ZEN-FAIL-FAST` |
 | `python-015` | Now is better than never | Structure | 4 | `ZEN-RETURN-EARLY` |
 | `python-016` | Although never is often better than *right* now | Design | 5 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-FAIL-FAST` |
 | `python-017` | If the implementation is hard to explain, it's a bad idea | Readability | 6 | `ZEN-UNAMBIGUOUS-NAME` |
 | `python-018` | If the implementation is easy to explain, it may be a good idea | Readability | 3 | `ZEN-UNAMBIGUOUS-NAME`, `ZEN-PROPORTIONATE-COMPLEXITY` |
-| `python-019` | There should be one-- and preferably only one --obvious way to do it | Idioms | 5 | `ZEN-RIGHT-ABSTRACTION` |
+| `python-019` | Although that way may not be obvious at first unless you're Dutch | Idioms | 5 | `ZEN-RIGHT-ABSTRACTION` |
 
 ??? info "`python-001` — Beautiful is better than ugly"
     **Code should be aesthetically pleasing and well-formatted**
@@ -277,8 +277,8 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     - Over-engineered ABC/Protocol hierarchies
     - Premature abstraction with few implementations
 
-??? info "`python-014` — Errors should never pass silently"
-    **Handle errors explicitly; never swallow exceptions**
+??? info "`python-014` — Unless explicitly silenced"
+    **Only suppress exceptions when suppression is intentional and documented**
 
     **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`, `ZEN-FAIL-FAST`
     **Common Violations:**
@@ -318,8 +318,8 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 
     - Public functions without docstrings
 
-??? info "`python-019` — There should be one-- and preferably only one --obvious way to do it"
-    **Use idiomatic Python constructs**
+??? info "`python-019` — Although that way may not be obvious at first unless you're Dutch"
+    **Use idiomatic Python constructs that may not be obvious to newcomers**
 
     **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
@@ -432,12 +432,12 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     python_011["python-011<br/>There should be one-- and preferably onl..."]
     python_012["python-012<br/>Namespaces are one honking great idea"]
     python_013["python-013<br/>Practicality beats purity"]
-    python_014["python-014<br/>Errors should never pass silently"]
+    python_014["python-014<br/>Unless explicitly silenced"]
     python_015["python-015<br/>Now is better than never"]
     python_016["python-016<br/>Although never is often better than *rig..."]
     python_017["python-017<br/>If the implementation is hard to explain..."]
     python_018["python-018<br/>If the implementation is easy to explain..."]
-    python_019["python-019<br/>There should be one-- and preferably onl..."]
+    python_019["python-019<br/>Although that way may not be obvious at ..."]
     det_BareExceptDetector["BareExceptDetector"]
     python_009 --> det_BareExceptDetector
     det_CircularDependencyDetector["CircularDependencyDetector"]
@@ -557,41 +557,41 @@ languages:
   python:
     enabled: true
     pipeline:
-      - type: cyclomatic-complexity
+      - type: cyclomatic_complexity
         max_cyclomatic_complexity: 10
-      - type: complex-one-liners
+      - type: complex_one_liners
         max_for_clauses: 1
         max_line_length: 120
-      - type: nesting-depth
+      - type: nesting_depth
         max_nesting_depth: 3
-      - type: long-functions
+      - type: long_functions
         max_function_length: 50
-      - type: short-variable-names
+      - type: short_variable_names
         min_identifier_length: 3
         allowed_loop_names: PydanticUndefined
-      - type: god-classes
+      - type: god_classes
         max_methods: 10
         max_class_length: 300
-      - type: magic-methods
+      - type: magic_methods
         max_magic_methods: 3
-      - type: deep-inheritance
+      - type: deep_inheritance
         max_depth: 3
-      - type: feature-envy
+      - type: feature_envy
         min_occurrences: 3
-      - type: class-size
+      - type: class_size
         max_class_length: 300
-      - type: magic-number
+      - type: magic_number
         max_magic_numbers: 0
-      - type: line-length
+      - type: line_length
         max_line_length: 88
-      - type: sparse-code
+      - type: sparse_code
         max_statements_per_line: 1
         min_blank_lines_between_defs: 1
       - type: consistency
         max_naming_styles: 1
       - type: explicitness
         require_type_hints: True
-      - type: namespace-usage
+      - type: namespace_usage
         max_top_level_symbols: 25
         max_exports: 20
 ```

@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import re
 import sys
+
 from pathlib import Path
+
 
 DOCS_ROOT = Path("docs")
 MKDOCS_CONFIG = Path("mkdocs.yml")

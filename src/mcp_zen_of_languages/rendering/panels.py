@@ -16,7 +16,9 @@ from rich.table import Table
 
 from .console import console
 from .layout import get_output_width
-from .themes import BOX_CONTENT, BOX_SUMMARY
+from .themes import BOX_CONTENT
+from .themes import BOX_SUMMARY
+
 
 if TYPE_CHECKING:
     from collections.abc import Sequence

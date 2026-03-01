@@ -1,15 +1,13 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
-from mcp_zen_of_languages.languages.configs import (
-    JsAsyncErrorHandlingConfig,
-    JsFunctionLengthConfig,
-    PowerShellApprovedVerbConfig,
-)
+from mcp_zen_of_languages.languages.configs import JsAsyncErrorHandlingConfig
+from mcp_zen_of_languages.languages.configs import JsFunctionLengthConfig
+from mcp_zen_of_languages.languages.configs import PowerShellApprovedVerbConfig
 from mcp_zen_of_languages.languages.javascript.detectors import (
     JsAsyncErrorHandlingDetector,
-    JsFunctionLengthDetector,
 )
+from mcp_zen_of_languages.languages.javascript.detectors import JsFunctionLengthDetector
 from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellApprovedVerbDetector,
 )

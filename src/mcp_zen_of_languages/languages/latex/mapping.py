@@ -2,33 +2,36 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import (
-    DetectorBinding,
-    LanguageDetectorMap,
-)
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
-from mcp_zen_of_languages.languages.configs import (
-    LatexBibliographyHygieneConfig,
-    LatexCaptionCompletenessConfig,
-    LatexEncodingDeclarationConfig,
-    LatexIncludeLoopConfig,
-    LatexLabelRefDisciplineConfig,
-    LatexMacroDefinitionConfig,
-    LatexSemanticMarkupConfig,
-    LatexUnusedPackagesConfig,
-    LatexWidthAbstractionConfig,
-)
+from mcp_zen_of_languages.languages.configs import LatexBibliographyHygieneConfig
+from mcp_zen_of_languages.languages.configs import LatexCaptionCompletenessConfig
+from mcp_zen_of_languages.languages.configs import LatexEncodingDeclarationConfig
+from mcp_zen_of_languages.languages.configs import LatexIncludeLoopConfig
+from mcp_zen_of_languages.languages.configs import LatexLabelRefDisciplineConfig
+from mcp_zen_of_languages.languages.configs import LatexMacroDefinitionConfig
+from mcp_zen_of_languages.languages.configs import LatexSemanticMarkupConfig
+from mcp_zen_of_languages.languages.configs import LatexUnusedPackagesConfig
+from mcp_zen_of_languages.languages.configs import LatexWidthAbstractionConfig
 from mcp_zen_of_languages.languages.latex.detectors import (
     LatexBibliographyHygieneDetector,
-    LatexCaptionCompletenessDetector,
-    LatexEncodingDeclarationDetector,
-    LatexIncludeLoopDetector,
-    LatexLabelRefDisciplineDetector,
-    LatexMacroDefinitionDetector,
-    LatexSemanticMarkupDetector,
-    LatexUnusedPackagesDetector,
-    LatexWidthAbstractionDetector,
 )
+from mcp_zen_of_languages.languages.latex.detectors import (
+    LatexCaptionCompletenessDetector,
+)
+from mcp_zen_of_languages.languages.latex.detectors import (
+    LatexEncodingDeclarationDetector,
+)
+from mcp_zen_of_languages.languages.latex.detectors import LatexIncludeLoopDetector
+from mcp_zen_of_languages.languages.latex.detectors import (
+    LatexLabelRefDisciplineDetector,
+)
+from mcp_zen_of_languages.languages.latex.detectors import LatexMacroDefinitionDetector
+from mcp_zen_of_languages.languages.latex.detectors import LatexSemanticMarkupDetector
+from mcp_zen_of_languages.languages.latex.detectors import LatexUnusedPackagesDetector
+from mcp_zen_of_languages.languages.latex.detectors import LatexWidthAbstractionDetector
+
 
 FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(

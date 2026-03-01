@@ -4,10 +4,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from mcp_zen_of_languages.analyzers.analyzer_factory import (
-    create_analyzer,
-    supported_languages,
-)
+from mcp_zen_of_languages.analyzers.analyzer_factory import create_analyzer
+from mcp_zen_of_languages.analyzers.analyzer_factory import supported_languages
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.core.detector import LanguageAdapter

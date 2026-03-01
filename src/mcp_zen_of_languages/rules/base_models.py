@@ -17,10 +17,16 @@ Key concepts:
 """
 
 import re
-from enum import Enum, StrEnum
+
+from enum import Enum
+from enum import StrEnum
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field, HttpUrl, field_validator
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import Field
+from pydantic import HttpUrl
+from pydantic import field_validator
 
 
 class SeverityLevel(int, Enum):

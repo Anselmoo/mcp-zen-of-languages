@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from mcp_zen_of_languages.models import CyclomaticSummary, Metrics
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import Metrics
 from mcp_zen_of_languages.orchestration import analyze_targets
 
 

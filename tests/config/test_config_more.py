@@ -3,7 +3,8 @@ from __future__ import annotations
 import pytest
 
 from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
-from mcp_zen_of_languages.config import ConfigModel, load_config
+from mcp_zen_of_languages.config import ConfigModel
+from mcp_zen_of_languages.config import load_config
 from mcp_zen_of_languages.languages.configs import DetectorConfig
 
 

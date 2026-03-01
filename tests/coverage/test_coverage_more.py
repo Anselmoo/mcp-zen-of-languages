@@ -4,36 +4,29 @@ import pytest
 
 from mcp_zen_of_languages import cli
 from mcp_zen_of_languages.adapters.rules_adapter import RulesAdapter
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    AnalyzerConfig,
-    BaseAnalyzer,
-    LocationHelperMixin,
-    ViolationDetector,
-)
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
+from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
 from mcp_zen_of_languages.analyzers.pipeline import merge_pipeline_overrides
-from mcp_zen_of_languages.analyzers.registry import DetectorMetadata, DetectorRegistry
-from mcp_zen_of_languages.config import ConfigModel, load_config
-from mcp_zen_of_languages.languages.configs import (
-    DetectorConfig,
-    ExplicitnessConfig,
-)
-from mcp_zen_of_languages.models import (
-    CyclomaticSummary,
-    DependencyAnalysis,
-    DependencyCycle,
-    ParserResult,
-    RulesSummary,
-)
-from mcp_zen_of_languages.rules.base_models import (
-    LanguageZenPrinciples,
-    PrincipleCategory,
-    ZenPrinciple,
-)
-from mcp_zen_of_languages.utils.parsers import (
-    parse_python,
-    parse_python_with_builtin_ast,
-)
+from mcp_zen_of_languages.analyzers.registry import DetectorMetadata
+from mcp_zen_of_languages.analyzers.registry import DetectorRegistry
+from mcp_zen_of_languages.config import ConfigModel
+from mcp_zen_of_languages.config import load_config
+from mcp_zen_of_languages.languages.configs import DetectorConfig
+from mcp_zen_of_languages.languages.configs import ExplicitnessConfig
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import DependencyAnalysis
+from mcp_zen_of_languages.models import DependencyCycle
+from mcp_zen_of_languages.models import ParserResult
+from mcp_zen_of_languages.models import RulesSummary
+from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
+from mcp_zen_of_languages.rules.base_models import PrincipleCategory
+from mcp_zen_of_languages.rules.base_models import ZenPrinciple
+from mcp_zen_of_languages.utils.parsers import parse_python
+from mcp_zen_of_languages.utils.parsers import parse_python_with_builtin_ast
+
 
 REPORT_FAILURE_EXIT_CODE = 2
 DEFAULT_VIOLATION_SEVERITY = 5
@@ -1069,7 +1062,8 @@ def test_report_format_gap_markdown_no_gaps():
 
 
 def test_report_format_gap_markdown_with_gaps():
-    from mcp_zen_of_languages.reporting.models import DetectorCoverageGap, GapAnalysis
+    from mcp_zen_of_languages.reporting.models import DetectorCoverageGap
+    from mcp_zen_of_languages.reporting.models import GapAnalysis
     from mcp_zen_of_languages.reporting.report import _format_gap_markdown
 
     gaps = GapAnalysis(

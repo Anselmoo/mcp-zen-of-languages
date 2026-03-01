@@ -4,11 +4,9 @@ from __future__ import annotations
 
 from unittest.mock import patch
 
-from mcp_zen_of_languages.utils.subprocess_runner import (
-    KNOWN_TOOLS,
-    SubprocessResult,
-    SubprocessToolRunner,
-)
+from mcp_zen_of_languages.utils.subprocess_runner import KNOWN_TOOLS
+from mcp_zen_of_languages.utils.subprocess_runner import SubprocessResult
+from mcp_zen_of_languages.utils.subprocess_runner import SubprocessToolRunner
 
 
 class TestSubprocessResult:

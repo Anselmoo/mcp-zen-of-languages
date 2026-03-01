@@ -9,12 +9,14 @@ IDs, and a reverse mapping (detector → rules) for cross-referencing.
 from __future__ import annotations
 
 import json
+
 from pathlib import Path
 from typing import Any
 
 from mcp_zen_of_languages.analyzers import registry_bootstrap  # noqa: F401
 from mcp_zen_of_languages.analyzers.registry import REGISTRY
-from mcp_zen_of_languages.rules import get_all_languages, get_language_zen
+from mcp_zen_of_languages.rules import get_all_languages
+from mcp_zen_of_languages.rules import get_language_zen
 
 
 def build_rule_detector_mapping(

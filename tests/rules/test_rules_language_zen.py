@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-from mcp_zen_of_languages.rules.base_models import (
-    LanguageZenPrinciples,
-    PrincipleCategory,
-    ZenPrinciple,
-)
+from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
+from mcp_zen_of_languages.rules.base_models import PrincipleCategory
+from mcp_zen_of_languages.rules.base_models import ZenPrinciple
 
 
 def test_language_zen_get_by_id():

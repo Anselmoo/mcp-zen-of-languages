@@ -4,24 +4,21 @@ import importlib
 
 from mcp_zen_of_languages.analyzers.analyzer_factory import supported_languages
 from mcp_zen_of_languages.analyzers.registry import REGISTRY
-from mcp_zen_of_languages.core.universal_dogmas import (
-    DOGMA_RULE_IDS,
-    UniversalDogmaID,
-    dogmas_for_rule,
-    dogmas_for_rule_ids,
-)
+from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
+from mcp_zen_of_languages.core.universal_dogmas import UniversalDogmaID
+from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule
+from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule_ids
 from mcp_zen_of_languages.languages.python.mapping import (
     DETECTOR_MAP as PYTHON_DETECTOR_MAP,
 )
 from mcp_zen_of_languages.languages.rust.mapping import (
     DETECTOR_MAP as RUST_DETECTOR_MAP,
 )
-from mcp_zen_of_languages.languages.sql.mapping import (
-    DETECTOR_MAP as SQL_DETECTOR_MAP,
-)
+from mcp_zen_of_languages.languages.sql.mapping import DETECTOR_MAP as SQL_DETECTOR_MAP
 from mcp_zen_of_languages.languages.typescript.mapping import (
     DETECTOR_MAP as TYPESCRIPT_DETECTOR_MAP,
 )
+
 
 PILOT_DETECTOR_EXPECTATIONS = [
     (

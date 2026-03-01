@@ -42,14 +42,13 @@ from mcp_zen_of_languages.orchestration import (
     collect_targets as _shared_collect_targets,
 )
 from mcp_zen_of_languages.reporting.gaps import build_gap_analysis
-from mcp_zen_of_languages.reporting.models import (
-    AnalysisSummary,
-    GapAnalysis,
-    ReportContext,
-    ReportOutput,
-)
+from mcp_zen_of_languages.reporting.models import AnalysisSummary
+from mcp_zen_of_languages.reporting.models import GapAnalysis
+from mcp_zen_of_languages.reporting.models import ReportContext
+from mcp_zen_of_languages.reporting.models import ReportOutput
 from mcp_zen_of_languages.reporting.prompts import build_prompt_bundle
 from mcp_zen_of_languages.utils.markdown_quality import normalize_markdown
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.models import AnalysisResult

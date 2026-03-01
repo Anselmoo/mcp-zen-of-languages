@@ -1,9 +1,7 @@
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
 from mcp_zen_of_languages.analyzers.registry import REGISTRY
-from mcp_zen_of_languages.languages.python.detectors import (
-    ContextManagerDetector,
-    DocstringDetector,
-)
+from mcp_zen_of_languages.languages.python.detectors import ContextManagerDetector
+from mcp_zen_of_languages.languages.python.detectors import DocstringDetector
 from mcp_zen_of_languages.languages.python.rules import PYTHON_ZEN
 
 

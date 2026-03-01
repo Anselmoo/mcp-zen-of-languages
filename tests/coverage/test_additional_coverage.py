@@ -5,53 +5,44 @@ import types
 
 import pytest
 
-from mcp_zen_of_languages.adapters.rules_adapter import RulesAdapter, RulesAdapterConfig
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    AnalyzerConfig,
-    DetectionPipeline,
-)
-from mcp_zen_of_languages.analyzers.pipeline import (
-    PipelineConfig,
-    merge_pipeline_overrides,
-)
+from mcp_zen_of_languages.adapters.rules_adapter import RulesAdapter
+from mcp_zen_of_languages.adapters.rules_adapter import RulesAdapterConfig
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
+from mcp_zen_of_languages.analyzers.base import DetectionPipeline
+from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
+from mcp_zen_of_languages.analyzers.pipeline import merge_pipeline_overrides
 from mcp_zen_of_languages.analyzers.registry import DetectorRegistry
-from mcp_zen_of_languages.cli import (
-    _filter_result,
-    _placeholder_result,
-    _render_report_output,
-    main,
-)
-from mcp_zen_of_languages.config import ConfigModel, load_config
+from mcp_zen_of_languages.cli import _filter_result
+from mcp_zen_of_languages.cli import _placeholder_result
+from mcp_zen_of_languages.cli import _render_report_output
+from mcp_zen_of_languages.cli import main
+from mcp_zen_of_languages.config import ConfigModel
+from mcp_zen_of_languages.config import load_config
 from mcp_zen_of_languages.languages.placeholder import PlaceholderDetector
 from mcp_zen_of_languages.metrics.collector import MetricsCollector
-from mcp_zen_of_languages.metrics.dependency_graph import (
-    build_import_graph,
-    find_cycles,
-)
-from mcp_zen_of_languages.models import (
-    AnalysisResult,
-    CyclomaticSummary,
-    Metrics,
-    ParserResult,
-    Violation,
-)
+from mcp_zen_of_languages.metrics.dependency_graph import build_import_graph
+from mcp_zen_of_languages.metrics.dependency_graph import find_cycles
+from mcp_zen_of_languages.models import AnalysisResult
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import Metrics
+from mcp_zen_of_languages.models import ParserResult
+from mcp_zen_of_languages.models import Violation
 from mcp_zen_of_languages.reporting.gaps import build_gap_analysis
 from mcp_zen_of_languages.reporting.prompts import build_prompt_bundle
-from mcp_zen_of_languages.reporting.report import (
-    _format_analysis_markdown,
-    _format_gap_markdown,
-    _format_prompts_markdown,
-    _summarize_results,
-    generate_report,
-)
-from mcp_zen_of_languages.rules import get_all_languages, get_all_principles_by_category
-from mcp_zen_of_languages.rules.base_models import PrincipleCategory, ZenPrinciple
-from mcp_zen_of_languages.utils.language_detection import (
-    detect_language_by_extension,
-    detect_language_from_content,
-)
+from mcp_zen_of_languages.reporting.report import _format_analysis_markdown
+from mcp_zen_of_languages.reporting.report import _format_gap_markdown
+from mcp_zen_of_languages.reporting.report import _format_prompts_markdown
+from mcp_zen_of_languages.reporting.report import _summarize_results
+from mcp_zen_of_languages.reporting.report import generate_report
+from mcp_zen_of_languages.rules import get_all_languages
+from mcp_zen_of_languages.rules import get_all_principles_by_category
+from mcp_zen_of_languages.rules.base_models import PrincipleCategory
+from mcp_zen_of_languages.rules.base_models import ZenPrinciple
+from mcp_zen_of_languages.utils.language_detection import detect_language_by_extension
+from mcp_zen_of_languages.utils.language_detection import detect_language_from_content
 from mcp_zen_of_languages.utils.parsers import parse_python
+
 
 INVALID_COMMAND_EXIT_CODE = 2
 

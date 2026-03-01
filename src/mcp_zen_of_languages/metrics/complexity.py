@@ -10,7 +10,8 @@ Studio formula.
 from radon.complexity import cc_visit
 from radon.metrics import mi_visit
 
-from mcp_zen_of_languages.models import CyclomaticBlock, CyclomaticSummary
+from mcp_zen_of_languages.models import CyclomaticBlock
+from mcp_zen_of_languages.models import CyclomaticSummary
 
 
 def compute_cyclomatic_complexity(code: str) -> CyclomaticSummary:

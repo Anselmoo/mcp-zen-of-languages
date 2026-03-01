@@ -1,4 +1,5 @@
-from mcp_zen_of_languages.rules import ZEN_REGISTRY, get_language_zen
+from mcp_zen_of_languages.rules import ZEN_REGISTRY
+from mcp_zen_of_languages.rules import get_language_zen
 
 
 def test_registry_contains_python():

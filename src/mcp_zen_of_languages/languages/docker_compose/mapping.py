@@ -2,23 +2,26 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import (
-    DetectorBinding,
-    LanguageDetectorMap,
-)
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
-from mcp_zen_of_languages.languages.configs import (
-    DockerComposeHealthcheckConfig,
-    DockerComposeLatestTagConfig,
-    DockerComposeNonRootUserConfig,
-    DockerComposeSecretHygieneConfig,
-)
+from mcp_zen_of_languages.languages.configs import DockerComposeHealthcheckConfig
+from mcp_zen_of_languages.languages.configs import DockerComposeLatestTagConfig
+from mcp_zen_of_languages.languages.configs import DockerComposeNonRootUserConfig
+from mcp_zen_of_languages.languages.configs import DockerComposeSecretHygieneConfig
 from mcp_zen_of_languages.languages.docker_compose.detectors import (
     DockerComposeHealthcheckDetector,
+)
+from mcp_zen_of_languages.languages.docker_compose.detectors import (
     DockerComposeLatestTagDetector,
+)
+from mcp_zen_of_languages.languages.docker_compose.detectors import (
     DockerComposeNonRootUserDetector,
+)
+from mcp_zen_of_languages.languages.docker_compose.detectors import (
     DockerComposeSecretHygieneDetector,
 )
+
 
 FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(

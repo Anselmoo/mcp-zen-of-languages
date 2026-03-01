@@ -2,41 +2,36 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import (
-    DetectorBinding,
-    LanguageDetectorMap,
-)
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
-from mcp_zen_of_languages.languages.configs import (
-    CppAutoConfig,
-    CppAvoidGlobalsConfig,
-    CppConstCorrectnessConfig,
-    CppCStyleCastConfig,
-    CppManualAllocationConfig,
-    CppMoveConfig,
-    CppNullptrConfig,
-    CppOptionalConfig,
-    CppOverrideFinalConfig,
-    CppRaiiConfig,
-    CppRangeForConfig,
-    CppRuleOfFiveConfig,
-    CppSmartPointerConfig,
-)
-from mcp_zen_of_languages.languages.cpp.detectors import (
-    CppAutoDetector,
-    CppAvoidGlobalsDetector,
-    CppConstCorrectnessDetector,
-    CppCStyleCastDetector,
-    CppManualAllocationDetector,
-    CppMoveDetector,
-    CppNullptrDetector,
-    CppOptionalDetector,
-    CppOverrideFinalDetector,
-    CppRaiiDetector,
-    CppRangeForDetector,
-    CppRuleOfFiveDetector,
-    CppSmartPointerDetector,
-)
+from mcp_zen_of_languages.languages.configs import CppAutoConfig
+from mcp_zen_of_languages.languages.configs import CppAvoidGlobalsConfig
+from mcp_zen_of_languages.languages.configs import CppCStyleCastConfig
+from mcp_zen_of_languages.languages.configs import CppConstCorrectnessConfig
+from mcp_zen_of_languages.languages.configs import CppManualAllocationConfig
+from mcp_zen_of_languages.languages.configs import CppMoveConfig
+from mcp_zen_of_languages.languages.configs import CppNullptrConfig
+from mcp_zen_of_languages.languages.configs import CppOptionalConfig
+from mcp_zen_of_languages.languages.configs import CppOverrideFinalConfig
+from mcp_zen_of_languages.languages.configs import CppRaiiConfig
+from mcp_zen_of_languages.languages.configs import CppRangeForConfig
+from mcp_zen_of_languages.languages.configs import CppRuleOfFiveConfig
+from mcp_zen_of_languages.languages.configs import CppSmartPointerConfig
+from mcp_zen_of_languages.languages.cpp.detectors import CppAutoDetector
+from mcp_zen_of_languages.languages.cpp.detectors import CppAvoidGlobalsDetector
+from mcp_zen_of_languages.languages.cpp.detectors import CppCStyleCastDetector
+from mcp_zen_of_languages.languages.cpp.detectors import CppConstCorrectnessDetector
+from mcp_zen_of_languages.languages.cpp.detectors import CppManualAllocationDetector
+from mcp_zen_of_languages.languages.cpp.detectors import CppMoveDetector
+from mcp_zen_of_languages.languages.cpp.detectors import CppNullptrDetector
+from mcp_zen_of_languages.languages.cpp.detectors import CppOptionalDetector
+from mcp_zen_of_languages.languages.cpp.detectors import CppOverrideFinalDetector
+from mcp_zen_of_languages.languages.cpp.detectors import CppRaiiDetector
+from mcp_zen_of_languages.languages.cpp.detectors import CppRangeForDetector
+from mcp_zen_of_languages.languages.cpp.detectors import CppRuleOfFiveDetector
+from mcp_zen_of_languages.languages.cpp.detectors import CppSmartPointerDetector
+
 
 FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(

@@ -20,27 +20,32 @@ import json
 import logging
 import os
 import sys
+
 from collections import Counter
 from pathlib import Path
 from types import SimpleNamespace
-from typing import TYPE_CHECKING, Annotated, Any, Literal, Protocol, cast
+from typing import TYPE_CHECKING
+from typing import Annotated
+from typing import Any
+from typing import Literal
+from typing import Protocol
+from typing import cast
 
 import click
 import typer
 import typer.rich_utils as typer_rich_utils
+
 from rich.console import Group
 from rich.text import Text
 
 from mcp_zen_of_languages import __version__
-from mcp_zen_of_languages.models import (
-    AnalysisResult,
-    CyclomaticSummary,
-    Metrics,
-    ProjectSummary,
-    RulesSummary,
-    SeverityCounts,
-    WorstOffender,
-)
+from mcp_zen_of_languages.models import AnalysisResult
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import Metrics
+from mcp_zen_of_languages.models import ProjectSummary
+from mcp_zen_of_languages.models import RulesSummary
+from mcp_zen_of_languages.models import SeverityCounts
+from mcp_zen_of_languages.models import WorstOffender
 from mcp_zen_of_languages.orchestration import (
     analyze_targets as _shared_analyze_targets,
 )
@@ -50,41 +55,38 @@ from mcp_zen_of_languages.orchestration import (
 from mcp_zen_of_languages.orchestration import (
     collect_targets as _shared_collect_targets,
 )
-from mcp_zen_of_languages.rendering import (
-    analysis_progress,
-    console,
-    file_glyph,
-    get_banner_art,
-    is_quiet,
-    print_banner,
-    print_error,
-    render_report_terminal,
-    set_quiet,
-    severity_badge,
-)
-from mcp_zen_of_languages.rendering.factories import (
-    zen_header_panel,
-    zen_panel,
-    zen_table,
-)
+from mcp_zen_of_languages.rendering import analysis_progress
+from mcp_zen_of_languages.rendering import console
+from mcp_zen_of_languages.rendering import file_glyph
+from mcp_zen_of_languages.rendering import get_banner_art
+from mcp_zen_of_languages.rendering import is_quiet
+from mcp_zen_of_languages.rendering import print_banner
+from mcp_zen_of_languages.rendering import print_error
+from mcp_zen_of_languages.rendering import render_report_terminal
+from mcp_zen_of_languages.rendering import set_quiet
+from mcp_zen_of_languages.rendering import severity_badge
+from mcp_zen_of_languages.rendering.factories import zen_header_panel
+from mcp_zen_of_languages.rendering.factories import zen_panel
+from mcp_zen_of_languages.rendering.factories import zen_table
 from mcp_zen_of_languages.rendering.layout import MAX_OUTPUT_WIDTH
 from mcp_zen_of_languages.rendering.sarif import analysis_results_to_sarif
-from mcp_zen_of_languages.reporting.agent_tasks import AgentTaskList, build_agent_tasks
+from mcp_zen_of_languages.reporting.agent_tasks import AgentTaskList
+from mcp_zen_of_languages.reporting.agent_tasks import build_agent_tasks
 from mcp_zen_of_languages.reporting.prompts import build_prompt_bundle
 from mcp_zen_of_languages.reporting.terminal import (
     build_agent_tasks_table as render_agent_tasks_table,
 )
-from mcp_zen_of_languages.reporting.terminal import (
-    render_prompt_panel,
-)
+from mcp_zen_of_languages.reporting.terminal import render_prompt_panel
 from mcp_zen_of_languages.rules import get_language_zen
 from mcp_zen_of_languages.utils.markdown_quality import normalize_markdown
 from mcp_zen_of_languages.utils.subprocess_runner import KNOWN_TOOLS
 
+
 if TYPE_CHECKING:
     from rich.table import Table
 
-    from mcp_zen_of_languages.reporting.models import PromptBundle, ReportOutput
+    from mcp_zen_of_languages.reporting.models import PromptBundle
+    from mcp_zen_of_languages.reporting.models import ReportOutput
 
 logger = logging.getLogger(__name__)
 logger.setLevel(
@@ -1192,7 +1194,8 @@ def _run_init_interactive(args: InitArgs) -> tuple[list[str], str, bool]:
         [`_run_init`][_run_init]: Calls this helper when stdin is a TTY and
         ``--yes`` was not passed.
     """
-    from rich.prompt import Confirm, Prompt
+    from rich.prompt import Confirm
+    from rich.prompt import Prompt
 
     detected = _detect_languages(Path.cwd())
     languages = args.languages
@@ -1440,10 +1443,8 @@ def _run_export_mapping(args: ExportMappingArgs) -> int:  # noqa: C901, PLR0912
     See Also:
         [`export_mapping`][export_mapping]: Typer command that delegates here.
     """
-    from mcp_zen_of_languages.rules.mapping_export import (
-        build_rule_detector_mapping,
-        export_mapping_json,
-    )
+    from mcp_zen_of_languages.rules.mapping_export import build_rule_detector_mapping
+    from mcp_zen_of_languages.rules.mapping_export import export_mapping_json
 
     payload = build_rule_detector_mapping(args.languages)
     if args.out:

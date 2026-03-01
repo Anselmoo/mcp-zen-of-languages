@@ -11,8 +11,7 @@ Tool registration follows the FastMCP decorator pattern:
 
 ```python
 @mcp.tool(name="analyze_zen_violations", tags={"analysis", "zen", "snippet"})
-async def analyze_zen_violations(code: str, language: str) -> AnalysisResult:
-    ...
+async def analyze_zen_violations(code: str, language: str) -> AnalysisResult: ...
 ```
 
 The tools are grouped into four families:
@@ -30,48 +29,50 @@ Note:
 
 import logging
 import os
+
 from datetime import timedelta
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
+from typing import cast
 
 import fastmcp
+
 from fastmcp.server.tasks import TaskConfig
-from mcp.types import Icon, ToolAnnotations
-from pydantic import BaseModel, TypeAdapter
+from mcp.types import Icon
+from mcp.types import ToolAnnotations
+from pydantic import BaseModel
+from pydantic import TypeAdapter
 
 from mcp_zen_of_languages import __version__
-from mcp_zen_of_languages.analyzers.analyzer_factory import (
-    create_analyzer,
-    supported_languages,
-)
+from mcp_zen_of_languages.analyzers.analyzer_factory import create_analyzer
+from mcp_zen_of_languages.analyzers.analyzer_factory import supported_languages
 from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
 from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
 from mcp_zen_of_languages.config import load_config
 from mcp_zen_of_languages.lifespan import zen_server_lifespan
 from mcp_zen_of_languages.middleware import build_default_middleware
-from mcp_zen_of_languages.models import (
-    AnalysisResult,
-    LanguagesResult,
-    PatternsResult,
-    RepositoryAnalysis,
-)
+from mcp_zen_of_languages.models import AnalysisResult
+from mcp_zen_of_languages.models import LanguagesResult
+from mcp_zen_of_languages.models import PatternsResult
+from mcp_zen_of_languages.models import RepositoryAnalysis
 from mcp_zen_of_languages.orchestration import (
     analyze_targets as _shared_analyze_targets,
 )
 from mcp_zen_of_languages.orchestration import (
     collect_targets as _shared_collect_targets,
 )
-from mcp_zen_of_languages.reporting.agent_tasks import (
-    AgentTaskList,
-    build_agent_tasks,
-)
-from mcp_zen_of_languages.reporting.models import PromptBundle, ReportOutput
+from mcp_zen_of_languages.reporting.agent_tasks import AgentTaskList
+from mcp_zen_of_languages.reporting.agent_tasks import build_agent_tasks
+from mcp_zen_of_languages.reporting.models import PromptBundle
+from mcp_zen_of_languages.reporting.models import ReportOutput
 from mcp_zen_of_languages.reporting.prompts import build_prompt_bundle
 from mcp_zen_of_languages.reporting.report import generate_report
-from mcp_zen_of_languages.rules import get_all_languages, get_language_zen
+from mcp_zen_of_languages.rules import get_all_languages
+from mcp_zen_of_languages.rules import get_language_zen
 from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
 from mcp_zen_of_languages.storage import create_cache_backend
 from mcp_zen_of_languages.telemetry import analysis_span
+
 
 SERVER_ICONS = [
     Icon(

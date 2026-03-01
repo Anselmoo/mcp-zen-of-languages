@@ -1,20 +1,18 @@
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
 from mcp_zen_of_languages.analyzers.registry import REGISTRY
-from mcp_zen_of_languages.languages.rust.detectors import (
-    RustCloneOverheadDetector,
-    RustDebugDeriveDetector,
-    RustEnumOverBoolDetector,
-    RustErrorHandlingDetector,
-    RustInteriorMutabilityDetector,
-    RustIteratorPreferenceDetector,
-    RustLifetimeUsageDetector,
-    RustMustUseDetector,
-    RustNewtypePatternDetector,
-    RustStdTraitsDetector,
-    RustTypeSafetyDetector,
-    RustUnsafeBlocksDetector,
-    RustUnwrapUsageDetector,
-)
+from mcp_zen_of_languages.languages.rust.detectors import RustCloneOverheadDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustDebugDeriveDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustEnumOverBoolDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustErrorHandlingDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustInteriorMutabilityDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustIteratorPreferenceDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustLifetimeUsageDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustMustUseDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustNewtypePatternDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustStdTraitsDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustTypeSafetyDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustUnsafeBlocksDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustUnwrapUsageDetector
 from mcp_zen_of_languages.languages.rust.rules import RUST_ZEN
 
 

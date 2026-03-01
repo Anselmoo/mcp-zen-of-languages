@@ -15,13 +15,12 @@ from __future__ import annotations
 
 import re
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    LocationHelperMixin,
-    ViolationDetector,
-)
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
 from mcp_zen_of_languages.languages.configs import DetectorConfig
-from mcp_zen_of_languages.models import Location, Violation
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import Violation
 
 
 class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin):

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from mcp_zen_of_languages.languages.python.analyzer import PythonAnalyzer
 
+
 EXPECTED_IMPORT_LINES = 2
 
 

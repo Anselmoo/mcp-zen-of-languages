@@ -4,10 +4,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    ViolationDetector,
-)
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.models import Violation

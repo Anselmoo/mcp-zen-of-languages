@@ -15,13 +15,9 @@ from mcp_zen_of_languages.languages.bash.analyzer import BashAnalyzer
 from mcp_zen_of_languages.languages.cpp.analyzer import CppAnalyzer
 from mcp_zen_of_languages.languages.csharp.analyzer import CSharpAnalyzer
 from mcp_zen_of_languages.languages.css.analyzer import CssAnalyzer
-from mcp_zen_of_languages.languages.docker_compose.analyzer import (
-    DockerComposeAnalyzer,
-)
+from mcp_zen_of_languages.languages.docker_compose.analyzer import DockerComposeAnalyzer
 from mcp_zen_of_languages.languages.dockerfile.analyzer import DockerfileAnalyzer
-from mcp_zen_of_languages.languages.github_actions.analyzer import (
-    GitHubActionsAnalyzer,
-)
+from mcp_zen_of_languages.languages.github_actions.analyzer import GitHubActionsAnalyzer
 from mcp_zen_of_languages.languages.gitlab_ci.analyzer import GitLabCIAnalyzer
 from mcp_zen_of_languages.languages.go.analyzer import GoAnalyzer
 from mcp_zen_of_languages.languages.javascript.analyzer import JavaScriptAnalyzer
@@ -38,8 +34,10 @@ from mcp_zen_of_languages.languages.typescript.analyzer import TypeScriptAnalyze
 from mcp_zen_of_languages.languages.xml.analyzer import XmlAnalyzer
 from mcp_zen_of_languages.languages.yaml.analyzer import YamlAnalyzer
 
+
 if TYPE_CHECKING:
-    from mcp_zen_of_languages.analyzers.base import AnalyzerConfig, BaseAnalyzer
+    from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
+    from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
 
     type AnalyzerClass = type[BaseAnalyzer]

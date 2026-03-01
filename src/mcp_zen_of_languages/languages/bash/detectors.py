@@ -14,28 +14,25 @@ from __future__ import annotations
 
 import re
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    LocationHelperMixin,
-    ViolationDetector,
-)
-from mcp_zen_of_languages.languages.configs import (
-    Bash006Config,
-    Bash011Config,
-    BashArgumentValidationConfig,
-    BashArrayUsageConfig,
-    BashCommandSubstitutionConfig,
-    BashDoubleBracketsConfig,
-    BashEvalUsageConfig,
-    BashExitCodeConfig,
-    BashLocalVariablesConfig,
-    BashQuoteVariablesConfig,
-    BashReadonlyConstantsConfig,
-    BashSignalHandlingConfig,
-    BashStrictModeConfig,
-    BashUsageInfoConfig,
-)
-from mcp_zen_of_languages.models import Location, Violation
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import Bash006Config
+from mcp_zen_of_languages.languages.configs import Bash011Config
+from mcp_zen_of_languages.languages.configs import BashArgumentValidationConfig
+from mcp_zen_of_languages.languages.configs import BashArrayUsageConfig
+from mcp_zen_of_languages.languages.configs import BashCommandSubstitutionConfig
+from mcp_zen_of_languages.languages.configs import BashDoubleBracketsConfig
+from mcp_zen_of_languages.languages.configs import BashEvalUsageConfig
+from mcp_zen_of_languages.languages.configs import BashExitCodeConfig
+from mcp_zen_of_languages.languages.configs import BashLocalVariablesConfig
+from mcp_zen_of_languages.languages.configs import BashQuoteVariablesConfig
+from mcp_zen_of_languages.languages.configs import BashReadonlyConstantsConfig
+from mcp_zen_of_languages.languages.configs import BashSignalHandlingConfig
+from mcp_zen_of_languages.languages.configs import BashStrictModeConfig
+from mcp_zen_of_languages.languages.configs import BashUsageInfoConfig
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import Violation
 
 
 class BashStrictModeDetector(

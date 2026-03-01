@@ -4,20 +4,18 @@ from __future__ import annotations
 
 import re
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    LocationHelperMixin,
-    ViolationDetector,
-)
-from mcp_zen_of_languages.languages.configs import (
-    XmlAttributeUsageConfig,
-    XmlClosingTagsConfig,
-    XmlHierarchyConfig,
-    XmlNamespaceConfig,
-    XmlSemanticMarkupConfig,
-    XmlValidityConfig,
-)
-from mcp_zen_of_languages.models import Location, Violation
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import XmlAttributeUsageConfig
+from mcp_zen_of_languages.languages.configs import XmlClosingTagsConfig
+from mcp_zen_of_languages.languages.configs import XmlHierarchyConfig
+from mcp_zen_of_languages.languages.configs import XmlNamespaceConfig
+from mcp_zen_of_languages.languages.configs import XmlSemanticMarkupConfig
+from mcp_zen_of_languages.languages.configs import XmlValidityConfig
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import Violation
+
 
 # Minimum number of tag occurrences before flagging as ungrouped repetition
 MIN_TAG_OCCURRENCES_FOR_GROUP = 2

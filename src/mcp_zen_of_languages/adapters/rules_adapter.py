@@ -13,23 +13,22 @@ All data access uses Pydantic model attributes — never raw dictionary keys.
 from __future__ import annotations
 
 import logging
+
 from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
+from pydantic import Field
 
-from mcp_zen_of_languages.models import (
-    CyclomaticSummary,
-    DependencyAnalysis,
-    Violation,
-)
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import DependencyAnalysis
+from mcp_zen_of_languages.models import Violation
 from mcp_zen_of_languages.rules import get_language_zen
 
+
 if TYPE_CHECKING:
-    from mcp_zen_of_languages.rules.base_models import (
-        DetectorConfig,
-        LanguageZenPrinciples,
-        ZenPrinciple,
-    )
+    from mcp_zen_of_languages.rules.base_models import DetectorConfig
+    from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
+    from mcp_zen_of_languages.rules.base_models import ZenPrinciple
 
 # Severity tier thresholds (1-10 scale)
 SEVERITY_CRITICAL = 9

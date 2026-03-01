@@ -8,7 +8,8 @@ objects that the coupling detector evaluates against zen thresholds.
 
 import networkx as nx
 
-from mcp_zen_of_languages.models import DependencyAnalysis, DependencyCycle
+from mcp_zen_of_languages.models import DependencyAnalysis
+from mcp_zen_of_languages.models import DependencyCycle
 
 
 def build_import_graph(file_imports: dict[str, list[str]]) -> DependencyAnalysis:

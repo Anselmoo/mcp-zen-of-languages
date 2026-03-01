@@ -2,45 +2,70 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import (
-    DetectorBinding,
-    LanguageDetectorMap,
-)
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
-from mcp_zen_of_languages.languages.configs import (
-    PowerShellAliasUsageConfig,
-    PowerShellApprovedVerbConfig,
-    PowerShellCmdletBindingConfig,
-    PowerShellCommentHelpConfig,
-    PowerShellErrorHandlingConfig,
-    PowerShellNullHandlingConfig,
-    PowerShellParameterValidationConfig,
-    PowerShellPascalCaseConfig,
-    PowerShellPipelineUsageConfig,
-    PowerShellPositionalParamsConfig,
-    PowerShellReturnObjectsConfig,
-    PowerShellScopeUsageConfig,
-    PowerShellShouldProcessConfig,
-    PowerShellSplattingConfig,
-    PowerShellVerboseDebugConfig,
-)
+from mcp_zen_of_languages.languages.configs import PowerShellAliasUsageConfig
+from mcp_zen_of_languages.languages.configs import PowerShellApprovedVerbConfig
+from mcp_zen_of_languages.languages.configs import PowerShellCmdletBindingConfig
+from mcp_zen_of_languages.languages.configs import PowerShellCommentHelpConfig
+from mcp_zen_of_languages.languages.configs import PowerShellErrorHandlingConfig
+from mcp_zen_of_languages.languages.configs import PowerShellNullHandlingConfig
+from mcp_zen_of_languages.languages.configs import PowerShellParameterValidationConfig
+from mcp_zen_of_languages.languages.configs import PowerShellPascalCaseConfig
+from mcp_zen_of_languages.languages.configs import PowerShellPipelineUsageConfig
+from mcp_zen_of_languages.languages.configs import PowerShellPositionalParamsConfig
+from mcp_zen_of_languages.languages.configs import PowerShellReturnObjectsConfig
+from mcp_zen_of_languages.languages.configs import PowerShellScopeUsageConfig
+from mcp_zen_of_languages.languages.configs import PowerShellShouldProcessConfig
+from mcp_zen_of_languages.languages.configs import PowerShellSplattingConfig
+from mcp_zen_of_languages.languages.configs import PowerShellVerboseDebugConfig
 from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellAliasUsageDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellApprovedVerbDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellCmdletBindingDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellCommentHelpDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellErrorHandlingDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellNullHandlingDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellParameterValidationDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellPascalCaseDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellPipelineUsageDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellPositionalParamsDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellReturnObjectsDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellScopeUsageDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellShouldProcessDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellSplattingDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellVerboseDebugDetector,
 )
+
 
 FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(

@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
-from mcp_zen_of_languages.models import CyclomaticSummary, Violation
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import Violation
+
 
 SINGLE_VIOLATION_SCORE = 90.0
 

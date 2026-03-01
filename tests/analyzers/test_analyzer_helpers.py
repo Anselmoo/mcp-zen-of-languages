@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    BaseAnalyzer,
-    LocationHelperMixin,
-)
-from mcp_zen_of_languages.models import CyclomaticSummary, Location, Violation
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import Violation
+
 
 EMPTY_VIOLATIONS_SCORE = 100.0
 SINGLE_VIOLATION_SCORE = 90.0

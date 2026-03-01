@@ -2,20 +2,18 @@ from __future__ import annotations
 
 import inspect
 
-from mcp_zen_of_languages.analyzers.analyzer_factory import (
-    create_analyzer,
-    supported_languages,
-)
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    AnalyzerCapabilities,
-    AnalyzerConfig,
-    AstStatus,
-    BaseAnalyzer,
-    DetectionPipeline,
-    ViolationDetector,
-)
-from mcp_zen_of_languages.models import CyclomaticSummary, ParserResult
+from mcp_zen_of_languages.analyzers.analyzer_factory import create_analyzer
+from mcp_zen_of_languages.analyzers.analyzer_factory import supported_languages
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import AnalyzerCapabilities
+from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
+from mcp_zen_of_languages.analyzers.base import AstStatus
+from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
+from mcp_zen_of_languages.analyzers.base import DetectionPipeline
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import ParserResult
+
 
 AST_CAPABLE_LANGUAGES = {
     "python",

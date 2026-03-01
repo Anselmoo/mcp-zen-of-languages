@@ -2,11 +2,9 @@ from __future__ import annotations
 
 import pytest
 
-from mcp_zen_of_languages.analyzers.pipeline import (
-    PipelineConfig,
-    merge_pipeline_overrides,
-    project_rules_to_configs,
-)
+from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
+from mcp_zen_of_languages.analyzers.pipeline import merge_pipeline_overrides
+from mcp_zen_of_languages.analyzers.pipeline import project_rules_to_configs
 from mcp_zen_of_languages.languages.python.rules import PYTHON_ZEN
 
 

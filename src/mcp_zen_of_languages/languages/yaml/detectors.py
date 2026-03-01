@@ -4,22 +4,19 @@ from __future__ import annotations
 
 import re
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    LocationHelperMixin,
-    ViolationDetector,
-)
-from mcp_zen_of_languages.languages.configs import (
-    YamlCommentIntentConfig,
-    YamlConsistencyConfig,
-    YamlDuplicateKeysConfig,
-    YamlIndentationConfig,
-    YamlKeyClarityConfig,
-    YamlLowercaseKeysConfig,
-    YamlNoTabsConfig,
-    YamlStringStyleConfig,
-)
-from mcp_zen_of_languages.models import Location, Violation
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import YamlCommentIntentConfig
+from mcp_zen_of_languages.languages.configs import YamlConsistencyConfig
+from mcp_zen_of_languages.languages.configs import YamlDuplicateKeysConfig
+from mcp_zen_of_languages.languages.configs import YamlIndentationConfig
+from mcp_zen_of_languages.languages.configs import YamlKeyClarityConfig
+from mcp_zen_of_languages.languages.configs import YamlLowercaseKeysConfig
+from mcp_zen_of_languages.languages.configs import YamlNoTabsConfig
+from mcp_zen_of_languages.languages.configs import YamlStringStyleConfig
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import Violation
 
 
 class YamlIndentationDetector(

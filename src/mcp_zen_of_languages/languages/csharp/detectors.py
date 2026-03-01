@@ -13,27 +13,24 @@ from __future__ import annotations
 
 import re
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    LocationHelperMixin,
-    ViolationDetector,
-)
-from mcp_zen_of_languages.languages.configs import (
-    Cs008Config,
-    CSharpAsyncAwaitConfig,
-    CSharpCollectionExpressionConfig,
-    CSharpDisposableConfig,
-    CSharpExceptionHandlingConfig,
-    CSharpExpressionBodiedConfig,
-    CSharpLinqConfig,
-    CSharpMagicNumberConfig,
-    CSharpNullableConfig,
-    CSharpPatternMatchingConfig,
-    CSharpRecordConfig,
-    CSharpStringInterpolationConfig,
-    CSharpVarConfig,
-)
-from mcp_zen_of_languages.models import Location, Violation
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import CSharpAsyncAwaitConfig
+from mcp_zen_of_languages.languages.configs import CSharpCollectionExpressionConfig
+from mcp_zen_of_languages.languages.configs import CSharpDisposableConfig
+from mcp_zen_of_languages.languages.configs import CSharpExceptionHandlingConfig
+from mcp_zen_of_languages.languages.configs import CSharpExpressionBodiedConfig
+from mcp_zen_of_languages.languages.configs import CSharpLinqConfig
+from mcp_zen_of_languages.languages.configs import CSharpMagicNumberConfig
+from mcp_zen_of_languages.languages.configs import CSharpNullableConfig
+from mcp_zen_of_languages.languages.configs import CSharpPatternMatchingConfig
+from mcp_zen_of_languages.languages.configs import CSharpRecordConfig
+from mcp_zen_of_languages.languages.configs import CSharpStringInterpolationConfig
+from mcp_zen_of_languages.languages.configs import CSharpVarConfig
+from mcp_zen_of_languages.languages.configs import Cs008Config
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import Violation
 
 
 class CSharpAsyncAwaitDetector(

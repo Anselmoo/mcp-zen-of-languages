@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 from mcp_zen_of_languages.rules import get_language_zen
 from mcp_zen_of_languages.rules.base_models import PrincipleCategory
 
+
 if TYPE_CHECKING:
     from collections.abc import Iterable
 

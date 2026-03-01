@@ -9,4 +9,5 @@ from __future__ import annotations
 
 from mcp_zen_of_languages.languages.rules import RulePatternDetector
 
+
 __all__ = ["RulePatternDetector"]

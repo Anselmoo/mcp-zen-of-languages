@@ -8,6 +8,7 @@ from mcp_zen_of_languages.core.detectors.shared_keyword import (
 from mcp_zen_of_languages.core.detectors.signature import SignatureDetector
 from mcp_zen_of_languages.core.detectors.state_mutation import StateMutationDetector
 
+
 __all__ = [
     "ClutterDetector",
     "ControlFlowDetector",

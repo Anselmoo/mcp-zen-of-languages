@@ -4,24 +4,23 @@
 from __future__ import annotations
 
 import re
+
 from pathlib import Path
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    LocationHelperMixin,
-    ViolationDetector,
-)
-from mcp_zen_of_languages.languages.configs import (
-    DockerfileAddInstructionConfig,
-    DockerfileDockerignoreConfig,
-    DockerfileHealthcheckConfig,
-    DockerfileLatestTagConfig,
-    DockerfileLayerDisciplineConfig,
-    DockerfileMultiStageConfig,
-    DockerfileNonRootUserConfig,
-    DockerfileSecretHygieneConfig,
-)
-from mcp_zen_of_languages.models import Location, Violation
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import DockerfileAddInstructionConfig
+from mcp_zen_of_languages.languages.configs import DockerfileDockerignoreConfig
+from mcp_zen_of_languages.languages.configs import DockerfileHealthcheckConfig
+from mcp_zen_of_languages.languages.configs import DockerfileLatestTagConfig
+from mcp_zen_of_languages.languages.configs import DockerfileLayerDisciplineConfig
+from mcp_zen_of_languages.languages.configs import DockerfileMultiStageConfig
+from mcp_zen_of_languages.languages.configs import DockerfileNonRootUserConfig
+from mcp_zen_of_languages.languages.configs import DockerfileSecretHygieneConfig
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import Violation
+
 
 _FROM_RE = re.compile(r"^\s*FROM\s+([^\s]+)", re.IGNORECASE)
 _USER_RE = re.compile(r"^\s*USER\s+([^\s#]+)", re.IGNORECASE)

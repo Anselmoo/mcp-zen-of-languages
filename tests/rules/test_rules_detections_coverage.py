@@ -1,12 +1,10 @@
 from __future__ import annotations
 
-from mcp_zen_of_languages.rules.tools.detections import (
-    detect_deep_nesting,
-    detect_long_functions,
-    detect_magic_methods_overuse,
-    detect_multiple_implementations,
-    detect_sparse_code,
-)
+from mcp_zen_of_languages.rules.tools.detections import detect_deep_nesting
+from mcp_zen_of_languages.rules.tools.detections import detect_long_functions
+from mcp_zen_of_languages.rules.tools.detections import detect_magic_methods_overuse
+from mcp_zen_of_languages.rules.tools.detections import detect_multiple_implementations
+from mcp_zen_of_languages.rules.tools.detections import detect_sparse_code
 
 
 def test_rules_detection_helpers():

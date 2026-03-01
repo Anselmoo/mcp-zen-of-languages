@@ -4,6 +4,7 @@ import pytest
 
 from mcp_zen_of_languages import server
 
+
 MAX_LINE_LENGTH_OVERRIDE = 100
 RELAXED_COMPLEXITY_TARGET = 15
 

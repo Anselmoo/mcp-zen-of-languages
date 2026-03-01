@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Protocol
+from typing import TYPE_CHECKING
+from typing import Protocol
 
 from mcp_zen_of_languages.core.universal_dogmas import (
     DOGMA_RULE_IDS as UNIVERSAL_DOGMA_RULE_IDS,
 )
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.models import AnalysisResult

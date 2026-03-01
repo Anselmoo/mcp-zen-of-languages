@@ -7,20 +7,16 @@ import pytest
 from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
 from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
 from mcp_zen_of_languages.languages.placeholder import PlaceholderDetector
-from mcp_zen_of_languages.models import (
-    AnalysisResult,
-    CyclomaticSummary,
-    Metrics,
-    Violation,
-)
+from mcp_zen_of_languages.models import AnalysisResult
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import Metrics
+from mcp_zen_of_languages.models import Violation
 from mcp_zen_of_languages.reporting.gaps import build_gap_analysis
 from mcp_zen_of_languages.reporting.prompts import build_prompt_bundle
 from mcp_zen_of_languages.reporting.report import _format_prompts_markdown
-from mcp_zen_of_languages.rules.base_models import (
-    LanguageZenPrinciples,
-    PrincipleCategory,
-    ZenPrinciple,
-)
+from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
+from mcp_zen_of_languages.rules.base_models import PrincipleCategory
+from mcp_zen_of_languages.rules.base_models import ZenPrinciple
 
 
 class DummyLocation(LocationHelperMixin):

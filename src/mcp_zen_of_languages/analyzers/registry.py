@@ -26,24 +26,28 @@ See Also:
 from __future__ import annotations
 
 import operator
+
 from functools import reduce
-from typing import TYPE_CHECKING, Annotated, Any
+from typing import TYPE_CHECKING
+from typing import Annotated
+from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Discriminator, Field, TypeAdapter
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import Discriminator
+from pydantic import Field
+from pydantic import TypeAdapter
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalyzerConfig,
-    DetectionPipeline,
-    ViolationDetector,
-)
+from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
+from mcp_zen_of_languages.analyzers.base import DetectionPipeline
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
 from mcp_zen_of_languages.languages.configs import DetectorConfig
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
-    from mcp_zen_of_languages.rules.base_models import (
-        LanguageZenPrinciples,
-        ZenPrinciple,
-    )
+    from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
+    from mcp_zen_of_languages.rules.base_models import ZenPrinciple
 
 
 class DetectorMetadata(BaseModel):
@@ -190,6 +194,7 @@ class DetectorRegistry:
         if self._registry:
             return
         import importlib
+
         from pathlib import Path
 
         languages_dir = Path(__file__).parent.parent / "languages"

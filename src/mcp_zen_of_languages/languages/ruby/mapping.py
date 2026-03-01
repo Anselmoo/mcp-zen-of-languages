@@ -2,37 +2,32 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import (
-    DetectorBinding,
-    LanguageDetectorMap,
-)
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
-from mcp_zen_of_languages.languages.configs import (
-    RubyBlockPreferenceConfig,
-    RubyDryConfig,
-    RubyExpressiveSyntaxConfig,
-    RubyGuardClauseConfig,
-    RubyMetaprogrammingConfig,
-    RubyMethodChainConfig,
-    RubyMethodNamingConfig,
-    RubyMonkeyPatchConfig,
-    RubyNamingConventionConfig,
-    RubyPreferFailConfig,
-    RubySymbolKeysConfig,
-)
-from mcp_zen_of_languages.languages.ruby.detectors import (
-    RubyBlockPreferenceDetector,
-    RubyDryDetector,
-    RubyExpressiveSyntaxDetector,
-    RubyGuardClauseDetector,
-    RubyMetaprogrammingDetector,
-    RubyMethodChainDetector,
-    RubyMethodNamingDetector,
-    RubyMonkeyPatchDetector,
-    RubyNamingConventionDetector,
-    RubyPreferFailDetector,
-    RubySymbolKeysDetector,
-)
+from mcp_zen_of_languages.languages.configs import RubyBlockPreferenceConfig
+from mcp_zen_of_languages.languages.configs import RubyDryConfig
+from mcp_zen_of_languages.languages.configs import RubyExpressiveSyntaxConfig
+from mcp_zen_of_languages.languages.configs import RubyGuardClauseConfig
+from mcp_zen_of_languages.languages.configs import RubyMetaprogrammingConfig
+from mcp_zen_of_languages.languages.configs import RubyMethodChainConfig
+from mcp_zen_of_languages.languages.configs import RubyMethodNamingConfig
+from mcp_zen_of_languages.languages.configs import RubyMonkeyPatchConfig
+from mcp_zen_of_languages.languages.configs import RubyNamingConventionConfig
+from mcp_zen_of_languages.languages.configs import RubyPreferFailConfig
+from mcp_zen_of_languages.languages.configs import RubySymbolKeysConfig
+from mcp_zen_of_languages.languages.ruby.detectors import RubyBlockPreferenceDetector
+from mcp_zen_of_languages.languages.ruby.detectors import RubyDryDetector
+from mcp_zen_of_languages.languages.ruby.detectors import RubyExpressiveSyntaxDetector
+from mcp_zen_of_languages.languages.ruby.detectors import RubyGuardClauseDetector
+from mcp_zen_of_languages.languages.ruby.detectors import RubyMetaprogrammingDetector
+from mcp_zen_of_languages.languages.ruby.detectors import RubyMethodChainDetector
+from mcp_zen_of_languages.languages.ruby.detectors import RubyMethodNamingDetector
+from mcp_zen_of_languages.languages.ruby.detectors import RubyMonkeyPatchDetector
+from mcp_zen_of_languages.languages.ruby.detectors import RubyNamingConventionDetector
+from mcp_zen_of_languages.languages.ruby.detectors import RubyPreferFailDetector
+from mcp_zen_of_languages.languages.ruby.detectors import RubySymbolKeysDetector
+
 
 FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(

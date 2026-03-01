@@ -43,25 +43,29 @@ from __future__ import annotations
 
 import logging
 import os
-from abc import ABC, abstractmethod
-from enum import StrEnum
-from typing import Literal, TypeVar
 
-from pydantic import BaseModel, ConfigDict, Field
+from abc import ABC
+from abc import abstractmethod
+from enum import StrEnum
+from typing import Literal
+from typing import TypeVar
+
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import Field
 
 from mcp_zen_of_languages.languages.configs import DetectorConfig
-from mcp_zen_of_languages.models import (
-    AnalysisResult,
-    CyclomaticSummary,
-    ExternalAnalysisResult,
-    ExternalToolResult,
-    Location,
-    Metrics,
-    ParserResult,
-    RulesSummary,
-    Violation,
-)
+from mcp_zen_of_languages.models import AnalysisResult
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import ExternalAnalysisResult
+from mcp_zen_of_languages.models import ExternalToolResult
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import Metrics
+from mcp_zen_of_languages.models import ParserResult
+from mcp_zen_of_languages.models import RulesSummary
+from mcp_zen_of_languages.models import Violation
 from mcp_zen_of_languages.telemetry import analysis_span
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(
@@ -821,8 +825,8 @@ class BaseAnalyzer(ABC):
             result = self._build_result(context, violations)
 
             try:
+                from mcp_zen_of_languages.adapters.rules_adapter import RulesAdapter
                 from mcp_zen_of_languages.adapters.rules_adapter import (
-                    RulesAdapter,
                     RulesAdapterConfig,
                 )
                 from mcp_zen_of_languages.models import DependencyAnalysis
@@ -1029,10 +1033,8 @@ class BaseAnalyzer(ABC):
         allow_temporary_tools: bool,
     ) -> ExternalAnalysisResult | None:
         """Optionally run allow-listed external tools for deeper analysis quality."""
-        from mcp_zen_of_languages.utils.subprocess_runner import (
-            KNOWN_TOOLS,
-            SubprocessToolRunner,
-        )
+        from mcp_zen_of_languages.utils.subprocess_runner import KNOWN_TOOLS
+        from mcp_zen_of_languages.utils.subprocess_runner import SubprocessToolRunner
 
         tool_map = KNOWN_TOOLS.get(self.language(), {})
         if not tool_map:

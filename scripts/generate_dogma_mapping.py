@@ -16,14 +16,15 @@ from __future__ import annotations
 import argparse
 import importlib
 import sys
+
 from collections import defaultdict
 from pathlib import Path
 
-from mcp_zen_of_languages.core.universal_dogmas import (
-    UniversalDogmaID,
-    infer_dogmas_for_principle,
-)
-from mcp_zen_of_languages.rules import get_all_languages, get_language_zen
+from mcp_zen_of_languages.core.universal_dogmas import UniversalDogmaID
+from mcp_zen_of_languages.core.universal_dogmas import infer_dogmas_for_principle
+from mcp_zen_of_languages.rules import get_all_languages
+from mcp_zen_of_languages.rules import get_language_zen
+
 
 OUTPUT_PATH = Path("docs/includes/generated/dogma-mapping.md")
 

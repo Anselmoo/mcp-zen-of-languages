@@ -4,18 +4,18 @@ from __future__ import annotations
 
 import re
 
-from mcp_zen_of_languages.analyzers.base import AnalysisContext, ViolationDetector
-from mcp_zen_of_languages.languages.configs import (
-    CssColorLiteralConfig,
-    CssGodStylesheetConfig,
-    CssImportChainConfig,
-    CssMagicPixelsConfig,
-    CssMediaQueryScaleConfig,
-    CssSpecificityConfig,
-    CssVendorPrefixConfig,
-    CssZIndexScaleConfig,
-)
-from mcp_zen_of_languages.models import Location, Violation
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import CssColorLiteralConfig
+from mcp_zen_of_languages.languages.configs import CssGodStylesheetConfig
+from mcp_zen_of_languages.languages.configs import CssImportChainConfig
+from mcp_zen_of_languages.languages.configs import CssMagicPixelsConfig
+from mcp_zen_of_languages.languages.configs import CssMediaQueryScaleConfig
+from mcp_zen_of_languages.languages.configs import CssSpecificityConfig
+from mcp_zen_of_languages.languages.configs import CssVendorPrefixConfig
+from mcp_zen_of_languages.languages.configs import CssZIndexScaleConfig
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import Violation
 
 
 class CssSpecificityDetector(ViolationDetector[CssSpecificityConfig]):

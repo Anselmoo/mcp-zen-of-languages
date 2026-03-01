@@ -1,20 +1,16 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
-from mcp_zen_of_languages.languages.configs import (
-    ClassSizeConfig,
-    DocstringConfig,
-    LineLengthConfig,
-    MagicMethodConfig,
-    NameStyleConfig,
-)
-from mcp_zen_of_languages.languages.python.detectors import (
-    ClassSizeDetector,
-    DocstringDetector,
-    LineLengthDetector,
-    MagicMethodDetector,
-    NameStyleDetector,
-)
+from mcp_zen_of_languages.languages.configs import ClassSizeConfig
+from mcp_zen_of_languages.languages.configs import DocstringConfig
+from mcp_zen_of_languages.languages.configs import LineLengthConfig
+from mcp_zen_of_languages.languages.configs import MagicMethodConfig
+from mcp_zen_of_languages.languages.configs import NameStyleConfig
+from mcp_zen_of_languages.languages.python.detectors import ClassSizeDetector
+from mcp_zen_of_languages.languages.python.detectors import DocstringDetector
+from mcp_zen_of_languages.languages.python.detectors import LineLengthDetector
+from mcp_zen_of_languages.languages.python.detectors import MagicMethodDetector
+from mcp_zen_of_languages.languages.python.detectors import NameStyleDetector
 
 
 def test_class_size_detector_handles_parse_error():

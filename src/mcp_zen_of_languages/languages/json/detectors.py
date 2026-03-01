@@ -4,29 +4,28 @@ from __future__ import annotations
 
 import json
 import re
+
 from collections import Counter
 from typing import TYPE_CHECKING
+
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    LocationHelperMixin,
-    ViolationDetector,
-)
-from mcp_zen_of_languages.languages.configs import (
-    JsonArrayOrderConfig,
-    JsonDateFormatConfig,
-    JsonDuplicateKeyConfig,
-    JsonKeyCasingConfig,
-    JsonMagicStringConfig,
-    JsonNullHandlingConfig,
-    JsonNullSprawlConfig,
-    JsonSchemaConsistencyConfig,
-    JsonStrictnessConfig,
-)
-from mcp_zen_of_languages.models import Location, Violation
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import JsonArrayOrderConfig
+from mcp_zen_of_languages.languages.configs import JsonDateFormatConfig
+from mcp_zen_of_languages.languages.configs import JsonDuplicateKeyConfig
+from mcp_zen_of_languages.languages.configs import JsonKeyCasingConfig
+from mcp_zen_of_languages.languages.configs import JsonMagicStringConfig
+from mcp_zen_of_languages.languages.configs import JsonNullHandlingConfig
+from mcp_zen_of_languages.languages.configs import JsonNullSprawlConfig
+from mcp_zen_of_languages.languages.configs import JsonSchemaConsistencyConfig
+from mcp_zen_of_languages.languages.configs import JsonStrictnessConfig
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import Violation
 
 
 def _load_json_document(code: str) -> object | None:

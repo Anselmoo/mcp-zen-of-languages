@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from mcp_zen_of_languages.analyzers.registry import DetectorMetadata, DetectorRegistry
+from mcp_zen_of_languages.analyzers.registry import DetectorMetadata
+from mcp_zen_of_languages.analyzers.registry import DetectorRegistry
 from mcp_zen_of_languages.languages.configs import DetectorConfig
 
 

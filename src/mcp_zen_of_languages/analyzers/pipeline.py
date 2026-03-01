@@ -22,12 +22,15 @@ from __future__ import annotations
 
 import logging
 import os
+
 from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel
+from pydantic import field_validator
 
 from mcp_zen_of_languages.languages.configs import DetectorConfig  # noqa: TC001
 from mcp_zen_of_languages.rules import get_language_zen
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples

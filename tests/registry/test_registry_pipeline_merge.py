@@ -1,12 +1,9 @@
-from mcp_zen_of_languages.analyzers.pipeline import (
-    PipelineConfig,
-    merge_pipeline_overrides,
-)
+from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
+from mcp_zen_of_languages.analyzers.pipeline import merge_pipeline_overrides
 from mcp_zen_of_languages.analyzers.registry import REGISTRY
-from mcp_zen_of_languages.languages.configs import (
-    LineLengthConfig,
-)
+from mcp_zen_of_languages.languages.configs import LineLengthConfig
 from mcp_zen_of_languages.languages.python.rules import PYTHON_ZEN
+
 
 LINE_LENGTH_SEVERITY = 4
 SPARSE_CODE_SEVERITY = 5

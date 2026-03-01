@@ -22,13 +22,14 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import Field
 
-from mcp_zen_of_languages.analyzers.base import (  # noqa: TC001
-    AnalyzerConfig,
-    ViolationDetector,
-)
+from mcp_zen_of_languages.analyzers.base import AnalyzerConfig  # noqa: TC001
+from mcp_zen_of_languages.analyzers.base import ViolationDetector  # noqa: TC001
 from mcp_zen_of_languages.languages.configs import DetectorConfig  # noqa: TC001
+
 
 CoverageLevel = Literal["partial", "full-shallow", "full", "1:1"]
 

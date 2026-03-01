@@ -3,12 +3,10 @@ from __future__ import annotations
 import re
 
 from mcp_zen_of_languages import cli
-from mcp_zen_of_languages.models import (
-    AnalysisResult,
-    CyclomaticSummary,
-    Metrics,
-    Violation,
-)
+from mcp_zen_of_languages.models import AnalysisResult
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import Metrics
+from mcp_zen_of_languages.models import Violation
 from mcp_zen_of_languages.reporting.prompts import build_prompt_bundle
 from mcp_zen_of_languages.reporting.report import generate_report
 from mcp_zen_of_languages.utils.markdown_quality import validate_markdown

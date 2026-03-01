@@ -3,61 +3,58 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
-from mcp_zen_of_languages.analyzers.mapping_models import (
-    DetectorBinding,
-    LanguageDetectorMap,
-)
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
-from mcp_zen_of_languages.languages.configs import (
-    BareExceptConfig,
-    CircularDependencyConfig,
-    ClassSizeConfig,
-    ComplexOneLinersConfig,
-    ConsistencyConfig,
-    ContextManagerConfig,
-    CyclomaticComplexityConfig,
-    DeepInheritanceConfig,
-    DocstringConfig,
-    DuplicateImplementationConfig,
-    ExplicitnessConfig,
-    FeatureEnvyConfig,
-    GodClassConfig,
-    LineLengthConfig,
-    LongFunctionConfig,
-    MagicMethodConfig,
-    MagicNumberConfig,
-    NamespaceConfig,
-    NameStyleConfig,
-    NestingDepthConfig,
-    ShortVariableNamesConfig,
-    SparseCodeConfig,
-    StarImportConfig,
-)
+from mcp_zen_of_languages.languages.configs import BareExceptConfig
+from mcp_zen_of_languages.languages.configs import CircularDependencyConfig
+from mcp_zen_of_languages.languages.configs import ClassSizeConfig
+from mcp_zen_of_languages.languages.configs import ComplexOneLinersConfig
+from mcp_zen_of_languages.languages.configs import ConsistencyConfig
+from mcp_zen_of_languages.languages.configs import ContextManagerConfig
+from mcp_zen_of_languages.languages.configs import CyclomaticComplexityConfig
+from mcp_zen_of_languages.languages.configs import DeepInheritanceConfig
+from mcp_zen_of_languages.languages.configs import DocstringConfig
+from mcp_zen_of_languages.languages.configs import DuplicateImplementationConfig
+from mcp_zen_of_languages.languages.configs import ExplicitnessConfig
+from mcp_zen_of_languages.languages.configs import FeatureEnvyConfig
+from mcp_zen_of_languages.languages.configs import GodClassConfig
+from mcp_zen_of_languages.languages.configs import LineLengthConfig
+from mcp_zen_of_languages.languages.configs import LongFunctionConfig
+from mcp_zen_of_languages.languages.configs import MagicMethodConfig
+from mcp_zen_of_languages.languages.configs import MagicNumberConfig
+from mcp_zen_of_languages.languages.configs import NameStyleConfig
+from mcp_zen_of_languages.languages.configs import NamespaceConfig
+from mcp_zen_of_languages.languages.configs import NestingDepthConfig
+from mcp_zen_of_languages.languages.configs import ShortVariableNamesConfig
+from mcp_zen_of_languages.languages.configs import SparseCodeConfig
+from mcp_zen_of_languages.languages.configs import StarImportConfig
+from mcp_zen_of_languages.languages.python.detectors import BareExceptDetector
+from mcp_zen_of_languages.languages.python.detectors import CircularDependencyDetector
+from mcp_zen_of_languages.languages.python.detectors import ClassSizeDetector
+from mcp_zen_of_languages.languages.python.detectors import ComplexOneLinersDetector
+from mcp_zen_of_languages.languages.python.detectors import ConsistencyDetector
+from mcp_zen_of_languages.languages.python.detectors import ContextManagerDetector
+from mcp_zen_of_languages.languages.python.detectors import CyclomaticComplexityDetector
+from mcp_zen_of_languages.languages.python.detectors import DeepInheritanceDetector
+from mcp_zen_of_languages.languages.python.detectors import DocstringDetector
 from mcp_zen_of_languages.languages.python.detectors import (
-    BareExceptDetector,
-    CircularDependencyDetector,
-    ClassSizeDetector,
-    ComplexOneLinersDetector,
-    ConsistencyDetector,
-    ContextManagerDetector,
-    CyclomaticComplexityDetector,
-    DeepInheritanceDetector,
-    DocstringDetector,
     DuplicateImplementationDetector,
-    ExplicitnessDetector,
-    FeatureEnvyDetector,
-    GodClassDetector,
-    LineLengthDetector,
-    LongFunctionDetector,
-    MagicMethodDetector,
-    MagicNumberDetector,
-    NamespaceUsageDetector,
-    NameStyleDetector,
-    NestingDepthDetector,
-    ShortVariableNamesDetector,
-    SparseCodeDetector,
-    StarImportDetector,
 )
+from mcp_zen_of_languages.languages.python.detectors import ExplicitnessDetector
+from mcp_zen_of_languages.languages.python.detectors import FeatureEnvyDetector
+from mcp_zen_of_languages.languages.python.detectors import GodClassDetector
+from mcp_zen_of_languages.languages.python.detectors import LineLengthDetector
+from mcp_zen_of_languages.languages.python.detectors import LongFunctionDetector
+from mcp_zen_of_languages.languages.python.detectors import MagicMethodDetector
+from mcp_zen_of_languages.languages.python.detectors import MagicNumberDetector
+from mcp_zen_of_languages.languages.python.detectors import NameStyleDetector
+from mcp_zen_of_languages.languages.python.detectors import NamespaceUsageDetector
+from mcp_zen_of_languages.languages.python.detectors import NestingDepthDetector
+from mcp_zen_of_languages.languages.python.detectors import ShortVariableNamesDetector
+from mcp_zen_of_languages.languages.python.detectors import SparseCodeDetector
+from mcp_zen_of_languages.languages.python.detectors import StarImportDetector
+
 
 FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(

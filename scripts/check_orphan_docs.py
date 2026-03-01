@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import sys
+
 from pathlib import Path
 
 import yaml
+
 
 DOCS_DIR = Path("docs")
 MKDOCS_YML = Path("mkdocs.yml")

@@ -10,7 +10,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from .complexity import compute_cyclomatic_complexity, compute_maintainability_index
+from .complexity import compute_cyclomatic_complexity
+from .complexity import compute_maintainability_index
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.models import CyclomaticSummary

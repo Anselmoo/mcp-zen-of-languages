@@ -2,31 +2,26 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import (
-    DetectorBinding,
-    LanguageDetectorMap,
-)
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
-from mcp_zen_of_languages.languages.configs import (
-    YamlCommentIntentConfig,
-    YamlConsistencyConfig,
-    YamlDuplicateKeysConfig,
-    YamlIndentationConfig,
-    YamlKeyClarityConfig,
-    YamlLowercaseKeysConfig,
-    YamlNoTabsConfig,
-    YamlStringStyleConfig,
-)
-from mcp_zen_of_languages.languages.yaml.detectors import (
-    YamlCommentIntentDetector,
-    YamlConsistencyDetector,
-    YamlDuplicateKeysDetector,
-    YamlIndentationDetector,
-    YamlKeyClarityDetector,
-    YamlLowercaseKeysDetector,
-    YamlNoTabsDetector,
-    YamlStringStyleDetector,
-)
+from mcp_zen_of_languages.languages.configs import YamlCommentIntentConfig
+from mcp_zen_of_languages.languages.configs import YamlConsistencyConfig
+from mcp_zen_of_languages.languages.configs import YamlDuplicateKeysConfig
+from mcp_zen_of_languages.languages.configs import YamlIndentationConfig
+from mcp_zen_of_languages.languages.configs import YamlKeyClarityConfig
+from mcp_zen_of_languages.languages.configs import YamlLowercaseKeysConfig
+from mcp_zen_of_languages.languages.configs import YamlNoTabsConfig
+from mcp_zen_of_languages.languages.configs import YamlStringStyleConfig
+from mcp_zen_of_languages.languages.yaml.detectors import YamlCommentIntentDetector
+from mcp_zen_of_languages.languages.yaml.detectors import YamlConsistencyDetector
+from mcp_zen_of_languages.languages.yaml.detectors import YamlDuplicateKeysDetector
+from mcp_zen_of_languages.languages.yaml.detectors import YamlIndentationDetector
+from mcp_zen_of_languages.languages.yaml.detectors import YamlKeyClarityDetector
+from mcp_zen_of_languages.languages.yaml.detectors import YamlLowercaseKeysDetector
+from mcp_zen_of_languages.languages.yaml.detectors import YamlNoTabsDetector
+from mcp_zen_of_languages.languages.yaml.detectors import YamlStringStyleDetector
+
 
 FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(

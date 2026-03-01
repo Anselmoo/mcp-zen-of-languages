@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-from mcp_zen_of_languages.rules import (
-    get_all_critical_principles,
-    get_registry_stats,
-)
+from mcp_zen_of_languages.rules import get_all_critical_principles
+from mcp_zen_of_languages.rules import get_registry_stats
 
 
 def test_get_all_critical_principles_returns_mapping():

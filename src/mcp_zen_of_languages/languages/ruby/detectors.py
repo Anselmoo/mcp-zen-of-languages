@@ -13,25 +13,23 @@ from __future__ import annotations
 
 import re
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    LocationHelperMixin,
-    ViolationDetector,
-)
-from mcp_zen_of_languages.languages.configs import (
-    RubyBlockPreferenceConfig,
-    RubyDryConfig,
-    RubyExpressiveSyntaxConfig,
-    RubyGuardClauseConfig,
-    RubyMetaprogrammingConfig,
-    RubyMethodChainConfig,
-    RubyMethodNamingConfig,
-    RubyMonkeyPatchConfig,
-    RubyNamingConventionConfig,
-    RubyPreferFailConfig,
-    RubySymbolKeysConfig,
-)
-from mcp_zen_of_languages.models import Location, Violation
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import RubyBlockPreferenceConfig
+from mcp_zen_of_languages.languages.configs import RubyDryConfig
+from mcp_zen_of_languages.languages.configs import RubyExpressiveSyntaxConfig
+from mcp_zen_of_languages.languages.configs import RubyGuardClauseConfig
+from mcp_zen_of_languages.languages.configs import RubyMetaprogrammingConfig
+from mcp_zen_of_languages.languages.configs import RubyMethodChainConfig
+from mcp_zen_of_languages.languages.configs import RubyMethodNamingConfig
+from mcp_zen_of_languages.languages.configs import RubyMonkeyPatchConfig
+from mcp_zen_of_languages.languages.configs import RubyNamingConventionConfig
+from mcp_zen_of_languages.languages.configs import RubyPreferFailConfig
+from mcp_zen_of_languages.languages.configs import RubySymbolKeysConfig
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import Violation
+
 
 # Minimum number of identical lines before flagging as duplication
 MIN_DUPLICATE_LINE_COUNT = 3

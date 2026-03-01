@@ -2,11 +2,9 @@ from __future__ import annotations
 
 from mcp_zen_of_languages.orchestration import build_repository_imports
 from mcp_zen_of_languages.reporting import gaps as gaps_module
-from mcp_zen_of_languages.reporting.report import (
-    _analyze_targets,
-    _collect_targets,
-    _format_analysis_markdown,
-)
+from mcp_zen_of_languages.reporting.report import _analyze_targets
+from mcp_zen_of_languages.reporting.report import _collect_targets
+from mcp_zen_of_languages.reporting.report import _format_analysis_markdown
 
 
 def test_collect_targets_with_language_override(tmp_path):

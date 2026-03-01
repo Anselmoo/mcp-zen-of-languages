@@ -12,6 +12,7 @@ from pathlib import Path
 
 from pydantic import BaseModel
 
+
 EXTENSION_LANGUAGE_MAP: dict[str, str] = {
     ".py": "python",
     ".rb": "ruby",

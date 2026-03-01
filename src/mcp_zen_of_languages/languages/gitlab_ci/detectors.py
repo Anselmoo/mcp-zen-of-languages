@@ -5,20 +5,18 @@ from __future__ import annotations
 # ruff: noqa: D102
 import re
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    LocationHelperMixin,
-    ViolationDetector,
-)
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
 from mcp_zen_of_languages.languages.configs import DetectorConfig
-from mcp_zen_of_languages.models import Location, Violation
-from mcp_zen_of_languages.utils.ci_yaml import (
-    KEY_LINE_RE,
-    TopLevelBlock,
-    find_key_line,
-    has_key,
-    split_top_level_blocks,
-)
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import Violation
+from mcp_zen_of_languages.utils.ci_yaml import KEY_LINE_RE
+from mcp_zen_of_languages.utils.ci_yaml import TopLevelBlock
+from mcp_zen_of_languages.utils.ci_yaml import find_key_line
+from mcp_zen_of_languages.utils.ci_yaml import has_key
+from mcp_zen_of_languages.utils.ci_yaml import split_top_level_blocks
+
 
 GLOBAL_KEYS = {
     "stages",

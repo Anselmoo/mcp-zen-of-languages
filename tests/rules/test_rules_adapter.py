@@ -1,11 +1,9 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.adapters.rules_adapter import RulesAdapter
-from mcp_zen_of_languages.models import (
-    CyclomaticSummary,
-    DependencyAnalysis,
-    DependencyCycle,
-)
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import DependencyAnalysis
+from mcp_zen_of_languages.models import DependencyCycle
 
 
 def test_rules_adapter_no_language_returns_empty():

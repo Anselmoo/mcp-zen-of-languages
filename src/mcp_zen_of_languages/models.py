@@ -25,7 +25,8 @@ See Also:
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
+from pydantic import Field
 
 
 class Location(BaseModel):
@@ -351,7 +352,9 @@ class ProjectSummary(BaseModel):
         ...     total_violations=108,
         ...     severity_counts=SeverityCounts(critical=2, high=10, medium=40, low=56),
         ...     worst_offenders=[
-        ...         WorstOffender(path="core/engine.py", violations=31, language="python"),
+        ...         WorstOffender(
+        ...             path="core/engine.py", violations=31, language="python"
+        ...         ),
         ...     ],
         ... )
         >>> ps.total_files
@@ -546,9 +549,11 @@ class PatternsResult(BaseModel):
         patterns: Ordered list of detected pattern findings.
 
     Example:
-        >>> pr = PatternsResult(patterns=[
-        ...     PatternFinding(name="observer", details="event bus in signals.py"),
-        ... ])
+        >>> pr = PatternsResult(
+        ...     patterns=[
+        ...         PatternFinding(name="observer", details="event bus in signals.py"),
+        ...     ]
+        ... )
         >>> len(pr.patterns)
         1
 

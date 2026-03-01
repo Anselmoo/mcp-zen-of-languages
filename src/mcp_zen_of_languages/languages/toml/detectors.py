@@ -5,22 +5,20 @@ from __future__ import annotations
 import itertools
 import re
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    LocationHelperMixin,
-    ViolationDetector,
-)
-from mcp_zen_of_languages.languages.configs import (
-    TomlCommentClarityConfig,
-    TomlDuplicateKeysConfig,
-    TomlFloatIntegerConfig,
-    TomlIsoDatetimeConfig,
-    TomlLowercaseKeysConfig,
-    TomlNoInlineTablesConfig,
-    TomlOrderConfig,
-    TomlTrailingCommasConfig,
-)
-from mcp_zen_of_languages.models import Location, Violation
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import TomlCommentClarityConfig
+from mcp_zen_of_languages.languages.configs import TomlDuplicateKeysConfig
+from mcp_zen_of_languages.languages.configs import TomlFloatIntegerConfig
+from mcp_zen_of_languages.languages.configs import TomlIsoDatetimeConfig
+from mcp_zen_of_languages.languages.configs import TomlLowercaseKeysConfig
+from mcp_zen_of_languages.languages.configs import TomlNoInlineTablesConfig
+from mcp_zen_of_languages.languages.configs import TomlOrderConfig
+from mcp_zen_of_languages.languages.configs import TomlTrailingCommasConfig
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import Violation
+
 
 # Minimum number of table headers needed to check for large inter-table gaps
 MIN_TABLE_HEADERS_FOR_GAP = 2

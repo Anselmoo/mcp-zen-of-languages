@@ -6,14 +6,14 @@ import types
 import pytest
 
 from mcp_zen_of_languages.analyzers.base import ViolationDetector
-from mcp_zen_of_languages.analyzers.mapping_models import (
-    DetectorBinding,
-    FullDetectorMap,
-    LanguageDetectorMap,
-)
-from mcp_zen_of_languages.analyzers.registry import DetectorMetadata, DetectorRegistry
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import FullDetectorMap
+from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
+from mcp_zen_of_languages.analyzers.registry import DetectorMetadata
+from mcp_zen_of_languages.analyzers.registry import DetectorRegistry
 from mcp_zen_of_languages.core.universal_dogmas import UniversalDogmaID
 from mcp_zen_of_languages.languages.configs import DetectorConfig
+
 
 DEFAULT_DETECTOR_ORDER = 5
 

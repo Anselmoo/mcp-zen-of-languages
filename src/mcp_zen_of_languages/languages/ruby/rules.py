@@ -2,11 +2,10 @@
 
 from pydantic import HttpUrl
 
-from mcp_zen_of_languages.rules.base_models import (
-    LanguageZenPrinciples,
-    PrincipleCategory,
-    ZenPrinciple,
-)
+from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
+from mcp_zen_of_languages.rules.base_models import PrincipleCategory
+from mcp_zen_of_languages.rules.base_models import ZenPrinciple
+
 
 RUBY_ZEN = LanguageZenPrinciples(
     language="ruby",

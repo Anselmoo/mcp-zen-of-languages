@@ -16,14 +16,16 @@ from rich.text import Text
 from mcp_zen_of_languages.models import AnalysisResult
 
 from .console import console
-from .factories import zen_header_panel, zen_panel, zen_summary_table, zen_table
+from .factories import zen_header_panel
+from .factories import zen_panel
+from .factories import zen_summary_table
+from .factories import zen_table
 from .layout import get_output_width
 from .tables import build_violation_table
-from .themes import (
-    file_glyph,
-    score_glyph,
-    severity_badge,
-)
+from .themes import file_glyph
+from .themes import score_glyph
+from .themes import severity_badge
+
 
 if TYPE_CHECKING:
     from rich.console import Console

@@ -14,27 +14,24 @@ from __future__ import annotations
 
 import re
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    LocationHelperMixin,
-    ViolationDetector,
-)
-from mcp_zen_of_languages.languages.configs import (
-    CppAutoConfig,
-    CppAvoidGlobalsConfig,
-    CppConstCorrectnessConfig,
-    CppCStyleCastConfig,
-    CppManualAllocationConfig,
-    CppMoveConfig,
-    CppNullptrConfig,
-    CppOptionalConfig,
-    CppOverrideFinalConfig,
-    CppRaiiConfig,
-    CppRangeForConfig,
-    CppRuleOfFiveConfig,
-    CppSmartPointerConfig,
-)
-from mcp_zen_of_languages.models import Location, Violation
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import CppAutoConfig
+from mcp_zen_of_languages.languages.configs import CppAvoidGlobalsConfig
+from mcp_zen_of_languages.languages.configs import CppCStyleCastConfig
+from mcp_zen_of_languages.languages.configs import CppConstCorrectnessConfig
+from mcp_zen_of_languages.languages.configs import CppManualAllocationConfig
+from mcp_zen_of_languages.languages.configs import CppMoveConfig
+from mcp_zen_of_languages.languages.configs import CppNullptrConfig
+from mcp_zen_of_languages.languages.configs import CppOptionalConfig
+from mcp_zen_of_languages.languages.configs import CppOverrideFinalConfig
+from mcp_zen_of_languages.languages.configs import CppRaiiConfig
+from mcp_zen_of_languages.languages.configs import CppRangeForConfig
+from mcp_zen_of_languages.languages.configs import CppRuleOfFiveConfig
+from mcp_zen_of_languages.languages.configs import CppSmartPointerConfig
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import Violation
 
 
 class CppSmartPointerDetector(

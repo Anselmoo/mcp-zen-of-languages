@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib
 import sys
+
 from io import StringIO
 
 from rich.console import Console
@@ -11,30 +12,25 @@ from rich.table import Table
 
 from mcp_zen_of_languages import __version__
 from mcp_zen_of_languages.rendering import progress as progress_module
-from mcp_zen_of_languages.rendering.console import (
-    get_banner_art,
-    print_banner,
-    print_error,
-    set_quiet,
-)
-from mcp_zen_of_languages.rendering.layout import MAX_OUTPUT_WIDTH, get_output_width
-from mcp_zen_of_languages.rendering.panels import (
-    build_project_summary_panel,
-    build_worst_offenders_panel,
-)
+from mcp_zen_of_languages.rendering.console import get_banner_art
+from mcp_zen_of_languages.rendering.console import print_banner
+from mcp_zen_of_languages.rendering.console import print_error
+from mcp_zen_of_languages.rendering.console import set_quiet
+from mcp_zen_of_languages.rendering.layout import MAX_OUTPUT_WIDTH
+from mcp_zen_of_languages.rendering.layout import get_output_width
+from mcp_zen_of_languages.rendering.panels import build_project_summary_panel
+from mcp_zen_of_languages.rendering.panels import build_worst_offenders_panel
 from mcp_zen_of_languages.rendering.progress import analysis_progress
 from mcp_zen_of_languages.rendering.tables import build_violation_table
-from mcp_zen_of_languages.rendering.themes import (
-    BOX_BANNER,
-    BOX_CONTENT,
-    BOX_SUMMARY,
-    ZEN_THEME,
-    file_glyph,
-    pass_fail_glyph,
-    score_glyph,
-    severity_badge,
-    severity_style,
-)
+from mcp_zen_of_languages.rendering.themes import BOX_BANNER
+from mcp_zen_of_languages.rendering.themes import BOX_CONTENT
+from mcp_zen_of_languages.rendering.themes import BOX_SUMMARY
+from mcp_zen_of_languages.rendering.themes import ZEN_THEME
+from mcp_zen_of_languages.rendering.themes import file_glyph
+from mcp_zen_of_languages.rendering.themes import pass_fail_glyph
+from mcp_zen_of_languages.rendering.themes import score_glyph
+from mcp_zen_of_languages.rendering.themes import severity_badge
+from mcp_zen_of_languages.rendering.themes import severity_style
 
 
 def test_severity_style_and_badge():

@@ -5,18 +5,16 @@ from __future__ import annotations
 
 import re
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    LocationHelperMixin,
-    ViolationDetector,
-)
-from mcp_zen_of_languages.languages.configs import (
-    DockerComposeHealthcheckConfig,
-    DockerComposeLatestTagConfig,
-    DockerComposeNonRootUserConfig,
-    DockerComposeSecretHygieneConfig,
-)
-from mcp_zen_of_languages.models import Location, Violation
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import DockerComposeHealthcheckConfig
+from mcp_zen_of_languages.languages.configs import DockerComposeLatestTagConfig
+from mcp_zen_of_languages.languages.configs import DockerComposeNonRootUserConfig
+from mcp_zen_of_languages.languages.configs import DockerComposeSecretHygieneConfig
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import Violation
+
 
 _IMAGE_RE = re.compile(r"^\s*image:\s*([^\s#]+)", re.IGNORECASE)
 _USER_RE = re.compile(r"^\s*user:\s*(.+?)\s*$", re.IGNORECASE)

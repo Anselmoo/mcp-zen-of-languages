@@ -2,11 +2,9 @@ from __future__ import annotations
 
 import asyncio
 
-from mcp_zen_of_languages.server import (
-    analyze_repository,
-    detect_languages,
-    generate_report_tool,
-)
+from mcp_zen_of_languages.server import analyze_repository
+from mcp_zen_of_languages.server import detect_languages
+from mcp_zen_of_languages.server import generate_report_tool
 
 
 def test_server_detect_languages(tmp_path):

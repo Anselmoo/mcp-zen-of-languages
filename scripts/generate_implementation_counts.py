@@ -7,10 +7,14 @@ import importlib
 import json
 import re
 import sys
-from dataclasses import asdict, dataclass
+
+from dataclasses import asdict
+from dataclasses import dataclass
 from pathlib import Path
 
-from mcp_zen_of_languages.rules import get_all_languages, get_language_zen
+from mcp_zen_of_languages.rules import get_all_languages
+from mcp_zen_of_languages.rules import get_language_zen
+
 
 README_PATH = Path("README.md")
 DOCS_INDEX_PATH = Path("docs/index.md")

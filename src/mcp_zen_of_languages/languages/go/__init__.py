@@ -3,4 +3,5 @@
 from .analyzer import GoAnalyzer
 from .rules import GO_ZEN
 
+
 __all__ = ["GO_ZEN", "GoAnalyzer"]

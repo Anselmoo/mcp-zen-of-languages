@@ -26,12 +26,12 @@ from pathlib import Path
 
 from mcp_zen_of_languages.analyzers.analyzer_factory import supported_languages
 from mcp_zen_of_languages.analyzers.registry import REGISTRY
-from mcp_zen_of_languages.reporting.models import (
-    DetectorCoverageGap,
-    FeatureGap,
-    GapAnalysis,
-)
-from mcp_zen_of_languages.rules import get_all_languages, get_language_zen
+from mcp_zen_of_languages.reporting.models import DetectorCoverageGap
+from mcp_zen_of_languages.reporting.models import FeatureGap
+from mcp_zen_of_languages.reporting.models import GapAnalysis
+from mcp_zen_of_languages.rules import get_all_languages
+from mcp_zen_of_languages.rules import get_language_zen
+
 
 _SERVER_ROUTED_LANGUAGES: tuple[str, ...] = supported_languages()
 

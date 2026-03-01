@@ -7,9 +7,11 @@ import subprocess
 import sys
 import tempfile
 import uuid
+
 from pathlib import Path
 
 import pytest
+
 
 ROOT = Path(__file__).resolve().parent.parent
 BRANCH_SCRIPT = ROOT / "scripts" / "branch.py"

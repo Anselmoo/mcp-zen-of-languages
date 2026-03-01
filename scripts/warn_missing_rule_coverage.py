@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from mcp_zen_of_languages.rules import get_all_languages, get_language_zen
+from mcp_zen_of_languages.rules import get_all_languages
+from mcp_zen_of_languages.rules import get_language_zen
 from mcp_zen_of_languages.rules.base_models import get_missing_detector_rules
 
 

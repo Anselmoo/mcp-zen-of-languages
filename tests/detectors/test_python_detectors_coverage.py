@@ -1,46 +1,40 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
-from mcp_zen_of_languages.languages.configs import (
-    BareExceptConfig,
-    CircularDependencyConfig,
-    ClassSizeConfig,
-    ConsistencyConfig,
-    ContextManagerConfig,
-    CyclomaticComplexityConfig,
-    DocstringConfig,
-    ExplicitnessConfig,
-    GodClassConfig,
-    LineLengthConfig,
-    LongFunctionConfig,
-    MagicMethodConfig,
-    NamespaceConfig,
-    NestingDepthConfig,
-    SparseCodeConfig,
-)
-from mcp_zen_of_languages.languages.python.detectors import (
-    BareExceptDetector,
-    CircularDependencyDetector,
-    ClassSizeDetector,
-    ConsistencyDetector,
-    ContextManagerDetector,
-    CyclomaticComplexityDetector,
-    DocstringDetector,
-    ExplicitnessDetector,
-    GodClassDetector,
-    LineLengthDetector,
-    LongFunctionDetector,
-    MagicMethodDetector,
-    NamespaceUsageDetector,
-    NestingDepthDetector,
-    SparseCodeDetector,
-)
-from mcp_zen_of_languages.models import (
-    CyclomaticBlock,
-    CyclomaticSummary,
-    DependencyAnalysis,
-    DependencyCycle,
-)
+from mcp_zen_of_languages.languages.configs import BareExceptConfig
+from mcp_zen_of_languages.languages.configs import CircularDependencyConfig
+from mcp_zen_of_languages.languages.configs import ClassSizeConfig
+from mcp_zen_of_languages.languages.configs import ConsistencyConfig
+from mcp_zen_of_languages.languages.configs import ContextManagerConfig
+from mcp_zen_of_languages.languages.configs import CyclomaticComplexityConfig
+from mcp_zen_of_languages.languages.configs import DocstringConfig
+from mcp_zen_of_languages.languages.configs import ExplicitnessConfig
+from mcp_zen_of_languages.languages.configs import GodClassConfig
+from mcp_zen_of_languages.languages.configs import LineLengthConfig
+from mcp_zen_of_languages.languages.configs import LongFunctionConfig
+from mcp_zen_of_languages.languages.configs import MagicMethodConfig
+from mcp_zen_of_languages.languages.configs import NamespaceConfig
+from mcp_zen_of_languages.languages.configs import NestingDepthConfig
+from mcp_zen_of_languages.languages.configs import SparseCodeConfig
+from mcp_zen_of_languages.languages.python.detectors import BareExceptDetector
+from mcp_zen_of_languages.languages.python.detectors import CircularDependencyDetector
+from mcp_zen_of_languages.languages.python.detectors import ClassSizeDetector
+from mcp_zen_of_languages.languages.python.detectors import ConsistencyDetector
+from mcp_zen_of_languages.languages.python.detectors import ContextManagerDetector
+from mcp_zen_of_languages.languages.python.detectors import CyclomaticComplexityDetector
+from mcp_zen_of_languages.languages.python.detectors import DocstringDetector
+from mcp_zen_of_languages.languages.python.detectors import ExplicitnessDetector
+from mcp_zen_of_languages.languages.python.detectors import GodClassDetector
+from mcp_zen_of_languages.languages.python.detectors import LineLengthDetector
+from mcp_zen_of_languages.languages.python.detectors import LongFunctionDetector
+from mcp_zen_of_languages.languages.python.detectors import MagicMethodDetector
+from mcp_zen_of_languages.languages.python.detectors import NamespaceUsageDetector
+from mcp_zen_of_languages.languages.python.detectors import NestingDepthDetector
+from mcp_zen_of_languages.languages.python.detectors import SparseCodeDetector
+from mcp_zen_of_languages.models import CyclomaticBlock
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import DependencyAnalysis
+from mcp_zen_of_languages.models import DependencyCycle
 
 
 def test_python_detector_coverage_paths():

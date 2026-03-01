@@ -27,4 +27,5 @@ See Also:
 from mcp_zen_of_languages.reporting.models import ReportOutput
 from mcp_zen_of_languages.reporting.report import generate_report
 
+
 __all__ = ["ReportOutput", "generate_report"]

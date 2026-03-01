@@ -11,7 +11,9 @@ from __future__ import annotations
 
 import re
 import sys
+
 from pathlib import Path
+
 
 REQUIRED_HEADINGS: dict[Path, tuple[str, ...]] = {
     Path("README.md"): (

@@ -1,230 +1,248 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
-from mcp_zen_of_languages.languages.configs import (
-    CppAutoConfig,
-    CppAvoidGlobalsConfig,
-    CppConstCorrectnessConfig,
-    CppCStyleCastConfig,
-    CppManualAllocationConfig,
-    CppMoveConfig,
-    CppOptionalConfig,
-    CppOverrideFinalConfig,
-    CppRaiiConfig,
-    CppRangeForConfig,
-    CppRuleOfFiveConfig,
-    Cs008Config,
-    CSharpCollectionExpressionConfig,
-    CSharpDisposableConfig,
-    CSharpExceptionHandlingConfig,
-    CSharpExpressionBodiedConfig,
-    CSharpLinqConfig,
-    CSharpMagicNumberConfig,
-    CSharpNullableConfig,
-    CSharpPatternMatchingConfig,
-    CSharpRecordConfig,
-    CSharpVarConfig,
-    CssColorLiteralConfig,
-    CssGodStylesheetConfig,
-    CssImportChainConfig,
-    CssMagicPixelsConfig,
-    CssMediaQueryScaleConfig,
-    CssSpecificityConfig,
-    CssVendorPrefixConfig,
-    CssZIndexScaleConfig,
-    GoGoroutineLeakConfig,
-    GoInitUsageConfig,
-    GoInterfacePointerConfig,
-    GoInterfaceReturnConfig,
-    GoPackageNamingConfig,
-    GoPackageStateConfig,
-    GoZeroValueConfig,
-    Js009Config,
-    Js011Config,
-    JsGlobalStateConfig,
-    JsMagicNumbersConfig,
-    JsModernFeaturesConfig,
-    JsonArrayOrderConfig,
-    JsonDateFormatConfig,
-    JsonDuplicateKeyConfig,
-    JsonKeyCasingConfig,
-    JsonMagicStringConfig,
-    JsonNullHandlingConfig,
-    JsonNullSprawlConfig,
-    JsonSchemaConsistencyConfig,
-    JsonStrictnessConfig,
-    JsPureFunctionConfig,
-    PowerShellAliasUsageConfig,
-    PowerShellCmdletBindingConfig,
-    PowerShellCommentHelpConfig,
-    PowerShellNullHandlingConfig,
-    PowerShellParameterValidationConfig,
-    PowerShellPipelineUsageConfig,
-    PowerShellPositionalParamsConfig,
-    PowerShellReturnObjectsConfig,
-    PowerShellScopeUsageConfig,
-    PowerShellShouldProcessConfig,
-    PowerShellSplattingConfig,
-    PowerShellVerboseDebugConfig,
-    RubyBlockPreferenceConfig,
-    RubyDryConfig,
-    RubyExpressiveSyntaxConfig,
-    RubyGuardClauseConfig,
-    RubyMetaprogrammingConfig,
-    RubyMethodNamingConfig,
-    RubyMonkeyPatchConfig,
-    RubyPreferFailConfig,
-    RubySymbolKeysConfig,
-    TomlCommentClarityConfig,
-    TomlDuplicateKeysConfig,
-    TomlFloatIntegerConfig,
-    TomlIsoDatetimeConfig,
-    TomlLowercaseKeysConfig,
-    TomlNoInlineTablesConfig,
-    TomlOrderConfig,
-    TomlTrailingCommasConfig,
-    XmlAttributeUsageConfig,
-    XmlClosingTagsConfig,
-    XmlHierarchyConfig,
-    XmlNamespaceConfig,
-    XmlSemanticMarkupConfig,
-    XmlValidityConfig,
-    YamlCommentIntentConfig,
-    YamlConsistencyConfig,
-    YamlDuplicateKeysConfig,
-    YamlIndentationConfig,
-    YamlKeyClarityConfig,
-    YamlLowercaseKeysConfig,
-    YamlNoTabsConfig,
-    YamlStringStyleConfig,
-)
-from mcp_zen_of_languages.languages.cpp.detectors import (
-    CppAutoDetector,
-    CppAvoidGlobalsDetector,
-    CppConstCorrectnessDetector,
-    CppCStyleCastDetector,
-    CppManualAllocationDetector,
-    CppMoveDetector,
-    CppOptionalDetector,
-    CppOverrideFinalDetector,
-    CppRaiiDetector,
-    CppRangeForDetector,
-    CppRuleOfFiveDetector,
-)
+from mcp_zen_of_languages.languages.configs import CSharpCollectionExpressionConfig
+from mcp_zen_of_languages.languages.configs import CSharpDisposableConfig
+from mcp_zen_of_languages.languages.configs import CSharpExceptionHandlingConfig
+from mcp_zen_of_languages.languages.configs import CSharpExpressionBodiedConfig
+from mcp_zen_of_languages.languages.configs import CSharpLinqConfig
+from mcp_zen_of_languages.languages.configs import CSharpMagicNumberConfig
+from mcp_zen_of_languages.languages.configs import CSharpNullableConfig
+from mcp_zen_of_languages.languages.configs import CSharpPatternMatchingConfig
+from mcp_zen_of_languages.languages.configs import CSharpRecordConfig
+from mcp_zen_of_languages.languages.configs import CSharpVarConfig
+from mcp_zen_of_languages.languages.configs import CppAutoConfig
+from mcp_zen_of_languages.languages.configs import CppAvoidGlobalsConfig
+from mcp_zen_of_languages.languages.configs import CppCStyleCastConfig
+from mcp_zen_of_languages.languages.configs import CppConstCorrectnessConfig
+from mcp_zen_of_languages.languages.configs import CppManualAllocationConfig
+from mcp_zen_of_languages.languages.configs import CppMoveConfig
+from mcp_zen_of_languages.languages.configs import CppOptionalConfig
+from mcp_zen_of_languages.languages.configs import CppOverrideFinalConfig
+from mcp_zen_of_languages.languages.configs import CppRaiiConfig
+from mcp_zen_of_languages.languages.configs import CppRangeForConfig
+from mcp_zen_of_languages.languages.configs import CppRuleOfFiveConfig
+from mcp_zen_of_languages.languages.configs import Cs008Config
+from mcp_zen_of_languages.languages.configs import CssColorLiteralConfig
+from mcp_zen_of_languages.languages.configs import CssGodStylesheetConfig
+from mcp_zen_of_languages.languages.configs import CssImportChainConfig
+from mcp_zen_of_languages.languages.configs import CssMagicPixelsConfig
+from mcp_zen_of_languages.languages.configs import CssMediaQueryScaleConfig
+from mcp_zen_of_languages.languages.configs import CssSpecificityConfig
+from mcp_zen_of_languages.languages.configs import CssVendorPrefixConfig
+from mcp_zen_of_languages.languages.configs import CssZIndexScaleConfig
+from mcp_zen_of_languages.languages.configs import GoGoroutineLeakConfig
+from mcp_zen_of_languages.languages.configs import GoInitUsageConfig
+from mcp_zen_of_languages.languages.configs import GoInterfacePointerConfig
+from mcp_zen_of_languages.languages.configs import GoInterfaceReturnConfig
+from mcp_zen_of_languages.languages.configs import GoPackageNamingConfig
+from mcp_zen_of_languages.languages.configs import GoPackageStateConfig
+from mcp_zen_of_languages.languages.configs import GoZeroValueConfig
+from mcp_zen_of_languages.languages.configs import Js009Config
+from mcp_zen_of_languages.languages.configs import Js011Config
+from mcp_zen_of_languages.languages.configs import JsGlobalStateConfig
+from mcp_zen_of_languages.languages.configs import JsMagicNumbersConfig
+from mcp_zen_of_languages.languages.configs import JsModernFeaturesConfig
+from mcp_zen_of_languages.languages.configs import JsPureFunctionConfig
+from mcp_zen_of_languages.languages.configs import JsonArrayOrderConfig
+from mcp_zen_of_languages.languages.configs import JsonDateFormatConfig
+from mcp_zen_of_languages.languages.configs import JsonDuplicateKeyConfig
+from mcp_zen_of_languages.languages.configs import JsonKeyCasingConfig
+from mcp_zen_of_languages.languages.configs import JsonMagicStringConfig
+from mcp_zen_of_languages.languages.configs import JsonNullHandlingConfig
+from mcp_zen_of_languages.languages.configs import JsonNullSprawlConfig
+from mcp_zen_of_languages.languages.configs import JsonSchemaConsistencyConfig
+from mcp_zen_of_languages.languages.configs import JsonStrictnessConfig
+from mcp_zen_of_languages.languages.configs import PowerShellAliasUsageConfig
+from mcp_zen_of_languages.languages.configs import PowerShellCmdletBindingConfig
+from mcp_zen_of_languages.languages.configs import PowerShellCommentHelpConfig
+from mcp_zen_of_languages.languages.configs import PowerShellNullHandlingConfig
+from mcp_zen_of_languages.languages.configs import PowerShellParameterValidationConfig
+from mcp_zen_of_languages.languages.configs import PowerShellPipelineUsageConfig
+from mcp_zen_of_languages.languages.configs import PowerShellPositionalParamsConfig
+from mcp_zen_of_languages.languages.configs import PowerShellReturnObjectsConfig
+from mcp_zen_of_languages.languages.configs import PowerShellScopeUsageConfig
+from mcp_zen_of_languages.languages.configs import PowerShellShouldProcessConfig
+from mcp_zen_of_languages.languages.configs import PowerShellSplattingConfig
+from mcp_zen_of_languages.languages.configs import PowerShellVerboseDebugConfig
+from mcp_zen_of_languages.languages.configs import RubyBlockPreferenceConfig
+from mcp_zen_of_languages.languages.configs import RubyDryConfig
+from mcp_zen_of_languages.languages.configs import RubyExpressiveSyntaxConfig
+from mcp_zen_of_languages.languages.configs import RubyGuardClauseConfig
+from mcp_zen_of_languages.languages.configs import RubyMetaprogrammingConfig
+from mcp_zen_of_languages.languages.configs import RubyMethodNamingConfig
+from mcp_zen_of_languages.languages.configs import RubyMonkeyPatchConfig
+from mcp_zen_of_languages.languages.configs import RubyPreferFailConfig
+from mcp_zen_of_languages.languages.configs import RubySymbolKeysConfig
+from mcp_zen_of_languages.languages.configs import TomlCommentClarityConfig
+from mcp_zen_of_languages.languages.configs import TomlDuplicateKeysConfig
+from mcp_zen_of_languages.languages.configs import TomlFloatIntegerConfig
+from mcp_zen_of_languages.languages.configs import TomlIsoDatetimeConfig
+from mcp_zen_of_languages.languages.configs import TomlLowercaseKeysConfig
+from mcp_zen_of_languages.languages.configs import TomlNoInlineTablesConfig
+from mcp_zen_of_languages.languages.configs import TomlOrderConfig
+from mcp_zen_of_languages.languages.configs import TomlTrailingCommasConfig
+from mcp_zen_of_languages.languages.configs import XmlAttributeUsageConfig
+from mcp_zen_of_languages.languages.configs import XmlClosingTagsConfig
+from mcp_zen_of_languages.languages.configs import XmlHierarchyConfig
+from mcp_zen_of_languages.languages.configs import XmlNamespaceConfig
+from mcp_zen_of_languages.languages.configs import XmlSemanticMarkupConfig
+from mcp_zen_of_languages.languages.configs import XmlValidityConfig
+from mcp_zen_of_languages.languages.configs import YamlCommentIntentConfig
+from mcp_zen_of_languages.languages.configs import YamlConsistencyConfig
+from mcp_zen_of_languages.languages.configs import YamlDuplicateKeysConfig
+from mcp_zen_of_languages.languages.configs import YamlIndentationConfig
+from mcp_zen_of_languages.languages.configs import YamlKeyClarityConfig
+from mcp_zen_of_languages.languages.configs import YamlLowercaseKeysConfig
+from mcp_zen_of_languages.languages.configs import YamlNoTabsConfig
+from mcp_zen_of_languages.languages.configs import YamlStringStyleConfig
+from mcp_zen_of_languages.languages.cpp.detectors import CppAutoDetector
+from mcp_zen_of_languages.languages.cpp.detectors import CppAvoidGlobalsDetector
+from mcp_zen_of_languages.languages.cpp.detectors import CppCStyleCastDetector
+from mcp_zen_of_languages.languages.cpp.detectors import CppConstCorrectnessDetector
+from mcp_zen_of_languages.languages.cpp.detectors import CppManualAllocationDetector
+from mcp_zen_of_languages.languages.cpp.detectors import CppMoveDetector
+from mcp_zen_of_languages.languages.cpp.detectors import CppOptionalDetector
+from mcp_zen_of_languages.languages.cpp.detectors import CppOverrideFinalDetector
+from mcp_zen_of_languages.languages.cpp.detectors import CppRaiiDetector
+from mcp_zen_of_languages.languages.cpp.detectors import CppRangeForDetector
+from mcp_zen_of_languages.languages.cpp.detectors import CppRuleOfFiveDetector
 from mcp_zen_of_languages.languages.csharp.detectors import (
     CSharpCollectionExpressionDetector,
-    CSharpDisposableDetector,
+)
+from mcp_zen_of_languages.languages.csharp.detectors import CSharpDisposableDetector
+from mcp_zen_of_languages.languages.csharp.detectors import (
     CSharpExceptionHandlingDetector,
+)
+from mcp_zen_of_languages.languages.csharp.detectors import (
     CSharpExpressionBodiedDetector,
-    CSharpLinqDetector,
-    CSharpMagicNumberDetector,
+)
+from mcp_zen_of_languages.languages.csharp.detectors import CSharpLinqDetector
+from mcp_zen_of_languages.languages.csharp.detectors import CSharpMagicNumberDetector
+from mcp_zen_of_languages.languages.csharp.detectors import (
     CSharpNamingConventionDetector,
-    CSharpNullableDetector,
+)
+from mcp_zen_of_languages.languages.csharp.detectors import CSharpNullableDetector
+from mcp_zen_of_languages.languages.csharp.detectors import (
     CSharpPatternMatchingDetector,
-    CSharpRecordDetector,
-    CSharpVarDetector,
 )
-from mcp_zen_of_languages.languages.css.detectors import (
-    CssColorLiteralDetector,
-    CssGodStylesheetDetector,
-    CssImportChainDetector,
-    CssMagicPixelsDetector,
-    CssMediaQueryScaleDetector,
-    CssSpecificityDetector,
-    CssVendorPrefixDetector,
-    CssZIndexScaleDetector,
-)
-from mcp_zen_of_languages.languages.go.detectors import (
-    GoContextUsageDetector,
-    GoDeferUsageDetector,
-    GoErrorHandlingDetector,
-    GoGoroutineLeakDetector,
-    GoInitUsageDetector,
-    GoInterfacePointerDetector,
-    GoInterfaceReturnDetector,
-    GoInterfaceSizeDetector,
-    GoNamingConventionDetector,
-    GoPackageNamingDetector,
-    GoPackageStateDetector,
-    GoZeroValueDetector,
-)
+from mcp_zen_of_languages.languages.csharp.detectors import CSharpRecordDetector
+from mcp_zen_of_languages.languages.csharp.detectors import CSharpVarDetector
+from mcp_zen_of_languages.languages.css.detectors import CssColorLiteralDetector
+from mcp_zen_of_languages.languages.css.detectors import CssGodStylesheetDetector
+from mcp_zen_of_languages.languages.css.detectors import CssImportChainDetector
+from mcp_zen_of_languages.languages.css.detectors import CssMagicPixelsDetector
+from mcp_zen_of_languages.languages.css.detectors import CssMediaQueryScaleDetector
+from mcp_zen_of_languages.languages.css.detectors import CssSpecificityDetector
+from mcp_zen_of_languages.languages.css.detectors import CssVendorPrefixDetector
+from mcp_zen_of_languages.languages.css.detectors import CssZIndexScaleDetector
+from mcp_zen_of_languages.languages.go.detectors import GoContextUsageDetector
+from mcp_zen_of_languages.languages.go.detectors import GoDeferUsageDetector
+from mcp_zen_of_languages.languages.go.detectors import GoErrorHandlingDetector
+from mcp_zen_of_languages.languages.go.detectors import GoGoroutineLeakDetector
+from mcp_zen_of_languages.languages.go.detectors import GoInitUsageDetector
+from mcp_zen_of_languages.languages.go.detectors import GoInterfacePointerDetector
+from mcp_zen_of_languages.languages.go.detectors import GoInterfaceReturnDetector
+from mcp_zen_of_languages.languages.go.detectors import GoInterfaceSizeDetector
+from mcp_zen_of_languages.languages.go.detectors import GoNamingConventionDetector
+from mcp_zen_of_languages.languages.go.detectors import GoPackageNamingDetector
+from mcp_zen_of_languages.languages.go.detectors import GoPackageStateDetector
+from mcp_zen_of_languages.languages.go.detectors import GoZeroValueDetector
 from mcp_zen_of_languages.languages.javascript.detectors import (
     JsAsyncErrorHandlingDetector,
+)
+from mcp_zen_of_languages.languages.javascript.detectors import (
     JsCallbackNestingDetector,
-    JsFunctionLengthDetector,
-    JsGlobalStateDetector,
+)
+from mcp_zen_of_languages.languages.javascript.detectors import JsFunctionLengthDetector
+from mcp_zen_of_languages.languages.javascript.detectors import JsGlobalStateDetector
+from mcp_zen_of_languages.languages.javascript.detectors import (
     JsInheritanceDepthDetector,
-    JsMagicNumbersDetector,
+)
+from mcp_zen_of_languages.languages.javascript.detectors import JsMagicNumbersDetector
+from mcp_zen_of_languages.languages.javascript.detectors import (
     JsMeaningfulNamesDetector,
-    JsModernFeaturesDetector,
-    JsNoVarDetector,
-    JsPureFunctionDetector,
-    JsStrictEqualityDetector,
 )
-from mcp_zen_of_languages.languages.json.detectors import (
-    JsonArrayOrderDetector,
-    JsonDateFormatDetector,
-    JsonDuplicateKeyDetector,
-    JsonKeyCasingDetector,
-    JsonMagicStringDetector,
-    JsonNullHandlingDetector,
-    JsonNullSprawlDetector,
-    JsonSchemaConsistencyDetector,
-    JsonStrictnessDetector,
-)
+from mcp_zen_of_languages.languages.javascript.detectors import JsModernFeaturesDetector
+from mcp_zen_of_languages.languages.javascript.detectors import JsNoVarDetector
+from mcp_zen_of_languages.languages.javascript.detectors import JsPureFunctionDetector
+from mcp_zen_of_languages.languages.javascript.detectors import JsStrictEqualityDetector
+from mcp_zen_of_languages.languages.json.detectors import JsonArrayOrderDetector
+from mcp_zen_of_languages.languages.json.detectors import JsonDateFormatDetector
+from mcp_zen_of_languages.languages.json.detectors import JsonDuplicateKeyDetector
+from mcp_zen_of_languages.languages.json.detectors import JsonKeyCasingDetector
+from mcp_zen_of_languages.languages.json.detectors import JsonMagicStringDetector
+from mcp_zen_of_languages.languages.json.detectors import JsonNullHandlingDetector
+from mcp_zen_of_languages.languages.json.detectors import JsonNullSprawlDetector
+from mcp_zen_of_languages.languages.json.detectors import JsonSchemaConsistencyDetector
+from mcp_zen_of_languages.languages.json.detectors import JsonStrictnessDetector
 from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellAliasUsageDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellCmdletBindingDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellCommentHelpDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellNullHandlingDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellParameterValidationDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellPipelineUsageDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellPositionalParamsDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellReturnObjectsDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellScopeUsageDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellShouldProcessDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellSplattingDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellVerboseDebugDetector,
 )
-from mcp_zen_of_languages.languages.ruby.detectors import (
-    RubyBlockPreferenceDetector,
-    RubyDryDetector,
-    RubyExpressiveSyntaxDetector,
-    RubyGuardClauseDetector,
-    RubyMetaprogrammingDetector,
-    RubyMethodNamingDetector,
-    RubyMonkeyPatchDetector,
-    RubyPreferFailDetector,
-    RubySymbolKeysDetector,
-)
-from mcp_zen_of_languages.languages.toml.detectors import (
-    TomlCommentClarityDetector,
-    TomlDuplicateKeysDetector,
-    TomlFloatIntegerDetector,
-    TomlIsoDatetimeDetector,
-    TomlLowercaseKeysDetector,
-    TomlNoInlineTablesDetector,
-    TomlOrderDetector,
-    TomlTrailingCommasDetector,
-)
-from mcp_zen_of_languages.languages.xml.detectors import (
-    XmlAttributeUsageDetector,
-    XmlClosingTagsDetector,
-    XmlHierarchyDetector,
-    XmlNamespaceDetector,
-    XmlSemanticMarkupDetector,
-    XmlValidityDetector,
-)
-from mcp_zen_of_languages.languages.yaml.detectors import (
-    YamlCommentIntentDetector,
-    YamlConsistencyDetector,
-    YamlDuplicateKeysDetector,
-    YamlIndentationDetector,
-    YamlKeyClarityDetector,
-    YamlLowercaseKeysDetector,
-    YamlNoTabsDetector,
-    YamlStringStyleDetector,
-)
+from mcp_zen_of_languages.languages.ruby.detectors import RubyBlockPreferenceDetector
+from mcp_zen_of_languages.languages.ruby.detectors import RubyDryDetector
+from mcp_zen_of_languages.languages.ruby.detectors import RubyExpressiveSyntaxDetector
+from mcp_zen_of_languages.languages.ruby.detectors import RubyGuardClauseDetector
+from mcp_zen_of_languages.languages.ruby.detectors import RubyMetaprogrammingDetector
+from mcp_zen_of_languages.languages.ruby.detectors import RubyMethodNamingDetector
+from mcp_zen_of_languages.languages.ruby.detectors import RubyMonkeyPatchDetector
+from mcp_zen_of_languages.languages.ruby.detectors import RubyPreferFailDetector
+from mcp_zen_of_languages.languages.ruby.detectors import RubySymbolKeysDetector
+from mcp_zen_of_languages.languages.toml.detectors import TomlCommentClarityDetector
+from mcp_zen_of_languages.languages.toml.detectors import TomlDuplicateKeysDetector
+from mcp_zen_of_languages.languages.toml.detectors import TomlFloatIntegerDetector
+from mcp_zen_of_languages.languages.toml.detectors import TomlIsoDatetimeDetector
+from mcp_zen_of_languages.languages.toml.detectors import TomlLowercaseKeysDetector
+from mcp_zen_of_languages.languages.toml.detectors import TomlNoInlineTablesDetector
+from mcp_zen_of_languages.languages.toml.detectors import TomlOrderDetector
+from mcp_zen_of_languages.languages.toml.detectors import TomlTrailingCommasDetector
+from mcp_zen_of_languages.languages.xml.detectors import XmlAttributeUsageDetector
+from mcp_zen_of_languages.languages.xml.detectors import XmlClosingTagsDetector
+from mcp_zen_of_languages.languages.xml.detectors import XmlHierarchyDetector
+from mcp_zen_of_languages.languages.xml.detectors import XmlNamespaceDetector
+from mcp_zen_of_languages.languages.xml.detectors import XmlSemanticMarkupDetector
+from mcp_zen_of_languages.languages.xml.detectors import XmlValidityDetector
+from mcp_zen_of_languages.languages.yaml.detectors import YamlCommentIntentDetector
+from mcp_zen_of_languages.languages.yaml.detectors import YamlConsistencyDetector
+from mcp_zen_of_languages.languages.yaml.detectors import YamlDuplicateKeysDetector
+from mcp_zen_of_languages.languages.yaml.detectors import YamlIndentationDetector
+from mcp_zen_of_languages.languages.yaml.detectors import YamlKeyClarityDetector
+from mcp_zen_of_languages.languages.yaml.detectors import YamlLowercaseKeysDetector
+from mcp_zen_of_languages.languages.yaml.detectors import YamlNoTabsDetector
+from mcp_zen_of_languages.languages.yaml.detectors import YamlStringStyleDetector
 
 
 def run_detector(detector, code: str, language: str, config):

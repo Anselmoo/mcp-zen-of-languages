@@ -1,26 +1,34 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
-from mcp_zen_of_languages.languages.configs import (
-    MarkdownAltTextConfig,
-    MarkdownBareUrlConfig,
-    MarkdownCodeFenceLanguageConfig,
-    MarkdownFrontMatterConfig,
-    MarkdownHeadingHierarchyConfig,
-    MarkdownMdxImportHygieneConfig,
-    MarkdownMdxNamedDefaultExportConfig,
+from mcp_zen_of_languages.languages.configs import MarkdownAltTextConfig
+from mcp_zen_of_languages.languages.configs import MarkdownBareUrlConfig
+from mcp_zen_of_languages.languages.configs import MarkdownCodeFenceLanguageConfig
+from mcp_zen_of_languages.languages.configs import MarkdownFrontMatterConfig
+from mcp_zen_of_languages.languages.configs import MarkdownHeadingHierarchyConfig
+from mcp_zen_of_languages.languages.configs import MarkdownMdxImportHygieneConfig
+from mcp_zen_of_languages.languages.configs import MarkdownMdxNamedDefaultExportConfig
+from mcp_zen_of_languages.languages.markdown.detectors import MarkdownAltTextDetector
+from mcp_zen_of_languages.languages.markdown.detectors import MarkdownBareUrlDetector
+from mcp_zen_of_languages.languages.markdown.detectors import (
+    MarkdownCodeFenceLanguageDetector,
 )
 from mcp_zen_of_languages.languages.markdown.detectors import (
-    MarkdownAltTextDetector,
-    MarkdownBareUrlDetector,
-    MarkdownCodeFenceLanguageDetector,
     MarkdownFrontMatterDetector,
-    MarkdownHeadingHierarchyDetector,
-    MarkdownMdxImportHygieneDetector,
-    MarkdownMdxNamedDefaultExportDetector,
-    _extract_imported_identifiers,
-    _parse_named_imports,
 )
+from mcp_zen_of_languages.languages.markdown.detectors import (
+    MarkdownHeadingHierarchyDetector,
+)
+from mcp_zen_of_languages.languages.markdown.detectors import (
+    MarkdownMdxImportHygieneDetector,
+)
+from mcp_zen_of_languages.languages.markdown.detectors import (
+    MarkdownMdxNamedDefaultExportDetector,
+)
+from mcp_zen_of_languages.languages.markdown.detectors import (
+    _extract_imported_identifiers,
+)
+from mcp_zen_of_languages.languages.markdown.detectors import _parse_named_imports
 
 
 def _detect(detector, code: str, config, path: str | None = None):

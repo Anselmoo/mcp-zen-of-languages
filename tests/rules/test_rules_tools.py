@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from mcp_zen_of_languages.rules.tools import detections
 
+
 SPARSE_CODE_LINE_NUMBER = 2
 
 

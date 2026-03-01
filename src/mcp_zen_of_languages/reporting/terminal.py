@@ -28,21 +28,24 @@ from __future__ import annotations
 from collections import Counter
 from typing import TYPE_CHECKING
 
-from rich.console import Console, Group, RenderableType
+from rich.console import Console
+from rich.console import Group
+from rich.console import RenderableType
 from rich.panel import Panel
 from rich.syntax import Syntax
 from rich.text import Text
 
-from mcp_zen_of_languages.rendering import console, file_glyph, severity_badge
-from mcp_zen_of_languages.rendering.factories import (
-    zen_header_panel,
-    zen_panel,
-    zen_summary_table,
-    zen_table,
-)
+from mcp_zen_of_languages.rendering import console
+from mcp_zen_of_languages.rendering import file_glyph
+from mcp_zen_of_languages.rendering import severity_badge
+from mcp_zen_of_languages.rendering.factories import zen_header_panel
+from mcp_zen_of_languages.rendering.factories import zen_panel
+from mcp_zen_of_languages.rendering.factories import zen_summary_table
+from mcp_zen_of_languages.rendering.factories import zen_table
 from mcp_zen_of_languages.rendering.layout import get_output_width
 from mcp_zen_of_languages.rendering.themes import BOX_CODE
 from mcp_zen_of_languages.reporting.theme_clustering import classify_violation
+
 
 if TYPE_CHECKING:
     from rich.table import Table

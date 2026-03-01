@@ -2,33 +2,28 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import (
-    DetectorBinding,
-    LanguageDetectorMap,
-)
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
-from mcp_zen_of_languages.languages.configs import (
-    JsonArrayOrderConfig,
-    JsonDateFormatConfig,
-    JsonDuplicateKeyConfig,
-    JsonKeyCasingConfig,
-    JsonMagicStringConfig,
-    JsonNullHandlingConfig,
-    JsonNullSprawlConfig,
-    JsonSchemaConsistencyConfig,
-    JsonStrictnessConfig,
-)
-from mcp_zen_of_languages.languages.json.detectors import (
-    JsonArrayOrderDetector,
-    JsonDateFormatDetector,
-    JsonDuplicateKeyDetector,
-    JsonKeyCasingDetector,
-    JsonMagicStringDetector,
-    JsonNullHandlingDetector,
-    JsonNullSprawlDetector,
-    JsonSchemaConsistencyDetector,
-    JsonStrictnessDetector,
-)
+from mcp_zen_of_languages.languages.configs import JsonArrayOrderConfig
+from mcp_zen_of_languages.languages.configs import JsonDateFormatConfig
+from mcp_zen_of_languages.languages.configs import JsonDuplicateKeyConfig
+from mcp_zen_of_languages.languages.configs import JsonKeyCasingConfig
+from mcp_zen_of_languages.languages.configs import JsonMagicStringConfig
+from mcp_zen_of_languages.languages.configs import JsonNullHandlingConfig
+from mcp_zen_of_languages.languages.configs import JsonNullSprawlConfig
+from mcp_zen_of_languages.languages.configs import JsonSchemaConsistencyConfig
+from mcp_zen_of_languages.languages.configs import JsonStrictnessConfig
+from mcp_zen_of_languages.languages.json.detectors import JsonArrayOrderDetector
+from mcp_zen_of_languages.languages.json.detectors import JsonDateFormatDetector
+from mcp_zen_of_languages.languages.json.detectors import JsonDuplicateKeyDetector
+from mcp_zen_of_languages.languages.json.detectors import JsonKeyCasingDetector
+from mcp_zen_of_languages.languages.json.detectors import JsonMagicStringDetector
+from mcp_zen_of_languages.languages.json.detectors import JsonNullHandlingDetector
+from mcp_zen_of_languages.languages.json.detectors import JsonNullSprawlDetector
+from mcp_zen_of_languages.languages.json.detectors import JsonSchemaConsistencyDetector
+from mcp_zen_of_languages.languages.json.detectors import JsonStrictnessDetector
+
 
 FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(

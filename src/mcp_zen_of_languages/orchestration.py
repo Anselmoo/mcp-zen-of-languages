@@ -3,17 +3,18 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Literal
+
+from typing import TYPE_CHECKING
+from typing import Literal
 
 from mcp_zen_of_languages.analyzers.analyzer_factory import create_analyzer
 from mcp_zen_of_languages.config import load_config
-from mcp_zen_of_languages.models import (
-    AnalysisResult,
-    CyclomaticSummary,
-    Metrics,
-    Violation,
-)
+from mcp_zen_of_languages.models import AnalysisResult
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import Metrics
+from mcp_zen_of_languages.models import Violation
 from mcp_zen_of_languages.utils.language_detection import detect_language_by_extension
+
 
 if TYPE_CHECKING:
     from collections.abc import Callable

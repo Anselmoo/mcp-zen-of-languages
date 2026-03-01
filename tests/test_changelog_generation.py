@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import importlib.util
 import sys
+
 from pathlib import Path
+
 
 # ---------------------------------------------------------------------------
 # Import helpers from scripts/bump_version.py without executing main()

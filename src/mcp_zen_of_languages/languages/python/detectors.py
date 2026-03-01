@@ -17,40 +17,40 @@ from __future__ import annotations
 
 import ast
 import re
+
 from typing import TYPE_CHECKING
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    LocationHelperMixin,
-    ViolationDetector,
-)
-from mcp_zen_of_languages.languages.configs import (
-    BareExceptConfig,
-    CircularDependencyConfig,
-    ClassSizeConfig,
-    ComplexOneLinersConfig,
-    ConsistencyConfig,
-    ContextManagerConfig,
-    CyclomaticComplexityConfig,
-    DeepInheritanceConfig,
-    DetectorConfig,
-    DocstringConfig,
-    DuplicateImplementationConfig,
-    ExplicitnessConfig,
-    FeatureEnvyConfig,
-    GodClassConfig,
-    LineLengthConfig,
-    LongFunctionConfig,
-    MagicMethodConfig,
-    MagicNumberConfig,
-    NamespaceConfig,
-    NameStyleConfig,
-    NestingDepthConfig,
-    ShortVariableNamesConfig,
-    SparseCodeConfig,
-    StarImportConfig,
-)
-from mcp_zen_of_languages.models import Location, ParserResult, Violation
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import BareExceptConfig
+from mcp_zen_of_languages.languages.configs import CircularDependencyConfig
+from mcp_zen_of_languages.languages.configs import ClassSizeConfig
+from mcp_zen_of_languages.languages.configs import ComplexOneLinersConfig
+from mcp_zen_of_languages.languages.configs import ConsistencyConfig
+from mcp_zen_of_languages.languages.configs import ContextManagerConfig
+from mcp_zen_of_languages.languages.configs import CyclomaticComplexityConfig
+from mcp_zen_of_languages.languages.configs import DeepInheritanceConfig
+from mcp_zen_of_languages.languages.configs import DetectorConfig
+from mcp_zen_of_languages.languages.configs import DocstringConfig
+from mcp_zen_of_languages.languages.configs import DuplicateImplementationConfig
+from mcp_zen_of_languages.languages.configs import ExplicitnessConfig
+from mcp_zen_of_languages.languages.configs import FeatureEnvyConfig
+from mcp_zen_of_languages.languages.configs import GodClassConfig
+from mcp_zen_of_languages.languages.configs import LineLengthConfig
+from mcp_zen_of_languages.languages.configs import LongFunctionConfig
+from mcp_zen_of_languages.languages.configs import MagicMethodConfig
+from mcp_zen_of_languages.languages.configs import MagicNumberConfig
+from mcp_zen_of_languages.languages.configs import NameStyleConfig
+from mcp_zen_of_languages.languages.configs import NamespaceConfig
+from mcp_zen_of_languages.languages.configs import NestingDepthConfig
+from mcp_zen_of_languages.languages.configs import ShortVariableNamesConfig
+from mcp_zen_of_languages.languages.configs import SparseCodeConfig
+from mcp_zen_of_languages.languages.configs import StarImportConfig
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import ParserResult
+from mcp_zen_of_languages.models import Violation
+
 
 if TYPE_CHECKING:
     from collections.abc import Iterable

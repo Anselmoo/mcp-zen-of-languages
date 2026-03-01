@@ -39,7 +39,7 @@ def analysis_progress(*, enabled: bool = True) -> Iterator[Progress | None]:
     the context exits, leaving only the final report output.
 
     Args:
-        enabled: Master switch — set to False to unconditionally suppress
+        enabled (bool): Master switch — set to False to unconditionally suppress
             the progress display.
 
     Yields:

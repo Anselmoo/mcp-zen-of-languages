@@ -48,18 +48,18 @@ def zen_panel(  # noqa: PLR0913
     visual parameter, but the width cap is always enforced.
 
     Args:
-        content: Any Rich renderable — ``Text``, ``Group``, ``Table``, etc.
-        title: Optional heading rendered in the top border.
-        subtitle: Optional text rendered in the bottom border.
-        box: Box drawing style; defaults to ``BOX_CONTENT`` (``ROUNDED``).
-        border_style: Rich colour token for the panel border.
-        output_console: Console used to derive the width cap; falls back
+        content (RenderableType): Any Rich renderable — ``Text``, ``Group``, ``Table``, etc.
+        title (str | None): Optional heading rendered in the top border.
+        subtitle (str | None): Optional text rendered in the bottom border.
+        box (_box_module.Box): Box drawing style; defaults to ``BOX_CONTENT`` (``ROUNDED``).
+        border_style (str): Rich colour token for the panel border.
+        output_console (Console | None): Console used to derive the width cap; falls back
             to the module-level ``console`` singleton.
-        width: Explicit width override.  When ``None``, computed via
+        width (int | None): Explicit width override.  When ``None``, computed via
             ``get_output_width()``.
-        expand: When True the panel stretches to fill available width;
+        expand (bool): When True the panel stretches to fill available width;
             defaults to ``False`` to honour *width* exactly.
-        padding: Inner ``(vertical, horizontal)`` padding in character cells.
+        padding (tuple[int, int]): Inner ``(vertical, horizontal)`` padding in character cells.
 
     Returns:
         Panel: Styled Rich panel ready for ``console.print()``.
@@ -91,8 +91,8 @@ def zen_header_panel(
 
     Args:
         *lines: Content lines rendered inside the panel body.
-        title: Heading text rendered in the panel's top border.
-        output_console: Console used to derive the width cap.
+        title (str): Heading text rendered in the panel's top border.
+        output_console (Console | None): Console used to derive the width cap.
 
     Returns:
         Panel: Header panel styled with the default ``BOX_CONTENT`` box.
@@ -126,16 +126,16 @@ def zen_table(  # noqa: PLR0913
     separation instead.
 
     Args:
-        title: Optional table caption rendered above the header row.
-        box: Box drawing style; defaults to ``BOX_CONTENT`` (``ROUNDED``).
-        show_header: Whether to render the column header row.
-        show_lines: Whether to draw horizontal rules between data rows.
-        output_console: Console used to derive the width cap.
-        width: Explicit width override; computed via ``get_output_width``
+        title (str | None): Optional table caption rendered above the header row.
+        box (_box_module.Box): Box drawing style; defaults to ``BOX_CONTENT`` (``ROUNDED``).
+        show_header (bool): Whether to render the column header row.
+        show_lines (bool): Whether to draw horizontal rules between data rows.
+        output_console (Console | None): Console used to derive the width cap.
+        width (int | None): Explicit width override; computed via ``get_output_width``
             when ``None``.
-        header_style: Rich style token applied to the header row;
+        header_style (str | None): Rich style token applied to the header row;
             defaults to ``"metric"`` (magenta).
-        row_styles: Alternating row styles for zebra-striped readability.
+        row_styles (Sequence[str] | None): Alternating row styles for zebra-striped readability.
 
     Returns:
         Table: Width-capped Rich table ready for column and row additions.
@@ -169,9 +169,9 @@ def zen_summary_table(
     ``zen_table`` with ``show_header=False`` and a ``None`` header style.
 
     Args:
-        title: Optional caption rendered above the table body.
-        output_console: Console used to derive the width cap.
-        width: Explicit width override.
+        title (str | None): Optional caption rendered above the table body.
+        output_console (Console | None): Console used to derive the width cap.
+        width (int | None): Explicit width override.
 
     Returns:
         Table: Heavy-bordered Rich table without a header row.

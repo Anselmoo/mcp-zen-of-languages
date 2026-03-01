@@ -83,7 +83,7 @@ def detect_language_by_extension(path: str) -> DetectionResult:
     ``language="unknown"`` so callers can fall back to content heuristics.
 
     Args:
-        path: Filesystem path (absolute or relative) whose extension is inspected.
+        path (str): Filesystem path (absolute or relative) whose extension is inspected.
 
     Returns:
         A ``DetectionResult`` with ``method="extension"`` and confidence 0.95
@@ -139,13 +139,14 @@ def detect_language_from_content(code: str) -> DetectionResult:
     the inherent ambiguity of keyword matching.
 
     Args:
-        code: Raw source text to scan for language-indicative patterns.
+        code (str): Raw source text to scan for language-indicative
+            patterns.
 
     Returns:
-        A ``DetectionResult`` with ``method="heuristics"`` and a confidence
-        between 0.1 (unknown) and 0.9 (strong keyword match).
+        DetectionResult: A ``DetectionResult`` with
+        ``method="heuristics"`` and a confidence between 0.1 (unknown)
+        and 0.9 (strong keyword match).
     """
-    # Relaxed heuristics: 'def ' alone is sufficient to indicate Python in many fixtures
     if "def " in code:
         return DetectionResult(language="python", confidence=0.9, method="heuristics")
     if "interface " in code or "=>" in code or "function " in code:

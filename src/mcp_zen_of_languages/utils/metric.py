@@ -23,7 +23,7 @@ def calculate_code_quality_score(violations: list[Violation]) -> float:
     score gently. The floor is clamped to 0 so the score never goes negative.
 
     Args:
-        violations: Violation instances whose ``severity`` fields drive the
+        violations (list[Violation]): Violation instances whose ``severity`` fields drive the
             penalty calculation.
 
     Returns:

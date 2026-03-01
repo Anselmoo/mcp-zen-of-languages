@@ -69,8 +69,8 @@ class RubyNamingConventionDetector(
         """Scan method definitions for non-snake_case names.
 
         Args:
-            context: Analysis context with Ruby source text.
-            config: Threshold configuration for naming conventions.
+            context (AnalysisContext): Analysis context with Ruby source text.
+            config (RubyNamingConventionConfig): Threshold configuration for naming conventions.
 
         Returns:
             list[Violation]: One violation per method using non-snake_case naming.
@@ -117,8 +117,8 @@ class RubyMethodChainDetector(
         """Flag lines where the number of chained method calls exceeds the threshold.
 
         Args:
-            context: Analysis context with Ruby source text.
-            config: Contains ``max_method_chain_length`` threshold.
+            context (AnalysisContext): Analysis context with Ruby source text.
+            config (RubyMethodChainConfig): Contains ``max_method_chain_length`` threshold.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -164,8 +164,8 @@ class RubyDryDetector(ViolationDetector[RubyDryConfig], LocationHelperMixin):
         """Flag source files containing three or more identical non-blank lines.
 
         Args:
-            context: Analysis context with Ruby source text.
-            config: DRY threshold configuration.
+            context (AnalysisContext): Analysis context with Ruby source text.
+            config (RubyDryConfig): DRY threshold configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -221,8 +221,8 @@ class RubyBlockPreferenceDetector(
         """Flag files that use ``lambda`` or ``Proc.new`` instead of blocks.
 
         Args:
-            context: Analysis context with Ruby source text.
-            config: Block-preference threshold configuration.
+            context (AnalysisContext): Analysis context with Ruby source text.
+            config (RubyBlockPreferenceConfig): Block-preference threshold configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -272,8 +272,8 @@ class RubyMonkeyPatchDetector(
         """Flag class reopenings of built-in Ruby types like String or Array.
 
         Args:
-            context: Analysis context with Ruby source text.
-            config: Monkey-patch detection configuration.
+            context (AnalysisContext): Analysis context with Ruby source text.
+            config (RubyMonkeyPatchConfig): Monkey-patch detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -323,8 +323,8 @@ class RubyMethodNamingDetector(
         """Flag methods starting with ``is``/``has`` that are missing a ``?`` suffix.
 
         Args:
-            context: Analysis context with Ruby source text.
-            config: Method-naming threshold configuration.
+            context (AnalysisContext): Analysis context with Ruby source text.
+            config (RubyMethodNamingConfig): Method-naming threshold configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -376,8 +376,8 @@ class RubySymbolKeysDetector(
         """Flag hash literals that use quoted string keys with ``=>`` syntax.
 
         Args:
-            context: Analysis context with Ruby source text.
-            config: Symbol-keys detection configuration.
+            context (AnalysisContext): Analysis context with Ruby source text.
+            config (RubySymbolKeysConfig): Symbol-keys detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -424,8 +424,8 @@ class RubyGuardClauseDetector(
         """Flag code with ``if`` blocks that lack ``return if/unless`` guard clauses.
 
         Args:
-            context: Analysis context with Ruby source text.
-            config: Guard-clause detection configuration.
+            context (AnalysisContext): Analysis context with Ruby source text.
+            config (RubyGuardClauseConfig): Guard-clause detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -477,8 +477,8 @@ class RubyMetaprogrammingDetector(
         """Flag code containing dynamic dispatch or runtime method generation.
 
         Args:
-            context: Analysis context with Ruby source text.
-            config: Metaprogramming detection configuration.
+            context (AnalysisContext): Analysis context with Ruby source text.
+            config (RubyMetaprogrammingConfig): Metaprogramming detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -536,8 +536,8 @@ class RubyExpressiveSyntaxDetector(
         """Flag ``for...in`` loops and ``unless !`` double-negatives.
 
         Args:
-            context: Analysis context with Ruby source text.
-            config: Expressive-syntax detection configuration.
+            context (AnalysisContext): Analysis context with Ruby source text.
+            config (RubyExpressiveSyntaxConfig): Expressive-syntax detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -589,8 +589,8 @@ class RubyPreferFailDetector(
         """Flag files that use ``raise`` without any corresponding ``fail`` calls.
 
         Args:
-            context: Analysis context with Ruby source text.
-            config: Prefer-fail detection configuration.
+            context (AnalysisContext): Analysis context with Ruby source text.
+            config (RubyPreferFailConfig): Prefer-fail detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.

@@ -52,8 +52,8 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
         """Run all sub-detection strategies and aggregate their violations.
 
         Args:
-            context: Analysis context holding the source text to scan.
-            config: Detector configuration whose optional fields activate
+            context (AnalysisContext): Analysis context holding the source text to scan.
+            config (DetectorConfig): Detector configuration whose optional fields activate
                 individual sub-detections (patterns, script length, naming, etc.).
 
         Returns:
@@ -76,8 +76,8 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
         """Match literal text patterns and required-absence patterns from ``detectable_patterns``.
 
         Args:
-            context: Analysis context holding the source text.
-            config: Config whose ``detectable_patterns`` list drives the scan.
+            context (AnalysisContext): Analysis context holding the source text.
+            config (DetectorConfig): Config whose ``detectable_patterns`` list drives the scan.
 
         Returns:
             list[Violation]: Violations for each matched or missing pattern.
@@ -122,8 +122,8 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
         """Flag scripts exceeding a line-count threshold that lack function definitions.
 
         Args:
-            context: Analysis context holding the source text.
-            config: Config with optional ``max_script_length_without_functions`` field.
+            context (AnalysisContext): Analysis context holding the source text.
+            config (DetectorConfig): Config with optional ``max_script_length_without_functions`` field.
 
         Returns:
             list[Violation]: A single violation when the script is too long and has no functions.
@@ -155,8 +155,8 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
         """Flag shell-style variable assignments with names shorter than a minimum length.
 
         Args:
-            context: Analysis context holding the source text.
-            config: Config with optional ``min_variable_name_length`` field.
+            context (AnalysisContext): Analysis context holding the source text.
+            config (DetectorConfig): Config with optional ``min_variable_name_length`` field.
 
         Returns:
             list[Violation]: A single violation for the first overly short variable name.
@@ -188,8 +188,8 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
         """Flag class hierarchies whose ``extends`` chains exceed a configurable depth.
 
         Args:
-            context: Analysis context holding the source text.
-            config: Config with optional ``max_inheritance_depth`` field.
+            context (AnalysisContext): Analysis context holding the source text.
+            config (DetectorConfig): Config with optional ``max_inheritance_depth`` field.
 
         Returns:
             list[Violation]: A single violation when any inheritance chain is too deep.
@@ -205,7 +205,7 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
             """Walk the parent map to measure the depth of the inheritance chain for *name*.
 
             Args:
-                name: Class name whose ancestor chain is traced.
+                name (str): Class name whose ancestor chain is traced.
 
             Returns:
                 int: Number of ``extends`` links from *name* to the root.
@@ -237,8 +237,8 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
         """Flag JavaScript-style identifiers (``const``, ``let``, ``var``, etc.) shorter than a minimum.
 
         Args:
-            context: Analysis context holding the source text.
-            config: Config with optional ``min_identifier_length`` field.
+            context (AnalysisContext): Analysis context holding the source text.
+            config (DetectorConfig): Config with optional ``min_identifier_length`` field.
 
         Returns:
             list[Violation]: A single violation for the first overly short identifier.
@@ -269,8 +269,8 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
         """Enforce PascalCase or camelCase conventions on public and private members.
 
         Args:
-            context: Analysis context holding the source text.
-            config: Config with optional ``public_naming`` and ``private_naming`` fields.
+            context (AnalysisContext): Analysis context holding the source text.
+            config (DetectorConfig): Config with optional ``public_naming`` and ``private_naming`` fields.
 
         Returns:
             list[Violation]: A single violation for the first non-conforming member name.
@@ -284,8 +284,8 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
             """Check whether *name* conforms to the given naming *style* (PascalCase or camelCase).
 
             Args:
-                name: Identifier to validate.
-                style: Convention string containing ``pascal`` or ``camel`` (case-insensitive).
+                name (str): Identifier to validate.
+                style (str): Convention string containing ``pascal`` or ``camel`` (case-insensitive).
 
             Returns:
                 bool: ``True`` when *name* matches the expected pattern.

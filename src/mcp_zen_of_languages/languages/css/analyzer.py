@@ -64,7 +64,7 @@ class CssAnalyzer(BaseAnalyzer):
         """Extract ``@import`` directives and build a stylesheet dependency graph.
 
         Args:
-            context: Current analysis context with stylesheet source text.
+            context (AnalysisContext): Current analysis context with stylesheet source text.
 
         Returns:
             DependencyAnalysis with import edges, or ``None`` when no imports found.

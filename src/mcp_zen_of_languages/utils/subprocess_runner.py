@@ -136,7 +136,7 @@ class SubprocessToolRunner:
     """Run allow-listed external tools with stdin-based code input.
 
     Args:
-        timeout: Maximum wall-clock seconds for each tool invocation.
+        timeout (int): Maximum wall-clock seconds for each tool invocation.
     """
 
     _cache: ClassVar[dict[str, bool]] = {}

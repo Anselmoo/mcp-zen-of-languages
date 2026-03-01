@@ -169,8 +169,8 @@ def resolve_pattern(violation: Violation, language: str) -> RemediationPattern:
     whose action mirrors the original violation message.
 
     Args:
-        violation: Violation record to match against registered patterns.
-        language: Language key used to look up the pattern registry.
+        violation (Violation): Violation record to match against registered patterns.
+        language (str): Language key used to look up the pattern registry.
 
     Returns:
         RemediationPattern: Matched pattern with action, snippets, and criteria.

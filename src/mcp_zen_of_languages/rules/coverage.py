@@ -78,7 +78,7 @@ def build_rule_coverage(language: str) -> RuleCoverageMap:
     purpose-built detectors.
 
     Args:
-        language: Lowercase language key (e.g. ``"python"``).
+        language (str): Lowercase language key (e.g. ``"python"``).
 
     Returns:
         A ``RuleCoverageMap`` covering every principle defined for *language*.
@@ -107,7 +107,7 @@ def build_explicit_rule_coverage(language: str) -> RuleCoverageMap:
     Raises ``ValueError`` if any principle lacks a purpose-built detector.
 
     Args:
-        language: Lowercase language key.
+        language (str): Lowercase language key.
 
     Returns:
         A ``RuleCoverageMap`` containing only explicitly registered detectors.
@@ -143,7 +143,7 @@ def build_rule_config_coverage(language: str) -> RuleConfigCoverageMap:
     """Build an inclusive rule-to-config-class map for *language*.
 
     Args:
-        language: Lowercase language key.
+        language (str): Lowercase language key.
 
     Returns:
         A ``RuleConfigCoverageMap`` listing every ``DetectorConfig`` subclass
@@ -181,7 +181,7 @@ def build_explicit_rule_config_coverage(language: str) -> RuleConfigCoverageMap:
     Raises ``ValueError`` if any principle lacks an explicit config class.
 
     Args:
-        language: Lowercase language key.
+        language (str): Lowercase language key.
 
     Returns:
         A ``RuleConfigCoverageMap`` containing only explicitly registered configs.
@@ -224,7 +224,7 @@ def build_all_rule_coverage(
     """Build inclusive rule coverage maps for all (or selected) languages.
 
     Args:
-        languages: Restrict to these language keys.  ``None`` means all
+        languages (list[str] | None): Restrict to these language keys.  ``None`` means all
             languages in the registry.
 
     Returns:
@@ -240,7 +240,7 @@ def build_all_explicit_rule_coverage(
     """Build strict rule coverage maps (no fallback) for all (or selected) languages.
 
     Args:
-        languages: Restrict to these language keys.  ``None`` means all.
+        languages (list[str] | None): Restrict to these language keys.  ``None`` means all.
 
     Returns:
         One ``RuleCoverageMap`` per language (raises on gaps).
@@ -255,7 +255,7 @@ def build_all_rule_config_coverage(
     """Build inclusive config coverage maps for all (or selected) languages.
 
     Args:
-        languages: Restrict to these language keys.  ``None`` means all.
+        languages (list[str] | None): Restrict to these language keys.  ``None`` means all.
 
     Returns:
         One ``RuleConfigCoverageMap`` per language.
@@ -270,7 +270,7 @@ def build_all_explicit_rule_config_coverage(
     """Build strict config coverage maps (no fallback) for all (or selected) languages.
 
     Args:
-        languages: Restrict to these language keys.  ``None`` means all.
+        languages (list[str] | None): Restrict to these language keys.  ``None`` means all.
 
     Returns:
         One ``RuleConfigCoverageMap`` per language (raises on gaps).

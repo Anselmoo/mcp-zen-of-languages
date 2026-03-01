@@ -53,8 +53,8 @@ class XmlSemanticMarkupDetector(
         """Search for presentational tags (``<font>``, ``<b>``, etc.) and inline ``style`` attributes.
 
         Args:
-            context: Analysis context holding the raw XML markup.
-            config: Semantic markup thresholds and violation message templates.
+            context (AnalysisContext): Analysis context holding the raw XML markup.
+            config (XmlSemanticMarkupConfig): Semantic markup thresholds and violation message templates.
 
         Returns:
             list[Violation]: A single violation when presentational elements are found.
@@ -109,8 +109,8 @@ class XmlAttributeUsageDetector(
         """Scan for attribute values longer than 30 characters that should be child elements.
 
         Args:
-            context: Analysis context holding the raw XML markup.
-            config: Attribute usage thresholds and violation message templates.
+            context (AnalysisContext): Analysis context holding the raw XML markup.
+            config (XmlAttributeUsageConfig): Attribute usage thresholds and violation message templates.
 
         Returns:
             list[Violation]: A single violation for the first oversized attribute found.
@@ -154,8 +154,8 @@ class XmlNamespaceDetector(ViolationDetector[XmlNamespaceConfig], LocationHelper
         """Check whether prefixed elements (``<prefix:tag>``) have a matching ``xmlns`` binding.
 
         Args:
-            context: Analysis context holding the raw XML markup.
-            config: Namespace thresholds and violation message templates.
+            context (AnalysisContext): Analysis context holding the raw XML markup.
+            config (XmlNamespaceConfig): Namespace thresholds and violation message templates.
 
         Returns:
             list[Violation]: A single violation when prefixed tags exist without ``xmlns`` declarations.
@@ -199,8 +199,8 @@ class XmlValidityDetector(ViolationDetector[XmlValidityConfig], LocationHelperMi
         """Search for ``xsi:schemaLocation`` or ``DOCTYPE`` references in the document.
 
         Args:
-            context: Analysis context holding the raw XML markup.
-            config: Validity thresholds and violation message templates.
+            context (AnalysisContext): Analysis context holding the raw XML markup.
+            config (XmlValidityConfig): Validity thresholds and violation message templates.
 
         Returns:
             list[Violation]: A single violation when no schema reference is present.
@@ -243,8 +243,8 @@ class XmlHierarchyDetector(ViolationDetector[XmlHierarchyConfig], LocationHelper
         """Count opening tags and flag any that repeat more than twice without a ``<group>`` wrapper.
 
         Args:
-            context: Analysis context holding the raw XML markup.
-            config: Hierarchy thresholds and violation message templates.
+            context (AnalysisContext): Analysis context holding the raw XML markup.
+            config (XmlHierarchyConfig): Hierarchy thresholds and violation message templates.
 
         Returns:
             list[Violation]: A single violation when ungrouped repeated elements are found.
@@ -296,8 +296,8 @@ class XmlClosingTagsDetector(
         """Search for self-closing tag syntax (``<tag />``) in the XML document.
 
         Args:
-            context: Analysis context holding the raw XML markup.
-            config: Closing tag thresholds and violation message templates.
+            context (AnalysisContext): Analysis context holding the raw XML markup.
+            config (XmlClosingTagsConfig): Closing tag thresholds and violation message templates.
 
         Returns:
             list[Violation]: A single violation when self-closing tags are found.

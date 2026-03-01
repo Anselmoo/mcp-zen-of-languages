@@ -60,7 +60,7 @@ class DockerfileAnalyzer(BaseAnalyzer):
         """Extract ``FROM`` and ``COPY --from`` references as image dependencies.
 
         Args:
-            context: Current analysis context with Dockerfile source text.
+            context (AnalysisContext): Current analysis context with Dockerfile source text.
 
         Returns:
             DependencyAnalysis with image dependency edges, or ``None`` when none found.

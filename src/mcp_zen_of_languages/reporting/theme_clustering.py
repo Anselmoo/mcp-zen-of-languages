@@ -102,7 +102,7 @@ def classify_violation(violation: Violation) -> str:
     match wins; if nothing matches, the violation falls into the ``"Other"`` bucket.
 
     Args:
-        violation: Violation record whose principle and message text drive classification.
+        violation (Violation): Violation record whose principle and message text drive classification.
 
     Returns:
         str: Theme label (e.g. ``"Complexity"``, ``"Documentation"``, ``"Other"``).
@@ -128,7 +128,7 @@ def build_big_picture_analysis(results: list[AnalysisResult]) -> BigPictureAnaly
     the single theme whose resolution would yield the largest score lift.
 
     Args:
-        results: Analysis results spanning one or more files and languages.
+        results (list[AnalysisResult]): Analysis results spanning one or more files and languages.
 
     Returns:
         BigPictureAnalysis: Clusters, roadmap, health score, and trajectory guidance.

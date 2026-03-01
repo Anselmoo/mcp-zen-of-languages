@@ -29,7 +29,7 @@ def build_rule_detector_mapping(
     * ``reverse_mapping`` — ``{detector_id: [rule_id, …]}``.
 
     Args:
-        languages: Restrict output to these language keys.  ``None`` includes
+        languages (list[str] | None): Restrict output to these language keys.  ``None`` includes
             every language in the registry.
 
     Returns:
@@ -89,8 +89,8 @@ def export_mapping_json(
     """Write the rule-to-detector mapping to *output_path* as pretty-printed JSON.
 
     Args:
-        output_path: Destination file (created or overwritten).
-        languages: Restrict to these language keys.  ``None`` includes all.
+        output_path (str | Path): Destination file (created or overwritten).
+        languages (list[str] | None): Restrict to these language keys.  ``None`` includes all.
 
     Returns:
         The same dict that was written to disk, for programmatic reuse.

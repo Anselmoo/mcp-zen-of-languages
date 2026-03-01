@@ -50,7 +50,7 @@ class DockerComposeAnalyzer(BaseAnalyzer):
         """Parse compose YAML into a structured mapping via ``yaml.safe_load``.
 
         Args:
-            code: Raw docker-compose YAML text.
+            code (str): Raw docker-compose YAML text.
 
         Returns:
             ParserResult wrapping the parsed mapping, or ``None`` on parse failure.

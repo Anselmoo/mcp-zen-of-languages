@@ -131,9 +131,9 @@ def build_agent_tasks(
     each task depends on the preceding task in its theme.
 
     Args:
-        results: Analysis results containing the violations to convert.
-        project: Label identifying the project in output headers.
-        min_severity: Violations below this severity are excluded.
+        results (list[AnalysisResult]): Analysis results containing the violations to convert.
+        project (str): Label identifying the project in output headers.
+        min_severity (int): Violations below this severity are excluded.
 
     Returns:
         AgentTaskList: Sorted tasks with clusters, health score, and roadmap.

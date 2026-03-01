@@ -1236,7 +1236,6 @@ async def onboard_project(
 
     """
     _ = team_size
-    # Determine thresholds based on strictness
     thresholds = {
         "relaxed": {
             "complexity": 15,

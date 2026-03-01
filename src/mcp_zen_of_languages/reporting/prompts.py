@@ -223,8 +223,8 @@ def _format_file_prompt(result: AnalysisResult, violations: list[Violation]) -> 
     ``remediation_patterns.resolve_pattern``.
 
     Args:
-        result: Analysis result for the target file.
-        violations: Violation subset to include (typically ``result.violations``).
+        result (AnalysisResult): Analysis result for the target file.
+        violations (list[Violation]): Violation subset to include (typically ``result.violations``).
 
     Returns:
         str: Multi-line Markdown prompt text ready for embedding in a ``FilePrompt``.
@@ -284,7 +284,7 @@ def build_prompt_bundle(results: list[AnalysisResult]) -> PromptBundle:
     a ``BigPictureAnalysis`` to provide roadmap and health-score context.
 
     Args:
-        results: Analysis results from one or more files and languages.
+        results (list[AnalysisResult]): Analysis results from one or more files and languages.
 
     Returns:
         PromptBundle: File prompts, generic prompts, and big-picture analysis.

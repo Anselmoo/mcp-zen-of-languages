@@ -34,7 +34,7 @@ def _supports_color(stream: object) -> bool:
     time to configure both console singletons.
 
     Args:
-        stream: Writable IO stream (typically ``sys.stdout`` or ``sys.stderr``).
+        stream (object): Writable IO stream (typically ``sys.stdout`` or ``sys.stderr``).
 
     Returns:
         bool: True when the stream is a colour-capable TTY.
@@ -125,7 +125,7 @@ def set_quiet(*, value: bool) -> None:
     unaffected so that fatal messages always reach the user.
 
     Args:
-        value: True to suppress banners and spinners, False to re-enable them.
+        value (bool): True to suppress banners and spinners, False to re-enable them.
     """
     _STATE.quiet = value
 
@@ -148,7 +148,7 @@ def print_banner(output_console: Console | None = None) -> None:
     border, producing the distinctive header shown at CLI startup.
 
     Args:
-        output_console: Alternate console to print to; defaults to the
+        output_console (Console | None): Alternate console to print to; defaults to the
             module-level ``console`` singleton.
     """
     if _STATE.quiet or not sys.stdout.isatty():
@@ -176,7 +176,7 @@ def print_error(message: str) -> None:
     user-supplied text as style tags.
 
     Args:
-        message: Human-readable error description to display.
+        message (str): Human-readable error description to display.
     """
     error_console.print(
         f"{pass_fail_glyph(passed=False)} {message}",

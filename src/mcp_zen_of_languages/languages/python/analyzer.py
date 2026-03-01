@@ -60,10 +60,10 @@ class PythonAnalyzer(BaseAnalyzer, LocationHelperMixin):
         """Initialise the Python analyzer with optional config overrides.
 
         Args:
-            config: Typed analyzer configuration controlling thresholds such as
+            config (AnalyzerConfig | None): Typed analyzer configuration controlling thresholds such as
                 max cyclomatic complexity or nesting depth.  When ``None``,
                 ``default_config()`` supplies sensible defaults.
-            pipeline_config: Pipeline-level overrides merged on top of the
+            pipeline_config (PipelineConfig | None): Pipeline-level overrides merged on top of the
                 rule-derived detector defaults.  Typically loaded from the
                 ``pipelines:`` section of ``zen-config.yaml``.
         """
@@ -110,7 +110,7 @@ class PythonAnalyzer(BaseAnalyzer, LocationHelperMixin):
         and returns the canonical ``ParserResult`` consumed by detectors.
 
         Args:
-            code: Raw Python source text to parse.
+            code (str): Raw Python source text to parse.
 
         Returns:
             ParserResult | None: Parse tree, or ``None`` if a
@@ -136,8 +136,8 @@ class PythonAnalyzer(BaseAnalyzer, LocationHelperMixin):
         ``CyclomaticComplexityDetector``, severity scaling).
 
         Args:
-            code: Python source text to measure.
-            _ast_tree: Parsed syntax tree (currently unused by radon but
+            code (str): Python source text to measure.
+            _ast_tree (ParserResult | None): Parsed syntax tree (currently unused by radon but
                 accepted for API symmetry with other language analyzers).
 
         Returns:
@@ -173,7 +173,7 @@ class PythonAnalyzer(BaseAnalyzer, LocationHelperMixin):
         ``CircularDependencyDetector`` and ``DeepInheritanceDetector``.
 
         Args:
-            context: Current analysis context carrying the source code, file
+            context (AnalysisContext): Current analysis context carrying the source code, file
                 path, and optionally the repository-wide import map.
 
         Returns:

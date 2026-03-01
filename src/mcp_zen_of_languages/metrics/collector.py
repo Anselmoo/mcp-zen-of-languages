@@ -33,7 +33,7 @@ class MetricsCollector:
         returning partial results.
 
         Args:
-            code: Python source text to measure.
+            code (str): Python source text to measure.
 
         Returns:
             A three-element tuple of ``(cyclomatic_summary, maintainability_index,

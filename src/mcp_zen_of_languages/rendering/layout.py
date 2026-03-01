@@ -25,7 +25,7 @@ def get_output_width(console: Console) -> int:
     displays while still adapting to narrower windows.
 
     Args:
-        console: Rich console instance whose ``.width`` is inspected.
+        console (Console): Rich console instance whose ``.width`` is inspected.
 
     Returns:
         int: Resolved column width that all renderables should use.

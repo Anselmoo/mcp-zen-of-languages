@@ -58,9 +58,9 @@ class JavaScriptAnalyzer(BaseAnalyzer):
         """Initialize the JavaScript analyzer with optional configuration.
 
         Args:
-            config: Threshold settings controlling detector sensitivity such as
+            config (AnalyzerConfig | None): Threshold settings controlling detector sensitivity such as
                 maximum callback nesting depth and function length limits.
-            pipeline_config: Optional overrides that are merged on top of
+            pipeline_config (PipelineConfig | None): Optional overrides that are merged on top of
                 rule-derived detector defaults, allowing per-project tuning
                 via ``zen-config.yaml``.
         """
@@ -97,7 +97,7 @@ class JavaScriptAnalyzer(BaseAnalyzer):
         inside each detector.
 
         Args:
-            code: Raw JavaScript source text to parse.
+            code (str): Raw JavaScript source text to parse.
 
         Returns:
             ParserResult | None: Always ``None`` for JavaScript; reserved for
@@ -116,8 +116,8 @@ class JavaScriptAnalyzer(BaseAnalyzer):
         cannot be calculated.  Only the raw line count is returned.
 
         Args:
-            code: Raw JavaScript source text.
-            ast_tree: Parsed AST (always ``None`` for JavaScript today).
+            code (str): Raw JavaScript source text.
+            ast_tree (ParserResult | None): Parsed AST (always ``None`` for JavaScript today).
 
         Returns:
             tuple[CyclomaticSummary | None, float | None, int]: A three-element
@@ -141,7 +141,7 @@ class JavaScriptAnalyzer(BaseAnalyzer):
         """Extract ``import``/``require`` dependencies and build an import graph.
 
         Args:
-            context: Current analysis context with source text and metrics.
+            context (AnalysisContext): Current analysis context with source text and metrics.
 
         Returns:
             DependencyAnalysis with import edges, or ``None`` when no imports found.

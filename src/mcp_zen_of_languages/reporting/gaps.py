@@ -126,7 +126,7 @@ def build_gap_analysis(languages: list[str]) -> GapAnalysis:
     shortcomings.
 
     Args:
-        languages: Language identifiers to include in the coverage scan.
+        languages (list[str]): Language identifiers to include in the coverage scan.
 
     Returns:
         GapAnalysis: Combined detector and feature gap report.

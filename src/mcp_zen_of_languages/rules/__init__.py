@@ -112,7 +112,7 @@ def get_language_zen(language: str) -> "LanguageZenPrinciples | None":
     """Retrieve the ``LanguageZenPrinciples`` for *language*, or ``None`` if unsupported.
 
     Args:
-        language: Case-insensitive language key (e.g. ``"Python"`` → ``"python"``).
+        language (str): Case-insensitive language key (e.g. ``"Python"`` → ``"python"``).
 
     Returns:
         The matching ``LanguageZenPrinciples``, or ``None``.
@@ -135,7 +135,7 @@ def get_principle_by_id(principle_id: str) -> "ZenPrinciple | None":
     """Search all languages for a principle matching *principle_id*.
 
     Args:
-        principle_id: Globally unique ID (e.g. ``"python-003"``).
+        principle_id (str): Globally unique ID (e.g. ``"python-003"``).
 
     Returns:
         The matching ``ZenPrinciple``, or ``None`` if no language defines it.
@@ -153,7 +153,7 @@ def get_all_principles_by_category(
     """Collect principles matching *category* across every registered language.
 
     Args:
-        category: The ``PrincipleCategory`` to filter by.
+        category (PrincipleCategory): The ``PrincipleCategory`` to filter by.
 
     Returns:
         ``{language_key: [ZenPrinciple, …]}`` — languages with no matches
@@ -186,11 +186,9 @@ def get_registry_stats() -> "RegistryStats":
     """Snapshot the registry into a ``RegistryStats`` Pydantic model.
 
     Returns:
-        Aggregated language counts, principle totals, and per-language
-        summaries.
+        RegistryStats: Aggregated language counts, principle totals, and
+        per-language summaries.
     """
-    # Prefer returning a structured Pydantic model for better typing and
-    # downstream validation/serialization benefits.
     _initialize_registry()
     return RegistryStats.from_registry(ZEN_REGISTRY)
 

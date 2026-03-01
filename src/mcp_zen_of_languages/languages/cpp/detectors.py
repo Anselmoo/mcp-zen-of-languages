@@ -67,8 +67,8 @@ class CppSmartPointerDetector(
         """Flag lines containing raw ``new`` or ``delete`` expressions.
 
         Args:
-            context: Analysis context with C++ source text.
-            config: Smart-pointer detection configuration.
+            context (AnalysisContext): Analysis context with C++ source text.
+            config (CppSmartPointerConfig): Smart-pointer detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -113,8 +113,8 @@ class CppNullptrDetector(ViolationDetector[CppNullptrConfig], LocationHelperMixi
         """Flag lines that reference the ``NULL`` macro.
 
         Args:
-            context: Analysis context with C++ source text.
-            config: Nullptr detection configuration.
+            context (AnalysisContext): Analysis context with C++ source text.
+            config (CppNullptrConfig): Nullptr detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -160,8 +160,8 @@ class CppRaiiDetector(ViolationDetector[CppRaiiConfig], LocationHelperMixin):
         """Flag lines with ``new``/``delete``/``malloc``/``free`` that bypass RAII.
 
         Args:
-            context: Analysis context with C++ source text.
-            config: RAII detection configuration.
+            context (AnalysisContext): Analysis context with C++ source text.
+            config (CppRaiiConfig): RAII detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -210,8 +210,8 @@ class CppAutoDetector(ViolationDetector[CppAutoConfig], LocationHelperMixin):
         """Flag assignments with explicit ``std::`` types that could use ``auto``.
 
         Args:
-            context: Analysis context with C++ source text.
-            config: Auto-deduction detection configuration.
+            context (AnalysisContext): Analysis context with C++ source text.
+            config (CppAutoConfig): Auto-deduction detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -258,8 +258,8 @@ class CppRangeForDetector(ViolationDetector[CppRangeForConfig], LocationHelperMi
         """Flag ``for`` loops using explicit ``.begin()``/``.end()`` iterators.
 
         Args:
-            context: Analysis context with C++ source text.
-            config: Range-for detection configuration.
+            context (AnalysisContext): Analysis context with C++ source text.
+            config (CppRangeForConfig): Range-for detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -308,8 +308,8 @@ class CppManualAllocationDetector(
         """Flag ``malloc``/``free`` and array ``new[]``/``delete[]`` usage.
 
         Args:
-            context: Analysis context with C++ source text.
-            config: Manual-allocation detection configuration.
+            context (AnalysisContext): Analysis context with C++ source text.
+            config (CppManualAllocationConfig): Manual-allocation detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -357,8 +357,8 @@ class CppConstCorrectnessDetector(
         """Flag reference parameters and variables missing ``const`` qualification.
 
         Args:
-            context: Analysis context with C++ source text.
-            config: Const-correctness detection configuration.
+            context (AnalysisContext): Analysis context with C++ source text.
+            config (CppConstCorrectnessConfig): Const-correctness detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -406,8 +406,8 @@ class CppCStyleCastDetector(
         """Flag C-style cast syntax on lines not already using named casts.
 
         Args:
-            context: Analysis context with C++ source text.
-            config: C-style-cast detection configuration.
+            context (AnalysisContext): Analysis context with C++ source text.
+            config (CppCStyleCastConfig): C-style-cast detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -458,8 +458,8 @@ class CppRuleOfFiveDetector(
         """Flag classes with a destructor but no ``operator=`` definition.
 
         Args:
-            context: Analysis context with C++ source text.
-            config: Rule-of-Five detection configuration.
+            context (AnalysisContext): Analysis context with C++ source text.
+            config (CppRuleOfFiveConfig): Rule-of-Five detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -502,8 +502,8 @@ class CppMoveDetector(ViolationDetector[CppMoveConfig], LocationHelperMixin):
         """Flag code with ``&&`` references but no ``std::move`` usage.
 
         Args:
-            context: Analysis context with C++ source text.
-            config: Move-semantics detection configuration.
+            context (AnalysisContext): Analysis context with C++ source text.
+            config (CppMoveConfig): Move-semantics detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -553,8 +553,8 @@ class CppAvoidGlobalsDetector(
         """Flag file-scope ``static`` or ``extern`` declarations (excluding ``static_assert``).
 
         Args:
-            context: Analysis context with C++ source text.
-            config: Global-avoidance detection configuration.
+            context (AnalysisContext): Analysis context with C++ source text.
+            config (CppAvoidGlobalsConfig): Global-avoidance detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -602,8 +602,8 @@ class CppOverrideFinalDetector(
         """Flag ``virtual`` methods lacking ``override`` or ``final`` specifiers.
 
         Args:
-            context: Analysis context with C++ source text.
-            config: Override/final detection configuration.
+            context (AnalysisContext): Analysis context with C++ source text.
+            config (CppOverrideFinalConfig): Override/final detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -649,8 +649,8 @@ class CppOptionalDetector(ViolationDetector[CppOptionalConfig], LocationHelperMi
         """Flag pointer declarations where ``std::optional`` would express intent better.
 
         Args:
-            context: Analysis context with C++ source text.
-            config: Optional detection configuration.
+            context (AnalysisContext): Analysis context with C++ source text.
+            config (CppOptionalConfig): Optional detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.

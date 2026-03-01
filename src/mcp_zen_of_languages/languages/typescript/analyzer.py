@@ -118,7 +118,7 @@ class TypeScriptAnalyzer(BaseAnalyzer):
         """Extract ``import``/``require`` dependencies and build an import graph.
 
         Args:
-            context: Analysis context containing source text and intermediate metrics.
+            context (AnalysisContext): Analysis context containing source text and intermediate metrics.
 
         Returns:
             DependencyAnalysis with import edges, or ``None`` when no imports found.

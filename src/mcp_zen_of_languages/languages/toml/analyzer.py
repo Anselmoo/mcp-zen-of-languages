@@ -42,9 +42,9 @@ class TomlAnalyzer(BaseAnalyzer):
         """Set up the TOML analyzer with optional threshold and pipeline overrides.
 
         Args:
-            config: Analyzer configuration controlling detection thresholds
+            config (AnalyzerConfig | None): Analyzer configuration controlling detection thresholds
                 such as comment clarity or key casing limits.
-            pipeline_config: Optional overrides that customize which TOML
+            pipeline_config (PipelineConfig | None): Optional overrides that customize which TOML
                 detectors run and their individual settings.
         """
         self._pipeline_config = pipeline_config
@@ -74,7 +74,7 @@ class TomlAnalyzer(BaseAnalyzer):
         """Parse TOML text into a mapping via ``tomllib.loads``.
 
         Args:
-            code: Raw TOML text to parse.
+            code (str): Raw TOML text to parse.
 
         Returns:
             ParserResult wrapping the parsed mapping, or ``None`` on parse failure.
@@ -94,8 +94,8 @@ class TomlAnalyzer(BaseAnalyzer):
         """Compute a line count for the TOML file; complexity metrics are not applicable.
 
         Args:
-            code: Raw TOML text whose lines are counted.
-            ast_tree: Unused; included for interface compatibility with [`BaseAnalyzer`][BaseAnalyzer].
+            code (str): Raw TOML text whose lines are counted.
+            ast_tree (ParserResult | None): Unused; included for interface compatibility with [`BaseAnalyzer`][BaseAnalyzer].
 
         Returns:
             tuple[CyclomaticSummary | None, float | None, int]: ``(None, None, line_count)``
@@ -116,7 +116,7 @@ class TomlAnalyzer(BaseAnalyzer):
         """Return ``None`` because TOML files have no cross-file dependency semantics.
 
         Args:
-            context: Current analysis context (unused for TOML).
+            context (AnalysisContext): Current analysis context (unused for TOML).
 
         Returns:
             object | None: Always ``None``; TOML documents are self-contained.

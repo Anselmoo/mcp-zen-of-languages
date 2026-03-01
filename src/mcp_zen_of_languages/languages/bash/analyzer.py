@@ -55,10 +55,10 @@ class BashAnalyzer(BaseAnalyzer):
         """Initialize the Bash analyzer with optional configuration.
 
         Args:
-            config: Threshold settings controlling detector sensitivity such as
+            config (AnalyzerConfig | None): Threshold settings controlling detector sensitivity such as
                 maximum script length without functions and minimum variable
                 name length.
-            pipeline_config: Optional overrides that are merged on top of
+            pipeline_config (PipelineConfig | None): Optional overrides that are merged on top of
                 rule-derived detector defaults, allowing per-project tuning
                 via ``zen-config.yaml``.
         """
@@ -95,7 +95,7 @@ class BashAnalyzer(BaseAnalyzer):
         each detector.
 
         Args:
-            code: Raw Bash/shell source text to parse.
+            code (str): Raw Bash/shell source text to parse.
 
         Returns:
             ParserResult | None: Always ``None`` for Bash; reserved for
@@ -114,8 +114,8 @@ class BashAnalyzer(BaseAnalyzer):
         cannot be calculated.  Only the raw line count is returned.
 
         Args:
-            code: Raw Bash source text.
-            ast_tree: Parsed AST (always ``None`` for Bash today).
+            code (str): Raw Bash source text.
+            ast_tree (ParserResult | None): Parsed AST (always ``None`` for Bash today).
 
         Returns:
             tuple[CyclomaticSummary | None, float | None, int]: A three-element
@@ -139,7 +139,7 @@ class BashAnalyzer(BaseAnalyzer):
         """Extract ``source`` and ``.`` includes and build a dependency graph.
 
         Args:
-            context: Current analysis context with source text and metrics.
+            context (AnalysisContext): Current analysis context with source text and metrics.
 
         Returns:
             DependencyAnalysis with include edges, or ``None`` when no sources found.

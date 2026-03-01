@@ -51,7 +51,7 @@ class GitLabCIAnalyzer(BaseAnalyzer):
         """Parse GitLab CI YAML into a structured mapping via ``yaml.safe_load``.
 
         Args:
-            code: Raw GitLab CI YAML text.
+            code (str): Raw GitLab CI YAML text.
 
         Returns:
             ParserResult wrapping the parsed mapping, or ``None`` on parse failure.

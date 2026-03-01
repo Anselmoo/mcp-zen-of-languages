@@ -56,7 +56,7 @@ def severity_style(severity: int) -> str:
     * **< 4** → ``severity.low`` (dim green)
 
     Args:
-        severity: Integer severity score assigned to a violation.
+        severity (int): Integer severity score assigned to a violation.
 
     Returns:
         str: Theme token name usable with Rich ``style=`` parameters.
@@ -78,7 +78,7 @@ def severity_badge(severity: int) -> str:
     legacy Windows consoles.
 
     Args:
-        severity: Integer severity score (1-10) determining the badge tier.
+        severity (int): Integer severity score (1-10) determining the badge tier.
 
     Returns:
         str: Rich markup string that renders as a coloured badge when printed.
@@ -117,7 +117,7 @@ def pass_fail_glyph(*, passed: bool) -> str:
     text fallbacks are used on legacy Windows consoles.
 
     Args:
-        passed: True for the success glyph, False for the failure glyph.
+        passed (bool): True for the success glyph, False for the failure glyph.
 
     Returns:
         str: Single-glyph string suitable for inline concatenation.

@@ -56,9 +56,9 @@ class PowerShellAnalyzer(BaseAnalyzer):
         """Initialize the PowerShell analyzer with optional configuration.
 
         Args:
-            config: Threshold settings controlling detector sensitivity such as
+            config (AnalyzerConfig | None): Threshold settings controlling detector sensitivity such as
                 approved verb lists and parameter validation requirements.
-            pipeline_config: Optional overrides that are merged on top of
+            pipeline_config (PipelineConfig | None): Optional overrides that are merged on top of
                 rule-derived detector defaults, allowing per-project tuning
                 via ``zen-config.yaml``.
         """
@@ -95,7 +95,7 @@ class PowerShellAnalyzer(BaseAnalyzer):
         each detector.
 
         Args:
-            code: Raw PowerShell source text to parse.
+            code (str): Raw PowerShell source text to parse.
 
         Returns:
             ParserResult | None: Always ``None`` for PowerShell; reserved for
@@ -114,8 +114,8 @@ class PowerShellAnalyzer(BaseAnalyzer):
         cannot be calculated.  Only the raw line count is returned.
 
         Args:
-            code: Raw PowerShell source text.
-            ast_tree: Parsed AST (always ``None`` for PowerShell today).
+            code (str): Raw PowerShell source text.
+            ast_tree (ParserResult | None): Parsed AST (always ``None`` for PowerShell today).
 
         Returns:
             tuple[CyclomaticSummary | None, float | None, int]: A three-element
@@ -139,7 +139,7 @@ class PowerShellAnalyzer(BaseAnalyzer):
         """Extract ``Import-Module`` and dot-sourcing dependencies.
 
         Args:
-            context: Current analysis context with source text and metrics.
+            context (AnalysisContext): Current analysis context with source text and metrics.
 
         Returns:
             DependencyAnalysis with module dependency edges, or ``None`` when none found.

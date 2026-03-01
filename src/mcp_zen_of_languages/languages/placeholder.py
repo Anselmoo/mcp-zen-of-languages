@@ -34,8 +34,8 @@ class PlaceholderDetector(ViolationDetector):
         """Return an empty list — no violations are ever produced.
 
         Args:
-            context: Analysis context (ignored by the stub).
-            config: Detector configuration (ignored by the stub).
+            context (AnalysisContext): Analysis context (ignored by the stub).
+            config (object): Detector configuration (ignored by the stub).
 
         Returns:
             list[Violation]: Always an empty list.

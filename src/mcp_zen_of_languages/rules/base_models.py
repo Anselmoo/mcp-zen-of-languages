@@ -109,7 +109,7 @@ def _slugify_violation(value: str) -> str:
     trailing hyphens are stripped.
 
     Args:
-        value: Free-text description to slugify.
+        value (str): Free-text description to slugify.
 
     Returns:
         Lowercase hyphen-separated slug suitable for use as a ``ViolationSpec.id``.
@@ -202,7 +202,7 @@ class ZenPrinciple(BaseModel):
         stable IDs; collisions are resolved by appending a positional suffix.
 
         Args:
-            value: Raw violations payload from YAML/JSON rule definitions.
+            value (object): Raw violations payload from YAML/JSON rule definitions.
 
         Returns:
             Normalised list of ``ViolationSpec`` models with unique IDs.
@@ -318,7 +318,7 @@ class LanguageZenPrinciples(BaseModel):
         """Look up a principle by its unique ID (e.g. ``"python-003"``).
 
         Args:
-            principle_id: The ``ZenPrinciple.id`` to search for.
+            principle_id (str): The ``ZenPrinciple.id`` to search for.
 
         Returns:
             The matching principle, or ``None`` if no principle has that ID.
@@ -336,7 +336,7 @@ class LanguageZenPrinciples(BaseModel):
         """Filter principles belonging to *category*.
 
         Args:
-            category: The ``PrincipleCategory`` to match against.
+            category (PrincipleCategory): The ``PrincipleCategory`` to match against.
 
         Returns:
             Principles whose ``category`` field equals *category* (may be empty).
@@ -347,7 +347,7 @@ class LanguageZenPrinciples(BaseModel):
         """Return principles at or above *min_severity*.
 
         Args:
-            min_severity: Inclusive lower bound on the 1-10 severity scale.
+            min_severity (int): Inclusive lower bound on the 1-10 severity scale.
 
         Returns:
             Principles whose ``severity`` is ≥ *min_severity*.
@@ -359,7 +359,7 @@ def get_number_of_principles(language: LanguageZenPrinciples) -> int:
     """Count principles defined for a single language.
 
     Args:
-        language: The ``LanguageZenPrinciples`` instance to inspect.
+        language (LanguageZenPrinciples): The ``LanguageZenPrinciples`` instance to inspect.
 
     Returns:
         Number of ``ZenPrinciple`` entries in *language*.
@@ -371,7 +371,7 @@ def get_number_of_priniciple(language: LanguageZenPrinciples) -> int:
     """Backward-compatible alias for ``get_number_of_principles`` (typo preserved).
 
     Args:
-        language: Delegated to ``get_number_of_principles``.
+        language (LanguageZenPrinciples): Delegated to ``get_number_of_principles``.
 
     Returns:
         Same as ``get_number_of_principles``.
@@ -383,7 +383,7 @@ def get_rule_ids(language: LanguageZenPrinciples) -> set[str]:
     """Collect the unique ``ZenPrinciple.id`` values for a language.
 
     Args:
-        language: The ``LanguageZenPrinciples`` to extract IDs from.
+        language (LanguageZenPrinciples): The ``LanguageZenPrinciples`` to extract IDs from.
 
     Returns:
         Set of principle IDs (e.g. ``{"python-001", "python-002", …}``).
@@ -397,7 +397,7 @@ def get_total_principles(
     """Sum principle counts across every language in *registry*.
 
     Args:
-        registry: The ``ZEN_REGISTRY`` mapping (language key → principles).
+        registry (dict[str, LanguageZenPrinciples]): The ``ZEN_REGISTRY`` mapping (language key → principles).
 
     Returns:
         Aggregate principle count.
@@ -417,8 +417,8 @@ def get_missing_detector_rules(
     detectors count as coverage.
 
     Args:
-        language: The ``LanguageZenPrinciples`` whose coverage is checked.
-        explicit_only: If ``True``, exclude the catch-all pattern detector
+        language (LanguageZenPrinciples): The ``LanguageZenPrinciples`` whose coverage is checked.
+        explicit_only (bool): If ``True``, exclude the catch-all pattern detector
             from the coverage calculation.
 
     Returns:
@@ -457,8 +457,8 @@ def get_rule_id_coverage(
       in the canonical rule set (potential stale registrations).
 
     Args:
-        language: The ``LanguageZenPrinciples`` to audit.
-        explicit_only: When ``True``, ignore ``RulePatternDetector`` fallbacks.
+        language (LanguageZenPrinciples): The ``LanguageZenPrinciples`` to audit.
+        explicit_only (bool): When ``True``, ignore ``RulePatternDetector`` fallbacks.
 
     Returns:
         ``(missing, unknown)`` — both lists sorted alphabetically.
@@ -490,8 +490,8 @@ def get_registry_rule_id_gaps(
     Languages with no gaps are omitted from the result.
 
     Args:
-        registry: Full ``ZEN_REGISTRY`` mapping.
-        explicit_only: Passed through to ``get_rule_id_coverage``.
+        registry (dict[str, LanguageZenPrinciples]): Full ``ZEN_REGISTRY`` mapping.
+        explicit_only (bool): Passed through to ``get_rule_id_coverage``.
 
     Returns:
         ``{language: {"missing": [...], "unknown": [...]}}`` for each
@@ -516,8 +516,8 @@ def get_registry_detector_gaps(
     applied to every language in *registry*.
 
     Args:
-        registry: Full ``ZEN_REGISTRY`` mapping.
-        explicit_only: Passed through to ``get_missing_detector_rules``.
+        registry (dict[str, LanguageZenPrinciples]): Full ``ZEN_REGISTRY`` mapping.
+        explicit_only (bool): Passed through to ``get_missing_detector_rules``.
 
     Returns:
         ``{language: [rule_id, …]}`` for each language with missing detectors.
@@ -690,7 +690,7 @@ class RegistryStats(BaseModel):
         """Snapshot the live registry into a serialisable ``RegistryStats`` model.
 
         Args:
-            registry: The ``ZEN_REGISTRY`` mapping to summarise.
+            registry (dict[str, LanguageZenPrinciples]): The ``ZEN_REGISTRY`` mapping to summarise.
 
         Returns:
             A fully populated ``RegistryStats`` instance.

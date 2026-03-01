@@ -21,7 +21,7 @@ def build_import_graph(file_imports: dict[str, list[str]]) -> DependencyAnalysis
     against the maximum allowed dependency cycles.
 
     Args:
-        file_imports: Mapping of source file paths to the module names they
+        file_imports (dict[str, list[str]]): Mapping of source file paths to the module names they
             import (e.g. ``{"app.py": ["utils", "models"]}``).
 
     Returns:
@@ -54,7 +54,7 @@ def find_cycles(g: nx.DiGraph) -> list[DependencyCycle]:
     directly to avoid rebuilding the graph.
 
     Args:
-        g: A networkx ``DiGraph`` whose nodes represent modules and whose
+        g (nx.DiGraph): A networkx ``DiGraph`` whose nodes represent modules and whose
             edges represent import relationships.
 
     Returns:

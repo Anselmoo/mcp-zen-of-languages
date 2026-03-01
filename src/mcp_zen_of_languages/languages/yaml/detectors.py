@@ -52,8 +52,8 @@ class YamlIndentationDetector(
         """Check each non-blank line's leading spaces against the configured indent width.
 
         Args:
-            context: Analysis context holding the raw YAML text.
-            config: Indentation thresholds including ``indent_size``.
+            context (AnalysisContext): Analysis context holding the raw YAML text.
+            config (YamlIndentationConfig): Indentation thresholds including ``indent_size``.
 
         Returns:
             list[Violation]: One violation per line whose leading whitespace is not a multiple of *indent_size*.
@@ -105,8 +105,8 @@ class YamlNoTabsDetector(ViolationDetector[YamlNoTabsConfig], LocationHelperMixi
         """Scan every line for tab characters and report their positions.
 
         Args:
-            context: Analysis context holding the raw YAML text.
-            config: No-tabs thresholds and violation message templates.
+            context (AnalysisContext): Analysis context holding the raw YAML text.
+            config (YamlNoTabsConfig): No-tabs thresholds and violation message templates.
 
         Returns:
             list[Violation]: One violation per line containing a tab character.
@@ -153,8 +153,8 @@ class YamlDuplicateKeysDetector(
         """Track top-level keys and flag any that appear more than once.
 
         Args:
-            context: Analysis context holding the raw YAML text.
-            config: Duplicate key thresholds and violation message templates.
+            context (AnalysisContext): Analysis context holding the raw YAML text.
+            config (YamlDuplicateKeysConfig): Duplicate key thresholds and violation message templates.
 
         Returns:
             list[Violation]: One violation per duplicate key occurrence.
@@ -208,8 +208,8 @@ class YamlLowercaseKeysDetector(
         """Scan mapping keys and flag any containing uppercase characters.
 
         Args:
-            context: Analysis context holding the raw YAML text.
-            config: Lowercase key thresholds and violation message templates.
+            context (AnalysisContext): Analysis context holding the raw YAML text.
+            config (YamlLowercaseKeysConfig): Lowercase key thresholds and violation message templates.
 
         Returns:
             list[Violation]: One violation per key with uppercase letters.
@@ -261,8 +261,8 @@ class YamlKeyClarityDetector(
         """Check each key's length and flag the first one shorter than *min_key_length*.
 
         Args:
-            context: Analysis context holding the raw YAML text.
-            config: Key clarity thresholds including ``min_key_length``.
+            context (AnalysisContext): Analysis context holding the raw YAML text.
+            config (YamlKeyClarityConfig): Key clarity thresholds including ``min_key_length``.
 
         Returns:
             list[Violation]: A single violation for the first overly short key found.
@@ -315,8 +315,8 @@ class YamlConsistencyDetector(
         """Collect list markers (``-`` vs ``*``) and flag mixed or disallowed usage.
 
         Args:
-            context: Analysis context holding the raw YAML text.
-            config: Consistency thresholds including ``allowed_list_markers``.
+            context (AnalysisContext): Analysis context holding the raw YAML text.
+            config (YamlConsistencyConfig): Consistency thresholds including ``allowed_list_markers``.
 
         Returns:
             list[Violation]: A single violation when marker styles are inconsistent or disallowed.
@@ -382,8 +382,8 @@ class YamlCommentIntentDetector(
         """Count non-empty and comment lines, flagging when comment coverage is too low.
 
         Args:
-            context: Analysis context holding the raw YAML text.
-            config: Comment intent thresholds including ``min_comment_lines`` and ``min_nonempty_lines``.
+            context (AnalysisContext): Analysis context holding the raw YAML text.
+            config (YamlCommentIntentConfig): Comment intent thresholds including ``min_comment_lines`` and ``min_nonempty_lines``.
 
         Returns:
             list[Violation]: A single violation when the file is large enough but lacks sufficient comments.
@@ -444,8 +444,8 @@ class YamlStringStyleDetector(
         """Search for unquoted values containing spaces, colons, or hashes that need quoting.
 
         Args:
-            context: Analysis context holding the raw YAML text.
-            config: String style thresholds including ``require_quotes_for_specials``.
+            context (AnalysisContext): Analysis context holding the raw YAML text.
+            config (YamlStringStyleConfig): String style thresholds including ``require_quotes_for_specials``.
 
         Returns:
             list[Violation]: A single violation for the first unquoted special-character value found.

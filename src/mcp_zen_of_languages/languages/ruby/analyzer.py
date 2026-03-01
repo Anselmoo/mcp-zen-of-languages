@@ -87,7 +87,7 @@ class RubyAnalyzer(BaseAnalyzer):
         integrated.  Detectors operate on raw source text instead.
 
         Args:
-            code: Raw Ruby source text to parse.
+            code (str): Raw Ruby source text to parse.
 
         Returns:
             ParserResult | None: Always ``None`` until a Ruby parser is wired in.
@@ -105,8 +105,8 @@ class RubyAnalyzer(BaseAnalyzer):
         maintainability index require a Ruby-aware parser.
 
         Args:
-            code: Ruby source text to measure.
-            ast_tree: Parsed syntax tree, currently unused for Ruby.
+            code (str): Ruby source text to measure.
+            ast_tree (ParserResult | None): Parsed syntax tree, currently unused for Ruby.
 
         Returns:
             tuple[CyclomaticSummary | None, float | None, int]: A three-element
@@ -126,7 +126,7 @@ class RubyAnalyzer(BaseAnalyzer):
         """Extract ``require`` / ``require_relative`` dependencies.
 
         Args:
-            context: Current analysis context with source text and metrics.
+            context (AnalysisContext): Current analysis context with source text and metrics.
 
         Returns:
             DependencyAnalysis with require edges, or ``None`` when none found.

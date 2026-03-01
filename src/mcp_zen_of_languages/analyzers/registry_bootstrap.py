@@ -51,7 +51,7 @@ def _rule_class_name(rule_id: str) -> str:
     """Derive a PascalCase config class name from a hyphenated rule ID.
 
     Args:
-        rule_id: Hyphenated rule identifier (e.g. ``"bash-006"``).
+        rule_id (str): Hyphenated rule identifier (e.g. ``"bash-006"``).
 
     Returns:
         PascalCase name suffixed with ``Config`` (e.g. ``"Bash006Config"``).
@@ -72,7 +72,7 @@ def _rule_literal(rule_id: str) -> object:
     raw dicts to the correct model class.
 
     Args:
-        rule_id: Rule identifier to embed as a literal value.
+        rule_id (str): Rule identifier to embed as a literal value.
 
     Returns:
         A ``Literal`` type containing exactly *rule_id*.
@@ -90,7 +90,7 @@ def _build_rule_configs(rule_ids: list[str]) -> dict[str, type[DetectorConfig]]:
     :data:`_RULE_FIELD_DEFAULTS`.
 
     Args:
-        rule_ids: Rules that need config models — typically those
+        rule_ids (list[str]): Rules that need config models — typically those
             identified as having no registered detector after the
             mapping scan.
 

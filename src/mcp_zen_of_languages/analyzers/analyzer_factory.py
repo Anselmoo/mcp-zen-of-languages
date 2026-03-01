@@ -147,11 +147,11 @@ def create_analyzer(
     *pipeline_config* overrides from ``zen-config.yaml``.
 
     Args:
-        language: Language name or alias (case-insensitive).  Common
+        language (str): Language name or alias (case-insensitive).  Common
             aliases are accepted — see the table below.
-        config: Global analyzer thresholds; passed through to the
+        config (AnalyzerConfig | None): Global analyzer thresholds; passed through to the
             analyzer's ``__init__``.
-        pipeline_config: Optional detector-level overrides merged on
+        pipeline_config (PipelineConfig | None): Optional detector-level overrides merged on
             top of the rule-derived pipeline.
 
     Returns:

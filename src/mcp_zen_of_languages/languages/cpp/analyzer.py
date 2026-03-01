@@ -87,7 +87,7 @@ class CppAnalyzer(BaseAnalyzer):
         scanning instead.
 
         Args:
-            code: Raw C++ source text to parse.
+            code (str): Raw C++ source text to parse.
 
         Returns:
             ParserResult | None: Always ``None`` until a C++ parser is wired in.
@@ -105,8 +105,8 @@ class CppAnalyzer(BaseAnalyzer):
         maintainability index require a C++-aware parser like libclang.
 
         Args:
-            code: C++ source text to measure.
-            ast_tree: Parsed syntax tree, currently unused for C++.
+            code (str): C++ source text to measure.
+            ast_tree (ParserResult | None): Parsed syntax tree, currently unused for C++.
 
         Returns:
             tuple[CyclomaticSummary | None, float | None, int]: A three-element
@@ -126,7 +126,7 @@ class CppAnalyzer(BaseAnalyzer):
         """Extract ``#include`` directives and build a header dependency graph.
 
         Args:
-            context: Current analysis context with source text and metrics.
+            context (AnalysisContext): Current analysis context with source text and metrics.
 
         Returns:
             DependencyAnalysis with include edges, or ``None`` when no includes found.

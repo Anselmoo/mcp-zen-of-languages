@@ -43,9 +43,9 @@ class YamlAnalyzer(BaseAnalyzer):
         """Set up the YAML analyzer with optional threshold and pipeline overrides.
 
         Args:
-            config: Analyzer configuration controlling detection thresholds
+            config (AnalyzerConfig | None): Analyzer configuration controlling detection thresholds
                 such as indentation width or minimum key length.
-            pipeline_config: Optional overrides that customize which YAML
+            pipeline_config (PipelineConfig | None): Optional overrides that customize which YAML
                 detectors run and their individual settings.
         """
         self._pipeline_config = pipeline_config
@@ -75,7 +75,7 @@ class YamlAnalyzer(BaseAnalyzer):
         """Parse YAML text into a structured mapping via ``yaml.safe_load``.
 
         Args:
-            code: Raw YAML text to parse.
+            code (str): Raw YAML text to parse.
 
         Returns:
             ParserResult wrapping the parsed mapping, or ``None`` on parse failure.
@@ -95,8 +95,8 @@ class YamlAnalyzer(BaseAnalyzer):
         """Compute a line count for the YAML file; complexity metrics are not applicable.
 
         Args:
-            code: Raw YAML text whose lines are counted.
-            ast_tree: Unused; included for interface compatibility with [`BaseAnalyzer`][BaseAnalyzer].
+            code (str): Raw YAML text whose lines are counted.
+            ast_tree (ParserResult | None): Unused; included for interface compatibility with [`BaseAnalyzer`][BaseAnalyzer].
 
         Returns:
             tuple[CyclomaticSummary | None, float | None, int]: ``(None, None, line_count)``
@@ -117,7 +117,7 @@ class YamlAnalyzer(BaseAnalyzer):
         """Return ``None`` because YAML files have no cross-file dependency semantics.
 
         Args:
-            context: Current analysis context (unused for YAML).
+            context (AnalysisContext): Current analysis context (unused for YAML).
 
         Returns:
             object | None: Always ``None``; YAML documents are self-contained.

@@ -560,7 +560,7 @@ class JsInheritanceDepthDetector(ViolationDetector[Js009Config], LocationHelperM
             """Compute the inheritance chain depth for a given class name.
 
             Args:
-                name: Class name whose ancestor chain is walked.
+                name (str): Class name whose ancestor chain is walked.
 
             Returns:
                 int: Number of ``extends`` hops from *name* to the root class.

@@ -22,7 +22,7 @@ def compute_cyclomatic_complexity(code: str) -> CyclomaticSummary:
     that detectors compare against ``max_cyclomatic_complexity``.
 
     Args:
-        code: Python source text to analyse.
+        code (str): Python source text to analyse.
 
     Returns:
         A ``CyclomaticSummary`` containing individual ``CyclomaticBlock``
@@ -50,8 +50,8 @@ def compute_maintainability_index(code: str, *, multi: bool = False) -> float:
     zen principle ``min_maintainability_index`` sets the passing threshold.
 
     Args:
-        code: Python source text to evaluate.
-        multi: When ``True``, radon counts multi-line strings as comments,
+        code (str): Python source text to evaluate.
+        multi (bool): When ``True``, radon counts multi-line strings as comments,
             which can raise the score for heavily documented modules.
 
     Returns:

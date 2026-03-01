@@ -41,9 +41,9 @@ class XmlAnalyzer(BaseAnalyzer):
         """Set up the XML analyzer with optional threshold and pipeline overrides.
 
         Args:
-            config: Analyzer configuration controlling detection thresholds
+            config (AnalyzerConfig | None): Analyzer configuration controlling detection thresholds
                 such as hierarchy depth or namespace strictness.
-            pipeline_config: Optional overrides that customize which XML
+            pipeline_config (PipelineConfig | None): Optional overrides that customize which XML
                 detectors run and their individual settings.
         """
         self._pipeline_config = pipeline_config
@@ -73,7 +73,7 @@ class XmlAnalyzer(BaseAnalyzer):
         """Parse XML text into an ElementTree via ``xml.etree.ElementTree``.
 
         Args:
-            code: Raw XML markup to parse.
+            code (str): Raw XML markup to parse.
 
         Returns:
             ParserResult wrapping the root Element, or ``None`` on parse failure.
@@ -93,8 +93,8 @@ class XmlAnalyzer(BaseAnalyzer):
         """Compute a line count for the XML document; complexity metrics are not applicable.
 
         Args:
-            code: Raw XML markup whose lines are counted.
-            ast_tree: Unused; included for interface compatibility with [`BaseAnalyzer`][BaseAnalyzer].
+            code (str): Raw XML markup whose lines are counted.
+            ast_tree (ParserResult | None): Unused; included for interface compatibility with [`BaseAnalyzer`][BaseAnalyzer].
 
         Returns:
             tuple[CyclomaticSummary | None, float | None, int]: ``(None, None, line_count)``
@@ -115,7 +115,7 @@ class XmlAnalyzer(BaseAnalyzer):
         """Return ``None`` because XML files have no cross-file dependency semantics.
 
         Args:
-            context: Current analysis context (unused for XML).
+            context (AnalysisContext): Current analysis context (unused for XML).
 
         Returns:
             object | None: Always ``None``; XML documents are analyzed in isolation.

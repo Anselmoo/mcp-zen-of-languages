@@ -92,9 +92,9 @@ class DetectorMetadata(BaseModel):
         detectors by ``(language, rule_id)`` pair.
 
         Args:
-            binding: A detector binding declared in a language's
+            binding (DetectorBinding): A detector binding declared in a language's
                 ``mapping.py`` module.
-            language: Language that owns this binding (e.g. ``"rust"``).
+            language (str): Language that owns this binding (e.g. ``"rust"``).
 
         Returns:
             Registry-ready metadata for [`DetectorRegistry.register`][DetectorRegistry.register].
@@ -158,7 +158,7 @@ class DetectorRegistry:
         """Add a detector to the registry, invalidating all caches.
 
         Args:
-            metadata: Fully populated metadata for the detector to register.
+            metadata (DetectorMetadata): Fully populated metadata for the detector to register.
 
         Raises:
             ValueError: If a detector with the same ``detector_id`` is
@@ -222,7 +222,7 @@ class DetectorRegistry:
         """Look up a single detector by its unique identifier.
 
         Args:
-            detector_id: Registry key matching the ``type`` discriminator
+            detector_id (str): Registry key matching the ``type`` discriminator
                 on the detector's config model.
 
         Returns:
@@ -245,8 +245,8 @@ class DetectorRegistry:
         detector is registered.
 
         Args:
-            rule_id: Zen rule identifier (e.g. ``"py-001"``).
-            language: Language scope for the lookup.
+            rule_id (str): Zen rule identifier (e.g. ``"py-001"``).
+            language (str): Language scope for the lookup.
 
         Returns:
             Metadata for every detector covering *rule_id* in *language*,
@@ -323,7 +323,7 @@ class DetectorRegistry:
         always injected at the head of the list to carry global thresholds.
 
         Args:
-            lang_zen: Complete zen principles for a single language.
+            lang_zen (LanguageZenPrinciples): Complete zen principles for a single language.
 
         Returns:
             Ordered detector configs sorted by [`DetectorMetadata.default_order`][DetectorMetadata.default_order],
@@ -364,8 +364,8 @@ class DetectorRegistry:
         [`DetectorMetadata.default_order`][DetectorMetadata.default_order].
 
         Args:
-            base: Rule-derived detector configs to serve as defaults.
-            overrides: User or programmatic overrides to layer on top.
+            base (list[DetectorConfig]): Rule-derived detector configs to serve as defaults.
+            overrides (list[DetectorConfig]): User or programmatic overrides to layer on top.
 
         Returns:
             Merged and re-ordered detector config list.
@@ -395,7 +395,7 @@ class DetectorRegistry:
         since it carries global thresholds rather than a detector.
 
         Args:
-            lang_zen: Complete zen principles for the target language.
+            lang_zen (LanguageZenPrinciples): Complete zen principles for the target language.
 
         Returns:
             Pipeline containing configured detector instances in execution
@@ -428,10 +428,10 @@ class DetectorRegistry:
         definition typos at startup.
 
         Args:
-            principle: Zen principle whose ``metrics`` supply threshold
+            principle (ZenPrinciple): Zen principle whose ``metrics`` supply threshold
                 values.
-            language: Language scope used for detector resolution.
-            base_fields: Field names defined on the base
+            language (str): Language scope used for detector resolution.
+            base_fields (set[str]): Field names defined on the base
                 ``DetectorConfig`` that should be excluded from metric
                 mapping.
 
@@ -494,7 +494,7 @@ class DetectorRegistry:
         configs.
 
         Args:
-            configs_by_type: Configs keyed by detector ``type``.
+            configs_by_type (dict[str, DetectorConfig]): Configs keyed by detector ``type``.
 
         Returns:
             Deterministically ordered config list.

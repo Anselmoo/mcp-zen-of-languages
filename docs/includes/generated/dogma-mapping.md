@@ -30,6 +30,8 @@
 | Go | `go-001` | Errors are values | 9 |
 | Go | `go-003` | Make the zero value useful | 6 |
 | Go | `go-012` | Avoid init() when possible | 6 |
+| Go | `go-017` | Handle every error path | 9 |
+| Go | `go-020` | Write self-documenting code | 5 |
 | JavaScript | `js-003` | Use strict equality | 8 |
 | JavaScript | `js-007` | Handle errors explicitly | 9 |
 | JavaScript | `js-008` | Avoid magic numbers and strings | 6 |
@@ -95,6 +97,9 @@
 | Bash | `bash-004` | Use $() over backticks | 6 |
 | CSS | `css-001` | Avoid specificity creep | 7 |
 | GitLab CI | `gitlab-ci-004` | Avoid god pipelines | 6 |
+| Go | `go-013` | Organize by responsibility | 6 |
+| Go | `go-014` | Embed for composition, not inheritance | 7 |
+| Go | `go-016` | Avoid unnecessary complexity | 7 |
 | JavaScript | `js-001` | Avoid callback hell | 8 |
 | JSON | `json-002` | Keep object depth understandable | 6 |
 | JSON | `json-006` | Keep inline arrays bounded | 4 |
@@ -119,6 +124,7 @@
 | Dockerfile | `dockerfile-004` | Declare HEALTHCHECK for production images | 7 |
 | GitHub Actions | `gha-008` | Set timeout-minutes on jobs | 6 |
 | Go | `go-001` | Errors are values | 9 |
+| Go | `go-017` | Handle every error path | 9 |
 | JavaScript | `js-001` | Avoid callback hell | 8 |
 | JavaScript | `js-007` | Handle errors explicitly | 9 |
 | PowerShell | `ps-002` | Use proper error handling | 9 |
@@ -130,6 +136,7 @@
 | Ruby | `ruby-011` | Prefer fail over raise for exceptions | 5 |
 | Rust | `rust-001` | Avoid unwrap() and expect() in production code | 9 |
 | Rust | `rust-008` | Avoid unsafe unless necessary | 9 |
+| Rust | `rust-014` | Error types should implement standard error traits | 8 |
 | TypeScript | `ts-004` | Always specify return types | 7 |
 | TypeScript | `ts-010` | Prefer unknown over any for uncertain types | 7 |
 
@@ -159,6 +166,7 @@
 | Go | `go-007` | Use defer for cleanup | 7 |
 | Go | `go-009` | Avoid package-level state | 7 |
 | Go | `go-010` | Keep interfaces small | 7 |
+| Go | `go-019` | Design for testability | 7 |
 | JavaScript | `js-004` | Avoid global state | 9 |
 | JavaScript | `js-005` | Functions should do one thing | 7 |
 | JavaScript | `js-006` | Use modern ES6+ features | 6 |
@@ -182,6 +190,8 @@
 | Rust | `rust-009` | Use std traits appropriately | 7 |
 | Rust | `rust-010` | Prefer enums over booleans for state | 7 |
 | Rust | `rust-012` | Avoid Rc<RefCell<T>> unless necessary | 7 |
+| Rust | `rust-016` | Implement Default when there is an obvious default value | 5 |
+| Rust | `rust-017` | Use From/Into for type conversions | 6 |
 | TypeScript | `ts-003` | Prefer interfaces over type aliases for objects | 5 |
 | TypeScript | `ts-007` | Use utility types | 6 |
 | TypeScript | `ts-009` | Use enums or const assertions appropriately | 6 |
@@ -199,6 +209,9 @@
 | C# | `cs-010` | Avoid magic numbers | 6 |
 | Go | `go-004` | Use short variable names | 5 |
 | Go | `go-008` | Package names are singular | 5 |
+| Go | `go-013` | Organize by responsibility | 6 |
+| Go | `go-014` | Embed for composition, not inheritance | 7 |
+| Go | `go-020` | Write self-documenting code | 5 |
 | JavaScript | `js-008` | Avoid magic numbers and strings | 6 |
 | JavaScript | `js-011` | Use meaningful names | 8 |
 | JSON | `json-005` | Keys are case-sensitive identifiers | 5 |
@@ -219,6 +232,7 @@
 | Ruby | `ruby-005` | Use meaningful method names with ?/! convention | 7 |
 | Ruby | `ruby-006` | Keep method chains readable | 6 |
 | Ruby | `ruby-007` | Prefer symbols over strings for keys | 5 |
+| Rust | `rust-015` | Follow Rust naming conventions (RFC 430) | 6 |
 | SQL | `sql-007` | Use descriptive table aliases | 4 |
 | SQL | `sql-009` | Prefer explicit JOIN syntax over ANSI-89 comma joins | 6 |
 | TOML | `toml-001` | Avoid inline tables | 6 |
@@ -245,6 +259,9 @@
 | Go | `go-006` | Avoid goroutine leaks | 9 |
 | Go | `go-009` | Avoid package-level state | 7 |
 | Go | `go-011` | Use context for cancellation | 8 |
+| Go | `go-015` | Communicate by sharing memory through channels | 8 |
+| Go | `go-019` | Design for testability | 7 |
+| Go | `go-020` | Write self-documenting code | 5 |
 | JavaScript | `js-002` | Prefer const over let, never var | 7 |
 | JavaScript | `js-004` | Avoid global state | 9 |
 | JavaScript | `js-010` | Keep functions pure when possible | 6 |
@@ -254,6 +271,8 @@
 | Rust | `rust-010` | Prefer enums over booleans for state | 7 |
 | Rust | `rust-011` | Use lifetimes judiciously | 6 |
 | Rust | `rust-012` | Avoid Rc<RefCell<T>> unless necessary | 7 |
+| Rust | `rust-013` | Send + Sync should be implemented when types allow | 7 |
+| Rust | `rust-016` | Implement Default when there is an obvious default value | 5 |
 | SQL | `sql-002` | Always include INSERT column lists | 7 |
 | TypeScript | `ts-005` | Use readonly when appropriate | 6 |
 
@@ -284,6 +303,7 @@
 | GitLab CI | `gitlab-ci-002` | Avoid exposed variables in repository YAML | 8 |
 | GitLab CI | `gitlab-ci-003` | Use allow_failure only with rules-based context | 6 |
 | Go | `go-008` | Package names are singular | 5 |
+| Go | `go-013` | Organize by responsibility | 6 |
 | LaTeX | `latex-004` | Maintain bibliography hygiene | 6 |
 | LaTeX | `latex-009` | Remove unused packages | 5 |
 | Markdown | `md-007` | Keep MDX imports hygienic | 5 |
@@ -309,6 +329,8 @@
 | GitLab CI | `gitlab-ci-006` | Use interruptible pipelines | 5 |
 | GitLab CI | `gitlab-ci-007` | Model job DAG dependencies with needs | 5 |
 | GitLab CI | `gitlab-ci-009` | Cache dependency installs | 5 |
+| Go | `go-016` | Avoid unnecessary complexity | 7 |
+| Go | `go-018` | Avoid premature optimization | 5 |
 | Python | `python-003` | Simple is better than complex | 8 |
 | Python | `python-004` | Complex is better than complicated | 7 |
 | Ruby | `ruby-003` | Prefer blocks over lambdas/procs | 6 |

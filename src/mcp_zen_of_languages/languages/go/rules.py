@@ -19,7 +19,7 @@ GO_ZEN = LanguageZenPrinciples(
             principle="Errors are values",
             category=PrincipleCategory.ERROR_HANDLING,
             severity=9,
-            description="Handle errors explicitly, don\'t panic",
+            description="Handle errors explicitly, don't panic",
             violations=[
                 "Ignoring error returns",
                 "_ assignment for errors",
@@ -70,10 +70,10 @@ GO_ZEN = LanguageZenPrinciples(
         ),
         ZenPrinciple(
             id="go-005",
-            principle="Don\'t use pointer to interface",
+            principle="Don't use pointer to interface",
             category=PrincipleCategory.DESIGN,
             severity=8,
-            description="Interfaces are already pointers, don\'t add *",
+            description="Interfaces are already pointers, don't add *",
             violations=[
                 "*Interface type parameters",
                 "Pointer to interface return types",
@@ -175,9 +175,7 @@ GO_ZEN = LanguageZenPrinciples(
             principle="Organize by responsibility",
             category=PrincipleCategory.ORGANIZATION,
             severity=6,
-            description=(
-                "Group code by domain responsibility, not by technical layer"
-            ),
+            description=("Group code by domain responsibility, not by technical layer"),
             violations=[
                 "Organizing packages by type (models/, controllers/)",
                 "Deeply nested package hierarchies",
@@ -224,8 +222,7 @@ GO_ZEN = LanguageZenPrinciples(
             category=PrincipleCategory.COMPLEXITY,
             severity=7,
             description=(
-                "Prefer straightforward solutions; "
-                "complexity must be justified"
+                "Prefer straightforward solutions; complexity must be justified"
             ),
             violations=[
                 "Deeply nested control flow exceeding three levels",
@@ -285,8 +282,7 @@ GO_ZEN = LanguageZenPrinciples(
             category=PrincipleCategory.READABILITY,
             severity=5,
             description=(
-                "Let clear naming and structure replace the need "
-                "for most comments"
+                "Let clear naming and structure replace the need for most comments"
             ),
             violations=[
                 "Comments that restate the code instead of explaining intent",

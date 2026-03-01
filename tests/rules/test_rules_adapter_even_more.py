@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.adapters.rules_adapter import RulesAdapter
-from mcp_zen_of_languages.rules.base_models import PrincipleCategory, ZenPrinciple
+from mcp_zen_of_languages.rules.base_models import PrincipleCategory
+from mcp_zen_of_languages.rules.base_models import ZenPrinciple
 
 
 def _build_principle(metrics=None, patterns=None):

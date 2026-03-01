@@ -4,20 +4,21 @@ from __future__ import annotations
 
 import json
 import logging
+
 from typing import TYPE_CHECKING
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
     from mcp_zen_of_languages.models import CyclomaticSummary
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    AnalyzerCapabilities,
-    AnalyzerConfig,
-    BaseAnalyzer,
-    DetectionPipeline,
-)
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import AnalyzerCapabilities
+from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
+from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
+from mcp_zen_of_languages.analyzers.base import DetectionPipeline
 from mcp_zen_of_languages.models import ParserResult
+
 
 logger = logging.getLogger(__name__)
 
@@ -41,10 +42,10 @@ class JsonAnalyzer(BaseAnalyzer):
         """Set up the JSON analyzer with optional threshold and pipeline overrides.
 
         Args:
-            config: Analyzer configuration controlling detection thresholds
-                such as strictness or schema consistency limits.
-            pipeline_config: Optional overrides that customize which JSON
-                detectors run and their individual settings.
+            config (AnalyzerConfig | None, optional): Analyzer configuration controlling detection thresholds
+                such as strictness or schema consistency limits. Default to None.
+            pipeline_config (PipelineConfig | None, optional): Optional overrides that customize which JSON
+                detectors run and their individual settings. Default to None.
         """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
@@ -73,10 +74,10 @@ class JsonAnalyzer(BaseAnalyzer):
         """Parse JSON text into a Python object via ``json.loads``.
 
         Args:
-            code: Raw JSON text to parse.
+            code (str): Raw JSON text to parse.
 
         Returns:
-            ParserResult wrapping the parsed object, or ``None`` on parse failure.
+            ParserResult | None: ParserResult wrapping the parsed object, or ``None`` on parse failure.
         """
         try:
             tree = json.loads(code)
@@ -93,8 +94,8 @@ class JsonAnalyzer(BaseAnalyzer):
         """Compute a line count for the JSON document; complexity metrics are not applicable.
 
         Args:
-            code: Raw JSON text whose lines are counted.
-            ast_tree: Unused; included for interface compatibility with [`BaseAnalyzer`][BaseAnalyzer].
+            code (str): Raw JSON text whose lines are counted.
+            ast_tree (ParserResult | None): Unused; included for interface compatibility with [`BaseAnalyzer`][BaseAnalyzer].
 
         Returns:
             tuple[CyclomaticSummary | None, float | None, int]: ``(None, None, line_count)``
@@ -115,7 +116,7 @@ class JsonAnalyzer(BaseAnalyzer):
         """Return ``None`` because JSON files have no cross-file dependency semantics.
 
         Args:
-            context: Current analysis context (unused for JSON).
+            context (AnalysisContext): Current analysis context (unused for JSON).
 
         Returns:
             object | None: Always ``None``; JSON documents are self-contained.

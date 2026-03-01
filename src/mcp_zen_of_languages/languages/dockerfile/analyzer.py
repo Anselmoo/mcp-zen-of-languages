@@ -3,18 +3,20 @@
 from __future__ import annotations
 
 import re
+
 from typing import TYPE_CHECKING
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
-    from mcp_zen_of_languages.models import CyclomaticSummary, ParserResult
+    from mcp_zen_of_languages.models import CyclomaticSummary
+    from mcp_zen_of_languages.models import ParserResult
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    AnalyzerCapabilities,
-    AnalyzerConfig,
-    BaseAnalyzer,
-)
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import AnalyzerCapabilities
+from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
+from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
+
 
 _FROM_RE = re.compile(r"^FROM\s+(\S+)", re.IGNORECASE)
 _COPY_FROM_RE = re.compile(r"^COPY\s+--from=(\S+)", re.IGNORECASE)
@@ -28,7 +30,12 @@ class DockerfileAnalyzer(BaseAnalyzer):
         config: AnalyzerConfig | None = None,
         pipeline_config: PipelineConfig | None = None,
     ) -> None:
-        """Initialize the Dockerfile analyzer."""
+        """Initialize the Dockerfile analyzer.
+
+        Args:
+            config (AnalyzerConfig | None, optional): Analyzer configuration overrides. Default to None.
+            pipeline_config (PipelineConfig | None, optional): Custom detection pipeline configuration. Default to None.
+        """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
 
@@ -60,10 +67,10 @@ class DockerfileAnalyzer(BaseAnalyzer):
         """Extract ``FROM`` and ``COPY --from`` references as image dependencies.
 
         Args:
-            context: Current analysis context with Dockerfile source text.
+            context (AnalysisContext): Current analysis context with Dockerfile source text.
 
         Returns:
-            DependencyAnalysis with image dependency edges, or ``None`` when none found.
+            object | None: DependencyAnalysis with image dependency edges, or ``None`` when none found.
         """
         imports: list[str] = []
         for line in context.code.splitlines():

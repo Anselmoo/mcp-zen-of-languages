@@ -95,6 +95,17 @@ extend-ignore = [
 "tests/**/*.py" = ["D", "S101", "INP001", "SLF001", "ARG", "ANN"]
 "scripts/**/*.py" = ["D", "T201", "INP001", "S", "ANN"]
 
+[tool.ruff.lint.isort]
+# Import ordering applied to src/, scripts/, and tests/ via ruff check hook.
+# Enforces: standard library → third-party → first-party (mcp_zen_of_languages)
+# Each category on single lines; blank line between sections.
+known-first-party = ["mcp_zen_of_languages"]
+force-single-line = true
+lines-between-types = 1
+lines-after-imports = 2
+case-sensitive = true
+combine-as-imports = false
+
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
@@ -105,6 +116,8 @@ allowed-unused-imports = []
 quote-style = "double"
 indent-style = "space"
 line-ending = "lf"
+docstring-code-format = true
+docstring-code-line-length = "dynamic"
 
 [tool.interrogate]
 ignore-init-method = true

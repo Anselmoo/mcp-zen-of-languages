@@ -4,16 +4,16 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+
 if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
-    from mcp_zen_of_languages.models import CyclomaticSummary, ParserResult
+    from mcp_zen_of_languages.models import CyclomaticSummary
+    from mcp_zen_of_languages.models import ParserResult
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    AnalyzerConfig,
-    BaseAnalyzer,
-    DetectionPipeline,
-)
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
+from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
+from mcp_zen_of_languages.analyzers.base import DetectionPipeline
 
 
 class LatexAnalyzer(BaseAnalyzer):
@@ -24,7 +24,12 @@ class LatexAnalyzer(BaseAnalyzer):
         config: AnalyzerConfig | None = None,
         pipeline_config: PipelineConfig | None = None,
     ) -> None:
-        """Initialize analyzer with optional global and detector-level overrides."""
+        """Initialize analyzer with optional global and detector-level overrides.
+
+        Args:
+            config (AnalyzerConfig | None, optional): Analyzer configuration overrides. Default to None.
+            pipeline_config (PipelineConfig | None, optional): Custom detection pipeline configuration. Default to None.
+        """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
 

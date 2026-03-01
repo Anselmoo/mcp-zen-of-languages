@@ -3,7 +3,9 @@ from __future__ import annotations
 import ast
 import importlib
 import sys
+
 from pathlib import Path
+
 
 REQUIRED_FILES = {
     "__init__.py",
@@ -79,7 +81,8 @@ def main() -> int:  # noqa: C901, PLR0912, PLR0915
 
     from mcp_zen_of_languages.analyzers import registry_bootstrap  # noqa: F401
     from mcp_zen_of_languages.analyzers.registry import REGISTRY
-    from mcp_zen_of_languages.rules import get_all_languages, get_language_zen
+    from mcp_zen_of_languages.rules import get_all_languages
+    from mcp_zen_of_languages.rules import get_language_zen
     from mcp_zen_of_languages.rules.base_models import get_rule_id_coverage
     from mcp_zen_of_languages.utils.language_detection import EXTENSION_LANGUAGE_MAP
 

@@ -16,14 +16,16 @@ from rich.text import Text
 from mcp_zen_of_languages.models import AnalysisResult
 
 from .console import console
-from .factories import zen_header_panel, zen_panel, zen_summary_table, zen_table
+from .factories import zen_header_panel
+from .factories import zen_panel
+from .factories import zen_summary_table
+from .factories import zen_table
 from .layout import get_output_width
 from .tables import build_violation_table
-from .themes import (
-    file_glyph,
-    score_glyph,
-    severity_badge,
-)
+from .themes import file_glyph
+from .themes import score_glyph
+from .themes import severity_badge
+
 
 if TYPE_CHECKING:
     from rich.console import Console
@@ -41,8 +43,8 @@ def _active_console(output_console: Console | None = None) -> Console:
     to repeat the fallback logic.
 
     Args:
-        output_console: Optional override console; ``None`` means use the
-            module-level singleton.
+        output_console (Console | None, optional): Optional override console; ``None`` means use the
+            module-level singleton. Default to None.
 
     Returns:
         Console: The resolved Rich console instance.
@@ -61,10 +63,10 @@ def render_report_terminal(
     skipped when its data key is absent from the report payload.
 
     Args:
-        report: Structured ``ReportOutput`` whose ``.data`` dict contains
+        report (ReportOutput): Structured ``ReportOutput`` whose ``.data`` dict contains
             ``target``, ``languages``, ``summary``, ``analysis``, ``gaps``,
             and ``prompts`` keys.
-        output_console: Alternate console to write to; defaults to the
+        output_console (Console | None, optional): Alternate console to write to; defaults to the
             module-level ``console`` singleton.
     """
     active_console = _active_console(output_console)
@@ -121,9 +123,9 @@ def _build_summary_table(summary: dict, width: int) -> Table:
     ``zen_summary_table`` for the heavy-bordered, headerless layout.
 
     Args:
-        summary: Dictionary with ``total_files``, ``total_violations``,
+        summary (dict): Dictionary with ``total_files``, ``total_violations``,
             ``severity_counts``, and optional ``score`` keys.
-        width: Column width passed through to the table factory.
+        width (int): Column width passed through to the table factory.
 
     Returns:
         Table: Populated summary table ready for ``console.print()``.
@@ -157,11 +159,11 @@ def _render_result_panel(
     is wrapped in a ``zen_panel`` titled with the file path.
 
     Args:
-        result: Single-file ``AnalysisResult`` containing ``path`` and
+        result (AnalysisResult): Single-file ``AnalysisResult`` containing ``path`` and
             ``violations``.
-        _width: Reserved width parameter kept for call-site compatibility.
+        _width (int): Reserved width parameter kept for call-site compatibility.
             Panel width is derived from ``output_console``.
-        output_console: Console instance to print the panel to.
+        output_console (Console): Console instance to print the panel to.
     """
     title = result.path or "<input>"
     if not result.violations:
@@ -186,9 +188,9 @@ def _build_gap_panel(gaps: dict, width: int) -> Panel:
     both lists are empty.
 
     Args:
-        gaps: Dictionary with ``detector_gaps`` and ``feature_gaps`` lists,
+        gaps (dict): Dictionary with ``detector_gaps`` and ``feature_gaps`` lists,
             each entry being a dict with descriptive keys.
-        width: Column width for the enclosing panel.
+        width (int): Column width for the enclosing panel.
 
     Returns:
         Panel: ``zen_panel``-wrapped table of coverage gaps.
@@ -229,9 +231,9 @@ def _build_prompt_panel(prompts: dict, width: int) -> Panel:
     how much remediation guidance was generated.
 
     Args:
-        prompts: Dictionary with ``file_prompts`` and ``generic_prompts``
+        prompts (dict): Dictionary with ``file_prompts`` and ``generic_prompts``
             lists whose lengths are counted.
-        width: Column width for the enclosing panel.
+        width (int): Column width for the enclosing panel.
 
     Returns:
         Panel: ``zen_panel``-wrapped table of prompt counts.

@@ -2,43 +2,40 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import (
-    DetectorBinding,
-    LanguageDetectorMap,
-)
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
+from mcp_zen_of_languages.languages.bash.detectors import BashArgumentValidationDetector
+from mcp_zen_of_languages.languages.bash.detectors import BashArrayUsageDetector
 from mcp_zen_of_languages.languages.bash.detectors import (
-    BashArgumentValidationDetector,
-    BashArrayUsageDetector,
     BashCommandSubstitutionDetector,
-    BashDoubleBracketsDetector,
-    BashEvalUsageDetector,
-    BashExitCodeChecksDetector,
-    BashFunctionUsageDetector,
-    BashLocalVariablesDetector,
-    BashMeaningfulNamesDetector,
-    BashQuoteVariablesDetector,
-    BashReadonlyConstantsDetector,
-    BashSignalHandlingDetector,
-    BashStrictModeDetector,
-    BashUsageInfoDetector,
 )
-from mcp_zen_of_languages.languages.configs import (
-    Bash006Config,
-    Bash011Config,
-    BashArgumentValidationConfig,
-    BashArrayUsageConfig,
-    BashCommandSubstitutionConfig,
-    BashDoubleBracketsConfig,
-    BashEvalUsageConfig,
-    BashExitCodeConfig,
-    BashLocalVariablesConfig,
-    BashQuoteVariablesConfig,
-    BashReadonlyConstantsConfig,
-    BashSignalHandlingConfig,
-    BashStrictModeConfig,
-    BashUsageInfoConfig,
-)
+from mcp_zen_of_languages.languages.bash.detectors import BashDoubleBracketsDetector
+from mcp_zen_of_languages.languages.bash.detectors import BashEvalUsageDetector
+from mcp_zen_of_languages.languages.bash.detectors import BashExitCodeChecksDetector
+from mcp_zen_of_languages.languages.bash.detectors import BashFunctionUsageDetector
+from mcp_zen_of_languages.languages.bash.detectors import BashLocalVariablesDetector
+from mcp_zen_of_languages.languages.bash.detectors import BashMeaningfulNamesDetector
+from mcp_zen_of_languages.languages.bash.detectors import BashQuoteVariablesDetector
+from mcp_zen_of_languages.languages.bash.detectors import BashReadonlyConstantsDetector
+from mcp_zen_of_languages.languages.bash.detectors import BashSignalHandlingDetector
+from mcp_zen_of_languages.languages.bash.detectors import BashStrictModeDetector
+from mcp_zen_of_languages.languages.bash.detectors import BashUsageInfoDetector
+from mcp_zen_of_languages.languages.configs import Bash006Config
+from mcp_zen_of_languages.languages.configs import Bash011Config
+from mcp_zen_of_languages.languages.configs import BashArgumentValidationConfig
+from mcp_zen_of_languages.languages.configs import BashArrayUsageConfig
+from mcp_zen_of_languages.languages.configs import BashCommandSubstitutionConfig
+from mcp_zen_of_languages.languages.configs import BashDoubleBracketsConfig
+from mcp_zen_of_languages.languages.configs import BashEvalUsageConfig
+from mcp_zen_of_languages.languages.configs import BashExitCodeConfig
+from mcp_zen_of_languages.languages.configs import BashLocalVariablesConfig
+from mcp_zen_of_languages.languages.configs import BashQuoteVariablesConfig
+from mcp_zen_of_languages.languages.configs import BashReadonlyConstantsConfig
+from mcp_zen_of_languages.languages.configs import BashSignalHandlingConfig
+from mcp_zen_of_languages.languages.configs import BashStrictModeConfig
+from mcp_zen_of_languages.languages.configs import BashUsageInfoConfig
+
 
 FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(

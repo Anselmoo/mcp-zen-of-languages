@@ -1,7 +1,10 @@
 from __future__ import annotations
 
-from mcp_zen_of_languages.models import DependencyAnalysis, DependencyCycle, Violation
+from mcp_zen_of_languages.models import DependencyAnalysis
+from mcp_zen_of_languages.models import DependencyCycle
+from mcp_zen_of_languages.models import Violation
 from mcp_zen_of_languages.rules import base_models
+
 
 DEFAULT_SEVERITY = 5
 

@@ -13,19 +13,21 @@ See Also:
 from __future__ import annotations
 
 import re
+
 from typing import TYPE_CHECKING
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
-    from mcp_zen_of_languages.models import CyclomaticSummary, ParserResult
+    from mcp_zen_of_languages.models import CyclomaticSummary
+    from mcp_zen_of_languages.models import ParserResult
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    AnalyzerCapabilities,
-    AnalyzerConfig,
-    BaseAnalyzer,
-    DetectionPipeline,
-)
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import AnalyzerCapabilities
+from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
+from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
+from mcp_zen_of_languages.analyzers.base import DetectionPipeline
+
 
 _REQUIRE_RE = re.compile(r"""^(?:require|require_relative|load)\s+['"](.+?)['"]""")
 
@@ -53,8 +55,8 @@ class RubyAnalyzer(BaseAnalyzer):
         """Initialize instance.
 
         Args:
-            config (AnalyzerConfig | None): Typed detector or analyzer configuration that controls thresholds.
-            pipeline_config ('PipelineConfig' | None): Optional pipeline overrides used to customize detector configuration.
+            config (AnalyzerConfig | None, optional): Typed detector or analyzer configuration that controls thresholds. Default to None.
+            pipeline_config ('PipelineConfig' | None, optional): Optional pipeline overrides used to customize detector configuration. Default to None.
         """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
@@ -87,7 +89,7 @@ class RubyAnalyzer(BaseAnalyzer):
         integrated.  Detectors operate on raw source text instead.
 
         Args:
-            code: Raw Ruby source text to parse.
+            code (str): Raw Ruby source text to parse.
 
         Returns:
             ParserResult | None: Always ``None`` until a Ruby parser is wired in.
@@ -105,8 +107,8 @@ class RubyAnalyzer(BaseAnalyzer):
         maintainability index require a Ruby-aware parser.
 
         Args:
-            code: Ruby source text to measure.
-            ast_tree: Parsed syntax tree, currently unused for Ruby.
+            code (str): Ruby source text to measure.
+            ast_tree (ParserResult | None): Parsed syntax tree, currently unused for Ruby.
 
         Returns:
             tuple[CyclomaticSummary | None, float | None, int]: A three-element
@@ -126,10 +128,10 @@ class RubyAnalyzer(BaseAnalyzer):
         """Extract ``require`` / ``require_relative`` dependencies.
 
         Args:
-            context: Current analysis context with source text and metrics.
+            context (AnalysisContext): Current analysis context with source text and metrics.
 
         Returns:
-            DependencyAnalysis with require edges, or ``None`` when none found.
+            object | None: DependencyAnalysis with require edges, or ``None`` when none found.
         """
         imports: list[str] = []
         for line in context.code.splitlines():

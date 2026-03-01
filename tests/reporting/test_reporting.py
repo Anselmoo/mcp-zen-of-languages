@@ -1,16 +1,12 @@
 from __future__ import annotations
 
-from mcp_zen_of_languages.models import (
-    AnalysisResult,
-    CyclomaticSummary,
-    Metrics,
-    Violation,
-)
+from mcp_zen_of_languages.models import AnalysisResult
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import Metrics
+from mcp_zen_of_languages.models import Violation
 from mcp_zen_of_languages.reporting.gaps import build_gap_analysis
-from mcp_zen_of_languages.reporting.prompts import (
-    GENERIC_PROMPTS_BY_LANGUAGE,
-    build_prompt_bundle,
-)
+from mcp_zen_of_languages.reporting.prompts import GENERIC_PROMPTS_BY_LANGUAGE
+from mcp_zen_of_languages.reporting.prompts import build_prompt_bundle
 from mcp_zen_of_languages.reporting.report import generate_report
 from mcp_zen_of_languages.rules import get_all_languages
 

@@ -2,31 +2,26 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import (
-    DetectorBinding,
-    LanguageDetectorMap,
-)
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
-from mcp_zen_of_languages.languages.configs import (
-    CssColorLiteralConfig,
-    CssGodStylesheetConfig,
-    CssImportChainConfig,
-    CssMagicPixelsConfig,
-    CssMediaQueryScaleConfig,
-    CssSpecificityConfig,
-    CssVendorPrefixConfig,
-    CssZIndexScaleConfig,
-)
-from mcp_zen_of_languages.languages.css.detectors import (
-    CssColorLiteralDetector,
-    CssGodStylesheetDetector,
-    CssImportChainDetector,
-    CssMagicPixelsDetector,
-    CssMediaQueryScaleDetector,
-    CssSpecificityDetector,
-    CssVendorPrefixDetector,
-    CssZIndexScaleDetector,
-)
+from mcp_zen_of_languages.languages.configs import CssColorLiteralConfig
+from mcp_zen_of_languages.languages.configs import CssGodStylesheetConfig
+from mcp_zen_of_languages.languages.configs import CssImportChainConfig
+from mcp_zen_of_languages.languages.configs import CssMagicPixelsConfig
+from mcp_zen_of_languages.languages.configs import CssMediaQueryScaleConfig
+from mcp_zen_of_languages.languages.configs import CssSpecificityConfig
+from mcp_zen_of_languages.languages.configs import CssVendorPrefixConfig
+from mcp_zen_of_languages.languages.configs import CssZIndexScaleConfig
+from mcp_zen_of_languages.languages.css.detectors import CssColorLiteralDetector
+from mcp_zen_of_languages.languages.css.detectors import CssGodStylesheetDetector
+from mcp_zen_of_languages.languages.css.detectors import CssImportChainDetector
+from mcp_zen_of_languages.languages.css.detectors import CssMagicPixelsDetector
+from mcp_zen_of_languages.languages.css.detectors import CssMediaQueryScaleDetector
+from mcp_zen_of_languages.languages.css.detectors import CssSpecificityDetector
+from mcp_zen_of_languages.languages.css.detectors import CssVendorPrefixDetector
+from mcp_zen_of_languages.languages.css.detectors import CssZIndexScaleDetector
+
 
 FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(

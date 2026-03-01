@@ -2,14 +2,19 @@ from __future__ import annotations
 
 import os
 import re
+
 from io import StringIO
 from pathlib import Path
 
 import pytest
-from jinja2 import Environment, StrictUndefined, select_autoescape
+
+from jinja2 import Environment
+from jinja2 import StrictUndefined
+from jinja2 import select_autoescape
 from rich.console import Console
 
-from mcp_zen_of_languages import __version__, cli
+from mcp_zen_of_languages import __version__
+from mcp_zen_of_languages import cli
 from mcp_zen_of_languages.rendering.report import render_report_terminal
 from mcp_zen_of_languages.rendering.themes import ZEN_THEME
 from mcp_zen_of_languages.reporting.prompts import build_prompt_bundle
@@ -17,6 +22,7 @@ from mcp_zen_of_languages.reporting.report import generate_report
 from mcp_zen_of_languages.reporting.terminal import render_prompt_panel
 
 from .visual_utils import assert_balanced_boxes
+
 
 FIXTURE_FILES = [
     "tests/fixtures/clean_file.py",

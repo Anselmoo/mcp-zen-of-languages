@@ -4,13 +4,12 @@ import json
 
 import pytest
 
-from mcp_zen_of_languages.adapters.rules_adapter import RulesAdapter, RulesAdapterConfig
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    AnalyzerConfig,
-    BaseAnalyzer,
-    DetectionPipeline,
-)
+from mcp_zen_of_languages.adapters.rules_adapter import RulesAdapter
+from mcp_zen_of_languages.adapters.rules_adapter import RulesAdapterConfig
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
+from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
+from mcp_zen_of_languages.analyzers.base import DetectionPipeline
 from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
 from mcp_zen_of_languages.analyzers.registry import DetectorRegistry
 from mcp_zen_of_languages.cli import main
@@ -19,7 +18,9 @@ from mcp_zen_of_languages.languages.configs import LineLengthConfig
 from mcp_zen_of_languages.models import CyclomaticSummary
 from mcp_zen_of_languages.reporting.report import generate_report
 from mcp_zen_of_languages.rules import get_principle_by_id
-from mcp_zen_of_languages.rules.base_models import PrincipleCategory, ZenPrinciple
+from mcp_zen_of_languages.rules.base_models import PrincipleCategory
+from mcp_zen_of_languages.rules.base_models import ZenPrinciple
+
 
 EMPTY_VIOLATIONS_SCORE = 100.0
 REPORT_FAILURE_EXIT_CODE = 2

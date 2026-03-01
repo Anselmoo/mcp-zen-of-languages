@@ -33,7 +33,11 @@ See Also:
 import os
 
 import yaml
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import Field
+from pydantic import field_validator
 
 from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
 
@@ -117,14 +121,14 @@ class ConfigModel(BaseModel):
         code never has to guard against ``None``.
 
         Args:
-            value: Untyped data from the YAML parser—expected to be a
-                ``list[dict]``, ``None`` (key absent), or any other type
-                which will raise ``TypeError``.
+            value (list[dict] | None): Untyped data from the YAML
+                parser—expected to be a ``list[dict]``, ``None`` (key
+                absent), or any other type which will raise ``TypeError``.
 
         Returns:
-            Validated list of ``PipelineConfig`` objects ready for
-            pipeline resolution.  Returns an empty list when *value* is
-            ``None``.
+            list[PipelineConfig]: Validated list of ``PipelineConfig``
+            objects ready for pipeline resolution.  Returns an empty list
+            when *value* is ``None``.
 
         Raises:
             TypeError: If *value* is neither ``None`` nor a ``list``.
@@ -158,12 +162,12 @@ class ConfigModel(BaseModel):
         complete detector configuration even with a minimal YAML file.
 
         Args:
-            language: Case-sensitive language identifier (e.g. ``"python"``,
-                ``"typescript"``).
+            language (str): Case-sensitive language identifier (e.g.
+                ``"python"``, ``"typescript"``).
 
         Returns:
-            Fully resolved ``PipelineConfig`` with base detectors and any
-            user overrides merged in.
+            PipelineConfig: Fully resolved ``PipelineConfig`` with base
+            detectors and any user overrides merged in.
 
         See Also:
             ``PipelineConfig.from_rules``: Builds the base pipeline from
@@ -206,13 +210,13 @@ def load_config(path: str | None = None) -> ConfigModel:  # noqa: C901, PLR0912
     language ships with a complete detector configuration.
 
     Args:
-        path: Filesystem path to ``zen-config.yaml``.  Pass ``None``
-            (the default) to activate auto-discovery.
+        path (str | None, optional): Filesystem path to ``zen-config.yaml``.  Pass
+            ``None`` (the default) to activate auto-discovery. Default to None.
 
     Returns:
-        Validated ``ConfigModel`` reflecting the merged configuration.
-        Returns a default ``ConfigModel`` when no config file is found
-        anywhere on the search path.
+        ConfigModel: Validated ``ConfigModel`` reflecting the merged
+        configuration.  Returns a default ``ConfigModel`` when no config
+        file is found anywhere on the search path.
 
     Raises:
         yaml.YAMLError: If the file contains invalid YAML syntax.
@@ -237,20 +241,17 @@ def load_config(path: str | None = None) -> ConfigModel:  # noqa: C901, PLR0912
 
     default = ConfigModel()
 
-    # Auto-discover config if no path provided
     if not path:
         cwd_config = Path.cwd() / "zen-config.yaml"
         if cwd_config.exists():
             path = str(cwd_config)
         else:
-            # Try to find project root by looking for pyproject.toml
             current = Path.cwd()
             for parent in [current, *current.parents]:
                 candidate = parent / "zen-config.yaml"
                 if candidate.exists():
                     path = str(candidate)
                     break
-                # Stop at project root marker
                 if (parent / "pyproject.toml").exists():
                     break
 

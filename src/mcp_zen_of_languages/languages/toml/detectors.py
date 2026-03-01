@@ -5,22 +5,20 @@ from __future__ import annotations
 import itertools
 import re
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    LocationHelperMixin,
-    ViolationDetector,
-)
-from mcp_zen_of_languages.languages.configs import (
-    TomlCommentClarityConfig,
-    TomlDuplicateKeysConfig,
-    TomlFloatIntegerConfig,
-    TomlIsoDatetimeConfig,
-    TomlLowercaseKeysConfig,
-    TomlNoInlineTablesConfig,
-    TomlOrderConfig,
-    TomlTrailingCommasConfig,
-)
-from mcp_zen_of_languages.models import Location, Violation
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import TomlCommentClarityConfig
+from mcp_zen_of_languages.languages.configs import TomlDuplicateKeysConfig
+from mcp_zen_of_languages.languages.configs import TomlFloatIntegerConfig
+from mcp_zen_of_languages.languages.configs import TomlIsoDatetimeConfig
+from mcp_zen_of_languages.languages.configs import TomlLowercaseKeysConfig
+from mcp_zen_of_languages.languages.configs import TomlNoInlineTablesConfig
+from mcp_zen_of_languages.languages.configs import TomlOrderConfig
+from mcp_zen_of_languages.languages.configs import TomlTrailingCommasConfig
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import Violation
+
 
 # Minimum number of table headers needed to check for large inter-table gaps
 MIN_TABLE_HEADERS_FOR_GAP = 2
@@ -58,8 +56,8 @@ class TomlNoInlineTablesDetector(
         """Scan for ``= {`` patterns indicating inline table assignments.
 
         Args:
-            context: Analysis context holding the raw TOML text.
-            config: Inline table thresholds and violation message templates.
+            context (AnalysisContext): Analysis context holding the raw TOML text.
+            config (TomlNoInlineTablesConfig): Inline table thresholds and violation message templates.
 
         Returns:
             list[Violation]: One violation per line containing an inline table.
@@ -106,8 +104,8 @@ class TomlDuplicateKeysDetector(
         """Track seen keys and flag any that appear more than once at the same level.
 
         Args:
-            context: Analysis context holding the raw TOML text.
-            config: Duplicate key thresholds and violation message templates.
+            context (AnalysisContext): Analysis context holding the raw TOML text.
+            config (TomlDuplicateKeysConfig): Duplicate key thresholds and violation message templates.
 
         Returns:
             list[Violation]: One violation per duplicate key occurrence.
@@ -163,8 +161,8 @@ class TomlLowercaseKeysDetector(
         """Scan key assignments and flag any containing uppercase characters.
 
         Args:
-            context: Analysis context holding the raw TOML text.
-            config: Lowercase key thresholds and violation message templates.
+            context (AnalysisContext): Analysis context holding the raw TOML text.
+            config (TomlLowercaseKeysConfig): Lowercase key thresholds and violation message templates.
 
         Returns:
             list[Violation]: One violation per key that contains uppercase letters.
@@ -216,8 +214,8 @@ class TomlTrailingCommasDetector(
         """Search for comma-then-closing-bracket patterns on each line.
 
         Args:
-            context: Analysis context holding the raw TOML text.
-            config: Trailing comma thresholds and violation message templates.
+            context (AnalysisContext): Analysis context holding the raw TOML text.
+            config (TomlTrailingCommasConfig): Trailing comma thresholds and violation message templates.
 
         Returns:
             list[Violation]: One violation per line containing a trailing comma.
@@ -265,8 +263,8 @@ class TomlCommentClarityDetector(
         """Count comment lines and flag the file when fewer than *min_comment_lines* exist.
 
         Args:
-            context: Analysis context holding the raw TOML text.
-            config: Comment clarity thresholds including ``min_comment_lines``.
+            context (AnalysisContext): Analysis context holding the raw TOML text.
+            config (TomlCommentClarityConfig): Comment clarity thresholds including ``min_comment_lines``.
 
         Returns:
             list[Violation]: A single violation when comment coverage is below the threshold.
@@ -313,8 +311,8 @@ class TomlOrderDetector(ViolationDetector[TomlOrderConfig], LocationHelperMixin)
         """Measure line gaps between consecutive ``[table]`` headers and flag large separations.
 
         Args:
-            context: Analysis context holding the raw TOML text.
-            config: Table order thresholds and violation message templates.
+            context (AnalysisContext): Analysis context holding the raw TOML text.
+            config (TomlOrderConfig): Table order thresholds and violation message templates.
 
         Returns:
             list[Violation]: A single violation when any inter-table gap exceeds ten lines.
@@ -368,8 +366,8 @@ class TomlIsoDatetimeDetector(
         """Search quoted string values for non-ISO date patterns like ``MM/DD/YYYY``.
 
         Args:
-            context: Analysis context holding the raw TOML text.
-            config: ISO datetime thresholds and violation message templates.
+            context (AnalysisContext): Analysis context holding the raw TOML text.
+            config (TomlIsoDatetimeConfig): ISO datetime thresholds and violation message templates.
 
         Returns:
             list[Violation]: Violations for the first non-ISO date string found.
@@ -427,8 +425,8 @@ class TomlFloatIntegerDetector(
         """Scan assignments for numeric values matching the ``N.0`` pattern.
 
         Args:
-            context: Analysis context holding the raw TOML text.
-            config: Float/integer thresholds and violation message templates.
+            context (AnalysisContext): Analysis context holding the raw TOML text.
+            config (TomlFloatIntegerConfig): Float/integer thresholds and violation message templates.
 
         Returns:
             list[Violation]: A single violation for the first ``.0`` float found.

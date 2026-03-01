@@ -17,40 +17,40 @@ from __future__ import annotations
 
 import ast
 import re
+
 from typing import TYPE_CHECKING
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    LocationHelperMixin,
-    ViolationDetector,
-)
-from mcp_zen_of_languages.languages.configs import (
-    BareExceptConfig,
-    CircularDependencyConfig,
-    ClassSizeConfig,
-    ComplexOneLinersConfig,
-    ConsistencyConfig,
-    ContextManagerConfig,
-    CyclomaticComplexityConfig,
-    DeepInheritanceConfig,
-    DetectorConfig,
-    DocstringConfig,
-    DuplicateImplementationConfig,
-    ExplicitnessConfig,
-    FeatureEnvyConfig,
-    GodClassConfig,
-    LineLengthConfig,
-    LongFunctionConfig,
-    MagicMethodConfig,
-    MagicNumberConfig,
-    NamespaceConfig,
-    NameStyleConfig,
-    NestingDepthConfig,
-    ShortVariableNamesConfig,
-    SparseCodeConfig,
-    StarImportConfig,
-)
-from mcp_zen_of_languages.models import Location, ParserResult, Violation
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import BareExceptConfig
+from mcp_zen_of_languages.languages.configs import CircularDependencyConfig
+from mcp_zen_of_languages.languages.configs import ClassSizeConfig
+from mcp_zen_of_languages.languages.configs import ComplexOneLinersConfig
+from mcp_zen_of_languages.languages.configs import ConsistencyConfig
+from mcp_zen_of_languages.languages.configs import ContextManagerConfig
+from mcp_zen_of_languages.languages.configs import CyclomaticComplexityConfig
+from mcp_zen_of_languages.languages.configs import DeepInheritanceConfig
+from mcp_zen_of_languages.languages.configs import DetectorConfig
+from mcp_zen_of_languages.languages.configs import DocstringConfig
+from mcp_zen_of_languages.languages.configs import DuplicateImplementationConfig
+from mcp_zen_of_languages.languages.configs import ExplicitnessConfig
+from mcp_zen_of_languages.languages.configs import FeatureEnvyConfig
+from mcp_zen_of_languages.languages.configs import GodClassConfig
+from mcp_zen_of_languages.languages.configs import LineLengthConfig
+from mcp_zen_of_languages.languages.configs import LongFunctionConfig
+from mcp_zen_of_languages.languages.configs import MagicMethodConfig
+from mcp_zen_of_languages.languages.configs import MagicNumberConfig
+from mcp_zen_of_languages.languages.configs import NameStyleConfig
+from mcp_zen_of_languages.languages.configs import NamespaceConfig
+from mcp_zen_of_languages.languages.configs import NestingDepthConfig
+from mcp_zen_of_languages.languages.configs import ShortVariableNamesConfig
+from mcp_zen_of_languages.languages.configs import SparseCodeConfig
+from mcp_zen_of_languages.languages.configs import StarImportConfig
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import ParserResult
+from mcp_zen_of_languages.models import Violation
+
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -66,7 +66,7 @@ def _principle_text(config: DetectorConfig) -> str:
     violation records always carry a meaningful label.
 
     Args:
-        config: Detector configuration to extract the principle label from.
+        config (DetectorConfig): Detector configuration to extract the principle label from.
 
     Returns:
         str: The most descriptive principle label available.
@@ -82,8 +82,8 @@ def _severity_level(config: DetectorConfig, fallback: int = 5) -> int:
     severity rating.
 
     Args:
-        config: Detector configuration potentially carrying an explicit severity.
-        fallback: Default severity returned when the config has no override.
+        config (DetectorConfig): Detector configuration potentially carrying an explicit severity.
+        fallback (int, optional): Default severity returned when the config has no override. Default to 5.
 
     Returns:
         int: Severity level in the range 1 (informational) to 9 (critical).
@@ -104,10 +104,10 @@ def _violation_message(
     substring filter and positional index to pick the best match.
 
     Args:
-        config: Detector configuration carrying the rule's message variants.
-        contains: Optional substring to filter candidate messages before
-            selecting by index.
-        index: Zero-based index into the (possibly filtered) message list.
+        config (DetectorConfig): Detector configuration carrying the rule's message variants.
+        contains (str | None, optional): Optional substring to filter candidate messages before
+            selecting by index. Default to None.
+        index (int, optional): Zero-based index into the (possibly filtered) message list. Default to 0.
 
     Returns:
         str: The resolved violation message text.
@@ -153,8 +153,8 @@ class StarImportDetector(ViolationDetector[StarImportConfig], LocationHelperMixi
         statement.
 
         Args:
-            context: Analysis context carrying the source text to scan.
-            config: Star-import detector thresholds and rule metadata.
+            context (AnalysisContext): Analysis context carrying the source text to scan.
+            config (StarImportConfig): Star-import detector thresholds and rule metadata.
 
         Returns:
             list[Violation]: One violation per wildcard import found.
@@ -221,8 +221,8 @@ class BareExceptDetector(ViolationDetector[BareExceptConfig], LocationHelperMixi
            the next.
 
         Args:
-            context: Analysis context with the source code to inspect.
-            config: Bare-except detector thresholds and rule metadata.
+            context (AnalysisContext): Analysis context with the source code to inspect.
+            config (BareExceptConfig): Bare-except detector thresholds and rule metadata.
 
         Returns:
             list[Violation]: One violation per offending ``except`` clause.
@@ -333,8 +333,8 @@ class MagicNumberDetector(ViolationDetector[MagicNumberConfig], LocationHelperMi
         the developer to the most likely starting point for refactoring.
 
         Args:
-            context: Analysis context carrying the source text.
-            config: Magic-number detector thresholds (``max_magic_numbers``).
+            context (AnalysisContext): Analysis context carrying the source text.
+            config (MagicNumberConfig): Magic-number detector thresholds (``max_magic_numbers``).
 
         Returns:
             list[Violation]: At most one violation when the count exceeds the
@@ -415,8 +415,8 @@ class ComplexOneLinersDetector(
         (comprehension vs. generic one-liner).
 
         Args:
-            context: Analysis context carrying the source text.
-            config: One-liner detector thresholds (``max_for_clauses``,
+            context (AnalysisContext): Analysis context carrying the source text.
+            config (ComplexOneLinersConfig): One-liner detector thresholds (``max_for_clauses``,
                 ``max_line_length``).
 
         Returns:
@@ -498,9 +498,9 @@ class ContextManagerDetector(
         that are already managed by a context manager.
 
         Args:
-            context: Analysis context with source text and (optionally) a
+            context (AnalysisContext): Analysis context with source text and (optionally) a
                 pre-parsed AST.
-            config: Context-manager detector thresholds and rule metadata.
+            config (ContextManagerConfig): Context-manager detector thresholds and rule metadata.
 
         Returns:
             list[Violation]: One violation per ``open()`` call that is not
@@ -594,8 +594,8 @@ class DocstringDetector(ViolationDetector[DocstringConfig], LocationHelperMixin)
         because they typically represent broader public contracts.
 
         Args:
-            context: Analysis context with source text to inspect.
-            config: Docstring detector thresholds and rule metadata.
+            context (AnalysisContext): Analysis context with source text to inspect.
+            config (DocstringConfig): Docstring detector thresholds and rule metadata.
 
         Returns:
             list[Violation]: One violation per undocumented top-level
@@ -682,8 +682,8 @@ class LineLengthDetector(ViolationDetector[LineLengthConfig], LocationHelperMixi
         editors highlight exactly where the overflow begins.
 
         Args:
-            context: Analysis context carrying the source text.
-            config: Line-length detector thresholds (``max_line_length``).
+            context (AnalysisContext): Analysis context carrying the source text.
+            config (LineLengthConfig): Line-length detector thresholds (``max_line_length``).
 
         Returns:
             list[Violation]: One violation per over-long line.
@@ -747,8 +747,8 @@ class ClassSizeDetector(ViolationDetector[ClassSizeConfig], LocationHelperMixin)
         is unavailable or not a stdlib ``ast.AST``.
 
         Args:
-            context: Analysis context with source text and parsed tree.
-            config: Class-size detector thresholds (``max_class_length``).
+            context (AnalysisContext): Analysis context with source text and parsed tree.
+            config (ClassSizeConfig): Class-size detector thresholds (``max_class_length``).
 
         Returns:
             list[Violation]: One violation per oversized class.
@@ -842,8 +842,8 @@ class NameStyleDetector(ViolationDetector[NameStyleConfig], LocationHelperMixin)
         Falls back to ``_heuristic_detect`` when the AST cannot be built.
 
         Args:
-            context: Analysis context with source text and parsed tree.
-            config: Name-style detector thresholds and rule metadata.
+            context (AnalysisContext): Analysis context with source text and parsed tree.
+            config (NameStyleConfig): Name-style detector thresholds and rule metadata.
 
         Returns:
             list[Violation]: One violation per non-conforming name.
@@ -920,7 +920,7 @@ class NameStyleDetector(ViolationDetector[NameStyleConfig], LocationHelperMixin)
         ``a`` and ``b`` independently.
 
         Args:
-            targets: Top-level assignment target nodes from an ``ast.Assign``.
+            targets (Iterable[ast.expr]): Top-level assignment target nodes from an ``ast.Assign``.
 
         Returns:
             Iterable[ast.expr]: Stream of leaf target nodes.
@@ -943,8 +943,8 @@ class NameStyleDetector(ViolationDetector[NameStyleConfig], LocationHelperMixin)
         AST-based path.
 
         Args:
-            context: Analysis context with the (unparseable) source text.
-            config: Name-style detector thresholds and rule metadata.
+            context (AnalysisContext): Analysis context with the (unparseable) source text.
+            config (NameStyleConfig): Name-style detector thresholds and rule metadata.
 
         Returns:
             list[Violation]: Violations found via heuristic matching.
@@ -993,7 +993,7 @@ class NameStyleDetector(ViolationDetector[NameStyleConfig], LocationHelperMixin)
         """Test whether *name* matches the ``_?[a-z][a-z0-9_]*`` snake_case pattern.
 
         Args:
-            name: Identifier string to validate.
+            name (str): Identifier string to validate.
 
         Returns:
             bool: ``True`` when *name* is valid snake_case.
@@ -1043,8 +1043,8 @@ class ShortVariableNamesDetector(
         ``allowed_loop_names`` are skipped.
 
         Args:
-            context: Analysis context with source text and parsed tree.
-            config: Short-name detector thresholds (``min_identifier_length``,
+            context (AnalysisContext): Analysis context with source text and parsed tree.
+            config (ShortVariableNamesConfig): Short-name detector thresholds (``min_identifier_length``,
                 ``allowed_loop_names``).
 
         Returns:
@@ -1127,8 +1127,8 @@ class ShortVariableNamesDetector(
         length check, skipping ``ALL_CAPS`` constants.
 
         Args:
-            context: Analysis context with the (unparseable) source text.
-            config: Short-name detector thresholds.
+            context (AnalysisContext): Analysis context with the (unparseable) source text.
+            config (ShortVariableNamesConfig): Short-name detector thresholds.
 
         Returns:
             list[Violation]: Violations found via heuristic matching.
@@ -1161,7 +1161,7 @@ class ShortVariableNamesDetector(
         is evaluated individually.
 
         Args:
-            targets: Top-level assignment target nodes from an ``ast.Assign``.
+            targets (Iterable[ast.expr]): Top-level assignment target nodes from an ``ast.Assign``.
 
         Returns:
             Iterable[ast.expr]: Stream of leaf target nodes.
@@ -1215,9 +1215,9 @@ class CyclomaticComplexityDetector(
         with severity scaled proportionally to the overshoot.
 
         Args:
-            context: Analysis context with a pre-computed
+            context (AnalysisContext): Analysis context with a pre-computed
                 ``cyclomatic_summary``.
-            config: Cyclomatic-complexity detector thresholds.
+            config (CyclomaticComplexityConfig): Cyclomatic-complexity detector thresholds.
 
         Returns:
             list[Violation]: One violation per over-complex function, plus
@@ -1273,7 +1273,7 @@ class CyclomaticComplexityDetector(
         for ``def `` in the raw source.
 
         Args:
-            context: Analysis context with source text and parsed tree.
+            context (AnalysisContext): Analysis context with source text and parsed tree.
 
         Returns:
             Location: Source location of the first function definition.
@@ -1336,8 +1336,8 @@ class NestingDepthDetector(ViolationDetector[NestingDepthConfig], LocationHelper
         via AST traversal and flags anything beyond depth 1.
 
         Args:
-            context: Analysis context with source text and parsed tree.
-            config: Nesting-depth detector thresholds (``max_nesting_depth``).
+            context (AnalysisContext): Analysis context with source text and parsed tree.
+            config (NestingDepthConfig): Nesting-depth detector thresholds (``max_nesting_depth``).
 
         Returns:
             list[Violation]: Up to two violations — one for general nesting,
@@ -1398,7 +1398,7 @@ class NestingDepthDetector(ViolationDetector[NestingDepthConfig], LocationHelper
         by ``detect_deep_nesting``.
 
         Args:
-            context: Analysis context with the source text to scan.
+            context (AnalysisContext): Analysis context with the source text to scan.
 
         Returns:
             Location: Approximate source location of the deepest nesting.
@@ -1412,7 +1412,7 @@ class NestingDepthDetector(ViolationDetector[NestingDepthConfig], LocationHelper
         and tracking the maximum seen across all branches.
 
         Args:
-            context: Analysis context with source text and parsed tree.
+            context (AnalysisContext): Analysis context with source text and parsed tree.
 
         Returns:
             int: Deepest loop nesting level (0 means no loops).
@@ -1432,8 +1432,8 @@ class NestingDepthDetector(ViolationDetector[NestingDepthConfig], LocationHelper
             """Recurse through AST children, counting loop nesting depth.
 
             Args:
-                node: Current AST node being visited.
-                depth: Accumulated loop nesting depth at this point.
+                node (ast.AST): Current AST node being visited.
+                depth (int): Accumulated loop nesting depth at this point.
 
             Returns:
                 int: Maximum loop depth encountered in this subtree.
@@ -1484,8 +1484,8 @@ class LongFunctionDetector(ViolationDetector[LongFunctionConfig], LocationHelper
         violation pinpointed to its ``def`` statement.
 
         Args:
-            context: Analysis context with source text and parsed tree.
-            config: Long-function detector thresholds (``max_function_length``).
+            context (AnalysisContext): Analysis context with source text and parsed tree.
+            config (LongFunctionConfig): Long-function detector thresholds (``max_function_length``).
 
         Returns:
             list[Violation]: One violation per oversized function.
@@ -1528,8 +1528,8 @@ class LongFunctionDetector(ViolationDetector[LongFunctionConfig], LocationHelper
         the function name in the raw source.
 
         Args:
-            context: Analysis context with source text and parsed tree.
-            func_name: Name of the function to locate.
+            context (AnalysisContext): Analysis context with source text and parsed tree.
+            func_name (str): Name of the function to locate.
 
         Returns:
             Location: Source location of the named function's ``def`` line.
@@ -1590,8 +1590,8 @@ class GodClassDetector(ViolationDetector[GodClassConfig]):
         """Delegate to ``detect_god_classes`` and flag classes that breach thresholds.
 
         Args:
-            context: Analysis context with source text.
-            config: God-class detector thresholds (``max_methods``,
+            context (AnalysisContext): Analysis context with source text.
+            config (GodClassConfig): God-class detector thresholds (``max_methods``,
                 ``max_class_length``).
 
         Returns:
@@ -1660,8 +1660,8 @@ class MagicMethodDetector(ViolationDetector[MagicMethodConfig], LocationHelperMi
         source to guide the developer to the most relevant class.
 
         Args:
-            context: Analysis context with source text.
-            config: Magic-method detector thresholds (``max_magic_methods``).
+            context (AnalysisContext): Analysis context with source text.
+            config (MagicMethodConfig): Magic-method detector thresholds (``max_magic_methods``).
 
         Returns:
             list[Violation]: At most one violation when the count exceeds the
@@ -1726,8 +1726,8 @@ class CircularDependencyDetector(ViolationDetector[CircularDependencyConfig]):
         (single-file mode without repository context).
 
         Args:
-            context: Analysis context with a pre-built dependency graph.
-            config: Circular-dependency detector thresholds and rule metadata.
+            context (AnalysisContext): Analysis context with a pre-built dependency graph.
+            config (CircularDependencyConfig): Circular-dependency detector thresholds and rule metadata.
 
         Returns:
             list[Violation]: One violation per import cycle detected.
@@ -1795,8 +1795,8 @@ class DeepInheritanceDetector(ViolationDetector[DeepInheritanceConfig]):
         returns an empty list in single-file mode.
 
         Args:
-            context: Analysis context with source text and sibling file map.
-            config: Deep-inheritance detector thresholds and rule metadata.
+            context (AnalysisContext): Analysis context with source text and sibling file map.
+            config (DeepInheritanceConfig): Deep-inheritance detector thresholds and rule metadata.
 
         Returns:
             list[Violation]: One violation per inheritance chain exceeding the
@@ -1865,8 +1865,8 @@ class FeatureEnvyDetector(ViolationDetector[FeatureEnvyConfig]):
         reads.
 
         Args:
-            context: Analysis context with source text.
-            config: Feature-envy detector thresholds (``min_occurrences``).
+            context (AnalysisContext): Analysis context with source text.
+            config (FeatureEnvyConfig): Feature-envy detector thresholds (``min_occurrences``).
 
         Returns:
             list[Violation]: One violation per envious method exceeding the
@@ -1936,8 +1936,8 @@ class DuplicateImplementationDetector(ViolationDetector[DuplicateImplementationC
         single-file mode.
 
         Args:
-            context: Analysis context with source text and sibling file map.
-            config: Duplicate-implementation detector thresholds and rule
+            context (AnalysisContext): Analysis context with source text and sibling file map.
+            config (DuplicateImplementationConfig): Duplicate-implementation detector thresholds and rule
                 metadata.
 
         Returns:
@@ -2011,8 +2011,8 @@ class SparseCodeDetector(ViolationDetector[SparseCodeConfig], LocationHelperMixi
         """Flag lines containing more than ``max_statements_per_line`` statements.
 
         Args:
-            context: Analysis context with source text.
-            config: Sparse-code detector thresholds (``max_statements_per_line``).
+            context (AnalysisContext): Analysis context with source text.
+            config (SparseCodeConfig): Sparse-code detector thresholds (``max_statements_per_line``).
 
         Returns:
             list[Violation]: One violation per overly dense line.
@@ -2078,8 +2078,8 @@ class ConsistencyDetector(ViolationDetector[ConsistencyConfig], LocationHelperMi
         inconsistency is inherently module-wide rather than localised.
 
         Args:
-            context: Analysis context with source text.
-            config: Consistency detector thresholds (``max_naming_styles``).
+            context (AnalysisContext): Analysis context with source text.
+            config (ConsistencyConfig): Consistency detector thresholds (``max_naming_styles``).
 
         Returns:
             list[Violation]: At most one violation when the style count
@@ -2151,8 +2151,8 @@ class ExplicitnessDetector(ViolationDetector[ExplicitnessConfig], LocationHelper
         projects to opt out of this check.
 
         Args:
-            context: Analysis context with source text.
-            config: Explicitness detector thresholds (``require_type_hints``).
+            context (AnalysisContext): Analysis context with source text.
+            config (ExplicitnessConfig): Explicitness detector thresholds (``require_type_hints``).
 
         Returns:
             list[Violation]: One violation per function with missing type
@@ -2225,8 +2225,8 @@ class NamespaceUsageDetector(ViolationDetector[NamespaceConfig], LocationHelperM
         count and one for ``__all__`` export count.  Either or both may fire.
 
         Args:
-            context: Analysis context with source text.
-            config: Namespace detector thresholds (``max_top_level_symbols``,
+            context (AnalysisContext): Analysis context with source text.
+            config (NamespaceConfig): Namespace detector thresholds (``max_top_level_symbols``,
                 ``max_exports``).
 
         Returns:

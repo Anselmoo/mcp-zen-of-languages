@@ -2,10 +2,8 @@ from __future__ import annotations
 
 import json
 
-from mcp_zen_of_languages.rules.mapping_export import (
-    build_rule_detector_mapping,
-    export_mapping_json,
-)
+from mcp_zen_of_languages.rules.mapping_export import build_rule_detector_mapping
+from mcp_zen_of_languages.rules.mapping_export import export_mapping_json
 
 
 def test_build_rule_detector_mapping_for_python():

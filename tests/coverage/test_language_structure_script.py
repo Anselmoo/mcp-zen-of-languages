@@ -1,13 +1,13 @@
 import sys
+
 from pathlib import Path
+
 
 repo_root = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(repo_root))
 
-from scripts.check_language_structure import (  # noqa: E402
-    _unexpected_python_modules,
-    main,
-)
+from scripts.check_language_structure import _unexpected_python_modules  # noqa: E402
+from scripts.check_language_structure import main  # noqa: E402
 
 
 def test_check_language_structure_script() -> None:

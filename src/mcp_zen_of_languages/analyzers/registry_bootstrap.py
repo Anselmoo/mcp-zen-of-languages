@@ -19,15 +19,20 @@ populated and ready for projection and pipeline construction.
 
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Any
+from typing import Literal
 
 from pydantic import create_model
 
-from mcp_zen_of_languages.analyzers.registry import REGISTRY, DetectorMetadata
+from mcp_zen_of_languages.analyzers.registry import REGISTRY
+from mcp_zen_of_languages.analyzers.registry import DetectorMetadata
 from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule
-from mcp_zen_of_languages.languages.configs import RULE_CONFIGS, DetectorConfig
+from mcp_zen_of_languages.languages.configs import RULE_CONFIGS
+from mcp_zen_of_languages.languages.configs import DetectorConfig
 from mcp_zen_of_languages.languages.rule_pattern import RulePatternDetector
-from mcp_zen_of_languages.rules import get_all_languages, get_language_zen
+from mcp_zen_of_languages.rules import get_all_languages
+from mcp_zen_of_languages.rules import get_language_zen
+
 
 _RULE_CONFIG_FIELDS: dict[str, list[str]] = {
     "bash-006": ["max_script_length_without_functions"],
@@ -51,10 +56,10 @@ def _rule_class_name(rule_id: str) -> str:
     """Derive a PascalCase config class name from a hyphenated rule ID.
 
     Args:
-        rule_id: Hyphenated rule identifier (e.g. ``"bash-006"``).
+        rule_id (str): Hyphenated rule identifier (e.g. ``"bash-006"``).
 
     Returns:
-        PascalCase name suffixed with ``Config`` (e.g. ``"Bash006Config"``).
+        str: PascalCase name suffixed with ``Config`` (e.g. ``"Bash006Config"``).
 
     Examples:
         >>> _rule_class_name("js-009")
@@ -72,10 +77,10 @@ def _rule_literal(rule_id: str) -> object:
     raw dicts to the correct model class.
 
     Args:
-        rule_id: Rule identifier to embed as a literal value.
+        rule_id (str): Rule identifier to embed as a literal value.
 
     Returns:
-        A ``Literal`` type containing exactly *rule_id*.
+        object: A ``Literal`` type containing exactly *rule_id*.
     """
     return Literal[rule_id]
 
@@ -90,12 +95,12 @@ def _build_rule_configs(rule_ids: list[str]) -> dict[str, type[DetectorConfig]]:
     :data:`_RULE_FIELD_DEFAULTS`.
 
     Args:
-        rule_ids: Rules that need config models — typically those
+        rule_ids (list[str]): Rules that need config models — typically those
             identified as having no registered detector after the
             mapping scan.
 
     Returns:
-        Mapping from rule ID to its config model class, ready for
+        dict[str, type[DetectorConfig]]: Mapping from rule ID to its config model class, ready for
         [`register`][mcp_zen_of_languages.analyzers.registry.DetectorRegistry.register].
     """
     configs: dict[str, type[DetectorConfig]] = {}

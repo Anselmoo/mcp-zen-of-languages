@@ -1,11 +1,9 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.reporting.gaps import build_gap_analysis
-from mcp_zen_of_languages.reporting.report import (
-    _build_repository_imports,
-    _format_gap_markdown,
-    generate_report,
-)
+from mcp_zen_of_languages.reporting.report import _build_repository_imports
+from mcp_zen_of_languages.reporting.report import _format_gap_markdown
+from mcp_zen_of_languages.reporting.report import generate_report
 
 
 def test_build_gap_analysis_unknown_language():

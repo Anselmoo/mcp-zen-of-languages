@@ -3,17 +3,18 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Literal
+
+from typing import TYPE_CHECKING
+from typing import Literal
 
 from mcp_zen_of_languages.analyzers.analyzer_factory import create_analyzer
 from mcp_zen_of_languages.config import load_config
-from mcp_zen_of_languages.models import (
-    AnalysisResult,
-    CyclomaticSummary,
-    Metrics,
-    Violation,
-)
+from mcp_zen_of_languages.models import AnalysisResult
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import Metrics
+from mcp_zen_of_languages.models import Violation
 from mcp_zen_of_languages.utils.language_detection import detect_language_by_extension
+
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -124,7 +125,18 @@ def analyze_targets(  # noqa: C901, PLR0912, PLR0913, PLR0915
     enable_external_tools: bool = False,
     allow_temporary_tools: bool = False,
 ) -> list[AnalysisResult]:
-    """Analyze targets grouped by language using the analyzer factory."""
+    """Analyze targets grouped by language using the analyzer factory.
+
+    Args:
+        targets (list[tuple[Path, str]]): File-path / language pairs to analyse.
+        config_path (str | None, optional): Custom ``zen-config.yaml`` path, or ``None`` for auto-discovery. Default to None.
+        pipeline_resolver (Callable[[str], PipelineConfig] | None, optional): Callable returning pipeline config per language. Default to None.
+        unsupported_language (Literal['skip', 'placeholder'], optional): Strategy for unsupported languages. Default to "skip".
+        include_read_errors (bool, optional): Include file read errors in results. Default to False.
+        progress_callback (Callable[[], None] | None, optional): Called after each file is analysed. Default to None.
+        enable_external_tools (bool, optional): Opt-in execution of external linters. Default to False.
+        allow_temporary_tools (bool, optional): Allow temporary tool runners (e.g. npx/uvx). Default to False.
+    """
     config = load_config(config_path)
     results: list[AnalysisResult] = []
     files_by_language: dict[str, list[Path]] = {}

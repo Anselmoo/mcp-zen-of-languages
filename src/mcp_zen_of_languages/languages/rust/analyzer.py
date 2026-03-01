@@ -3,19 +3,21 @@
 from __future__ import annotations
 
 import re
+
 from typing import TYPE_CHECKING
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
-    from mcp_zen_of_languages.models import CyclomaticSummary, ParserResult
+    from mcp_zen_of_languages.models import CyclomaticSummary
+    from mcp_zen_of_languages.models import ParserResult
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    AnalyzerCapabilities,
-    AnalyzerConfig,
-    BaseAnalyzer,
-    DetectionPipeline,
-)
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import AnalyzerCapabilities
+from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
+from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
+from mcp_zen_of_languages.analyzers.base import DetectionPipeline
+
 
 _USE_RE = re.compile(r"^use\s+([\w:]+)")
 _MOD_RE = re.compile(r"^mod\s+(\w+)\s*;")
@@ -49,8 +51,8 @@ class RustAnalyzer(BaseAnalyzer):
         """Initialize instance.
 
         Args:
-            config (AnalyzerConfig | None): Typed detector or analyzer configuration that controls thresholds.
-            pipeline_config ('PipelineConfig' | None): Optional pipeline overrides used to customize detector configuration.
+            config (AnalyzerConfig | None, optional): Typed detector or analyzer configuration that controls thresholds. Default to None.
+            pipeline_config ('PipelineConfig' | None, optional): Optional pipeline overrides used to customize detector configuration. Default to None.
         """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
@@ -114,10 +116,10 @@ class RustAnalyzer(BaseAnalyzer):
         """Extract ``use``, ``mod``, and ``extern crate`` dependencies.
 
         Args:
-            context: Analysis context containing source text and intermediate metrics.
+            context (AnalysisContext): Analysis context containing source text and intermediate metrics.
 
         Returns:
-            DependencyAnalysis with import edges, or ``None`` when no dependencies found.
+            object | None: DependencyAnalysis with import edges, or ``None`` when no dependencies found.
         """
         imports: list[str] = []
         for line in context.code.splitlines():

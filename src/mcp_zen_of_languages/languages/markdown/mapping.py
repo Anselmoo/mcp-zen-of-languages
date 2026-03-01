@@ -2,29 +2,34 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import (
-    DetectorBinding,
-    LanguageDetectorMap,
-)
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
-from mcp_zen_of_languages.languages.configs import (
-    MarkdownAltTextConfig,
-    MarkdownBareUrlConfig,
-    MarkdownCodeFenceLanguageConfig,
-    MarkdownFrontMatterConfig,
-    MarkdownHeadingHierarchyConfig,
-    MarkdownMdxImportHygieneConfig,
-    MarkdownMdxNamedDefaultExportConfig,
+from mcp_zen_of_languages.languages.configs import MarkdownAltTextConfig
+from mcp_zen_of_languages.languages.configs import MarkdownBareUrlConfig
+from mcp_zen_of_languages.languages.configs import MarkdownCodeFenceLanguageConfig
+from mcp_zen_of_languages.languages.configs import MarkdownFrontMatterConfig
+from mcp_zen_of_languages.languages.configs import MarkdownHeadingHierarchyConfig
+from mcp_zen_of_languages.languages.configs import MarkdownMdxImportHygieneConfig
+from mcp_zen_of_languages.languages.configs import MarkdownMdxNamedDefaultExportConfig
+from mcp_zen_of_languages.languages.markdown.detectors import MarkdownAltTextDetector
+from mcp_zen_of_languages.languages.markdown.detectors import MarkdownBareUrlDetector
+from mcp_zen_of_languages.languages.markdown.detectors import (
+    MarkdownCodeFenceLanguageDetector,
 )
 from mcp_zen_of_languages.languages.markdown.detectors import (
-    MarkdownAltTextDetector,
-    MarkdownBareUrlDetector,
-    MarkdownCodeFenceLanguageDetector,
     MarkdownFrontMatterDetector,
+)
+from mcp_zen_of_languages.languages.markdown.detectors import (
     MarkdownHeadingHierarchyDetector,
+)
+from mcp_zen_of_languages.languages.markdown.detectors import (
     MarkdownMdxImportHygieneDetector,
+)
+from mcp_zen_of_languages.languages.markdown.detectors import (
     MarkdownMdxNamedDefaultExportDetector,
 )
+
 
 FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(

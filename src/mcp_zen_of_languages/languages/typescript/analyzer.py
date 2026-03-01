@@ -3,20 +3,22 @@
 from __future__ import annotations
 
 import re
+
 from typing import TYPE_CHECKING
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
-    from mcp_zen_of_languages.models import CyclomaticSummary, ParserResult
+    from mcp_zen_of_languages.models import CyclomaticSummary
+    from mcp_zen_of_languages.models import ParserResult
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    AnalyzerCapabilities,
-    AnalyzerConfig,
-    BaseAnalyzer,
-    DetectionPipeline,
-    TypeScriptAnalyzerConfig,
-)
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import AnalyzerCapabilities
+from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
+from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
+from mcp_zen_of_languages.analyzers.base import DetectionPipeline
+from mcp_zen_of_languages.analyzers.base import TypeScriptAnalyzerConfig
+
 
 _IMPORT_RE = re.compile(
     r"""(?:import\s+(?:type\s+)?.*?\s+from\s+['"](.+?)['"]"""
@@ -52,8 +54,8 @@ class TypeScriptAnalyzer(BaseAnalyzer):
         """Initialize instance.
 
         Args:
-            config (AnalyzerConfig | None): Typed detector or analyzer configuration that controls thresholds.
-            pipeline_config ('PipelineConfig' | None): Optional pipeline overrides used to customize detector configuration.
+            config (AnalyzerConfig | None, optional): Typed detector or analyzer configuration that controls thresholds. Default to None.
+            pipeline_config ('PipelineConfig' | None, optional): Optional pipeline overrides used to customize detector configuration. Default to None.
         """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
@@ -118,10 +120,10 @@ class TypeScriptAnalyzer(BaseAnalyzer):
         """Extract ``import``/``require`` dependencies and build an import graph.
 
         Args:
-            context: Analysis context containing source text and intermediate metrics.
+            context (AnalysisContext): Analysis context containing source text and intermediate metrics.
 
         Returns:
-            DependencyAnalysis with import edges, or ``None`` when no imports found.
+            object | None: DependencyAnalysis with import edges, or ``None`` when no imports found.
         """
         imports: list[str] = []
         for line in context.code.splitlines():

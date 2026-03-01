@@ -2,49 +2,44 @@ from __future__ import annotations
 
 import pytest
 
-from mcp_zen_of_languages.adapters.rules_adapter import RulesAdapter, RulesAdapterConfig
+from mcp_zen_of_languages.adapters.rules_adapter import RulesAdapter
+from mcp_zen_of_languages.adapters.rules_adapter import RulesAdapterConfig
 from mcp_zen_of_languages.analyzers.analyzer_factory import create_analyzer
-from mcp_zen_of_languages.analyzers.base import AnalysisContext, AnalyzerConfig
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
 from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
-from mcp_zen_of_languages.analyzers.registry import DetectorMetadata, DetectorRegistry
-from mcp_zen_of_languages.config import ConfigModel, load_config
+from mcp_zen_of_languages.analyzers.registry import DetectorMetadata
+from mcp_zen_of_languages.analyzers.registry import DetectorRegistry
+from mcp_zen_of_languages.config import ConfigModel
+from mcp_zen_of_languages.config import load_config
 from mcp_zen_of_languages.languages.bash.detectors import BashEvalUsageDetector
-from mcp_zen_of_languages.languages.configs import (
-    BashEvalUsageConfig,
-    ContextManagerConfig,
-    DeepInheritanceConfig,
-    FeatureEnvyConfig,
-    NameStyleConfig,
-    StarImportConfig,
-)
+from mcp_zen_of_languages.languages.configs import BashEvalUsageConfig
+from mcp_zen_of_languages.languages.configs import ContextManagerConfig
+from mcp_zen_of_languages.languages.configs import DeepInheritanceConfig
+from mcp_zen_of_languages.languages.configs import FeatureEnvyConfig
+from mcp_zen_of_languages.languages.configs import NameStyleConfig
+from mcp_zen_of_languages.languages.configs import StarImportConfig
+from mcp_zen_of_languages.languages.python.detectors import ContextManagerDetector
 from mcp_zen_of_languages.languages.python.detectors import (
-    ContextManagerDetector,
     DuplicateImplementationDetector,
-    FeatureEnvyDetector,
-    NameStyleDetector,
-    StarImportDetector,
 )
-from mcp_zen_of_languages.models import (
-    CyclomaticSummary,
-    DependencyAnalysis,
-    DependencyCycle,
-)
+from mcp_zen_of_languages.languages.python.detectors import FeatureEnvyDetector
+from mcp_zen_of_languages.languages.python.detectors import NameStyleDetector
+from mcp_zen_of_languages.languages.python.detectors import StarImportDetector
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import DependencyAnalysis
+from mcp_zen_of_languages.models import DependencyCycle
 from mcp_zen_of_languages.reporting.prompts import build_prompt_bundle
 from mcp_zen_of_languages.rules import get_principle_by_id
-from mcp_zen_of_languages.rules.base_models import PrincipleCategory, ZenPrinciple
-from mcp_zen_of_languages.rules.tools.detections import (
-    detect_deep_inheritance,
-    detect_dependency_cycles,
-)
-from mcp_zen_of_languages.utils.language_detection import (
-    DetectionResult,
-    detect_language_by_extension,
-    detect_language_from_content,
-)
-from mcp_zen_of_languages.utils.parsers import (
-    parse_python_with_builtin_ast,
-    parse_python_with_treesitter,
-)
+from mcp_zen_of_languages.rules.base_models import PrincipleCategory
+from mcp_zen_of_languages.rules.base_models import ZenPrinciple
+from mcp_zen_of_languages.rules.tools.detections import detect_deep_inheritance
+from mcp_zen_of_languages.rules.tools.detections import detect_dependency_cycles
+from mcp_zen_of_languages.utils.language_detection import DetectionResult
+from mcp_zen_of_languages.utils.language_detection import detect_language_by_extension
+from mcp_zen_of_languages.utils.language_detection import detect_language_from_content
+from mcp_zen_of_languages.utils.parsers import parse_python_with_builtin_ast
+from mcp_zen_of_languages.utils.parsers import parse_python_with_treesitter
 
 
 def test_rules_adapter_dependency_edges_and_thresholds():

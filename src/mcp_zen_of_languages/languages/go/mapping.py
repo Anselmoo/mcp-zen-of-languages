@@ -2,39 +2,34 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import (
-    DetectorBinding,
-    LanguageDetectorMap,
-)
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
-from mcp_zen_of_languages.languages.configs import (
-    GoContextUsageConfig,
-    GoDeferUsageConfig,
-    GoErrorHandlingConfig,
-    GoGoroutineLeakConfig,
-    GoInitUsageConfig,
-    GoInterfacePointerConfig,
-    GoInterfaceReturnConfig,
-    GoInterfaceSizeConfig,
-    GoNamingConventionConfig,
-    GoPackageNamingConfig,
-    GoPackageStateConfig,
-    GoZeroValueConfig,
-)
-from mcp_zen_of_languages.languages.go.detectors import (
-    GoContextUsageDetector,
-    GoDeferUsageDetector,
-    GoErrorHandlingDetector,
-    GoGoroutineLeakDetector,
-    GoInitUsageDetector,
-    GoInterfacePointerDetector,
-    GoInterfaceReturnDetector,
-    GoInterfaceSizeDetector,
-    GoNamingConventionDetector,
-    GoPackageNamingDetector,
-    GoPackageStateDetector,
-    GoZeroValueDetector,
-)
+from mcp_zen_of_languages.languages.configs import GoContextUsageConfig
+from mcp_zen_of_languages.languages.configs import GoDeferUsageConfig
+from mcp_zen_of_languages.languages.configs import GoErrorHandlingConfig
+from mcp_zen_of_languages.languages.configs import GoGoroutineLeakConfig
+from mcp_zen_of_languages.languages.configs import GoInitUsageConfig
+from mcp_zen_of_languages.languages.configs import GoInterfacePointerConfig
+from mcp_zen_of_languages.languages.configs import GoInterfaceReturnConfig
+from mcp_zen_of_languages.languages.configs import GoInterfaceSizeConfig
+from mcp_zen_of_languages.languages.configs import GoNamingConventionConfig
+from mcp_zen_of_languages.languages.configs import GoPackageNamingConfig
+from mcp_zen_of_languages.languages.configs import GoPackageStateConfig
+from mcp_zen_of_languages.languages.configs import GoZeroValueConfig
+from mcp_zen_of_languages.languages.go.detectors import GoContextUsageDetector
+from mcp_zen_of_languages.languages.go.detectors import GoDeferUsageDetector
+from mcp_zen_of_languages.languages.go.detectors import GoErrorHandlingDetector
+from mcp_zen_of_languages.languages.go.detectors import GoGoroutineLeakDetector
+from mcp_zen_of_languages.languages.go.detectors import GoInitUsageDetector
+from mcp_zen_of_languages.languages.go.detectors import GoInterfacePointerDetector
+from mcp_zen_of_languages.languages.go.detectors import GoInterfaceReturnDetector
+from mcp_zen_of_languages.languages.go.detectors import GoInterfaceSizeDetector
+from mcp_zen_of_languages.languages.go.detectors import GoNamingConventionDetector
+from mcp_zen_of_languages.languages.go.detectors import GoPackageNamingDetector
+from mcp_zen_of_languages.languages.go.detectors import GoPackageStateDetector
+from mcp_zen_of_languages.languages.go.detectors import GoZeroValueDetector
+
 
 FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(

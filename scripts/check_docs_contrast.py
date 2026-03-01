@@ -8,14 +8,19 @@ import os
 import subprocess
 import sys
 import threading
+
 from contextlib import contextmanager
 from dataclasses import dataclass
 from functools import partial
-from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from http.server import SimpleHTTPRequestHandler
+from http.server import ThreadingHTTPServer
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
+from typing import Any
 
-from playwright.sync_api import Page, sync_playwright
+from playwright.sync_api import Page
+from playwright.sync_api import sync_playwright
+
 
 if TYPE_CHECKING:
     from collections.abc import Iterator

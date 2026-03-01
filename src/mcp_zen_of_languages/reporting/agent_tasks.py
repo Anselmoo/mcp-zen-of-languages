@@ -21,15 +21,17 @@ See Also:
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, TypedDict
+from typing import TYPE_CHECKING
+from typing import Literal
+from typing import TypedDict
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
+from pydantic import Field
 
 from mcp_zen_of_languages.reporting.remediation_patterns import resolve_pattern
-from mcp_zen_of_languages.reporting.theme_clustering import (
-    build_big_picture_analysis,
-    classify_violation,
-)
+from mcp_zen_of_languages.reporting.theme_clustering import build_big_picture_analysis
+from mcp_zen_of_languages.reporting.theme_clustering import classify_violation
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.models import AnalysisResult
@@ -131,9 +133,9 @@ def build_agent_tasks(
     each task depends on the preceding task in its theme.
 
     Args:
-        results: Analysis results containing the violations to convert.
-        project: Label identifying the project in output headers.
-        min_severity: Violations below this severity are excluded.
+        results (list[AnalysisResult]): Analysis results containing the violations to convert.
+        project (str, optional): Label identifying the project in output headers. Default to ".".
+        min_severity (int, optional): Violations below this severity are excluded. Default to 1.
 
     Returns:
         AgentTaskList: Sorted tasks with clusters, health score, and roadmap.

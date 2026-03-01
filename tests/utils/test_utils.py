@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.models import Violation
-from mcp_zen_of_languages.utils.language_detection import (
-    detect_language_by_extension,
-    detect_language_from_content,
-)
+from mcp_zen_of_languages.utils.language_detection import detect_language_by_extension
+from mcp_zen_of_languages.utils.language_detection import detect_language_from_content
 from mcp_zen_of_languages.utils.metric import calculate_code_quality_score
+
 
 SINGLE_CRITICAL_VIOLATION_SCORE = 80.0
 EMPTY_VIOLATIONS_SCORE = 100.0

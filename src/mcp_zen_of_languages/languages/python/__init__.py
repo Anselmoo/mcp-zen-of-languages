@@ -3,4 +3,5 @@
 from .analyzer import PythonAnalyzer
 from .rules import PYTHON_ZEN
 
+
 __all__ = ["PYTHON_ZEN", "PythonAnalyzer"]

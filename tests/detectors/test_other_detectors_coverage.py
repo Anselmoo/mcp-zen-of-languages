@@ -1,120 +1,118 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.languages.bash.detectors import BashArgumentValidationDetector
+from mcp_zen_of_languages.languages.bash.detectors import BashArrayUsageDetector
 from mcp_zen_of_languages.languages.bash.detectors import (
-    BashArgumentValidationDetector,
-    BashArrayUsageDetector,
     BashCommandSubstitutionDetector,
-    BashDoubleBracketsDetector,
-    BashExitCodeChecksDetector,
-    BashFunctionUsageDetector,
-    BashLocalVariablesDetector,
-    BashMeaningfulNamesDetector,
-    BashQuoteVariablesDetector,
-    BashReadonlyConstantsDetector,
-    BashSignalHandlingDetector,
-    BashStrictModeDetector,
-    BashUsageInfoDetector,
 )
-from mcp_zen_of_languages.languages.configs import (
-    Bash006Config,
-    Bash011Config,
-    BashArgumentValidationConfig,
-    BashArrayUsageConfig,
-    BashCommandSubstitutionConfig,
-    BashDoubleBracketsConfig,
-    BashExitCodeConfig,
-    BashLocalVariablesConfig,
-    BashQuoteVariablesConfig,
-    BashReadonlyConstantsConfig,
-    BashSignalHandlingConfig,
-    BashStrictModeConfig,
-    BashUsageInfoConfig,
-    CppNullptrConfig,
-    CppSmartPointerConfig,
-    CSharpAsyncAwaitConfig,
-    CSharpStringInterpolationConfig,
-    GoContextUsageConfig,
-    GoDeferUsageConfig,
-    GoErrorHandlingConfig,
-    GoInterfaceSizeConfig,
-    GoNamingConventionConfig,
-    JsAsyncErrorHandlingConfig,
-    JsCallbackNestingConfig,
-    JsFunctionLengthConfig,
-    JsNoVarConfig,
-    JsStrictEqualityConfig,
-    PowerShellApprovedVerbConfig,
-    PowerShellErrorHandlingConfig,
-    PowerShellPascalCaseConfig,
-    RubyMethodChainConfig,
-    RubyNamingConventionConfig,
-    RustCloneOverheadConfig,
-    RustErrorHandlingConfig,
-    RustTypeSafetyConfig,
-    RustUnsafeBlocksConfig,
-    RustUnwrapUsageConfig,
-    TsAnyUsageConfig,
-    TsEnumConstConfig,
-    TsInterfacePreferenceConfig,
-    TsNonNullAssertionConfig,
-    TsReadonlyConfig,
-    TsReturnTypeConfig,
-    TsStrictModeConfig,
-    TsTypeGuardConfig,
-    TsUnknownOverAnyConfig,
-    TsUtilityTypesConfig,
-)
-from mcp_zen_of_languages.languages.cpp.detectors import (
-    CppNullptrDetector,
-    CppSmartPointerDetector,
-)
+from mcp_zen_of_languages.languages.bash.detectors import BashDoubleBracketsDetector
+from mcp_zen_of_languages.languages.bash.detectors import BashExitCodeChecksDetector
+from mcp_zen_of_languages.languages.bash.detectors import BashFunctionUsageDetector
+from mcp_zen_of_languages.languages.bash.detectors import BashLocalVariablesDetector
+from mcp_zen_of_languages.languages.bash.detectors import BashMeaningfulNamesDetector
+from mcp_zen_of_languages.languages.bash.detectors import BashQuoteVariablesDetector
+from mcp_zen_of_languages.languages.bash.detectors import BashReadonlyConstantsDetector
+from mcp_zen_of_languages.languages.bash.detectors import BashSignalHandlingDetector
+from mcp_zen_of_languages.languages.bash.detectors import BashStrictModeDetector
+from mcp_zen_of_languages.languages.bash.detectors import BashUsageInfoDetector
+from mcp_zen_of_languages.languages.configs import Bash006Config
+from mcp_zen_of_languages.languages.configs import Bash011Config
+from mcp_zen_of_languages.languages.configs import BashArgumentValidationConfig
+from mcp_zen_of_languages.languages.configs import BashArrayUsageConfig
+from mcp_zen_of_languages.languages.configs import BashCommandSubstitutionConfig
+from mcp_zen_of_languages.languages.configs import BashDoubleBracketsConfig
+from mcp_zen_of_languages.languages.configs import BashExitCodeConfig
+from mcp_zen_of_languages.languages.configs import BashLocalVariablesConfig
+from mcp_zen_of_languages.languages.configs import BashQuoteVariablesConfig
+from mcp_zen_of_languages.languages.configs import BashReadonlyConstantsConfig
+from mcp_zen_of_languages.languages.configs import BashSignalHandlingConfig
+from mcp_zen_of_languages.languages.configs import BashStrictModeConfig
+from mcp_zen_of_languages.languages.configs import BashUsageInfoConfig
+from mcp_zen_of_languages.languages.configs import CSharpAsyncAwaitConfig
+from mcp_zen_of_languages.languages.configs import CSharpStringInterpolationConfig
+from mcp_zen_of_languages.languages.configs import CppNullptrConfig
+from mcp_zen_of_languages.languages.configs import CppSmartPointerConfig
+from mcp_zen_of_languages.languages.configs import GoContextUsageConfig
+from mcp_zen_of_languages.languages.configs import GoDeferUsageConfig
+from mcp_zen_of_languages.languages.configs import GoErrorHandlingConfig
+from mcp_zen_of_languages.languages.configs import GoInterfaceSizeConfig
+from mcp_zen_of_languages.languages.configs import GoNamingConventionConfig
+from mcp_zen_of_languages.languages.configs import JsAsyncErrorHandlingConfig
+from mcp_zen_of_languages.languages.configs import JsCallbackNestingConfig
+from mcp_zen_of_languages.languages.configs import JsFunctionLengthConfig
+from mcp_zen_of_languages.languages.configs import JsNoVarConfig
+from mcp_zen_of_languages.languages.configs import JsStrictEqualityConfig
+from mcp_zen_of_languages.languages.configs import PowerShellApprovedVerbConfig
+from mcp_zen_of_languages.languages.configs import PowerShellErrorHandlingConfig
+from mcp_zen_of_languages.languages.configs import PowerShellPascalCaseConfig
+from mcp_zen_of_languages.languages.configs import RubyMethodChainConfig
+from mcp_zen_of_languages.languages.configs import RubyNamingConventionConfig
+from mcp_zen_of_languages.languages.configs import RustCloneOverheadConfig
+from mcp_zen_of_languages.languages.configs import RustErrorHandlingConfig
+from mcp_zen_of_languages.languages.configs import RustTypeSafetyConfig
+from mcp_zen_of_languages.languages.configs import RustUnsafeBlocksConfig
+from mcp_zen_of_languages.languages.configs import RustUnwrapUsageConfig
+from mcp_zen_of_languages.languages.configs import TsAnyUsageConfig
+from mcp_zen_of_languages.languages.configs import TsEnumConstConfig
+from mcp_zen_of_languages.languages.configs import TsInterfacePreferenceConfig
+from mcp_zen_of_languages.languages.configs import TsNonNullAssertionConfig
+from mcp_zen_of_languages.languages.configs import TsReadonlyConfig
+from mcp_zen_of_languages.languages.configs import TsReturnTypeConfig
+from mcp_zen_of_languages.languages.configs import TsStrictModeConfig
+from mcp_zen_of_languages.languages.configs import TsTypeGuardConfig
+from mcp_zen_of_languages.languages.configs import TsUnknownOverAnyConfig
+from mcp_zen_of_languages.languages.configs import TsUtilityTypesConfig
+from mcp_zen_of_languages.languages.cpp.detectors import CppNullptrDetector
+from mcp_zen_of_languages.languages.cpp.detectors import CppSmartPointerDetector
+from mcp_zen_of_languages.languages.csharp.detectors import CSharpAsyncAwaitDetector
 from mcp_zen_of_languages.languages.csharp.detectors import (
-    CSharpAsyncAwaitDetector,
     CSharpStringInterpolationDetector,
 )
-from mcp_zen_of_languages.languages.go.detectors import (
-    GoContextUsageDetector,
-    GoDeferUsageDetector,
-    GoErrorHandlingDetector,
-    GoInterfaceSizeDetector,
-    GoNamingConventionDetector,
-)
+from mcp_zen_of_languages.languages.go.detectors import GoContextUsageDetector
+from mcp_zen_of_languages.languages.go.detectors import GoDeferUsageDetector
+from mcp_zen_of_languages.languages.go.detectors import GoErrorHandlingDetector
+from mcp_zen_of_languages.languages.go.detectors import GoInterfaceSizeDetector
+from mcp_zen_of_languages.languages.go.detectors import GoNamingConventionDetector
 from mcp_zen_of_languages.languages.javascript.detectors import (
     JsAsyncErrorHandlingDetector,
-    JsCallbackNestingDetector,
-    JsFunctionLengthDetector,
-    JsNoVarDetector,
-    JsStrictEqualityDetector,
 )
+from mcp_zen_of_languages.languages.javascript.detectors import (
+    JsCallbackNestingDetector,
+)
+from mcp_zen_of_languages.languages.javascript.detectors import JsFunctionLengthDetector
+from mcp_zen_of_languages.languages.javascript.detectors import JsNoVarDetector
+from mcp_zen_of_languages.languages.javascript.detectors import JsStrictEqualityDetector
 from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellApprovedVerbDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellErrorHandlingDetector,
+)
+from mcp_zen_of_languages.languages.powershell.detectors import (
     PowerShellPascalCaseDetector,
 )
-from mcp_zen_of_languages.languages.ruby.detectors import (
-    RubyMethodChainDetector,
-    RubyNamingConventionDetector,
-)
-from mcp_zen_of_languages.languages.rust.detectors import (
-    RustCloneOverheadDetector,
-    RustErrorHandlingDetector,
-    RustTypeSafetyDetector,
-    RustUnsafeBlocksDetector,
-    RustUnwrapUsageDetector,
+from mcp_zen_of_languages.languages.ruby.detectors import RubyMethodChainDetector
+from mcp_zen_of_languages.languages.ruby.detectors import RubyNamingConventionDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustCloneOverheadDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustErrorHandlingDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustTypeSafetyDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustUnsafeBlocksDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustUnwrapUsageDetector
+from mcp_zen_of_languages.languages.typescript.detectors import TsAnyUsageDetector
+from mcp_zen_of_languages.languages.typescript.detectors import TsEnumConstDetector
+from mcp_zen_of_languages.languages.typescript.detectors import (
+    TsInterfacePreferenceDetector,
 )
 from mcp_zen_of_languages.languages.typescript.detectors import (
-    TsAnyUsageDetector,
-    TsEnumConstDetector,
-    TsInterfacePreferenceDetector,
     TsNonNullAssertionDetector,
-    TsReadonlyDetector,
-    TsReturnTypeDetector,
-    TsStrictModeDetector,
-    TsTypeGuardDetector,
-    TsUnknownOverAnyDetector,
-    TsUtilityTypesDetector,
 )
+from mcp_zen_of_languages.languages.typescript.detectors import TsReadonlyDetector
+from mcp_zen_of_languages.languages.typescript.detectors import TsReturnTypeDetector
+from mcp_zen_of_languages.languages.typescript.detectors import TsStrictModeDetector
+from mcp_zen_of_languages.languages.typescript.detectors import TsTypeGuardDetector
+from mcp_zen_of_languages.languages.typescript.detectors import TsUnknownOverAnyDetector
+from mcp_zen_of_languages.languages.typescript.detectors import TsUtilityTypesDetector
 
 
 def test_other_language_detectors_cover_paths():  # noqa: PLR0915

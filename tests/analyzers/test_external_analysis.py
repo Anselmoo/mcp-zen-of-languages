@@ -2,17 +2,13 @@ from __future__ import annotations
 
 from typing import ClassVar
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    AnalyzerConfig,
-    BaseAnalyzer,
-)
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
+from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
 from mcp_zen_of_languages.models import CyclomaticSummary
-from mcp_zen_of_languages.utils.subprocess_runner import (
-    SubprocessResult,
-    SubprocessToolRunner,
-    ToolResolution,
-)
+from mcp_zen_of_languages.utils.subprocess_runner import SubprocessResult
+from mcp_zen_of_languages.utils.subprocess_runner import SubprocessToolRunner
+from mcp_zen_of_languages.utils.subprocess_runner import ToolResolution
 
 
 class _ExternalDummyAnalyzer(BaseAnalyzer):

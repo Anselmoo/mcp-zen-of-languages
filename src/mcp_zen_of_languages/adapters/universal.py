@@ -4,10 +4,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from mcp_zen_of_languages.analyzers.analyzer_factory import (
-    create_analyzer,
-    supported_languages,
-)
+from mcp_zen_of_languages.analyzers.analyzer_factory import create_analyzer
+from mcp_zen_of_languages.analyzers.analyzer_factory import supported_languages
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.core.detector import LanguageAdapter
@@ -22,7 +21,12 @@ class AnalyzerFactoryAdapter:
         self.language = language
 
     def analyze(self, code: str, path: str | None = None) -> AnalysisResult:
-        """Analyze code with the configured language analyzer."""
+        """Analyze code with the configured language analyzer.
+
+        Args:
+            code (str): Source code to analyse.
+            path (str | None, optional): File path being analysed. Default to None.
+        """
         analyzer = create_analyzer(self.language)
         return analyzer.analyze(code, path=path)
 

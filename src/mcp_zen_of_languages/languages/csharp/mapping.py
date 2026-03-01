@@ -2,41 +2,48 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import (
-    DetectorBinding,
-    LanguageDetectorMap,
-)
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
-from mcp_zen_of_languages.languages.configs import (
-    Cs008Config,
-    CSharpAsyncAwaitConfig,
-    CSharpCollectionExpressionConfig,
-    CSharpDisposableConfig,
-    CSharpExceptionHandlingConfig,
-    CSharpExpressionBodiedConfig,
-    CSharpLinqConfig,
-    CSharpMagicNumberConfig,
-    CSharpNullableConfig,
-    CSharpPatternMatchingConfig,
-    CSharpRecordConfig,
-    CSharpStringInterpolationConfig,
-    CSharpVarConfig,
+from mcp_zen_of_languages.languages.configs import CSharpAsyncAwaitConfig
+from mcp_zen_of_languages.languages.configs import CSharpCollectionExpressionConfig
+from mcp_zen_of_languages.languages.configs import CSharpDisposableConfig
+from mcp_zen_of_languages.languages.configs import CSharpExceptionHandlingConfig
+from mcp_zen_of_languages.languages.configs import CSharpExpressionBodiedConfig
+from mcp_zen_of_languages.languages.configs import CSharpLinqConfig
+from mcp_zen_of_languages.languages.configs import CSharpMagicNumberConfig
+from mcp_zen_of_languages.languages.configs import CSharpNullableConfig
+from mcp_zen_of_languages.languages.configs import CSharpPatternMatchingConfig
+from mcp_zen_of_languages.languages.configs import CSharpRecordConfig
+from mcp_zen_of_languages.languages.configs import CSharpStringInterpolationConfig
+from mcp_zen_of_languages.languages.configs import CSharpVarConfig
+from mcp_zen_of_languages.languages.configs import Cs008Config
+from mcp_zen_of_languages.languages.csharp.detectors import CSharpAsyncAwaitDetector
+from mcp_zen_of_languages.languages.csharp.detectors import (
+    CSharpCollectionExpressionDetector,
+)
+from mcp_zen_of_languages.languages.csharp.detectors import CSharpDisposableDetector
+from mcp_zen_of_languages.languages.csharp.detectors import (
+    CSharpExceptionHandlingDetector,
 )
 from mcp_zen_of_languages.languages.csharp.detectors import (
-    CSharpAsyncAwaitDetector,
-    CSharpCollectionExpressionDetector,
-    CSharpDisposableDetector,
-    CSharpExceptionHandlingDetector,
     CSharpExpressionBodiedDetector,
-    CSharpLinqDetector,
-    CSharpMagicNumberDetector,
-    CSharpNamingConventionDetector,
-    CSharpNullableDetector,
-    CSharpPatternMatchingDetector,
-    CSharpRecordDetector,
-    CSharpStringInterpolationDetector,
-    CSharpVarDetector,
 )
+from mcp_zen_of_languages.languages.csharp.detectors import CSharpLinqDetector
+from mcp_zen_of_languages.languages.csharp.detectors import CSharpMagicNumberDetector
+from mcp_zen_of_languages.languages.csharp.detectors import (
+    CSharpNamingConventionDetector,
+)
+from mcp_zen_of_languages.languages.csharp.detectors import CSharpNullableDetector
+from mcp_zen_of_languages.languages.csharp.detectors import (
+    CSharpPatternMatchingDetector,
+)
+from mcp_zen_of_languages.languages.csharp.detectors import CSharpRecordDetector
+from mcp_zen_of_languages.languages.csharp.detectors import (
+    CSharpStringInterpolationDetector,
+)
+from mcp_zen_of_languages.languages.csharp.detectors import CSharpVarDetector
+
 
 FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(

@@ -1,16 +1,20 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
-from mcp_zen_of_languages.languages.configs import (
-    DockerComposeHealthcheckConfig,
-    DockerComposeLatestTagConfig,
-    DockerComposeNonRootUserConfig,
-    DockerComposeSecretHygieneConfig,
-)
+from mcp_zen_of_languages.languages.configs import DockerComposeHealthcheckConfig
+from mcp_zen_of_languages.languages.configs import DockerComposeLatestTagConfig
+from mcp_zen_of_languages.languages.configs import DockerComposeNonRootUserConfig
+from mcp_zen_of_languages.languages.configs import DockerComposeSecretHygieneConfig
 from mcp_zen_of_languages.languages.docker_compose.detectors import (
     DockerComposeHealthcheckDetector,
+)
+from mcp_zen_of_languages.languages.docker_compose.detectors import (
     DockerComposeLatestTagDetector,
+)
+from mcp_zen_of_languages.languages.docker_compose.detectors import (
     DockerComposeNonRootUserDetector,
+)
+from mcp_zen_of_languages.languages.docker_compose.detectors import (
     DockerComposeSecretHygieneDetector,
 )
 

@@ -16,7 +16,9 @@ from rich.table import Table
 
 from .console import console
 from .layout import get_output_width
-from .themes import BOX_CONTENT, BOX_SUMMARY
+from .themes import BOX_CONTENT
+from .themes import BOX_SUMMARY
+
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -32,7 +34,7 @@ def build_project_summary_panel(summary: object) -> Panel:
     key-value layout compact.
 
     Args:
-        summary: Result summary object carrying ``severity_counts``,
+        summary (object): Result summary object carrying ``severity_counts``,
             ``total_files``, and ``total_violations`` attributes.
 
     Returns:
@@ -72,7 +74,7 @@ def build_worst_offenders_panel(offenders: Sequence[object]) -> Panel:
     empty a single "No violations detected" placeholder row is shown.
 
     Args:
-        offenders: Sequence of objects exposing ``path`` and
+        offenders (Sequence[object]): Sequence of objects exposing ``path`` and
             ``violations`` (or ``violation_count``) attributes.
 
     Returns:

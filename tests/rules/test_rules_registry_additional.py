@@ -1,11 +1,9 @@
 from __future__ import annotations
 
-from mcp_zen_of_languages.rules import (
-    PrincipleCategory,
-    get_all_languages,
-    get_all_principles_by_category,
-    get_principle_by_id,
-)
+from mcp_zen_of_languages.rules import PrincipleCategory
+from mcp_zen_of_languages.rules import get_all_languages
+from mcp_zen_of_languages.rules import get_all_principles_by_category
+from mcp_zen_of_languages.rules import get_principle_by_id
 
 
 def test_get_all_languages_includes_python():

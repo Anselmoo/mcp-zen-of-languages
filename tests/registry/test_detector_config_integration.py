@@ -1,10 +1,8 @@
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
 from mcp_zen_of_languages.analyzers.registry import REGISTRY
 from mcp_zen_of_languages.languages.configs import ClassSizeConfig
-from mcp_zen_of_languages.languages.python.detectors import (
-    ClassSizeDetector,
-    NameStyleDetector,
-)
+from mcp_zen_of_languages.languages.python.detectors import ClassSizeDetector
+from mcp_zen_of_languages.languages.python.detectors import NameStyleDetector
 from mcp_zen_of_languages.languages.python.rules import PYTHON_ZEN
 
 

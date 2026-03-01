@@ -9,7 +9,9 @@ from __future__ import annotations
 
 from rich.table import Table
 
-from .themes import BOX_CONTENT, severity_badge, severity_style
+from .themes import BOX_CONTENT
+from .themes import severity_badge
+from .themes import severity_style
 
 
 def build_violation_table(violations: list, path: str) -> Table:
@@ -21,10 +23,10 @@ def build_violation_table(violations: list, path: str) -> Table:
     appended to the message in parentheses.
 
     Args:
-        violations: ``Violation`` objects to render, each exposing
+        violations (list): ``Violation`` objects to render, each exposing
             ``severity``, ``principle``, ``message``, and optional
             ``location`` attributes.
-        path: File path used in the table's title caption.
+        path (str): File path used in the table's title caption.
 
     Returns:
         Table: ``BOX_CONTENT``-styled table with alternating ``""`` / ``"dim"``

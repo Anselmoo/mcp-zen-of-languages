@@ -10,7 +10,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from .complexity import compute_cyclomatic_complexity, compute_maintainability_index
+from .complexity import compute_cyclomatic_complexity
+from .complexity import compute_maintainability_index
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.models import CyclomaticSummary
@@ -33,10 +35,10 @@ class MetricsCollector:
         returning partial results.
 
         Args:
-            code: Python source text to measure.
+            code (str): Python source text to measure.
 
         Returns:
-            A three-element tuple of ``(cyclomatic_summary, maintainability_index,
+            tuple[CyclomaticSummary | None, float | None, int]: A three-element tuple of ``(cyclomatic_summary, maintainability_index,
             lines_of_code)``. On radon errors the first two elements are ``None``
             while the line count is always populated.
         """

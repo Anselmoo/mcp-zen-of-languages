@@ -4,6 +4,7 @@ from pathlib import Path
 
 from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
 
+
 HEADER = """---
 title: Configuration Reference
 description: Generated reference for zen-config analyzer defaults and constraints.

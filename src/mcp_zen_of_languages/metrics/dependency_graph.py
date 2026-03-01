@@ -8,7 +8,8 @@ objects that the coupling detector evaluates against zen thresholds.
 
 import networkx as nx
 
-from mcp_zen_of_languages.models import DependencyAnalysis, DependencyCycle
+from mcp_zen_of_languages.models import DependencyAnalysis
+from mcp_zen_of_languages.models import DependencyCycle
 
 
 def build_import_graph(file_imports: dict[str, list[str]]) -> DependencyAnalysis:
@@ -21,11 +22,11 @@ def build_import_graph(file_imports: dict[str, list[str]]) -> DependencyAnalysis
     against the maximum allowed dependency cycles.
 
     Args:
-        file_imports: Mapping of source file paths to the module names they
+        file_imports (dict[str, list[str]]): Mapping of source file paths to the module names they
             import (e.g. ``{"app.py": ["utils", "models"]}``).
 
     Returns:
-        A ``DependencyAnalysis`` model containing the node list, edge pairs,
+        DependencyAnalysis: A ``DependencyAnalysis`` model containing the node list, edge pairs,
         and any detected ``DependencyCycle`` instances.
     """
     g = nx.DiGraph()
@@ -54,11 +55,11 @@ def find_cycles(g: nx.DiGraph) -> list[DependencyCycle]:
     directly to avoid rebuilding the graph.
 
     Args:
-        g: A networkx ``DiGraph`` whose nodes represent modules and whose
+        g (nx.DiGraph): A networkx ``DiGraph`` whose nodes represent modules and whose
             edges represent import relationships.
 
     Returns:
-        A list of ``DependencyCycle`` models, one per elementary circuit
+        list[DependencyCycle]: A list of ``DependencyCycle`` models, one per elementary circuit
         found. An empty list means the graph is acyclic.
     """
     cycles_raw = list(nx.simple_cycles(g))

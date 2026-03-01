@@ -4,15 +4,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+
 if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
-    from mcp_zen_of_languages.models import CyclomaticSummary, ParserResult
+    from mcp_zen_of_languages.models import CyclomaticSummary
+    from mcp_zen_of_languages.models import ParserResult
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    AnalyzerConfig,
-    BaseAnalyzer,
-)
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
+from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
 
 
 class MarkdownAnalyzer(BaseAnalyzer):
@@ -23,7 +23,12 @@ class MarkdownAnalyzer(BaseAnalyzer):
         config: AnalyzerConfig | None = None,
         pipeline_config: PipelineConfig | None = None,
     ) -> None:
-        """Initialize the Markdown analyzer."""
+        """Initialize the Markdown analyzer.
+
+        Args:
+            config (AnalyzerConfig | None, optional): Analyzer configuration overrides. Default to None.
+            pipeline_config (PipelineConfig | None, optional): Custom detection pipeline configuration. Default to None.
+        """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
 

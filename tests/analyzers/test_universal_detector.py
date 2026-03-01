@@ -1,18 +1,17 @@
 import pytest
 
-from mcp_zen_of_languages.adapters.universal import (
-    AnalyzerFactoryAdapter,
-    build_universal_adapters,
-)
+from mcp_zen_of_languages.adapters.universal import AnalyzerFactoryAdapter
+from mcp_zen_of_languages.adapters.universal import build_universal_adapters
 from mcp_zen_of_languages.analyzers.analyzer_factory import supported_languages
-from mcp_zen_of_languages.core.detector import DOGMA_RULE_IDS, UniversalZenDetector
-from mcp_zen_of_languages.core.detectors import (
-    ClutterDetector,
-    ControlFlowDetector,
-    SignatureDetector,
-    StateMutationDetector,
-)
-from mcp_zen_of_languages.transport.reporters import CliReporter, McpReporter
+from mcp_zen_of_languages.core.detector import DOGMA_RULE_IDS
+from mcp_zen_of_languages.core.detector import UniversalZenDetector
+from mcp_zen_of_languages.core.detectors import ClutterDetector
+from mcp_zen_of_languages.core.detectors import ControlFlowDetector
+from mcp_zen_of_languages.core.detectors import SignatureDetector
+from mcp_zen_of_languages.core.detectors import StateMutationDetector
+from mcp_zen_of_languages.transport.reporters import CliReporter
+from mcp_zen_of_languages.transport.reporters import McpReporter
+
 
 UNIVERSAL_LANGUAGE_SNIPPETS = {
     "python": "def add(a, b):\n    return a + b\n",

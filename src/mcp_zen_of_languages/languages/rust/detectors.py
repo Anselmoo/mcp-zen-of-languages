@@ -3,24 +3,25 @@
 from __future__ import annotations
 
 import re
+
 from typing import TYPE_CHECKING
 
-from mcp_zen_of_languages.analyzers.base import AnalysisContext, ViolationDetector
-from mcp_zen_of_languages.languages.configs import (
-    RustCloneOverheadConfig,
-    RustDebugDeriveConfig,
-    RustEnumOverBoolConfig,
-    RustErrorHandlingConfig,
-    RustInteriorMutabilityConfig,
-    RustIteratorPreferenceConfig,
-    RustLifetimeUsageConfig,
-    RustMustUseConfig,
-    RustNewtypePatternConfig,
-    RustStdTraitsConfig,
-    RustTypeSafetyConfig,
-    RustUnsafeBlocksConfig,
-    RustUnwrapUsageConfig,
-)
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import RustCloneOverheadConfig
+from mcp_zen_of_languages.languages.configs import RustDebugDeriveConfig
+from mcp_zen_of_languages.languages.configs import RustEnumOverBoolConfig
+from mcp_zen_of_languages.languages.configs import RustErrorHandlingConfig
+from mcp_zen_of_languages.languages.configs import RustInteriorMutabilityConfig
+from mcp_zen_of_languages.languages.configs import RustIteratorPreferenceConfig
+from mcp_zen_of_languages.languages.configs import RustLifetimeUsageConfig
+from mcp_zen_of_languages.languages.configs import RustMustUseConfig
+from mcp_zen_of_languages.languages.configs import RustNewtypePatternConfig
+from mcp_zen_of_languages.languages.configs import RustStdTraitsConfig
+from mcp_zen_of_languages.languages.configs import RustTypeSafetyConfig
+from mcp_zen_of_languages.languages.configs import RustUnsafeBlocksConfig
+from mcp_zen_of_languages.languages.configs import RustUnwrapUsageConfig
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.models import Violation

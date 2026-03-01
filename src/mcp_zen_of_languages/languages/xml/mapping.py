@@ -2,27 +2,22 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import (
-    DetectorBinding,
-    LanguageDetectorMap,
-)
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
-from mcp_zen_of_languages.languages.configs import (
-    XmlAttributeUsageConfig,
-    XmlClosingTagsConfig,
-    XmlHierarchyConfig,
-    XmlNamespaceConfig,
-    XmlSemanticMarkupConfig,
-    XmlValidityConfig,
-)
-from mcp_zen_of_languages.languages.xml.detectors import (
-    XmlAttributeUsageDetector,
-    XmlClosingTagsDetector,
-    XmlHierarchyDetector,
-    XmlNamespaceDetector,
-    XmlSemanticMarkupDetector,
-    XmlValidityDetector,
-)
+from mcp_zen_of_languages.languages.configs import XmlAttributeUsageConfig
+from mcp_zen_of_languages.languages.configs import XmlClosingTagsConfig
+from mcp_zen_of_languages.languages.configs import XmlHierarchyConfig
+from mcp_zen_of_languages.languages.configs import XmlNamespaceConfig
+from mcp_zen_of_languages.languages.configs import XmlSemanticMarkupConfig
+from mcp_zen_of_languages.languages.configs import XmlValidityConfig
+from mcp_zen_of_languages.languages.xml.detectors import XmlAttributeUsageDetector
+from mcp_zen_of_languages.languages.xml.detectors import XmlClosingTagsDetector
+from mcp_zen_of_languages.languages.xml.detectors import XmlHierarchyDetector
+from mcp_zen_of_languages.languages.xml.detectors import XmlNamespaceDetector
+from mcp_zen_of_languages.languages.xml.detectors import XmlSemanticMarkupDetector
+from mcp_zen_of_languages.languages.xml.detectors import XmlValidityDetector
+
 
 FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(

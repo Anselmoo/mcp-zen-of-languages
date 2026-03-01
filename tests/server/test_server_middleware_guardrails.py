@@ -3,18 +3,19 @@ from __future__ import annotations
 from types import SimpleNamespace
 
 import pytest
+
 from pydantic import BaseModel
 
 import mcp_zen_of_languages.middleware as middleware_module
-from mcp_zen_of_languages.middleware import (
-    DuplicateCallSuppressionMiddleware,
-    MiddlewareSettings,
-    RateLimitingMiddleware,
-    ResponseCachingMiddleware,
-    ResponseLimitingMiddleware,
-    build_default_middleware,
-)
+
+from mcp_zen_of_languages.middleware import DuplicateCallSuppressionMiddleware
+from mcp_zen_of_languages.middleware import MiddlewareSettings
+from mcp_zen_of_languages.middleware import RateLimitingMiddleware
+from mcp_zen_of_languages.middleware import ResponseCachingMiddleware
+from mcp_zen_of_languages.middleware import ResponseLimitingMiddleware
+from mcp_zen_of_languages.middleware import build_default_middleware
 from mcp_zen_of_languages.storage import InMemoryCacheBackend
+
 
 DEFAULT_RATE_LIMIT_MAX_CALLS = 40
 

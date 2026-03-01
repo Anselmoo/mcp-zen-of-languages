@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import logging
+
 from typing import TYPE_CHECKING
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
@@ -11,14 +13,13 @@ if TYPE_CHECKING:
 
 import yaml
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    AnalyzerCapabilities,
-    AnalyzerConfig,
-    BaseAnalyzer,
-    DetectionPipeline,
-)
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import AnalyzerCapabilities
+from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
+from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
+from mcp_zen_of_languages.analyzers.base import DetectionPipeline
 from mcp_zen_of_languages.models import ParserResult
+
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +32,12 @@ class GitLabCIAnalyzer(BaseAnalyzer):
         config: AnalyzerConfig | None = None,
         pipeline_config: PipelineConfig | None = None,
     ) -> None:
-        """Initialize analyzer with optional threshold and pipeline overrides."""
+        """Initialize analyzer with optional threshold and pipeline overrides.
+
+        Args:
+            config (AnalyzerConfig | None, optional): Analyzer configuration overrides. Default to None.
+            pipeline_config (PipelineConfig | None, optional): Custom detection pipeline configuration. Default to None.
+        """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
 
@@ -51,10 +57,10 @@ class GitLabCIAnalyzer(BaseAnalyzer):
         """Parse GitLab CI YAML into a structured mapping via ``yaml.safe_load``.
 
         Args:
-            code: Raw GitLab CI YAML text.
+            code (str): Raw GitLab CI YAML text.
 
         Returns:
-            ParserResult wrapping the parsed mapping, or ``None`` on parse failure.
+            ParserResult | None: ParserResult wrapping the parsed mapping, or ``None`` on parse failure.
         """
         try:
             tree = yaml.safe_load(code)

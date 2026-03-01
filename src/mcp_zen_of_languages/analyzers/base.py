@@ -43,25 +43,29 @@ from __future__ import annotations
 
 import logging
 import os
-from abc import ABC, abstractmethod
-from enum import StrEnum
-from typing import Literal, TypeVar
 
-from pydantic import BaseModel, ConfigDict, Field
+from abc import ABC
+from abc import abstractmethod
+from enum import StrEnum
+from typing import Literal
+from typing import TypeVar
+
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import Field
 
 from mcp_zen_of_languages.languages.configs import DetectorConfig
-from mcp_zen_of_languages.models import (
-    AnalysisResult,
-    CyclomaticSummary,
-    ExternalAnalysisResult,
-    ExternalToolResult,
-    Location,
-    Metrics,
-    ParserResult,
-    RulesSummary,
-    Violation,
-)
+from mcp_zen_of_languages.models import AnalysisResult
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import ExternalAnalysisResult
+from mcp_zen_of_languages.models import ExternalToolResult
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import Metrics
+from mcp_zen_of_languages.models import ParserResult
+from mcp_zen_of_languages.models import RulesSummary
+from mcp_zen_of_languages.models import Violation
 from mcp_zen_of_languages.telemetry import analysis_span
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(
@@ -378,14 +382,14 @@ class ViolationDetector[ConfigT: "DetectorConfig"](ABC):
         severity.
 
         Args:
-            context: Pipeline state carrying parsed AST, metrics, and
+            context (AnalysisContext): Pipeline state carrying parsed AST, metrics, and
                 source text populated by earlier analysis stages.
-            config: Typed detector configuration holding thresholds,
+            config (AnalyzerConfig): Typed detector configuration holding thresholds,
                 severity, and violation-message templates for this
                 detector.
 
         Returns:
-            Zero or more violations discovered by this strategy. An empty
+            list[Violation]: Zero or more violations discovered by this strategy. An empty
             list signals clean code for this detector's concern.
         """
 
@@ -399,7 +403,7 @@ class ViolationDetector[ConfigT: "DetectorConfig"](ABC):
         when a detector raises an unexpected exception.
 
         Returns:
-            Short, unique name such as ``"cyclomatic_complexity"`` or
+            str: Short, unique name such as ``"cyclomatic_complexity"`` or
             ``"god_class"``.
         """
 
@@ -431,26 +435,26 @@ class ViolationDetector[ConfigT: "DetectorConfig"](ABC):
            or a default of ``5``.
 
         Args:
-            config: Detector configuration carrying principle metadata,
+            config (DetectorConfig): Detector configuration carrying principle metadata,
                 severity, and violation-message templates.
-            message: Explicit violation message. When ``None``, the
-                message is auto-selected from the config's template list.
-            contains: Substring filter passed to
-                ``select_violation_message`` to pick a matching template.
-            index: Zero-based position selecting one template from the
-                config's ``violation_messages`` list (default ``0``).
-            severity: Override severity score (1-10). Falls back to the
-                config-level severity when omitted.
-            location: Source location to attach to the violation, typically
+            message (str | None, optional): Explicit violation message. When ``None``, the
+                message is auto-selected from the config's template list. Default to None.
+            contains (str | None, optional): Substring filter passed to
+                ``select_violation_message`` to pick a matching template. Default to None.
+            index (int | None, optional): Zero-based position selecting one template from the
+                config's ``violation_messages`` list (default ``0``). Default to 0.
+            severity (int | None, optional): Override severity score (1-10). Falls back to the
+                config-level severity when omitted. Default to None.
+            location (Location | None, optional): Source location to attach to the violation, typically
                 produced by
-                [`LocationHelperMixin`][mcp_zen_of_languages.analyzers.base.LocationHelperMixin].
-            suggestion: Remediation hint shown alongside the violation in
-                reports and IDE integrations.
-            files: Related file paths included for cross-file violations
-                such as duplicate-code detection.
+                [`LocationHelperMixin`][mcp_zen_of_languages.analyzers.base.LocationHelperMixin]. Default to None.
+            suggestion (str | None, optional): Remediation hint shown alongside the violation in
+                reports and IDE integrations. Default to None.
+            files (list[str] | None, optional): Related file paths included for cross-file violations
+                such as duplicate-code detection. Default to None.
 
         Returns:
-            Fully populated ``Violation`` ready for collection by the
+            Violation: Fully populated ``Violation`` ready for collection by the
             [`DetectionPipeline`][mcp_zen_of_languages.analyzers.base.DetectionPipeline].
         """
         principle = (
@@ -507,7 +511,7 @@ class DetectionPipeline:
         """Prepare the pipeline with an ordered detector sequence.
 
         Args:
-            detectors: Detector instances to execute, in the order they
+            detectors (list[ViolationDetector]): Detector instances to execute, in the order they
                 should run. Order can matter when later detectors depend
                 on side-effects written to ``AnalysisContext.violations``
                 by earlier ones.
@@ -541,14 +545,14 @@ class DetectionPipeline:
         healthy detectors are lost.
 
         Args:
-            context: Shared analysis state populated by
+            context (AnalysisContext): Shared analysis state populated by
                 [`BaseAnalyzer.analyze`][mcp_zen_of_languages.analyzers.base.BaseAnalyzer.analyze]
                 before the pipeline starts.
-            config: Fallback configuration used when a detector does not
+            config (AnalyzerConfig): Fallback configuration used when a detector does not
                 carry its own per-detector config.
 
         Returns:
-            Flat list of violations aggregated from all detectors that
+            list[Violation]: Flat list of violations aggregated from all detectors that
             executed successfully.
         """
         all_violations: list[Violation] = []
@@ -622,8 +626,8 @@ class BaseAnalyzer(ABC):
         ``analyze()`` invocation.
 
         Args:
-            config: Explicit analyzer configuration. When ``None``, the
-                subclass's ``default_config()`` is used.
+            config (AnalyzerConfig | None, optional): Explicit analyzer configuration. When ``None``, the
+                subclass's ``default_config()`` is used. Default to None.
 
         Raises:
             TypeError: If *config* is not ``None`` and not an
@@ -645,7 +649,7 @@ class BaseAnalyzer(ABC):
         pre-populated with sensible defaults.
 
         Returns:
-            Language-appropriate configuration with default thresholds.
+            AnalyzerConfig: Language-appropriate configuration with default thresholds.
         """
 
     @abstractmethod
@@ -657,7 +661,7 @@ class BaseAnalyzer(ABC):
         ``"rust"``).
 
         Returns:
-            Lowercase language name used for rule lookup and result
+            str: Lowercase language name used for rule lookup and result
             tagging.
         """
 
@@ -670,10 +674,10 @@ class BaseAnalyzer(ABC):
         languages may use tree-sitter or custom parsers.
 
         Args:
-            code: Complete source text of the file being analyzed.
+            code (str): Complete source text of the file being analyzed.
 
         Returns:
-            Wrapped parse result, or ``None`` when the source cannot be
+            ParserResult | None: Wrapped parse result, or ``None`` when the source cannot be
             parsed (e.g. syntax errors). A ``None`` return does not abort
             analysis — metric computation and detectors will proceed
             with whatever data is available.
@@ -695,12 +699,12 @@ class BaseAnalyzer(ABC):
         for downstream detectors.
 
         Args:
-            code: Source text to measure.
-            ast_tree: Previously parsed syntax tree (may be ``None`` if
+            code (str): Source text to measure.
+            ast_tree (ParserResult | None): Previously parsed syntax tree (may be ``None`` if
                 parsing failed), useful for AST-driven metric tools.
 
         Returns:
-            Three-element tuple of ``(cyclomatic_summary,
+            tuple[CyclomaticSummary | None, float | None, int]: Three-element tuple of ``(cyclomatic_summary,
             maintainability_index, lines_of_code)``. Any element may be
             ``None`` when the corresponding metric is unavailable.
         """
@@ -718,7 +722,6 @@ class BaseAnalyzer(ABC):
         """
         return AnalyzerCapabilities()
 
-    # Template Method - defines the algorithm structure
     def analyze(  # noqa: PLR0913
         self,
         code: str,
@@ -753,23 +756,23 @@ class BaseAnalyzer(ABC):
         7. Assemble and return the final ``AnalysisResult``.
 
         Args:
-            code: Complete source text to analyze.
-            path: Filesystem path of the source file, used for
-                cross-file detectors and result metadata.
-            other_files: Map of sibling file paths to their contents,
-                enabling detectors like duplicate-code that compare
-                across files.
-            repository_imports: Per-file import lists from the wider
-                repository, enabling coupling and dependency-fan
-                detectors.
-            enable_external_tools: Run allow-listed external linters/tools
-                in best-effort mode for additional diagnostics.
-            allow_temporary_tools: Allow temporary-runner strategies
-                (for example ``npx``/``uvx``) when direct/no-install
+            code (str): Complete source text to analyze.
+            path (str | None, optional): Filesystem path of the source file, used for
+                cross-file detectors and result metadata. Default to None.
+            other_files (dict[str, str] | None, optional): Map of sibling file paths to
+                their contents, enabling detectors like duplicate-code that
+                compare across files. Default to None.
+            repository_imports (dict[str, list[str]] | None, optional): Per-file import
+                lists from the wider repository, enabling coupling and
+                dependency-fan detectors. Default to None.
+            enable_external_tools (bool, optional): Run allow-listed external
+                linters/tools in best-effort mode for additional diagnostics. Default to False.
+            allow_temporary_tools (bool, optional): Allow temporary-runner strategies
+                (for example ``npx``/``uvx``) when direct/no-install Default to False.
                 resolution is unavailable.
 
         Returns:
-            Fully populated analysis result containing metrics,
+            AnalysisResult: Fully populated analysis result containing metrics,
             violations, an overall quality score, and (when available)
             a ``rules_summary``.
         """
@@ -777,7 +780,6 @@ class BaseAnalyzer(ABC):
             "analyzer.analyze",
             {"language": self.language(), "path": path or "<snippet>"},
         ):
-            # 1. Create analysis context
             context = self._create_context(
                 code=code,
                 path=path,
@@ -785,7 +787,6 @@ class BaseAnalyzer(ABC):
                 repository_imports=repository_imports,
             )
 
-            # 2. Parse code (language-specific hook)
             with analysis_span("analyzer.parse", {"language": self.language()}):
                 context.ast_tree = self.parse_code(code)
                 if context.capabilities.supports_ast:
@@ -795,14 +796,12 @@ class BaseAnalyzer(ABC):
                         else AstStatus.parse_failed
                     )
 
-            # 3. Compute metrics (language-specific hook)
             with analysis_span("analyzer.metrics", {"language": self.language()}):
                 cc, mi, loc = self.compute_metrics(code, context.ast_tree)
                 context.cyclomatic_summary = cc
                 context.maintainability_index = mi
                 context.lines_of_code = loc
 
-            # 4. Build dependency analysis (optional)
             with analysis_span("analyzer.dependencies", {"language": self.language()}):
                 if self.config.enable_dependency_analysis:
                     context.dependency_analysis = self._build_dependency_analysis(
@@ -814,7 +813,6 @@ class BaseAnalyzer(ABC):
                     allow_temporary_tools=allow_temporary_tools,
                 )
 
-            # 5. Run detection pipeline
             with analysis_span(
                 "analyzer.pipeline",
                 {
@@ -824,13 +822,11 @@ class BaseAnalyzer(ABC):
             ):
                 violations = self.pipeline.run(context, self.config)
 
-            # 6. Build and return result
             result = self._build_result(context, violations)
 
-            # 7. If RulesAdapter is available, attach rules_summary
             try:
+                from mcp_zen_of_languages.adapters.rules_adapter import RulesAdapter
                 from mcp_zen_of_languages.adapters.rules_adapter import (
-                    RulesAdapter,
                     RulesAdapterConfig,
                 )
                 from mcp_zen_of_languages.models import DependencyAnalysis
@@ -843,8 +839,6 @@ class BaseAnalyzer(ABC):
 
                 adapter = RulesAdapter(language=self.language(), config=adapter_config)
 
-                # Normalize dependency_analysis into DependencyAnalysis if possible to
-                # satisfy type-checker
                 dep_analysis: DependencyAnalysis | None = None
                 raw_dep = context.dependency_analysis
                 if isinstance(raw_dep, DependencyAnalysis):
@@ -869,21 +863,17 @@ class BaseAnalyzer(ABC):
                         if self.config.enable_pattern_detection
                         else []
                     )
-                # Merge pipeline violations with rules-derived violations
                 all_violations = violations + rules_violations
                 result.rules_summary = RulesSummary(
                     **adapter.summarize_violations(all_violations),
                 )
                 result.violations = all_violations
             except Exception as exc:  # noqa: BLE001
-                # If adapter missing or fails, proceed without rules_summary
                 logger.debug(
                     "RulesAdapter integration failed; continuing", exc_info=exc
                 )
 
             return result
-
-    # Helper methods (can be overridden if needed)
 
     def build_pipeline(self) -> DetectionPipeline:
         """Assemble the detector pipeline from zen rules and config overrides.
@@ -906,7 +896,7 @@ class BaseAnalyzer(ABC):
         use-cases.
 
         Returns:
-            Ready-to-run pipeline containing all detectors registered
+            DetectionPipeline: Ready-to-run pipeline containing all detectors registered
             for this language.
 
         Raises:
@@ -974,16 +964,16 @@ class BaseAnalyzer(ABC):
         dependency data.
 
         Args:
-            code: Source text to analyze.
-            path: Filesystem path associated with the source, or
+            code (str): Source text to analyze.
+            path (str | None): Filesystem path associated with the source, or
                 ``None`` for ad-hoc snippets.
-            other_files: Sibling file contents for cross-file analysis,
+            other_files (dict[str, str] | None): Sibling file contents for cross-file analysis,
                 or ``None`` when unavailable.
-            repository_imports: Per-file import index for coupling
+            repository_imports (dict[str, list[str]] | None): Per-file import index for coupling
                 analysis, or ``None`` when unavailable.
 
         Returns:
-            Minimally populated context ready for enrichment by
+            AnalysisContext: Minimally populated context ready for enrichment by
             ``parse_code()`` and ``compute_metrics()``.
         """
         capabilities = self.capabilities()
@@ -1013,11 +1003,11 @@ class BaseAnalyzer(ABC):
         ``config.enable_dependency_analysis`` is ``True``.
 
         Args:
-            context: Current analysis state containing parsed AST and
+            context (AnalysisContext): Current analysis state containing parsed AST and
                 cross-file metadata needed for dependency resolution.
 
         Returns:
-            Language-specific dependency payload consumed by downstream
+            object | None: Language-specific dependency payload consumed by downstream
             detectors, or ``None`` when the language does not support
             dependency analysis.
         """
@@ -1030,7 +1020,12 @@ class BaseAnalyzer(ABC):
 
     @staticmethod
     def _truncate_external_output(text: str, max_chars: int = 1000) -> str:
-        """Trim verbose tool output to keep result payloads bounded."""
+        """Trim verbose tool output to keep result payloads bounded.
+
+        Args:
+            text (str): Raw output text from an external tool.
+            max_chars (int, optional): Maximum characters to keep from external tool output. Default to 1000.
+        """
         if len(text) <= max_chars:
             return text
         return text[:max_chars] + "... [truncated]"
@@ -1043,10 +1038,8 @@ class BaseAnalyzer(ABC):
         allow_temporary_tools: bool,
     ) -> ExternalAnalysisResult | None:
         """Optionally run allow-listed external tools for deeper analysis quality."""
-        from mcp_zen_of_languages.utils.subprocess_runner import (
-            KNOWN_TOOLS,
-            SubprocessToolRunner,
-        )
+        from mcp_zen_of_languages.utils.subprocess_runner import KNOWN_TOOLS
+        from mcp_zen_of_languages.utils.subprocess_runner import SubprocessToolRunner
 
         tool_map = KNOWN_TOOLS.get(self.language(), {})
         if not tool_map:
@@ -1180,13 +1173,13 @@ class BaseAnalyzer(ABC):
         the result model returned to callers.
 
         Args:
-            context: Fully enriched analysis state carrying metrics
+            context (AnalysisContext): Fully enriched analysis state carrying metrics
                 computed during earlier workflow steps.
-            violations: Violation entries collected from the detector
+            violations (list[Violation]): Violation entries collected from the detector
                 pipeline.
 
         Returns:
-            Complete analysis payload ready for serialization or
+            AnalysisResult: Complete analysis payload ready for serialization or
             rendering.
         """
         overall_score = max(0.0, 100.0 - (sum(v.severity for v in violations) * 2))
@@ -1227,17 +1220,16 @@ class BaseAnalyzer(ABC):
         score points.
 
         Args:
-            violations: Violation entries whose ``severity`` values are
-                summed to compute the penalty.
+            violations (list[Violation]): Violation entries whose ``severity``
+                values are summed to compute the penalty.
 
         Returns:
-            Clamped quality score between ``0.0`` and ``100.0``.
+            float: Clamped quality score between ``0.0`` and ``100.0``.
         """
         if not violations:
             return 100.0
 
         total_severity = sum(v.severity for v in violations)
-        # Deduct 2 points per severity point
         return max(0.0, 100.0 - (total_severity * 2))
 
 
@@ -1274,12 +1266,12 @@ class LocationHelperMixin:
         as a safe fallback rather than raising.
 
         Args:
-            code: Full source text to search, potentially multi-line.
-            substring: Token or identifier to locate (exact,
+            code (str): Full source text to search, potentially multi-line.
+            substring (str): Token or identifier to locate (exact,
                 case-sensitive match).
 
         Returns:
-            One-based ``Location`` of the first match, or ``(1, 1)``
+            Location: One-based ``Location`` of the first match, or ``(1, 1)``
             when the substring does not appear in *code*.
         """
         lines = code.splitlines()
@@ -1303,13 +1295,13 @@ class LocationHelperMixin:
         convention.
 
         Args:
-            _ast_tree: Parsed tree wrapper (currently unused but reserved
+            _ast_tree (ParserResult | None): Parsed tree wrapper (currently unused but reserved
                 for future tree-sitter adapters that need the root).
-            node: AST node expected to carry ``lineno`` (int) and
+            node (object): AST node expected to carry ``lineno`` (int) and
                 ``col_offset`` (int) attributes.
 
         Returns:
-            One-based ``Location`` when both attributes are present,
+            Location: One-based ``Location`` when both attributes are present,
             otherwise ``None``.
         """
         if node is None:

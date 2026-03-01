@@ -25,7 +25,8 @@ See Also:
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
+from pydantic import Field
 
 
 class Location(BaseModel):
@@ -99,7 +100,6 @@ class Violation(BaseModel):
     location: Location | None = None
     files: list[str] | None = None
 
-    # Provide dict-like access for legacy tests that expect .get()
     def get(self, key: str, default: object | None = None) -> object | None:
         """Retrieve a field value by name, falling back to *default*.
 
@@ -108,13 +108,14 @@ class Violation(BaseModel):
         ``getattr``, so any Pydantic field is reachable.
 
         Args:
-            key: Attribute name matching one of the model fields
+            key (str): Attribute name matching one of the model fields
                 (e.g. ``"principle"``, ``"severity"``).
-            default: Fallback returned when *key* does not correspond to an
-                existing attribute.  Defaults to ``None``.
+            default (object | None, optional): Fallback returned when *key* does not
+                correspond to an existing attribute.  Defaults to ``None``.
 
         Returns:
-            The field value when *key* exists, otherwise *default*.
+            object | None: The field value when *key* exists, otherwise
+            *default*.
 
         Example:
             >>> v = Violation(principle="flat", severity=4, message="too deep")
@@ -133,10 +134,10 @@ class Violation(BaseModel):
         field of the same name, raising ``AttributeError`` for unknown keys.
 
         Args:
-            key: Field name to look up on the model instance.
+            key (str): Field name to look up on the model instance.
 
         Returns:
-            The corresponding field value.
+            object: The corresponding field value.
 
         Raises:
             AttributeError: When *key* does not match any model field.
@@ -351,7 +352,9 @@ class ProjectSummary(BaseModel):
         ...     total_violations=108,
         ...     severity_counts=SeverityCounts(critical=2, high=10, medium=40, low=56),
         ...     worst_offenders=[
-        ...         WorstOffender(path="core/engine.py", violations=31, language="python"),
+        ...         WorstOffender(
+        ...             path="core/engine.py", violations=31, language="python"
+        ...         ),
         ...     ],
         ... )
         >>> ps.total_files
@@ -453,10 +456,10 @@ class AnalysisResult(BaseModel):
         uses standard attribute access.
 
         Args:
-            item: Field name to look up on the model instance.
+            item (str): Field name to look up on the model instance.
 
         Returns:
-            The corresponding field value.
+            object: The corresponding field value.
 
         Raises:
             AttributeError: When *item* does not match any model field.
@@ -465,7 +468,6 @@ class AnalysisResult(BaseModel):
             >>> result["language"]
             'python'
         """
-        # Allow legacy tests that index into results like dicts
         return getattr(self, item)
 
 
@@ -547,9 +549,11 @@ class PatternsResult(BaseModel):
         patterns: Ordered list of detected pattern findings.
 
     Example:
-        >>> pr = PatternsResult(patterns=[
-        ...     PatternFinding(name="observer", details="event bus in signals.py"),
-        ... ])
+        >>> pr = PatternsResult(
+        ...     patterns=[
+        ...         PatternFinding(name="observer", details="event bus in signals.py"),
+        ...     ]
+        ... )
         >>> len(pr.patterns)
         1
 

@@ -3,6 +3,7 @@ from __future__ import annotations
 from io import StringIO
 
 import pytest
+
 from rich.console import Console
 
 from mcp_zen_of_languages.rendering.themes import ZEN_THEME

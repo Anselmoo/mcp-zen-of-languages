@@ -26,24 +26,28 @@ See Also:
 from __future__ import annotations
 
 import operator
+
 from functools import reduce
-from typing import TYPE_CHECKING, Annotated, Any
+from typing import TYPE_CHECKING
+from typing import Annotated
+from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Discriminator, Field, TypeAdapter
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import Discriminator
+from pydantic import Field
+from pydantic import TypeAdapter
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalyzerConfig,
-    DetectionPipeline,
-    ViolationDetector,
-)
+from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
+from mcp_zen_of_languages.analyzers.base import DetectionPipeline
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
 from mcp_zen_of_languages.languages.configs import DetectorConfig
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
-    from mcp_zen_of_languages.rules.base_models import (
-        LanguageZenPrinciples,
-        ZenPrinciple,
-    )
+    from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
+    from mcp_zen_of_languages.rules.base_models import ZenPrinciple
 
 
 class DetectorMetadata(BaseModel):
@@ -92,12 +96,12 @@ class DetectorMetadata(BaseModel):
         detectors by ``(language, rule_id)`` pair.
 
         Args:
-            binding: A detector binding declared in a language's
+            binding (DetectorBinding): A detector binding declared in a language's
                 ``mapping.py`` module.
-            language: Language that owns this binding (e.g. ``"rust"``).
+            language (str): Language that owns this binding (e.g. ``"rust"``).
 
         Returns:
-            Registry-ready metadata for [`DetectorRegistry.register`][DetectorRegistry.register].
+            DetectorMetadata: Registry-ready metadata for [`DetectorRegistry.register`][DetectorRegistry.register].
         """
         from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule_ids
 
@@ -158,7 +162,7 @@ class DetectorRegistry:
         """Add a detector to the registry, invalidating all caches.
 
         Args:
-            metadata: Fully populated metadata for the detector to register.
+            metadata (DetectorMetadata): Fully populated metadata for the detector to register.
 
         Raises:
             ValueError: If a detector with the same ``detector_id`` is
@@ -190,6 +194,7 @@ class DetectorRegistry:
         if self._registry:
             return
         import importlib
+
         from pathlib import Path
 
         languages_dir = Path(__file__).parent.parent / "languages"
@@ -214,7 +219,7 @@ class DetectorRegistry:
         """Return a snapshot of every registered detector's metadata.
 
         Returns:
-            Shallow copy of all metadata entries in registration order.
+            list[DetectorMetadata]: Shallow copy of all metadata entries in registration order.
         """
         return list(self._registry.values())
 
@@ -222,11 +227,11 @@ class DetectorRegistry:
         """Look up a single detector by its unique identifier.
 
         Args:
-            detector_id: Registry key matching the ``type`` discriminator
+            detector_id (str): Registry key matching the ``type`` discriminator
                 on the detector's config model.
 
         Returns:
-            The metadata for the requested detector.
+            DetectorMetadata: The metadata for the requested detector.
 
         Raises:
             KeyError: If *detector_id* is not registered.
@@ -245,11 +250,11 @@ class DetectorRegistry:
         detector is registered.
 
         Args:
-            rule_id: Zen rule identifier (e.g. ``"py-001"``).
-            language: Language scope for the lookup.
+            rule_id (str): Zen rule identifier (e.g. ``"py-001"``).
+            language (str): Language scope for the lookup.
 
         Returns:
-            Metadata for every detector covering *rule_id* in *language*,
+            list[DetectorMetadata]: Metadata for every detector covering *rule_id* in *language*,
             or an empty list if none are registered.
         """
         if self._rule_index is None:
@@ -268,7 +273,7 @@ class DetectorRegistry:
         changes.
 
         Returns:
-            An ``Annotated`` union type suitable for
+            object: An ``Annotated`` union type suitable for
             [`TypeAdapter`][pydantic.TypeAdapter] construction.
 
         Raises:
@@ -300,7 +305,7 @@ class DetectorRegistry:
         registered before the discriminated union is constructed.
 
         Returns:
-            A ``TypeAdapter`` that validates raw dicts into the correct
+            TypeAdapter: A ``TypeAdapter`` that validates raw dicts into the correct
             ``DetectorConfig`` subclass by discriminator.
         """
         if self._config_adapter is None:
@@ -323,10 +328,10 @@ class DetectorRegistry:
         always injected at the head of the list to carry global thresholds.
 
         Args:
-            lang_zen: Complete zen principles for a single language.
+            lang_zen (LanguageZenPrinciples): Complete zen principles for a single language.
 
         Returns:
-            Ordered detector configs sorted by [`DetectorMetadata.default_order`][DetectorMetadata.default_order],
+            list[DetectorConfig]: Ordered detector configs sorted by [`DetectorMetadata.default_order`][DetectorMetadata.default_order],
             with ``analyzer_defaults`` first.
         """
         from mcp_zen_of_languages.analyzers import registry_bootstrap  # noqa: F401
@@ -364,11 +369,11 @@ class DetectorRegistry:
         [`DetectorMetadata.default_order`][DetectorMetadata.default_order].
 
         Args:
-            base: Rule-derived detector configs to serve as defaults.
-            overrides: User or programmatic overrides to layer on top.
+            base (list[DetectorConfig]): Rule-derived detector configs to serve as defaults.
+            overrides (list[DetectorConfig]): User or programmatic overrides to layer on top.
 
         Returns:
-            Merged and re-ordered detector config list.
+            list[DetectorConfig]: Merged and re-ordered detector config list.
         """
         configs_by_type = {cfg.type: cfg for cfg in base}
         for override in overrides:
@@ -395,10 +400,10 @@ class DetectorRegistry:
         since it carries global thresholds rather than a detector.
 
         Args:
-            lang_zen: Complete zen principles for the target language.
+            lang_zen (LanguageZenPrinciples): Complete zen principles for the target language.
 
         Returns:
-            Pipeline containing configured detector instances in execution
+            DetectionPipeline: Pipeline containing configured detector instances in execution
             order.
         """
         configs = self.configs_from_rules(lang_zen)
@@ -428,15 +433,15 @@ class DetectorRegistry:
         definition typos at startup.
 
         Args:
-            principle: Zen principle whose ``metrics`` supply threshold
+            principle (ZenPrinciple): Zen principle whose ``metrics`` supply threshold
                 values.
-            language: Language scope used for detector resolution.
-            base_fields: Field names defined on the base
+            language (str): Language scope used for detector resolution.
+            base_fields (set[str]): Field names defined on the base
                 ``DetectorConfig`` that should be excluded from metric
                 mapping.
 
         Returns:
-            One typed config per detector registered for this principle,
+            list[DetectorConfig]: One typed config per detector registered for this principle,
             each populated with the applicable metric values, severity,
             and violation messages.
 
@@ -494,10 +499,10 @@ class DetectorRegistry:
         configs.
 
         Args:
-            configs_by_type: Configs keyed by detector ``type``.
+            configs_by_type (dict[str, DetectorConfig]): Configs keyed by detector ``type``.
 
         Returns:
-            Deterministically ordered config list.
+            list[DetectorConfig]: Deterministically ordered config list.
         """
         configs_by_type = dict(configs_by_type)
         order_map = {meta.detector_id: meta.default_order for meta in self.items()}

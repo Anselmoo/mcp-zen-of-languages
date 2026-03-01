@@ -27,10 +27,13 @@ import logging
 import os
 import shutil
 import subprocess
+
 from pathlib import Path
 from typing import ClassVar
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
+from pydantic import Field
+
 
 logger = logging.getLogger(__name__)
 
@@ -136,13 +139,17 @@ class SubprocessToolRunner:
     """Run allow-listed external tools with stdin-based code input.
 
     Args:
-        timeout: Maximum wall-clock seconds for each tool invocation.
+        timeout (int): Maximum wall-clock seconds for each tool invocation.
     """
 
     _cache: ClassVar[dict[str, bool]] = {}
 
     def __init__(self, timeout: int = DEFAULT_TIMEOUT_SECONDS) -> None:
-        """Initialize the runner with a default timeout for subprocess calls."""
+        """Initialize the runner with a default timeout for subprocess calls.
+
+        Args:
+            timeout (int, optional): Timeout. Default to DEFAULT_TIMEOUT_SECONDS.
+        """
         self.timeout = timeout
 
     # ------------------------------------------------------------------
@@ -184,7 +191,13 @@ class SubprocessToolRunner:
         language: str | None = None,
         allow_temporary_tools: bool = False,
     ) -> ToolResolution:
-        """Resolve the executable command prefix for a tool without running it."""
+        """Resolve the executable command prefix for a tool without running it.
+
+        Args:
+            tool (str): Tool name to resolve.
+            language (str | None, optional): Target language for tool resolution. Default to None.
+            allow_temporary_tools (bool, optional): Allow temporary tool runners (e.g. npx/uvx). Default to False.
+        """
         attempts: list[str] = []
         if tool not in _ALL_ALLOWED_TOOLS:
             attempts.append("allowlist:blocked")
@@ -255,7 +268,13 @@ class SubprocessToolRunner:
         language: str | None = None,
         allow_temporary_tools: bool = False,
     ) -> bool:
-        """Return *True* when the tool can be resolved through allowed strategies."""
+        """Return *True* when the tool can be resolved through allowed strategies.
+
+        Args:
+            tool (str): Tool name to check.
+            language (str | None, optional): Language. Default to None.
+            allow_temporary_tools (bool, optional): Allow temporary tools. Default to False.
+        """
         resolution = SubprocessToolRunner().resolve_tool(
             tool,
             language=language,
@@ -275,6 +294,13 @@ class SubprocessToolRunner:
         """Invoke *tool* with *code* on stdin.
 
         Returns ``None`` when the tool cannot be resolved or execution fails.
+
+        Args:
+            tool (str): Tool name to execute.
+            args (list[str] | None, optional): Extra command-line arguments. Default to None.
+            code (str, optional): Source code to pipe via stdin. Default to "".
+            language (str | None, optional): Language. Default to None.
+            allow_temporary_tools (bool, optional): Allow temporary tools. Default to False.
         """
         resolution = self.resolve_tool(
             tool,
@@ -324,7 +350,13 @@ class SubprocessToolRunner:
         *,
         allow_temporary_tools: bool = False,
     ) -> dict[str, SubprocessResult]:
-        """Run **all** known tools for *language*, returning results keyed by tool name."""
+        """Run **all** known tools for *language*, returning results keyed by tool name.
+
+        Args:
+            code (str): Source code to pipe to the tool.
+            language (str): Target language identifier.
+            allow_temporary_tools (bool, optional): Allow temporary tools. Default to False.
+        """
         results: dict[str, SubprocessResult] = {}
         for tool, default_args in KNOWN_TOOLS.get(language, {}).items():
             result = self.run(

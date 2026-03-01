@@ -3,23 +3,24 @@
 from __future__ import annotations
 
 import re
+
 from typing import TYPE_CHECKING
 
-from mcp_zen_of_languages.analyzers.base import AnalysisContext, ViolationDetector
-from mcp_zen_of_languages.languages.configs import (
-    GoContextUsageConfig,
-    GoDeferUsageConfig,
-    GoErrorHandlingConfig,
-    GoGoroutineLeakConfig,
-    GoInitUsageConfig,
-    GoInterfacePointerConfig,
-    GoInterfaceReturnConfig,
-    GoInterfaceSizeConfig,
-    GoNamingConventionConfig,
-    GoPackageNamingConfig,
-    GoPackageStateConfig,
-    GoZeroValueConfig,
-)
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import GoContextUsageConfig
+from mcp_zen_of_languages.languages.configs import GoDeferUsageConfig
+from mcp_zen_of_languages.languages.configs import GoErrorHandlingConfig
+from mcp_zen_of_languages.languages.configs import GoGoroutineLeakConfig
+from mcp_zen_of_languages.languages.configs import GoInitUsageConfig
+from mcp_zen_of_languages.languages.configs import GoInterfacePointerConfig
+from mcp_zen_of_languages.languages.configs import GoInterfaceReturnConfig
+from mcp_zen_of_languages.languages.configs import GoInterfaceSizeConfig
+from mcp_zen_of_languages.languages.configs import GoNamingConventionConfig
+from mcp_zen_of_languages.languages.configs import GoPackageNamingConfig
+from mcp_zen_of_languages.languages.configs import GoPackageStateConfig
+from mcp_zen_of_languages.languages.configs import GoZeroValueConfig
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.models import Violation

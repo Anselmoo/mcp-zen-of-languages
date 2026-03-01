@@ -228,11 +228,11 @@ def detect_deep_nesting(code: str, max_depth: int = 3) -> tuple[bool, int]:
     """Measure the deepest indentation level using 4-space tab stops.
 
     Args:
-        code: Python source text to scan.
-        max_depth: Nesting-depth ceiling used for the boolean flag.
+        code (str): Python source text to scan.
+        max_depth (int, optional): Nesting-depth ceiling used for the boolean flag. Default to 3.
 
     Returns:
-        ``(exceeds_threshold, deepest_level)`` — the boolean is ``True``
+        tuple[bool, int]: ``(exceeds_threshold, deepest_level)`` — the boolean is ``True``
         when *deepest_level* is strictly greater than *max_depth*.
     """
     max_found = 0
@@ -250,11 +250,11 @@ def detect_long_functions(code: str, max_lines: int = 50) -> list[tuple[str, int
     and terminates the previous one.
 
     Args:
-        code: Python source text.
-        max_lines: Line-count ceiling.  Blocks at or below this are ignored.
+        code (str): Python source text.
+        max_lines (int, optional): Line-count ceiling.  Blocks at or below this are ignored. Default to 50.
 
     Returns:
-        ``[(function_header, line_count), …]`` for each over-long function.
+        list[tuple[str, int]]: ``[(function_header, line_count), …]`` for each over-long function.
     """
     funcs: list[tuple[str, int]] = []
     current_name = None
@@ -276,10 +276,10 @@ def detect_magic_methods_overuse(code: str) -> list[str]:
     """Collect all dunder-method definitions (``def __xxx__``) in *code*.
 
     Args:
-        code: Python source text to scan.
+        code (str): Python source text to scan.
 
     Returns:
-        Raw matched lines (including leading whitespace) for each dunder ``def``.
+        list[str]: Raw matched lines (including leading whitespace) for each dunder ``def``.
     """
     return re.findall(r"^\s*def\s+__\w+__", code, flags=re.MULTILINE)
 
@@ -292,10 +292,10 @@ def detect_multiple_implementations(files: dict[str, str]) -> list[DuplicateFind
     ``DuplicateFinding``.
 
     Args:
-        files: ``{filename: source_code}`` mapping.
+        files (dict[str, str]): ``{filename: source_code}`` mapping.
 
     Returns:
-        One ``DuplicateFinding`` per duplicated function name.
+        list[DuplicateFinding]: One ``DuplicateFinding`` per duplicated function name.
     """
     name_map: dict[str, list[str]] = {}
     for fname, code in files.items():
@@ -322,12 +322,12 @@ def detect_god_classes(
     counting indented ``def`` lines inside each block.
 
     Args:
-        code: Python source text.
-        max_methods: Method-count ceiling.
-        max_lines: Line-span ceiling.
+        code (str): Python source text.
+        max_methods (int, optional): Method-count ceiling. Default to 10.
+        max_lines (int, optional): Line-span ceiling. Default to 500.
 
     Returns:
-        One ``GodClassFinding`` per class breaching either threshold.
+        list[GodClassFinding]: One ``GodClassFinding`` per class breaching either threshold.
     """
     results: list[GodClassFinding] = []
     lines = code.splitlines()
@@ -352,7 +352,7 @@ def detect_god_classes(
             method_count = 0
         elif current_class and re.match(r"^\s+def\s+\w+", ln):
             method_count += 1
-    # finalize
+
     if current_class:
         length = len(lines) - class_start + 1
         if method_count > max_methods or length > max_lines:
@@ -376,11 +376,13 @@ def detect_deep_inheritance(
     then walks chains recursively.  Cycles are detected and short-circuited.
 
     Args:
-        code_map: ``{filepath: source_code}`` mapping for all files to consider.
-        max_depth: Maximum allowed inheritance hops.
+        code_map (dict[str, str]): ``{filepath: source_code}`` mapping for all
+            files to consider.
+        max_depth (int, optional): Maximum allowed inheritance hops. Default to 3.
 
     Returns:
-        One ``InheritanceFinding`` per chain exceeding *max_depth*.
+        list[InheritanceFinding]: One ``InheritanceFinding`` per chain
+        exceeding *max_depth*.
     """
     parent_map: dict[str, list[str]] = {}
     for code in code_map.values():
@@ -388,7 +390,7 @@ def detect_deep_inheritance(
             cls = m.group(1)
             parents = [p.strip().split()[0] for p in m.group(2).split(",") if p.strip()]
             parent_map[cls] = parents
-    # compute chains
+
     results: list[InheritanceFinding] = []
 
     def walk_chain(start: str, seen: set[str]) -> list[list[str] | str]:
@@ -423,10 +425,10 @@ def detect_dependency_cycles(
     """Find circular dependencies in a directed edge list via depth-first search.
 
     Args:
-        edges: ``[(source, target), …]`` import-dependency pairs.
+        edges (list[tuple[str, str]]): ``[(source, target), …]`` import-dependency pairs.
 
     Returns:
-        One ``DependencyCycleFinding`` per distinct cycle discovered.
+        list[DependencyCycleFinding]: One ``DependencyCycleFinding`` per distinct cycle discovered.
     """
     adj: dict[str, list[str]] = {}
     for a, b in edges:
@@ -460,17 +462,22 @@ def detect_feature_envy(code: str) -> list[FeatureEnvyFinding]:
     When any single external name outweighs ``self`` references, a finding
     is emitted.
 
+    Note:
+        This is a deliberately naive global heuristic — it counts all
+        ``self.attr`` occurrences against all ``other.attr`` occurrences
+        without scope isolation.  Method-level granularity may be added
+        in a future iteration.
+
     Args:
-        code: Python source text.
+        code (str): Python source text.
 
     Returns:
-        At most one ``FeatureEnvyFinding`` per file.
+        list[FeatureEnvyFinding]: At most one ``FeatureEnvyFinding`` per
+        file.
     """
     results: list[FeatureEnvyFinding] = []
-    # Very naive: count occurrences of 'other.attr' patterns vs 'self.attr'
     for _ in re.finditer(r"def\s+(\w+)\(|class\s+(\w+)", code):
         pass
-    # Simple global heuristic across whole file
     self_refs = len(re.findall(r"self\.[a-zA-Z_]+", code))
     others = re.findall(r"(\w+)\.[a-zA-Z_]+", code)
     other_counts: dict[str, int] = {}
@@ -500,11 +507,11 @@ def detect_sparse_code(
     Comment-only lines are skipped.
 
     Args:
-        code: Python source text.
-        max_statements_per_line: Maximum allowed statements per line.
+        code (str): Python source text.
+        max_statements_per_line (int, optional): Maximum allowed statements per line. Default to 1.
 
     Returns:
-        One ``SparseCodeFinding`` per offending line.
+        list[SparseCodeFinding]: One ``SparseCodeFinding`` per offending line.
     """
     results: list[SparseCodeFinding] = []
     for i, line in enumerate(code.splitlines(), start=1):
@@ -520,10 +527,10 @@ def detect_inconsistent_naming_styles(code: str) -> list[ConsistencyFinding]:
     """Check whether function names mix ``snake_case``, ``camelCase``, or ``PascalCase``.
 
     Args:
-        code: Python source text.
+        code (str): Python source text.
 
     Returns:
-        A single-element list when more than one style is detected,
+        list[ConsistencyFinding]: A single-element list when more than one style is detected,
         otherwise an empty list.
     """
     styles: set[str] = set()
@@ -546,10 +553,10 @@ def detect_missing_type_hints(code: str) -> list[ExplicitnessFinding]:
     """Walk the AST to find functions with unannotated parameters (excluding ``self``).
 
     Args:
-        code: Python source text.
+        code (str): Python source text.
 
     Returns:
-        One ``ExplicitnessFinding`` per function with at least one missing annotation.
+        list[ExplicitnessFinding]: One ``ExplicitnessFinding`` per function with at least one missing annotation.
     """
     results: list[ExplicitnessFinding] = []
     try:
@@ -575,10 +582,10 @@ def detect_namespace_usage(code: str) -> NamespaceFinding:
     """Count top-level symbols and ``__all__`` entries to gauge namespace pollution.
 
     Args:
-        code: Python source text.
+        code (str): Python source text.
 
     Returns:
-        A ``NamespaceFinding`` with symbol count and optional export count.
+        NamespaceFinding: A ``NamespaceFinding`` with symbol count and optional export count.
     """
     top_level_symbols = 0
     export_count: int | None = None
@@ -616,10 +623,10 @@ def detect_ts_any_usage(code: str) -> TsAnyFinding:
     """Count occurrences of the ``any`` type keyword in TypeScript source.
 
     Args:
-        code: TypeScript source text.
+        code (str): TypeScript source text.
 
     Returns:
-        A ``TsAnyFinding`` with the match count.
+        TsAnyFinding: A ``TsAnyFinding`` with the match count.
     """
     count = len(re.findall(r"\bany\b", code))
     return TsAnyFinding(count=count)
@@ -629,10 +636,10 @@ def detect_ts_object_type_aliases(code: str) -> TsTypeAliasFinding:
     """Count ``type X = { … }`` object-literal type aliases in TypeScript.
 
     Args:
-        code: TypeScript source text.
+        code (str): TypeScript source text.
 
     Returns:
-        A ``TsTypeAliasFinding`` with the match count.
+        TsTypeAliasFinding: A ``TsTypeAliasFinding`` with the match count.
     """
     count = len(re.findall(r"\btype\s+\w+\s*=\s*\{", code))
     return TsTypeAliasFinding(count=count)
@@ -642,10 +649,10 @@ def detect_ts_missing_return_types(code: str) -> TsReturnTypeFinding:
     """Count exported functions lacking an explicit return-type annotation.
 
     Args:
-        code: TypeScript source text.
+        code (str): TypeScript source text.
 
     Returns:
-        A ``TsReturnTypeFinding`` with the match count.
+        TsReturnTypeFinding: A ``TsReturnTypeFinding`` with the match count.
     """
     count = len(re.findall(r"export\s+function\s+\w+\s*\([^)]*\)\s*\{", code))
     return TsReturnTypeFinding(count=count)
@@ -655,10 +662,10 @@ def detect_ts_readonly_usage(code: str) -> TsReadonlyFinding:
     """Count ``readonly`` modifier occurrences in TypeScript source.
 
     Args:
-        code: TypeScript source text.
+        code (str): TypeScript source text.
 
     Returns:
-        A ``TsReadonlyFinding`` with the match count.
+        TsReadonlyFinding: A ``TsReadonlyFinding`` with the match count.
     """
     count = len(re.findall(r"\breadonly\b", code))
     return TsReadonlyFinding(count=count)
@@ -668,10 +675,10 @@ def detect_ts_type_assertions(code: str) -> TsAssertionFinding:
     """Count ``as T`` type-assertion expressions in TypeScript source.
 
     Args:
-        code: TypeScript source text.
+        code (str): TypeScript source text.
 
     Returns:
-        A ``TsAssertionFinding`` with the match count.
+        TsAssertionFinding: A ``TsAssertionFinding`` with the match count.
     """
     count = len(re.findall(r"\bas\s+\w+", code))
     return TsAssertionFinding(count=count)
@@ -681,10 +688,10 @@ def detect_ts_utility_types(code: str) -> TsUtilityTypeFinding:
     """Count built-in utility-type references (``Partial``, ``Pick``, ``Omit``, ``Record``, ``Readonly``).
 
     Args:
-        code: TypeScript source text.
+        code (str): TypeScript source text.
 
     Returns:
-        A ``TsUtilityTypeFinding`` with the combined match count.
+        TsUtilityTypeFinding: A ``TsUtilityTypeFinding`` with the combined match count.
     """
     count = len(re.findall(r"\b(Partial|Pick|Omit|Record|Readonly)\b", code))
     return TsUtilityTypeFinding(count=count)
@@ -694,10 +701,10 @@ def detect_ts_non_null_assertions(code: str) -> TsNonNullFinding:
     """Count non-null assertion operators (``expr!``) in TypeScript source.
 
     Args:
-        code: TypeScript source text.
+        code (str): TypeScript source text.
 
     Returns:
-        A ``TsNonNullFinding`` with the match count.
+        TsNonNullFinding: A ``TsNonNullFinding`` with the match count.
     """
     count = len(re.findall(r"\b\w+!", code))
     return TsNonNullFinding(count=count)
@@ -707,10 +714,10 @@ def detect_ts_plain_enum_objects(code: str) -> TsEnumObjectFinding:
     """Count ``const X = {`` patterns that may function as ad-hoc enums.
 
     Args:
-        code: TypeScript source text.
+        code (str): TypeScript source text.
 
     Returns:
-        A ``TsEnumObjectFinding`` with the match count.
+        TsEnumObjectFinding: A ``TsEnumObjectFinding`` with the match count.
     """
     count = len(re.findall(r"\bconst\s+\w+\s*=\s*\{", code))
     return TsEnumObjectFinding(count=count)
@@ -723,10 +730,10 @@ def detect_ts_unknown_over_any(code: str) -> TsUnknownAnyFinding:
     should migrate toward ``unknown`` for safer type narrowing.
 
     Args:
-        code: TypeScript source text.
+        code (str): TypeScript source text.
 
     Returns:
-        A ``TsUnknownAnyFinding`` with both counts.
+        TsUnknownAnyFinding: A ``TsUnknownAnyFinding`` with both counts.
     """
     any_count = len(re.findall(r"\bany\b", code))
     unknown_count = len(re.findall(r"\bunknown\b", code))

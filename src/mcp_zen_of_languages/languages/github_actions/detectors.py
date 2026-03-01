@@ -4,14 +4,14 @@ from __future__ import annotations
 
 import re
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    LocationHelperMixin,
-    ViolationDetector,
-)
-from mcp_zen_of_languages.languages.ci_yaml_utils import job_steps, workflow_jobs
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.ci_yaml_utils import job_steps
+from mcp_zen_of_languages.languages.ci_yaml_utils import workflow_jobs
 from mcp_zen_of_languages.languages.configs import GitHubActionsWorkflowConfig
 from mcp_zen_of_languages.models import Violation
+
 
 _SEVERITY: dict[str, int] = {
     "gha-001": 9,

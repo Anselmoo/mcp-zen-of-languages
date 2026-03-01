@@ -3,10 +3,12 @@ from __future__ import annotations
 from typing import ClassVar
 
 import pytest
+
 from pydantic import BaseModel
 
 from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
 from mcp_zen_of_languages.models import CyclomaticSummary
+
 
 EXPECTED_TWO_LINE_SOURCE = 2
 

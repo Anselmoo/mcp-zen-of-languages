@@ -1,13 +1,11 @@
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
 from mcp_zen_of_languages.analyzers.registry import REGISTRY
-from mcp_zen_of_languages.languages.go.detectors import (
-    GoContextUsageDetector,
-    GoDeferUsageDetector,
-    GoErrorHandlingDetector,
-    GoGoroutineLeakDetector,
-    GoInterfaceSizeDetector,
-    GoNamingConventionDetector,
-)
+from mcp_zen_of_languages.languages.go.detectors import GoContextUsageDetector
+from mcp_zen_of_languages.languages.go.detectors import GoDeferUsageDetector
+from mcp_zen_of_languages.languages.go.detectors import GoErrorHandlingDetector
+from mcp_zen_of_languages.languages.go.detectors import GoGoroutineLeakDetector
+from mcp_zen_of_languages.languages.go.detectors import GoInterfaceSizeDetector
+from mcp_zen_of_languages.languages.go.detectors import GoNamingConventionDetector
 from mcp_zen_of_languages.languages.go.rules import GO_ZEN
 
 

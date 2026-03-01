@@ -42,14 +42,13 @@ from mcp_zen_of_languages.orchestration import (
     collect_targets as _shared_collect_targets,
 )
 from mcp_zen_of_languages.reporting.gaps import build_gap_analysis
-from mcp_zen_of_languages.reporting.models import (
-    AnalysisSummary,
-    GapAnalysis,
-    ReportContext,
-    ReportOutput,
-)
+from mcp_zen_of_languages.reporting.models import AnalysisSummary
+from mcp_zen_of_languages.reporting.models import GapAnalysis
+from mcp_zen_of_languages.reporting.models import ReportContext
+from mcp_zen_of_languages.reporting.models import ReportOutput
 from mcp_zen_of_languages.reporting.prompts import build_prompt_bundle
 from mcp_zen_of_languages.utils.markdown_quality import normalize_markdown
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.models import AnalysisResult
@@ -74,8 +73,8 @@ def _collect_targets(
     extensions are skipped unless a language override is active.
 
     Args:
-        target: Filesystem path (file or directory) to scan.
-        language_override: When set, only files matching this language are collected.
+        target (Path): Filesystem path (file or directory) to scan.
+        language_override (str | None): When set, only files matching this language are collected.
 
     Returns:
         list[tuple[Path, str]]: Pairs of ``(file_path, language)`` ready for analysis.
@@ -95,8 +94,8 @@ def _analyze_targets(
     are silently skipped.
 
     Args:
-        targets: ``(path, language)`` pairs produced by ``_collect_targets``.
-        config_path: Optional path to a ``zen-config.yaml`` override.
+        targets (list[tuple[Path, str]]): ``(path, language)`` pairs produced by ``_collect_targets``.
+        config_path (str | None): Optional path to a ``zen-config.yaml`` override.
 
     Returns:
         list[AnalysisResult]: Per-file analysis results with violations and metrics.
@@ -112,7 +111,7 @@ def _build_repository_imports(files: list[Path]) -> dict[str, list[str]]:
     dependency detectors a repository-level view of module usage.
 
     Args:
-        files: Python source files to scan for import statements.
+        files (list[Path]): Python source files to scan for import statements.
 
     Returns:
         dict[str, list[str]]: Mapping from file path string to imported root module names.
@@ -128,7 +127,7 @@ def _summarize_results(results: list[AnalysisResult]) -> AnalysisSummary:
     is derived from unique ``path`` values across all results.
 
     Args:
-        results: Analysis results spanning one or more files and languages.
+        results (list[AnalysisResult]): Analysis results spanning one or more files and languages.
 
     Returns:
         AnalysisSummary: Total files, total violations, and severity bucket counts.
@@ -158,8 +157,8 @@ def _markdown_table(headers: list[str], rows: list[list[str]]) -> list[str]:
     """Render a pipe-delimited Markdown table from headers and row data.
 
     Args:
-        headers: Column header labels for the table.
-        rows: List of row values, each list matching the header count.
+        headers (list[str]): Column header labels for the table.
+        rows (list[list[str]]): List of row values, each list matching the header count.
 
     Returns:
         list[str]: Markdown lines including the header, separator, and data rows.
@@ -175,7 +174,7 @@ def _format_summary_markdown(summary: AnalysisSummary) -> list[str]:
     """Format the analysis summary as a Markdown table under a ``## Summary`` heading.
 
     Args:
-        summary: Aggregated violation counts to render.
+        summary (AnalysisSummary): Aggregated violation counts to render.
 
     Returns:
         list[str]: Markdown lines for the summary section.
@@ -202,7 +201,7 @@ def _format_gap_markdown(gaps: GapAnalysis) -> list[str]:
     suggested next step.
 
     Args:
-        gaps: Combined gap analysis to render.
+        gaps (GapAnalysis): Combined gap analysis to render.
 
     Returns:
         list[str]: Markdown lines for the gap analysis section.
@@ -242,7 +241,7 @@ def _format_analysis_markdown(results: list[AnalysisResult]) -> list[str]:
     suggestion.
 
     Args:
-        results: Analysis results to render, one sub-section per file.
+        results (list[AnalysisResult]): Analysis results to render, one sub-section per file.
 
     Returns:
         list[str]: Markdown lines for the analysis section.
@@ -279,7 +278,7 @@ def _format_prompts_markdown(context: ReportContext) -> list[str]:
     each generic prompt as a bullet.
 
     Args:
-        context: Report context carrying the optional prompt bundle.
+        context (ReportContext): Report context carrying the optional prompt bundle.
 
     Returns:
         list[str]: Markdown lines for the remediation prompts section (empty if no prompts).
@@ -333,12 +332,12 @@ def generate_report(  # noqa: PLR0913
     normalised Markdown document alongside a serialised data dict.
 
     Args:
-        target_path: File or directory to analyse.
-        config_path: Optional path to a ``zen-config.yaml`` override file.
-        language: When set, restricts analysis to this single language.
-        include_prompts: Attach per-file and generic remediation prompts.
-        include_analysis: Run analyzers and include a violation summary.
-        include_gaps: Perform detector coverage gap analysis.
+        target_path (str): File or directory to analyse.
+        config_path (str | None, optional): Optional path to a ``zen-config.yaml`` override file. Default to None.
+        language (str | None, optional): When set, restricts analysis to this single language. Default to None.
+        include_prompts (bool, optional): Attach per-file and generic remediation prompts. Default to False.
+        include_analysis (bool, optional): Run analyzers and include a violation summary. Default to True.
+        include_gaps (bool, optional): Perform detector coverage gap analysis. Default to True.
 
     Returns:
         ReportOutput: Markdown report text and equivalent machine-readable data dict.

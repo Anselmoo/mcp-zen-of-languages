@@ -6,6 +6,7 @@ from mcp_zen_of_languages.core.detectors.shared_keyword import (
 )
 from mcp_zen_of_languages.languages.configs import DetectorConfig
 
+
 EXPECTED_MATCH_LINE = 2
 
 

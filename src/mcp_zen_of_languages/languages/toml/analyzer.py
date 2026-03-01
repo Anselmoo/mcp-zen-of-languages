@@ -4,20 +4,21 @@ from __future__ import annotations
 
 import logging
 import tomllib
+
 from typing import TYPE_CHECKING
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
     from mcp_zen_of_languages.models import CyclomaticSummary
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    AnalyzerCapabilities,
-    AnalyzerConfig,
-    BaseAnalyzer,
-    DetectionPipeline,
-)
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import AnalyzerCapabilities
+from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
+from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
+from mcp_zen_of_languages.analyzers.base import DetectionPipeline
 from mcp_zen_of_languages.models import ParserResult
+
 
 logger = logging.getLogger(__name__)
 
@@ -42,10 +43,10 @@ class TomlAnalyzer(BaseAnalyzer):
         """Set up the TOML analyzer with optional threshold and pipeline overrides.
 
         Args:
-            config: Analyzer configuration controlling detection thresholds
-                such as comment clarity or key casing limits.
-            pipeline_config: Optional overrides that customize which TOML
-                detectors run and their individual settings.
+            config (AnalyzerConfig | None, optional): Analyzer configuration controlling detection thresholds
+                such as comment clarity or key casing limits. Default to None.
+            pipeline_config (PipelineConfig | None, optional): Optional overrides that customize which TOML
+                detectors run and their individual settings. Default to None.
         """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
@@ -74,10 +75,10 @@ class TomlAnalyzer(BaseAnalyzer):
         """Parse TOML text into a mapping via ``tomllib.loads``.
 
         Args:
-            code: Raw TOML text to parse.
+            code (str): Raw TOML text to parse.
 
         Returns:
-            ParserResult wrapping the parsed mapping, or ``None`` on parse failure.
+            ParserResult | None: ParserResult wrapping the parsed mapping, or ``None`` on parse failure.
         """
         try:
             tree = tomllib.loads(code)
@@ -94,8 +95,8 @@ class TomlAnalyzer(BaseAnalyzer):
         """Compute a line count for the TOML file; complexity metrics are not applicable.
 
         Args:
-            code: Raw TOML text whose lines are counted.
-            ast_tree: Unused; included for interface compatibility with [`BaseAnalyzer`][BaseAnalyzer].
+            code (str): Raw TOML text whose lines are counted.
+            ast_tree (ParserResult | None): Unused; included for interface compatibility with [`BaseAnalyzer`][BaseAnalyzer].
 
         Returns:
             tuple[CyclomaticSummary | None, float | None, int]: ``(None, None, line_count)``
@@ -116,7 +117,7 @@ class TomlAnalyzer(BaseAnalyzer):
         """Return ``None`` because TOML files have no cross-file dependency semantics.
 
         Args:
-            context: Current analysis context (unused for TOML).
+            context (AnalysisContext): Current analysis context (unused for TOML).
 
         Returns:
             object | None: Always ``None``; TOML documents are self-contained.

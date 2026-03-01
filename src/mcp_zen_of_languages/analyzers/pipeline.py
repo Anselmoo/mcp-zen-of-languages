@@ -22,12 +22,15 @@ from __future__ import annotations
 
 import logging
 import os
+
 from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel
+from pydantic import field_validator
 
 from mcp_zen_of_languages.languages.configs import DetectorConfig  # noqa: TC001
 from mcp_zen_of_languages.rules import get_language_zen
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
@@ -73,11 +76,11 @@ class PipelineConfig(BaseModel):
         model by inspecting the ``type`` discriminator field.
 
         Args:
-            value: Raw list of dicts or config instances from YAML or
+            value (object): Raw list of dicts or config instances from YAML or
                 programmatic construction.
 
         Returns:
-            Typed detector config instances ready for pipeline execution.
+            list[DetectorConfig]: Typed detector config instances ready for pipeline execution.
 
         Raises:
             TypeError: If *value* is not a list.
@@ -100,11 +103,11 @@ class PipelineConfig(BaseModel):
         to project each principle's metrics onto the matching detector configs.
 
         Args:
-            language: Language key recognised by [`get_language_zen`][mcp_zen_of_languages.rules.get_language_zen]
+            language (str): Language key recognised by [`get_language_zen`][mcp_zen_of_languages.rules.get_language_zen]
                 (e.g. ``"python"``).
 
         Returns:
-            A fully populated ``PipelineConfig`` whose detector list reflects
+            PipelineConfig: A fully populated ``PipelineConfig`` whose detector list reflects
             all zen principles defined for the language.
 
         Raises:
@@ -135,11 +138,11 @@ def project_rules_to_configs(lang_zen: LanguageZenPrinciples) -> list[DetectorCo
     immediately so typos in rule definitions are caught at startup.
 
     Args:
-        lang_zen: The complete set of zen principles for a single language,
+        lang_zen (LanguageZenPrinciples): The complete set of zen principles for a single language,
             including metric thresholds and violation specs.
 
     Returns:
-        Ordered detector configs with thresholds populated from the rules.
+        list[DetectorConfig]: Ordered detector configs with thresholds populated from the rules.
 
     See Also:
         ``DetectorRegistry.configs_from_rules``
@@ -163,13 +166,13 @@ def merge_pipeline_overrides(
     doesn't appear in the base are appended as new detector entries.
 
     Args:
-        base: Pipeline produced by ``PipelineConfig.from_rules`` with
+        base (PipelineConfig): Pipeline produced by ``PipelineConfig.from_rules`` with
             thresholds derived from canonical zen principles.
-        overrides: Pipeline section from ``zen-config.yaml``, or ``None``
+        overrides (PipelineConfig | None): Pipeline section from ``zen-config.yaml``, or ``None``
             to skip merging entirely.
 
     Returns:
-        A new ``PipelineConfig`` containing the merged detector list.
+        PipelineConfig: A new ``PipelineConfig`` containing the merged detector list.
 
     Raises:
         ValueError: If *overrides.language* doesn't match *base.language*.

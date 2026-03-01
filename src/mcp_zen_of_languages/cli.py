@@ -20,27 +20,32 @@ import json
 import logging
 import os
 import sys
+
 from collections import Counter
 from pathlib import Path
 from types import SimpleNamespace
-from typing import TYPE_CHECKING, Annotated, Any, Literal, Protocol, cast
+from typing import TYPE_CHECKING
+from typing import Annotated
+from typing import Any
+from typing import Literal
+from typing import Protocol
+from typing import cast
 
 import click
 import typer
 import typer.rich_utils as typer_rich_utils
+
 from rich.console import Group
 from rich.text import Text
 
 from mcp_zen_of_languages import __version__
-from mcp_zen_of_languages.models import (
-    AnalysisResult,
-    CyclomaticSummary,
-    Metrics,
-    ProjectSummary,
-    RulesSummary,
-    SeverityCounts,
-    WorstOffender,
-)
+from mcp_zen_of_languages.models import AnalysisResult
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import Metrics
+from mcp_zen_of_languages.models import ProjectSummary
+from mcp_zen_of_languages.models import RulesSummary
+from mcp_zen_of_languages.models import SeverityCounts
+from mcp_zen_of_languages.models import WorstOffender
 from mcp_zen_of_languages.orchestration import (
     analyze_targets as _shared_analyze_targets,
 )
@@ -50,41 +55,38 @@ from mcp_zen_of_languages.orchestration import (
 from mcp_zen_of_languages.orchestration import (
     collect_targets as _shared_collect_targets,
 )
-from mcp_zen_of_languages.rendering import (
-    analysis_progress,
-    console,
-    file_glyph,
-    get_banner_art,
-    is_quiet,
-    print_banner,
-    print_error,
-    render_report_terminal,
-    set_quiet,
-    severity_badge,
-)
-from mcp_zen_of_languages.rendering.factories import (
-    zen_header_panel,
-    zen_panel,
-    zen_table,
-)
+from mcp_zen_of_languages.rendering import analysis_progress
+from mcp_zen_of_languages.rendering import console
+from mcp_zen_of_languages.rendering import file_glyph
+from mcp_zen_of_languages.rendering import get_banner_art
+from mcp_zen_of_languages.rendering import is_quiet
+from mcp_zen_of_languages.rendering import print_banner
+from mcp_zen_of_languages.rendering import print_error
+from mcp_zen_of_languages.rendering import render_report_terminal
+from mcp_zen_of_languages.rendering import set_quiet
+from mcp_zen_of_languages.rendering import severity_badge
+from mcp_zen_of_languages.rendering.factories import zen_header_panel
+from mcp_zen_of_languages.rendering.factories import zen_panel
+from mcp_zen_of_languages.rendering.factories import zen_table
 from mcp_zen_of_languages.rendering.layout import MAX_OUTPUT_WIDTH
 from mcp_zen_of_languages.rendering.sarif import analysis_results_to_sarif
-from mcp_zen_of_languages.reporting.agent_tasks import AgentTaskList, build_agent_tasks
+from mcp_zen_of_languages.reporting.agent_tasks import AgentTaskList
+from mcp_zen_of_languages.reporting.agent_tasks import build_agent_tasks
 from mcp_zen_of_languages.reporting.prompts import build_prompt_bundle
 from mcp_zen_of_languages.reporting.terminal import (
     build_agent_tasks_table as render_agent_tasks_table,
 )
-from mcp_zen_of_languages.reporting.terminal import (
-    render_prompt_panel,
-)
+from mcp_zen_of_languages.reporting.terminal import render_prompt_panel
 from mcp_zen_of_languages.rules import get_language_zen
 from mcp_zen_of_languages.utils.markdown_quality import normalize_markdown
 from mcp_zen_of_languages.utils.subprocess_runner import KNOWN_TOOLS
 
+
 if TYPE_CHECKING:
     from rich.table import Table
 
-    from mcp_zen_of_languages.reporting.models import PromptBundle, ReportOutput
+    from mcp_zen_of_languages.reporting.models import PromptBundle
+    from mcp_zen_of_languages.reporting.models import ReportOutput
 
 logger = logging.getLogger(__name__)
 logger.setLevel(
@@ -194,8 +196,8 @@ def _configure_app(
     pyfiglet banner prints once, giving users a visual anchor.
 
     Args:
-        quiet (bool): Suppress decorative banners, panels, and progress bars.
-        verbose (bool): Enable Rich tracebacks with local-variable inspection.
+        quiet (bool, optional): Suppress decorative banners, panels, and progress bars. Default to False.
+        verbose (bool, optional): Enable Rich tracebacks with local-variable inspection. Default to False.
 
     See Also:
         [`_install_rich_traceback`][_install_rich_traceback]: Activated when *verbose* is ``True``.
@@ -713,10 +715,10 @@ def _analyze_targets(
     Args:
         targets (list[tuple[Path, str]]): ``(file, language)`` pairs produced by [`_collect_targets`][_collect_targets].
         config_path (str | None): Custom ``zen-config.yaml`` path, or ``None`` for auto-discovery.
-        enable_external_tools (bool): Enable optional external language tools
-            (best effort, no auto-install).
-        allow_temporary_tools (bool): Allow temporary-runner fallback
-            strategies (for example ``npx``/``uvx``) when enabled.
+        enable_external_tools (bool, optional): Enable optional external language tools
+            (best effort, no auto-install). Default to False.
+        allow_temporary_tools (bool, optional): Allow temporary-runner fallback Default to False.
+            strategies (for example ``npx``/``uvx``) when enabled. Default to False.
 
     Returns:
         list[AnalysisResult]: One result per input file, preserving target order within
@@ -1192,7 +1194,8 @@ def _run_init_interactive(args: InitArgs) -> tuple[list[str], str, bool]:
         [`_run_init`][_run_init]: Calls this helper when stdin is a TTY and
         ``--yes`` was not passed.
     """
-    from rich.prompt import Confirm, Prompt
+    from rich.prompt import Confirm
+    from rich.prompt import Prompt
 
     detected = _detect_languages(Path.cwd())
     languages = args.languages
@@ -1440,10 +1443,8 @@ def _run_export_mapping(args: ExportMappingArgs) -> int:  # noqa: C901, PLR0912
     See Also:
         [`export_mapping`][export_mapping]: Typer command that delegates here.
     """
-    from mcp_zen_of_languages.rules.mapping_export import (
-        build_rule_detector_mapping,
-        export_mapping_json,
-    )
+    from mcp_zen_of_languages.rules.mapping_export import build_rule_detector_mapping
+    from mcp_zen_of_languages.rules.mapping_export import export_mapping_json
 
     payload = build_rule_detector_mapping(args.languages)
     if args.out:
@@ -1565,17 +1566,17 @@ def reports(  # noqa: PLR0913
     keep reports compact.
 
     Args:
-        path (str): File or directory to analyse — directories are walked recursively.
-        language (str | None): Override extension-based language detection.
-        config (str | None): Path to a custom ``zen-config.yaml``; auto-discovered when omitted.
-        output_format (Literal['markdown', 'json', 'both']): Primary output serialisation format.
-        out (str | None): Write the rendered report to this file instead of stdout.
-        export_json (str | None): Sidecar path for the raw JSON data export.
-        export_markdown (str | None): Sidecar path for the rendered markdown export.
-        export_log (str | None): Sidecar path for a compact key-value log summary.
-        include_prompts (bool): Append remediation prompt text to the report body.
-        skip_analysis (bool): Omit the per-file analysis details chapter.
-        skip_gaps (bool): Omit the gap-analysis chapter.
+        path (str, optional): File or directory to analyse — directories are walked recursively. Default to typer.Argument(..., help='File or directory to analyze').
+        language (str | None, optional): Override extension-based language detection. Default to typer.Option(None, help='Override language detection').
+        config (str | None, optional): Path to a custom ``zen-config.yaml``; auto-discovered when omitted. Default to typer.Option(None, help='Path to zen-config.yaml').
+        output_format (Literal['markdown', 'json', 'both'], optional): Primary output serialisation format. Default to typer.Option('markdown', '--format', help='Output format', show_choices=True).
+        out (str | None, optional): Write the rendered report to this file instead of stdout. Default to typer.Option(None, help='Write output to file').
+        export_json (str | None, optional): Sidecar path for the raw JSON data export. Default to typer.Option(None, '--export-json', help='Write report JSON to file').
+        export_markdown (str | None, optional): Sidecar path for the rendered markdown export. Default to typer.Option(None, '--export-markdown', help='Write report markdown to file').
+        export_log (str | None, optional): Sidecar path for a compact key-value log summary. Default to typer.Option(None, '--export-log', help='Write log summary to file').
+        include_prompts (bool, optional): Append remediation prompt text to the report body. Default to False.
+        skip_analysis (bool, optional): Omit the per-file analysis details chapter. Default to False.
+        skip_gaps (bool, optional): Omit the gap-analysis chapter. Default to False.
 
     Returns:
         int: Process exit code — ``0`` on success, ``2`` on input errors.
@@ -1649,18 +1650,18 @@ def check(  # noqa: PLR0913
     """Run zen analysis for a path with optional CI gating and machine output.
 
     Args:
-        path (str): File or directory to analyze.
-        language (str | None): Optional language override.
-        config (str | None): Optional path to ``zen-config.yaml``.
-        output_format (Literal["terminal", "json", "sarif"]): Output format.
-        out (str | None): Optional file path for output payload.
-        fail_on_severity (int | None): Exit with code ``1`` when any
-            violation has severity greater than or equal to this threshold.
-        show_files (bool): Include per-file violation details in terminal output.
-        enable_external_tools (bool): Opt-in execution of allow-listed external
-            analysis tools.
-        allow_temporary_runners (bool): Permit temporary-runner fallback
-            strategies for optional external tools.
+        path (str, optional): File or directory to analyze. Default to typer.Argument(..., help='File or directory to analyze').
+        language (str | None, optional): Optional language override. Default to typer.Option(None, help='Override language detection').
+        config (str | None, optional): Optional path to ``zen-config.yaml``. Default to typer.Option(None, help='Path to zen-config.yaml').
+        output_format (Literal["terminal", "json", "sarif"], optional): Output format. Default to typer.Option('terminal', '--format', help='Output format', show_choices=True).
+        out (str | None, optional): Optional file path for output payload. Default to typer.Option(None, help='Write output to file').
+        fail_on_severity (int | None, optional): Exit with code ``1`` when any
+            violation has severity greater than or equal to this threshold. Default to typer.Option(None, '--fail-on-severity', min=1, max=10, help='Exit with code 1 when any violation has severity >= this threshold').
+        show_files (bool, optional): Include per-file violation details in terminal output. Default to False.
+        enable_external_tools (bool, optional): Opt-in execution of allow-listed external
+            analysis tools. Default to typer.Option(EXTERNAL_TOOLS_DEFAULT, '--enable-external-tools', help='Opt-in to run available external language tools (no auto-install; missing tools emit recommendations).').
+        allow_temporary_runners (bool, optional): Permit temporary-runner fallback
+            strategies for optional external tools. Default to typer.Option(TEMPORARY_RUNNERS_DEFAULT, '--allow-temporary-runners', help='Allow temporary runner fallback (for example npx/uvx) when external tools are enabled.').
 
     Returns:
         int: Exit code ``0`` on success, ``1`` for severity-gated failure,
@@ -1727,17 +1728,17 @@ def prompts(  # noqa: PLR0913
     both — depending on the mode and export flags.
 
     Args:
-        path (str): File or directory whose violations drive prompt generation.
-        language (str | None): Override extension-based language detection.
-        config (str | None): Path to a custom ``zen-config.yaml``; auto-discovered when omitted.
-        mode (Literal['remediation', 'agent', 'both']): Which prompt artefact to produce.
-        export_prompts (str | None): Write remediation markdown to this path.
-        export_agent (str | None): Write agent-task JSON to this path.
-        severity (int | None): Exclude violations below this severity threshold.
-        enable_external_tools (bool): Opt-in execution of allow-listed external
-            analysis tools.
-        allow_temporary_runners (bool): Permit temporary-runner fallback
-            strategies for optional external tools.
+        path (str, optional): File or directory whose violations drive prompt generation. Default to typer.Argument(..., help='File or directory to analyze').
+        language (str | None, optional): Override extension-based language detection. Default to typer.Option(None, help='Override language detection').
+        config (str | None, optional): Path to a custom ``zen-config.yaml``; auto-discovered when omitted. Default to typer.Option(None, help='Path to zen-config.yaml').
+        mode (Literal['remediation', 'agent', 'both'], optional): Which prompt artefact to produce. Default to typer.Option('remediation', help='Prompt generation mode', show_choices=True).
+        export_prompts (str | None, optional): Write remediation markdown to this path. Default to typer.Option(None, '--export-prompts', help='Write prompts markdown to file').
+        export_agent (str | None, optional): Write agent-task JSON to this path. Default to typer.Option(None, '--export-agent', help='Write agent JSON to file').
+        severity (int | None, optional): Exclude violations below this severity threshold. Default to typer.Option(None, help='Minimum severity threshold').
+        enable_external_tools (bool, optional): Opt-in execution of allow-listed external
+            analysis tools. Default to typer.Option(EXTERNAL_TOOLS_DEFAULT, '--enable-external-tools', help='Opt-in to run available external language tools (no auto-install; missing tools emit recommendations).').
+        allow_temporary_runners (bool, optional): Permit temporary-runner fallback
+            strategies for optional external tools. Default to typer.Option(TEMPORARY_RUNNERS_DEFAULT, '--allow-temporary-runners', help='Allow temporary runner fallback (for example npx/uvx) when external tools are enabled.').
 
     Returns:
         int: Process exit code — ``0`` on success, ``2`` on input errors.
@@ -1771,7 +1772,7 @@ def list_rules(language: str = typer.Argument(..., help="Language identifier")) 
     easy to audit which rules are active and how severe they are.
 
     Args:
-        language (str): Language whose zen principles should be listed (e.g. ``"python"``).
+        language (str, optional): Language whose zen principles should be listed (e.g. ``"python"``). Default to typer.Argument(..., help='Language identifier').
 
     Returns:
         int: Process exit code — ``0`` on success, ``2`` if the language is unknown.
@@ -1812,10 +1813,10 @@ def init(
     ``--force`` to overwrite an existing config file.
 
     Args:
-        force (bool): Allow overwriting an existing ``zen-config.yaml``.
-        yes (bool): Accept all defaults without interactive prompts.
-        languages (list[str] | None): Pre-selected languages; ``None`` triggers auto-detection.
-        strictness (Literal['relaxed', 'moderate', 'strict']): Severity threshold preset.
+        force (bool, optional): Allow overwriting an existing ``zen-config.yaml``. Default to False.
+        yes (bool, optional): Accept all defaults without interactive prompts. Default to False.
+        languages (list[str] | None, optional): Pre-selected languages; ``None`` triggers auto-detection. Default to None.
+        strictness (Literal['relaxed', 'moderate', 'strict'], optional): Severity threshold preset. Default to typer.Option('moderate', help='Strictness: relaxed|moderate|strict', show_choices=True).
 
     Returns:
         int: Process exit code — ``0`` on success, ``2`` if the file exists without ``--force``.
@@ -1854,9 +1855,9 @@ def export_mapping(
     registered.
 
     Args:
-        out (str | None): Write JSON mapping to this file and exit.
-        languages (list[str] | None): Restrict output to these languages; ``None`` includes all.
-        output_format (Literal['terminal', 'json']): Output style — Rich table or raw JSON.
+        out (str | None, optional): Write JSON mapping to this file and exit. Default to typer.Option(None, help='Write output to file').
+        languages (list[str] | None, optional): Restrict output to these languages; ``None`` includes all. Default to None.
+        output_format (Literal['terminal', 'json'], optional): Output style — Rich table or raw JSON. Default to typer.Option('terminal', '--format', help='Output format', show_choices=True).
 
     Returns:
         int: Process exit code — always ``0``.
@@ -1877,7 +1878,7 @@ def main(argv: list[str] | None = None) -> int:
     always returns a numeric exit code rather than raising.
 
     Args:
-        argv (list[str] | None): Command-line tokens; defaults to ``sys.argv[1:]``.
+        argv (list[str] | None, optional): Command-line tokens; defaults to ``sys.argv[1:]``.
 
     Returns:
         int: Process exit code — ``0`` for success, non-zero on errors.

@@ -9,12 +9,14 @@ IDs, and a reverse mapping (detector → rules) for cross-referencing.
 from __future__ import annotations
 
 import json
+
 from pathlib import Path
 from typing import Any
 
 from mcp_zen_of_languages.analyzers import registry_bootstrap  # noqa: F401
 from mcp_zen_of_languages.analyzers.registry import REGISTRY
-from mcp_zen_of_languages.rules import get_all_languages, get_language_zen
+from mcp_zen_of_languages.rules import get_all_languages
+from mcp_zen_of_languages.rules import get_language_zen
 
 
 def build_rule_detector_mapping(
@@ -29,11 +31,11 @@ def build_rule_detector_mapping(
     * ``reverse_mapping`` — ``{detector_id: [rule_id, …]}``.
 
     Args:
-        languages: Restrict output to these language keys.  ``None`` includes
-            every language in the registry.
+        languages (list[str] | None, optional): Restrict output to these language keys.  ``None`` includes
+            every language in the registry. Default to None.
 
     Returns:
-        Nested dict ready for ``json.dumps`` serialisation.
+        dict[str, Any]: Nested dict ready for ``json.dumps`` serialisation.
     """
     data: dict[str, Any] = {
         "$schema": "rule_detector_mapping_schema",
@@ -89,11 +91,11 @@ def export_mapping_json(
     """Write the rule-to-detector mapping to *output_path* as pretty-printed JSON.
 
     Args:
-        output_path: Destination file (created or overwritten).
-        languages: Restrict to these language keys.  ``None`` includes all.
+        output_path (str | Path): Destination file (created or overwritten).
+        languages (list[str] | None, optional): Restrict to these language keys.  ``None`` includes all. Default to None.
 
     Returns:
-        The same dict that was written to disk, for programmatic reuse.
+        dict[str, Any]: The same dict that was written to disk, for programmatic reuse.
     """
     data = build_rule_detector_mapping(languages)
     path = Path(output_path)

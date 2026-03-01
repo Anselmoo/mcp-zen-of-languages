@@ -2,33 +2,28 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import (
-    DetectorBinding,
-    LanguageDetectorMap,
-)
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
-from mcp_zen_of_languages.languages.configs import (
-    SqlAliasClarityConfig,
-    SqlAnsi89JoinConfig,
-    SqlDynamicSqlConfig,
-    SqlImplicitJoinCoercionConfig,
-    SqlInsertColumnListConfig,
-    SqlNolockConfig,
-    SqlSelectStarConfig,
-    SqlTransactionBoundaryConfig,
-    SqlUnboundedQueryConfig,
-)
-from mcp_zen_of_languages.languages.sql.detectors import (
-    SqlAliasClarityDetector,
-    SqlAnsi89JoinDetector,
-    SqlDynamicSqlDetector,
-    SqlImplicitJoinCoercionDetector,
-    SqlInsertColumnListDetector,
-    SqlNolockDetector,
-    SqlSelectStarDetector,
-    SqlTransactionBoundaryDetector,
-    SqlUnboundedQueryDetector,
-)
+from mcp_zen_of_languages.languages.configs import SqlAliasClarityConfig
+from mcp_zen_of_languages.languages.configs import SqlAnsi89JoinConfig
+from mcp_zen_of_languages.languages.configs import SqlDynamicSqlConfig
+from mcp_zen_of_languages.languages.configs import SqlImplicitJoinCoercionConfig
+from mcp_zen_of_languages.languages.configs import SqlInsertColumnListConfig
+from mcp_zen_of_languages.languages.configs import SqlNolockConfig
+from mcp_zen_of_languages.languages.configs import SqlSelectStarConfig
+from mcp_zen_of_languages.languages.configs import SqlTransactionBoundaryConfig
+from mcp_zen_of_languages.languages.configs import SqlUnboundedQueryConfig
+from mcp_zen_of_languages.languages.sql.detectors import SqlAliasClarityDetector
+from mcp_zen_of_languages.languages.sql.detectors import SqlAnsi89JoinDetector
+from mcp_zen_of_languages.languages.sql.detectors import SqlDynamicSqlDetector
+from mcp_zen_of_languages.languages.sql.detectors import SqlImplicitJoinCoercionDetector
+from mcp_zen_of_languages.languages.sql.detectors import SqlInsertColumnListDetector
+from mcp_zen_of_languages.languages.sql.detectors import SqlNolockDetector
+from mcp_zen_of_languages.languages.sql.detectors import SqlSelectStarDetector
+from mcp_zen_of_languages.languages.sql.detectors import SqlTransactionBoundaryDetector
+from mcp_zen_of_languages.languages.sql.detectors import SqlUnboundedQueryDetector
+
 
 FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(

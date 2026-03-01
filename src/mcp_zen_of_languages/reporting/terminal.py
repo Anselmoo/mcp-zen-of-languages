@@ -28,21 +28,24 @@ from __future__ import annotations
 from collections import Counter
 from typing import TYPE_CHECKING
 
-from rich.console import Console, Group, RenderableType
+from rich.console import Console
+from rich.console import Group
+from rich.console import RenderableType
 from rich.panel import Panel
 from rich.syntax import Syntax
 from rich.text import Text
 
-from mcp_zen_of_languages.rendering import console, file_glyph, severity_badge
-from mcp_zen_of_languages.rendering.factories import (
-    zen_header_panel,
-    zen_panel,
-    zen_summary_table,
-    zen_table,
-)
+from mcp_zen_of_languages.rendering import console
+from mcp_zen_of_languages.rendering import file_glyph
+from mcp_zen_of_languages.rendering import severity_badge
+from mcp_zen_of_languages.rendering.factories import zen_header_panel
+from mcp_zen_of_languages.rendering.factories import zen_panel
+from mcp_zen_of_languages.rendering.factories import zen_summary_table
+from mcp_zen_of_languages.rendering.factories import zen_table
 from mcp_zen_of_languages.rendering.layout import get_output_width
 from mcp_zen_of_languages.rendering.themes import BOX_CODE
 from mcp_zen_of_languages.reporting.theme_clustering import classify_violation
+
 
 if TYPE_CHECKING:
     from rich.table import Table
@@ -59,7 +62,7 @@ def _active_console(output_console: Console | None = None) -> Console:
     ensuring consistent theme and width settings across the rendering session.
 
     Args:
-        output_console: Optional console override for testing or redirection.
+        output_console (Console | None, optional): Optional console override for testing or redirection. Default to None.
 
     Returns:
         Console: Active console instance for subsequent Rich operations.
@@ -77,8 +80,8 @@ def _build_prompt_file_summary(
     and a severity badge for the highest-severity violation in that file.
 
     Args:
-        results: Analysis results to summarise, one row per file with violations.
-        output_console: Optional console override for width calculation.
+        results (list[AnalysisResult]): Analysis results to summarise, one row per file with violations.
+        output_console (Console | None, optional): Optional console override for width calculation. Default to None.
 
     Returns:
         Table: Rich table renderable with File / Issues / Summary columns.
@@ -116,8 +119,8 @@ def _build_generic_prompts_table(
     giving a quick overview without expanding full descriptions.
 
     Args:
-        bundle: Prompt bundle whose ``generic_prompts`` are rendered.
-        output_console: Optional console override for width calculation.
+        bundle (PromptBundle): Prompt bundle whose ``generic_prompts`` are rendered.
+        output_console (Console | None, optional): Optional console override for width calculation. Default to None.
 
     Returns:
         Table | None: Rich table renderable, or ``None`` when no generic prompts exist.
@@ -144,9 +147,9 @@ def _build_prompt_details_renderable(prompt: str, language: str, width: int) -> 
     a title.
 
     Args:
-        prompt: Raw Markdown prompt text containing interleaved prose and code.
-        language: Default language for syntax highlighting when fences omit it.
-        width: Available width used to size code panels.
+        prompt (str): Raw Markdown prompt text containing interleaved prose and code.
+        language (str): Default language for syntax highlighting when fences omit it.
+        width (int): Available width used to size code panels.
 
     Returns:
         Group: Composite Rich renderable combining prose text and code panels.
@@ -221,9 +224,9 @@ def _render_file_prompt_panels(
     ``_build_prompt_details_renderable``.
 
     Args:
-        bundle: Prompt bundle whose ``file_prompts`` are expanded into panels.
-        width: Available terminal width for panel sizing.
-        output_console: Console used to print the panels.
+        bundle (PromptBundle): Prompt bundle whose ``file_prompts`` are expanded into panels.
+        width (int): Available terminal width for panel sizing.
+        output_console (Console): Console used to print the panels.
     """
     for file_prompt in bundle.file_prompts:
         violation_count = file_prompt.prompt.count("\n- [") + int(
@@ -256,9 +259,9 @@ def render_prompt_panel(
     panels with syntax-highlighted code, and a generic prompts table.
 
     Args:
-        bundle: Prompt bundle containing all remediation guidance.
-        results: Analysis results used to populate the file summary table.
-        output_console: Optional console override for testing or redirection.
+        bundle (PromptBundle): Prompt bundle containing all remediation guidance.
+        results (list[AnalysisResult]): Analysis results used to populate the file summary table.
+        output_console (Console | None, optional): Optional console override for testing or redirection. Default to None.
     """
     active_console = _active_console(output_console)
     width = get_output_width(active_console)
@@ -332,8 +335,8 @@ def build_agent_tasks_table(
     empty, a single placeholder row is rendered.
 
     Args:
-        task_list: Agent task list to render.
-        output_console: Optional console override for width calculation.
+        task_list (AgentTaskList): Agent task list to render.
+        output_console (Console | None, optional): Optional console override for width calculation. Default to None.
 
     Returns:
         Table: Rich table renderable with ``#`` / ``File`` / ``Task`` columns.

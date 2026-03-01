@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from mcp_zen_of_languages.models import AnalysisResult, CyclomaticSummary, Metrics
+from mcp_zen_of_languages.models import AnalysisResult
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import Metrics
 
 
 def test_analysis_result_getitem():

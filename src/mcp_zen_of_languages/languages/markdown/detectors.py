@@ -5,21 +5,19 @@ from __future__ import annotations
 
 import re
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    LocationHelperMixin,
-    ViolationDetector,
-)
-from mcp_zen_of_languages.languages.configs import (
-    MarkdownAltTextConfig,
-    MarkdownBareUrlConfig,
-    MarkdownCodeFenceLanguageConfig,
-    MarkdownFrontMatterConfig,
-    MarkdownHeadingHierarchyConfig,
-    MarkdownMdxImportHygieneConfig,
-    MarkdownMdxNamedDefaultExportConfig,
-)
-from mcp_zen_of_languages.models import Location, Violation
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import MarkdownAltTextConfig
+from mcp_zen_of_languages.languages.configs import MarkdownBareUrlConfig
+from mcp_zen_of_languages.languages.configs import MarkdownCodeFenceLanguageConfig
+from mcp_zen_of_languages.languages.configs import MarkdownFrontMatterConfig
+from mcp_zen_of_languages.languages.configs import MarkdownHeadingHierarchyConfig
+from mcp_zen_of_languages.languages.configs import MarkdownMdxImportHygieneConfig
+from mcp_zen_of_languages.languages.configs import MarkdownMdxNamedDefaultExportConfig
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import Violation
+
 
 _HEADING_RE = re.compile(r"^\s{0,3}(#{1,6})\s+\S")
 _IMAGE_RE = re.compile(r"!\[([^\]]*)\]\(([^)]+)\)")

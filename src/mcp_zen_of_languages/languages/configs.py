@@ -14,7 +14,9 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import Field
 
 
 class DetectorConfig(BaseModel):
@@ -62,9 +64,9 @@ class DetectorConfig(BaseModel):
         discriminator if no messages are configured.
 
         Args:
-            contains: Optional substring to match against available messages.
-            index: Zero-based position selecting a message when no substring
-                match is requested.
+            contains (str | None, optional): Optional substring to match against available messages. Default to None.
+            index (int, optional): Zero-based position selecting a message when no substring
+                match is requested. Default to 0.
 
         Returns:
             str: The selected violation message text.

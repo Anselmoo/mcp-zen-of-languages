@@ -18,28 +18,29 @@ The rendering pipeline flows as follows:
 
 from __future__ import annotations
 
-from .console import (
-    console,
-    error_console,
-    get_banner_art,
-    is_quiet,
-    print_banner,
-    print_error,
-    set_quiet,
-)
-from .factories import zen_header_panel, zen_panel, zen_summary_table, zen_table
-from .panels import build_project_summary_panel, build_worst_offenders_panel
+from .console import console
+from .console import error_console
+from .console import get_banner_art
+from .console import is_quiet
+from .console import print_banner
+from .console import print_error
+from .console import set_quiet
+from .factories import zen_header_panel
+from .factories import zen_panel
+from .factories import zen_summary_table
+from .factories import zen_table
+from .panels import build_project_summary_panel
+from .panels import build_worst_offenders_panel
 from .progress import analysis_progress
 from .report import render_report_terminal
 from .tables import build_violation_table
-from .themes import (
-    ZEN_THEME,
-    file_glyph,
-    pass_fail_glyph,
-    score_glyph,
-    severity_badge,
-    severity_style,
-)
+from .themes import ZEN_THEME
+from .themes import file_glyph
+from .themes import pass_fail_glyph
+from .themes import score_glyph
+from .themes import severity_badge
+from .themes import severity_style
+
 
 __all__ = [
     "ZEN_THEME",

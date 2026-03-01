@@ -3,27 +3,26 @@
 from __future__ import annotations
 
 import re
+
 from typing import TYPE_CHECKING
 
 import sqlglot
+
 from sqlglot import exp
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    LocationHelperMixin,
-    ViolationDetector,
-)
-from mcp_zen_of_languages.languages.configs import (
-    SqlAliasClarityConfig,
-    SqlAnsi89JoinConfig,
-    SqlDynamicSqlConfig,
-    SqlImplicitJoinCoercionConfig,
-    SqlInsertColumnListConfig,
-    SqlNolockConfig,
-    SqlSelectStarConfig,
-    SqlTransactionBoundaryConfig,
-    SqlUnboundedQueryConfig,
-)
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import SqlAliasClarityConfig
+from mcp_zen_of_languages.languages.configs import SqlAnsi89JoinConfig
+from mcp_zen_of_languages.languages.configs import SqlDynamicSqlConfig
+from mcp_zen_of_languages.languages.configs import SqlImplicitJoinCoercionConfig
+from mcp_zen_of_languages.languages.configs import SqlInsertColumnListConfig
+from mcp_zen_of_languages.languages.configs import SqlNolockConfig
+from mcp_zen_of_languages.languages.configs import SqlSelectStarConfig
+from mcp_zen_of_languages.languages.configs import SqlTransactionBoundaryConfig
+from mcp_zen_of_languages.languages.configs import SqlUnboundedQueryConfig
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.models import Violation

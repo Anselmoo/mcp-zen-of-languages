@@ -4,6 +4,7 @@ import pytest
 
 from mcp_zen_of_languages.config import load_config
 
+
 CONFIG_FILE_SEVERITY = 7
 ENV_OVERRIDE_SEVERITY = 8
 

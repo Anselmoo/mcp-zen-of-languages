@@ -1,13 +1,11 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages import cli
-from mcp_zen_of_languages.models import (
-    AnalysisResult,
-    CyclomaticSummary,
-    ExternalAnalysisResult,
-    ExternalToolResult,
-    Metrics,
-)
+from mcp_zen_of_languages.models import AnalysisResult
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import ExternalAnalysisResult
+from mcp_zen_of_languages.models import ExternalToolResult
+from mcp_zen_of_languages.models import Metrics
 
 
 def test_summarize_violations_counts():

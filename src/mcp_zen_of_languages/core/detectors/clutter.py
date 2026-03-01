@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 from mcp_zen_of_languages.analyzers.base import ViolationDetector
 from mcp_zen_of_languages.languages.configs import DetectorConfig
 
+
 if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.base import AnalysisContext
     from mcp_zen_of_languages.models import Violation

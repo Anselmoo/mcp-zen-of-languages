@@ -1,24 +1,22 @@
 from __future__ import annotations
 
 import re
+
 from io import StringIO
 
 import pytest
+
 from rich.console import Console
 
-from mcp_zen_of_languages.models import (
-    AnalysisResult,
-    CyclomaticSummary,
-    Metrics,
-    Violation,
-)
+from mcp_zen_of_languages.models import AnalysisResult
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import Metrics
+from mcp_zen_of_languages.models import Violation
 from mcp_zen_of_languages.rendering.report import render_report_terminal
 from mcp_zen_of_languages.rendering.themes import ZEN_THEME
-from mcp_zen_of_languages.reporting.models import (
-    GenericPrompt,
-    PromptBundle,
-    ReportOutput,
-)
+from mcp_zen_of_languages.reporting.models import GenericPrompt
+from mcp_zen_of_languages.reporting.models import PromptBundle
+from mcp_zen_of_languages.reporting.models import ReportOutput
 from mcp_zen_of_languages.reporting.terminal import render_prompt_panel
 from mcp_zen_of_languages.reporting.theme_clustering import BigPictureAnalysis
 

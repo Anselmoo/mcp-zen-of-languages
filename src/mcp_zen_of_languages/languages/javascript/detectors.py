@@ -14,25 +14,23 @@ from __future__ import annotations
 
 import re
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    LocationHelperMixin,
-    ViolationDetector,
-)
-from mcp_zen_of_languages.languages.configs import (
-    Js009Config,
-    Js011Config,
-    JsAsyncErrorHandlingConfig,
-    JsCallbackNestingConfig,
-    JsFunctionLengthConfig,
-    JsGlobalStateConfig,
-    JsMagicNumbersConfig,
-    JsModernFeaturesConfig,
-    JsNoVarConfig,
-    JsPureFunctionConfig,
-    JsStrictEqualityConfig,
-)
-from mcp_zen_of_languages.models import Location, Violation
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import Js009Config
+from mcp_zen_of_languages.languages.configs import Js011Config
+from mcp_zen_of_languages.languages.configs import JsAsyncErrorHandlingConfig
+from mcp_zen_of_languages.languages.configs import JsCallbackNestingConfig
+from mcp_zen_of_languages.languages.configs import JsFunctionLengthConfig
+from mcp_zen_of_languages.languages.configs import JsGlobalStateConfig
+from mcp_zen_of_languages.languages.configs import JsMagicNumbersConfig
+from mcp_zen_of_languages.languages.configs import JsModernFeaturesConfig
+from mcp_zen_of_languages.languages.configs import JsNoVarConfig
+from mcp_zen_of_languages.languages.configs import JsPureFunctionConfig
+from mcp_zen_of_languages.languages.configs import JsStrictEqualityConfig
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import Violation
+
 
 # Minimum number of repeated property accesses on the same name to flag destructuring
 MIN_REPEATED_ACCESS_COUNT = 2
@@ -560,7 +558,7 @@ class JsInheritanceDepthDetector(ViolationDetector[Js009Config], LocationHelperM
             """Compute the inheritance chain depth for a given class name.
 
             Args:
-                name: Class name whose ancestor chain is walked.
+                name (str): Class name whose ancestor chain is walked.
 
             Returns:
                 int: Number of ``extends`` hops from *name* to the root class.

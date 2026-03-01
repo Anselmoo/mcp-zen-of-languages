@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import re
+
 from dataclasses import dataclass
+
 
 TOP_LEVEL_KEY_RE = re.compile(r"^([A-Za-z0-9_.-]+):\s*(?:#.*)?$")
 KEY_LINE_RE = re.compile(r"^\s*([A-Za-z0-9_.-]+)\s*:\s*(.*)$")

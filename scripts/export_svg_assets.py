@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import argparse
 import re
+
 from contextlib import suppress
 from pathlib import Path
+
 
 DEFAULT_ASSETS: tuple[tuple[Path, Path, int | None, int | None], ...] = (
     (Path("docs/assets/logo.svg"), Path("docs/assets/logo.png"), None, None),

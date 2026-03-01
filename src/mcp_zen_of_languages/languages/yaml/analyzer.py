@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import logging
+
 from typing import TYPE_CHECKING
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
@@ -11,14 +13,13 @@ if TYPE_CHECKING:
 
 import yaml
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    AnalyzerCapabilities,
-    AnalyzerConfig,
-    BaseAnalyzer,
-    DetectionPipeline,
-)
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import AnalyzerCapabilities
+from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
+from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
+from mcp_zen_of_languages.analyzers.base import DetectionPipeline
 from mcp_zen_of_languages.models import ParserResult
+
 
 logger = logging.getLogger(__name__)
 
@@ -43,10 +44,10 @@ class YamlAnalyzer(BaseAnalyzer):
         """Set up the YAML analyzer with optional threshold and pipeline overrides.
 
         Args:
-            config: Analyzer configuration controlling detection thresholds
-                such as indentation width or minimum key length.
-            pipeline_config: Optional overrides that customize which YAML
-                detectors run and their individual settings.
+            config (AnalyzerConfig | None, optional): Analyzer configuration controlling detection thresholds
+                such as indentation width or minimum key length. Default to None.
+            pipeline_config (PipelineConfig | None, optional): Optional overrides that customize which YAML
+                detectors run and their individual settings. Default to None.
         """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
@@ -75,10 +76,10 @@ class YamlAnalyzer(BaseAnalyzer):
         """Parse YAML text into a structured mapping via ``yaml.safe_load``.
 
         Args:
-            code: Raw YAML text to parse.
+            code (str): Raw YAML text to parse.
 
         Returns:
-            ParserResult wrapping the parsed mapping, or ``None`` on parse failure.
+            ParserResult | None: ParserResult wrapping the parsed mapping, or ``None`` on parse failure.
         """
         try:
             tree = yaml.safe_load(code)
@@ -95,8 +96,8 @@ class YamlAnalyzer(BaseAnalyzer):
         """Compute a line count for the YAML file; complexity metrics are not applicable.
 
         Args:
-            code: Raw YAML text whose lines are counted.
-            ast_tree: Unused; included for interface compatibility with [`BaseAnalyzer`][BaseAnalyzer].
+            code (str): Raw YAML text whose lines are counted.
+            ast_tree (ParserResult | None): Unused; included for interface compatibility with [`BaseAnalyzer`][BaseAnalyzer].
 
         Returns:
             tuple[CyclomaticSummary | None, float | None, int]: ``(None, None, line_count)``
@@ -117,7 +118,7 @@ class YamlAnalyzer(BaseAnalyzer):
         """Return ``None`` because YAML files have no cross-file dependency semantics.
 
         Args:
-            context: Current analysis context (unused for YAML).
+            context (AnalysisContext): Current analysis context (unused for YAML).
 
         Returns:
             object | None: Always ``None``; YAML documents are self-contained.

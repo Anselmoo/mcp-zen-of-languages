@@ -1,24 +1,36 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
-from mcp_zen_of_languages.languages.configs import (
-    DockerfileAddInstructionConfig,
-    DockerfileDockerignoreConfig,
-    DockerfileHealthcheckConfig,
-    DockerfileLatestTagConfig,
-    DockerfileLayerDisciplineConfig,
-    DockerfileMultiStageConfig,
-    DockerfileNonRootUserConfig,
-    DockerfileSecretHygieneConfig,
-)
+from mcp_zen_of_languages.languages.configs import DockerfileAddInstructionConfig
+from mcp_zen_of_languages.languages.configs import DockerfileDockerignoreConfig
+from mcp_zen_of_languages.languages.configs import DockerfileHealthcheckConfig
+from mcp_zen_of_languages.languages.configs import DockerfileLatestTagConfig
+from mcp_zen_of_languages.languages.configs import DockerfileLayerDisciplineConfig
+from mcp_zen_of_languages.languages.configs import DockerfileMultiStageConfig
+from mcp_zen_of_languages.languages.configs import DockerfileNonRootUserConfig
+from mcp_zen_of_languages.languages.configs import DockerfileSecretHygieneConfig
 from mcp_zen_of_languages.languages.dockerfile.detectors import (
     DockerfileAddInstructionDetector,
+)
+from mcp_zen_of_languages.languages.dockerfile.detectors import (
     DockerfileDockerignoreDetector,
+)
+from mcp_zen_of_languages.languages.dockerfile.detectors import (
     DockerfileHealthcheckDetector,
+)
+from mcp_zen_of_languages.languages.dockerfile.detectors import (
     DockerfileLatestTagDetector,
+)
+from mcp_zen_of_languages.languages.dockerfile.detectors import (
     DockerfileLayerDisciplineDetector,
+)
+from mcp_zen_of_languages.languages.dockerfile.detectors import (
     DockerfileMultiStageDetector,
+)
+from mcp_zen_of_languages.languages.dockerfile.detectors import (
     DockerfileNonRootUserDetector,
+)
+from mcp_zen_of_languages.languages.dockerfile.detectors import (
     DockerfileSecretHygieneDetector,
 )
 

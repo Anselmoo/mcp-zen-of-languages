@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+
 if TYPE_CHECKING:
     from mcp_zen_of_languages.models import Violation
 
@@ -23,10 +24,10 @@ def calculate_code_quality_score(violations: list[Violation]) -> float:
     score gently. The floor is clamped to 0 so the score never goes negative.
 
     Args:
-        violations: Violation instances whose ``severity`` fields drive the
+        violations (list[Violation]): Violation instances whose ``severity`` fields drive the
             penalty calculation.
 
     Returns:
-        A float between 0.0 (heavily violated) and 100.0 (no violations).
+        float: A float between 0.0 (heavily violated) and 100.0 (no violations).
     """
     return max(0.0, 100.0 - (sum(v.severity for v in violations) * 2))

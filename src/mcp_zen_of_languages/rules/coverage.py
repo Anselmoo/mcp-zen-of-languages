@@ -18,11 +18,14 @@ one is missing.
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import Field
 
 from mcp_zen_of_languages.languages.configs import DetectorConfig  # noqa: TC001
 from mcp_zen_of_languages.languages.rule_pattern import RulePatternDetector
-from mcp_zen_of_languages.rules import get_all_languages, get_language_zen
+from mcp_zen_of_languages.rules import get_all_languages
+from mcp_zen_of_languages.rules import get_language_zen
 
 
 class RuleCoverageMap(BaseModel):
@@ -43,7 +46,7 @@ class RuleCoverageMap(BaseModel):
         """Return the number of detectors backing each principle.
 
         Returns:
-            ``{principle_id: count}`` — zero means the rule is uncovered.
+            dict[str, int]: ``{principle_id: count}`` — zero means the rule is uncovered.
         """
         return {rule_id: len(detectors) for rule_id, detectors in self.rules.items()}
 
@@ -66,7 +69,7 @@ class RuleConfigCoverageMap(BaseModel):
         """Return the number of distinct config classes per principle.
 
         Returns:
-            ``{principle_id: count}`` — zero means no config class is bound.
+            dict[str, int]: ``{principle_id: count}`` — zero means no config class is bound.
         """
         return {rule_id: len(configs) for rule_id, configs in self.rules.items()}
 
@@ -78,10 +81,10 @@ def build_rule_coverage(language: str) -> RuleCoverageMap:
     purpose-built detectors.
 
     Args:
-        language: Lowercase language key (e.g. ``"python"``).
+        language (str): Lowercase language key (e.g. ``"python"``).
 
     Returns:
-        A ``RuleCoverageMap`` covering every principle defined for *language*.
+        RuleCoverageMap: A ``RuleCoverageMap`` covering every principle defined for *language*.
 
     Raises:
         ValueError: If *language* is not present in the registry.
@@ -107,10 +110,10 @@ def build_explicit_rule_coverage(language: str) -> RuleCoverageMap:
     Raises ``ValueError`` if any principle lacks a purpose-built detector.
 
     Args:
-        language: Lowercase language key.
+        language (str): Lowercase language key.
 
     Returns:
-        A ``RuleCoverageMap`` containing only explicitly registered detectors.
+        RuleCoverageMap: A ``RuleCoverageMap`` containing only explicitly registered detectors.
 
     Raises:
         ValueError: If *language* is unknown or any principle is uncovered.
@@ -143,10 +146,10 @@ def build_rule_config_coverage(language: str) -> RuleConfigCoverageMap:
     """Build an inclusive rule-to-config-class map for *language*.
 
     Args:
-        language: Lowercase language key.
+        language (str): Lowercase language key.
 
     Returns:
-        A ``RuleConfigCoverageMap`` listing every ``DetectorConfig`` subclass
+        RuleConfigCoverageMap: A ``RuleConfigCoverageMap`` listing every ``DetectorConfig`` subclass
         serving each principle.
 
     Raises:
@@ -181,10 +184,10 @@ def build_explicit_rule_config_coverage(language: str) -> RuleConfigCoverageMap:
     Raises ``ValueError`` if any principle lacks an explicit config class.
 
     Args:
-        language: Lowercase language key.
+        language (str): Lowercase language key.
 
     Returns:
-        A ``RuleConfigCoverageMap`` containing only explicitly registered configs.
+        RuleConfigCoverageMap: A ``RuleConfigCoverageMap`` containing only explicitly registered configs.
 
     Raises:
         ValueError: If *language* is unknown or any principle is uncovered.
@@ -224,11 +227,11 @@ def build_all_rule_coverage(
     """Build inclusive rule coverage maps for all (or selected) languages.
 
     Args:
-        languages: Restrict to these language keys.  ``None`` means all
-            languages in the registry.
+        languages (list[str] | None, optional): Restrict to these language keys.  ``None`` means all
+            languages in the registry. Default to None.
 
     Returns:
-        One ``RuleCoverageMap`` per language.
+        list[RuleCoverageMap]: One ``RuleCoverageMap`` per language.
     """
     langs = languages or get_all_languages()
     return [build_rule_coverage(lang) for lang in langs]
@@ -240,10 +243,10 @@ def build_all_explicit_rule_coverage(
     """Build strict rule coverage maps (no fallback) for all (or selected) languages.
 
     Args:
-        languages: Restrict to these language keys.  ``None`` means all.
+        languages (list[str] | None, optional): Restrict to these language keys.  ``None`` means all. Default to None.
 
     Returns:
-        One ``RuleCoverageMap`` per language (raises on gaps).
+        list[RuleCoverageMap]: One ``RuleCoverageMap`` per language (raises on gaps).
     """
     langs = languages or get_all_languages()
     return [build_explicit_rule_coverage(lang) for lang in langs]
@@ -255,10 +258,10 @@ def build_all_rule_config_coverage(
     """Build inclusive config coverage maps for all (or selected) languages.
 
     Args:
-        languages: Restrict to these language keys.  ``None`` means all.
+        languages (list[str] | None, optional): Restrict to these language keys.  ``None`` means all. Default to None.
 
     Returns:
-        One ``RuleConfigCoverageMap`` per language.
+        list[RuleConfigCoverageMap]: One ``RuleConfigCoverageMap`` per language.
     """
     langs = languages or get_all_languages()
     return [build_rule_config_coverage(lang) for lang in langs]
@@ -270,10 +273,10 @@ def build_all_explicit_rule_config_coverage(
     """Build strict config coverage maps (no fallback) for all (or selected) languages.
 
     Args:
-        languages: Restrict to these language keys.  ``None`` means all.
+        languages (list[str] | None, optional): Restrict to these language keys.  ``None`` means all. Default to None.
 
     Returns:
-        One ``RuleConfigCoverageMap`` per language (raises on gaps).
+        list[RuleConfigCoverageMap]: One ``RuleConfigCoverageMap`` per language (raises on gaps).
     """
     langs = languages or get_all_languages()
     return [build_explicit_rule_config_coverage(lang) for lang in langs]

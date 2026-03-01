@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import re
 import sys
+
 from pathlib import Path
+
 
 SRC_ROOT = Path("src")
 ROLE_PATTERN = re.compile(r":(?:class|meth|func|mod|attr):`[^`]+`")

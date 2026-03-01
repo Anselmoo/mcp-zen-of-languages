@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+
 if TYPE_CHECKING:
     from ast import Module
 
@@ -24,21 +25,24 @@ def parse_python_with_treesitter(code: str) -> object | None:
     the shared library, or the ``PY_LANGUAGE`` object are missing, returns
     ``None`` so the caller can fall back to ``ast.parse``.
 
+    Note:
+        The Parser and Language APIs are used with explicit, typed calls
+        rather than silent error swallowing.  Language constructors in some
+        tree-sitter bindings expect a pointer/int, so we import a prebuilt
+        ``PY_LANGUAGE`` object from ``build.my_languages`` (CI convention)
+        instead of constructing a Language from a file path.
+
     Args:
-        code: Python source text to parse into a tree-sitter tree.
+        code (str): Python source text to parse into a tree-sitter tree.
 
     Returns:
-        A tree-sitter ``Tree`` object on success, or ``None`` when the
-        tree-sitter toolchain is not available in this environment.
+        object | None: A tree-sitter ``Tree`` object on success, or
+        ``None`` when the tree-sitter toolchain is not available in this
+        environment.
     """
     from tree_sitter import Parser
 
-    # Use explicit, typed usage of Parser and Language APIs; do not swallow errors silently here.
-    # Attempt to construct Language using the common two-arg form guarded by a TypeError fallback.
     parser = Parser()
-    # tree-sitter Language constructors can expect a pointer/int in some bindings; avoid calling
-    # Language directly with a path in this environment. Instead, attempt to import a prebuilt
-    # language module `build.my_languages` which exposes a `PY_LANGUAGE` object (convention used by CI)
     try:
         from build.my_languages import PY_LANGUAGE  # type: ignore[import-not-found]
 
@@ -47,7 +51,6 @@ def parse_python_with_treesitter(code: str) -> object | None:
         parser.set_language(PY_LANGUAGE)
         return parser.parse(bytes(code, "utf8"))
     except Exception:  # noqa: BLE001
-        # Fall back to builtin ast if any step fails; do not raise here to keep analysis robust
         return None
 
 
@@ -60,15 +63,14 @@ def parse_python_with_builtin_ast(code: str) -> Module | None:
     to preserve unexpected-error visibility.
 
     Args:
-        code: Python source text to compile into an AST.
+        code (str): Python source text to compile into an AST.
 
     Returns:
-        An ``ast.Module`` root node on success, or ``None`` when the source
-        contains a syntax error.
+        Module | None: An ``ast.Module`` root node on success, or ``None``
+        when the source contains a syntax error.
     """
     import ast
 
-    # Let syntax errors propagate as SyntaxError; return None only on unexpected exceptions.
     try:
         return ast.parse(code)
     except SyntaxError:
@@ -84,11 +86,12 @@ def parse_python(code: str) -> ParserResult | None:
     so detectors can branch on parser capabilities when needed.
 
     Args:
-        code: Python source text to parse.
+        code (str): Python source text to parse.
 
     Returns:
-        A ``ParserResult`` wrapping the parsed tree and its backend tag,
-        or ``None`` when neither parser can handle the input.
+        ParserResult | None: A ``ParserResult`` wrapping the parsed tree
+        and its backend tag, or ``None`` when neither parser can handle
+        the input.
     """
     from mcp_zen_of_languages.models import ParserResult
 

@@ -3,15 +3,14 @@ from __future__ import annotations
 import pytest
 
 from mcp_zen_of_languages import server
-from mcp_zen_of_languages.middleware import (
-    DuplicateCallSuppressionMiddleware,
-    ErrorHandlingMiddleware,
-    LoggingMiddleware,
-    RateLimitingMiddleware,
-    ResponseCachingMiddleware,
-    ResponseLimitingMiddleware,
-    TimingMiddleware,
-)
+from mcp_zen_of_languages.middleware import DuplicateCallSuppressionMiddleware
+from mcp_zen_of_languages.middleware import ErrorHandlingMiddleware
+from mcp_zen_of_languages.middleware import LoggingMiddleware
+from mcp_zen_of_languages.middleware import RateLimitingMiddleware
+from mcp_zen_of_languages.middleware import ResponseCachingMiddleware
+from mcp_zen_of_languages.middleware import ResponseLimitingMiddleware
+from mcp_zen_of_languages.middleware import TimingMiddleware
+
 
 LIST_PAGE_SIZE = 100
 ICON_URL_PREFIX = "https://anselmoo.github.io/mcp-zen-of-languages/assets/icons/"

@@ -1,17 +1,19 @@
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
 from mcp_zen_of_languages.analyzers.registry import REGISTRY
+from mcp_zen_of_languages.languages.typescript.detectors import TsAnyUsageDetector
+from mcp_zen_of_languages.languages.typescript.detectors import TsEnumConstDetector
 from mcp_zen_of_languages.languages.typescript.detectors import (
-    TsAnyUsageDetector,
-    TsEnumConstDetector,
     TsInterfacePreferenceDetector,
-    TsNonNullAssertionDetector,
-    TsReadonlyDetector,
-    TsReturnTypeDetector,
-    TsStrictModeDetector,
-    TsTypeGuardDetector,
-    TsUnknownOverAnyDetector,
-    TsUtilityTypesDetector,
 )
+from mcp_zen_of_languages.languages.typescript.detectors import (
+    TsNonNullAssertionDetector,
+)
+from mcp_zen_of_languages.languages.typescript.detectors import TsReadonlyDetector
+from mcp_zen_of_languages.languages.typescript.detectors import TsReturnTypeDetector
+from mcp_zen_of_languages.languages.typescript.detectors import TsStrictModeDetector
+from mcp_zen_of_languages.languages.typescript.detectors import TsTypeGuardDetector
+from mcp_zen_of_languages.languages.typescript.detectors import TsUnknownOverAnyDetector
+from mcp_zen_of_languages.languages.typescript.detectors import TsUtilityTypesDetector
 from mcp_zen_of_languages.languages.typescript.rules import TYPESCRIPT_ZEN
 
 

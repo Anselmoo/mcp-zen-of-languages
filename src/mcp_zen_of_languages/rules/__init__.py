@@ -24,24 +24,23 @@ Examples::
 """
 
 # typing imports not required at module level
-from .base_models import (
-    AnalysisResult,
-    LanguageSummary,
-    LanguageZenPrinciples,
-    PrincipleCategory,
-    RegistryStats,
-    SeverityLevel,
-    ViolationReport,
-    ZenPrinciple,
-    get_missing_detector_rules,
-    get_number_of_principles,
-    get_number_of_priniciple,
-    get_registry_detector_gaps,
-    get_registry_rule_id_gaps,
-    get_rule_id_coverage,
-    get_rule_ids,
-    get_total_principles,
-)
+from .base_models import AnalysisResult
+from .base_models import LanguageSummary
+from .base_models import LanguageZenPrinciples
+from .base_models import PrincipleCategory
+from .base_models import RegistryStats
+from .base_models import SeverityLevel
+from .base_models import ViolationReport
+from .base_models import ZenPrinciple
+from .base_models import get_missing_detector_rules
+from .base_models import get_number_of_principles
+from .base_models import get_number_of_priniciple
+from .base_models import get_registry_detector_gaps
+from .base_models import get_registry_rule_id_gaps
+from .base_models import get_rule_id_coverage
+from .base_models import get_rule_ids
+from .base_models import get_total_principles
+
 
 # Central registry of all language zen principles (lazy-loaded to avoid circular imports)
 ZEN_REGISTRY: dict[str, LanguageZenPrinciples] = {}
@@ -112,10 +111,10 @@ def get_language_zen(language: str) -> "LanguageZenPrinciples | None":
     """Retrieve the ``LanguageZenPrinciples`` for *language*, or ``None`` if unsupported.
 
     Args:
-        language: Case-insensitive language key (e.g. ``"Python"`` → ``"python"``).
+        language (str): Case-insensitive language key (e.g. ``"Python"`` → ``"python"``).
 
     Returns:
-        The matching ``LanguageZenPrinciples``, or ``None``.
+        'LanguageZenPrinciples | None': The matching ``LanguageZenPrinciples``, or ``None``.
     """
     _initialize_registry()
     return ZEN_REGISTRY.get(language.lower())
@@ -125,7 +124,7 @@ def get_all_languages() -> list[str]:
     """Return every language key registered in ``ZEN_REGISTRY``.
 
     Returns:
-        Sorted insertion-order list of language keys.
+        list[str]: Sorted insertion-order list of language keys.
     """
     _initialize_registry()
     return list(ZEN_REGISTRY.keys())
@@ -135,10 +134,10 @@ def get_principle_by_id(principle_id: str) -> "ZenPrinciple | None":
     """Search all languages for a principle matching *principle_id*.
 
     Args:
-        principle_id: Globally unique ID (e.g. ``"python-003"``).
+        principle_id (str): Globally unique ID (e.g. ``"python-003"``).
 
     Returns:
-        The matching ``ZenPrinciple``, or ``None`` if no language defines it.
+        'ZenPrinciple | None': The matching ``ZenPrinciple``, or ``None`` if no language defines it.
     """
     _initialize_registry()
     for lang_zen in ZEN_REGISTRY.values():
@@ -153,10 +152,10 @@ def get_all_principles_by_category(
     """Collect principles matching *category* across every registered language.
 
     Args:
-        category: The ``PrincipleCategory`` to filter by.
+        category (PrincipleCategory): The ``PrincipleCategory`` to filter by.
 
     Returns:
-        ``{language_key: [ZenPrinciple, …]}`` — languages with no matches
+        dict[str, list[ZenPrinciple]]: ``{language_key: [ZenPrinciple, …]}`` — languages with no matches
         are omitted.
     """
     _initialize_registry()
@@ -171,7 +170,7 @@ def get_all_critical_principles() -> dict[str, list[ZenPrinciple]]:
     """Collect principles with severity ≥ 9 across all languages.
 
     Returns:
-        ``{language_key: [ZenPrinciple, …]}`` — languages with no critical
+        dict[str, list[ZenPrinciple]]: ``{language_key: [ZenPrinciple, …]}`` — languages with no critical
         principles are omitted.
     """
     _initialize_registry()
@@ -186,27 +185,24 @@ def get_registry_stats() -> "RegistryStats":
     """Snapshot the registry into a ``RegistryStats`` Pydantic model.
 
     Returns:
-        Aggregated language counts, principle totals, and per-language
-        summaries.
+        RegistryStats: Aggregated language counts, principle totals, and
+        per-language summaries.
     """
-    # Prefer returning a structured Pydantic model for better typing and
-    # downstream validation/serialization benefits.
     _initialize_registry()
     return RegistryStats.from_registry(ZEN_REGISTRY)
 
 
-from .coverage import (  # noqa: E402
-    RuleConfigCoverageMap,
-    RuleCoverageMap,
-    build_all_explicit_rule_config_coverage,
-    build_all_explicit_rule_coverage,
-    build_all_rule_config_coverage,
-    build_all_rule_coverage,
-    build_explicit_rule_config_coverage,
-    build_explicit_rule_coverage,
-    build_rule_config_coverage,
-    build_rule_coverage,
-)
+from .coverage import RuleConfigCoverageMap  # noqa: E402
+from .coverage import RuleCoverageMap  # noqa: E402
+from .coverage import build_all_explicit_rule_config_coverage  # noqa: E402
+from .coverage import build_all_explicit_rule_coverage  # noqa: E402
+from .coverage import build_all_rule_config_coverage  # noqa: E402
+from .coverage import build_all_rule_coverage  # noqa: E402
+from .coverage import build_explicit_rule_config_coverage  # noqa: E402
+from .coverage import build_explicit_rule_coverage  # noqa: E402
+from .coverage import build_rule_config_coverage  # noqa: E402
+from .coverage import build_rule_coverage  # noqa: E402
+
 
 # Export all public symbols
 __all__ = [

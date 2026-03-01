@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import ast
 import re
+
 from pathlib import Path
+
 
 SRC_PY_FILES = sorted(Path("src/mcp_zen_of_languages").rglob("*.py"))
 MIN_DOCSTRING_LENGTH = 20

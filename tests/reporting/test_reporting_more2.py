@@ -1,16 +1,12 @@
 from __future__ import annotations
 
-from mcp_zen_of_languages.reporting.models import (
-    FilePrompt,
-    GapAnalysis,
-    GenericPrompt,
-    PromptBundle,
-    ReportContext,
-)
-from mcp_zen_of_languages.reporting.report import (
-    _format_gap_markdown,
-    _format_prompts_markdown,
-)
+from mcp_zen_of_languages.reporting.models import FilePrompt
+from mcp_zen_of_languages.reporting.models import GapAnalysis
+from mcp_zen_of_languages.reporting.models import GenericPrompt
+from mcp_zen_of_languages.reporting.models import PromptBundle
+from mcp_zen_of_languages.reporting.models import ReportContext
+from mcp_zen_of_languages.reporting.report import _format_gap_markdown
+from mcp_zen_of_languages.reporting.report import _format_prompts_markdown
 
 
 def test_format_gap_markdown_no_gaps():

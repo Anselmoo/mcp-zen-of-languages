@@ -12,19 +12,21 @@ See Also:
 from __future__ import annotations
 
 import re
+
 from typing import TYPE_CHECKING
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
-    from mcp_zen_of_languages.models import CyclomaticSummary, ParserResult
+    from mcp_zen_of_languages.models import CyclomaticSummary
+    from mcp_zen_of_languages.models import ParserResult
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    AnalyzerCapabilities,
-    AnalyzerConfig,
-    BaseAnalyzer,
-    DetectionPipeline,
-)
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import AnalyzerCapabilities
+from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
+from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
+from mcp_zen_of_languages.analyzers.base import DetectionPipeline
+
 
 _IMPORT_RE = re.compile(
     r"""(?:import\s+.*?\s+from\s+['"](.+?)['"]"""
@@ -58,11 +60,11 @@ class JavaScriptAnalyzer(BaseAnalyzer):
         """Initialize the JavaScript analyzer with optional configuration.
 
         Args:
-            config: Threshold settings controlling detector sensitivity such as
-                maximum callback nesting depth and function length limits.
-            pipeline_config: Optional overrides that are merged on top of
+            config (AnalyzerConfig | None, optional): Threshold settings controlling detector sensitivity such as
+                maximum callback nesting depth and function length limits. Default to None.
+            pipeline_config (PipelineConfig | None, optional): Optional overrides that are merged on top of
                 rule-derived detector defaults, allowing per-project tuning
-                via ``zen-config.yaml``.
+                via ``zen-config.yaml``. Default to None.
         """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
@@ -97,7 +99,7 @@ class JavaScriptAnalyzer(BaseAnalyzer):
         inside each detector.
 
         Args:
-            code: Raw JavaScript source text to parse.
+            code (str): Raw JavaScript source text to parse.
 
         Returns:
             ParserResult | None: Always ``None`` for JavaScript; reserved for
@@ -116,8 +118,8 @@ class JavaScriptAnalyzer(BaseAnalyzer):
         cannot be calculated.  Only the raw line count is returned.
 
         Args:
-            code: Raw JavaScript source text.
-            ast_tree: Parsed AST (always ``None`` for JavaScript today).
+            code (str): Raw JavaScript source text.
+            ast_tree (ParserResult | None): Parsed AST (always ``None`` for JavaScript today).
 
         Returns:
             tuple[CyclomaticSummary | None, float | None, int]: A three-element
@@ -141,10 +143,10 @@ class JavaScriptAnalyzer(BaseAnalyzer):
         """Extract ``import``/``require`` dependencies and build an import graph.
 
         Args:
-            context: Current analysis context with source text and metrics.
+            context (AnalysisContext): Current analysis context with source text and metrics.
 
         Returns:
-            DependencyAnalysis with import edges, or ``None`` when no imports found.
+            object | None: DependencyAnalysis with import edges, or ``None`` when no imports found.
         """
         imports: list[str] = []
         for line in context.code.splitlines():

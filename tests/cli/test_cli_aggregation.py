@@ -1,12 +1,11 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages import cli
-from mcp_zen_of_languages.models import (
-    AnalysisResult,
-    CyclomaticSummary,
-    Metrics,
-    Violation,
-)
+from mcp_zen_of_languages.models import AnalysisResult
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import Metrics
+from mcp_zen_of_languages.models import Violation
+
 
 EXPECTED_FILES = 2
 EXPECTED_VIOLATIONS = 2

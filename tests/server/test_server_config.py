@@ -4,6 +4,7 @@ import pytest
 
 from mcp_zen_of_languages import server
 
+
 MAX_CYCLOMATIC_OVERRIDE = 5
 
 

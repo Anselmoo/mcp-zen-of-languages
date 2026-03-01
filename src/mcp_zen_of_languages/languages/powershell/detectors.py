@@ -14,29 +14,27 @@ from __future__ import annotations
 
 import re
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    LocationHelperMixin,
-    ViolationDetector,
-)
-from mcp_zen_of_languages.languages.configs import (
-    PowerShellAliasUsageConfig,
-    PowerShellApprovedVerbConfig,
-    PowerShellCmdletBindingConfig,
-    PowerShellCommentHelpConfig,
-    PowerShellErrorHandlingConfig,
-    PowerShellNullHandlingConfig,
-    PowerShellParameterValidationConfig,
-    PowerShellPascalCaseConfig,
-    PowerShellPipelineUsageConfig,
-    PowerShellPositionalParamsConfig,
-    PowerShellReturnObjectsConfig,
-    PowerShellScopeUsageConfig,
-    PowerShellShouldProcessConfig,
-    PowerShellSplattingConfig,
-    PowerShellVerboseDebugConfig,
-)
-from mcp_zen_of_languages.models import Location, Violation
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import PowerShellAliasUsageConfig
+from mcp_zen_of_languages.languages.configs import PowerShellApprovedVerbConfig
+from mcp_zen_of_languages.languages.configs import PowerShellCmdletBindingConfig
+from mcp_zen_of_languages.languages.configs import PowerShellCommentHelpConfig
+from mcp_zen_of_languages.languages.configs import PowerShellErrorHandlingConfig
+from mcp_zen_of_languages.languages.configs import PowerShellNullHandlingConfig
+from mcp_zen_of_languages.languages.configs import PowerShellParameterValidationConfig
+from mcp_zen_of_languages.languages.configs import PowerShellPascalCaseConfig
+from mcp_zen_of_languages.languages.configs import PowerShellPipelineUsageConfig
+from mcp_zen_of_languages.languages.configs import PowerShellPositionalParamsConfig
+from mcp_zen_of_languages.languages.configs import PowerShellReturnObjectsConfig
+from mcp_zen_of_languages.languages.configs import PowerShellScopeUsageConfig
+from mcp_zen_of_languages.languages.configs import PowerShellShouldProcessConfig
+from mcp_zen_of_languages.languages.configs import PowerShellSplattingConfig
+from mcp_zen_of_languages.languages.configs import PowerShellVerboseDebugConfig
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import Violation
+
 
 # Maximum number of inline parameters before recommending splatting
 MAX_INLINE_PARAMS = 4

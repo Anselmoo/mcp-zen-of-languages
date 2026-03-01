@@ -16,17 +16,18 @@ import argparse
 import importlib
 import sys
 import textwrap
+
 from collections import Counter
 from pathlib import Path
 
-from generate_implementation_counts import (
-    sync_implementation_counts,
-    validate_documented_languages,
-)
-from jinja2 import Environment, FileSystemLoader
+from generate_implementation_counts import sync_implementation_counts
+from generate_implementation_counts import validate_documented_languages
+from jinja2 import Environment
+from jinja2 import FileSystemLoader
 
 from mcp_zen_of_languages.core.universal_dogmas import infer_dogmas_for_principle
 from mcp_zen_of_languages.utils.subprocess_runner import KNOWN_TOOLS
+
 
 # Maximum characters shown from a principle description in diagram labels
 PRINCIPLE_PREVIEW_LENGTH = 40

@@ -4,20 +4,18 @@ from io import StringIO
 
 from rich.console import Console
 
-from mcp_zen_of_languages.models import AnalysisResult, CyclomaticSummary, Metrics
+from mcp_zen_of_languages.models import AnalysisResult
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import Metrics
 from mcp_zen_of_languages.rendering.themes import ZEN_THEME
 from mcp_zen_of_languages.reporting.agent_tasks import AgentTaskList
-from mcp_zen_of_languages.reporting.models import (
-    FilePrompt,
-    GenericPrompt,
-    PromptBundle,
-)
-from mcp_zen_of_languages.reporting.terminal import (
-    _build_generic_prompts_table,
-    _build_prompt_file_summary,
-    build_agent_tasks_table,
-    render_prompt_panel,
-)
+from mcp_zen_of_languages.reporting.models import FilePrompt
+from mcp_zen_of_languages.reporting.models import GenericPrompt
+from mcp_zen_of_languages.reporting.models import PromptBundle
+from mcp_zen_of_languages.reporting.terminal import _build_generic_prompts_table
+from mcp_zen_of_languages.reporting.terminal import _build_prompt_file_summary
+from mcp_zen_of_languages.reporting.terminal import build_agent_tasks_table
+from mcp_zen_of_languages.reporting.terminal import render_prompt_panel
 from mcp_zen_of_languages.reporting.theme_clustering import BigPictureAnalysis
 
 

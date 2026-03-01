@@ -4,22 +4,16 @@ import pytest
 
 from mcp_zen_of_languages.analyzers import registry as registry_module
 from mcp_zen_of_languages.rules import coverage as coverage_module
-from mcp_zen_of_languages.rules import (
-    get_all_languages,
-    get_language_zen,
-    get_rule_id_coverage,
-)
-from mcp_zen_of_languages.rules.base_models import (
-    LanguageZenPrinciples,
-    PrincipleCategory,
-    ZenPrinciple,
-)
-from mcp_zen_of_languages.rules.coverage import (
-    build_all_explicit_rule_coverage,
-    build_all_rule_coverage,
-    build_explicit_rule_coverage,
-    build_rule_coverage,
-)
+from mcp_zen_of_languages.rules import get_all_languages
+from mcp_zen_of_languages.rules import get_language_zen
+from mcp_zen_of_languages.rules import get_rule_id_coverage
+from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
+from mcp_zen_of_languages.rules.base_models import PrincipleCategory
+from mcp_zen_of_languages.rules.base_models import ZenPrinciple
+from mcp_zen_of_languages.rules.coverage import build_all_explicit_rule_coverage
+from mcp_zen_of_languages.rules.coverage import build_all_rule_coverage
+from mcp_zen_of_languages.rules.coverage import build_explicit_rule_coverage
+from mcp_zen_of_languages.rules.coverage import build_rule_coverage
 
 
 def test_build_rule_coverage_python() -> None:

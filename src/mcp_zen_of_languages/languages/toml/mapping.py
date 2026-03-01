@@ -2,31 +2,26 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import (
-    DetectorBinding,
-    LanguageDetectorMap,
-)
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
-from mcp_zen_of_languages.languages.configs import (
-    TomlCommentClarityConfig,
-    TomlDuplicateKeysConfig,
-    TomlFloatIntegerConfig,
-    TomlIsoDatetimeConfig,
-    TomlLowercaseKeysConfig,
-    TomlNoInlineTablesConfig,
-    TomlOrderConfig,
-    TomlTrailingCommasConfig,
-)
-from mcp_zen_of_languages.languages.toml.detectors import (
-    TomlCommentClarityDetector,
-    TomlDuplicateKeysDetector,
-    TomlFloatIntegerDetector,
-    TomlIsoDatetimeDetector,
-    TomlLowercaseKeysDetector,
-    TomlNoInlineTablesDetector,
-    TomlOrderDetector,
-    TomlTrailingCommasDetector,
-)
+from mcp_zen_of_languages.languages.configs import TomlCommentClarityConfig
+from mcp_zen_of_languages.languages.configs import TomlDuplicateKeysConfig
+from mcp_zen_of_languages.languages.configs import TomlFloatIntegerConfig
+from mcp_zen_of_languages.languages.configs import TomlIsoDatetimeConfig
+from mcp_zen_of_languages.languages.configs import TomlLowercaseKeysConfig
+from mcp_zen_of_languages.languages.configs import TomlNoInlineTablesConfig
+from mcp_zen_of_languages.languages.configs import TomlOrderConfig
+from mcp_zen_of_languages.languages.configs import TomlTrailingCommasConfig
+from mcp_zen_of_languages.languages.toml.detectors import TomlCommentClarityDetector
+from mcp_zen_of_languages.languages.toml.detectors import TomlDuplicateKeysDetector
+from mcp_zen_of_languages.languages.toml.detectors import TomlFloatIntegerDetector
+from mcp_zen_of_languages.languages.toml.detectors import TomlIsoDatetimeDetector
+from mcp_zen_of_languages.languages.toml.detectors import TomlLowercaseKeysDetector
+from mcp_zen_of_languages.languages.toml.detectors import TomlNoInlineTablesDetector
+from mcp_zen_of_languages.languages.toml.detectors import TomlOrderDetector
+from mcp_zen_of_languages.languages.toml.detectors import TomlTrailingCommasDetector
+
 
 FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(

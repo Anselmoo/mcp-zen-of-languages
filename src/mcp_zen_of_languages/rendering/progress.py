@@ -10,19 +10,20 @@ caller opts out via the *enabled* flag.
 from __future__ import annotations
 
 import sys
+
 from contextlib import contextmanager
 from typing import TYPE_CHECKING
 
-from rich.progress import (
-    BarColumn,
-    MofNCompleteColumn,
-    Progress,
-    SpinnerColumn,
-    TextColumn,
-    TimeElapsedColumn,
-)
+from rich.progress import BarColumn
+from rich.progress import MofNCompleteColumn
+from rich.progress import Progress
+from rich.progress import SpinnerColumn
+from rich.progress import TextColumn
+from rich.progress import TimeElapsedColumn
 
-from .console import console, is_quiet
+from .console import console
+from .console import is_quiet
+
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
@@ -39,8 +40,8 @@ def analysis_progress(*, enabled: bool = True) -> Iterator[Progress | None]:
     the context exits, leaving only the final report output.
 
     Args:
-        enabled: Master switch — set to False to unconditionally suppress
-            the progress display.
+        enabled (bool, optional): Master switch — set to False to unconditionally suppress
+            the progress display. Default to True.
 
     Yields:
         Progress | None: A running ``Progress`` instance when the terminal

@@ -1,20 +1,17 @@
 from __future__ import annotations
 
-from mcp_zen_of_languages.models import (
-    AnalysisResult,
-    CyclomaticSummary,
-    Metrics,
-    Violation,
-)
+from mcp_zen_of_languages.models import AnalysisResult
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import Metrics
+from mcp_zen_of_languages.models import Violation
 from mcp_zen_of_languages.reporting.gaps import GapAnalysis
 from mcp_zen_of_languages.reporting.models import ReportContext
-from mcp_zen_of_languages.reporting.report import (
-    _format_analysis_markdown,
-    _format_gap_markdown,
-    _format_prompts_markdown,
-    _summarize_results,
-    generate_report,
-)
+from mcp_zen_of_languages.reporting.report import _format_analysis_markdown
+from mcp_zen_of_languages.reporting.report import _format_gap_markdown
+from mcp_zen_of_languages.reporting.report import _format_prompts_markdown
+from mcp_zen_of_languages.reporting.report import _summarize_results
+from mcp_zen_of_languages.reporting.report import generate_report
+
 
 EXPECTED_FILES = 2
 EXPECTED_VIOLATIONS = 2

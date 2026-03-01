@@ -13,19 +13,21 @@ See Also:
 from __future__ import annotations
 
 import re
+
 from typing import TYPE_CHECKING
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
-    from mcp_zen_of_languages.models import CyclomaticSummary, ParserResult
+    from mcp_zen_of_languages.models import CyclomaticSummary
+    from mcp_zen_of_languages.models import ParserResult
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    AnalyzerCapabilities,
-    AnalyzerConfig,
-    BaseAnalyzer,
-    DetectionPipeline,
-)
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import AnalyzerCapabilities
+from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
+from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
+from mcp_zen_of_languages.analyzers.base import DetectionPipeline
+
 
 _IMPORT_MODULE_RE = re.compile(r"^Import-Module\s+(\S+)", re.IGNORECASE)
 _DOT_SOURCE_RE = re.compile(r"""^\.\s+['"]?([^\s'"]+)['"]?""")
@@ -56,11 +58,11 @@ class PowerShellAnalyzer(BaseAnalyzer):
         """Initialize the PowerShell analyzer with optional configuration.
 
         Args:
-            config: Threshold settings controlling detector sensitivity such as
-                approved verb lists and parameter validation requirements.
-            pipeline_config: Optional overrides that are merged on top of
+            config (AnalyzerConfig | None, optional): Threshold settings controlling detector sensitivity such as
+                approved verb lists and parameter validation requirements. Default to None.
+            pipeline_config (PipelineConfig | None, optional): Optional overrides that are merged on top of
                 rule-derived detector defaults, allowing per-project tuning
-                via ``zen-config.yaml``.
+                via ``zen-config.yaml``. Default to None.
         """
         self._pipeline_config = pipeline_config
         super().__init__(config=config)
@@ -95,7 +97,7 @@ class PowerShellAnalyzer(BaseAnalyzer):
         each detector.
 
         Args:
-            code: Raw PowerShell source text to parse.
+            code (str): Raw PowerShell source text to parse.
 
         Returns:
             ParserResult | None: Always ``None`` for PowerShell; reserved for
@@ -114,8 +116,8 @@ class PowerShellAnalyzer(BaseAnalyzer):
         cannot be calculated.  Only the raw line count is returned.
 
         Args:
-            code: Raw PowerShell source text.
-            ast_tree: Parsed AST (always ``None`` for PowerShell today).
+            code (str): Raw PowerShell source text.
+            ast_tree (ParserResult | None): Parsed AST (always ``None`` for PowerShell today).
 
         Returns:
             tuple[CyclomaticSummary | None, float | None, int]: A three-element
@@ -139,10 +141,10 @@ class PowerShellAnalyzer(BaseAnalyzer):
         """Extract ``Import-Module`` and dot-sourcing dependencies.
 
         Args:
-            context: Current analysis context with source text and metrics.
+            context (AnalysisContext): Current analysis context with source text and metrics.
 
         Returns:
-            DependencyAnalysis with module dependency edges, or ``None`` when none found.
+            object | None: DependencyAnalysis with module dependency edges, or ``None`` when none found.
         """
         imports: list[str] = []
         for line in context.code.splitlines():

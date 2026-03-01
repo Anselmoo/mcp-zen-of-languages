@@ -3,19 +3,19 @@ from __future__ import annotations
 import json
 import re
 import sys
+
 from importlib import metadata
 
 import pytest
 
 from mcp_zen_of_languages import cli
-from mcp_zen_of_languages.models import (
-    AnalysisResult,
-    CyclomaticSummary,
-    Location,
-    Metrics,
-    Violation,
-)
+from mcp_zen_of_languages.models import AnalysisResult
+from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import Metrics
+from mcp_zen_of_languages.models import Violation
 from mcp_zen_of_languages.rules import get_all_languages
+
 
 CONFIG_ALREADY_EXISTS_EXIT_CODE = 2
 SARIF_RESULT_LINE = 2

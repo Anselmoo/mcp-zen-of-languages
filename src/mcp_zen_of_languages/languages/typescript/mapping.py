@@ -2,35 +2,34 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import (
-    DetectorBinding,
-    LanguageDetectorMap,
-)
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
-from mcp_zen_of_languages.languages.configs import (
-    TsAnyUsageConfig,
-    TsEnumConstConfig,
-    TsInterfacePreferenceConfig,
-    TsNonNullAssertionConfig,
-    TsReadonlyConfig,
-    TsReturnTypeConfig,
-    TsStrictModeConfig,
-    TsTypeGuardConfig,
-    TsUnknownOverAnyConfig,
-    TsUtilityTypesConfig,
+from mcp_zen_of_languages.languages.configs import TsAnyUsageConfig
+from mcp_zen_of_languages.languages.configs import TsEnumConstConfig
+from mcp_zen_of_languages.languages.configs import TsInterfacePreferenceConfig
+from mcp_zen_of_languages.languages.configs import TsNonNullAssertionConfig
+from mcp_zen_of_languages.languages.configs import TsReadonlyConfig
+from mcp_zen_of_languages.languages.configs import TsReturnTypeConfig
+from mcp_zen_of_languages.languages.configs import TsStrictModeConfig
+from mcp_zen_of_languages.languages.configs import TsTypeGuardConfig
+from mcp_zen_of_languages.languages.configs import TsUnknownOverAnyConfig
+from mcp_zen_of_languages.languages.configs import TsUtilityTypesConfig
+from mcp_zen_of_languages.languages.typescript.detectors import TsAnyUsageDetector
+from mcp_zen_of_languages.languages.typescript.detectors import TsEnumConstDetector
+from mcp_zen_of_languages.languages.typescript.detectors import (
+    TsInterfacePreferenceDetector,
 )
 from mcp_zen_of_languages.languages.typescript.detectors import (
-    TsAnyUsageDetector,
-    TsEnumConstDetector,
-    TsInterfacePreferenceDetector,
     TsNonNullAssertionDetector,
-    TsReadonlyDetector,
-    TsReturnTypeDetector,
-    TsStrictModeDetector,
-    TsTypeGuardDetector,
-    TsUnknownOverAnyDetector,
-    TsUtilityTypesDetector,
 )
+from mcp_zen_of_languages.languages.typescript.detectors import TsReadonlyDetector
+from mcp_zen_of_languages.languages.typescript.detectors import TsReturnTypeDetector
+from mcp_zen_of_languages.languages.typescript.detectors import TsStrictModeDetector
+from mcp_zen_of_languages.languages.typescript.detectors import TsTypeGuardDetector
+from mcp_zen_of_languages.languages.typescript.detectors import TsUnknownOverAnyDetector
+from mcp_zen_of_languages.languages.typescript.detectors import TsUtilityTypesDetector
+
 
 FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(

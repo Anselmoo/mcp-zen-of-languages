@@ -13,27 +13,24 @@ from __future__ import annotations
 
 import re
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    LocationHelperMixin,
-    ViolationDetector,
-)
-from mcp_zen_of_languages.languages.configs import (
-    Cs008Config,
-    CSharpAsyncAwaitConfig,
-    CSharpCollectionExpressionConfig,
-    CSharpDisposableConfig,
-    CSharpExceptionHandlingConfig,
-    CSharpExpressionBodiedConfig,
-    CSharpLinqConfig,
-    CSharpMagicNumberConfig,
-    CSharpNullableConfig,
-    CSharpPatternMatchingConfig,
-    CSharpRecordConfig,
-    CSharpStringInterpolationConfig,
-    CSharpVarConfig,
-)
-from mcp_zen_of_languages.models import Location, Violation
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import CSharpAsyncAwaitConfig
+from mcp_zen_of_languages.languages.configs import CSharpCollectionExpressionConfig
+from mcp_zen_of_languages.languages.configs import CSharpDisposableConfig
+from mcp_zen_of_languages.languages.configs import CSharpExceptionHandlingConfig
+from mcp_zen_of_languages.languages.configs import CSharpExpressionBodiedConfig
+from mcp_zen_of_languages.languages.configs import CSharpLinqConfig
+from mcp_zen_of_languages.languages.configs import CSharpMagicNumberConfig
+from mcp_zen_of_languages.languages.configs import CSharpNullableConfig
+from mcp_zen_of_languages.languages.configs import CSharpPatternMatchingConfig
+from mcp_zen_of_languages.languages.configs import CSharpRecordConfig
+from mcp_zen_of_languages.languages.configs import CSharpStringInterpolationConfig
+from mcp_zen_of_languages.languages.configs import CSharpVarConfig
+from mcp_zen_of_languages.languages.configs import Cs008Config
+from mcp_zen_of_languages.models import Location
+from mcp_zen_of_languages.models import Violation
 
 
 class CSharpAsyncAwaitDetector(
@@ -66,8 +63,8 @@ class CSharpAsyncAwaitDetector(
         """Flag lines that block on tasks with ``.Result`` or ``.Wait()``.
 
         Args:
-            context: Analysis context with C# source text.
-            config: Async/await detection configuration.
+            context (AnalysisContext): Analysis context with C# source text.
+            config (CSharpAsyncAwaitConfig): Async/await detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -114,8 +111,8 @@ class CSharpStringInterpolationDetector(
         """Flag calls to ``String.Format`` that should use interpolation.
 
         Args:
-            context: Analysis context with C# source text.
-            config: String-interpolation detection configuration.
+            context (AnalysisContext): Analysis context with C# source text.
+            config (CSharpStringInterpolationConfig): String-interpolation detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -165,8 +162,8 @@ class CSharpNullableDetector(
         """Flag files that do not contain a ``#nullable enable`` directive.
 
         Args:
-            context: Analysis context with C# source text.
-            config: Nullable detection configuration.
+            context (AnalysisContext): Analysis context with C# source text.
+            config (CSharpNullableConfig): Nullable detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -211,8 +208,8 @@ class CSharpExpressionBodiedDetector(
         """Flag ``get { return ... }`` patterns that could be expression-bodied.
 
         Args:
-            context: Analysis context with C# source text.
-            config: Expression-bodied detection configuration.
+            context (AnalysisContext): Analysis context with C# source text.
+            config (CSharpExpressionBodiedConfig): Expression-bodied detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -261,8 +258,8 @@ class CSharpVarDetector(ViolationDetector[CSharpVarConfig], LocationHelperMixin)
         """Flag assignments with explicit primitive types that could use ``var``.
 
         Args:
-            context: Analysis context with C# source text.
-            config: Var-usage detection configuration.
+            context (AnalysisContext): Analysis context with C# source text.
+            config (CSharpVarConfig): Var-usage detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -311,8 +308,8 @@ class CSharpPatternMatchingDetector(
         """Flag ``is`` type checks that could leverage pattern matching.
 
         Args:
-            context: Analysis context with C# source text.
-            config: Pattern-matching detection configuration.
+            context (AnalysisContext): Analysis context with C# source text.
+            config (CSharpPatternMatchingConfig): Pattern-matching detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -363,8 +360,8 @@ class CSharpCollectionExpressionDetector(
         """Flag ``new List`` or ``new T[]`` initialisations that could use ``[]``.
 
         Args:
-            context: Analysis context with C# source text.
-            config: Collection-expression detection configuration.
+            context (AnalysisContext): Analysis context with C# source text.
+            config (CSharpCollectionExpressionConfig): Collection-expression detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -412,8 +409,8 @@ class CSharpNamingConventionDetector(
         """Flag public/private members that violate configured naming styles.
 
         Args:
-            context: Analysis context with C# source text.
-            config: Contains ``public_naming`` and ``private_naming`` style rules.
+            context (AnalysisContext): Analysis context with C# source text.
+            config (Cs008Config): Contains ``public_naming`` and ``private_naming`` style rules.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -423,8 +420,8 @@ class CSharpNamingConventionDetector(
             """Check whether a symbol name conforms to the given casing style.
 
             Args:
-                name: Symbol name to validate (e.g., ``myField``, ``MyProperty``).
-                style: Casing convention to match—``PascalCase`` or ``camelCase``.
+                name (str): Symbol name to validate (e.g., ``myField``, ``MyProperty``).
+                style (str): Casing convention to match—``PascalCase`` or ``camelCase``.
 
             Returns:
                 bool: ``True`` when the name matches the expected casing style.
@@ -495,8 +492,8 @@ class CSharpDisposableDetector(
         """Flag code referencing ``IDisposable``/``Dispose()`` without ``using``.
 
         Args:
-            context: Analysis context with C# source text.
-            config: Disposable detection configuration.
+            context (AnalysisContext): Analysis context with C# source text.
+            config (CSharpDisposableConfig): Disposable detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -543,8 +540,8 @@ class CSharpMagicNumberDetector(
         """Flag multi-digit numeric literals that should be named constants.
 
         Args:
-            context: Analysis context with C# source text.
-            config: Magic-number detection configuration.
+            context (AnalysisContext): Analysis context with C# source text.
+            config (CSharpMagicNumberConfig): Magic-number detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -587,8 +584,8 @@ class CSharpLinqDetector(ViolationDetector[CSharpLinqConfig], LocationHelperMixi
         """Flag ``foreach`` loops that lack corresponding LINQ method calls.
 
         Args:
-            context: Analysis context with C# source text.
-            config: LINQ detection configuration.
+            context (AnalysisContext): Analysis context with C# source text.
+            config (CSharpLinqConfig): LINQ detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -635,8 +632,8 @@ class CSharpExceptionHandlingDetector(
         """Flag ``catch (Exception)`` and bare ``catch`` blocks.
 
         Args:
-            context: Analysis context with C# source text.
-            config: Exception-handling detection configuration.
+            context (AnalysisContext): Analysis context with C# source text.
+            config (CSharpExceptionHandlingConfig): Exception-handling detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.
@@ -682,8 +679,8 @@ class CSharpRecordDetector(ViolationDetector[CSharpRecordConfig], LocationHelper
         """Flag ``class`` definitions with ``get; set;`` that could be records.
 
         Args:
-            context: Analysis context with C# source text.
-            config: Record-type detection configuration.
+            context (AnalysisContext): Analysis context with C# source text.
+            config (CSharpRecordConfig): Record-type detection configuration.
 
         Returns:
             list[Violation]: Violations detected for the analyzed context.

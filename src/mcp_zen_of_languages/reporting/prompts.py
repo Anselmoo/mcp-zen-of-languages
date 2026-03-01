@@ -25,22 +25,18 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from mcp_zen_of_languages.reporting.models import (
-    FilePrompt,
-    GenericPrompt,
-    PromptBundle,
-)
-from mcp_zen_of_languages.reporting.remediation_patterns import (
-    QUALITY_CHECKLIST,
-    resolve_pattern,
-)
-from mcp_zen_of_languages.reporting.theme_clustering import (
-    build_big_picture_analysis,
-    classify_violation,
-)
+from mcp_zen_of_languages.reporting.models import FilePrompt
+from mcp_zen_of_languages.reporting.models import GenericPrompt
+from mcp_zen_of_languages.reporting.models import PromptBundle
+from mcp_zen_of_languages.reporting.remediation_patterns import QUALITY_CHECKLIST
+from mcp_zen_of_languages.reporting.remediation_patterns import resolve_pattern
+from mcp_zen_of_languages.reporting.theme_clustering import build_big_picture_analysis
+from mcp_zen_of_languages.reporting.theme_clustering import classify_violation
+
 
 if TYPE_CHECKING:
-    from mcp_zen_of_languages.models import AnalysisResult, Violation
+    from mcp_zen_of_languages.models import AnalysisResult
+    from mcp_zen_of_languages.models import Violation
 
 PROMPT_CONTEXT = "Remediate code quality violations in a multi-language codebase using zen principles."
 PROMPT_GOAL = (
@@ -223,8 +219,8 @@ def _format_file_prompt(result: AnalysisResult, violations: list[Violation]) -> 
     ``remediation_patterns.resolve_pattern``.
 
     Args:
-        result: Analysis result for the target file.
-        violations: Violation subset to include (typically ``result.violations``).
+        result (AnalysisResult): Analysis result for the target file.
+        violations (list[Violation]): Violation subset to include (typically ``result.violations``).
 
     Returns:
         str: Multi-line Markdown prompt text ready for embedding in a ``FilePrompt``.
@@ -284,7 +280,7 @@ def build_prompt_bundle(results: list[AnalysisResult]) -> PromptBundle:
     a ``BigPictureAnalysis`` to provide roadmap and health-score context.
 
     Args:
-        results: Analysis results from one or more files and languages.
+        results (list[AnalysisResult]): Analysis results from one or more files and languages.
 
     Returns:
         PromptBundle: File prompts, generic prompts, and big-picture analysis.

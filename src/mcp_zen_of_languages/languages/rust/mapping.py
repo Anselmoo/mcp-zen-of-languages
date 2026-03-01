@@ -2,41 +2,36 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import (
-    DetectorBinding,
-    LanguageDetectorMap,
-)
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
-from mcp_zen_of_languages.languages.configs import (
-    RustCloneOverheadConfig,
-    RustDebugDeriveConfig,
-    RustEnumOverBoolConfig,
-    RustErrorHandlingConfig,
-    RustInteriorMutabilityConfig,
-    RustIteratorPreferenceConfig,
-    RustLifetimeUsageConfig,
-    RustMustUseConfig,
-    RustNewtypePatternConfig,
-    RustStdTraitsConfig,
-    RustTypeSafetyConfig,
-    RustUnsafeBlocksConfig,
-    RustUnwrapUsageConfig,
-)
-from mcp_zen_of_languages.languages.rust.detectors import (
-    RustCloneOverheadDetector,
-    RustDebugDeriveDetector,
-    RustEnumOverBoolDetector,
-    RustErrorHandlingDetector,
-    RustInteriorMutabilityDetector,
-    RustIteratorPreferenceDetector,
-    RustLifetimeUsageDetector,
-    RustMustUseDetector,
-    RustNewtypePatternDetector,
-    RustStdTraitsDetector,
-    RustTypeSafetyDetector,
-    RustUnsafeBlocksDetector,
-    RustUnwrapUsageDetector,
-)
+from mcp_zen_of_languages.languages.configs import RustCloneOverheadConfig
+from mcp_zen_of_languages.languages.configs import RustDebugDeriveConfig
+from mcp_zen_of_languages.languages.configs import RustEnumOverBoolConfig
+from mcp_zen_of_languages.languages.configs import RustErrorHandlingConfig
+from mcp_zen_of_languages.languages.configs import RustInteriorMutabilityConfig
+from mcp_zen_of_languages.languages.configs import RustIteratorPreferenceConfig
+from mcp_zen_of_languages.languages.configs import RustLifetimeUsageConfig
+from mcp_zen_of_languages.languages.configs import RustMustUseConfig
+from mcp_zen_of_languages.languages.configs import RustNewtypePatternConfig
+from mcp_zen_of_languages.languages.configs import RustStdTraitsConfig
+from mcp_zen_of_languages.languages.configs import RustTypeSafetyConfig
+from mcp_zen_of_languages.languages.configs import RustUnsafeBlocksConfig
+from mcp_zen_of_languages.languages.configs import RustUnwrapUsageConfig
+from mcp_zen_of_languages.languages.rust.detectors import RustCloneOverheadDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustDebugDeriveDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustEnumOverBoolDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustErrorHandlingDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustInteriorMutabilityDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustIteratorPreferenceDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustLifetimeUsageDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustMustUseDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustNewtypePatternDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustStdTraitsDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustTypeSafetyDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustUnsafeBlocksDetector
+from mcp_zen_of_languages.languages.rust.detectors import RustUnwrapUsageDetector
+
 
 FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(

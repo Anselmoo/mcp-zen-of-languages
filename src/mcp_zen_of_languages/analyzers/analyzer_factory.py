@@ -15,13 +15,9 @@ from mcp_zen_of_languages.languages.bash.analyzer import BashAnalyzer
 from mcp_zen_of_languages.languages.cpp.analyzer import CppAnalyzer
 from mcp_zen_of_languages.languages.csharp.analyzer import CSharpAnalyzer
 from mcp_zen_of_languages.languages.css.analyzer import CssAnalyzer
-from mcp_zen_of_languages.languages.docker_compose.analyzer import (
-    DockerComposeAnalyzer,
-)
+from mcp_zen_of_languages.languages.docker_compose.analyzer import DockerComposeAnalyzer
 from mcp_zen_of_languages.languages.dockerfile.analyzer import DockerfileAnalyzer
-from mcp_zen_of_languages.languages.github_actions.analyzer import (
-    GitHubActionsAnalyzer,
-)
+from mcp_zen_of_languages.languages.github_actions.analyzer import GitHubActionsAnalyzer
 from mcp_zen_of_languages.languages.gitlab_ci.analyzer import GitLabCIAnalyzer
 from mcp_zen_of_languages.languages.go.analyzer import GoAnalyzer
 from mcp_zen_of_languages.languages.javascript.analyzer import JavaScriptAnalyzer
@@ -38,8 +34,10 @@ from mcp_zen_of_languages.languages.typescript.analyzer import TypeScriptAnalyze
 from mcp_zen_of_languages.languages.xml.analyzer import XmlAnalyzer
 from mcp_zen_of_languages.languages.yaml.analyzer import YamlAnalyzer
 
+
 if TYPE_CHECKING:
-    from mcp_zen_of_languages.analyzers.base import AnalyzerConfig, BaseAnalyzer
+    from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
+    from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
 
     type AnalyzerClass = type[BaseAnalyzer]
@@ -147,15 +145,15 @@ def create_analyzer(
     *pipeline_config* overrides from ``zen-config.yaml``.
 
     Args:
-        language: Language name or alias (case-insensitive).  Common
+        language (str): Language name or alias (case-insensitive).  Common
             aliases are accepted — see the table below.
-        config: Global analyzer thresholds; passed through to the
-            analyzer's ``__init__``.
-        pipeline_config: Optional detector-level overrides merged on
-            top of the rule-derived pipeline.
+        config (AnalyzerConfig | None, optional): Global analyzer thresholds; passed through to the
+            analyzer's ``__init__``. Default to None.
+        pipeline_config (PipelineConfig | None, optional): Optional detector-level overrides merged on
+            top of the rule-derived pipeline. Default to None.
 
     Returns:
-        A configured [`BaseAnalyzer`][mcp_zen_of_languages.analyzers.base.BaseAnalyzer]
+        BaseAnalyzer: A configured [`BaseAnalyzer`][mcp_zen_of_languages.analyzers.base.BaseAnalyzer]
         subclass ready to call ``analyze``.
 
     Raises:

@@ -4,10 +4,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    ViolationDetector,
-)
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.models import Violation
@@ -34,8 +33,8 @@ class PlaceholderDetector(ViolationDetector):
         """Return an empty list — no violations are ever produced.
 
         Args:
-            context: Analysis context (ignored by the stub).
-            config: Detector configuration (ignored by the stub).
+            context (AnalysisContext): Analysis context (ignored by the stub).
+            config (object): Detector configuration (ignored by the stub).
 
         Returns:
             list[Violation]: Always an empty list.

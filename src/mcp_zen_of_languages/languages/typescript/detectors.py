@@ -3,36 +3,32 @@
 from __future__ import annotations
 
 import re
+
 from typing import TYPE_CHECKING
 
-from mcp_zen_of_languages.analyzers.base import (
-    AnalysisContext,
-    LocationHelperMixin,
-    ViolationDetector,
-)
-from mcp_zen_of_languages.languages.configs import (
-    TsAnyUsageConfig,
-    TsEnumConstConfig,
-    TsInterfacePreferenceConfig,
-    TsNonNullAssertionConfig,
-    TsReadonlyConfig,
-    TsReturnTypeConfig,
-    TsStrictModeConfig,
-    TsTypeGuardConfig,
-    TsUnknownOverAnyConfig,
-    TsUtilityTypesConfig,
-)
-from mcp_zen_of_languages.rules.detections import (
-    detect_ts_any_usage,
-    detect_ts_missing_return_types,
-    detect_ts_non_null_assertions,
-    detect_ts_object_type_aliases,
-    detect_ts_plain_enum_objects,
-    detect_ts_readonly_usage,
-    detect_ts_type_assertions,
-    detect_ts_unknown_over_any,
-    detect_ts_utility_types,
-)
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
+from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import TsAnyUsageConfig
+from mcp_zen_of_languages.languages.configs import TsEnumConstConfig
+from mcp_zen_of_languages.languages.configs import TsInterfacePreferenceConfig
+from mcp_zen_of_languages.languages.configs import TsNonNullAssertionConfig
+from mcp_zen_of_languages.languages.configs import TsReadonlyConfig
+from mcp_zen_of_languages.languages.configs import TsReturnTypeConfig
+from mcp_zen_of_languages.languages.configs import TsStrictModeConfig
+from mcp_zen_of_languages.languages.configs import TsTypeGuardConfig
+from mcp_zen_of_languages.languages.configs import TsUnknownOverAnyConfig
+from mcp_zen_of_languages.languages.configs import TsUtilityTypesConfig
+from mcp_zen_of_languages.rules.detections import detect_ts_any_usage
+from mcp_zen_of_languages.rules.detections import detect_ts_missing_return_types
+from mcp_zen_of_languages.rules.detections import detect_ts_non_null_assertions
+from mcp_zen_of_languages.rules.detections import detect_ts_object_type_aliases
+from mcp_zen_of_languages.rules.detections import detect_ts_plain_enum_objects
+from mcp_zen_of_languages.rules.detections import detect_ts_readonly_usage
+from mcp_zen_of_languages.rules.detections import detect_ts_type_assertions
+from mcp_zen_of_languages.rules.detections import detect_ts_unknown_over_any
+from mcp_zen_of_languages.rules.detections import detect_ts_utility_types
+
 
 if TYPE_CHECKING:
     from mcp_zen_of_languages.models import Violation

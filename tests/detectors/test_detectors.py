@@ -1,19 +1,17 @@
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
 from mcp_zen_of_languages.analyzers.registry import REGISTRY
-from mcp_zen_of_languages.languages.python.detectors import (
-    BareExceptDetector,
-    ComplexOneLinersDetector,
-    ConsistencyDetector,
-    CyclomaticComplexityDetector,
-    ExplicitnessDetector,
-    LineLengthDetector,
-    MagicNumberDetector,
-    NamespaceUsageDetector,
-    NameStyleDetector,
-    ShortVariableNamesDetector,
-    SparseCodeDetector,
-    StarImportDetector,
-)
+from mcp_zen_of_languages.languages.python.detectors import BareExceptDetector
+from mcp_zen_of_languages.languages.python.detectors import ComplexOneLinersDetector
+from mcp_zen_of_languages.languages.python.detectors import ConsistencyDetector
+from mcp_zen_of_languages.languages.python.detectors import CyclomaticComplexityDetector
+from mcp_zen_of_languages.languages.python.detectors import ExplicitnessDetector
+from mcp_zen_of_languages.languages.python.detectors import LineLengthDetector
+from mcp_zen_of_languages.languages.python.detectors import MagicNumberDetector
+from mcp_zen_of_languages.languages.python.detectors import NameStyleDetector
+from mcp_zen_of_languages.languages.python.detectors import NamespaceUsageDetector
+from mcp_zen_of_languages.languages.python.detectors import ShortVariableNamesDetector
+from mcp_zen_of_languages.languages.python.detectors import SparseCodeDetector
+from mcp_zen_of_languages.languages.python.detectors import StarImportDetector
 from mcp_zen_of_languages.languages.python.rules import PYTHON_ZEN
 
 
@@ -211,14 +209,14 @@ def test_namespace_usage_detector():
 
 
 def test_js_detectors_smoke():
-    from mcp_zen_of_languages.languages.configs import (
-        JsCallbackNestingConfig,
-        JsNoVarConfig,
-        JsStrictEqualityConfig,
-    )
+    from mcp_zen_of_languages.languages.configs import JsCallbackNestingConfig
+    from mcp_zen_of_languages.languages.configs import JsNoVarConfig
+    from mcp_zen_of_languages.languages.configs import JsStrictEqualityConfig
     from mcp_zen_of_languages.languages.javascript.detectors import (
         JsCallbackNestingDetector,
-        JsNoVarDetector,
+    )
+    from mcp_zen_of_languages.languages.javascript.detectors import JsNoVarDetector
+    from mcp_zen_of_languages.languages.javascript.detectors import (
         JsStrictEqualityDetector,
     )
 
@@ -235,14 +233,16 @@ def test_js_detectors_smoke():
 
 
 def test_powershell_detectors_smoke():
-    from mcp_zen_of_languages.languages.configs import (
-        PowerShellApprovedVerbConfig,
-        PowerShellErrorHandlingConfig,
-        PowerShellPascalCaseConfig,
-    )
+    from mcp_zen_of_languages.languages.configs import PowerShellApprovedVerbConfig
+    from mcp_zen_of_languages.languages.configs import PowerShellErrorHandlingConfig
+    from mcp_zen_of_languages.languages.configs import PowerShellPascalCaseConfig
     from mcp_zen_of_languages.languages.powershell.detectors import (
         PowerShellApprovedVerbDetector,
+    )
+    from mcp_zen_of_languages.languages.powershell.detectors import (
         PowerShellErrorHandlingDetector,
+    )
+    from mcp_zen_of_languages.languages.powershell.detectors import (
         PowerShellPascalCaseDetector,
     )
 
@@ -260,12 +260,10 @@ def test_powershell_detectors_smoke():
 
 
 def test_ruby_detectors_smoke():
-    from mcp_zen_of_languages.languages.configs import (
-        RubyMethodChainConfig,
-        RubyNamingConventionConfig,
-    )
+    from mcp_zen_of_languages.languages.configs import RubyMethodChainConfig
+    from mcp_zen_of_languages.languages.configs import RubyNamingConventionConfig
+    from mcp_zen_of_languages.languages.ruby.detectors import RubyMethodChainDetector
     from mcp_zen_of_languages.languages.ruby.detectors import (
-        RubyMethodChainDetector,
         RubyNamingConventionDetector,
     )
 

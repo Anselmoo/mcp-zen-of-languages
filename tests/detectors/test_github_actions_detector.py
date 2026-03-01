@@ -1,11 +1,9 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.analyzer_factory import create_analyzer
-from mcp_zen_of_languages.languages.ci_yaml_utils import (
-    job_steps,
-    load_ci_yaml,
-    workflow_jobs,
-)
+from mcp_zen_of_languages.languages.ci_yaml_utils import job_steps
+from mcp_zen_of_languages.languages.ci_yaml_utils import load_ci_yaml
+from mcp_zen_of_languages.languages.ci_yaml_utils import workflow_jobs
 
 
 def test_github_actions_detector_finds_security_and_timeout_issues():

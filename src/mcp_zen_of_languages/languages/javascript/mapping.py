@@ -2,37 +2,40 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import (
-    DetectorBinding,
-    LanguageDetectorMap,
-)
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
-from mcp_zen_of_languages.languages.configs import (
-    Js009Config,
-    Js011Config,
-    JsAsyncErrorHandlingConfig,
-    JsCallbackNestingConfig,
-    JsFunctionLengthConfig,
-    JsGlobalStateConfig,
-    JsMagicNumbersConfig,
-    JsModernFeaturesConfig,
-    JsNoVarConfig,
-    JsPureFunctionConfig,
-    JsStrictEqualityConfig,
-)
+from mcp_zen_of_languages.languages.configs import Js009Config
+from mcp_zen_of_languages.languages.configs import Js011Config
+from mcp_zen_of_languages.languages.configs import JsAsyncErrorHandlingConfig
+from mcp_zen_of_languages.languages.configs import JsCallbackNestingConfig
+from mcp_zen_of_languages.languages.configs import JsFunctionLengthConfig
+from mcp_zen_of_languages.languages.configs import JsGlobalStateConfig
+from mcp_zen_of_languages.languages.configs import JsMagicNumbersConfig
+from mcp_zen_of_languages.languages.configs import JsModernFeaturesConfig
+from mcp_zen_of_languages.languages.configs import JsNoVarConfig
+from mcp_zen_of_languages.languages.configs import JsPureFunctionConfig
+from mcp_zen_of_languages.languages.configs import JsStrictEqualityConfig
 from mcp_zen_of_languages.languages.javascript.detectors import (
     JsAsyncErrorHandlingDetector,
-    JsCallbackNestingDetector,
-    JsFunctionLengthDetector,
-    JsGlobalStateDetector,
-    JsInheritanceDepthDetector,
-    JsMagicNumbersDetector,
-    JsMeaningfulNamesDetector,
-    JsModernFeaturesDetector,
-    JsNoVarDetector,
-    JsPureFunctionDetector,
-    JsStrictEqualityDetector,
 )
+from mcp_zen_of_languages.languages.javascript.detectors import (
+    JsCallbackNestingDetector,
+)
+from mcp_zen_of_languages.languages.javascript.detectors import JsFunctionLengthDetector
+from mcp_zen_of_languages.languages.javascript.detectors import JsGlobalStateDetector
+from mcp_zen_of_languages.languages.javascript.detectors import (
+    JsInheritanceDepthDetector,
+)
+from mcp_zen_of_languages.languages.javascript.detectors import JsMagicNumbersDetector
+from mcp_zen_of_languages.languages.javascript.detectors import (
+    JsMeaningfulNamesDetector,
+)
+from mcp_zen_of_languages.languages.javascript.detectors import JsModernFeaturesDetector
+from mcp_zen_of_languages.languages.javascript.detectors import JsNoVarDetector
+from mcp_zen_of_languages.languages.javascript.detectors import JsPureFunctionDetector
+from mcp_zen_of_languages.languages.javascript.detectors import JsStrictEqualityDetector
+
 
 FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(

@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import logging
 import os
+
 from dataclasses import dataclass
 from time import monotonic
 from typing import Protocol
+
 
 logger = logging.getLogger(__name__)
 

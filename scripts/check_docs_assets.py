@@ -12,7 +12,9 @@ from __future__ import annotations
 
 import re
 import sys
+
 from pathlib import Path
+
 
 # Paths relative to repo root
 CSS_ROOT = Path("docs/stylesheets")

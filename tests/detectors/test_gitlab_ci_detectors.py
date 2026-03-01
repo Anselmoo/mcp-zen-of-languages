@@ -3,16 +3,21 @@ from __future__ import annotations
 from mcp_zen_of_languages.analyzers.analyzer_factory import create_analyzer
 from mcp_zen_of_languages.languages.gitlab_ci.detectors import (
     AllowFailureWithoutRulesDetector,
-    ArtifactExpiryDetector,
-    DuplicatedBeforeScriptDetector,
-    ExposedVariablesDetector,
-    GodPipelineDetector,
-    MissingCacheKeyDetector,
-    MissingInterruptibleDetector,
-    MissingNeedsDetector,
-    OnlyExceptDetector,
-    UnpinnedImageTagDetector,
 )
+from mcp_zen_of_languages.languages.gitlab_ci.detectors import ArtifactExpiryDetector
+from mcp_zen_of_languages.languages.gitlab_ci.detectors import (
+    DuplicatedBeforeScriptDetector,
+)
+from mcp_zen_of_languages.languages.gitlab_ci.detectors import ExposedVariablesDetector
+from mcp_zen_of_languages.languages.gitlab_ci.detectors import GodPipelineDetector
+from mcp_zen_of_languages.languages.gitlab_ci.detectors import MissingCacheKeyDetector
+from mcp_zen_of_languages.languages.gitlab_ci.detectors import (
+    MissingInterruptibleDetector,
+)
+from mcp_zen_of_languages.languages.gitlab_ci.detectors import MissingNeedsDetector
+from mcp_zen_of_languages.languages.gitlab_ci.detectors import OnlyExceptDetector
+from mcp_zen_of_languages.languages.gitlab_ci.detectors import UnpinnedImageTagDetector
+
 
 DETECTOR_CLASS_COUNT = 10
 EXPECTED_EXPOSED_VARIABLES_COUNT = 2

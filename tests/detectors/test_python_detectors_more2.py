@@ -1,20 +1,16 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
-from mcp_zen_of_languages.languages.configs import (
-    ConsistencyConfig,
-    ExplicitnessConfig,
-    LongFunctionConfig,
-    NamespaceConfig,
-    NestingDepthConfig,
-)
-from mcp_zen_of_languages.languages.python.detectors import (
-    ConsistencyDetector,
-    ExplicitnessDetector,
-    LongFunctionDetector,
-    NamespaceUsageDetector,
-    NestingDepthDetector,
-)
+from mcp_zen_of_languages.languages.configs import ConsistencyConfig
+from mcp_zen_of_languages.languages.configs import ExplicitnessConfig
+from mcp_zen_of_languages.languages.configs import LongFunctionConfig
+from mcp_zen_of_languages.languages.configs import NamespaceConfig
+from mcp_zen_of_languages.languages.configs import NestingDepthConfig
+from mcp_zen_of_languages.languages.python.detectors import ConsistencyDetector
+from mcp_zen_of_languages.languages.python.detectors import ExplicitnessDetector
+from mcp_zen_of_languages.languages.python.detectors import LongFunctionDetector
+from mcp_zen_of_languages.languages.python.detectors import NamespaceUsageDetector
+from mcp_zen_of_languages.languages.python.detectors import NestingDepthDetector
 
 
 def test_consistency_detector_flags_styles():

@@ -2,35 +2,36 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import (
-    DetectorBinding,
-    LanguageDetectorMap,
-)
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
-from mcp_zen_of_languages.languages.configs import (
-    GitLabCIAllowFailureConfig,
-    GitLabCIArtifactExpiryConfig,
-    GitLabCIDuplicatedBeforeScriptConfig,
-    GitLabCIExposedVariablesConfig,
-    GitLabCIGodPipelineConfig,
-    GitLabCIMissingCacheConfig,
-    GitLabCIMissingInterruptibleConfig,
-    GitLabCIMissingNeedsConfig,
-    GitLabCIOnlyExceptConfig,
-    GitLabCIUnpinnedImageConfig,
-)
+from mcp_zen_of_languages.languages.configs import GitLabCIAllowFailureConfig
+from mcp_zen_of_languages.languages.configs import GitLabCIArtifactExpiryConfig
+from mcp_zen_of_languages.languages.configs import GitLabCIDuplicatedBeforeScriptConfig
+from mcp_zen_of_languages.languages.configs import GitLabCIExposedVariablesConfig
+from mcp_zen_of_languages.languages.configs import GitLabCIGodPipelineConfig
+from mcp_zen_of_languages.languages.configs import GitLabCIMissingCacheConfig
+from mcp_zen_of_languages.languages.configs import GitLabCIMissingInterruptibleConfig
+from mcp_zen_of_languages.languages.configs import GitLabCIMissingNeedsConfig
+from mcp_zen_of_languages.languages.configs import GitLabCIOnlyExceptConfig
+from mcp_zen_of_languages.languages.configs import GitLabCIUnpinnedImageConfig
 from mcp_zen_of_languages.languages.gitlab_ci.detectors import (
     AllowFailureWithoutRulesDetector,
-    ArtifactExpiryDetector,
-    DuplicatedBeforeScriptDetector,
-    ExposedVariablesDetector,
-    GodPipelineDetector,
-    MissingCacheKeyDetector,
-    MissingInterruptibleDetector,
-    MissingNeedsDetector,
-    OnlyExceptDetector,
-    UnpinnedImageTagDetector,
 )
+from mcp_zen_of_languages.languages.gitlab_ci.detectors import ArtifactExpiryDetector
+from mcp_zen_of_languages.languages.gitlab_ci.detectors import (
+    DuplicatedBeforeScriptDetector,
+)
+from mcp_zen_of_languages.languages.gitlab_ci.detectors import ExposedVariablesDetector
+from mcp_zen_of_languages.languages.gitlab_ci.detectors import GodPipelineDetector
+from mcp_zen_of_languages.languages.gitlab_ci.detectors import MissingCacheKeyDetector
+from mcp_zen_of_languages.languages.gitlab_ci.detectors import (
+    MissingInterruptibleDetector,
+)
+from mcp_zen_of_languages.languages.gitlab_ci.detectors import MissingNeedsDetector
+from mcp_zen_of_languages.languages.gitlab_ci.detectors import OnlyExceptDetector
+from mcp_zen_of_languages.languages.gitlab_ci.detectors import UnpinnedImageTagDetector
+
 
 FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
 DETECTOR_MAP = LanguageDetectorMap(

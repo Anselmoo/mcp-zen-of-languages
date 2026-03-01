@@ -199,5 +199,78 @@ PYTHON_ZEN = LanguageZenPrinciples(
                 "max_exports": 20,
             },
         ),
+        ZenPrinciple(
+            id="python-013",
+            principle="Practicality beats purity",
+            category=PrincipleCategory.DESIGN,
+            severity=5,
+            description="Prefer simple, practical solutions over excessive abstraction",
+            violations=[
+                "Over-engineered ABC/Protocol hierarchies",
+                "Premature abstraction with few implementations",
+            ],
+        ),
+        ZenPrinciple(
+            id="python-014",
+            principle="Errors should never pass silently",
+            category=PrincipleCategory.CORRECTNESS,
+            severity=8,
+            description="Handle errors explicitly; never swallow exceptions",
+            violations=[
+                "Bare except clauses",
+                "Silent exception catching with pass",
+            ],
+        ),
+        ZenPrinciple(
+            id="python-015",
+            principle="Now is better than never",
+            category=PrincipleCategory.STRUCTURE,
+            severity=4,
+            description="Address TODOs and stubs promptly",
+            violations=[
+                "TODO/FIXME/HACK/XXX comments left unresolved",
+            ],
+        ),
+        ZenPrinciple(
+            id="python-016",
+            principle="Although never is often better than *right* now",
+            category=PrincipleCategory.DESIGN,
+            severity=5,
+            description="Document why functionality is deferred rather than raising bare NotImplementedError",
+            violations=[
+                "Undocumented NotImplementedError stubs",
+            ],
+        ),
+        ZenPrinciple(
+            id="python-017",
+            principle="If the implementation is hard to explain, it's a bad idea",
+            category=PrincipleCategory.READABILITY,
+            severity=6,
+            description="Complex code must be documented",
+            violations=[
+                "Functions without docstrings",
+            ],
+        ),
+        ZenPrinciple(
+            id="python-018",
+            principle="If the implementation is easy to explain, it may be a good idea",
+            category=PrincipleCategory.READABILITY,
+            severity=3,
+            description="Even simple public functions benefit from docstrings",
+            violations=[
+                "Public functions without docstrings",
+            ],
+        ),
+        ZenPrinciple(
+            id="python-019",
+            principle="There should be one-- and preferably only one --obvious way to do it",
+            category=PrincipleCategory.IDIOMS,
+            severity=5,
+            description="Use idiomatic Python constructs",
+            violations=[
+                "Using range(len()) instead of enumerate()",
+                "Comparing with == True/False instead of direct boolean checks",
+            ],
+        ),
     ],
 )

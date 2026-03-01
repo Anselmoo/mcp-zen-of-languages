@@ -21,11 +21,18 @@ from mcp_zen_of_languages.languages.configs import Js009Config
 from mcp_zen_of_languages.languages.configs import Js011Config
 from mcp_zen_of_languages.languages.configs import JsAsyncErrorHandlingConfig
 from mcp_zen_of_languages.languages.configs import JsCallbackNestingConfig
+from mcp_zen_of_languages.languages.configs import JsDestructuringConfig
 from mcp_zen_of_languages.languages.configs import JsFunctionLengthConfig
 from mcp_zen_of_languages.languages.configs import JsGlobalStateConfig
 from mcp_zen_of_languages.languages.configs import JsMagicNumbersConfig
 from mcp_zen_of_languages.languages.configs import JsModernFeaturesConfig
+from mcp_zen_of_languages.languages.configs import JsNoArgumentsConfig
+from mcp_zen_of_languages.languages.configs import JsNoEvalConfig
+from mcp_zen_of_languages.languages.configs import JsNoPrototypeMutationConfig
 from mcp_zen_of_languages.languages.configs import JsNoVarConfig
+from mcp_zen_of_languages.languages.configs import JsNoWithConfig
+from mcp_zen_of_languages.languages.configs import JsObjectSpreadConfig
+from mcp_zen_of_languages.languages.configs import JsParamCountConfig
 from mcp_zen_of_languages.languages.configs import JsPureFunctionConfig
 from mcp_zen_of_languages.languages.configs import JsStrictEqualityConfig
 from mcp_zen_of_languages.models import Location
@@ -34,6 +41,9 @@ from mcp_zen_of_languages.models import Violation
 
 # Minimum number of repeated property accesses on the same name to flag destructuring
 MIN_REPEATED_ACCESS_COUNT = 2
+
+# Threshold for the dedicated destructuring detector (js-012)
+MIN_DESTRUCTURING_ACCESS_COUNT = 3
 
 
 class JsCallbackNestingDetector(
@@ -684,16 +694,364 @@ class JsMeaningfulNamesDetector(ViolationDetector[Js011Config], LocationHelperMi
         return []
 
 
+class JsDestructuringDetector(ViolationDetector[JsDestructuringConfig]):
+    """Detect repeated property access on the same object without destructuring.
+
+    When three or more property accesses reference the same object name, code
+    becomes verbose and harder to maintain.  Destructuring extracts multiple
+    properties in a single statement and makes data dependencies explicit.
+
+    Note:
+        ``const { a, b, c } = obj;`` is more concise and communicates intent
+        better than three separate ``obj.x`` assignments.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier used by registry wiring.
+
+        Returns:
+            str: Identifier string consumed by callers.
+        """
+        return "js_destructuring"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: JsDestructuringConfig,
+    ) -> list[Violation]:
+        """Detect violations for the current analysis context.
+
+        Args:
+            context: Analysis context containing source text and intermediate
+                metrics.
+            config: Typed detector configuration that controls thresholds.
+
+        Returns:
+            list[Violation]: Violations detected for the analyzed context.
+        """
+        matches = re.findall(r"\b(\w+)\.\w+", context.code)
+        counts: dict[str, int] = {}
+        for m in matches:
+            counts[m] = counts.get(m, 0) + 1
+        if any(c >= MIN_DESTRUCTURING_ACCESS_COUNT for c in counts.values()):
+            return [
+                self.build_violation(
+                    config,
+                    contains="repeated property access",
+                    suggestion="Use destructuring for cleaner property assignment.",
+                ),
+            ]
+        return []
+
+
+class JsObjectSpreadDetector(ViolationDetector[JsObjectSpreadConfig]):
+    """Detect usage of ``Object.assign`` where object spread is preferred.
+
+    ``Object.assign`` mutates its first argument and is harder to read than
+    the equivalent spread syntax ``{ ...a, ...b }``.  The spread form is
+    also safer because it always creates a new object.
+
+    Note:
+        Object spread is supported in all modern browsers and Node.js 8.3+.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier used by registry wiring.
+
+        Returns:
+            str: Identifier string consumed by callers.
+        """
+        return "js_object_spread"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: JsObjectSpreadConfig,
+    ) -> list[Violation]:
+        """Detect violations for the current analysis context.
+
+        Args:
+            context: Analysis context containing source text and intermediate
+                metrics.
+            config: Typed detector configuration that controls thresholds.
+
+        Returns:
+            list[Violation]: Violations detected for the analyzed context.
+        """
+        if re.search(r"Object\.assign\s*\(", context.code):
+            return [
+                self.build_violation(
+                    config,
+                    contains="Object.assign",
+                    suggestion="Prefer object spread {...obj} over Object.assign().",
+                ),
+            ]
+        return []
+
+
+class JsNoWithDetector(ViolationDetector[JsNoWithConfig]):
+    """Detect usage of the ``with`` statement in JavaScript.
+
+    The ``with`` statement creates ambiguous scope chains, making it
+    impossible to tell at a glance whether an identifier refers to a
+    property of the ``with`` target or an outer variable.  It is
+    forbidden in strict mode and should never appear in modern code.
+
+    Note:
+        ``with`` was deprecated by ES5 strict mode and is a syntax
+        error in ES modules.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier used by registry wiring.
+
+        Returns:
+            str: Identifier string consumed by callers.
+        """
+        return "js_no_with"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: JsNoWithConfig,
+    ) -> list[Violation]:
+        """Detect violations for the current analysis context.
+
+        Args:
+            context: Analysis context containing source text and intermediate
+                metrics.
+            config: Typed detector configuration that controls thresholds.
+
+        Returns:
+            list[Violation]: Violations detected for the analyzed context.
+        """
+        if re.search(r"\bwith\s*\(", context.code):
+            return [
+                self.build_violation(
+                    config,
+                    contains="with",
+                    suggestion="Avoid the with statement; it creates ambiguous scope.",
+                ),
+            ]
+        return []
+
+
+class JsParamCountDetector(ViolationDetector[JsParamCountConfig]):
+    """Detect functions with too many parameters.
+
+    Functions accepting four or more positional parameters are hard to call
+    correctly — callers must remember argument order, and long signatures
+    impede readability.  An options-object parameter collapses the list into
+    a single, self-documenting argument.
+
+    Note:
+        ``function create({ name, age, role })`` is clearer than
+        ``function create(name, age, role, active)``.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier used by registry wiring.
+
+        Returns:
+            str: Identifier string consumed by callers.
+        """
+        return "js_param_count"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: JsParamCountConfig,
+    ) -> list[Violation]:
+        """Detect violations for the current analysis context.
+
+        Args:
+            context: Analysis context containing source text and intermediate
+                metrics.
+            config: Typed detector configuration that controls thresholds.
+
+        Returns:
+            list[Violation]: Violations detected for the analyzed context.
+        """
+        if re.search(r"function\s+\w+\s*\([^)]*,[^)]*,[^)]*,[^)]*\)", context.code):
+            return [
+                self.build_violation(
+                    config,
+                    contains="parameters",
+                    suggestion="Limit function parameters; use an options object instead.",
+                ),
+            ]
+        return []
+
+
+class JsNoEvalDetector(ViolationDetector[JsNoEvalConfig]):
+    """Detect usage of ``eval()`` or ``new Function()`` in JavaScript.
+
+    Both ``eval`` and the ``Function`` constructor execute arbitrary strings
+    as code, opening the door to injection attacks, defeating static
+    analysis, and disabling engine optimisations.  There is almost always a
+    safer, more performant alternative.
+
+    Note:
+        Content-Security-Policy headers block ``eval`` by default in
+        modern browsers — relying on it also limits deployment options.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier used by registry wiring.
+
+        Returns:
+            str: Identifier string consumed by callers.
+        """
+        return "js_no_eval"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: JsNoEvalConfig,
+    ) -> list[Violation]:
+        """Detect violations for the current analysis context.
+
+        Args:
+            context: Analysis context containing source text and intermediate
+                metrics.
+            config: Typed detector configuration that controls thresholds.
+
+        Returns:
+            list[Violation]: Violations detected for the analyzed context.
+        """
+        if re.search(r"\beval\s*\(", context.code) or re.search(
+            r"new\s+Function\s*\(", context.code
+        ):
+            return [
+                self.build_violation(
+                    config,
+                    contains="eval",
+                    suggestion="Never use eval() or new Function(); they are security risks.",
+                ),
+            ]
+        return []
+
+
+class JsNoArgumentsDetector(ViolationDetector[JsNoArgumentsConfig]):
+    """Detect usage of the legacy ``arguments`` object in JavaScript.
+
+    The ``arguments`` object is not a real ``Array``, lacks arrow-function
+    support, and prevents engine optimisations.  Rest parameters
+    (``...args``) provide a true array with full method support and work
+    consistently in both regular and arrow functions.
+
+    Note:
+        ``arguments`` is unavailable inside arrow functions, so migrating
+        early avoids runtime errors during future refactoring.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier used by registry wiring.
+
+        Returns:
+            str: Identifier string consumed by callers.
+        """
+        return "js_no_arguments"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: JsNoArgumentsConfig,
+    ) -> list[Violation]:
+        """Detect violations for the current analysis context.
+
+        Args:
+            context: Analysis context containing source text and intermediate
+                metrics.
+            config: Typed detector configuration that controls thresholds.
+
+        Returns:
+            list[Violation]: Violations detected for the analyzed context.
+        """
+        if re.search(r"\barguments\b", context.code):
+            return [
+                self.build_violation(
+                    config,
+                    contains="arguments",
+                    suggestion="Use rest parameters (...args) instead of the arguments object.",
+                ),
+            ]
+        return []
+
+
+class JsNoPrototypeMutationDetector(ViolationDetector[JsNoPrototypeMutationConfig]):
+    """Detect mutations of built-in object prototypes.
+
+    Assigning to ``Array.prototype``, ``String.prototype``, or other
+    built-in prototypes pollutes every instance in the runtime, causing
+    unpredictable interactions between unrelated modules and libraries.
+
+    Note:
+        If custom behaviour is needed, use a wrapper function or subclass
+        instead of modifying the shared prototype chain.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier used by registry wiring.
+
+        Returns:
+            str: Identifier string consumed by callers.
+        """
+        return "js_no_prototype_mutation"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: JsNoPrototypeMutationConfig,
+    ) -> list[Violation]:
+        """Detect violations for the current analysis context.
+
+        Args:
+            context: Analysis context containing source text and intermediate
+                metrics.
+            config: Typed detector configuration that controls thresholds.
+
+        Returns:
+            list[Violation]: Violations detected for the analyzed context.
+        """
+        if re.search(
+            r"(Array|String|Object|Function|Number|Boolean)\.prototype\.\w+\s*=",
+            context.code,
+        ):
+            return [
+                self.build_violation(
+                    config,
+                    contains="prototype mutation",
+                    suggestion="Never mutate built-in prototypes.",
+                ),
+            ]
+        return []
+
+
 __all__ = [
     "JsAsyncErrorHandlingDetector",
     "JsCallbackNestingDetector",
+    "JsDestructuringDetector",
     "JsFunctionLengthDetector",
     "JsGlobalStateDetector",
     "JsInheritanceDepthDetector",
     "JsMagicNumbersDetector",
     "JsMeaningfulNamesDetector",
     "JsModernFeaturesDetector",
+    "JsNoArgumentsDetector",
+    "JsNoEvalDetector",
+    "JsNoPrototypeMutationDetector",
     "JsNoVarDetector",
+    "JsNoWithDetector",
+    "JsObjectSpreadDetector",
+    "JsParamCountDetector",
     "JsPureFunctionDetector",
     "JsStrictEqualityDetector",
 ]

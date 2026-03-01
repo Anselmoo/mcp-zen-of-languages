@@ -8,17 +8,25 @@ from typing import TYPE_CHECKING
 
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
 from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import GoBenchmarkConfig
+from mcp_zen_of_languages.languages.configs import GoConcurrencyCallerConfig
 from mcp_zen_of_languages.languages.configs import GoContextUsageConfig
 from mcp_zen_of_languages.languages.configs import GoDeferUsageConfig
+from mcp_zen_of_languages.languages.configs import GoEarlyReturnConfig
 from mcp_zen_of_languages.languages.configs import GoErrorHandlingConfig
 from mcp_zen_of_languages.languages.configs import GoGoroutineLeakConfig
 from mcp_zen_of_languages.languages.configs import GoInitUsageConfig
 from mcp_zen_of_languages.languages.configs import GoInterfacePointerConfig
 from mcp_zen_of_languages.languages.configs import GoInterfaceReturnConfig
 from mcp_zen_of_languages.languages.configs import GoInterfaceSizeConfig
+from mcp_zen_of_languages.languages.configs import GoMaintainabilityConfig
+from mcp_zen_of_languages.languages.configs import GoModerationConfig
 from mcp_zen_of_languages.languages.configs import GoNamingConventionConfig
 from mcp_zen_of_languages.languages.configs import GoPackageNamingConfig
 from mcp_zen_of_languages.languages.configs import GoPackageStateConfig
+from mcp_zen_of_languages.languages.configs import GoSimplicityConfig
+from mcp_zen_of_languages.languages.configs import GoSinglePurposePackageConfig
+from mcp_zen_of_languages.languages.configs import GoTestPresenceConfig
 from mcp_zen_of_languages.languages.configs import GoZeroValueConfig
 
 
@@ -645,17 +653,366 @@ class GoInitUsageDetector(ViolationDetector[GoInitUsageConfig]):
         return []
 
 
+class GoOrganizeResponsibilityDetector(ViolationDetector[GoSinglePurposePackageConfig]):
+    """Detects catch-all package names like util, common, or helper.
+
+    "Each package fulfils a single purpose" — generic package names
+    indicate a grab-bag of unrelated functionality.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "go_single_purpose_package"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: GoSinglePurposePackageConfig,
+    ) -> list[Violation]:
+        """Detect catch-all Go package names.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (GoSinglePurposePackageConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Detected violations.
+        """
+        if re.search(
+            r"^package\s+(util|utils|common|helper|helpers|misc|shared)\b",
+            context.code,
+            re.MULTILINE,
+        ):
+            return [
+                self.build_violation(
+                    config,
+                    contains="package",
+                    suggestion="Each package should fulfil a single purpose.",
+                ),
+            ]
+        return []
+
+
+class GoEarlyReturnDetector(ViolationDetector[GoEarlyReturnConfig]):
+    """Flags ``err == nil`` guards that nest the happy path instead of returning early.
+
+    Go convention favours returning errors immediately to keep the
+    main logic at the top indentation level.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "go_early_return"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: GoEarlyReturnConfig,
+    ) -> list[Violation]:
+        """Detect ``err == nil`` nesting anti-pattern.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (GoEarlyReturnConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Detected violations.
+        """
+        if re.search(r"if\s+err\s*==\s*nil\s*\{", context.code):
+            return [
+                self.build_violation(
+                    config,
+                    contains="err == nil",
+                    suggestion="Return early rather than nesting deeply.",
+                ),
+            ]
+        return []
+
+
+class GoConcurrencyCallerDetector(ViolationDetector[GoConcurrencyCallerConfig]):
+    """Flags functions that spawn goroutines internally.
+
+    Go proverb: leave concurrency decisions to the caller so that
+    library code remains composable and testable.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "go_concurrency_caller"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: GoConcurrencyCallerConfig,
+    ) -> list[Violation]:
+        """Detect internal goroutine spawning.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (GoConcurrencyCallerConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Detected violations.
+        """
+        if re.search(r"\bgo\s+func\b|\bgo\s+\w+\(", context.code):
+            return [
+                self.build_violation(
+                    config,
+                    contains="go ",
+                    suggestion="Leave concurrency to the caller.",
+                ),
+            ]
+        return []
+
+
+class GoSimplicityDetector(ViolationDetector[GoSimplicityConfig]):
+    """Flags empty interface usage that weakens type safety.
+
+    ``interface{}`` (or ``any``) discards compile-time type
+    information.  Prefer specific types or small interfaces.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "go_simplicity"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: GoSimplicityConfig,
+    ) -> list[Violation]:
+        """Detect empty interface usage.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (GoSimplicityConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Detected violations.
+        """
+        if re.search(r"\binterface\s*\{\s*\}", context.code):
+            return [
+                self.build_violation(
+                    config,
+                    contains="interface{}",
+                    suggestion="Prefer specific types over empty interfaces; simplicity matters.",
+                ),
+            ]
+        return []
+
+
+class GoTestPresenceDetector(ViolationDetector[GoTestPresenceConfig]):
+    """Flags exported functions without accompanying test functions.
+
+    Every exported API surface should have tests to lock in
+    expected behaviour and prevent regressions.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "go_test_presence"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: GoTestPresenceConfig,
+    ) -> list[Violation]:
+        """Detect exported functions without tests.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (GoTestPresenceConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Detected violations.
+        """
+        has_exported = re.search(r"func\s+[A-Z]", context.code)
+        has_tests = re.search(r"func\s+Test", context.code)
+        if has_exported and not has_tests:
+            return [
+                self.build_violation(
+                    config,
+                    contains="exported function",
+                    suggestion="Write tests to lock in API behaviour.",
+                ),
+            ]
+        return []
+
+
+class GoBenchmarkDetector(ViolationDetector[GoBenchmarkConfig]):
+    """Flags optimisation primitives used without benchmark proof.
+
+    ``sync.Pool`` and ``unsafe.Pointer`` are advanced optimisations
+    that should be justified by benchmark results.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "go_benchmark"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: GoBenchmarkConfig,
+    ) -> list[Violation]:
+        """Detect optimisation without benchmarks.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (GoBenchmarkConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Detected violations.
+        """
+        has_optim = re.search(r"sync\.Pool|unsafe\.Pointer", context.code)
+        has_bench = re.search(r"func\s+Benchmark", context.code)
+        if has_optim and not has_bench:
+            return [
+                self.build_violation(
+                    config,
+                    contains="optimization",
+                    suggestion="Prove it's slow with a benchmark before optimizing.",
+                ),
+            ]
+        return []
+
+
+class GoModerationDetector(ViolationDetector[GoModerationConfig]):
+    """Flags excessive goroutine spawning within a single file.
+
+    Moderation is a virtue — too many ``go`` statements in one file
+    suggest uncontrolled concurrency that is hard to reason about.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "go_moderation"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: GoModerationConfig,
+    ) -> list[Violation]:
+        """Detect goroutine proliferation.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (GoModerationConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Detected violations.
+        """
+        count = len(re.findall(r"\bgo\s+", context.code))
+        if count > config.max_goroutine_spawns:
+            return [
+                self.build_violation(
+                    config,
+                    contains="goroutine",
+                    suggestion="Moderation is a virtue; limit goroutine proliferation.",
+                ),
+            ]
+        return []
+
+
+class GoMaintainabilityDetector(ViolationDetector[GoMaintainabilityConfig]):
+    """Flags exported functions missing godoc comments.
+
+    Go convention requires every exported symbol to have a comment
+    starting with the symbol name for ``go doc`` to render correctly.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "go_maintainability"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: GoMaintainabilityConfig,
+    ) -> list[Violation]:
+        """Detect exported functions without godoc comments.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (GoMaintainabilityConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Detected violations.
+        """
+        lines = context.code.splitlines()
+        for idx, line in enumerate(lines):
+            if re.match(r"func\s+[A-Z]\w*\(", line):
+                prev = lines[idx - 1].strip() if idx > 0 else ""
+                if not prev.startswith("//"):
+                    return [
+                        self.build_violation(
+                            config,
+                            contains="exported function",
+                            suggestion="Add godoc comments for exported functions.",
+                        ),
+                    ]
+        return []
+
+
 __all__ = [
+    "GoBenchmarkDetector",
+    "GoConcurrencyCallerDetector",
     "GoContextUsageDetector",
     "GoDeferUsageDetector",
+    "GoEarlyReturnDetector",
     "GoErrorHandlingDetector",
     "GoGoroutineLeakDetector",
     "GoInitUsageDetector",
     "GoInterfacePointerDetector",
     "GoInterfaceReturnDetector",
     "GoInterfaceSizeDetector",
+    "GoMaintainabilityDetector",
+    "GoModerationDetector",
     "GoNamingConventionDetector",
+    "GoOrganizeResponsibilityDetector",
     "GoPackageNamingDetector",
     "GoPackageStateDetector",
+    "GoSimplicityDetector",
+    "GoTestPresenceDetector",
     "GoZeroValueDetector",
 ]

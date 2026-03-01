@@ -531,6 +531,90 @@ class TsStringConcatConfig(DetectorConfig):
     max_string_concats: int = 0
 
 
+class TsAsyncAwaitConfig(DetectorConfig):
+    """TypeScript async/await preference settings.
+
+    Attributes:
+        max_then_chains: Maximum raw ``.then()`` chains allowed.
+    """
+
+    type: Literal["ts_async_await"] = "ts_async_await"
+    max_promise_chains: int = 2
+    max_then_chains: int = 0
+
+
+class TsForOfConfig(DetectorConfig):
+    """TypeScript for-of loop preference settings.
+
+    Attributes:
+        max_index_based_loops: Maximum C-style index loops allowed.
+    """
+
+    type: Literal["ts_for_of"] = "ts_for_of"
+    max_index_loops: int = 0
+    max_index_based_loops: int = 0
+
+
+class TsImportOrderConfig(DetectorConfig):
+    """TypeScript import-order enforcement settings.
+
+    Attributes:
+        max_require_usages: Maximum ``require()`` calls allowed.
+    """
+
+    type: Literal["ts_import_order"] = "ts_import_order"
+    max_require_calls: int = 0
+    max_require_usages: int = 0
+
+
+class TsNamedExportConfig(DetectorConfig):
+    """TypeScript named-export preference settings.
+
+    Attributes:
+        max_default_export_usages: Maximum ``export default`` usages allowed.
+    """
+
+    type: Literal["ts_named_export"] = "ts_named_export"
+    max_default_exports: int = 0
+    max_default_export_usages: int = 0
+
+
+class TsNoConsoleConfig(DetectorConfig):
+    """TypeScript no-console enforcement settings.
+
+    Attributes:
+        max_console_statements: Maximum ``console.*`` calls allowed.
+    """
+
+    type: Literal["ts_no_console"] = "ts_no_console"
+    max_console_usages: int = 0
+    max_console_statements: int = 0
+
+
+class TsObjectTypeConfig(DetectorConfig):
+    """TypeScript object-type enforcement settings.
+
+    Attributes:
+        max_object_types: Maximum generic ``Object``/``object``/``{}`` annotations allowed.
+    """
+
+    type: Literal["ts_object_type"] = "ts_object_type"
+    max_catch_all_types: int = 0
+    max_object_types: int = 0
+
+
+class TsTemplateLiteralConfig(DetectorConfig):
+    """TypeScript template-literal preference settings.
+
+    Attributes:
+        max_string_concatenations: Maximum string concatenation patterns allowed.
+    """
+
+    type: Literal["ts_template_literal"] = "ts_template_literal"
+    max_string_concats: int = 3
+    max_string_concatenations: int = 0
+
+
 class JsCallbackNestingConfig(DetectorConfig):
     """JavaScript callback-nesting depth enforcement settings.
 
@@ -1653,6 +1737,62 @@ class GoInitUsageConfig(DetectorConfig):
     type: Literal["go_init_usage"] = "go_init_usage"
 
 
+class GoSinglePurposePackageConfig(DetectorConfig):
+    """Go single-purpose package naming enforcement settings."""
+
+    type: Literal["go_single_purpose_package"] = "go_single_purpose_package"
+
+
+class GoEarlyReturnConfig(DetectorConfig):
+    """Go early-return style enforcement settings."""
+
+    type: Literal["go_early_return"] = "go_early_return"
+    max_embedding_depth: int = 2
+
+
+class GoConcurrencyCallerConfig(DetectorConfig):
+    """Go concurrency-caller delegation enforcement settings."""
+
+    type: Literal["go_concurrency_caller"] = "go_concurrency_caller"
+
+
+class GoSimplicityConfig(DetectorConfig):
+    """Go empty-interface avoidance settings."""
+
+    type: Literal["go_simplicity"] = "go_simplicity"
+    max_nesting_depth: int = 3
+    max_function_lines: int = 50
+
+
+class GoTestPresenceConfig(DetectorConfig):
+    """Go test-presence enforcement settings."""
+
+    type: Literal["go_test_presence"] = "go_test_presence"
+
+
+class GoBenchmarkConfig(DetectorConfig):
+    """Go benchmark-before-optimizing enforcement settings."""
+
+    type: Literal["go_benchmark"] = "go_benchmark"
+
+
+class GoModerationConfig(DetectorConfig):
+    """Go goroutine moderation enforcement settings.
+
+    Attributes:
+        max_goroutine_spawns: Maximum ``go`` statements per file.
+    """
+
+    type: Literal["go_moderation"] = "go_moderation"
+    max_goroutine_spawns: int = 5
+
+
+class GoMaintainabilityConfig(DetectorConfig):
+    """Go exported-function godoc enforcement settings."""
+
+    type: Literal["go_maintainability"] = "go_maintainability"
+
+
 class RustUnwrapUsageConfig(DetectorConfig):
     """Rust ``unwrap()`` avoidance settings.
 
@@ -1778,6 +1918,36 @@ class RustInteriorMutabilityConfig(DetectorConfig):
     type: Literal["rust-012"] = "rust-012"
 
 
+class RustSendSyncConfig(DetectorConfig):
+    """Rust unsafe ``Send``/``Sync`` implementation detection settings."""
+
+    type: Literal["rust_send_sync"] = "rust_send_sync"
+
+
+class RustErrorTraitsConfig(DetectorConfig):
+    """Rust error-type trait implementation enforcement settings."""
+
+    type: Literal["rust_error_traits"] = "rust_error_traits"
+
+
+class RustNamingConfig(DetectorConfig):
+    """Rust naming convention (RFC 430) enforcement settings."""
+
+    type: Literal["rust_naming"] = "rust_naming"
+
+
+class RustDefaultImplConfig(DetectorConfig):
+    """Rust ``Default`` trait implementation detection settings."""
+
+    type: Literal["rust_default_impl"] = "rust_default_impl"
+
+
+class RustFromIntoConfig(DetectorConfig):
+    """Rust ``From``/``Into`` trait conversion enforcement settings."""
+
+    type: Literal["rust_from_into"] = "rust_from_into"
+
+
 class Bash006Config(DetectorConfig):
     """Bash script-length-without-functions enforcement settings.
 
@@ -1821,6 +1991,49 @@ class Js011Config(DetectorConfig):
 
     type: Literal["js-011"] = "js-011"
     min_identifier_length: int | None = None
+
+
+class JsDestructuringConfig(DetectorConfig):
+    """JavaScript destructuring preference enforcement settings."""
+
+    type: Literal["js_destructuring"] = "js_destructuring"
+
+
+class JsObjectSpreadConfig(DetectorConfig):
+    """JavaScript object-spread preference over ``Object.assign`` settings."""
+
+    type: Literal["js_object_spread"] = "js_object_spread"
+
+
+class JsNoWithConfig(DetectorConfig):
+    """JavaScript ``with`` statement prohibition settings."""
+
+    type: Literal["js_no_with"] = "js_no_with"
+
+
+class JsParamCountConfig(DetectorConfig):
+    """JavaScript function parameter-count enforcement settings."""
+
+    type: Literal["js_param_count"] = "js_param_count"
+    max_params: int = 3
+
+
+class JsNoEvalConfig(DetectorConfig):
+    """JavaScript ``eval`` and ``new Function`` prohibition settings."""
+
+    type: Literal["js_no_eval"] = "js_no_eval"
+
+
+class JsNoArgumentsConfig(DetectorConfig):
+    """JavaScript ``arguments`` object prohibition settings."""
+
+    type: Literal["js_no_arguments"] = "js_no_arguments"
+
+
+class JsNoPrototypeMutationConfig(DetectorConfig):
+    """JavaScript built-in prototype mutation prohibition settings."""
+
+    type: Literal["js_no_prototype_mutation"] = "js_no_prototype_mutation"
 
 
 class Cs008Config(DetectorConfig):
@@ -1904,6 +2117,48 @@ class SqlAnsi89JoinConfig(DetectorConfig):
 
     type: Literal["sql-009"] = "sql-009"
     dialect: str = "postgres"
+
+
+class PythonComplexUndocumentedConfig(DetectorConfig):
+    """Complex undocumented function detection settings."""
+
+    type: Literal["python_complex_undocumented"] = "python_complex_undocumented"
+
+
+class PythonExplicitSilenceConfig(DetectorConfig):
+    """Bare except and silent catch detection settings."""
+
+    type: Literal["python_explicit_silence"] = "python_explicit_silence"
+
+
+class PythonIdiomConfig(DetectorConfig):
+    """Non-idiomatic Python pattern detection settings."""
+
+    type: Literal["python_idiom"] = "python_idiom"
+
+
+class PythonPracticalityConfig(DetectorConfig):
+    """Over-engineered abstraction detection settings."""
+
+    type: Literal["python_practicality"] = "python_practicality"
+
+
+class PythonPrematureImplConfig(DetectorConfig):
+    """Premature NotImplementedError detection settings."""
+
+    type: Literal["python_premature_impl"] = "python_premature_impl"
+
+
+class PythonSimpleDocumentedConfig(DetectorConfig):
+    """Public undocumented function detection settings."""
+
+    type: Literal["python_simple_documented"] = "python_simple_documented"
+
+
+class PythonTodoStubConfig(DetectorConfig):
+    """TODO/FIXME/HACK/XXX comment detection settings."""
+
+    type: Literal["python_todo_stub"] = "python_todo_stub"
 
 
 RULE_CONFIGS: dict[str, type[DetectorConfig]] = {

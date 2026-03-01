@@ -40,6 +40,16 @@ _RULE_CONFIG_FIELDS: dict[str, list[str]] = {
     "js-009": ["max_inheritance_depth"],
     "js-011": ["min_identifier_length"],
     "cs-008": ["public_naming", "private_naming"],
+    "go-014": ["max_embedding_depth"],
+    "go-016": ["max_nesting_depth", "max_function_lines"],
+    "ts-011": ["max_manual_null_checks"],
+    "ts-012": ["max_index_loops"],
+    "ts-013": ["max_promise_chains"],
+    "ts-014": ["max_default_exports"],
+    "ts-015": ["max_catch_all_types"],
+    "ts-016": ["max_console_usages"],
+    "ts-017": ["max_require_calls"],
+    "ts-018": ["max_string_concats"],
 }
 
 _RULE_FIELD_DEFAULTS: dict[str, tuple[object, object]] = {
@@ -49,6 +59,17 @@ _RULE_FIELD_DEFAULTS: dict[str, tuple[object, object]] = {
     "min_identifier_length": (int | None, None),
     "public_naming": (str | None, None),
     "private_naming": (str | None, None),
+    "max_embedding_depth": (int | None, None),
+    "max_nesting_depth": (int | None, None),
+    "max_function_lines": (int | None, None),
+    "max_manual_null_checks": (int | None, None),
+    "max_index_loops": (int | None, None),
+    "max_promise_chains": (int | None, None),
+    "max_default_exports": (int | None, None),
+    "max_catch_all_types": (int | None, None),
+    "max_console_usages": (int | None, None),
+    "max_require_calls": (int | None, None),
+    "max_string_concats": (int | None, None),
 }
 
 

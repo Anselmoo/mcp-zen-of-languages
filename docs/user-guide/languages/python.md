@@ -1,6 +1,6 @@
 ---
 title: Python
-description: "12 zen principles enforced by 23 detectors: The Zen of Python (PEP 20)."
+description: "19 zen principles enforced by 30 detectors: The Zen of Python (PEP 20)."
 icon: fontawesome/brands/python
 tags:
   - Python
@@ -32,7 +32,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 
 ## Zen Principles
 
-12 principles across 10 categories, drawn from [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/).
+19 principles across 11 categories, drawn from [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/).
 
 <div class="grid" markdown>
 
@@ -40,12 +40,13 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 :material-tag-outline: **Clarity** · 1 principle
 :material-tag-outline: **Complexity** · 1 principle
 :material-tag-outline: **Consistency** · 1 principle
-:material-tag-outline: **Correctness** · 1 principle
+:material-tag-outline: **Correctness** · 2 principles
+:material-tag-outline: **Design** · 2 principles
 :material-tag-outline: **Error Handling** · 1 principle
-:material-tag-outline: **Idioms** · 1 principle
+:material-tag-outline: **Idioms** · 2 principles
 :material-tag-outline: **Organization** · 1 principle
-:material-tag-outline: **Readability** · 3 principles
-:material-tag-outline: **Structure** · 1 principle
+:material-tag-outline: **Readability** · 5 principles
+:material-tag-outline: **Structure** · 2 principles
 
 </div>
 
@@ -63,6 +64,13 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 | `python-010` | In the face of ambiguity, refuse the temptation to guess | Correctness | 7 | `ZEN-EXPLICIT-INTENT` |
 | `python-011` | There should be one-- and preferably only one --obvious way to do it | Idioms | 6 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-VISIBLE-STATE` |
 | `python-012` | Namespaces are one honking great idea | Organization | 7 | `ZEN-STRICT-FENCES`, `ZEN-UNAMBIGUOUS-NAME` |
+| `python-013` | Practicality beats purity | Design | 5 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-PROPORTIONATE-COMPLEXITY` |
+| `python-014` | Errors should never pass silently | Correctness | 8 | `ZEN-EXPLICIT-INTENT`, `ZEN-FAIL-FAST` |
+| `python-015` | Now is better than never | Structure | 4 | `ZEN-RETURN-EARLY` |
+| `python-016` | Although never is often better than *right* now | Design | 5 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-FAIL-FAST` |
+| `python-017` | If the implementation is hard to explain, it's a bad idea | Readability | 6 | `ZEN-UNAMBIGUOUS-NAME` |
+| `python-018` | If the implementation is easy to explain, it may be a good idea | Readability | 3 | `ZEN-UNAMBIGUOUS-NAME`, `ZEN-PROPORTIONATE-COMPLEXITY` |
+| `python-019` | There should be one-- and preferably only one --obvious way to do it | Idioms | 5 | `ZEN-RIGHT-ABSTRACTION` |
 
 ??? info "`python-001` — Beautiful is better than ugly"
     **Code should be aesthetically pleasing and well-formatted**
@@ -260,6 +268,65 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     | `max_top_level_symbols` | `25` |
     | `max_exports` | `20` |
 
+??? info "`python-013` — Practicality beats purity"
+    **Prefer simple, practical solutions over excessive abstraction**
+
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-PROPORTIONATE-COMPLEXITY`
+    **Common Violations:**
+
+    - Over-engineered ABC/Protocol hierarchies
+    - Premature abstraction with few implementations
+
+??? info "`python-014` — Errors should never pass silently"
+    **Handle errors explicitly; never swallow exceptions**
+
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`, `ZEN-FAIL-FAST`
+    **Common Violations:**
+
+    - Bare except clauses
+    - Silent exception catching with pass
+
+??? info "`python-015` — Now is better than never"
+    **Address TODOs and stubs promptly**
+
+    **Universal Dogmas:** `ZEN-RETURN-EARLY`
+    **Common Violations:**
+
+    - TODO/FIXME/HACK/XXX comments left unresolved
+
+??? info "`python-016` — Although never is often better than *right* now"
+    **Document why functionality is deferred rather than raising bare NotImplementedError**
+
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-FAIL-FAST`
+    **Common Violations:**
+
+    - Undocumented NotImplementedError stubs
+
+??? info "`python-017` — If the implementation is hard to explain, it's a bad idea"
+    **Complex code must be documented**
+
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
+    **Common Violations:**
+
+    - Functions without docstrings
+
+??? info "`python-018` — If the implementation is easy to explain, it may be a good idea"
+    **Even simple public functions benefit from docstrings**
+
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`, `ZEN-PROPORTIONATE-COMPLEXITY`
+    **Common Violations:**
+
+    - Public functions without docstrings
+
+??? info "`python-019` — There should be one-- and preferably only one --obvious way to do it"
+    **Use idiomatic Python constructs**
+
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
+    **Common Violations:**
+
+    - Using range(len()) instead of enumerate()
+    - Comparing with == True/False instead of direct boolean checks
+
 
 ## Detector Catalog
 
@@ -297,6 +364,14 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
 | **ExplicitnessDetector** | Detect function parameters missing type annotations | `python-010` |
+| **PythonExplicitSilenceDetector** | Detects bare except clauses and silently caught exceptions | `python-014` |
+
+### Design
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **PythonPracticalityDetector** | Flags over-engineered abstractions like ABCs with likely few implementations | `python-013` |
+| **PythonPrematureImplDetector** | Detects ``raise NotImplementedError`` stubs without documentation | `python-016` |
 
 ### Error Handling
 
@@ -311,6 +386,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 | **FeatureEnvyDetector** | Detect methods that access another object's data more than their own | `python-011` |
 | **DuplicateImplementationDetector** | Detect identical or near-identical function implementations across files | `python-011` |
 | **ContextManagerDetector** | Detect ``open()`` calls not wrapped in a ``with`` context manager | `python-011` |
+| **PythonIdiomDetector** | Detects non-idiomatic Python patterns like ``range(len(...))`` and ``== True`` | `python-019` |
 
 ### Organization
 
@@ -329,12 +405,15 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 | **LineLengthDetector** | Detect source lines that exceed a configured character limit | `python-001` |
 | **SparseCodeDetector** | Detect lines packing multiple statements separated by semicolons | `python-006` |
 | **DocstringDetector** | Detect top-level functions and classes missing a docstring | `python-007` |
+| **PythonComplexUndocumentedDetector** | Detects functions missing docstrings | `python-017` |
+| **PythonSimpleDocumentedDetector** | Detects public functions (not starting with ``_``) missing docstrings | `python-018` |
 
 ### Structure
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
 | **NestingDepthDetector** | Detect code blocks with excessive indentation depth and nested loops | `python-005` |
+| **PythonTodoStubDetector** | Detects TODO, FIXME, HACK, and XXX comments left in source code | `python-015` |
 
 
 ??? example "Principle → Detector Wiring"
@@ -352,6 +431,13 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     python_010["python-010<br/>In the face of ambiguity, refuse the tem..."]
     python_011["python-011<br/>There should be one-- and preferably onl..."]
     python_012["python-012<br/>Namespaces are one honking great idea"]
+    python_013["python-013<br/>Practicality beats purity"]
+    python_014["python-014<br/>Errors should never pass silently"]
+    python_015["python-015<br/>Now is better than never"]
+    python_016["python-016<br/>Although never is often better than *rig..."]
+    python_017["python-017<br/>If the implementation is hard to explain..."]
+    python_018["python-018<br/>If the implementation is easy to explain..."]
+    python_019["python-019<br/>There should be one-- and preferably onl..."]
     det_BareExceptDetector["BareExceptDetector"]
     python_009 --> det_BareExceptDetector
     det_CircularDependencyDetector["CircularDependencyDetector"]
@@ -391,6 +477,20 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     python_012 --> det_NamespaceUsageDetector
     det_NestingDepthDetector["NestingDepthDetector"]
     python_005 --> det_NestingDepthDetector
+    det_PythonComplexUndocumentedDetector["PythonComplexUndocumentedDetector"]
+    python_017 --> det_PythonComplexUndocumentedDetector
+    det_PythonExplicitSilenceDetector["PythonExplicitSilenceDetector"]
+    python_014 --> det_PythonExplicitSilenceDetector
+    det_PythonIdiomDetector["PythonIdiomDetector"]
+    python_019 --> det_PythonIdiomDetector
+    det_PythonPracticalityDetector["PythonPracticalityDetector"]
+    python_013 --> det_PythonPracticalityDetector
+    det_PythonPrematureImplDetector["PythonPrematureImplDetector"]
+    python_016 --> det_PythonPrematureImplDetector
+    det_PythonSimpleDocumentedDetector["PythonSimpleDocumentedDetector"]
+    python_018 --> det_PythonSimpleDocumentedDetector
+    det_PythonTodoStubDetector["PythonTodoStubDetector"]
+    python_015 --> det_PythonTodoStubDetector
     det_ShortVariableNamesDetector["ShortVariableNamesDetector"]
     python_007 --> det_ShortVariableNamesDetector
     det_SparseCodeDetector["SparseCodeDetector"]
@@ -411,6 +511,13 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     class python_010 principle
     class python_011 principle
     class python_012 principle
+    class python_013 principle
+    class python_014 principle
+    class python_015 principle
+    class python_016 principle
+    class python_017 principle
+    class python_018 principle
+    class python_019 principle
     class det_BareExceptDetector detector
     class det_CircularDependencyDetector detector
     class det_ClassSizeDetector detector
@@ -431,6 +538,13 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     class det_NameStyleDetector detector
     class det_NamespaceUsageDetector detector
     class det_NestingDepthDetector detector
+    class det_PythonComplexUndocumentedDetector detector
+    class det_PythonExplicitSilenceDetector detector
+    class det_PythonIdiomDetector detector
+    class det_PythonPracticalityDetector detector
+    class det_PythonPrematureImplDetector detector
+    class det_PythonSimpleDocumentedDetector detector
+    class det_PythonTodoStubDetector detector
     class det_ShortVariableNamesDetector detector
     class det_SparseCodeDetector detector
     class det_StarImportDetector detector

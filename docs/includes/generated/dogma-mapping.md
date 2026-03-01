@@ -35,6 +35,7 @@
 | JavaScript | `js-003` | Use strict equality | 8 |
 | JavaScript | `js-007` | Handle errors explicitly | 9 |
 | JavaScript | `js-008` | Avoid magic numbers and strings | 6 |
+| JavaScript | `js-014` | Avoid with statement | 9 |
 | JSON | `json-001` | Choose strictness intentionally | 7 |
 | JSON | `json-003` | Keys must be unique | 8 |
 | JSON | `json-004` | Avoid magic string repetition | 5 |
@@ -58,6 +59,7 @@
 | Python | `python-008` | Special cases aren't special enough to break the rules | 6 |
 | Python | `python-009` | Errors should never pass silently | 9 |
 | Python | `python-010` | In the face of ambiguity, refuse the temptation to guess | 7 |
+| Python | `python-014` | Errors should never pass silently | 8 |
 | Rust | `rust-002` | Use the type system to prevent bugs | 8 |
 | Rust | `rust-005` | Use #[must_use] for important return types | 6 |
 | Rust | `rust-006` | Implement Debug for all public types | 6 |
@@ -108,6 +110,7 @@
 | Markdown | `md-001` | Preserve heading hierarchy | 6 |
 | Python | `python-003` | Simple is better than complex | 8 |
 | Python | `python-005` | Flat is better than nested | 8 |
+| Python | `python-015` | Now is better than never | 4 |
 | Ruby | `ruby-008` | Use guard clauses | 6 |
 | TypeScript | `ts-011` | Use optional chaining instead of manual null checks | 5 |
 | TypeScript | `ts-013` | Prefer async/await over raw promise chains | 6 |
@@ -137,6 +140,8 @@
 | PowerShell | `ps-015` | Handle null values explicitly | 7 |
 | Python | `python-008` | Special cases aren't special enough to break the rules | 6 |
 | Python | `python-009` | Errors should never pass silently | 9 |
+| Python | `python-014` | Errors should never pass silently | 8 |
+| Python | `python-016` | Although never is often better than *right* now | 5 |
 | Ruby | `ruby-011` | Prefer fail over raise for exceptions | 5 |
 | Rust | `rust-001` | Avoid unwrap() and expect() in production code | 9 |
 | Rust | `rust-008` | Avoid unsafe unless necessary | 9 |
@@ -180,6 +185,11 @@
 | JavaScript | `js-006` | Use modern ES6+ features | 6 |
 | JavaScript | `js-009` | Prefer composition over inheritance | 7 |
 | JavaScript | `js-010` | Keep functions pure when possible | 6 |
+| JavaScript | `js-012` | Use destructuring for assignment | 5 |
+| JavaScript | `js-013` | Use object spread over Object.assign | 5 |
+| JavaScript | `js-015` | Limit function parameter count | 7 |
+| JavaScript | `js-017` | Prefer Array.from/spread over arguments | 6 |
+| JavaScript | `js-018` | No prototype mutation on built-in objects | 9 |
 | LaTeX | `latex-007` | Prevent circular \input and \include chains | 8 |
 | PowerShell | `ps-003` | Use cmdlet binding and parameters | 8 |
 | PowerShell | `ps-007` | Use pipeline properly | 7 |
@@ -187,6 +197,9 @@
 | Python | `python-003` | Simple is better than complex | 8 |
 | Python | `python-004` | Complex is better than complicated | 7 |
 | Python | `python-011` | There should be one-- and preferably only one --obvious way to do it | 6 |
+| Python | `python-013` | Practicality beats purity | 5 |
+| Python | `python-016` | Although never is often better than *right* now | 5 |
+| Python | `python-019` | There should be one-- and preferably only one --obvious way to do it | 5 |
 | Ruby | `ruby-001` | Convention over configuration | 7 |
 | Ruby | `ruby-002` | DRY (Don't Repeat Yourself) | 8 |
 | Ruby | `ruby-003` | Prefer blocks over lambdas/procs | 6 |
@@ -240,6 +253,8 @@
 | Python | `python-006` | Sparse is better than dense | 5 |
 | Python | `python-007` | Readability counts | 9 |
 | Python | `python-012` | Namespaces are one honking great idea | 7 |
+| Python | `python-017` | If the implementation is hard to explain, it's a bad idea | 6 |
+| Python | `python-018` | If the implementation is easy to explain, it may be a good idea | 3 |
 | Ruby | `ruby-005` | Use meaningful method names with ?/! convention | 7 |
 | Ruby | `ruby-006` | Keep method chains readable | 6 |
 | Ruby | `ruby-007` | Prefer symbols over strings for keys | 5 |
@@ -278,6 +293,7 @@
 | JavaScript | `js-002` | Prefer const over let, never var | 7 |
 | JavaScript | `js-004` | Avoid global state | 9 |
 | JavaScript | `js-010` | Keep functions pure when possible | 6 |
+| JavaScript | `js-014` | Avoid with statement | 9 |
 | Python | `python-006` | Sparse is better than dense | 5 |
 | Python | `python-011` | There should be one-- and preferably only one --obvious way to do it | 6 |
 | Rust | `rust-002` | Use the type system to prevent bugs | 8 |
@@ -317,6 +333,7 @@
 | GitLab CI | `gitlab-ci-003` | Use allow_failure only with rules-based context | 6 |
 | Go | `go-008` | Package names are singular | 5 |
 | Go | `go-013` | Organize by responsibility | 6 |
+| JavaScript | `js-016` | No eval() | 9 |
 | LaTeX | `latex-004` | Maintain bibliography hygiene | 6 |
 | LaTeX | `latex-009` | Remove unused packages | 5 |
 | Markdown | `md-007` | Keep MDX imports hygienic | 5 |
@@ -347,6 +364,8 @@
 | Go | `go-018` | Avoid premature optimization | 5 |
 | Python | `python-003` | Simple is better than complex | 8 |
 | Python | `python-004` | Complex is better than complicated | 7 |
+| Python | `python-013` | Practicality beats purity | 5 |
+| Python | `python-018` | If the implementation is easy to explain, it may be a good idea | 3 |
 | Ruby | `ruby-003` | Prefer blocks over lambdas/procs | 6 |
 | Ruby | `ruby-009` | Avoid needless metaprogramming | 8 |
 | Rust | `rust-004` | Clone sparingly | 7 |

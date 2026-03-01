@@ -17,11 +17,11 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 | Language | Principles | Detectors | Parser | Philosophy Origin |
 |----------|:----------:|:---------:|--------|-------------------|
-| [Python](python.md) | 12 | 23 | AST | [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/) |
-| [TypeScript](typescript.md) | 10 | 10 | Regex | [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html) |
-| [Rust](rust.md) | 17 | 13 | Regex | [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/) |
-| [Go](go.md) | 20 | 12 | Regex | [Effective Go & The Zen of Go](https://the-zen-of-go.netlify.app/) |
-| [JavaScript](javascript.md) | 11 | 11 | Regex | [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript) |
+| [Python](python.md) | 19 | 30 | AST | [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/) |
+| [TypeScript](typescript.md) | 18 | 25 | Regex | [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html) |
+| [Rust](rust.md) | 17 | 18 | Regex | [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/) |
+| [Go](go.md) | 20 | 20 | Regex | [Effective Go & The Zen of Go](https://the-zen-of-go.netlify.app/) |
+| [JavaScript](javascript.md) | 18 | 18 | Regex | [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript) |
 | [CSS](css.md) | 8 | 8 | Regex | [CSSWG + common modular CSS practices](https://www.w3.org/TR/CSS/) |
 | [Bash](bash.md) | 14 | 14 | Regex | [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html) |
 | [PowerShell](powershell.md) | 15 | 15 | Regex | [PoshCode Style Guide](https://github.com/PoshCode/PowerShellPracticeAndStyle) |
@@ -33,7 +33,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 | [Dockerfile](dockerfile.md) | 8 | 8 | Regex | [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) |
 | [LaTeX](latex.md) | 9 | 9 | Regex | [LaTeX Project](https://www.latex-project.org/) |
 | [Markdown / MDX](markdown.md) | 7 | 7 | Regex | [CommonMark + MDX authoring best practices](https://commonmark.org/) |
-| **Programming & markup subtotal** | **181** | **180** | | |
+| **Programming & markup subtotal** | **203** | **222** | | |
 
 ### Workflows & Automation
 
@@ -52,8 +52,8 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 ### Coverage Totals
 
-- **Principles (all categories):** 245
-- **Detectors + workflow checks:** 244
+- **Principles (all categories):** 259
+- **Detectors + workflow checks:** 278
 
 ## Maturity Tiers
 

@@ -1,6 +1,6 @@
 ---
 title: Rust
-description: "12 zen principles enforced by 13 detectors: Safety, Concurrency, and Zero-Cost Abstractions."
+description: "17 zen principles enforced by 18 detectors: Safety, Concurrency, and Zero-Cost Abstractions."
 icon: material/language-rust
 tags:
   - Rust
@@ -26,17 +26,19 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
 
 ## Zen Principles
 
-12 principles across 9 categories, drawn from [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/).
+17 principles across 11 categories, drawn from [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/).
 
 <div class="grid" markdown>
 
+:material-tag-outline: **Concurrency** · 1 principle
 :material-tag-outline: **Correctness** · 1 principle
 :material-tag-outline: **Debugging** · 1 principle
 :material-tag-outline: **Design** · 3 principles
-:material-tag-outline: **Error Handling** · 1 principle
-:material-tag-outline: **Idioms** · 2 principles
+:material-tag-outline: **Error Handling** · 2 principles
+:material-tag-outline: **Idioms** · 4 principles
 :material-tag-outline: **Ownership** · 1 principle
 :material-tag-outline: **Performance** · 1 principle
+:material-tag-outline: **Readability** · 1 principle
 :material-tag-outline: **Safety** · 1 principle
 :material-tag-outline: **Type Safety** · 1 principle
 
@@ -56,6 +58,11 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
 | `rust-010` | Prefer enums over booleans for state | Design | 7 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-EXPLICIT-INTENT`, `ZEN-VISIBLE-STATE` |
 | `rust-011` | Use lifetimes judiciously | Ownership | 6 | `ZEN-VISIBLE-STATE`, `ZEN-EXPLICIT-INTENT` |
 | `rust-012` | Avoid Rc<RefCell<T>> unless necessary | Design | 7 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-VISIBLE-STATE` |
+| `rust-013` | Send + Sync should be implemented when types allow | Concurrency | 7 | `ZEN-VISIBLE-STATE` |
+| `rust-014` | Error types should implement standard error traits | Error Handling | 8 | `ZEN-FAIL-FAST` |
+| `rust-015` | Follow Rust naming conventions (RFC 430) | Readability | 6 | `ZEN-UNAMBIGUOUS-NAME` |
+| `rust-016` | Implement Default when there is an obvious default value | Idioms | 5 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-VISIBLE-STATE` |
+| `rust-017` | Use From/Into for type conversions | Idioms | 6 | `ZEN-RIGHT-ABSTRACTION` |
 
 ??? info "`rust-001` — Avoid unwrap() and expect() in production code"
     **Use proper error handling with Result and Option**
@@ -238,8 +245,97 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
     - `Rc<RefCell`
     - `Arc<Mutex`
 
+??? info "`rust-013` — Send + Sync should be implemented when types allow"
+    **Public types that can safely be Send/Sync should be, and unsafe impls need SAFETY comments**
+
+    **Universal Dogmas:** `ZEN-VISIBLE-STATE`
+    **Common Violations:**
+
+    - unsafe impl Send without SAFETY comment
+    - unsafe impl Sync without SAFETY comment
+    - Public types missing Send/Sync bounds
+
+    **Detectable Patterns:**
+
+    - `unsafe impl Send`
+    - `unsafe impl Sync`
+
+??? info "`rust-014` — Error types should implement standard error traits"
+    **Custom error types must implement std::error::Error, Display, and Debug**
+
+    **Universal Dogmas:** `ZEN-FAIL-FAST`
+    **Common Violations:**
+
+    - Error type without std::error::Error impl
+    - Missing Display for error types
+    - Error types without Debug
+
+    **Detectable Patterns:**
+
+    - `struct Error without impl Error`
+    - `enum Error without Display`
+
+    !!! tip "Recommended Fix"
+        Use thiserror derive macros or manual Display + Error impls
+
+??? info "`rust-015` — Follow Rust naming conventions (RFC 430)"
+    **Use snake_case for functions, CamelCase for types, SCREAMING_SNAKE_CASE for constants**
+
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
+    **Common Violations:**
+
+    - camelCase function names
+    - snake_case type names
+    - Lowercase constants
+    - Non-standard lifetime names
+
+    **Detectable Patterns:**
+
+    - `fn camelCase`
+    - `struct snake_case`
+    - `const lowercase`
+
+??? info "`rust-016` — Implement Default when there is an obvious default value"
+    **Types with meaningful zero/empty states should derive or implement Default**
+
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-VISIBLE-STATE`
+    **Common Violations:**
+
+    - Public structs with obvious defaults missing Default
+    - Builder patterns without Default
+    - Option/Vec fields without derive Default
+
+    **Detectable Patterns:**
+
+    - `pub struct without derive(Default)`
+
+??? info "`rust-017` — Use From/Into for type conversions"
+    **Prefer From/Into trait implementations over manual conversion functions**
+
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
+    **Common Violations:**
+
+    - Manual from_xxx() without From impl
+    - Manual to_xxx() without Into impl
+    - Clone-into chains suggesting missing From
+
+    **Detectable Patterns:**
+
+    - `fn from_string(`
+    - `fn into_vec(`
+    - `fn to_string(`
+
+    !!! tip "Recommended Fix"
+        impl From<T> for type conversions
+
 
 ## Detector Catalog
+
+### Concurrency
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **RustSendSyncDetector** | Flags unsafe Send/Sync implementations without SAFETY comments | `rust-013` |
 
 ### Correctness
 
@@ -267,6 +363,7 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
 |----------|----------------|----------|
 | **RustUnwrapUsageDetector** | Flags excessive ``unwrap()`` and ``expect()`` calls that bypass Rust's error model | `rust-001` |
 | **RustErrorHandlingDetector** | Flags functions that use ``Result`` without propagating errors and detects ``panic!`` abuse | `rust-001` |
+| **RustErrorTraitsDetector** | Flags error types that do not implement ``std::error::Error`` | `rust-014` |
 
 ### Idioms
 
@@ -274,6 +371,8 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
 |----------|----------------|----------|
 | **RustIteratorPreferenceDetector** | Flags excessive manual loops where iterator adapters would be more idiomatic | `rust-003` |
 | **RustStdTraitsDetector** | Detects structs that lack standard trait implementations like ``From`` or ``Display`` | `rust-009` |
+| **RustDefaultImplDetector** | Flags public structs that lack a ``Default`` implementation | `rust-016` |
+| **RustFromIntoDetector** | Flags ad-hoc conversion functions that should use ``From``/``Into`` traits | `rust-017` |
 
 ### Ownership
 
@@ -286,6 +385,12 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
 | **RustCloneOverheadDetector** | Detects excessive ``.clone()`` calls that undermine Rust's zero-cost abstraction goal | `rust-004` |
+
+### Readability
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **RustNamingDetector** | Flags functions using camelCase instead of snake_case | `rust-015` |
 
 ### Safety
 
@@ -315,14 +420,25 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
     rust_010["rust-010<br/>Prefer enums over booleans for state"]
     rust_011["rust-011<br/>Use lifetimes judiciously"]
     rust_012["rust-012<br/>Avoid Rc<RefCell<T>> unless necessary"]
+    rust_013["rust-013<br/>Send + Sync should be implemented when t..."]
+    rust_014["rust-014<br/>Error types should implement standard er..."]
+    rust_015["rust-015<br/>Follow Rust naming conventions (RFC 430)"]
+    rust_016["rust-016<br/>Implement Default when there is an obvio..."]
+    rust_017["rust-017<br/>Use From/Into for type conversions"]
     det_RustCloneOverheadDetector["RustCloneOverheadDetector"]
     rust_004 --> det_RustCloneOverheadDetector
     det_RustDebugDeriveDetector["RustDebugDeriveDetector"]
     rust_006 --> det_RustDebugDeriveDetector
+    det_RustDefaultImplDetector["RustDefaultImplDetector"]
+    rust_016 --> det_RustDefaultImplDetector
     det_RustEnumOverBoolDetector["RustEnumOverBoolDetector"]
     rust_010 --> det_RustEnumOverBoolDetector
     det_RustErrorHandlingDetector["RustErrorHandlingDetector"]
     rust_001 --> det_RustErrorHandlingDetector
+    det_RustErrorTraitsDetector["RustErrorTraitsDetector"]
+    rust_014 --> det_RustErrorTraitsDetector
+    det_RustFromIntoDetector["RustFromIntoDetector"]
+    rust_017 --> det_RustFromIntoDetector
     det_RustInteriorMutabilityDetector["RustInteriorMutabilityDetector"]
     rust_012 --> det_RustInteriorMutabilityDetector
     det_RustIteratorPreferenceDetector["RustIteratorPreferenceDetector"]
@@ -331,8 +447,12 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
     rust_011 --> det_RustLifetimeUsageDetector
     det_RustMustUseDetector["RustMustUseDetector"]
     rust_005 --> det_RustMustUseDetector
+    det_RustNamingDetector["RustNamingDetector"]
+    rust_015 --> det_RustNamingDetector
     det_RustNewtypePatternDetector["RustNewtypePatternDetector"]
     rust_007 --> det_RustNewtypePatternDetector
+    det_RustSendSyncDetector["RustSendSyncDetector"]
+    rust_013 --> det_RustSendSyncDetector
     det_RustStdTraitsDetector["RustStdTraitsDetector"]
     rust_009 --> det_RustStdTraitsDetector
     det_RustTypeSafetyDetector["RustTypeSafetyDetector"]
@@ -355,15 +475,25 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
     class rust_010 principle
     class rust_011 principle
     class rust_012 principle
+    class rust_013 principle
+    class rust_014 principle
+    class rust_015 principle
+    class rust_016 principle
+    class rust_017 principle
     class det_RustCloneOverheadDetector detector
     class det_RustDebugDeriveDetector detector
+    class det_RustDefaultImplDetector detector
     class det_RustEnumOverBoolDetector detector
     class det_RustErrorHandlingDetector detector
+    class det_RustErrorTraitsDetector detector
+    class det_RustFromIntoDetector detector
     class det_RustInteriorMutabilityDetector detector
     class det_RustIteratorPreferenceDetector detector
     class det_RustLifetimeUsageDetector detector
     class det_RustMustUseDetector detector
+    class det_RustNamingDetector detector
     class det_RustNewtypePatternDetector detector
+    class det_RustSendSyncDetector detector
     class det_RustStdTraitsDetector detector
     class det_RustTypeSafetyDetector detector
     class det_RustUnsafeBlocksDetector detector

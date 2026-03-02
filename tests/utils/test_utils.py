@@ -146,6 +146,11 @@ def test_detect_language_from_content_ansible():
     assert result.language == "ansible"
 
 
+def test_detect_language_from_content_tasks_shell_without_task_item_not_ansible():
+    result = detect_language_from_content("tasks:\n  shell: echo hi\n")
+    assert result.language == "unknown"
+
+
 def test_detect_language_from_content_javascript_const():
     result = detect_language_from_content("const foo = 1\n")
     assert result.language == "javascript"

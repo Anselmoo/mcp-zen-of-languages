@@ -797,7 +797,7 @@ def render_index_page() -> str:
 
             CI/CD-specific security and maintainability checks for pipeline files and reusable workflow patterns.
 
-            **GitHub Actions · Ansible**
+            **GitHub Actions**
 
         -   :material-file-cog:{ .lg .middle } **Config Validation**
 

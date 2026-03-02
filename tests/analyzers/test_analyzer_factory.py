@@ -38,3 +38,7 @@ def test_create_analyzer_types():
     assert bibtex.language() == "latex"
     gitlab_ci = create_analyzer("gitlab-ci")
     assert gitlab_ci.language() == "gitlab_ci"
+    terraform = create_analyzer("terraform")
+    assert terraform.language() == "terraform"
+    tf = create_analyzer("tf")
+    assert tf.language() == "terraform"

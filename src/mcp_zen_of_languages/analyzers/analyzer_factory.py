@@ -29,6 +29,7 @@ from mcp_zen_of_languages.languages.python.analyzer import PythonAnalyzer
 from mcp_zen_of_languages.languages.ruby.analyzer import RubyAnalyzer
 from mcp_zen_of_languages.languages.rust.analyzer import RustAnalyzer
 from mcp_zen_of_languages.languages.sql.analyzer import SqlAnalyzer
+from mcp_zen_of_languages.languages.terraform.analyzer import TerraformAnalyzer
 from mcp_zen_of_languages.languages.toml.analyzer import TomlAnalyzer
 from mcp_zen_of_languages.languages.typescript.analyzer import TypeScriptAnalyzer
 from mcp_zen_of_languages.languages.xml.analyzer import XmlAnalyzer
@@ -62,6 +63,7 @@ SUPPORTED_LANGUAGES: tuple[str, ...] = (
     "xml",
     "json",
     "sql",
+    "terraform",
     "markdown",
     "latex",
     "gitlab_ci",
@@ -113,6 +115,8 @@ _ANALYZERS_BY_ALIAS: dict[str, AnalyzerClass] = {
     "mysql": SqlAnalyzer,
     "sqlite": SqlAnalyzer,
     "mssql": SqlAnalyzer,
+    "terraform": TerraformAnalyzer,
+    "tf": TerraformAnalyzer,
     "gitlab-ci": GitLabCIAnalyzer,
     "gitlab_ci": GitLabCIAnalyzer,
     "gitlabci": GitLabCIAnalyzer,
@@ -185,6 +189,7 @@ def create_analyzer(
         JSON                            ``json``
         LaTeX                           ``latex``, ``tex``, ``ltx``, ``sty``, ``bib``, ``bibtex``
         SQL                             ``sql``, ``postgresql``, ``mysql``, ``sqlite``, ``mssql``
+        Terraform                       ``terraform``, ``tf``
         Markdown / MDX                  ``markdown``, ``mdx``
         LaTeX                           ``latex``, ``tex``, ``ltx``, ``sty``
         =============================== ===================================

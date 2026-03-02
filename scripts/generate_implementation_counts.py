@@ -45,6 +45,7 @@ PROGRAMMING_LANGUAGES: list[tuple[str, str]] = [
     ("csharp", "csharp"),
     ("docker_compose", "docker_compose"),
     ("dockerfile", "dockerfile"),
+    ("terraform", "terraform"),
     ("markdown", "markdown"),
     ("latex", "latex"),
 ]

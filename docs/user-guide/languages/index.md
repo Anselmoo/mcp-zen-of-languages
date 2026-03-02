@@ -33,7 +33,8 @@ Every language has its own philosophy — its own sense of what "good code" mean
 | [Dockerfile](dockerfile.md) | 8 | 8 | Regex | [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) |
 | [LaTeX](latex.md) | 9 | 9 | Regex | [LaTeX Project](https://www.latex-project.org/) |
 | [Markdown / MDX](markdown.md) | 7 | 7 | Regex | [CommonMark + MDX authoring best practices](https://commonmark.org/) |
-| **Programming & markup subtotal** | **203** | **223** | | |
+| [Terraform](terraform.md) | 7 | 7 | Regex | [Terraform language and module best-practice documentation](https://developer.hashicorp.com/terraform/language) |
+| **Programming & markup subtotal** | **210** | **230** | | |
 
 ### Workflows & Automation
 
@@ -52,8 +53,8 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 ### Coverage Totals
 
-- **Principles (all categories):** 259
-- **Detectors + workflow checks:** 279
+- **Principles (all categories):** 266
+- **Detectors + workflow checks:** 286
 
 ## Maturity Tiers
 
@@ -73,7 +74,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
     Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
 
-    **TypeScript · Rust · Go · JavaScript · CSS · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile**
+    **TypeScript · Rust · Go · JavaScript · CSS · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile · Terraform**
 
 -   :material-language-markdown:{ .lg .middle } **Documentation & Markup**
 

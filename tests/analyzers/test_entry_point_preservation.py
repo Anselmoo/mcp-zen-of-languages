@@ -25,6 +25,7 @@ AST_CAPABLE_LANGUAGES = {
     "xml",
     "docker_compose",
     "gitlab_ci",
+    "terraform",
 }
 
 DEPENDENCY_CAPABLE_LANGUAGES = {
@@ -40,6 +41,7 @@ DEPENDENCY_CAPABLE_LANGUAGES = {
     "css",
     "dockerfile",
     "powershell",
+    "terraform",
 }
 PARSE_SIGNATURE_PARAM_COUNT = 2
 METRICS_SIGNATURE_PARAM_COUNT = 3

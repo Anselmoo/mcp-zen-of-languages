@@ -5,6 +5,7 @@ from mcp_zen_of_languages.languages.dockerfile.analyzer import DockerfileAnalyze
 from mcp_zen_of_languages.languages.javascript.analyzer import JavaScriptAnalyzer
 from mcp_zen_of_languages.languages.powershell.analyzer import PowerShellAnalyzer
 from mcp_zen_of_languages.languages.ruby.analyzer import RubyAnalyzer
+from mcp_zen_of_languages.languages.terraform.analyzer import TerraformAnalyzer
 
 
 def _pipeline_stub():
@@ -65,3 +66,14 @@ def test_docker_compose_analyzer_parse_code():
     assert result is not None
     assert result.type == "yaml"
     assert result.tree == {"services": {"web": {"image": "nginx:1.27"}}}
+
+
+def test_terraform_analyzer_parse_code():
+    class StubTerraformAnalyzer(TerraformAnalyzer):
+        def build_pipeline(self):
+            return _pipeline_stub()
+
+    analyzer = StubTerraformAnalyzer()
+    result = analyzer.parse_code('resource "null_resource" "example" {}\n')
+    assert result is not None
+    assert result.type == "terraform"

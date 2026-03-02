@@ -91,6 +91,13 @@ LANGUAGES: list[tuple[str, str, str, str, str]] = [
         "markdown.md",
         "markdown",
     ),
+    (
+        "terraform",
+        "Terraform",
+        "material/cloud-outline",
+        "terraform.md",
+        "terraform",
+    ),
 ]
 
 WORKFLOW_LANGUAGES: list[tuple[str, str, str]] = [
@@ -178,6 +185,11 @@ SEE_ALSO: dict[str, str] = {
         "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
         "- [Understanding Violations](../understanding-violations.md) — Severity scale reference\n"
         "- [Prompt Generation](../prompt-generation.md) — Generate AI remediation prompts"
+    ),
+    "terraform": (
+        "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
+        "- [Understanding Violations](../understanding-violations.md) — Severity scale reference\n"
+        "- [Prompt Generation](../prompt-generation.md) — Generate Terraform remediation prompts"
     ),
 }
 
@@ -774,7 +786,7 @@ def render_index_page() -> str:
 
             Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
 
-            **TypeScript · Rust · Go · JavaScript · CSS · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile**
+            **TypeScript · Rust · Go · JavaScript · CSS · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile · Terraform**
 
         -   :material-language-markdown:{ .lg .middle } **Documentation & Markup**
 

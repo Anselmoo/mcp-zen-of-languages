@@ -193,6 +193,7 @@ def _canonical_language(language: str) -> str:
         "sty": "latex",
         "bib": "latex",
         "bibtex": "latex",
+        "tf": "terraform",
     }
     return alias_map.get(lang, lang)
 

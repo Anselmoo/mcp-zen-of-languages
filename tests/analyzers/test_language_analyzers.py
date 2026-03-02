@@ -77,3 +77,17 @@ def test_terraform_analyzer_parse_code():
     result = analyzer.parse_code('resource "null_resource" "example" {}\n')
     assert result is not None
     assert result.type == "terraform"
+
+
+def test_terraform_analyzer_parses_terraform_root_block():
+    class StubTerraformAnalyzer(TerraformAnalyzer):
+        def build_pipeline(self):
+            return _pipeline_stub()
+
+    analyzer = StubTerraformAnalyzer()
+    result = analyzer.parse_code('terraform {\n  required_version = ">= 1.6.0"\n}\n')
+    assert result is not None
+    assert result.type == "terraform"
+    blocks = result.tree["blocks"]
+    assert blocks[0]["block_type"] == "terraform"
+    assert blocks[0]["label"] is None

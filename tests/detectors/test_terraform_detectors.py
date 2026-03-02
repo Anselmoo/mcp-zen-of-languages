@@ -124,3 +124,78 @@ def test_terraform_detectors_cover_clean_paths() -> None:
     assert not TerraformNamingConventionDetector().detect(
         context, TerraformNamingConventionConfig()
     )
+
+
+def test_terraform_module_version_pinning_ignores_local_sources() -> None:
+    context = AnalysisContext(
+        code=(
+            'module "local_vpc" {\n'
+            '  source = "./modules/vpc"\n'
+            "}\n"
+            'module "external_vpc" {\n'
+            '  source = "terraform-aws-modules/vpc/aws"\n'
+            "}\n"
+        ),
+        language="terraform",
+    )
+    violations = TerraformModuleVersionPinningDetector().detect(
+        context, TerraformModuleVersionPinningConfig()
+    )
+    assert len(violations) == 1
+    assert violations[0].location is not None
+    assert violations[0].location.line == 4
+
+
+def test_terraform_backend_detector_uses_terraform_block_location() -> None:
+    context = AnalysisContext(
+        code=(
+            '# comment\n\nlocals {\n  env = "dev"\n}\n\n'
+            "terraform {\n"
+            '  required_version = ">= 1.6.0"\n'
+            "}\n"
+        ),
+        language="terraform",
+    )
+    violations = TerraformBackendConfigDetector().detect(context, TerraformBackendConfig())
+    assert violations
+    assert violations[0].location is not None
+    assert violations[0].location.line == 7
+
+
+def test_terraform_naming_detector_does_not_flag_output_names() -> None:
+    context = AnalysisContext(
+        code=(
+            'output "BadOutputName" {\n'
+            '  description = "output description"\n'
+            "  value = aws_instance.web.id\n"
+            "}\n"
+        ),
+        language="terraform",
+    )
+    violations = TerraformNamingConventionDetector().detect(
+        context, TerraformNamingConventionConfig()
+    )
+    assert not violations
+
+
+def test_terraform_provider_version_detector_accepts_required_providers_version() -> None:
+    context = AnalysisContext(
+        code=(
+            "terraform {\n"
+            "  required_providers {\n"
+            "    aws = {\n"
+            '      source  = "hashicorp/aws"\n'
+            '      version = "~> 5.0"\n'
+            "    }\n"
+            "  }\n"
+            "}\n"
+            'provider "aws" {\n'
+            '  region = "eu-central-1"\n'
+            "}\n"
+        ),
+        language="terraform",
+    )
+    violations = TerraformProviderVersionPinningDetector().detect(
+        context, TerraformProviderVersionPinningConfig()
+    )
+    assert not violations

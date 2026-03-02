@@ -73,8 +73,8 @@ def _initialize_registry() -> None:
     from mcp_zen_of_languages.languages.python.rules import PYTHON_ZEN
     from mcp_zen_of_languages.languages.ruby.rules import RUBY_ZEN
     from mcp_zen_of_languages.languages.rust.rules import RUST_ZEN
-    from mcp_zen_of_languages.languages.svg.rules import SVG_ZEN
     from mcp_zen_of_languages.languages.sql.rules import SQL_ZEN
+    from mcp_zen_of_languages.languages.svg.rules import SVG_ZEN
     from mcp_zen_of_languages.languages.toml.rules import TOML_ZEN
     from mcp_zen_of_languages.languages.typescript.rules import TYPESCRIPT_ZEN
     from mcp_zen_of_languages.languages.xml.rules import XML_ZEN

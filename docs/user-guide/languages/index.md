@@ -47,13 +47,13 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 | Language Family | Principles | Detectors | Parser | Coverage Breakdown |
 |-----------------|:----------:|:---------:|--------|--------------------|
-| [Config formats](config-formats.md) | 31 | 31 | Regex | JSON (9), TOML (8), XML (6), YAML (8) |
-| **Config subtotal** | **31** | **31** | | |
+| [Config formats](config-formats.md) | 46 | 46 | Regex | JSON (9), SVG (15), TOML (8), XML (6), YAML (8) |
+| **Config subtotal** | **46** | **46** | | |
 
 ### Coverage Totals
 
-- **Principles (all categories):** 259
-- **Detectors + workflow checks:** 279
+- **Principles (all categories):** 274
+- **Detectors + workflow checks:** 294
 
 ## Maturity Tiers
 

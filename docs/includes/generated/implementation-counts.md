@@ -1,2 +1,2 @@
-- **259 zen principles** across programming, markup, workflow, and config domains
-- **279 detector/check coverage points** with severity scoring
+- **274 zen principles** across programming, markup, workflow, and config domains
+- **294 detector/check coverage points** with severity scoring

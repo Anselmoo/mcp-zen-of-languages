@@ -1,4 +1,5 @@
 """Detectors for SVG accessibility, idioms, and performance."""
+# ruff: noqa: D102
 
 from __future__ import annotations
 
@@ -21,6 +22,7 @@ _REF_RE = re.compile(r"#([A-Za-z_][\w\-.]*)")
 _PATH_CMD_RE = re.compile(r"[A-Za-z]")
 _RELATIVE_CMD_RE = re.compile(r"[mlhvcsqtaz]")
 _BASE64_IMAGE_RE = re.compile(r"data:image/[^;]+;base64,", re.IGNORECASE)
+_UNSAFE_XML_DIRECTIVE_RE = re.compile(r"<!\s*(DOCTYPE|ENTITY)\b", re.IGNORECASE)
 _COMPLEX_NODE_THRESHOLD = 20
 _GROUP_DEPTH_LIMIT = 5
 
@@ -33,6 +35,8 @@ def _root_from_context(context: AnalysisContext) -> ET.Element | None:
     ast_tree = context.ast_tree
     if isinstance(ast_tree, ParserResult) and isinstance(ast_tree.tree, ET.Element):
         return ast_tree.tree
+    if _UNSAFE_XML_DIRECTIVE_RE.search(context.code):
+        return None
     try:
         return ET.fromstring(context.code)  # noqa: S314
     except ET.ParseError:
@@ -40,11 +44,15 @@ def _root_from_context(context: AnalysisContext) -> ET.Element | None:
 
 
 class SvgMissingTitleDetector(ViolationDetector[DetectorConfig], LocationHelperMixin):
+    """Detects root SVG elements that omit an accessible title child."""
+
     @property
     def name(self) -> str:
         return "svg-001"
 
-    def detect(self, context: AnalysisContext, config: DetectorConfig) -> list[Violation]:
+    def detect(
+        self, context: AnalysisContext, config: DetectorConfig
+    ) -> list[Violation]:
         root = _root_from_context(context)
         if root is None or any(_local_name(child.tag) == "title" for child in root):
             return []
@@ -52,17 +60,21 @@ class SvgMissingTitleDetector(ViolationDetector[DetectorConfig], LocationHelperM
             self.build_violation(
                 config,
                 location=Location(line=1, column=1),
-                suggestion="Add <title id=\"...\"> and reference it from aria-labelledby.",
+                suggestion='Add <title id="..."> and reference it from aria-labelledby.',
             ),
         ]
 
 
 class SvgAriaRoleDetector(ViolationDetector[DetectorConfig], LocationHelperMixin):
+    """Detects root SVG elements missing image role and labeling attributes."""
+
     @property
     def name(self) -> str:
         return "svg-002"
 
-    def detect(self, context: AnalysisContext, config: DetectorConfig) -> list[Violation]:
+    def detect(
+        self, context: AnalysisContext, config: DetectorConfig
+    ) -> list[Violation]:
         root = _root_from_context(context)
         if root is None:
             return []
@@ -72,24 +84,32 @@ class SvgAriaRoleDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
             self.build_violation(
                 config,
                 location=Location(line=1, column=1),
-                suggestion="Set role=\"img\" and aria-labelledby on the root <svg>.",
+                suggestion='Set role="img" and aria-labelledby on the root <svg>.',
             ),
         ]
 
 
 class SvgImageAltDetector(ViolationDetector[DetectorConfig], LocationHelperMixin):
+    """Detects embedded image elements lacking alternative text metadata."""
+
     @property
     def name(self) -> str:
         return "svg-003"
 
-    def detect(self, context: AnalysisContext, config: DetectorConfig) -> list[Violation]:
+    def detect(
+        self, context: AnalysisContext, config: DetectorConfig
+    ) -> list[Violation]:
         root = _root_from_context(context)
         if root is None:
             return []
         for image in root.iter():
             if _local_name(image.tag) != "image":
                 continue
-            if image.attrib.get("alt") or image.attrib.get("aria-label") or image.attrib.get("title"):
+            if (
+                image.attrib.get("alt")
+                or image.attrib.get("aria-label")
+                or image.attrib.get("title")
+            ):
                 continue
             return [
                 self.build_violation(
@@ -105,11 +125,15 @@ class SvgDescForComplexGraphicsDetector(
     ViolationDetector[DetectorConfig],
     LocationHelperMixin,
 ):
+    """Detects complex SVG documents that lack a descriptive <desc> element."""
+
     @property
     def name(self) -> str:
         return "svg-004"
 
-    def detect(self, context: AnalysisContext, config: DetectorConfig) -> list[Violation]:
+    def detect(
+        self, context: AnalysisContext, config: DetectorConfig
+    ) -> list[Violation]:
         root = _root_from_context(context)
         if root is None:
             return []
@@ -127,11 +151,15 @@ class SvgDescForComplexGraphicsDetector(
 
 
 class SvgInlineStyleDetector(ViolationDetector[DetectorConfig], LocationHelperMixin):
+    """Detects inline style usage inside SVG markup."""
+
     @property
     def name(self) -> str:
         return "svg-005"
 
-    def detect(self, context: AnalysisContext, config: DetectorConfig) -> list[Violation]:
+    def detect(
+        self, context: AnalysisContext, config: DetectorConfig
+    ) -> list[Violation]:
         if "style=" not in context.code:
             return []
         return [
@@ -144,11 +172,15 @@ class SvgInlineStyleDetector(ViolationDetector[DetectorConfig], LocationHelperMi
 
 
 class SvgViewBoxDetector(ViolationDetector[DetectorConfig], LocationHelperMixin):
+    """Detects fixed dimensions used without a responsive viewBox."""
+
     @property
     def name(self) -> str:
         return "svg-006"
 
-    def detect(self, context: AnalysisContext, config: DetectorConfig) -> list[Violation]:
+    def detect(
+        self, context: AnalysisContext, config: DetectorConfig
+    ) -> list[Violation]:
         root = _root_from_context(context)
         if root is None:
             return []
@@ -164,11 +196,15 @@ class SvgViewBoxDetector(ViolationDetector[DetectorConfig], LocationHelperMixin)
 
 
 class SvgUnusedDefsDetector(ViolationDetector[DetectorConfig], LocationHelperMixin):
+    """Detects IDs declared under defs that are never referenced."""
+
     @property
     def name(self) -> str:
         return "svg-007"
 
-    def detect(self, context: AnalysisContext, config: DetectorConfig) -> list[Violation]:
+    def detect(
+        self, context: AnalysisContext, config: DetectorConfig
+    ) -> list[Violation]:
         root = _root_from_context(context)
         if root is None:
             return []
@@ -188,7 +224,9 @@ class SvgUnusedDefsDetector(ViolationDetector[DetectorConfig], LocationHelperMix
                 self.build_violation(
                     config,
                     contains=unused[0],
-                    location=self.find_location_by_substring(context.code, f'id="{unused[0]}"'),
+                    location=self.find_location_by_substring(
+                        context.code, f'id="{unused[0]}"'
+                    ),
                     suggestion="Remove or reference unused defs entries.",
                 ),
             ]
@@ -196,11 +234,15 @@ class SvgUnusedDefsDetector(ViolationDetector[DetectorConfig], LocationHelperMix
 
 
 class SvgNestedGroupsDetector(ViolationDetector[DetectorConfig], LocationHelperMixin):
+    """Detects excessive nesting depth of SVG group elements."""
+
     @property
     def name(self) -> str:
         return "svg-008"
 
-    def detect(self, context: AnalysisContext, config: DetectorConfig) -> list[Violation]:
+    def detect(
+        self, context: AnalysisContext, config: DetectorConfig
+    ) -> list[Violation]:
         root = _root_from_context(context)
         if root is None:
             return []
@@ -222,11 +264,15 @@ class SvgNestedGroupsDetector(ViolationDetector[DetectorConfig], LocationHelperM
 
 
 class SvgDuplicateIdDetector(ViolationDetector[DetectorConfig], LocationHelperMixin):
+    """Detects duplicate ID values across SVG elements."""
+
     @property
     def name(self) -> str:
         return "svg-009"
 
-    def detect(self, context: AnalysisContext, config: DetectorConfig) -> list[Violation]:
+    def detect(
+        self, context: AnalysisContext, config: DetectorConfig
+    ) -> list[Violation]:
         root = _root_from_context(context)
         if root is None:
             return []
@@ -237,19 +283,27 @@ class SvgDuplicateIdDetector(ViolationDetector[DetectorConfig], LocationHelperMi
                     self.build_violation(
                         config,
                         contains=element_id,
-                        location=self.find_location_by_substring(context.code, f'id="{element_id}"'),
+                        location=self.find_location_by_substring(
+                            context.code, f'id="{element_id}"'
+                        ),
                         suggestion="Ensure every id value is globally unique in the SVG document.",
                     ),
                 ]
         return []
 
 
-class SvgAbsolutePathOnlyDetector(ViolationDetector[DetectorConfig], LocationHelperMixin):
+class SvgAbsolutePathOnlyDetector(
+    ViolationDetector[DetectorConfig], LocationHelperMixin
+):
+    """Detects paths composed only of absolute command letters."""
+
     @property
     def name(self) -> str:
         return "svg-010"
 
-    def detect(self, context: AnalysisContext, config: DetectorConfig) -> list[Violation]:
+    def detect(
+        self, context: AnalysisContext, config: DetectorConfig
+    ) -> list[Violation]:
         root = _root_from_context(context)
         if root is None:
             return []
@@ -257,15 +311,11 @@ class SvgAbsolutePathOnlyDetector(ViolationDetector[DetectorConfig], LocationHel
             if _local_name(path.tag) != "path":
                 continue
             commands = "".join(_PATH_CMD_RE.findall(path.attrib.get("d", "")))
-            if commands and commands.lower() == commands.upper():
-                return [
-                    self.build_violation(
-                        config,
-                        location=self.find_location_by_substring(context.code, "<path"),
-                        suggestion="Use relative path commands where practical to reduce payload.",
-                    ),
-                ]
-            if commands and not _RELATIVE_CMD_RE.search(commands):
+            if (
+                commands
+                and commands.isupper()
+                and not _RELATIVE_CMD_RE.search(commands)
+            ):
                 return [
                     self.build_violation(
                         config,
@@ -277,11 +327,15 @@ class SvgAbsolutePathOnlyDetector(ViolationDetector[DetectorConfig], LocationHel
 
 
 class SvgBase64ImageDetector(ViolationDetector[DetectorConfig], LocationHelperMixin):
+    """Detects base64-embedded raster images in SVG content."""
+
     @property
     def name(self) -> str:
         return "svg-011"
 
-    def detect(self, context: AnalysisContext, config: DetectorConfig) -> list[Violation]:
+    def detect(
+        self, context: AnalysisContext, config: DetectorConfig
+    ) -> list[Violation]:
         if not _BASE64_IMAGE_RE.search(context.code):
             return []
         return [
@@ -294,11 +348,15 @@ class SvgBase64ImageDetector(ViolationDetector[DetectorConfig], LocationHelperMi
 
 
 class SvgXmlnsDetector(ViolationDetector[DetectorConfig], LocationHelperMixin):
+    """Detects missing core SVG XML namespace declarations."""
+
     @property
     def name(self) -> str:
         return "svg-012"
 
-    def detect(self, context: AnalysisContext, config: DetectorConfig) -> list[Violation]:
+    def detect(
+        self, context: AnalysisContext, config: DetectorConfig
+    ) -> list[Violation]:
         root = _root_from_context(context)
         if root is None:
             return []
@@ -317,17 +375,23 @@ class SvgDeprecatedXlinkHrefDetector(
     ViolationDetector[DetectorConfig],
     LocationHelperMixin,
 ):
+    """Detects deprecated xlink:href attributes in SVG markup."""
+
     @property
     def name(self) -> str:
         return "svg-013"
 
-    def detect(self, context: AnalysisContext, config: DetectorConfig) -> list[Violation]:
+    def detect(
+        self, context: AnalysisContext, config: DetectorConfig
+    ) -> list[Violation]:
         if "xlink:href" in context.code:
             return [
                 self.build_violation(
                     config,
-                    location=self.find_location_by_substring(context.code, "xlink:href"),
-                    suggestion='Replace xlink:href with href in SVG 2 documents.',
+                    location=self.find_location_by_substring(
+                        context.code, "xlink:href"
+                    ),
+                    suggestion="Replace xlink:href with href in SVG 2 documents.",
                 ),
             ]
         root = _root_from_context(context)
@@ -340,18 +404,22 @@ class SvgDeprecatedXlinkHrefDetector(
                     self.build_violation(
                         config,
                         location=self.find_location_by_substring(context.code, "href"),
-                        suggestion='Replace xlink:href with href in SVG 2 documents.',
+                        suggestion="Replace xlink:href with href in SVG 2 documents.",
                     ),
                 ]
         return []
 
 
 class SvgNodeCountDetector(ViolationDetector[SvgNodeCountConfig], LocationHelperMixin):
+    """Detects SVG documents exceeding a configurable node-count threshold."""
+
     @property
     def name(self) -> str:
         return "svg-014"
 
-    def detect(self, context: AnalysisContext, config: SvgNodeCountConfig) -> list[Violation]:
+    def detect(
+        self, context: AnalysisContext, config: SvgNodeCountConfig
+    ) -> list[Violation]:
         root = _root_from_context(context)
         if root is None:
             return []
@@ -368,12 +436,18 @@ class SvgNodeCountDetector(ViolationDetector[SvgNodeCountConfig], LocationHelper
         ]
 
 
-class SvgProductionBloatDetector(ViolationDetector[DetectorConfig], LocationHelperMixin):
+class SvgProductionBloatDetector(
+    ViolationDetector[DetectorConfig], LocationHelperMixin
+):
+    """Detects metadata/comments and editor namespace bloat in production SVG."""
+
     @property
     def name(self) -> str:
         return "svg-015"
 
-    def detect(self, context: AnalysisContext, config: DetectorConfig) -> list[Violation]:
+    def detect(
+        self, context: AnalysisContext, config: DetectorConfig
+    ) -> list[Violation]:
         bloat_tokens = ("<metadata", "inkscape:", "sodipodi:", "<!--")
         for token in bloat_tokens:
             if token in context.code:

@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
 from mcp_zen_of_languages.languages.configs import MarkdownAltTextConfig
 from mcp_zen_of_languages.languages.configs import MarkdownBareUrlConfig
@@ -137,8 +135,10 @@ def test_markdown_dead_relative_link_allows_existing_target(tmp_path):
     assert not violations
 
 
-def test_markdown_dead_relative_link_disallows_repo_escape():
-    doc_path = Path.cwd() / "docs" / "guide.md"
+def test_markdown_dead_relative_link_disallows_repo_escape(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "pyproject.toml").write_text("[project]\nname = 'tmp'\n", encoding="utf-8")
+    doc_path = tmp_path / "docs" / "guide.md"
     violations = _detect(
         MarkdownFrontMatterDetector(),
         "[Escape](../../etc/passwd)\n",

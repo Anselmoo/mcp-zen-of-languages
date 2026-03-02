@@ -68,6 +68,13 @@ def _is_mdx_context(context: AnalysisContext) -> bool:
     return False
 
 
+def _discover_project_root(start_dir: Path) -> Path | None:
+    for parent in (start_dir, *start_dir.parents):
+        if (parent / "zen-config.yaml").exists() or (parent / "pyproject.toml").exists():
+            return parent
+    return None
+
+
 class MarkdownHeadingHierarchyDetector(
     ViolationDetector[MarkdownHeadingHierarchyConfig],
     LocationHelperMixin,
@@ -211,7 +218,7 @@ class MarkdownFrontMatterDetector(
     ViolationDetector[MarkdownFrontMatterConfig],
     LocationHelperMixin,
 ):
-    """Detect incomplete YAML front-matter blocks."""
+    """Detect incomplete YAML front-matter blocks and dead relative links."""
 
     @property
     def name(self) -> str:
@@ -246,8 +253,7 @@ class MarkdownFrontMatterDetector(
         if not context.path:
             return []
         base_dir = Path(context.path).resolve().parent
-        repo_root = Path.cwd().resolve()
-        enforce_repo_boundary = repo_root in (base_dir, *base_dir.parents)
+        project_root = _discover_project_root(base_dir)
         for line_no, line in _iter_text_lines(context.code):
             for match in _MARKDOWN_LINK_TARGET_RE.finditer(line):
                 target = match.group(1).strip()
@@ -259,7 +265,7 @@ class MarkdownFrontMatterDetector(
                 ):
                     continue
                 resolved_target = (base_dir / target).resolve()
-                if enforce_repo_boundary and repo_root not in (
+                if project_root is not None and project_root not in (
                     resolved_target,
                     *resolved_target.parents,
                 ):

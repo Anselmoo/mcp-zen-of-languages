@@ -59,7 +59,7 @@
 | Python | `python-008` | Special cases aren't special enough to break the rules | 6 |
 | Python | `python-009` | Errors should never pass silently | 9 |
 | Python | `python-010` | In the face of ambiguity, refuse the temptation to guess | 7 |
-| Python | `python-014` | Errors should never pass silently | 8 |
+| Python | `python-014` | Unless explicitly silenced | 8 |
 | Rust | `rust-002` | Use the type system to prevent bugs | 8 |
 | Rust | `rust-005` | Use #[must_use] for important return types | 6 |
 | Rust | `rust-006` | Implement Debug for all public types | 6 |
@@ -140,7 +140,7 @@
 | PowerShell | `ps-015` | Handle null values explicitly | 7 |
 | Python | `python-008` | Special cases aren't special enough to break the rules | 6 |
 | Python | `python-009` | Errors should never pass silently | 9 |
-| Python | `python-014` | Errors should never pass silently | 8 |
+| Python | `python-014` | Unless explicitly silenced | 8 |
 | Python | `python-016` | Although never is often better than *right* now | 5 |
 | Ruby | `ruby-011` | Prefer fail over raise for exceptions | 5 |
 | Rust | `rust-001` | Avoid unwrap() and expect() in production code | 9 |
@@ -199,7 +199,7 @@
 | Python | `python-011` | There should be one-- and preferably only one --obvious way to do it | 6 |
 | Python | `python-013` | Practicality beats purity | 5 |
 | Python | `python-016` | Although never is often better than *right* now | 5 |
-| Python | `python-019` | There should be one-- and preferably only one --obvious way to do it | 5 |
+| Python | `python-019` | Although that way may not be obvious at first unless you're Dutch | 5 |
 | Ruby | `ruby-001` | Convention over configuration | 7 |
 | Ruby | `ruby-002` | DRY (Don't Repeat Yourself) | 8 |
 | Ruby | `ruby-003` | Prefer blocks over lambdas/procs | 6 |

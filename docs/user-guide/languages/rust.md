@@ -507,17 +507,17 @@ languages:
   rust:
     enabled: true
     pipeline:
-      - type: rust-unwrap-usage
+      - type: rust_unwrap_usage
         max_unwraps: 0
       - type: rust-002
         primitive_types: ['String', 'i32', 'u32', 'i64', 'u64', 'bool']
       - type: rust-003
         max_loops: 0
-      - type: rust-unsafe-blocks
+      - type: rust_unsafe_blocks
         detect_unsafe_blocks: True
-      - type: rust-clone-overhead
+      - type: rust_clone_overhead
         max_clone_calls: 0
-      - type: rust-error-handling
+      - type: rust_error_handling
         detect_unhandled_results: True
         max_panics: 0
       - type: rust-007

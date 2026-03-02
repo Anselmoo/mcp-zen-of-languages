@@ -1747,6 +1747,16 @@ class GoEarlyReturnConfig(DetectorConfig):
     """Go early-return style enforcement settings."""
 
     type: Literal["go_early_return"] = "go_early_return"
+
+
+class GoEmbeddingDepthConfig(DetectorConfig):
+    """Go struct embedding depth enforcement settings.
+
+    Attributes:
+        max_embedding_depth: Maximum number of anonymously embedded types per struct.
+    """
+
+    type: Literal["go_embedding_depth"] = "go_embedding_depth"
     max_embedding_depth: int = 2
 
 

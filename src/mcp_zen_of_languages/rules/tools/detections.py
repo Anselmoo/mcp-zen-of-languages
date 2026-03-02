@@ -365,7 +365,7 @@ def detect_ts_catch_all_types(code: str) -> TsCatchAllTypeFinding:
     Returns:
         TsCatchAllTypeFinding: Detection result.
     """
-    pattern = re.compile(r":\s*(?:Object|object|\{\s*\})\b")
+    pattern = re.compile(r":\s*(?:[Oo]bject\b|\{\s*\})")
     return TsCatchAllTypeFinding(count=len(pattern.findall(code)))
 
 

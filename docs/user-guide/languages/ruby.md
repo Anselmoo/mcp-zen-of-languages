@@ -343,7 +343,7 @@ languages:
   ruby:
     enabled: true
     pipeline:
-      - type: ruby-method-chain
+      - type: ruby_method_chain
         max_method_chain_length: 4
 ```
 

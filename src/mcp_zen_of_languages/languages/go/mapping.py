@@ -10,6 +10,7 @@ from mcp_zen_of_languages.languages.configs import GoConcurrencyCallerConfig
 from mcp_zen_of_languages.languages.configs import GoContextUsageConfig
 from mcp_zen_of_languages.languages.configs import GoDeferUsageConfig
 from mcp_zen_of_languages.languages.configs import GoEarlyReturnConfig
+from mcp_zen_of_languages.languages.configs import GoEmbeddingDepthConfig
 from mcp_zen_of_languages.languages.configs import GoErrorHandlingConfig
 from mcp_zen_of_languages.languages.configs import GoGoroutineLeakConfig
 from mcp_zen_of_languages.languages.configs import GoInitUsageConfig
@@ -30,6 +31,7 @@ from mcp_zen_of_languages.languages.go.detectors import GoConcurrencyCallerDetec
 from mcp_zen_of_languages.languages.go.detectors import GoContextUsageDetector
 from mcp_zen_of_languages.languages.go.detectors import GoDeferUsageDetector
 from mcp_zen_of_languages.languages.go.detectors import GoEarlyReturnDetector
+from mcp_zen_of_languages.languages.go.detectors import GoEmbeddingDepthDetector
 from mcp_zen_of_languages.languages.go.detectors import GoErrorHandlingDetector
 from mcp_zen_of_languages.languages.go.detectors import GoGoroutineLeakDetector
 from mcp_zen_of_languages.languages.go.detectors import GoInitUsageDetector
@@ -156,10 +158,18 @@ DETECTOR_MAP = LanguageDetectorMap(
             default_order=130,
         ),
         DetectorBinding(
+            detector_id="go_embedding_depth",
+            detector_class=GoEmbeddingDepthDetector,
+            config_model=GoEmbeddingDepthConfig,
+            rule_ids=["go-014"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
+            default_order=135,
+        ),
+        DetectorBinding(
             detector_id="go_early_return",
             detector_class=GoEarlyReturnDetector,
             config_model=GoEarlyReturnConfig,
-            rule_ids=["go-014"],
+            rule_ids=["go-017"],
             universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=140,
         ),
@@ -183,7 +193,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_id="go_test_presence",
             detector_class=GoTestPresenceDetector,
             config_model=GoTestPresenceConfig,
-            rule_ids=["go-017"],
+            rule_ids=["go-019"],
             universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=170,
         ),
@@ -199,7 +209,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_id="go_moderation",
             detector_class=GoModerationDetector,
             config_model=GoModerationConfig,
-            rule_ids=["go-019"],
+            rule_ids=[],
             universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=190,
         ),

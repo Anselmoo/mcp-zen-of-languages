@@ -212,10 +212,10 @@ PYTHON_ZEN = LanguageZenPrinciples(
         ),
         ZenPrinciple(
             id="python-014",
-            principle="Errors should never pass silently",
+            principle="Unless explicitly silenced",
             category=PrincipleCategory.CORRECTNESS,
             severity=8,
-            description="Handle errors explicitly; never swallow exceptions",
+            description="Only suppress exceptions when suppression is intentional and documented",
             violations=[
                 "Bare except clauses",
                 "Silent exception catching with pass",
@@ -263,10 +263,10 @@ PYTHON_ZEN = LanguageZenPrinciples(
         ),
         ZenPrinciple(
             id="python-019",
-            principle="There should be one-- and preferably only one --obvious way to do it",
+            principle="Although that way may not be obvious at first unless you're Dutch",
             category=PrincipleCategory.IDIOMS,
             severity=5,
-            description="Use idiomatic Python constructs",
+            description="Use idiomatic Python constructs that may not be obvious to newcomers",
             violations=[
                 "Using range(len()) instead of enumerate()",
                 "Comparing with == True/False instead of direct boolean checks",

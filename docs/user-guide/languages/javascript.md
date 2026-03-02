@@ -505,13 +505,13 @@ languages:
   javascript:
     enabled: true
     pipeline:
-      - type: js-callback-nesting
+      - type: js_callback_nesting
         max_callback_nesting: 2
-      - type: js-no-var
+      - type: js_no_var
         detect_var_usage: True
-      - type: js-function-length
+      - type: js_function_length
         max_function_length: 50
-      - type: js-param-count
+      - type: js_param_count
         max_params: 3
 ```
 

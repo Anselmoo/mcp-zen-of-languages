@@ -359,11 +359,9 @@ def _build_config_entries(_principles, detector_map) -> list[dict]:
                     comments[field_name] = desc[:60]
 
         if params:
-            # Convert detector_id to kebab-case for YAML
-            yaml_type = det_id.replace("_", "-")
             entries.append(
                 {
-                    "type": yaml_type,
+                    "type": det_id,
                     "params": params,
                     "comments": comments,
                 },

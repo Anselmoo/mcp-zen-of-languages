@@ -90,7 +90,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
     CI/CD-specific security and maintainability checks for pipeline files and reusable workflow patterns.
 
-    **GitHub Actions · Ansible**
+    **GitHub Actions**
 
 -   :material-file-cog:{ .lg .middle } **Config Validation**
 

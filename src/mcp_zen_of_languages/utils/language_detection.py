@@ -53,6 +53,7 @@ GITLAB_CI_FILENAMES = {".gitlab-ci.yml", ".gitlab-ci.yaml"}
 YAML_EXTENSIONS = {".yml", ".yaml"}
 ANSIBLE_PATH_SEGMENTS = {"tasks", "handlers", "vars", "defaults"}
 ANSIBLE_SIGNAL_THRESHOLD = 2
+ANSIBLE_DETECTION_READ_LIMIT = 16 * 1024
 
 
 class DetectionResult(BaseModel):
@@ -99,7 +100,10 @@ def _is_ansible_yaml_content(text: str) -> bool:
         signals += 1
     if re.search(r"(?m)^\s*(become|gather_facts|roles)\s*:", lowered):
         signals += 1
-    if re.search(r"(?m)^\s*(ansible\.builtin\.[a-z_]+|command|shell)\s*:", lowered):
+    if re.search(
+        r"(?m)^\s*(?:ansible\.builtin\.[a-z_]+|-\s*(?:command|shell))\s*:",
+        lowered,
+    ):
         signals += 1
     return signals >= ANSIBLE_SIGNAL_THRESHOLD
 
@@ -115,7 +119,8 @@ def _detect_ansible_yaml(path_obj: Path, ext: str) -> DetectionResult | None:
             notes="Matched Ansible-specific YAML path",
         )
     try:
-        contents = path_obj.read_text(encoding="utf-8")
+        with path_obj.open(encoding="utf-8", errors="ignore") as handle:
+            contents = handle.read(ANSIBLE_DETECTION_READ_LIMIT)
     except OSError:
         return None
     if contents and _is_ansible_yaml_content(contents):

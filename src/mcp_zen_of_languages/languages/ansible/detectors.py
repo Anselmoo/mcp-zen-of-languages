@@ -38,6 +38,7 @@ _STATEFUL_MODULES = {
     "yum",
 }
 _TASK_META_KEYS = {
+    "action",
     "always",
     "args",
     "async",
@@ -60,6 +61,7 @@ _TASK_META_KEYS = {
     "ignore_unreachable",
     "loop",
     "loop_control",
+    "local_action",
     "name",
     "no_log",
     "notify",
@@ -76,6 +78,7 @@ _TASK_META_KEYS = {
     "vars",
     "when",
 }
+_PLAY_KEYS = {"hosts", "tasks", "pre_tasks", "post_tasks", "roles", "gather_facts"}
 
 
 def _to_plays(tree: object) -> list[dict[str, object]]:
@@ -99,7 +102,30 @@ def _iter_tasks(play: dict[str, object]) -> list[dict[str, object]]:
     return tasks
 
 
+def _root_tasks(tree: object) -> list[dict[str, object]]:
+    if not isinstance(tree, list):
+        return []
+    mappings = [
+        {str(key): value for key, value in item.items()}
+        for item in tree
+        if isinstance(item, dict)
+    ]
+    if not mappings:
+        return []
+    if any(any(key in _PLAY_KEYS for key in item) for item in mappings):
+        return []
+    return mappings
+
+
 def _task_module(task: dict[str, object]) -> str | None:
+    for action_key in ("action", "local_action"):
+        action_value = task.get(action_key)
+        if isinstance(action_value, dict):
+            module = action_value.get("module")
+            if isinstance(module, str):
+                return module
+        if isinstance(action_value, str):
+            return action_value.split(maxsplit=1)[0]
     for key in task:
         if key in _TASK_META_KEYS or key.startswith("with_"):
             continue
@@ -107,11 +133,36 @@ def _task_module(task: dict[str, object]) -> str | None:
     return None
 
 
-def _line_of_token(code: str, token: str, default: int = 1) -> int:
-    for idx, line in enumerate(code.splitlines(), start=1):
+def _line_of_token(
+    code: str, token: str, default: int = 1, start_line: int = 1
+) -> int:
+    lines = code.splitlines()
+    for idx in range(max(start_line, 1) - 1, len(lines)):
+        if token in lines[idx]:
+            return idx + 1
+    for idx, line in enumerate(lines, start=1):
         if token in line:
             return idx
     return default
+
+
+def _task_line(
+    code: str,
+    task: dict[str, object],
+    module: str | None,
+    *,
+    default: int = 1,
+    start_line: int = 1,
+) -> int:
+    if "action" in task:
+        return _line_of_token(code, "action:", default=default, start_line=start_line)
+    if "local_action" in task:
+        return _line_of_token(
+            code, "local_action:", default=default, start_line=start_line
+        )
+    if module is None:
+        return default
+    return _line_of_token(code, f"{module}:", default=default, start_line=start_line)
 
 
 class AnsibleNamingDetector(
@@ -131,9 +182,13 @@ class AnsibleNamingDetector(
         tree = context.ast_tree.tree if context.ast_tree is not None else None
         plays = _to_plays(tree)
         if not plays:
-            return []
+            plays = [{}]
         violations: list[Violation] = []
-        for play in plays:
+        root_tasks = _root_tasks(tree)
+        task_groups = [(play, _iter_tasks(play)) for play in plays]
+        if root_tasks:
+            task_groups.append(({}, root_tasks))
+        for play, tasks in task_groups:
             if "hosts" in play and not play.get("name"):
                 line = _line_of_token(context.code, "hosts:")
                 violations.append(
@@ -143,13 +198,23 @@ class AnsibleNamingDetector(
                         suggestion="Add a descriptive name for this play.",
                     )
                 )
-            for task in _iter_tasks(play):
+            task_cursor = 1
+            for task in tasks:
                 if task.get("name"):
+                    task_cursor = _task_line(
+                        context.code,
+                        task,
+                        _task_module(task),
+                        start_line=task_cursor,
+                    )
                     continue
                 module = _task_module(task)
                 if module is None:
                     continue
-                line = _line_of_token(context.code, f"{module}:")
+                line = _task_line(
+                    context.code, task, module, start_line=task_cursor, default=1
+                )
+                task_cursor = line + 1
                 violations.append(
                     self.build_violation(
                         config,
@@ -174,12 +239,25 @@ class AnsibleFqcnDetector(ViolationDetector[AnsibleFqcnConfig], LocationHelperMi
     ) -> list[Violation]:
         tree = context.ast_tree.tree if context.ast_tree is not None else None
         violations: list[Violation] = []
-        for play in _to_plays(tree):
-            for task in _iter_tasks(play):
+        task_groups = [_iter_tasks(play) for play in _to_plays(tree)]
+        if root_tasks := _root_tasks(tree):
+            task_groups.append(root_tasks)
+        for tasks in task_groups:
+            task_cursor = 1
+            for task in tasks:
                 module = _task_module(task)
                 if module is None or "." in module:
+                    task_cursor = _task_line(
+                        context.code,
+                        task,
+                        module,
+                        start_line=task_cursor,
+                    )
                     continue
-                line = _line_of_token(context.code, f"{module}:")
+                line = _task_line(
+                    context.code, task, module, start_line=task_cursor, default=1
+                )
+                task_cursor = line + 1
                 violations.append(
                     self.build_violation(
                         config,
@@ -213,12 +291,25 @@ class AnsibleIdempotencyDetector(
             "ansible.builtin.shell",
             "ansible.builtin.command",
         }
-        for play in _to_plays(tree):
-            for task in _iter_tasks(play):
+        task_groups = [_iter_tasks(play) for play in _to_plays(tree)]
+        if root_tasks := _root_tasks(tree):
+            task_groups.append(root_tasks)
+        for tasks in task_groups:
+            task_cursor = 1
+            for task in tasks:
                 module = _task_module(task)
                 if module not in disallowed:
+                    task_cursor = _task_line(
+                        context.code,
+                        task,
+                        module,
+                        start_line=task_cursor,
+                    )
                     continue
-                line = _line_of_token(context.code, f"{module}:")
+                line = _task_line(
+                    context.code, task, module, start_line=task_cursor, default=1
+                )
+                task_cursor = line + 1
                 violations.append(
                     self.build_violation(
                         config,
@@ -273,20 +364,54 @@ class AnsibleStateExplicitDetector(
     ) -> list[Violation]:
         tree = context.ast_tree.tree if context.ast_tree is not None else None
         violations: list[Violation] = []
-        for play in _to_plays(tree):
-            for task in _iter_tasks(play):
+        task_groups = [_iter_tasks(play) for play in _to_plays(tree)]
+        if root_tasks := _root_tasks(tree):
+            task_groups.append(root_tasks)
+        for tasks in task_groups:
+            task_cursor = 1
+            for task in tasks:
                 module = _task_module(task)
                 if module is None:
                     continue
                 module_name = module.split(".")[-1]
                 if module_name not in _STATEFUL_MODULES:
+                    task_cursor = _task_line(
+                        context.code,
+                        task,
+                        module,
+                        start_line=task_cursor,
+                    )
                     continue
                 module_args = task.get(module)
+                action = task.get("action")
+                local_action = task.get("local_action")
+                if module_args is None and isinstance(action, dict):
+                    module_args = action
+                if module_args is None and isinstance(local_action, dict):
+                    module_args = local_action
                 if isinstance(module_args, dict) and "state" in module_args:
+                    continue
+                if isinstance(module_args, str) and re.search(
+                    r"(^|\s)state=", module_args
+                ):
                     continue
                 if "state" in task:
                     continue
-                line = _line_of_token(context.code, f"{module}:")
+                args = task.get("args")
+                if isinstance(args, dict) and "state" in args:
+                    continue
+                if isinstance(args, str) and re.search(r"(^|\s)state=", args):
+                    continue
+                if isinstance(action, str) and re.search(r"(^|\s)state=", action):
+                    continue
+                if isinstance(local_action, str) and re.search(
+                    r"(^|\s)state=", local_action
+                ):
+                    continue
+                line = _task_line(
+                    context.code, task, module, start_line=task_cursor, default=1
+                )
+                task_cursor = line + 1
                 violations.append(
                     self.build_violation(
                         config,

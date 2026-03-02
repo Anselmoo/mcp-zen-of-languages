@@ -82,6 +82,13 @@ GENERIC_PROMPTS_BY_LANGUAGE: dict[str, list[tuple[str, str]]] = {
             "standardize breakpoints and z-index scales.",
         ),
     ],
+    "ansible": [
+        (
+            "Ansible playbook hygiene",
+            "Name plays/tasks clearly, prefer FQCN modules, avoid shell/command when "
+            "idempotent modules exist, and keep privilege/state/secret handling explicit.",
+        ),
+    ],
     "javascript": [
         (
             "Safer JavaScript",

@@ -10,7 +10,7 @@ from mcp_zen_of_languages.rules.base_models import ZenPrinciple
 ANSIBLE_ZEN = LanguageZenPrinciples(
     language="ansible",
     name="Ansible",
-    philosophy="Idempotent, secure, and maintainable infrastructure automation.",
+    philosophy="Idempotent, secure, and maintainable infrastructure automation",
     source_text="Ansible Documentation",
     source_url=HttpUrl("https://docs.ansible.com/"),
     principles=[

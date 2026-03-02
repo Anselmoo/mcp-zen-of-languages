@@ -74,6 +74,8 @@ def test_ansible_analyzer_parse_code():
             return _pipeline_stub()
 
     analyzer = StubAnsibleAnalyzer()
-    result = analyzer.parse_code("- hosts: all\n  tasks:\n    - ansible.builtin.ping:\n")
+    result = analyzer.parse_code(
+        "- hosts: all\n  tasks:\n    - ansible.builtin.ping:\n"
+    )
     assert result is not None
     assert result.type == "yaml"

@@ -1,6 +1,6 @@
 ---
 title: Ansible
-description: "7 zen principles enforced by 7 detectors: Idempotent, secure, and maintainable infrastructure automation.."
+description: "7 zen principles enforced by 7 detectors: Idempotent, secure, and maintainable infrastructure automation."
 icon: material/console
 tags:
   - Ansible

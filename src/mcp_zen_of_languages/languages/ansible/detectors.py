@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
+# ruff: noqa: D102
 import re
-
-from collections.abc import Iterable
-from typing import Any
 
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
 from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
@@ -80,24 +78,28 @@ _TASK_META_KEYS = {
 }
 
 
-def _to_plays(tree: Any) -> list[dict[str, Any]]:
+def _to_plays(tree: object) -> list[dict[str, object]]:
     if isinstance(tree, list):
-        return [item for item in tree if isinstance(item, dict)]
+        return [
+            {str(key): value for key, value in item.items()}
+            for item in tree
+            if isinstance(item, dict)
+        ]
     if isinstance(tree, dict):
-        return [tree]
+        return [{str(key): value for key, value in tree.items()}]
     return []
 
 
-def _iter_tasks(play: dict[str, Any]) -> Iterable[dict[str, Any]]:
+def _iter_tasks(play: dict[str, object]) -> list[dict[str, object]]:
+    tasks: list[dict[str, object]] = []
     for key in ("tasks", "pre_tasks", "post_tasks", "handlers"):
         entries = play.get(key)
         if isinstance(entries, list):
-            for entry in entries:
-                if isinstance(entry, dict):
-                    yield entry
+            tasks.extend(entry for entry in entries if isinstance(entry, dict))
+    return tasks
 
 
-def _task_module(task: dict[str, Any]) -> str | None:
+def _task_module(task: dict[str, object]) -> str | None:
     for key in task:
         if key in _TASK_META_KEYS or key.startswith("with_"):
             continue
@@ -112,7 +114,9 @@ def _line_of_token(code: str, token: str, default: int = 1) -> int:
     return default
 
 
-class AnsibleNamingDetector(ViolationDetector[AnsibleNamingConfig], LocationHelperMixin):
+class AnsibleNamingDetector(
+    ViolationDetector[AnsibleNamingConfig], LocationHelperMixin
+):
     """Ensure Ansible plays and tasks include descriptive names."""
 
     @property
@@ -203,7 +207,12 @@ class AnsibleIdempotencyDetector(
     ) -> list[Violation]:
         tree = context.ast_tree.tree if context.ast_tree is not None else None
         violations: list[Violation] = []
-        disallowed = {"shell", "command", "ansible.builtin.shell", "ansible.builtin.command"}
+        disallowed = {
+            "shell",
+            "command",
+            "ansible.builtin.shell",
+            "ansible.builtin.command",
+        }
         for play in _to_plays(tree):
             for task in _iter_tasks(play):
                 module = _task_module(task)
@@ -221,7 +230,9 @@ class AnsibleIdempotencyDetector(
         return violations
 
 
-class AnsibleBecomeDetector(ViolationDetector[AnsibleBecomeConfig], LocationHelperMixin):
+class AnsibleBecomeDetector(
+    ViolationDetector[AnsibleBecomeConfig], LocationHelperMixin
+):
     """Flag deprecated sudo usage in plays or tasks."""
 
     @property

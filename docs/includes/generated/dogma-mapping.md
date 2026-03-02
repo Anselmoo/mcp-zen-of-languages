@@ -2,6 +2,9 @@
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
+| ansible | `ansible-002` | Use fully qualified collection names | 5 |
+| ansible | `ansible-005` | State should be explicit | 6 |
+| ansible | `ansible-007` | Use clean Jinja2 variable spacing | 4 |
 | Bash | `bash-002` | Quote all variables | 8 |
 | Bash | `bash-009` | Use readonly for constants | 6 |
 | Bash | `bash-013` | Use arrays instead of string splitting | 7 |
@@ -162,6 +165,8 @@
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
+| ansible | `ansible-003` | Prefer idempotent modules over command or shell | 8 |
+| ansible | `ansible-004` | Use become instead of sudo | 7 |
 | Bash | `bash-003` | Use [[ ]] over [ ] | 7 |
 | C++ | `cpp-003` | Use auto for type deduction | 6 |
 | C++ | `cpp-005` | Use range-based for loops | 6 |
@@ -231,6 +236,9 @@
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
+| ansible | `ansible-001` | Name all tasks and plays | 6 |
+| ansible | `ansible-002` | Use fully qualified collection names | 5 |
+| ansible | `ansible-007` | Use clean Jinja2 variable spacing | 4 |
 | Bash | `bash-004` | Use $() over backticks | 6 |
 | Bash | `bash-011` | Use meaningful variable names | 7 |
 | Bash | `bash-014` | Include usage information | 6 |
@@ -289,6 +297,7 @@
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
+| ansible | `ansible-005` | State should be explicit | 6 |
 | Bash | `bash-009` | Use readonly for constants | 6 |
 | C++ | `cpp-002` | Prefer smart pointers over raw pointers | 9 |
 | C++ | `cpp-006` | Avoid manual memory allocation | 9 |
@@ -322,6 +331,8 @@
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
+| ansible | `ansible-002` | Use fully qualified collection names | 5 |
+| ansible | `ansible-006` | No cleartext passwords | 9 |
 | Bash | `bash-006` | Use functions for reusable code | 6 |
 | Bash | `bash-007` | Use local variables in functions | 7 |
 | Bash | `bash-008` | Avoid eval | 9 |

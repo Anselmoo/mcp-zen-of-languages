@@ -56,8 +56,8 @@ def _initialize_registry() -> None:
         return  # Already initialized
 
     # Language modules are canonical; use languages.* directly.
-    from mcp_zen_of_languages.languages.bash.rules import BASH_ZEN
     from mcp_zen_of_languages.languages.ansible.rules import ANSIBLE_ZEN
+    from mcp_zen_of_languages.languages.bash.rules import BASH_ZEN
     from mcp_zen_of_languages.languages.cpp.rules import CPP_ZEN
     from mcp_zen_of_languages.languages.csharp.rules import CSHARP_ZEN
     from mcp_zen_of_languages.languages.css.rules import CSS_ZEN

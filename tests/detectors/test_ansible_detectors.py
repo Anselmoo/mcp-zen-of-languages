@@ -10,7 +10,9 @@ from mcp_zen_of_languages.languages.ansible.detectors import AnsibleNamingDetect
 from mcp_zen_of_languages.languages.ansible.detectors import (
     AnsibleNoCleartextPasswordDetector,
 )
-from mcp_zen_of_languages.languages.ansible.detectors import AnsibleStateExplicitDetector
+from mcp_zen_of_languages.languages.ansible.detectors import (
+    AnsibleStateExplicitDetector,
+)
 from mcp_zen_of_languages.languages.configs import AnsibleBecomeConfig
 from mcp_zen_of_languages.languages.configs import AnsibleFqcnConfig
 from mcp_zen_of_languages.languages.configs import AnsibleIdempotencyConfig
@@ -75,8 +77,12 @@ def test_ansible_detectors_cover_clean_paths():
     assert not AnsibleFqcnDetector().detect(context, AnsibleFqcnConfig())
     assert not AnsibleIdempotencyDetector().detect(context, AnsibleIdempotencyConfig())
     assert not AnsibleBecomeDetector().detect(context, AnsibleBecomeConfig())
-    assert not AnsibleStateExplicitDetector().detect(context, AnsibleStateExplicitConfig())
+    assert not AnsibleStateExplicitDetector().detect(
+        context, AnsibleStateExplicitConfig()
+    )
     assert not AnsibleNoCleartextPasswordDetector().detect(
         context, AnsibleNoCleartextPasswordConfig()
     )
-    assert not AnsibleJinjaSpacingDetector().detect(context, AnsibleJinjaSpacingConfig())
+    assert not AnsibleJinjaSpacingDetector().detect(
+        context, AnsibleJinjaSpacingConfig()
+    )

@@ -100,7 +100,10 @@ def test_detect_language_by_extension_ansible_path(tmp_path):
     path = tmp_path / "roles" / "web" / "tasks"
     path.mkdir(parents=True)
     play = path / "main.yml"
-    play.write_text("- name: install\n  ansible.builtin.package:\n    name: nginx\n", encoding="utf-8")
+    play.write_text(
+        "- name: install\n  ansible.builtin.package:\n    name: nginx\n",
+        encoding="utf-8",
+    )
     result = detect_language_by_extension(str(play))
     assert result.language == "ansible"
     assert result.method == "extension"
@@ -108,7 +111,9 @@ def test_detect_language_by_extension_ansible_path(tmp_path):
 
 def test_detect_language_by_extension_ansible_content(tmp_path):
     play = tmp_path / "playbook.yaml"
-    play.write_text("- hosts: all\n  tasks:\n    - command: echo hi\n", encoding="utf-8")
+    play.write_text(
+        "- hosts: all\n  tasks:\n    - command: echo hi\n", encoding="utf-8"
+    )
     result = detect_language_by_extension(str(play))
     assert result.language == "ansible"
     assert result.method == "extension"

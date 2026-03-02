@@ -90,10 +90,7 @@ def test_ansible_detectors_cover_clean_paths():
 
 def test_ansible_detectors_support_root_task_list_documents():
     context = _context(
-        "- shell: mkdir -p /tmp/demo\n"
-        "  password: cleartext\n"
-        "- apt:\n"
-        "    name: nginx\n"
+        "- shell: mkdir -p /tmp/demo\n  password: cleartext\n- apt:\n    name: nginx\n"
     )
     assert AnsibleNamingDetector().detect(context, AnsibleNamingConfig())
     assert AnsibleIdempotencyDetector().detect(context, AnsibleIdempotencyConfig())
@@ -113,18 +110,19 @@ def test_ansible_detectors_handle_action_and_local_action_module_forms():
         "      local_action: ansible.builtin.file path=/tmp/local state=directory\n"
     )
     assert not AnsibleFqcnDetector().detect(context, AnsibleFqcnConfig())
-    assert not AnsibleStateExplicitDetector().detect(context, AnsibleStateExplicitConfig())
+    assert not AnsibleStateExplicitDetector().detect(
+        context, AnsibleStateExplicitConfig()
+    )
 
 
 def test_ansible_detector_locations_track_repeated_module_lines():
     context = _context(
-        "- hosts: all\n"
-        "  tasks:\n"
-        "    - shell: echo one\n"
-        "    - shell: echo two\n"
+        "- hosts: all\n  tasks:\n    - shell: echo one\n    - shell: echo two\n"
     )
     naming = AnsibleNamingDetector().detect(context, AnsibleNamingConfig())
-    idempotency = AnsibleIdempotencyDetector().detect(context, AnsibleIdempotencyConfig())
+    idempotency = AnsibleIdempotencyDetector().detect(
+        context, AnsibleIdempotencyConfig()
+    )
     assert [violation.location.line for violation in naming] == [1, 3, 4]
     assert [violation.location.line for violation in idempotency] == [3, 4]
 
@@ -136,4 +134,6 @@ def test_ansible_state_detector_accepts_string_form_state_argument():
         "    - name: install nginx\n"
         "      apt: name=nginx state=present\n"
     )
-    assert not AnsibleStateExplicitDetector().detect(context, AnsibleStateExplicitConfig())
+    assert not AnsibleStateExplicitDetector().detect(
+        context, AnsibleStateExplicitConfig()
+    )

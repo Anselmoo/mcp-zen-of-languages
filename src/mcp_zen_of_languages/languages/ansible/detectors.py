@@ -23,6 +23,7 @@ _SECRET_RE = re.compile(
     r"(?i)\b(password|passwd|passphrase|token|secret|api[_-]?key)\b\s*:\s*([^\n#]+)"
 )
 _BAD_JINJA_SPACING_RE = re.compile(r"\{\{\S|\S\}\}")
+_STATE_ARG_RE = re.compile(r"(^|\s)state=")
 
 _STATEFUL_MODULES = {
     "apt",
@@ -133,13 +134,12 @@ def _task_module(task: dict[str, object]) -> str | None:
     return None
 
 
-def _line_of_token(
-    code: str, token: str, default: int = 1, start_line: int = 1
-) -> int:
+def _line_of_token(code: str, token: str, default: int = 1, start_line: int = 1) -> int:
     lines = code.splitlines()
     for idx in range(max(start_line, 1) - 1, len(lines)):
         if token in lines[idx]:
             return idx + 1
+    # Fallback for callers using an offset when the token appears earlier in the file.
     for idx, line in enumerate(lines, start=1):
         if token in line:
             return idx
@@ -163,6 +163,39 @@ def _task_line(
     if module is None:
         return default
     return _line_of_token(code, f"{module}:", default=default, start_line=start_line)
+
+
+def _has_explicit_state(
+    task: dict[str, object],
+    module_args: object,
+    action: object,
+    local_action: object,
+) -> bool:
+    has_module_state = isinstance(module_args, dict) and "state" in module_args
+    has_module_state_arg = isinstance(module_args, str) and bool(
+        _STATE_ARG_RE.search(module_args)
+    )
+    has_task_state = "state" in task
+    args = task.get("args")
+    has_args_state = isinstance(args, dict) and "state" in args
+    has_args_state_arg = isinstance(args, str) and bool(_STATE_ARG_RE.search(args))
+    has_action_state_arg = isinstance(action, str) and bool(
+        _STATE_ARG_RE.search(action)
+    )
+    has_local_action_state_arg = isinstance(local_action, str) and bool(
+        _STATE_ARG_RE.search(local_action)
+    )
+    return any(
+        (
+            has_module_state,
+            has_module_state_arg,
+            has_task_state,
+            has_args_state,
+            has_args_state_arg,
+            has_action_state_arg,
+            has_local_action_state_arg,
+        )
+    )
 
 
 class AnsibleNamingDetector(
@@ -389,24 +422,7 @@ class AnsibleStateExplicitDetector(
                     module_args = action
                 if module_args is None and isinstance(local_action, dict):
                     module_args = local_action
-                if isinstance(module_args, dict) and "state" in module_args:
-                    continue
-                if isinstance(module_args, str) and re.search(
-                    r"(^|\s)state=", module_args
-                ):
-                    continue
-                if "state" in task:
-                    continue
-                args = task.get("args")
-                if isinstance(args, dict) and "state" in args:
-                    continue
-                if isinstance(args, str) and re.search(r"(^|\s)state=", args):
-                    continue
-                if isinstance(action, str) and re.search(r"(^|\s)state=", action):
-                    continue
-                if isinstance(local_action, str) and re.search(
-                    r"(^|\s)state=", local_action
-                ):
+                if _has_explicit_state(task, module_args, action, local_action):
                     continue
                 line = _task_line(
                     context.code, task, module, start_line=task_cursor, default=1

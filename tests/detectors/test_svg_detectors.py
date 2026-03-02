@@ -10,9 +10,7 @@ from mcp_zen_of_languages.languages.configs import SvgNodeCountConfig
 from mcp_zen_of_languages.languages.configs import SvgUnusedDefsConfig
 from mcp_zen_of_languages.languages.configs import SvgXmlnsConfig
 from mcp_zen_of_languages.languages.svg.detectors import SvgAbsolutePathOnlyDetector
-from mcp_zen_of_languages.languages.svg.detectors import (
-    SvgDeprecatedXlinkHrefDetector,
-)
+from mcp_zen_of_languages.languages.svg.detectors import SvgDeprecatedXlinkHrefDetector
 from mcp_zen_of_languages.languages.svg.detectors import SvgDuplicateIdDetector
 from mcp_zen_of_languages.languages.svg.detectors import SvgMissingTitleDetector
 from mcp_zen_of_languages.languages.svg.detectors import SvgNestedGroupsDetector
@@ -46,8 +44,8 @@ def test_svg_node_count_detector_uses_configurable_threshold() -> None:
 def test_svg_unused_defs_detector_flags_unreferenced_defs_id() -> None:
     code = (
         '<svg xmlns="http://www.w3.org/2000/svg">'
-        "<defs><linearGradient id=\"g1\"></linearGradient></defs>"
-        "<rect width=\"10\" height=\"10\"/>"
+        '<defs><linearGradient id="g1"></linearGradient></defs>'
+        '<rect width="10" height="10"/>'
         "</svg>"
     )
     context = AnalysisContext(code=code, language="svg")
@@ -69,7 +67,7 @@ def test_svg_nested_groups_detector_flags_deep_group_nesting() -> None:
 def test_svg_duplicate_id_detector_flags_duplicate_ids() -> None:
     code = (
         '<svg xmlns="http://www.w3.org/2000/svg">'
-        "<rect id=\"dup\"/><circle id=\"dup\"/>"
+        '<rect id="dup"/><circle id="dup"/>'
         "</svg>"
     )
     context = AnalysisContext(code=code, language="svg")
@@ -78,11 +76,7 @@ def test_svg_duplicate_id_detector_flags_duplicate_ids() -> None:
 
 
 def test_svg_absolute_path_detector_ignores_exponent_notation() -> None:
-    code = (
-        '<svg xmlns="http://www.w3.org/2000/svg">'
-        '<path d="M1e-5 2e-3 l1 1"/>'
-        "</svg>"
-    )
+    code = '<svg xmlns="http://www.w3.org/2000/svg"><path d="M1e-5 2e-3 l1 1"/></svg>'
     context = AnalysisContext(code=code, language="svg")
     violations = SvgAbsolutePathOnlyDetector().detect(
         context, SvgAbsolutePathOnlyConfig()

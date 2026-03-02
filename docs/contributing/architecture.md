@@ -100,7 +100,7 @@ When adding a new language, register it in `analyzers/analyzer_factory.py`.
 
 ## Dogma-to-Detector Mapping
 
-Each of the [10 Dogmas of Zen](../getting-started/philosophy.md) maps to one or more **universal detector stubs** in the
+Each of the [10 Dogmas of Zen](../user-guide/rules/the-ten-dogmas.md) maps to one or more **universal detector stubs** in the
 `core/detectors/` package. These stubs define the *intent*; language-specific analyzers provide the *implementation*.
 
 | Detector Domain | Dogmas Covered | Module |
@@ -183,5 +183,6 @@ at inference time by keyword scanning of violation and pattern descriptions.
 
 - [Adding a Language](adding-language.md) — Implement the two abstract methods
 - [Adding a Detector](adding-detector.md) — Create a Strategy class and register it
-- [Philosophy](../getting-started/philosophy.md) — The 10 Dogmas that drive every detector decision
+- [Philosophy](../getting-started/philosophy.md) — The architectural-coaching approach and motivation
+- [The 10 Dogmas](../user-guide/rules/the-ten-dogmas.md) — Full dogma reference with rationale and anti-patterns
 - [Languages](../user-guide/languages/index.md) — See programming, workflow, and config coverage at a glance

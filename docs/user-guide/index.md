@@ -50,6 +50,14 @@ This guide starts with MCP workflows, then covers CLI usage, configuration, lang
 
     [Languages](languages/index.md)
 
+-   :material-gavel:{ .lg .middle } **Rules**
+
+    ---
+
+    The 10 universal dogmas and per-language zen principles that drive every detector.
+
+    [Rules](rules/index.md)
+
 -   :material-alert-circle-check:{ .lg .middle } **Understanding Violations**
 
     ---

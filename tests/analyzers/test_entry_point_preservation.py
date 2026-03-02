@@ -19,6 +19,7 @@ AST_CAPABLE_LANGUAGES = {
     "python",
     "sql",
     "github-actions",
+    "ansible",
     "yaml",
     "json",
     "toml",

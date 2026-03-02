@@ -63,6 +63,7 @@ LANGUAGES: list[tuple[str, str, str, str, str]] = [
         "javascript",
     ),
     ("css", "CSS", "material/language-css3", "css.md", "css"),
+    ("ansible", "Ansible", "material/console", "ansible.md", "ansible"),
     ("bash", "Bash", "material/console", "bash.md", "bash"),
     (
         "powershell",
@@ -138,6 +139,11 @@ SEE_ALSO: dict[str, str] = {
         "- [JavaScript](javascript.md) — Common frontend codebase counterpart\n"
         "- [TypeScript](typescript.md) — Strongly-typed frontend language companion\n"
         "- [Configuration](../configuration.md) — Per-language pipeline overrides"
+    ),
+    "ansible": (
+        "- [GitHub Actions](github-actions.md) — Workflow automation counterpart in CI environments\n"
+        "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
+        "- [Understanding Violations](../understanding-violations.md) — Severity scale reference"
     ),
     "bash": (
         "- [PowerShell](powershell.md) — Object-pipeline shell with different idioms\n"
@@ -774,7 +780,7 @@ def render_index_page() -> str:
 
             Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
 
-            **TypeScript · Rust · Go · JavaScript · CSS · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile**
+            **TypeScript · Rust · Go · JavaScript · CSS · Ansible · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile**
 
         -   :material-language-markdown:{ .lg .middle } **Documentation & Markup**
 
@@ -790,7 +796,7 @@ def render_index_page() -> str:
 
             CI/CD-specific security and maintainability checks for pipeline files and reusable workflow patterns.
 
-            **GitHub Actions**
+            **GitHub Actions · Ansible**
 
         -   :material-file-cog:{ .lg .middle } **Config Validation**
 

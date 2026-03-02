@@ -6,6 +6,7 @@ import pytest
 
 from mcp_zen_of_languages.languages.docker_compose.analyzer import DockerComposeAnalyzer
 from mcp_zen_of_languages.languages.gitlab_ci.analyzer import GitLabCIAnalyzer
+from mcp_zen_of_languages.languages.ansible.analyzer import AnsibleAnalyzer
 from mcp_zen_of_languages.languages.json.analyzer import JsonAnalyzer
 from mcp_zen_of_languages.languages.toml.analyzer import TomlAnalyzer
 from mcp_zen_of_languages.languages.xml.analyzer import XmlAnalyzer
@@ -105,6 +106,21 @@ class TestGitLabCIParseCode:
         assert GitLabCIAnalyzer().capabilities().supports_ast is True
 
 
+class TestAnsibleParseCode:
+    def test_valid_ansible(self) -> None:
+        code = "- hosts: all\n  tasks:\n    - name: ping\n      ansible.builtin.ping:\n"
+        result = AnsibleAnalyzer().parse_code(code)
+        assert isinstance(result, ParserResult)
+        assert result.type == "yaml"
+
+    def test_invalid_ansible_returns_none(self) -> None:
+        result = AnsibleAnalyzer().parse_code(":\n  :\n    - [invalid")
+        assert result is None
+
+    def test_capabilities(self) -> None:
+        assert AnsibleAnalyzer().capabilities().supports_ast is True
+
+
 @pytest.mark.parametrize(
     ("analyzer_cls", "valid_input", "expected_type"),
     [
@@ -114,6 +130,7 @@ class TestGitLabCIParseCode:
         (XmlAnalyzer, "<r/>", "xml"),
         (DockerComposeAnalyzer, "services: {}", "yaml"),
         (GitLabCIAnalyzer, "stages: []", "yaml"),
+        (AnsibleAnalyzer, "- hosts: all\n  tasks: []", "yaml"),
     ],
 )
 def test_all_data_format_parsers_return_parser_result(

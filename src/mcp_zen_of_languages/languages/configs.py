@@ -1226,6 +1226,48 @@ class YamlStringStyleConfig(DetectorConfig):
     require_quotes_for_specials: bool = True
 
 
+class AnsibleNamingConfig(DetectorConfig):
+    """Ansible play and task naming enforcement settings."""
+
+    type: Literal["ansible-001"] = "ansible-001"
+
+
+class AnsibleFqcnConfig(DetectorConfig):
+    """Ansible fully qualified collection name enforcement settings."""
+
+    type: Literal["ansible-002"] = "ansible-002"
+
+
+class AnsibleIdempotencyConfig(DetectorConfig):
+    """Ansible idempotency-over-shell enforcement settings."""
+
+    type: Literal["ansible-003"] = "ansible-003"
+
+
+class AnsibleBecomeConfig(DetectorConfig):
+    """Ansible become-vs-sudo enforcement settings."""
+
+    type: Literal["ansible-004"] = "ansible-004"
+
+
+class AnsibleStateExplicitConfig(DetectorConfig):
+    """Ansible explicit-state enforcement settings."""
+
+    type: Literal["ansible-005"] = "ansible-005"
+
+
+class AnsibleNoCleartextPasswordConfig(DetectorConfig):
+    """Ansible cleartext secret detection settings."""
+
+    type: Literal["ansible-006"] = "ansible-006"
+
+
+class AnsibleJinjaSpacingConfig(DetectorConfig):
+    """Ansible Jinja spacing enforcement settings."""
+
+    type: Literal["ansible-007"] = "ansible-007"
+
+
 class DockerfileLatestTagConfig(DetectorConfig):
     """Dockerfile latest-tag usage detection settings."""
 

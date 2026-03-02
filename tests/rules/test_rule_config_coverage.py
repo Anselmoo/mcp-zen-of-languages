@@ -48,6 +48,7 @@ def test_build_explicit_rule_config_coverage_languages() -> None:
         "python",
         "cpp",
         "csharp",
+        "ansible",
         "yaml",
         "toml",
         "json",

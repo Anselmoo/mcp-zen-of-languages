@@ -57,6 +57,7 @@ def _initialize_registry() -> None:
 
     # Language modules are canonical; use languages.* directly.
     from mcp_zen_of_languages.languages.bash.rules import BASH_ZEN
+    from mcp_zen_of_languages.languages.ansible.rules import ANSIBLE_ZEN
     from mcp_zen_of_languages.languages.cpp.rules import CPP_ZEN
     from mcp_zen_of_languages.languages.csharp.rules import CSHARP_ZEN
     from mcp_zen_of_languages.languages.css.rules import CSS_ZEN
@@ -96,6 +97,7 @@ def _initialize_registry() -> None:
             "docker_compose": DOCKER_COMPOSE_ZEN,
             "dockerfile": DOCKERFILE_ZEN,
             "bash": BASH_ZEN,
+            "ansible": ANSIBLE_ZEN,
             "powershell": POWERSHELL_ZEN,
             "yaml": YAML_ZEN,
             "github-actions": GITHUB_ACTIONS_ZEN,

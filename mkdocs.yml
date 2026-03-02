@@ -253,6 +253,7 @@ nav:
           - Go: user-guide/languages/go.md
           - JavaScript: user-guide/languages/javascript.md
           - CSS: user-guide/languages/css.md
+          - Ansible: user-guide/languages/ansible.md
           - Bash: user-guide/languages/bash.md
           - PowerShell: user-guide/languages/powershell.md
           - Ruby: user-guide/languages/ruby.md

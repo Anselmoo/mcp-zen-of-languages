@@ -18,6 +18,7 @@ from mcp_zen_of_languages import server
         ("cpp", "#include <iostream>\nint main() { return 0; }"),
         ("csharp", "class Program { static void Main() {} }"),
         ("css", ".btn { color: var(--text); }"),
+        ("ansible", "- hosts: all\n  tasks:\n    - ansible.builtin.ping:"),
         ("yaml", "name: value"),
         (
             "github-actions",

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from mcp_zen_of_languages.languages.ansible.analyzer import AnsibleAnalyzer
 from mcp_zen_of_languages.languages.docker_compose.analyzer import DockerComposeAnalyzer
 from mcp_zen_of_languages.languages.dockerfile.analyzer import DockerfileAnalyzer
 from mcp_zen_of_languages.languages.javascript.analyzer import JavaScriptAnalyzer
@@ -65,3 +66,14 @@ def test_docker_compose_analyzer_parse_code():
     assert result is not None
     assert result.type == "yaml"
     assert result.tree == {"services": {"web": {"image": "nginx:1.27"}}}
+
+
+def test_ansible_analyzer_parse_code():
+    class StubAnsibleAnalyzer(AnsibleAnalyzer):
+        def build_pipeline(self):
+            return _pipeline_stub()
+
+    analyzer = StubAnsibleAnalyzer()
+    result = analyzer.parse_code("- hosts: all\n  tasks:\n    - ansible.builtin.ping:\n")
+    assert result is not None
+    assert result.type == "yaml"

@@ -600,6 +600,7 @@ SAMPLES = {
     "cpp": "int main() { return 0; }\n",
     "csharp": "public class Foo {}\n",
     "css": ".button { color: var(--text); }\n",
+    "ansible": "- hosts: all\n  tasks:\n    - name: ping\n      ansible.builtin.ping:\n",
     "yaml": "key: value\n",
     "gitlab_ci": "build:\n  image: python\n  script:\n    - echo hello\n",
     "github-actions": "name: CI\non: push\njobs:\n  build:\n    runs-on: ubuntu-latest\n    timeout-minutes: 5\n    steps:\n      - run: echo hi\n        shell: bash\n",

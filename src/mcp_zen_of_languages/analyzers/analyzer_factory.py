@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from mcp_zen_of_languages.languages.ansible.analyzer import AnsibleAnalyzer
 from mcp_zen_of_languages.languages.bash.analyzer import BashAnalyzer
 from mcp_zen_of_languages.languages.cpp.analyzer import CppAnalyzer
 from mcp_zen_of_languages.languages.csharp.analyzer import CSharpAnalyzer
@@ -58,6 +59,7 @@ SUPPORTED_LANGUAGES: tuple[str, ...] = (
     "css",
     "docker_compose",
     "dockerfile",
+    "ansible",
     "yaml",
     "github-actions",
     "toml",
@@ -103,6 +105,8 @@ _ANALYZERS_BY_ALIAS: dict[str, AnalyzerClass] = {
     "docker-compose": DockerComposeAnalyzer,
     "dockerfile": DockerfileAnalyzer,
     "docker": DockerfileAnalyzer,
+    "ansible": AnsibleAnalyzer,
+    "ansible-playbook": AnsibleAnalyzer,
     "yaml": YamlAnalyzer,
     "yml": YamlAnalyzer,
     "github-actions": GitHubActionsAnalyzer,

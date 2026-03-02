@@ -23,6 +23,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 | [Go](go.md) | 20 | 21 | Regex | [Effective Go & The Zen of Go](https://the-zen-of-go.netlify.app/) |
 | [JavaScript](javascript.md) | 18 | 18 | Regex | [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript) |
 | [CSS](css.md) | 8 | 8 | Regex | [CSSWG + common modular CSS practices](https://www.w3.org/TR/CSS/) |
+| [Ansible](ansible.md) | 7 | 7 | Regex | [Ansible Documentation](https://docs.ansible.com/) |
 | [Bash](bash.md) | 14 | 14 | Regex | [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html) |
 | [PowerShell](powershell.md) | 15 | 15 | Regex | [PoshCode Style Guide](https://github.com/PoshCode/PowerShellPracticeAndStyle) |
 | [Ruby](ruby.md) | 11 | 11 | Regex | [Ruby Style Guide](https://rubystyle.guide/) |
@@ -33,7 +34,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 | [Dockerfile](dockerfile.md) | 8 | 8 | Regex | [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) |
 | [LaTeX](latex.md) | 9 | 9 | Regex | [LaTeX Project](https://www.latex-project.org/) |
 | [Markdown / MDX](markdown.md) | 7 | 7 | Regex | [CommonMark + MDX authoring best practices](https://commonmark.org/) |
-| **Programming & markup subtotal** | **203** | **223** | | |
+| **Programming & markup subtotal** | **210** | **230** | | |
 
 ### Workflows & Automation
 
@@ -52,8 +53,8 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 ### Coverage Totals
 
-- **Principles (all categories):** 274
-- **Detectors + workflow checks:** 294
+- **Principles (all categories):** 281
+- **Detectors + workflow checks:** 301
 
 ## Maturity Tiers
 
@@ -73,7 +74,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
     Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
 
-    **TypeScript · Rust · Go · JavaScript · CSS · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile**
+    **TypeScript · Rust · Go · JavaScript · CSS · Ansible · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile**
 
 -   :material-language-markdown:{ .lg .middle } **Documentation & Markup**
 
@@ -89,7 +90,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
     CI/CD-specific security and maintainability checks for pipeline files and reusable workflow patterns.
 
-    **GitHub Actions**
+    **GitHub Actions · Ansible**
 
 -   :material-file-cog:{ .lg .middle } **Config Validation**
 

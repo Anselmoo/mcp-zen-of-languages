@@ -8,6 +8,8 @@ lifecycle to route code to the appropriate language-specific pipeline.
 
 from __future__ import annotations
 
+import re
+
 from pathlib import Path
 
 from pydantic import BaseModel
@@ -50,6 +52,7 @@ EXTENSION_LANGUAGE_MAP: dict[str, str] = {
 
 GITLAB_CI_FILENAMES = {".gitlab-ci.yml", ".gitlab-ci.yaml"}
 YAML_EXTENSIONS = {".yml", ".yaml"}
+ANSIBLE_PATH_SEGMENTS = {"tasks", "handlers", "vars", "defaults"}
 
 
 class DetectionResult(BaseModel):
@@ -74,6 +77,32 @@ class DetectionResult(BaseModel):
             dict: A dict with keys ``language``, ``confidence``, ``method``, and ``notes``.
         """
         return self.model_dump()
+
+
+def _is_ansible_path(path_obj: Path) -> bool:
+    parts = {part.lower() for part in path_obj.parts}
+    parent_name = path_obj.parent.name.lower()
+    return (
+        parent_name == "group_vars"
+        or parent_name == "host_vars"
+        or "roles" in parts
+        and parent_name in ANSIBLE_PATH_SEGMENTS
+        or path_obj.name.lower() in {"playbook.yml", "playbook.yaml", "site.yml", "site.yaml"}
+    )
+
+
+def _is_ansible_yaml_content(text: str) -> bool:
+    lowered = text.lower()
+    signals = 0
+    if re.search(r"(?m)^\s*-\s*hosts\s*:", lowered):
+        signals += 1
+    if re.search(r"(?m)^\s*(tasks|handlers|pre_tasks|post_tasks)\s*:", lowered):
+        signals += 1
+    if re.search(r"(?m)^\s*(become|gather_facts|roles)\s*:", lowered):
+        signals += 1
+    if re.search(r"(?m)^\s*(ansible\.builtin\.[a-z_]+|command|shell)\s*:", lowered):
+        signals += 1
+    return signals >= 2
 
 
 def detect_language_by_extension(path: str) -> DetectionResult:
@@ -127,6 +156,25 @@ def detect_language_by_extension(path: str) -> DetectionResult:
             confidence=0.98,
             method="extension",
         )
+    if ext in YAML_EXTENSIONS and path_obj.exists():
+        if _is_ansible_path(path_obj):
+            return DetectionResult(
+                language="ansible",
+                confidence=0.99,
+                method="extension",
+                notes="Matched Ansible-specific YAML path",
+            )
+        try:
+            contents = path_obj.read_text(encoding="utf-8")
+        except OSError:
+            contents = ""
+        if contents and _is_ansible_yaml_content(contents):
+            return DetectionResult(
+                language="ansible",
+                confidence=0.9,
+                method="extension",
+                notes="Matched Ansible YAML structure",
+            )
     lang = EXTENSION_LANGUAGE_MAP.get(ext, "unknown")
     return DetectionResult(language=lang, confidence=0.95, method="extension")
 
@@ -149,6 +197,8 @@ def detect_language_from_content(code: str) -> DetectionResult:
         ``method="heuristics"`` and a confidence between 0.1 (unknown)
         and 0.9 (strong keyword match).
     """
+    if _is_ansible_yaml_content(code):
+        return DetectionResult(language="ansible", confidence=0.85, method="heuristics")
     if "def " in code:
         return DetectionResult(language="python", confidence=0.9, method="heuristics")
     if "interface " in code or "=>" in code or "function " in code:

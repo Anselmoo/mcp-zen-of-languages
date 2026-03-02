@@ -27,6 +27,7 @@ UNIVERSAL_LANGUAGE_SNIPPETS = {
     "css": "body { color: red; }\n",
     "docker_compose": "services:\n  app:\n    image: alpine:latest\n",
     "dockerfile": "FROM alpine:3.20\nRUN echo hi\n",
+    "ansible": "- hosts: all\n  tasks:\n    - name: ping\n      ansible.builtin.ping:\n",
     "yaml": "key: value\n",
     "github-actions": (
         "name: CI\n"

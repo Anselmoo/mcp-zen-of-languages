@@ -37,6 +37,7 @@ PROGRAMMING_LANGUAGES: list[tuple[str, str]] = [
     ("go", "go"),
     ("javascript", "javascript"),
     ("css", "css"),
+    ("ansible", "ansible"),
     ("bash", "bash"),
     ("powershell", "powershell"),
     ("ruby", "ruby"),

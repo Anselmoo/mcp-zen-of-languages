@@ -24,6 +24,8 @@ def test_create_analyzer_types():
     assert docker_compose.language() == "docker_compose"
     dockerfile = create_analyzer("dockerfile")
     assert dockerfile.language() == "dockerfile"
+    ansible = create_analyzer("ansible")
+    assert ansible.language() == "ansible"
     sql = create_analyzer("sql")
     assert sql.language() == "sql"
     postgres = create_analyzer("postgresql")

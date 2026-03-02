@@ -97,7 +97,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
     Schema and structure-focused detectors for data formats. Checks consistency, naming conventions, and format-specific best practices.
 
-    **JSON · TOML · XML · YAML**
+    **JSON · SVG · TOML · XML · YAML**
 
 </div>
 
@@ -133,7 +133,7 @@ You can tune severity thresholds and detector parameters per-language in your [`
     [GitHub Actions](github-actions.md) focuses on workflow hardening: pinning actions, permission scoping, secret safety, and pipeline maintainability.
 
 === "Config files?"
-    The [config formats](config-formats.md) page covers JSON, TOML, XML, and YAML — consistency checks, naming conventions, and format-specific best practices.
+    The [config formats](config-formats.md) page covers JSON, SVG, TOML, XML, and YAML — consistency checks, naming conventions, and format-specific best practices.
 
 ## Programmatic Access
 

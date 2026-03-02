@@ -19,7 +19,7 @@ from mcp_zen_of_languages.models import Violation
 _SVG_NS = "http://www.w3.org/2000/svg"
 _XLINK_NS = "http://www.w3.org/1999/xlink"
 _REF_RE = re.compile(r"#([A-Za-z_][\w\-.]*)")
-_PATH_CMD_RE = re.compile(r"[A-Za-z]")
+_PATH_CMD_RE = re.compile(r"[MmZzLlHhVvCcSsQqTtAa]")
 _RELATIVE_CMD_RE = re.compile(r"[mlhvcsqtaz]")
 _BASE64_IMAGE_RE = re.compile(r"data:image/[^;]+;base64,", re.IGNORECASE)
 _UNSAFE_XML_DIRECTIVE_RE = re.compile(r"<!\s*(DOCTYPE|ENTITY)\b", re.IGNORECASE)
@@ -276,19 +276,27 @@ class SvgDuplicateIdDetector(ViolationDetector[DetectorConfig], LocationHelperMi
         root = _root_from_context(context)
         if root is None:
             return []
-        ids: list[str] = [el.attrib["id"] for el in root.iter() if el.attrib.get("id")]
-        for element_id in ids:
-            if ids.count(element_id) > 1:
-                return [
-                    self.build_violation(
-                        config,
-                        contains=element_id,
-                        location=self.find_location_by_substring(
-                            context.code, f'id="{element_id}"'
-                        ),
-                        suggestion="Ensure every id value is globally unique in the SVG document.",
+        seen: set[str] = set()
+        duplicate: str | None = None
+        for element in root.iter():
+            element_id = element.attrib.get("id")
+            if not element_id:
+                continue
+            if element_id in seen:
+                duplicate = element_id
+                break
+            seen.add(element_id)
+        if duplicate is not None:
+            return [
+                self.build_violation(
+                    config,
+                    contains=duplicate,
+                    location=self.find_location_by_substring(
+                        context.code, f'id="{duplicate}"'
                     ),
-                ]
+                    suggestion="Ensure every id value is globally unique in the SVG document.",
+                ),
+            ]
         return []
 
 
@@ -403,7 +411,9 @@ class SvgDeprecatedXlinkHrefDetector(
                 return [
                     self.build_violation(
                         config,
-                        location=self.find_location_by_substring(context.code, "href"),
+                        location=self.find_location_by_substring(
+                            context.code, "xlink:href"
+                        ),
                         suggestion="Replace xlink:href with href in SVG 2 documents.",
                     ),
                 ]

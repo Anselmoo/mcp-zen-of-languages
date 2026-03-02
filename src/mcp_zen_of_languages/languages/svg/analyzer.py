@@ -1,8 +1,10 @@
 """SVG analyzer for accessibility and maintainability checks."""
+# ruff: noqa: D102, D107
 
 from __future__ import annotations
 
 import logging
+import re
 import xml.etree.ElementTree as ET
 
 from typing import TYPE_CHECKING
@@ -20,6 +22,7 @@ from mcp_zen_of_languages.models import ParserResult
 
 
 logger = logging.getLogger(__name__)
+_UNSAFE_XML_DIRECTIVE_RE = re.compile(r"<!\s*(DOCTYPE|ENTITY)\b", re.IGNORECASE)
 
 
 class SvgAnalyzer(BaseAnalyzer):
@@ -43,6 +46,9 @@ class SvgAnalyzer(BaseAnalyzer):
         return AnalyzerCapabilities(supports_ast=True)
 
     def parse_code(self, code: str) -> ParserResult | None:
+        if _UNSAFE_XML_DIRECTIVE_RE.search(code):
+            logger.debug("Rejected SVG with unsafe XML directive")
+            return None
         try:
             tree = ET.fromstring(code)  # noqa: S314
             return ParserResult(type="svg", tree=tree)

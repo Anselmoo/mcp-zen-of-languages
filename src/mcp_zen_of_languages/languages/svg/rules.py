@@ -28,7 +28,7 @@ SVG_ZEN = LanguageZenPrinciples(
             category=PrincipleCategory.USABILITY,
             severity=8,
             description="Inline SVGs should be exposed as images and linked to accessible labels.",
-            violations=["Missing role=\"img\" and/or aria-labelledby on root <svg>"],
+            violations=['Missing role="img" and/or aria-labelledby on root <svg>'],
         ),
         ZenPrinciple(
             id="svg-003",
@@ -107,7 +107,7 @@ SVG_ZEN = LanguageZenPrinciples(
             principle="Declare the SVG XML namespace",
             category=PrincipleCategory.CORRECTNESS,
             severity=7,
-            description="Missing xmlns=\"http://www.w3.org/2000/svg\" breaks parsing in non-browser contexts.",
+            description='Missing xmlns="http://www.w3.org/2000/svg" breaks parsing in non-browser contexts.',
             violations=["Missing SVG namespace declaration"],
         ),
         ZenPrinciple(

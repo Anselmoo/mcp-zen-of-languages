@@ -23,9 +23,7 @@ from mcp_zen_of_languages.languages.configs import SvgXmlnsConfig
 from mcp_zen_of_languages.languages.svg.detectors import SvgAbsolutePathOnlyDetector
 from mcp_zen_of_languages.languages.svg.detectors import SvgAriaRoleDetector
 from mcp_zen_of_languages.languages.svg.detectors import SvgBase64ImageDetector
-from mcp_zen_of_languages.languages.svg.detectors import (
-    SvgDeprecatedXlinkHrefDetector,
-)
+from mcp_zen_of_languages.languages.svg.detectors import SvgDeprecatedXlinkHrefDetector
 from mcp_zen_of_languages.languages.svg.detectors import (
     SvgDescForComplexGraphicsDetector,
 )

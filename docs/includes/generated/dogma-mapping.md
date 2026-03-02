@@ -72,6 +72,9 @@
 | SQL | `sql-007` | Use descriptive table aliases | 4 |
 | SQL | `sql-008` | Keep transaction boundaries balanced | 8 |
 | SQL | `sql-009` | Prefer explicit JOIN syntax over ANSI-89 comma joins | 6 |
+| svg | `svg-005` | Prefer presentation attributes over inline styles | 5 |
+| svg | `svg-009` | Keep id attributes unique | 8 |
+| svg | `svg-012` | Declare the SVG XML namespace | 7 |
 | TOML | `toml-002` | Avoid duplicate keys | 8 |
 | TOML | `toml-003` | Use lowercase keys | 5 |
 | TOML | `toml-005` | Clarity is paramount | 5 |
@@ -112,6 +115,8 @@
 | Python | `python-005` | Flat is better than nested | 8 |
 | Python | `python-015` | Now is better than never | 4 |
 | Ruby | `ruby-008` | Use guard clauses | 6 |
+| svg | `svg-006` | Use viewBox with fixed dimensions | 6 |
+| svg | `svg-008` | Avoid excessive nested group depth | 5 |
 | TypeScript | `ts-011` | Use optional chaining instead of manual null checks | 5 |
 | TypeScript | `ts-013` | Prefer async/await over raw promise chains | 6 |
 | XML | `xml-002` | Attributes for metadata, Elements for data | 5 |
@@ -213,6 +218,8 @@
 | Rust | `rust-012` | Avoid Rc<RefCell<T>> unless necessary | 7 |
 | Rust | `rust-016` | Implement Default when there is an obvious default value | 5 |
 | Rust | `rust-017` | Use From/Into for type conversions | 6 |
+| svg | `svg-010` | Prefer relative path commands when practical | 4 |
+| svg | `svg-013` | Use href instead of deprecated xlink:href | 4 |
 | TypeScript | `ts-003` | Prefer interfaces over type aliases for objects | 5 |
 | TypeScript | `ts-007` | Use utility types | 6 |
 | TypeScript | `ts-009` | Use enums or const assertions appropriately | 6 |
@@ -261,6 +268,12 @@
 | Rust | `rust-015` | Follow Rust naming conventions (RFC 430) | 6 |
 | SQL | `sql-007` | Use descriptive table aliases | 4 |
 | SQL | `sql-009` | Prefer explicit JOIN syntax over ANSI-89 comma joins | 6 |
+| svg | `svg-001` | Include a root title element for accessibility | 8 |
+| svg | `svg-002` | Use role=img with aria-labelledby for inline SVG | 8 |
+| svg | `svg-003` | Give image nodes alternative text | 7 |
+| svg | `svg-004` | Provide a long description for complex graphics | 6 |
+| svg | `svg-012` | Declare the SVG XML namespace | 7 |
+| svg | `svg-015` | Remove production-bloat metadata and comments | 4 |
 | TOML | `toml-001` | Avoid inline tables | 6 |
 | TOML | `toml-004` | Avoid trailing commas | 5 |
 | TypeScript | `ts-003` | Prefer interfaces over type aliases for objects | 5 |
@@ -340,6 +353,9 @@
 | PowerShell | `ps-014` | Use script scope carefully | 7 |
 | Python | `python-012` | Namespaces are one honking great idea | 7 |
 | SQL | `sql-003` | Prefer parameterized SQL over dynamic concatenation | 9 |
+| svg | `svg-007` | Remove unused defs entries | 5 |
+| svg | `svg-012` | Declare the SVG XML namespace | 7 |
+| svg | `svg-015` | Remove production-bloat metadata and comments | 4 |
 | TOML | `toml-006` | Order implies importance | 4 |
 | TypeScript | `ts-014` | Prefer named exports over default exports | 4 |
 | XML | `xml-003` | Namespaces prevent local collisions | 6 |
@@ -372,4 +388,9 @@
 | SQL | `sql-001` | Never use SELECT * | 6 |
 | SQL | `sql-005` | Avoid implicit type coercion in JOIN predicates | 6 |
 | SQL | `sql-006` | Bound result sets with WHERE/LIMIT/TOP | 5 |
+| svg | `svg-007` | Remove unused defs entries | 5 |
+| svg | `svg-008` | Avoid excessive nested group depth | 5 |
+| svg | `svg-011` | Avoid embedded base64 raster payloads | 7 |
+| svg | `svg-014` | Keep node count within maintainable limits | 6 |
+| svg | `svg-015` | Remove production-bloat metadata and comments | 4 |
 | TypeScript | `ts-003` | Prefer interfaces over type aliases for objects | 5 |

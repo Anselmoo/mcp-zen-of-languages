@@ -157,6 +157,13 @@ GENERIC_PROMPTS_BY_LANGUAGE: dict[str, list[tuple[str, str]]] = {
             "validate documents against a schema or contract.",
         ),
     ],
+    "svg": [
+        (
+            "SVG accessibility and optimization",
+            "Add title/desc metadata, remove unused defs and editor metadata, "
+            "and keep node depth/count optimized for responsive rendering.",
+        ),
+    ],
     "json": [
         (
             "JSON payload consistency",

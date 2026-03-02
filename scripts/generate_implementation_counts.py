@@ -55,6 +55,7 @@ WORKFLOW_LANGUAGES: list[tuple[str, str]] = [
 CONFIG_LANGUAGES: list[tuple[str, str]] = [
     ("json", "json"),
     ("toml", "toml"),
+    ("svg", "svg"),
     ("xml", "xml"),
     ("yaml", "yaml"),
 ]

@@ -19,8 +19,11 @@ MARKDOWN_ZEN = LanguageZenPrinciples(
             principle="Preserve heading hierarchy",
             category=PrincipleCategory.STRUCTURE,
             severity=6,
-            description="Headings should not skip levels (for example H1 directly to H3).",
-            violations=["Heading level jump greater than one level"],
+            description="Documents should begin with an H1 and avoid heading level skips.",
+            violations=[
+                "Heading level jump greater than one level",
+                "Document missing top-level H1 heading",
+            ],
         ),
         ZenPrinciple(
             id="md-002",
@@ -51,11 +54,14 @@ MARKDOWN_ZEN = LanguageZenPrinciples(
         ),
         ZenPrinciple(
             id="md-005",
-            principle="Keep front-matter complete when present",
-            category=PrincipleCategory.CONFIGURATION,
+            principle="Keep relative links and metadata healthy",
+            category=PrincipleCategory.DOCUMENTATION,
             severity=6,
-            description="If YAML front-matter exists, required metadata keys must be provided.",
-            violations=["Front-matter is missing required keys"],
+            description="Validate front-matter keys when present and flag dead relative links.",
+            violations=[
+                "Front-matter is missing required keys",
+                "Relative Markdown link target does not exist",
+            ],
             metrics={"required_frontmatter_keys": ["title", "description"]},
         ),
         ZenPrinciple(

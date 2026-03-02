@@ -46,6 +46,15 @@ def test_markdown_heading_hierarchy_violation():
     assert violations
 
 
+def test_markdown_heading_requires_top_level_h1():
+    violations = _detect(
+        MarkdownHeadingHierarchyDetector(),
+        "## Subtitle\n\nBody\n",
+        MarkdownHeadingHierarchyConfig(),
+    )
+    assert violations
+
+
 def test_markdown_alt_text_violation():
     violations = _detect(
         MarkdownAltTextDetector(),
@@ -96,6 +105,32 @@ def test_markdown_frontmatter_complete_no_violation():
         MarkdownFrontMatterDetector(),
         "---\ntitle: Doc\ndescription: Desc\n---\n# Doc\n",
         MarkdownFrontMatterConfig(required_frontmatter_keys=["title", "description"]),
+    )
+    assert not violations
+
+
+def test_markdown_dead_relative_link_violation(tmp_path):
+    doc_path = tmp_path / "docs" / "guide.md"
+    doc_path.parent.mkdir(parents=True)
+    violations = _detect(
+        MarkdownFrontMatterDetector(),
+        "[Missing](./missing.md)\n",
+        MarkdownFrontMatterConfig(required_frontmatter_keys=["title", "description"]),
+        path=str(doc_path),
+    )
+    assert violations
+
+
+def test_markdown_dead_relative_link_allows_existing_target(tmp_path):
+    docs_dir = tmp_path / "docs"
+    docs_dir.mkdir()
+    (docs_dir / "intro.md").write_text("# Intro\n", encoding="utf-8")
+    doc_path = docs_dir / "guide.md"
+    violations = _detect(
+        MarkdownFrontMatterDetector(),
+        "[Intro](./intro.md)\n",
+        MarkdownFrontMatterConfig(required_frontmatter_keys=["title", "description"]),
+        path=str(doc_path),
     )
     assert not violations
 

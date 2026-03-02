@@ -39,6 +39,7 @@ UNIVERSAL_LANGUAGE_SNIPPETS = {
     ),
     "toml": 'name = "example"\n',
     "xml": "<root><item>v</item></root>\n",
+    "svg": '<svg xmlns="http://www.w3.org/2000/svg"><title>i</title></svg>\n',
     "json": '{"name":"example"}\n',
     "sql": "SELECT 1;\n",
     "markdown": "# Title\n\nText.\n",

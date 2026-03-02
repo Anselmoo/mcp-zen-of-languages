@@ -53,6 +53,7 @@ def test_build_explicit_rule_config_coverage_languages() -> None:
         "json",
         "sql",
         "xml",
+        "svg",
         "latex",
         "gitlab_ci",
         "docker_compose",

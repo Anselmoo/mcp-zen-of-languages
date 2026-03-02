@@ -220,6 +220,13 @@ GENERIC_PROMPTS_BY_LANGUAGE: dict[str, list[tuple[str, str]]] = {
             "and extract duplicated job setup into reusable templates.",
         ),
     ],
+    "terraform": [
+        (
+            "Terraform state and security hygiene",
+            "Pin providers/modules, use remote backends, avoid hardcoded IDs/secrets, "
+            "and keep variable/resource naming consistently snake_case.",
+        ),
+    ],
 }
 
 

@@ -1,4 +1,5 @@
 """Detectors for Terraform infrastructure-as-code maintainability and security."""
+# ruff: noqa: D102
 
 from __future__ import annotations
 
@@ -13,7 +14,9 @@ from mcp_zen_of_languages.languages.configs import TerraformModuleVersionPinning
 from mcp_zen_of_languages.languages.configs import TerraformNamingConventionConfig
 from mcp_zen_of_languages.languages.configs import TerraformNoHardcodedSecretsConfig
 from mcp_zen_of_languages.languages.configs import TerraformProviderVersionPinningConfig
-from mcp_zen_of_languages.languages.configs import TerraformVariableOutputDescriptionConfig
+from mcp_zen_of_languages.languages.configs import (
+    TerraformVariableOutputDescriptionConfig,
+)
 from mcp_zen_of_languages.models import Location
 from mcp_zen_of_languages.models import Violation
 
@@ -69,6 +72,8 @@ class TerraformProviderVersionPinningDetector(
     ViolationDetector[TerraformProviderVersionPinningConfig],
     LocationHelperMixin,
 ):
+    """Flag provider blocks that omit explicit version constraints."""
+
     @property
     def name(self) -> str:
         return "tf-001"
@@ -99,6 +104,8 @@ class TerraformModuleVersionPinningDetector(
     ViolationDetector[TerraformModuleVersionPinningConfig],
     LocationHelperMixin,
 ):
+    """Flag module blocks that are not pinned to versions or refs."""
+
     @property
     def name(self) -> str:
         return "tf-002"
@@ -109,7 +116,9 @@ class TerraformModuleVersionPinningDetector(
         config: TerraformModuleVersionPinningConfig,
     ) -> list[Violation]:
         violations: list[Violation] = []
-        for line_no, module_name, body in _iter_block_lines(context.code, _MODULE_START_RE):
+        for line_no, module_name, body in _iter_block_lines(
+            context.code, _MODULE_START_RE
+        ):
             source = ""
             has_version = False
             for line in body:
@@ -134,6 +143,8 @@ class TerraformVariableOutputDescriptionDetector(
     ViolationDetector[TerraformVariableOutputDescriptionConfig],
     LocationHelperMixin,
 ):
+    """Require description fields on variable and output blocks."""
+
     @property
     def name(self) -> str:
         return "tf-003"
@@ -144,7 +155,9 @@ class TerraformVariableOutputDescriptionDetector(
         config: TerraformVariableOutputDescriptionConfig,
     ) -> list[Violation]:
         violations: list[Violation] = []
-        for line_no, name, body in _iter_block_lines(context.code, _VARIABLE_OR_OUTPUT_START_RE):
+        for line_no, name, body in _iter_block_lines(
+            context.code, _VARIABLE_OR_OUTPUT_START_RE
+        ):
             if any(_DESCRIPTION_RE.search(line) for line in body):
                 continue
             violations.append(
@@ -162,6 +175,8 @@ class TerraformHardcodedIdDetector(
     ViolationDetector[TerraformHardcodedIdConfig],
     LocationHelperMixin,
 ):
+    """Detect hardcoded cloud resource IDs and ARNs in assignments."""
+
     @property
     def name(self) -> str:
         return "tf-004"
@@ -196,6 +211,8 @@ class TerraformNoHardcodedSecretsDetector(
     ViolationDetector[TerraformNoHardcodedSecretsConfig],
     LocationHelperMixin,
 ):
+    """Detect likely hardcoded secret values in Terraform assignments."""
+
     @property
     def name(self) -> str:
         return "tf-005"
@@ -229,6 +246,8 @@ class TerraformBackendConfigDetector(
     ViolationDetector[TerraformBackendConfig],
     LocationHelperMixin,
 ):
+    """Ensure terraform blocks declare an explicit backend configuration."""
+
     @property
     def name(self) -> str:
         return "tf-006"
@@ -258,6 +277,8 @@ class TerraformNamingConventionDetector(
     ViolationDetector[TerraformNamingConventionConfig],
     LocationHelperMixin,
 ):
+    """Enforce snake_case naming for Terraform variables and resources."""
+
     @property
     def name(self) -> str:
         return "tf-007"

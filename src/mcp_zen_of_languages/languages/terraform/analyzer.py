@@ -47,7 +47,9 @@ class TerraformAnalyzer(BaseAnalyzer):
 
     def capabilities(self) -> AnalyzerCapabilities:
         """Declare support for lightweight block parsing and dependency analysis."""
-        return AnalyzerCapabilities(supports_ast=True, supports_dependency_analysis=True)
+        return AnalyzerCapabilities(
+            supports_ast=True, supports_dependency_analysis=True
+        )
 
     def parse_code(self, code: str) -> ParserResult | None:
         """Parse Terraform source into lightweight block declarations."""

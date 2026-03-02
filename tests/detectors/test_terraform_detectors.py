@@ -7,9 +7,15 @@ from mcp_zen_of_languages.languages.configs import TerraformModuleVersionPinning
 from mcp_zen_of_languages.languages.configs import TerraformNamingConventionConfig
 from mcp_zen_of_languages.languages.configs import TerraformNoHardcodedSecretsConfig
 from mcp_zen_of_languages.languages.configs import TerraformProviderVersionPinningConfig
-from mcp_zen_of_languages.languages.configs import TerraformVariableOutputDescriptionConfig
-from mcp_zen_of_languages.languages.terraform.detectors import TerraformBackendConfigDetector
-from mcp_zen_of_languages.languages.terraform.detectors import TerraformHardcodedIdDetector
+from mcp_zen_of_languages.languages.configs import (
+    TerraformVariableOutputDescriptionConfig,
+)
+from mcp_zen_of_languages.languages.terraform.detectors import (
+    TerraformBackendConfigDetector,
+)
+from mcp_zen_of_languages.languages.terraform.detectors import (
+    TerraformHardcodedIdDetector,
+)
 from mcp_zen_of_languages.languages.terraform.detectors import (
     TerraformModuleVersionPinningDetector,
 )
@@ -65,7 +71,7 @@ def test_terraform_detectors_emit_expected_violations() -> None:
 def test_terraform_detectors_cover_clean_paths() -> None:
     context = AnalysisContext(
         code=(
-            'terraform {\n'
+            "terraform {\n"
             '  required_version = ">= 1.6.0"\n'
             '  backend "s3" {\n'
             '    bucket = "state-bucket"\n'
@@ -106,11 +112,15 @@ def test_terraform_detectors_cover_clean_paths() -> None:
     assert not TerraformVariableOutputDescriptionDetector().detect(
         context, TerraformVariableOutputDescriptionConfig()
     )
-    assert not TerraformHardcodedIdDetector().detect(context, TerraformHardcodedIdConfig())
+    assert not TerraformHardcodedIdDetector().detect(
+        context, TerraformHardcodedIdConfig()
+    )
     assert not TerraformNoHardcodedSecretsDetector().detect(
         context, TerraformNoHardcodedSecretsConfig()
     )
-    assert not TerraformBackendConfigDetector().detect(context, TerraformBackendConfig())
+    assert not TerraformBackendConfigDetector().detect(
+        context, TerraformBackendConfig()
+    )
     assert not TerraformNamingConventionDetector().detect(
         context, TerraformNamingConventionConfig()
     )

@@ -98,33 +98,33 @@ tags:
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **TerraformProviderVersionPinningDetector** | Detects violations | `tf-001` |
-| **TerraformModuleVersionPinningDetector** | Detects violations | `tf-002` |
-| **TerraformHardcodedIdDetector** | Detects violations | `tf-004` |
+| **TerraformProviderVersionPinningDetector** | Flag provider blocks that omit explicit version constraints | `tf-001` |
+| **TerraformModuleVersionPinningDetector** | Flag module blocks that are not pinned to versions or refs | `tf-002` |
+| **TerraformHardcodedIdDetector** | Detect hardcoded cloud resource IDs and ARNs in assignments | `tf-004` |
 
 ### Documentation
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **TerraformVariableOutputDescriptionDetector** | Detects violations | `tf-003` |
+| **TerraformVariableOutputDescriptionDetector** | Require description fields on variable and output blocks | `tf-003` |
 
 ### Naming
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **TerraformNamingConventionDetector** | Detects violations | `tf-007` |
+| **TerraformNamingConventionDetector** | Enforce snake_case naming for Terraform variables and resources | `tf-007` |
 
 ### Robustness
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **TerraformBackendConfigDetector** | Detects violations | `tf-006` |
+| **TerraformBackendConfigDetector** | Ensure terraform blocks declare an explicit backend configuration | `tf-006` |
 
 ### Security
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **TerraformNoHardcodedSecretsDetector** | Detects violations | `tf-005` |
+| **TerraformNoHardcodedSecretsDetector** | Detect likely hardcoded secret values in Terraform assignments | `tf-005` |
 
 
 ??? example "Principle → Detector Wiring"

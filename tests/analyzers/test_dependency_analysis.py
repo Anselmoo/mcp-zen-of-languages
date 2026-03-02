@@ -272,7 +272,9 @@ class TestTerraformDependencyAnalysis:
     def test_comments_skipped(self) -> None:
         analyzer = TerraformAnalyzer()
         result = analyzer._build_dependency_analysis(
-            _ctx('# source = "fake/module"\nresource "null_resource" "x" {}', "terraform")
+            _ctx(
+                '# source = "fake/module"\nresource "null_resource" "x" {}', "terraform"
+            )
         )
         assert result is None
 

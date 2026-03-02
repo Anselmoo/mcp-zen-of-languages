@@ -135,9 +135,11 @@ def test_markdown_dead_relative_link_allows_existing_target(tmp_path):
     assert not violations
 
 
-def test_markdown_dead_relative_link_disallows_repo_escape(tmp_path, monkeypatch):
-    monkeypatch.chdir(tmp_path)
-    (tmp_path / "pyproject.toml").write_text("[project]\nname = 'tmp'\n", encoding="utf-8")
+def test_markdown_dead_relative_link_disallows_repo_escape(tmp_path):
+    (tmp_path / "pyproject.toml").write_text(
+        "[project]\nname = 'tmp'\n", encoding="utf-8"
+    )
+    (tmp_path / "docs").mkdir()
     doc_path = tmp_path / "docs" / "guide.md"
     violations = _detect(
         MarkdownFrontMatterDetector(),

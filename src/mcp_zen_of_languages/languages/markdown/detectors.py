@@ -70,7 +70,10 @@ def _is_mdx_context(context: AnalysisContext) -> bool:
 
 def _discover_project_root(start_dir: Path) -> Path | None:
     for parent in (start_dir, *start_dir.parents):
-        if (parent / "zen-config.yaml").exists() or (parent / "pyproject.toml").exists():
+        if any(
+            (parent / marker).exists()
+            for marker in ("zen-config.yaml", "pyproject.toml")
+        ):
             return parent
     return None
 
@@ -218,7 +221,7 @@ class MarkdownFrontMatterDetector(
     ViolationDetector[MarkdownFrontMatterConfig],
     LocationHelperMixin,
 ):
-    """Detect incomplete YAML front-matter blocks and dead relative links."""
+    """Detect incomplete YAML front-matter blocks and unsafe/dead relative links."""
 
     @property
     def name(self) -> str:

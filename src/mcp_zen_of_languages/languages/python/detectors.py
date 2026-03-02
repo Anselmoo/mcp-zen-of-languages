@@ -44,6 +44,13 @@ from mcp_zen_of_languages.languages.configs import MagicNumberConfig
 from mcp_zen_of_languages.languages.configs import NameStyleConfig
 from mcp_zen_of_languages.languages.configs import NamespaceConfig
 from mcp_zen_of_languages.languages.configs import NestingDepthConfig
+from mcp_zen_of_languages.languages.configs import PythonComplexUndocumentedConfig
+from mcp_zen_of_languages.languages.configs import PythonExplicitSilenceConfig
+from mcp_zen_of_languages.languages.configs import PythonIdiomConfig
+from mcp_zen_of_languages.languages.configs import PythonPracticalityConfig
+from mcp_zen_of_languages.languages.configs import PythonPrematureImplConfig
+from mcp_zen_of_languages.languages.configs import PythonSimpleDocumentedConfig
+from mcp_zen_of_languages.languages.configs import PythonTodoStubConfig
 from mcp_zen_of_languages.languages.configs import ShortVariableNamesConfig
 from mcp_zen_of_languages.languages.configs import SparseCodeConfig
 from mcp_zen_of_languages.languages.configs import StarImportConfig
@@ -2265,6 +2272,302 @@ class NamespaceUsageDetector(ViolationDetector[NamespaceConfig], LocationHelperM
         return violations
 
 
+class PythonPracticalityDetector(ViolationDetector[PythonPracticalityConfig]):
+    """Flags over-engineered abstractions like ABCs with likely few implementations.
+
+    Python's "practicality beats purity" principle discourages
+    premature abstraction.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "python_practicality"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: PythonPracticalityConfig,
+    ) -> list[Violation]:
+        """Detect over-engineered abstractions.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (PythonPracticalityConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Detected violations.
+        """
+        if re.search(r"\bclass\s+\w+\s*\(\s*(ABC|Protocol)\s*\)", context.code):
+            return [
+                self.build_violation(
+                    config,
+                    contains="ABC",
+                    suggestion="Prefer simple, practical solutions over excessive abstraction.",
+                ),
+            ]
+        return []
+
+
+class PythonExplicitSilenceDetector(ViolationDetector[PythonExplicitSilenceConfig]):
+    """Detects bare except clauses and silently caught exceptions.
+
+    Errors should never pass silently unless explicitly silenced.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "python_explicit_silence"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: PythonExplicitSilenceConfig,
+    ) -> list[Violation]:
+        """Detect bare except and silent catch patterns.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (PythonExplicitSilenceConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Detected violations.
+        """
+        violations: list[Violation] = []
+        if re.search(r"\bexcept\s*:", context.code):
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains="bare except",
+                    suggestion="Catch specific exceptions; never use bare except.",
+                ),
+            )
+        if re.search(r"\bexcept\s+\w[\w.]*\s*:.*\n\s*pass\b", context.code):
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains="silent catch",
+                    suggestion="Log or re-raise caught exceptions; don't silently pass.",
+                ),
+            )
+        return violations
+
+
+class PythonTodoStubDetector(ViolationDetector[PythonTodoStubConfig]):
+    """Detects TODO, FIXME, HACK, and XXX comments left in source code."""
+
+    @property
+    def name(self) -> str:
+        """Return detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "python_todo_stub"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: PythonTodoStubConfig,
+    ) -> list[Violation]:
+        """Detect TODO/FIXME/HACK/XXX comment markers.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (PythonTodoStubConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Detected violations.
+        """
+        if re.search(r"#\s*(TODO|FIXME|HACK|XXX)\b", context.code):
+            return [
+                self.build_violation(
+                    config,
+                    contains="TODO",
+                    suggestion="Address TODO/FIXME items; don't leave stubs unimplemented.",
+                ),
+            ]
+        return []
+
+
+class PythonPrematureImplDetector(ViolationDetector[PythonPrematureImplConfig]):
+    """Detects ``raise NotImplementedError`` stubs without documentation."""
+
+    @property
+    def name(self) -> str:
+        """Return detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "python_premature_impl"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: PythonPrematureImplConfig,
+    ) -> list[Violation]:
+        """Detect NotImplementedError raises.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (PythonPrematureImplConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Detected violations.
+        """
+        if re.search(r"raise\s+NotImplementedError", context.code):
+            return [
+                self.build_violation(
+                    config,
+                    contains="NotImplementedError",
+                    suggestion="Document why functionality is not yet implemented.",
+                ),
+            ]
+        return []
+
+
+class PythonComplexUndocumentedDetector(
+    ViolationDetector[PythonComplexUndocumentedConfig]
+):
+    """Detects functions missing docstrings."""
+
+    @property
+    def name(self) -> str:
+        """Return detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "python_complex_undocumented"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: PythonComplexUndocumentedConfig,
+    ) -> list[Violation]:
+        """Detect functions without docstrings.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (PythonComplexUndocumentedConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Detected violations.
+        """
+        violations: list[Violation] = []
+        pattern = re.compile(
+            r"def\s+(\w+)\s*\([^)]*\)\s*(?:->\s*[^:]+)?:\s*\n(?!\s*(\"\"\"|'''))",
+        )
+        for match in pattern.finditer(context.code):
+            fn_name = match.group(1)
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains=fn_name,
+                    suggestion=f"Add a docstring to {fn_name}() to explain the implementation.",
+                ),
+            )
+        return violations
+
+
+class PythonSimpleDocumentedDetector(ViolationDetector[PythonSimpleDocumentedConfig]):
+    """Detects public functions (not starting with ``_``) missing docstrings."""
+
+    @property
+    def name(self) -> str:
+        """Return detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "python_simple_documented"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: PythonSimpleDocumentedConfig,
+    ) -> list[Violation]:
+        """Detect public functions without docstrings.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (PythonSimpleDocumentedConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Detected violations.
+        """
+        violations: list[Violation] = []
+        pattern = re.compile(
+            r"def\s+(?!_)(\w+)\s*\([^)]*\)\s*(?:->\s*[^:]+)?:\s*\n(?!\s*(\"\"\"|'''))",
+        )
+        for match in pattern.finditer(context.code):
+            fn_name = match.group(1)
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains=fn_name,
+                    suggestion=f"Consider adding a docstring to {fn_name}().",
+                ),
+            )
+        return violations
+
+
+class PythonIdiomDetector(ViolationDetector[PythonIdiomConfig]):
+    """Detects non-idiomatic Python patterns like ``range(len(...))`` and ``== True``."""
+
+    @property
+    def name(self) -> str:
+        """Return detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "python_idiom"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: PythonIdiomConfig,
+    ) -> list[Violation]:
+        """Detect non-idiomatic Python patterns.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (PythonIdiomConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Detected violations.
+        """
+        violations: list[Violation] = []
+        if re.search(r"range\s*\(\s*len\s*\(", context.code):
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains="range(len(",
+                    suggestion="Use enumerate() instead of range(len()).",
+                ),
+            )
+        if re.search(r"==\s*True\b|==\s*False\b", context.code):
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains="== True",
+                    suggestion="Use direct boolean checks instead of == True/False.",
+                ),
+            )
+        return violations
+
+
 __all__ = [
     "BareExceptDetector",
     "CircularDependencyDetector",
@@ -2286,6 +2589,13 @@ __all__ = [
     "NameStyleDetector",
     "NamespaceUsageDetector",
     "NestingDepthDetector",
+    "PythonComplexUndocumentedDetector",
+    "PythonExplicitSilenceDetector",
+    "PythonIdiomDetector",
+    "PythonPracticalityDetector",
+    "PythonPrematureImplDetector",
+    "PythonSimpleDocumentedDetector",
+    "PythonTodoStubDetector",
     "ShortVariableNamesDetector",
     "SparseCodeDetector",
     "StarImportDetector",

@@ -109,7 +109,7 @@ Reports use emoji badges for quick scanning:
 
 Dogma-tagged violations power a three-step MCP loop:
 
-1. **Analyze** — `analyze_zen_violations` returns severity-scored violations tagged with [dogma identifiers](../getting-started/philosophy.md).
+1. **Analyze** — `analyze_zen_violations` returns severity-scored violations tagged with [dogma identifiers](rules/the-ten-dogmas.md).
 2. **Explain** — `generate_prompts` produces remediation instructions grounded in the specific violated dogma.
 3. **Act** — `generate_agent_tasks` creates a prioritised task list an AI agent can execute directly.
 
@@ -119,5 +119,6 @@ This turns static findings into a closed feedback loop: analyze in your IDE, gen
 
 - [Configuration](configuration.md) — How to tune severity thresholds
 - [Prompt Generation](prompt-generation.md) — Generate AI remediation from violations
-- [Philosophy](../getting-started/philosophy.md) — The 10 Dogmas that classify every violation
+- [Philosophy](../getting-started/philosophy.md) — The architectural-coaching motivation
+- [The 10 Dogmas](rules/the-ten-dogmas.md) — Full dogma reference that classifies every violation
 - [Languages](languages/index.md) — See every principle and detector per language

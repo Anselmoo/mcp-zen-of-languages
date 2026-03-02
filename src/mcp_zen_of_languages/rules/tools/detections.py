@@ -224,6 +224,190 @@ class TsUnknownAnyFinding(BaseModel):
     unknown_count: int
 
 
+class TsOptionalChainingFinding(BaseModel):
+    """Manual null-check chains in TypeScript source.
+
+    Attributes:
+        count: Number of manual null-check chain patterns found.
+    """
+
+    count: int
+
+
+class TsIndexLoopFinding(BaseModel):
+    """C-style index-based ``for`` loops in TypeScript source.
+
+    Attributes:
+        count: Number of index-based loop patterns found.
+    """
+
+    count: int
+
+
+class TsPromiseChainFinding(BaseModel):
+    """Raw ``.then()`` promise chains in TypeScript source.
+
+    Attributes:
+        count: Number of ``.then()`` call patterns found.
+    """
+
+    count: int
+
+
+class TsDefaultExportFinding(BaseModel):
+    """``export default`` statements in TypeScript source.
+
+    Attributes:
+        count: Number of ``export default`` patterns found.
+    """
+
+    count: int
+
+
+class TsCatchAllTypeFinding(BaseModel):
+    """Catch-all type annotations (``Object``, ``object``, ``{}``) in TypeScript source.
+
+    Attributes:
+        count: Number of catch-all type annotation patterns found.
+    """
+
+    count: int
+
+
+class TsConsoleUsageFinding(BaseModel):
+    """``console.*`` calls in TypeScript source.
+
+    Attributes:
+        count: Number of ``console.*`` call patterns found.
+    """
+
+    count: int
+
+
+class TsRequireImportFinding(BaseModel):
+    """``require()`` calls in TypeScript source.
+
+    Attributes:
+        count: Number of ``require()`` call patterns found.
+    """
+
+    count: int
+
+
+class TsStringConcatFinding(BaseModel):
+    """String concatenation patterns in TypeScript source.
+
+    Attributes:
+        count: Number of string concatenation patterns found.
+    """
+
+    count: int
+
+
+def detect_ts_optional_chaining(code: str) -> TsOptionalChainingFinding:
+    """Detect manual null-check chains replaceable by optional chaining.
+
+    Args:
+        code (str): TypeScript source text.
+
+    Returns:
+        TsOptionalChainingFinding: Detection result.
+    """
+    pattern = re.compile(r"\b\w+\s*&&\s*\w+\.\w+\s*&&\s*\w+\.\w+\.\w+")
+    return TsOptionalChainingFinding(count=len(pattern.findall(code)))
+
+
+def detect_ts_index_loops(code: str) -> TsIndexLoopFinding:
+    """Detect C-style index-based for loops.
+
+    Args:
+        code (str): TypeScript source text.
+
+    Returns:
+        TsIndexLoopFinding: Detection result.
+    """
+    pattern = re.compile(r"for\s*\(\s*let\s+\w+\s*=\s*0\s*;\s*\w+\s*<")
+    return TsIndexLoopFinding(count=len(pattern.findall(code)))
+
+
+def detect_ts_promise_chains(code: str) -> TsPromiseChainFinding:
+    """Detect raw .then() promise chains.
+
+    Args:
+        code (str): TypeScript source text.
+
+    Returns:
+        TsPromiseChainFinding: Detection result.
+    """
+    pattern = re.compile(r"\.then\s*\(")
+    return TsPromiseChainFinding(count=len(pattern.findall(code)))
+
+
+def detect_ts_default_exports(code: str) -> TsDefaultExportFinding:
+    """Detect export default statements.
+
+    Args:
+        code (str): TypeScript source text.
+
+    Returns:
+        TsDefaultExportFinding: Detection result.
+    """
+    pattern = re.compile(r"\bexport\s+default\b")
+    return TsDefaultExportFinding(count=len(pattern.findall(code)))
+
+
+def detect_ts_catch_all_types(code: str) -> TsCatchAllTypeFinding:
+    """Detect catch-all type annotations.
+
+    Args:
+        code (str): TypeScript source text.
+
+    Returns:
+        TsCatchAllTypeFinding: Detection result.
+    """
+    pattern = re.compile(r":\s*(?:[Oo]bject\b|\{\s*\})")
+    return TsCatchAllTypeFinding(count=len(pattern.findall(code)))
+
+
+def detect_ts_console_usage(code: str) -> TsConsoleUsageFinding:
+    """Detect console.* calls.
+
+    Args:
+        code (str): TypeScript source text.
+
+    Returns:
+        TsConsoleUsageFinding: Detection result.
+    """
+    pattern = re.compile(r"\bconsole\.\w+\s*\(")
+    return TsConsoleUsageFinding(count=len(pattern.findall(code)))
+
+
+def detect_ts_require_imports(code: str) -> TsRequireImportFinding:
+    """Detect require() calls.
+
+    Args:
+        code (str): TypeScript source text.
+
+    Returns:
+        TsRequireImportFinding: Detection result.
+    """
+    pattern = re.compile(r"\brequire\s*\(")
+    return TsRequireImportFinding(count=len(pattern.findall(code)))
+
+
+def detect_ts_string_concats(code: str) -> TsStringConcatFinding:
+    """Detect string concatenation patterns.
+
+    Args:
+        code (str): TypeScript source text.
+
+    Returns:
+        TsStringConcatFinding: Detection result.
+    """
+    pattern = re.compile(r"""["'][^"']*["']\s*\+\s*\w+""")
+    return TsStringConcatFinding(count=len(pattern.findall(code)))
+
+
 def detect_deep_nesting(code: str, max_depth: int = 3) -> tuple[bool, int]:
     """Measure the deepest indentation level using 4-space tab stops.
 

@@ -30,9 +30,12 @@
 | Go | `go-001` | Errors are values | 9 |
 | Go | `go-003` | Make the zero value useful | 6 |
 | Go | `go-012` | Avoid init() when possible | 6 |
+| Go | `go-017` | Handle every error path | 9 |
+| Go | `go-020` | Write self-documenting code | 5 |
 | JavaScript | `js-003` | Use strict equality | 8 |
 | JavaScript | `js-007` | Handle errors explicitly | 9 |
 | JavaScript | `js-008` | Avoid magic numbers and strings | 6 |
+| JavaScript | `js-014` | Avoid with statement | 9 |
 | JSON | `json-001` | Choose strictness intentionally | 7 |
 | JSON | `json-003` | Keys must be unique | 8 |
 | JSON | `json-004` | Avoid magic string repetition | 5 |
@@ -56,6 +59,7 @@
 | Python | `python-008` | Special cases aren't special enough to break the rules | 6 |
 | Python | `python-009` | Errors should never pass silently | 9 |
 | Python | `python-010` | In the face of ambiguity, refuse the temptation to guess | 7 |
+| Python | `python-014` | Unless explicitly silenced | 8 |
 | Rust | `rust-002` | Use the type system to prevent bugs | 8 |
 | Rust | `rust-005` | Use #[must_use] for important return types | 6 |
 | Rust | `rust-006` | Implement Debug for all public types | 6 |
@@ -79,6 +83,8 @@
 | TypeScript | `ts-006` | Leverage type guards | 7 |
 | TypeScript | `ts-008` | Avoid non-null assertions | 8 |
 | TypeScript | `ts-010` | Prefer unknown over any for uncertain types | 7 |
+| TypeScript | `ts-015` | Avoid catch-all types like Object or {} | 6 |
+| TypeScript | `ts-016` | Avoid console usage in production code | 4 |
 | XML | `xml-001` | Mark up meaning, not presentation | 5 |
 | XML | `xml-003` | Namespaces prevent local collisions | 6 |
 | XML | `xml-004` | Validity supersedes well-formedness | 6 |
@@ -95,13 +101,19 @@
 | Bash | `bash-004` | Use $() over backticks | 6 |
 | CSS | `css-001` | Avoid specificity creep | 7 |
 | GitLab CI | `gitlab-ci-004` | Avoid god pipelines | 6 |
+| Go | `go-013` | Organize by responsibility | 6 |
+| Go | `go-014` | Embed for composition, not inheritance | 7 |
+| Go | `go-016` | Avoid unnecessary complexity | 7 |
 | JavaScript | `js-001` | Avoid callback hell | 8 |
 | JSON | `json-002` | Keep object depth understandable | 6 |
 | JSON | `json-006` | Keep inline arrays bounded | 4 |
 | Markdown | `md-001` | Preserve heading hierarchy | 6 |
 | Python | `python-003` | Simple is better than complex | 8 |
 | Python | `python-005` | Flat is better than nested | 8 |
+| Python | `python-015` | Now is better than never | 4 |
 | Ruby | `ruby-008` | Use guard clauses | 6 |
+| TypeScript | `ts-011` | Use optional chaining instead of manual null checks | 5 |
+| TypeScript | `ts-013` | Prefer async/await over raw promise chains | 6 |
 | XML | `xml-002` | Attributes for metadata, Elements for data | 5 |
 | XML | `xml-005` | Hierarchy represents ownership | 4 |
 
@@ -119,6 +131,7 @@
 | Dockerfile | `dockerfile-004` | Declare HEALTHCHECK for production images | 7 |
 | GitHub Actions | `gha-008` | Set timeout-minutes on jobs | 6 |
 | Go | `go-001` | Errors are values | 9 |
+| Go | `go-017` | Handle every error path | 9 |
 | JavaScript | `js-001` | Avoid callback hell | 8 |
 | JavaScript | `js-007` | Handle errors explicitly | 9 |
 | PowerShell | `ps-002` | Use proper error handling | 9 |
@@ -127,11 +140,18 @@
 | PowerShell | `ps-015` | Handle null values explicitly | 7 |
 | Python | `python-008` | Special cases aren't special enough to break the rules | 6 |
 | Python | `python-009` | Errors should never pass silently | 9 |
+| Python | `python-014` | Unless explicitly silenced | 8 |
+| Python | `python-016` | Although never is often better than *right* now | 5 |
 | Ruby | `ruby-011` | Prefer fail over raise for exceptions | 5 |
 | Rust | `rust-001` | Avoid unwrap() and expect() in production code | 9 |
 | Rust | `rust-008` | Avoid unsafe unless necessary | 9 |
+| Rust | `rust-014` | Error types should implement standard error traits | 8 |
 | TypeScript | `ts-004` | Always specify return types | 7 |
 | TypeScript | `ts-010` | Prefer unknown over any for uncertain types | 7 |
+| TypeScript | `ts-012` | Prefer for-of and array methods over index loops | 4 |
+| TypeScript | `ts-013` | Prefer async/await over raw promise chains | 6 |
+| TypeScript | `ts-016` | Avoid console usage in production code | 4 |
+| TypeScript | `ts-018` | Use template literals instead of string concatenation | 3 |
 
 ### Meaningful Abstraction — `ZEN-RIGHT-ABSTRACTION`
 
@@ -159,11 +179,17 @@
 | Go | `go-007` | Use defer for cleanup | 7 |
 | Go | `go-009` | Avoid package-level state | 7 |
 | Go | `go-010` | Keep interfaces small | 7 |
+| Go | `go-019` | Design for testability | 7 |
 | JavaScript | `js-004` | Avoid global state | 9 |
 | JavaScript | `js-005` | Functions should do one thing | 7 |
 | JavaScript | `js-006` | Use modern ES6+ features | 6 |
 | JavaScript | `js-009` | Prefer composition over inheritance | 7 |
 | JavaScript | `js-010` | Keep functions pure when possible | 6 |
+| JavaScript | `js-012` | Use destructuring for assignment | 5 |
+| JavaScript | `js-013` | Use object spread over Object.assign | 5 |
+| JavaScript | `js-015` | Limit function parameter count | 7 |
+| JavaScript | `js-017` | Prefer Array.from/spread over arguments | 6 |
+| JavaScript | `js-018` | No prototype mutation on built-in objects | 9 |
 | LaTeX | `latex-007` | Prevent circular \input and \include chains | 8 |
 | PowerShell | `ps-003` | Use cmdlet binding and parameters | 8 |
 | PowerShell | `ps-007` | Use pipeline properly | 7 |
@@ -171,6 +197,9 @@
 | Python | `python-003` | Simple is better than complex | 8 |
 | Python | `python-004` | Complex is better than complicated | 7 |
 | Python | `python-011` | There should be one-- and preferably only one --obvious way to do it | 6 |
+| Python | `python-013` | Practicality beats purity | 5 |
+| Python | `python-016` | Although never is often better than *right* now | 5 |
+| Python | `python-019` | Although that way may not be obvious at first unless you're Dutch | 5 |
 | Ruby | `ruby-001` | Convention over configuration | 7 |
 | Ruby | `ruby-002` | DRY (Don't Repeat Yourself) | 8 |
 | Ruby | `ruby-003` | Prefer blocks over lambdas/procs | 6 |
@@ -182,9 +211,14 @@
 | Rust | `rust-009` | Use std traits appropriately | 7 |
 | Rust | `rust-010` | Prefer enums over booleans for state | 7 |
 | Rust | `rust-012` | Avoid Rc<RefCell<T>> unless necessary | 7 |
+| Rust | `rust-016` | Implement Default when there is an obvious default value | 5 |
+| Rust | `rust-017` | Use From/Into for type conversions | 6 |
 | TypeScript | `ts-003` | Prefer interfaces over type aliases for objects | 5 |
 | TypeScript | `ts-007` | Use utility types | 6 |
 | TypeScript | `ts-009` | Use enums or const assertions appropriately | 6 |
+| TypeScript | `ts-011` | Use optional chaining instead of manual null checks | 5 |
+| TypeScript | `ts-012` | Prefer for-of and array methods over index loops | 4 |
+| TypeScript | `ts-017` | Use ES module imports instead of require() | 5 |
 
 ### Unambiguous Naming — `ZEN-UNAMBIGUOUS-NAME`
 
@@ -199,6 +233,9 @@
 | C# | `cs-010` | Avoid magic numbers | 6 |
 | Go | `go-004` | Use short variable names | 5 |
 | Go | `go-008` | Package names are singular | 5 |
+| Go | `go-013` | Organize by responsibility | 6 |
+| Go | `go-014` | Embed for composition, not inheritance | 7 |
+| Go | `go-020` | Write self-documenting code | 5 |
 | JavaScript | `js-008` | Avoid magic numbers and strings | 6 |
 | JavaScript | `js-011` | Use meaningful names | 8 |
 | JSON | `json-005` | Keys are case-sensitive identifiers | 5 |
@@ -216,14 +253,19 @@
 | Python | `python-006` | Sparse is better than dense | 5 |
 | Python | `python-007` | Readability counts | 9 |
 | Python | `python-012` | Namespaces are one honking great idea | 7 |
+| Python | `python-017` | If the implementation is hard to explain, it's a bad idea | 6 |
+| Python | `python-018` | If the implementation is easy to explain, it may be a good idea | 3 |
 | Ruby | `ruby-005` | Use meaningful method names with ?/! convention | 7 |
 | Ruby | `ruby-006` | Keep method chains readable | 6 |
 | Ruby | `ruby-007` | Prefer symbols over strings for keys | 5 |
+| Rust | `rust-015` | Follow Rust naming conventions (RFC 430) | 6 |
 | SQL | `sql-007` | Use descriptive table aliases | 4 |
 | SQL | `sql-009` | Prefer explicit JOIN syntax over ANSI-89 comma joins | 6 |
 | TOML | `toml-001` | Avoid inline tables | 6 |
 | TOML | `toml-004` | Avoid trailing commas | 5 |
 | TypeScript | `ts-003` | Prefer interfaces over type aliases for objects | 5 |
+| TypeScript | `ts-014` | Prefer named exports over default exports | 4 |
+| TypeScript | `ts-018` | Use template literals instead of string concatenation | 3 |
 | XML | `xml-003` | Namespaces prevent local collisions | 6 |
 | YAML | `yaml-001` | Use consistent indentation | 6 |
 | YAML | `yaml-002` | Avoid tabs in indentation | 7 |
@@ -245,15 +287,21 @@
 | Go | `go-006` | Avoid goroutine leaks | 9 |
 | Go | `go-009` | Avoid package-level state | 7 |
 | Go | `go-011` | Use context for cancellation | 8 |
+| Go | `go-015` | Communicate by sharing memory through channels | 8 |
+| Go | `go-019` | Design for testability | 7 |
+| Go | `go-020` | Write self-documenting code | 5 |
 | JavaScript | `js-002` | Prefer const over let, never var | 7 |
 | JavaScript | `js-004` | Avoid global state | 9 |
 | JavaScript | `js-010` | Keep functions pure when possible | 6 |
+| JavaScript | `js-014` | Avoid with statement | 9 |
 | Python | `python-006` | Sparse is better than dense | 5 |
 | Python | `python-011` | There should be one-- and preferably only one --obvious way to do it | 6 |
 | Rust | `rust-002` | Use the type system to prevent bugs | 8 |
 | Rust | `rust-010` | Prefer enums over booleans for state | 7 |
 | Rust | `rust-011` | Use lifetimes judiciously | 6 |
 | Rust | `rust-012` | Avoid Rc<RefCell<T>> unless necessary | 7 |
+| Rust | `rust-013` | Send + Sync should be implemented when types allow | 7 |
+| Rust | `rust-016` | Implement Default when there is an obvious default value | 5 |
 | SQL | `sql-002` | Always include INSERT column lists | 7 |
 | TypeScript | `ts-005` | Use readonly when appropriate | 6 |
 
@@ -284,6 +332,8 @@
 | GitLab CI | `gitlab-ci-002` | Avoid exposed variables in repository YAML | 8 |
 | GitLab CI | `gitlab-ci-003` | Use allow_failure only with rules-based context | 6 |
 | Go | `go-008` | Package names are singular | 5 |
+| Go | `go-013` | Organize by responsibility | 6 |
+| JavaScript | `js-016` | No eval() | 9 |
 | LaTeX | `latex-004` | Maintain bibliography hygiene | 6 |
 | LaTeX | `latex-009` | Remove unused packages | 5 |
 | Markdown | `md-007` | Keep MDX imports hygienic | 5 |
@@ -291,6 +341,7 @@
 | Python | `python-012` | Namespaces are one honking great idea | 7 |
 | SQL | `sql-003` | Prefer parameterized SQL over dynamic concatenation | 9 |
 | TOML | `toml-006` | Order implies importance | 4 |
+| TypeScript | `ts-014` | Prefer named exports over default exports | 4 |
 | XML | `xml-003` | Namespaces prevent local collisions | 6 |
 
 ### Proportionate Complexity — `ZEN-PROPORTIONATE-COMPLEXITY`
@@ -309,8 +360,12 @@
 | GitLab CI | `gitlab-ci-006` | Use interruptible pipelines | 5 |
 | GitLab CI | `gitlab-ci-007` | Model job DAG dependencies with needs | 5 |
 | GitLab CI | `gitlab-ci-009` | Cache dependency installs | 5 |
+| Go | `go-016` | Avoid unnecessary complexity | 7 |
+| Go | `go-018` | Avoid premature optimization | 5 |
 | Python | `python-003` | Simple is better than complex | 8 |
 | Python | `python-004` | Complex is better than complicated | 7 |
+| Python | `python-013` | Practicality beats purity | 5 |
+| Python | `python-018` | If the implementation is easy to explain, it may be a good idea | 3 |
 | Ruby | `ruby-003` | Prefer blocks over lambdas/procs | 6 |
 | Ruby | `ruby-009` | Avoid needless metaprogramming | 8 |
 | Rust | `rust-004` | Clone sparingly | 7 |

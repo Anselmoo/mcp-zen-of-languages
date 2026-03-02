@@ -4,16 +4,16 @@
 ╰────────────────────────────────────────────────╯
                                   Remediation Roadmap
 ╭────────┬─────────────────────────────────────────────────────────────────────────────╮
-│      1 │ 1. Address Documentation issues (1 violations).                             │
+│      1 │ 1. Address Documentation issues (3 violations).                             │
 │      2 │ 2. Address Naming & Style issues (1 violations).                            │
 │      3 │ 3. Address Other issues (1 violations).                                     │
 ╰────────┴─────────────────────────────────────────────────────────────────────────────╯
                                       Big Picture
 ┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ Health score       ┃ 42.5/100                                                        ┃
+┃ Health score       ┃ 20.0/100                                                        ┃
 ┃ Trajectory         ┃ Prioritize Documentation fixes first for the fastest score      ┃
 ┃                    ┃ lift.                                                           ┃
-┃ Pattern            ┃ High concentration of Documentation violations (1 findings).    ┃
+┃ Pattern            ┃ High concentration of Documentation violations (3 findings).    ┃
 ┃ Pattern            ┃ Secondary pressure in Naming & Style (1 findings).              ┃
 ┃ Pattern            ┃ Secondary pressure in Other (1 findings).                       ┃
 ┗━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
@@ -21,7 +21,7 @@
 ╭─────────────────────────────────────┬──────────┬─────────────────────────────────────╮
 │ File                                │   Issues │ Summary                             │
 ├─────────────────────────────────────┼──────────┼─────────────────────────────────────┤
-│ {{ fixture_path }} │        3 │ Naming & Style, Documentation · 🔴  │
+│ {{ fixture_path }} │        5 │ Documentation, Naming & Style · 🔴  │
 │                                     │          │ CRIT                                │
 ╰─────────────────────────────────────┴──────────┴─────────────────────────────────────╯
 ╭───────────────── File Prompt - {{ fixture_path }} ──────────────────╮
@@ -94,7 +94,61 @@
 │   Effort: S                                                                          │
 │   Acceptance: Resolve the violation and confirm it no longer appears in              │
 │ {{ fixture_path }}.                                                 │
-╰─────────────────────────────── python · 3 violations ────────────────────────────────╯
+│ - [6] If the implementation is hard to explain, it's a bad idea: Functions without   │
+│ docstrings                                                                           │
+│   Theme: Documentation                                                               │
+│   Action: Add Google-style docstrings with summary, args, and return details.        │
+│   Idiom: Explicit docstrings document intent and reduce onboarding time.             │
+│   Effort: S                                                                          │
+│   Before:                                                                            │
+│ ┌───────────── Code ─────────────┐                                                   │
+│ │ def fetch_data(client, query): │                                                   │
+│ │     ...                        │                                                   │
+│ └────────────────────────────────┘                                                   │
+│   After:                                                                             │
+│ ┌───────────── Code ─────────────┐                                                   │
+│ │ def fetch_data(client, query): │                                                   │
+│ │     """Fetch data for a query. │                                                   │
+│ │                                │                                                   │
+│ │     Args:                      │                                                   │
+│ │         client: API client.    │                                                   │
+│ │         query: Query string.   │                                                   │
+│ │                                │                                                   │
+│ │     Returns:                   │                                                   │
+│ │         Parsed response data.  │                                                   │
+│ │     """                        │                                                   │
+│ │     ...                        │                                                   │
+│ └────────────────────────────────┘                                                   │
+│   Acceptance: Public functions and classes include docstrings in                     │
+│ {{ fixture_path }}.                                                 │
+│ - [3] If the implementation is easy to explain, it may be a good idea: Public        │
+│ functions without docstrings                                                         │
+│   Theme: Documentation                                                               │
+│   Action: Add Google-style docstrings with summary, args, and return details.        │
+│   Idiom: Explicit docstrings document intent and reduce onboarding time.             │
+│   Effort: S                                                                          │
+│   Before:                                                                            │
+│ ┌───────────── Code ─────────────┐                                                   │
+│ │ def fetch_data(client, query): │                                                   │
+│ │     ...                        │                                                   │
+│ └────────────────────────────────┘                                                   │
+│   After:                                                                             │
+│ ┌───────────── Code ─────────────┐                                                   │
+│ │ def fetch_data(client, query): │                                                   │
+│ │     """Fetch data for a query. │                                                   │
+│ │                                │                                                   │
+│ │     Args:                      │                                                   │
+│ │         client: API client.    │                                                   │
+│ │         query: Query string.   │                                                   │
+│ │                                │                                                   │
+│ │     Returns:                   │                                                   │
+│ │         Parsed response data.  │                                                   │
+│ │     """                        │                                                   │
+│ │     ...                        │                                                   │
+│ └────────────────────────────────┘                                                   │
+│   Acceptance: Public functions and classes include docstrings in                     │
+│ {{ fixture_path }}.                                                 │
+╰─────────────────────────────── python · 5 violations ────────────────────────────────╯
                                     Generic Prompts
 ╭─────────────────────────────┬────────────────────────────────────────────────────────╮
 │ Title                       │ Focus                                                  │

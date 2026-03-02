@@ -26,6 +26,13 @@ from mcp_zen_of_languages.languages.configs import MagicNumberConfig
 from mcp_zen_of_languages.languages.configs import NameStyleConfig
 from mcp_zen_of_languages.languages.configs import NamespaceConfig
 from mcp_zen_of_languages.languages.configs import NestingDepthConfig
+from mcp_zen_of_languages.languages.configs import PythonComplexUndocumentedConfig
+from mcp_zen_of_languages.languages.configs import PythonExplicitSilenceConfig
+from mcp_zen_of_languages.languages.configs import PythonIdiomConfig
+from mcp_zen_of_languages.languages.configs import PythonPracticalityConfig
+from mcp_zen_of_languages.languages.configs import PythonPrematureImplConfig
+from mcp_zen_of_languages.languages.configs import PythonSimpleDocumentedConfig
+from mcp_zen_of_languages.languages.configs import PythonTodoStubConfig
 from mcp_zen_of_languages.languages.configs import ShortVariableNamesConfig
 from mcp_zen_of_languages.languages.configs import SparseCodeConfig
 from mcp_zen_of_languages.languages.configs import StarImportConfig
@@ -51,6 +58,19 @@ from mcp_zen_of_languages.languages.python.detectors import MagicNumberDetector
 from mcp_zen_of_languages.languages.python.detectors import NameStyleDetector
 from mcp_zen_of_languages.languages.python.detectors import NamespaceUsageDetector
 from mcp_zen_of_languages.languages.python.detectors import NestingDepthDetector
+from mcp_zen_of_languages.languages.python.detectors import (
+    PythonComplexUndocumentedDetector,
+)
+from mcp_zen_of_languages.languages.python.detectors import (
+    PythonExplicitSilenceDetector,
+)
+from mcp_zen_of_languages.languages.python.detectors import PythonIdiomDetector
+from mcp_zen_of_languages.languages.python.detectors import PythonPracticalityDetector
+from mcp_zen_of_languages.languages.python.detectors import PythonPrematureImplDetector
+from mcp_zen_of_languages.languages.python.detectors import (
+    PythonSimpleDocumentedDetector,
+)
+from mcp_zen_of_languages.languages.python.detectors import PythonTodoStubDetector
 from mcp_zen_of_languages.languages.python.detectors import ShortVariableNamesDetector
 from mcp_zen_of_languages.languages.python.detectors import SparseCodeDetector
 from mcp_zen_of_languages.languages.python.detectors import StarImportDetector
@@ -252,6 +272,62 @@ DETECTOR_MAP = LanguageDetectorMap(
             rule_ids=["python-012"],
             universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=170,
+        ),
+        DetectorBinding(
+            detector_id="python_practicality",
+            detector_class=PythonPracticalityDetector,
+            config_model=PythonPracticalityConfig,
+            rule_ids=["python-013"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
+            default_order=180,
+        ),
+        DetectorBinding(
+            detector_id="python_explicit_silence",
+            detector_class=PythonExplicitSilenceDetector,
+            config_model=PythonExplicitSilenceConfig,
+            rule_ids=["python-014"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
+            default_order=190,
+        ),
+        DetectorBinding(
+            detector_id="python_todo_stub",
+            detector_class=PythonTodoStubDetector,
+            config_model=PythonTodoStubConfig,
+            rule_ids=["python-015"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
+            default_order=200,
+        ),
+        DetectorBinding(
+            detector_id="python_premature_impl",
+            detector_class=PythonPrematureImplDetector,
+            config_model=PythonPrematureImplConfig,
+            rule_ids=["python-016"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
+            default_order=210,
+        ),
+        DetectorBinding(
+            detector_id="python_complex_undocumented",
+            detector_class=PythonComplexUndocumentedDetector,
+            config_model=PythonComplexUndocumentedConfig,
+            rule_ids=["python-017"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
+            default_order=220,
+        ),
+        DetectorBinding(
+            detector_id="python_simple_documented",
+            detector_class=PythonSimpleDocumentedDetector,
+            config_model=PythonSimpleDocumentedConfig,
+            rule_ids=["python-018"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
+            default_order=230,
+        ),
+        DetectorBinding(
+            detector_id="python_idiom",
+            detector_class=PythonIdiomDetector,
+            config_model=PythonIdiomConfig,
+            rule_ids=["python-019"],
+            universal_dogma_ids=FULL_DOGMA_IDS,
+            default_order=240,
         ),
     ],
 )

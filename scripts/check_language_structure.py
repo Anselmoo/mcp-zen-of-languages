@@ -81,6 +81,7 @@ def main() -> int:  # noqa: C901, PLR0912, PLR0915
 
     from mcp_zen_of_languages.analyzers import registry_bootstrap  # noqa: F401
     from mcp_zen_of_languages.analyzers.registry import REGISTRY
+    from mcp_zen_of_languages.languages.rule_pattern import RulePatternDetector
     from mcp_zen_of_languages.rules import get_all_languages
     from mcp_zen_of_languages.rules import get_language_zen
     from mcp_zen_of_languages.rules.base_models import get_rule_id_coverage
@@ -138,6 +139,7 @@ def main() -> int:  # noqa: C901, PLR0912, PLR0915
             meta.detector_class.__name__
             for meta in REGISTRY.items()
             if meta.language == language_key
+            and meta.detector_class is not RulePatternDetector
         }
         missing_exports = sorted(registry_detectors - set(exported))
         extra_exports = sorted(set(exported) - registry_detectors)
@@ -149,7 +151,9 @@ def main() -> int:  # noqa: C901, PLR0912, PLR0915
         if lang_zen is None:
             errors.append(f"{entry.name}: missing rules definition")
             continue
-        missing_rule_ids, unknown_rule_ids = get_rule_id_coverage(lang_zen)
+        missing_rule_ids, unknown_rule_ids = get_rule_id_coverage(
+            lang_zen, explicit_only=False
+        )
         if missing_rule_ids or unknown_rule_ids:
             errors.append(
                 f"{entry.name}: rule_id gaps missing={missing_rule_ids} unknown={unknown_rule_ids}",

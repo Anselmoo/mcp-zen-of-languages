@@ -10,13 +10,18 @@ from mcp_zen_of_languages.analyzers.base import AnalysisContext
 from mcp_zen_of_languages.analyzers.base import ViolationDetector
 from mcp_zen_of_languages.languages.configs import RustCloneOverheadConfig
 from mcp_zen_of_languages.languages.configs import RustDebugDeriveConfig
+from mcp_zen_of_languages.languages.configs import RustDefaultImplConfig
 from mcp_zen_of_languages.languages.configs import RustEnumOverBoolConfig
 from mcp_zen_of_languages.languages.configs import RustErrorHandlingConfig
+from mcp_zen_of_languages.languages.configs import RustErrorTraitsConfig
+from mcp_zen_of_languages.languages.configs import RustFromIntoConfig
 from mcp_zen_of_languages.languages.configs import RustInteriorMutabilityConfig
 from mcp_zen_of_languages.languages.configs import RustIteratorPreferenceConfig
 from mcp_zen_of_languages.languages.configs import RustLifetimeUsageConfig
 from mcp_zen_of_languages.languages.configs import RustMustUseConfig
+from mcp_zen_of_languages.languages.configs import RustNamingConfig
 from mcp_zen_of_languages.languages.configs import RustNewtypePatternConfig
+from mcp_zen_of_languages.languages.configs import RustSendSyncConfig
 from mcp_zen_of_languages.languages.configs import RustStdTraitsConfig
 from mcp_zen_of_languages.languages.configs import RustTypeSafetyConfig
 from mcp_zen_of_languages.languages.configs import RustUnsafeBlocksConfig
@@ -677,16 +682,242 @@ class RustInteriorMutabilityDetector(ViolationDetector[RustInteriorMutabilityCon
         return []
 
 
+class RustSendSyncDetector(ViolationDetector[RustSendSyncConfig]):
+    """Flags unsafe Send/Sync implementations without SAFETY comments.
+
+    ``unsafe impl Send`` or ``unsafe impl Sync`` should always be
+    accompanied by a ``// SAFETY:`` comment explaining the soundness
+    justification.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "rust_send_sync"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: RustSendSyncConfig,
+    ) -> list[Violation]:
+        """Detect unsafe Send/Sync without safety comments.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (RustSendSyncConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Detected violations.
+        """
+        lines = context.code.splitlines()
+        violations: list[Violation] = []
+        for i, line in enumerate(lines):
+            if re.search(r"unsafe\s+impl\s+(Send|Sync)", line):
+                prev = lines[i - 1].strip() if i > 0 else ""
+                if "SAFETY:" not in prev:
+                    violations.append(
+                        self.build_violation(
+                            config,
+                            contains="unsafe impl",
+                            suggestion="Add a // SAFETY: comment before unsafe Send/Sync impls.",
+                        ),
+                    )
+        return violations
+
+
+class RustErrorTraitsDetector(ViolationDetector[RustErrorTraitsConfig]):
+    """Flags error types that do not implement ``std::error::Error``.
+
+    Custom error structs/enums should implement ``std::error::Error``
+    and ``Display`` so they integrate with the standard error ecosystem.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "rust_error_traits"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: RustErrorTraitsConfig,
+    ) -> list[Violation]:
+        """Detect error types missing std::error::Error impls.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (RustErrorTraitsConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Detected violations.
+        """
+        if re.search(r"(struct|enum)\s+\w*Error", context.code) and not re.search(
+            r"impl.*(std::error::Error|Error\s+for)",
+            context.code,
+        ):
+            return [
+                self.build_violation(
+                    config,
+                    contains="Error type",
+                    suggestion="Error types should implement std::error::Error and Display.",
+                ),
+            ]
+        return []
+
+
+class RustNamingDetector(ViolationDetector[RustNamingConfig]):
+    """Flags functions using camelCase instead of snake_case.
+
+    RFC 430 mandates ``snake_case`` for function names in Rust.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "rust_naming"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: RustNamingConfig,
+    ) -> list[Violation]:
+        """Detect camelCase function names violating RFC 430.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (RustNamingConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Detected violations.
+        """
+        if re.search(r"fn\s+[a-z]+[A-Z]", context.code):
+            return [
+                self.build_violation(
+                    config,
+                    contains="naming",
+                    suggestion="Follow Rust naming conventions (RFC 430): snake_case for functions.",
+                ),
+            ]
+        return []
+
+
+class RustDefaultImplDetector(ViolationDetector[RustDefaultImplConfig]):
+    """Flags public structs that lack a ``Default`` implementation.
+
+    Public structs with an obvious default state should implement
+    ``Default`` so callers can construct them ergonomically.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "rust_default_impl"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: RustDefaultImplConfig,
+    ) -> list[Violation]:
+        """Detect public structs without Default derivation.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (RustDefaultImplConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Detected violations.
+        """
+        violations: list[Violation] = []
+        lines = context.code.splitlines()
+        for i, line in enumerate(lines):
+            if re.search(r"pub\s+struct\s+\w+", line):
+                preceding = "\n".join(lines[max(0, i - 5) : i])
+                if not re.search(r"#\[derive\(.*Default", preceding):
+                    violations.append(
+                        self.build_violation(
+                            config,
+                            contains="pub struct",
+                            suggestion="Implement Default when there's an obvious default state.",
+                        ),
+                    )
+        return violations
+
+
+class RustFromIntoDetector(ViolationDetector[RustFromIntoConfig]):
+    """Flags ad-hoc conversion functions that should use ``From``/``Into`` traits.
+
+    Idiomatic Rust uses ``From``/``Into`` traits for type conversions
+    rather than standalone ``from_*``/``to_*``/``into_*`` functions.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "rust_from_into"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: RustFromIntoConfig,
+    ) -> list[Violation]:
+        """Detect ad-hoc conversion functions missing From/Into impls.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (RustFromIntoConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Detected violations.
+        """
+        if re.search(
+            r"fn\s+(from_\w+|to_\w+|into_\w+)\s*\(",
+            context.code,
+        ) and not re.search(r"impl\s+From", context.code):
+            return [
+                self.build_violation(
+                    config,
+                    contains="conversion function",
+                    suggestion="Use From/Into traits for type conversions.",
+                ),
+            ]
+        return []
+
+
 __all__ = [
     "RustCloneOverheadDetector",
     "RustDebugDeriveDetector",
+    "RustDefaultImplDetector",
     "RustEnumOverBoolDetector",
     "RustErrorHandlingDetector",
+    "RustErrorTraitsDetector",
+    "RustFromIntoDetector",
     "RustInteriorMutabilityDetector",
     "RustIteratorPreferenceDetector",
     "RustLifetimeUsageDetector",
     "RustMustUseDetector",
+    "RustNamingDetector",
     "RustNewtypePatternDetector",
+    "RustSendSyncDetector",
     "RustStdTraitsDetector",
     "RustTypeSafetyDetector",
     "RustUnsafeBlocksDetector",

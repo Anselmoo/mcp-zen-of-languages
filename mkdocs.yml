@@ -268,6 +268,9 @@ nav:
           - Markdown / MDX: user-guide/languages/markdown.md
           - Config Formats: user-guide/languages/config-formats.md
       - Understanding Violations: user-guide/understanding-violations.md
+      - Rules:
+          - user-guide/rules/index.md
+          - The 10 Dogmas: user-guide/rules/the-ten-dogmas.md
       - Prompt Generation: user-guide/prompt-generation.md
       - Project Analysis: user-guide/project-analysis.md
       - Examples: user-guide/examples.md

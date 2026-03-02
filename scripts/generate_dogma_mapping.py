@@ -1,4 +1,4 @@
-"""Generate dogma↔language-rule reverse-mapping snippets for docs.
+"""Generate dogma↔language-rule reverse-mapping docs.
 
 Run::
 
@@ -8,7 +8,7 @@ Run::
 The script imports all language zen principles and uses
 ``infer_dogmas_for_principle()`` to build a reverse mapping from each
 of the 10 universal dogmas to the language-specific rules that implement
-them.  Output is written to ``docs/includes/generated/dogma-mapping.md``.
+them.
 """
 
 from __future__ import annotations
@@ -26,7 +26,8 @@ from mcp_zen_of_languages.rules import get_all_languages
 from mcp_zen_of_languages.rules import get_language_zen
 
 
-OUTPUT_PATH = Path("docs/includes/generated/dogma-mapping.md")
+MAPPING_OUTPUT_PATH = Path("docs/includes/generated/dogma-mapping.md")
+DOGMA_SPEC_PATH = Path("docs/user-guide/rules/the-ten-dogmas.md")
 
 # Display-friendly language names (module_key → display name)
 _LANGUAGE_NAMES: dict[str, str] = {
@@ -68,6 +69,7 @@ _DOGMA_LABELS: dict[UniversalDogmaID, str] = {
     UniversalDogmaID.PROPORTIONATE_COMPLEXITY: "Proportionate Complexity",
 }
 
+
 # Dogma anchor slugs on philosophy.md (MkDocs auto-generated from headings)
 _DOGMA_ANCHORS: dict[UniversalDogmaID, str] = {
     UniversalDogmaID.UTILIZE_ARGUMENTS: "1-dogma-of-purpose-zen-utilize-arguments",
@@ -80,6 +82,131 @@ _DOGMA_ANCHORS: dict[UniversalDogmaID, str] = {
     UniversalDogmaID.STRICT_FENCES: "8-dogma-of-strict-fences-zen-strict-fences",
     UniversalDogmaID.RUTHLESS_DELETION: "9-dogma-of-ruthless-deletion-zen-ruthless-deletion",
     UniversalDogmaID.PROPORTIONATE_COMPLEXITY: "10-dogma-of-proportionate-complexity-zen-proportionate-complexity",
+}
+
+# Per-dogma (quote, rationale, anti-patterns list)
+_DOGMA_DETAIL: dict[UniversalDogmaID, tuple[str, str, list[str]]] = {
+    UniversalDogmaID.UTILIZE_ARGUMENTS: (
+        "Every argument must be used or removed.",
+        "Unused parameters signal dead intent. They mislead readers about a "
+        "function's contract and accumulate as noise during refactors. In AI-assisted "
+        "workflows, an agent generating a function signature should never leave behind "
+        "vestigial parameters.",
+        [
+            "Accepting a parameter that is never referenced in the body.",
+            "Keeping deprecated arguments for compatibility without a migration path.",
+            "Forwarding `**kwargs` solely to suppress linter warnings about unused names.",
+        ],
+    ),
+    UniversalDogmaID.EXPLICIT_INTENT: (
+        "Avoid magic behavior and hidden assumptions.",
+        "Implicit behavior — type coercion, default mutations, hidden global state — "
+        "creates cognitive load that compounds across a codebase. When an AI assistant "
+        "reviews code, explicit intent makes violations unambiguous and fixes mechanical.",
+        [
+            "Relying on mutable default arguments (`def f(x=[])`).",
+            "Star-imports that hide the origin of names.",
+            "Magic numbers without named constants.",
+            "Implicit type conversions that silently change semantics.",
+        ],
+    ),
+    UniversalDogmaID.RETURN_EARLY: (
+        "Prefer guard clauses over deep nesting.",
+        "Deeply nested code forces readers to maintain a mental stack of conditions. "
+        "Guard clauses flatten the control flow and highlight the happy path. "
+        "Detectors can measure nesting depth mechanically, making this an ideal "
+        "candidate for automated enforcement.",
+        [
+            "`if`/`else` chains nested three or more levels deep.",
+            "Wrapping entire function bodies in a single top-level `if`.",
+            "Failing to invert negative conditions into early returns.",
+        ],
+    ),
+    UniversalDogmaID.FAIL_FAST: (
+        "Never silently swallow errors.",
+        "Silent failures turn bugs into mysteries. When errors surface immediately, "
+        "root-cause analysis becomes trivial. This is especially critical in MCP "
+        "workflows where an agent may not observe side effects that a human would "
+        "notice in a debugger.",
+        [
+            "Bare `except: pass` blocks.",
+            "Catching broad exception types without logging or re-raising.",
+            "Returning `None` as a silent error sentinel instead of raising.",
+            "Using `.unwrap()` (Rust) or force-unwrapping (Swift) without context.",
+        ],
+    ),
+    UniversalDogmaID.RIGHT_ABSTRACTION: (
+        "Avoid flag-heavy abstractions.",
+        "A boolean parameter that toggles behavior is two functions wearing one name. "
+        "Premature or incorrect abstraction is worse than duplication — it couples "
+        "unrelated concerns and makes extension fragile.",
+        [
+            "Functions with boolean `mode` flags that switch between unrelated behaviors.",
+            "God Classes with dozens of methods spanning multiple responsibilities.",
+            "Deep inheritance hierarchies where base classes know about leaf details.",
+            "Circular dependencies between modules.",
+        ],
+    ),
+    UniversalDogmaID.UNAMBIGUOUS_NAME: (
+        "Clarity over clever shorthand.",
+        "Names are the primary API for understanding code. Ambiguous or overly short "
+        "identifiers force readers to trace definitions. For AI assistants consuming "
+        "code via MCP, clear names reduce hallucination risk.",
+        [
+            "Single-letter variable names outside trivial loop counters.",
+            "Abbreviations that save keystrokes but cost comprehension (`mgr`, `ctx`, `impl`).",
+            "Naming style violations for the language (e.g., `camelCase` in Python).",
+            "Inconsistent naming conventions across a project.",
+        ],
+    ),
+    UniversalDogmaID.VISIBLE_STATE: (
+        "Make mutation explicit and predictable.",
+        "Hidden mutation — global state changes, in-place modifications without clear "
+        "signals — is the leading cause of 'works on my machine' bugs. Visible state "
+        "makes data flow traceable and diffs reviewable.",
+        [
+            "Mutating function arguments in place without documenting it.",
+            "Global mutable singletons accessed from multiple modules.",
+            "Implicit state changes through property setters that trigger side effects.",
+            "Shadowing variables in nested scopes, creating ambiguity about which binding is alive.",
+        ],
+    ),
+    UniversalDogmaID.STRICT_FENCES: (
+        "Preserve encapsulation boundaries.",
+        "Module and class boundaries exist to manage complexity. Breaking "
+        "encapsulation — accessing private members, circular imports, leaking internal "
+        "types — turns architecture diagrams into lies.",
+        [
+            "Accessing private/protected members from outside the owning module.",
+            "Circular import dependencies between packages.",
+            "Exposing internal implementation types in public APIs.",
+            "Namespace pollution through wildcard re-exports.",
+        ],
+    ),
+    UniversalDogmaID.RUTHLESS_DELETION: (
+        "Remove dead and unreachable code.",
+        "Dead code is technical debt with zero value. It misleads readers, inflates "
+        "coverage metrics, and creates phantom dependencies. Version control preserves "
+        "history — there is no reason to keep unused code in the working tree.",
+        [
+            "Commented-out code blocks left 'just in case.'",
+            "Functions or classes that are defined but never called.",
+            "Feature flags that are permanently off with no cleanup plan.",
+            "Unreachable branches after an unconditional return.",
+        ],
+    ),
+    UniversalDogmaID.PROPORTIONATE_COMPLEXITY: (
+        "Choose the simplest design that works.",
+        "Complexity must be justified by requirements, not by speculative generality. "
+        "High cyclomatic complexity, long functions, and over-engineered abstractions "
+        "all increase the cost of every future change.",
+        [
+            "Functions with cyclomatic complexity exceeding a configured threshold.",
+            "Functions longer than a screen (configurable, default ~50 lines).",
+            "Premature introduction of design patterns without a concrete need.",
+            "Over-parameterized configurations when sensible defaults suffice.",
+        ],
+    ),
 }
 
 # Language key → docs filename mapping for cross-links
@@ -171,6 +298,91 @@ def render_mapping(mapping: dict[str, list[tuple[str, str, str, int]]]) -> str:
     return "\n".join(lines).rstrip("\n") + "\n" if lines else ""
 
 
+_DOGMA_SPEC_FRONTMATTER = """\
+---
+title: The 10 Dogmas of Zen
+description: >-
+  Ten universal cross-language rules that drive every detector
+  and remediation prompt in mcp-zen-of-languages.
+icon: material/gavel
+tags:
+  - Dogmas
+  - Architecture
+  - Quality
+---
+"""
+
+_DOGMA_SPEC_INTRO = """\
+# The 10 Dogmas of Zen
+
+![The 10 Dogmas of Zen — ten stones in a zen garden representing the core code quality principles](../../assets/illustration-zen-dogma.svg)
+
+`mcp-zen-of-languages` treats static analysis as **architectural coaching**, not just linting.
+These 10 dogmas are universal, cross-language contracts — every language-specific rule and
+every detector ultimately traces back to one of them.
+
+!!! info "How this page is generated"
+    This page is auto-generated by `scripts/generate_dogma_mapping.py` from the
+    `UniversalDogmaID` enum in `src/mcp_zen_of_languages/core/universal_dogmas.py`.
+    Do not edit it manually — run `uv run python scripts/generate_dogma_mapping.py` instead.
+
+"""
+
+
+def render_dogma_spec() -> str:
+    """Render the full dogma-spec page for docs/user-guide/rules/the-ten-dogmas.md."""
+    lines: list[str] = [_DOGMA_SPEC_FRONTMATTER, _DOGMA_SPEC_INTRO]
+
+    for i, dogma in enumerate(UniversalDogmaID, start=1):
+        label = _DOGMA_LABELS[dogma]
+        quote, rationale, anti_patterns = _DOGMA_DETAIL[dogma]
+        lines.append(f"## {i}. Dogma of {label} — `{dogma.value}`")
+        lines.append("")
+        lines.append(f"> {quote}")
+        lines.append("")
+        lines.append(f"**Rationale.** {rationale}")
+        lines.append("")
+        lines.append("**Anti-patterns:**")
+        lines.append("")
+        lines.extend(f"- {ap}" for ap in anti_patterns)
+        lines.append("")
+        lines.append("---")
+        lines.append("")
+
+    lines.append("## Cross-Language Rule Mapping")
+    lines.append("")
+    lines.append(
+        "Each dogma is implemented by language-specific rules across the supported languages."
+    )
+    lines.append(
+        "The tables below are **auto-generated** from the codebase's"
+        " `infer_dogmas_for_principle()` mapping."
+    )
+    lines.append("")
+    lines.append('--8<-- "docs/includes/generated/dogma-mapping.md"')
+    lines.append("")
+    lines.append("## See Also")
+    lines.append("")
+    lines.append(
+        "- [Philosophy](../../getting-started/philosophy.md)"
+        " — motivation and the architectural-coaching approach"
+    )
+    lines.append(
+        "- [Architecture](../../contributing/architecture.md)"
+        " — how dogmas drive detector and pipeline design"
+    )
+    lines.append(
+        "- [Languages](../languages/index.md)"
+        " — per-language principles derived from these dogmas"
+    )
+    lines.append(
+        "- [Understanding Violations](../understanding-violations.md)"
+        " — severity scores, worked examples, and the MCP workflow"
+    )
+
+    return "\n".join(lines).rstrip("\n") + "\n"
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Generate dogma↔rule reverse-mapping docs snippets.",
@@ -183,23 +395,35 @@ def main() -> int:
     args = parser.parse_args()
 
     mapping = build_reverse_mapping()
-    expected = render_mapping(mapping)
+    expected_outputs = {
+        MAPPING_OUTPUT_PATH: render_mapping(mapping),
+        DOGMA_SPEC_PATH: render_dogma_spec(),
+    }
 
     if args.check:
-        if not OUTPUT_PATH.exists():
-            print(f"❌ {OUTPUT_PATH}: generated dogma mapping missing")
-            return 1
-        current = OUTPUT_PATH.read_text(encoding="utf-8")
-        if current != expected:
-            print(f"❌ {OUTPUT_PATH}: stale dogma mapping (run generator)")
+        stale = False
+        for output_path, expected in expected_outputs.items():
+            if not output_path.exists():
+                print(f"❌ {output_path}: generated output missing")
+                stale = True
+                continue
+            current = output_path.read_text(encoding="utf-8")
+            if current != expected:
+                print(f"❌ {output_path}: stale generated output (run generator)")
+                stale = True
+        if stale:
             return 1
         print("✅ Dogma mapping checks passed")
         return 0
 
-    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT_PATH.write_text(expected, encoding="utf-8")
+    for output_path, expected in expected_outputs.items():
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(expected, encoding="utf-8")
     total_rules = sum(len(v) for v in mapping.values())
-    print(f"Generated dogma mapping ({len(mapping)} dogmas, {total_rules} rule links)")
+    print(
+        f"Generated dogma docs ({len(mapping)} dogmas,"
+        f" {total_rules} rule links, {len(expected_outputs)} files)"
+    )
     return 0
 
 

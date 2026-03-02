@@ -10,21 +10,44 @@ from mcp_zen_of_languages.analyzers.base import AnalysisContext
 from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
 from mcp_zen_of_languages.analyzers.base import ViolationDetector
 from mcp_zen_of_languages.languages.configs import TsAnyUsageConfig
+from mcp_zen_of_languages.languages.configs import TsAsyncAwaitConfig
+from mcp_zen_of_languages.languages.configs import TsCatchAllTypeConfig
+from mcp_zen_of_languages.languages.configs import TsConsoleUsageConfig
+from mcp_zen_of_languages.languages.configs import TsDefaultExportConfig
 from mcp_zen_of_languages.languages.configs import TsEnumConstConfig
+from mcp_zen_of_languages.languages.configs import TsForOfConfig
+from mcp_zen_of_languages.languages.configs import TsImportOrderConfig
+from mcp_zen_of_languages.languages.configs import TsIndexLoopConfig
 from mcp_zen_of_languages.languages.configs import TsInterfacePreferenceConfig
+from mcp_zen_of_languages.languages.configs import TsNamedExportConfig
+from mcp_zen_of_languages.languages.configs import TsNoConsoleConfig
 from mcp_zen_of_languages.languages.configs import TsNonNullAssertionConfig
+from mcp_zen_of_languages.languages.configs import TsObjectTypeConfig
+from mcp_zen_of_languages.languages.configs import TsOptionalChainingConfig
+from mcp_zen_of_languages.languages.configs import TsPromiseChainConfig
 from mcp_zen_of_languages.languages.configs import TsReadonlyConfig
+from mcp_zen_of_languages.languages.configs import TsRequireImportConfig
 from mcp_zen_of_languages.languages.configs import TsReturnTypeConfig
 from mcp_zen_of_languages.languages.configs import TsStrictModeConfig
+from mcp_zen_of_languages.languages.configs import TsStringConcatConfig
+from mcp_zen_of_languages.languages.configs import TsTemplateLiteralConfig
 from mcp_zen_of_languages.languages.configs import TsTypeGuardConfig
 from mcp_zen_of_languages.languages.configs import TsUnknownOverAnyConfig
 from mcp_zen_of_languages.languages.configs import TsUtilityTypesConfig
 from mcp_zen_of_languages.rules.detections import detect_ts_any_usage
+from mcp_zen_of_languages.rules.detections import detect_ts_catch_all_types
+from mcp_zen_of_languages.rules.detections import detect_ts_console_usage
+from mcp_zen_of_languages.rules.detections import detect_ts_default_exports
+from mcp_zen_of_languages.rules.detections import detect_ts_index_loops
 from mcp_zen_of_languages.rules.detections import detect_ts_missing_return_types
 from mcp_zen_of_languages.rules.detections import detect_ts_non_null_assertions
 from mcp_zen_of_languages.rules.detections import detect_ts_object_type_aliases
+from mcp_zen_of_languages.rules.detections import detect_ts_optional_chaining
 from mcp_zen_of_languages.rules.detections import detect_ts_plain_enum_objects
+from mcp_zen_of_languages.rules.detections import detect_ts_promise_chains
 from mcp_zen_of_languages.rules.detections import detect_ts_readonly_usage
+from mcp_zen_of_languages.rules.detections import detect_ts_require_imports
+from mcp_zen_of_languages.rules.detections import detect_ts_string_concats
 from mcp_zen_of_languages.rules.detections import detect_ts_type_assertions
 from mcp_zen_of_languages.rules.detections import detect_ts_unknown_over_any
 from mcp_zen_of_languages.rules.detections import detect_ts_utility_types
@@ -536,14 +559,664 @@ class TsUnknownOverAnyDetector(
         return violations
 
 
+class TsOptionalChainingDetector(
+    ViolationDetector[TsOptionalChainingConfig],
+    LocationHelperMixin,
+):
+    """Detects manual null-check chains replaceable by optional chaining (``?.``)."""
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "ts_optional_chaining"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: TsOptionalChainingConfig,
+    ) -> list[Violation]:
+        """Detect manual null-check chain violations.
+
+        Args:
+            context (AnalysisContext): Analysis context.
+            config (TsOptionalChainingConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Violations found.
+        """
+        violations: list[Violation] = []
+        finding = detect_ts_optional_chaining(context.code)
+        if finding.count > config.max_manual_null_checks:
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains="&&",
+                    index=0,
+                    suggestion="Use optional chaining (?.) instead of manual null checks.",
+                ),
+            )
+        return violations
+
+
+class TsIndexLoopDetector(
+    ViolationDetector[TsIndexLoopConfig],
+    LocationHelperMixin,
+):
+    """Detects C-style index-based ``for`` loops replaceable by ``for-of`` or array methods."""
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "ts_index_loops"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: TsIndexLoopConfig,
+    ) -> list[Violation]:
+        """Detect index-loop violations.
+
+        Args:
+            context (AnalysisContext): Analysis context.
+            config (TsIndexLoopConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Violations found.
+        """
+        violations: list[Violation] = []
+        finding = detect_ts_index_loops(context.code)
+        if finding.count > config.max_index_loops:
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains="for",
+                    index=0,
+                    suggestion="Prefer for-of or array methods over index loops.",
+                ),
+            )
+        return violations
+
+
+class TsPromiseChainDetector(
+    ViolationDetector[TsPromiseChainConfig],
+    LocationHelperMixin,
+):
+    """Detects raw ``.then()`` promise chains replaceable by async/await."""
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "ts_promise_chains"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: TsPromiseChainConfig,
+    ) -> list[Violation]:
+        """Detect promise chain violations.
+
+        Args:
+            context (AnalysisContext): Analysis context.
+            config (TsPromiseChainConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Violations found.
+        """
+        violations: list[Violation] = []
+        finding = detect_ts_promise_chains(context.code)
+        if finding.count > config.max_promise_chains:
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains=".then(",
+                    index=0,
+                    suggestion="Prefer async/await over raw promise chains.",
+                ),
+            )
+        return violations
+
+
+class TsDefaultExportDetector(
+    ViolationDetector[TsDefaultExportConfig],
+    LocationHelperMixin,
+):
+    """Detects ``export default`` statements encouraging named exports instead."""
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "ts_default_exports"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: TsDefaultExportConfig,
+    ) -> list[Violation]:
+        """Detect default export violations.
+
+        Args:
+            context (AnalysisContext): Analysis context.
+            config (TsDefaultExportConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Violations found.
+        """
+        violations: list[Violation] = []
+        finding = detect_ts_default_exports(context.code)
+        if finding.count > config.max_default_exports:
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains="export default",
+                    index=0,
+                    suggestion="Prefer named exports for better refactoring support.",
+                ),
+            )
+        return violations
+
+
+class TsCatchAllTypeDetector(
+    ViolationDetector[TsCatchAllTypeConfig],
+    LocationHelperMixin,
+):
+    """Detects catch-all type annotations (``Object``, ``object``, ``{}``)."""
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "ts_catch_all_types"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: TsCatchAllTypeConfig,
+    ) -> list[Violation]:
+        """Detect catch-all type violations.
+
+        Args:
+            context (AnalysisContext): Analysis context.
+            config (TsCatchAllTypeConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Violations found.
+        """
+        violations: list[Violation] = []
+        finding = detect_ts_catch_all_types(context.code)
+        if finding.count > config.max_catch_all_types:
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains="Object",
+                    index=0,
+                    suggestion="Use precise types instead of Object, object, or {}.",
+                ),
+            )
+        return violations
+
+
+class TsConsoleUsageDetector(
+    ViolationDetector[TsConsoleUsageConfig],
+    LocationHelperMixin,
+):
+    """Detects ``console.*`` calls in TypeScript production code."""
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "ts_console_usage"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: TsConsoleUsageConfig,
+    ) -> list[Violation]:
+        """Detect console usage violations.
+
+        Args:
+            context (AnalysisContext): Analysis context.
+            config (TsConsoleUsageConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Violations found.
+        """
+        violations: list[Violation] = []
+        finding = detect_ts_console_usage(context.code)
+        if finding.count > config.max_console_usages:
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains="console.",
+                    index=0,
+                    suggestion="Use a proper logging framework instead of console.",
+                ),
+            )
+        return violations
+
+
+class TsRequireImportDetector(
+    ViolationDetector[TsRequireImportConfig],
+    LocationHelperMixin,
+):
+    """Detects ``require()`` calls encouraging ES module imports instead."""
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "ts_require_imports"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: TsRequireImportConfig,
+    ) -> list[Violation]:
+        """Detect require import violations.
+
+        Args:
+            context (AnalysisContext): Analysis context.
+            config (TsRequireImportConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Violations found.
+        """
+        violations: list[Violation] = []
+        finding = detect_ts_require_imports(context.code)
+        if finding.count > config.max_require_calls:
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains="require(",
+                    index=0,
+                    suggestion="Use ES module import/export syntax instead of require().",
+                ),
+            )
+        return violations
+
+
+class TsStringConcatDetector(
+    ViolationDetector[TsStringConcatConfig],
+    LocationHelperMixin,
+):
+    """Detects string concatenation patterns encouraging template literals."""
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "ts_string_concats"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: TsStringConcatConfig,
+    ) -> list[Violation]:
+        """Detect string concatenation violations.
+
+        Args:
+            context (AnalysisContext): Analysis context.
+            config (TsStringConcatConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Violations found.
+        """
+        violations: list[Violation] = []
+        finding = detect_ts_string_concats(context.code)
+        if finding.count > config.max_string_concats:
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains="+",
+                    index=0,
+                    suggestion="Use template literals instead of string concatenation.",
+                ),
+            )
+        return violations
+
+
+class TsAsyncAwaitDetector(
+    ViolationDetector[TsAsyncAwaitConfig],
+    LocationHelperMixin,
+):
+    """Detects raw ``.then()`` promise chains encouraging async/await usage."""
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "ts_async_await"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: TsAsyncAwaitConfig,
+    ) -> list[Violation]:
+        """Detect raw promise-chain violations.
+
+        Args:
+            context (AnalysisContext): Analysis context.
+            config (TsAsyncAwaitConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Violations found.
+        """
+        violations: list[Violation] = []
+        finding = detect_ts_promise_chains(context.code)
+        if finding.count > config.max_then_chains:
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains=".then(",
+                    suggestion="Use async/await over raw Promise chains.",
+                ),
+            )
+        return violations
+
+
+class TsForOfDetector(
+    ViolationDetector[TsForOfConfig],
+    LocationHelperMixin,
+):
+    """Detects C-style index-based ``for`` loops encouraging ``for...of`` iteration."""
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "ts_for_of"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: TsForOfConfig,
+    ) -> list[Violation]:
+        """Detect index-based loop violations.
+
+        Args:
+            context (AnalysisContext): Analysis context.
+            config (TsForOfConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Violations found.
+        """
+        violations: list[Violation] = []
+        if re.search(
+            r"for\s*\(\s*(let|var|const)\s+\w+\s*=\s*0\s*;\s*\w+\s*<\s*\w+\.length",
+            context.code,
+        ):
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains="index loop",
+                    suggestion="Prefer for...of over index-based iteration.",
+                ),
+            )
+        return violations
+
+
+class TsImportOrderDetector(
+    ViolationDetector[TsImportOrderConfig],
+    LocationHelperMixin,
+):
+    """Detects CommonJS ``require()`` calls mixed with ES module imports."""
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "ts_import_order"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: TsImportOrderConfig,
+    ) -> list[Violation]:
+        """Detect mixed import style violations.
+
+        Args:
+            context (AnalysisContext): Analysis context.
+            config (TsImportOrderConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Violations found.
+        """
+        violations: list[Violation] = []
+        if re.search(r"\brequire\s*\(", context.code):
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains="require(",
+                    suggestion="Use consistent ES module imports; avoid mixing require().",
+                ),
+            )
+        return violations
+
+
+class TsNamedExportDetector(
+    ViolationDetector[TsNamedExportConfig],
+    LocationHelperMixin,
+):
+    """Detects ``export default`` usages encouraging named exports."""
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "ts_named_export"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: TsNamedExportConfig,
+    ) -> list[Violation]:
+        """Detect default-export violations.
+
+        Args:
+            context (AnalysisContext): Analysis context.
+            config (TsNamedExportConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Violations found.
+        """
+        violations: list[Violation] = []
+        if re.search(r"\bexport\s+default\b", context.code):
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains="export default",
+                    suggestion="Prefer named exports over default exports.",
+                ),
+            )
+        return violations
+
+
+class TsNoConsoleDetector(
+    ViolationDetector[TsNoConsoleConfig],
+    LocationHelperMixin,
+):
+    """Detects ``console.*`` calls in production code."""
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "ts_no_console"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: TsNoConsoleConfig,
+    ) -> list[Violation]:
+        """Detect console statement violations.
+
+        Args:
+            context (AnalysisContext): Analysis context.
+            config (TsNoConsoleConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Violations found.
+        """
+        violations: list[Violation] = []
+        if re.search(r"\bconsole\.(log|error|warn|debug|info)\s*\(", context.code):
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains="console.",
+                    suggestion="Remove console.log from production code; use a logger.",
+                ),
+            )
+        return violations
+
+
+class TsObjectTypeDetector(
+    ViolationDetector[TsObjectTypeConfig],
+    LocationHelperMixin,
+):
+    """Detects generic ``Object``/``object``/``{}`` type annotations."""
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "ts_object_type"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: TsObjectTypeConfig,
+    ) -> list[Violation]:
+        """Detect generic object-type violations.
+
+        Args:
+            context (AnalysisContext): Analysis context.
+            config (TsObjectTypeConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Violations found.
+        """
+        violations: list[Violation] = []
+        if re.search(r":\s*(Object|object|\{\s*\})(\s|;|,|\))", context.code):
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains="Object type",
+                    suggestion="Avoid Object/{}/object; use specific types or unknown.",
+                ),
+            )
+        return violations
+
+
+class TsTemplateLiteralDetector(
+    ViolationDetector[TsTemplateLiteralConfig],
+    LocationHelperMixin,
+):
+    """Detects string concatenation patterns encouraging template literals."""
+
+    @property
+    def name(self) -> str:
+        """Return the detector identifier.
+
+        Returns:
+            str: Identifier string.
+        """
+        return "ts_template_literal"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: TsTemplateLiteralConfig,
+    ) -> list[Violation]:
+        """Detect string concatenation violations.
+
+        Args:
+            context (AnalysisContext): Analysis context.
+            config (TsTemplateLiteralConfig): Detector configuration.
+
+        Returns:
+            list[Violation]: Violations found.
+        """
+        violations: list[Violation] = []
+        if re.search(r"""["']\s*\+\s*\w+\s*\+\s*["']""", context.code):
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains="string concat",
+                    suggestion="Use template literals instead of string concatenation.",
+                ),
+            )
+        return violations
+
+
 __all__ = [
     "TsAnyUsageDetector",
+    "TsAsyncAwaitDetector",
+    "TsCatchAllTypeDetector",
+    "TsConsoleUsageDetector",
+    "TsDefaultExportDetector",
     "TsEnumConstDetector",
+    "TsForOfDetector",
+    "TsImportOrderDetector",
+    "TsIndexLoopDetector",
     "TsInterfacePreferenceDetector",
+    "TsNamedExportDetector",
+    "TsNoConsoleDetector",
     "TsNonNullAssertionDetector",
+    "TsObjectTypeDetector",
+    "TsOptionalChainingDetector",
+    "TsPromiseChainDetector",
     "TsReadonlyDetector",
+    "TsRequireImportDetector",
     "TsReturnTypeDetector",
     "TsStrictModeDetector",
+    "TsStringConcatDetector",
+    "TsTemplateLiteralDetector",
     "TsTypeGuardDetector",
     "TsUnknownOverAnyDetector",
     "TsUtilityTypesDetector",

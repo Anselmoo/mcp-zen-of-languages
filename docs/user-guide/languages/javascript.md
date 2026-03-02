@@ -1,6 +1,6 @@
 ---
 title: JavaScript
-description: "11 zen principles enforced by 11 detectors: Modern JavaScript Best Practices."
+description: "18 zen principles enforced by 18 detectors: Modern JavaScript Best Practices."
 icon: fontawesome/brands/js
 tags:
   - JavaScript
@@ -31,20 +31,21 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 
 ## Zen Principles
 
-11 principles across 10 categories, drawn from [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript).
+18 principles across 11 categories, drawn from [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript).
 
 <div class="grid" markdown>
 
-:material-tag-outline: **Architecture** · 2 principles
+:material-tag-outline: **Architecture** · 3 principles
 :material-tag-outline: **Async** · 1 principle
 :material-tag-outline: **Clarity** · 1 principle
-:material-tag-outline: **Correctness** · 1 principle
-:material-tag-outline: **Design** · 1 principle
+:material-tag-outline: **Correctness** · 2 principles
+:material-tag-outline: **Design** · 2 principles
 :material-tag-outline: **Error Handling** · 1 principle
 :material-tag-outline: **Functional** · 1 principle
-:material-tag-outline: **Idioms** · 1 principle
+:material-tag-outline: **Idioms** · 4 principles
 :material-tag-outline: **Immutability** · 1 principle
 :material-tag-outline: **Readability** · 1 principle
+:material-tag-outline: **Security** · 1 principle
 
 </div>
 
@@ -61,6 +62,13 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 | `js-009` | Prefer composition over inheritance | Architecture | 7 | `ZEN-RIGHT-ABSTRACTION` |
 | `js-010` | Keep functions pure when possible | Functional | 6 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-VISIBLE-STATE` |
 | `js-011` | Use meaningful names | Readability | 8 | `ZEN-UNAMBIGUOUS-NAME` |
+| `js-012` | Use destructuring for assignment | Idioms | 5 | `ZEN-RIGHT-ABSTRACTION` |
+| `js-013` | Use object spread over Object.assign | Idioms | 5 | `ZEN-RIGHT-ABSTRACTION` |
+| `js-014` | Avoid with statement | Correctness | 9 | `ZEN-EXPLICIT-INTENT`, `ZEN-VISIBLE-STATE` |
+| `js-015` | Limit function parameter count | Design | 7 | `ZEN-RIGHT-ABSTRACTION` |
+| `js-016` | No eval() | Security | 9 | `ZEN-STRICT-FENCES` |
+| `js-017` | Prefer Array.from/spread over arguments | Idioms | 6 | `ZEN-RIGHT-ABSTRACTION` |
+| `js-018` | No prototype mutation on built-in objects | Architecture | 9 | `ZEN-RIGHT-ABSTRACTION` |
 
 ??? info "`js-001` — Avoid callback hell"
     **Use modern async patterns instead of nested callbacks**
@@ -239,6 +247,83 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
     |-----------|---------|
     | `min_identifier_length` | `2` |
 
+??? info "`js-012` — Use destructuring for assignment"
+    **Prefer destructuring over manually extracting object properties or array elements**
+
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
+    **Common Violations:**
+
+    - Consecutive property extractions from same object
+    - Repetitive array index access (arr[0], arr[1])
+    - Repeated parameter property access
+
+??? info "`js-013` — Use object spread over Object.assign"
+    **Prefer the spread syntax ({...obj}) over Object.assign for shallow cloning and merging**
+
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
+    **Common Violations:**
+
+    - Object.assign with empty first argument
+    - Object.assign for shallow cloning
+    - Object.assign with 3+ arguments when spread is clearer
+
+??? info "`js-014` — Avoid with statement"
+    **The with statement is disallowed in strict mode and creates ambiguous scope resolution**
+
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`, `ZEN-VISIBLE-STATE`
+    **Common Violations:**
+
+    - Any usage of with statement
+
+??? info "`js-015` — Limit function parameter count"
+    **Functions with too many positional parameters should accept an options object instead**
+
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
+    **Common Violations:**
+
+    - Functions with more than 3 positional parameters
+    - Constructor functions with more than 4 parameters
+
+    **Thresholds:**
+
+    | Parameter | Default |
+    |-----------|---------|
+    | `max_params` | `3` |
+
+??? info "`js-016` — No eval()"
+    **Use of eval() introduces security vulnerabilities and prevents JavaScript engine optimizations**
+
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`
+    **Common Violations:**
+
+    - Direct eval() calls
+    - new Function() constructor
+    - setTimeout or setInterval with string arguments
+
+??? info "`js-017` — Prefer Array.from/spread over arguments"
+    **The arguments object is a legacy non-array; use rest parameters (...args) instead**
+
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
+    **Common Violations:**
+
+    - Direct use of arguments keyword
+    - Array.prototype.slice.call(arguments)
+    - Array.from(arguments)
+
+    !!! tip "Recommended Fix"
+        Rest parameters (...args)
+
+??? info "`js-018` — No prototype mutation on built-in objects"
+    **Extending native prototypes creates global side effects and can break third-party code**
+
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
+    **Common Violations:**
+
+    - Array.prototype modification
+    - String.prototype modification
+    - Object.prototype modification
+    - Function.prototype modification
+
 
 ## Detector Catalog
 
@@ -248,6 +333,7 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 |----------|----------------|----------|
 | **JsGlobalStateDetector** | Detect direct access to global mutable state via ``window``, ``globalThis``, or ``global`` | `js-004` |
 | **JsInheritanceDepthDetector** | Detect class hierarchies that exceed a maximum inheritance depth | `js-009` |
+| **JsNoPrototypeMutationDetector** | Detect mutations of built-in object prototypes | `js-018` |
 
 ### Async
 
@@ -266,12 +352,14 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
 | **JsStrictEqualityDetector** | Detect loose equality operators (``==`` / ``!=``) in JavaScript | `js-003` |
+| **JsNoWithDetector** | Detect usage of the ``with`` statement in JavaScript | `js-014` |
 
 ### Design
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
 | **JsFunctionLengthDetector** | Detect JavaScript functions that exceed a configurable line-count limit | `js-005` |
+| **JsParamCountDetector** | Detect functions with too many parameters | `js-015` |
 
 ### Error Handling
 
@@ -290,6 +378,9 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
 | **JsModernFeaturesDetector** | Detect opportunities to adopt modern ES6+ language features | `js-006` |
+| **JsDestructuringDetector** | Detect repeated property access on the same object without destructuring | `js-012` |
+| **JsObjectSpreadDetector** | Detect usage of ``Object.assign`` where object spread is preferred | `js-013` |
+| **JsNoArgumentsDetector** | Detect usage of the legacy ``arguments`` object in JavaScript | `js-017` |
 
 ### Immutability
 
@@ -302,6 +393,12 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
 | **JsMeaningfulNamesDetector** | Detect overly short or cryptic identifiers in JavaScript declarations | `js-011` |
+
+### Security
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **JsNoEvalDetector** | Detect usage of ``eval()`` or ``new Function()`` in JavaScript | `js-016` |
 
 
 ??? example "Principle → Detector Wiring"
@@ -318,10 +415,19 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
     js_009["js-009<br/>Prefer composition over inheritance"]
     js_010["js-010<br/>Keep functions pure when possible"]
     js_011["js-011<br/>Use meaningful names"]
+    js_012["js-012<br/>Use destructuring for assignment"]
+    js_013["js-013<br/>Use object spread over Object.assign"]
+    js_014["js-014<br/>Avoid with statement"]
+    js_015["js-015<br/>Limit function parameter count"]
+    js_016["js-016<br/>No eval()"]
+    js_017["js-017<br/>Prefer Array.from/spread over arguments"]
+    js_018["js-018<br/>No prototype mutation on built-in object..."]
     det_JsAsyncErrorHandlingDetector["JsAsyncErrorHandlingDetector"]
     js_007 --> det_JsAsyncErrorHandlingDetector
     det_JsCallbackNestingDetector["JsCallbackNestingDetector"]
     js_001 --> det_JsCallbackNestingDetector
+    det_JsDestructuringDetector["JsDestructuringDetector"]
+    js_012 --> det_JsDestructuringDetector
     det_JsFunctionLengthDetector["JsFunctionLengthDetector"]
     js_005 --> det_JsFunctionLengthDetector
     det_JsGlobalStateDetector["JsGlobalStateDetector"]
@@ -334,8 +440,20 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
     js_011 --> det_JsMeaningfulNamesDetector
     det_JsModernFeaturesDetector["JsModernFeaturesDetector"]
     js_006 --> det_JsModernFeaturesDetector
+    det_JsNoArgumentsDetector["JsNoArgumentsDetector"]
+    js_017 --> det_JsNoArgumentsDetector
+    det_JsNoEvalDetector["JsNoEvalDetector"]
+    js_016 --> det_JsNoEvalDetector
+    det_JsNoPrototypeMutationDetector["JsNoPrototypeMutationDetector"]
+    js_018 --> det_JsNoPrototypeMutationDetector
     det_JsNoVarDetector["JsNoVarDetector"]
     js_002 --> det_JsNoVarDetector
+    det_JsNoWithDetector["JsNoWithDetector"]
+    js_014 --> det_JsNoWithDetector
+    det_JsObjectSpreadDetector["JsObjectSpreadDetector"]
+    js_013 --> det_JsObjectSpreadDetector
+    det_JsParamCountDetector["JsParamCountDetector"]
+    js_015 --> det_JsParamCountDetector
     det_JsPureFunctionDetector["JsPureFunctionDetector"]
     js_010 --> det_JsPureFunctionDetector
     det_JsStrictEqualityDetector["JsStrictEqualityDetector"]
@@ -353,15 +471,29 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
     class js_009 principle
     class js_010 principle
     class js_011 principle
+    class js_012 principle
+    class js_013 principle
+    class js_014 principle
+    class js_015 principle
+    class js_016 principle
+    class js_017 principle
+    class js_018 principle
     class det_JsAsyncErrorHandlingDetector detector
     class det_JsCallbackNestingDetector detector
+    class det_JsDestructuringDetector detector
     class det_JsFunctionLengthDetector detector
     class det_JsGlobalStateDetector detector
     class det_JsInheritanceDepthDetector detector
     class det_JsMagicNumbersDetector detector
     class det_JsMeaningfulNamesDetector detector
     class det_JsModernFeaturesDetector detector
+    class det_JsNoArgumentsDetector detector
+    class det_JsNoEvalDetector detector
+    class det_JsNoPrototypeMutationDetector detector
     class det_JsNoVarDetector detector
+    class det_JsNoWithDetector detector
+    class det_JsObjectSpreadDetector detector
+    class det_JsParamCountDetector detector
     class det_JsPureFunctionDetector detector
     class det_JsStrictEqualityDetector detector
     ```
@@ -373,12 +505,14 @@ languages:
   javascript:
     enabled: true
     pipeline:
-      - type: js-callback-nesting
+      - type: js_callback_nesting
         max_callback_nesting: 2
-      - type: js-no-var
+      - type: js_no_var
         detect_var_usage: True
-      - type: js-function-length
+      - type: js_function_length
         max_function_length: 50
+      - type: js_param_count
+        max_params: 3
 ```
 
 

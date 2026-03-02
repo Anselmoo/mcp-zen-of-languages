@@ -166,5 +166,128 @@ JAVASCRIPT_ZEN = LanguageZenPrinciples(
             ],
             metrics={"min_identifier_length": 2},
         ),
+        ZenPrinciple(
+            id="js-012",
+            principle="Use destructuring for assignment",
+            category=PrincipleCategory.IDIOMS,
+            severity=5,
+            description=(
+                "Prefer destructuring over manually extracting "
+                "object properties or array elements"
+            ),
+            violations=[
+                "Consecutive property extractions from same object",
+                "Repetitive array index access (arr[0], arr[1])",
+                "Repeated parameter property access",
+            ],
+            source_url=HttpUrl("https://github.com/airbnb/javascript#destructuring"),
+        ),
+        ZenPrinciple(
+            id="js-013",
+            principle="Use object spread over Object.assign",
+            category=PrincipleCategory.IDIOMS,
+            severity=5,
+            description=(
+                "Prefer the spread syntax ({...obj}) over "
+                "Object.assign for shallow cloning and merging"
+            ),
+            violations=[
+                "Object.assign with empty first argument",
+                "Object.assign for shallow cloning",
+                "Object.assign with 3+ arguments when spread is clearer",
+            ],
+            source_url=HttpUrl(
+                "https://github.com/airbnb/javascript#objects--rest-spread"
+            ),
+        ),
+        ZenPrinciple(
+            id="js-014",
+            principle="Avoid with statement",
+            category=PrincipleCategory.CORRECTNESS,
+            severity=9,
+            description=(
+                "The with statement is disallowed in strict mode "
+                "and creates ambiguous scope resolution"
+            ),
+            violations=[
+                "Any usage of with statement",
+            ],
+            source_url=HttpUrl(
+                "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/with"
+            ),
+        ),
+        ZenPrinciple(
+            id="js-015",
+            principle="Limit function parameter count",
+            category=PrincipleCategory.DESIGN,
+            severity=7,
+            description=(
+                "Functions with too many positional parameters "
+                "should accept an options object instead"
+            ),
+            violations=[
+                "Functions with more than 3 positional parameters",
+                "Constructor functions with more than 4 parameters",
+            ],
+            metrics={"max_params": 3},
+            source_url=HttpUrl(
+                "https://github.com/airbnb/javascript#functions--defaults-last"
+            ),
+        ),
+        ZenPrinciple(
+            id="js-016",
+            principle="No eval()",
+            category=PrincipleCategory.SECURITY,
+            severity=9,
+            description=(
+                "Use of eval() introduces security vulnerabilities "
+                "and prevents JavaScript engine optimizations"
+            ),
+            violations=[
+                "Direct eval() calls",
+                "new Function() constructor",
+                "setTimeout or setInterval with string arguments",
+            ],
+            source_url=HttpUrl("https://github.com/airbnb/javascript#properties--eval"),
+        ),
+        ZenPrinciple(
+            id="js-017",
+            principle="Prefer Array.from/spread over arguments",
+            category=PrincipleCategory.IDIOMS,
+            severity=6,
+            description=(
+                "The arguments object is a legacy non-array; "
+                "use rest parameters (...args) instead"
+            ),
+            violations=[
+                "Direct use of arguments keyword",
+                "Array.prototype.slice.call(arguments)",
+                "Array.from(arguments)",
+            ],
+            recommended_alternative="Rest parameters (...args)",
+            source_url=HttpUrl(
+                "https://github.com/airbnb/javascript#functions--arguments-shadow"
+            ),
+        ),
+        ZenPrinciple(
+            id="js-018",
+            principle="No prototype mutation on built-in objects",
+            category=PrincipleCategory.ARCHITECTURE,
+            severity=9,
+            description=(
+                "Extending native prototypes creates global side effects "
+                "and can break third-party code"
+            ),
+            violations=[
+                "Array.prototype modification",
+                "String.prototype modification",
+                "Object.prototype modification",
+                "Function.prototype modification",
+            ],
+            source_url=HttpUrl(
+                "https://github.com/airbnb/javascript"
+                "#native-prototypes--no-extend-native"
+            ),
+        ),
     ],
 )

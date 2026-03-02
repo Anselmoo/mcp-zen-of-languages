@@ -5,11 +5,11 @@
                                         Summary
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ Total files                                         ┃ 1                              ┃
-┃ Total violations                                    ┃ 3                              ┃
+┃ Total violations                                    ┃ 5                              ┃
 ┃ Critical                                            ┃ 🔴 CRIT 1                      ┃
 ┃ High                                                ┃ 🟠 HIGH 2                      ┃
-┃ Medium                                              ┃ 🔵 MED 0                       ┃
-┃ Low                                                 ┃ ⚪ LOW 0                       ┃
+┃ Medium                                              ┃ 🔵 MED 1                       ┃
+┃ Low                                                 ┃ ⚪ LOW 1                       ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 ╭──────────────────────── {{ fixture_path }} ─────────────────────────╮
 │                   Violations - {{ fixture_path }}                   │
@@ -22,6 +22,11 @@
 │ │              │                                 │ APIs (4:1)                      │ │
 │ │   🟠 HIGH    │ In the face of ambiguity,       │ Missing input validation (4:1)  │ │
 │ │              │ refuse the temptation to guess  │                                 │ │
+│ │    🔵 MED    │ If the implementation is hard   │ Functions without docstrings    │ │
+│ │              │ to explain, it's a bad idea     │                                 │ │
+│ │    ⚪ LOW    │ If the implementation is easy   │ Public functions without        │ │
+│ │              │ to explain, it may be a good    │ docstrings                      │ │
+│ │              │ idea                            │                                 │ │
 │ ╰──────────────┴─────────────────────────────────┴─────────────────────────────────╯ │
 ╰──────────────────────────────────────────────────────────────────────────────────────╯
 ╭──────────────────────────────────────────────────────────────────────────────╮
@@ -29,7 +34,7 @@
 │ ╭────────────────┬────────────────────────────────────────────────────────── │
 │ │ Area           │ Detail                                                    │
 │ ├────────────────┼────────────────────────────────────────────────────────── │
-│ │ Feature        │ testing: 2 detector classes have no matching test module. │
+│ │ Feature        │ testing: 42 detector classes have no matching test module │
 │ │                │ Add detector-focused tests under tests/detectors.)        │
 │ ╰────────────────┴────────────────────────────────────────────────────────── │
 ╰──────────────────────────────────────────────────────────────────────────────╯

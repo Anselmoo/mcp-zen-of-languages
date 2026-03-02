@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
 from mcp_zen_of_languages.languages.configs import MarkdownAltTextConfig
 from mcp_zen_of_languages.languages.configs import MarkdownBareUrlConfig
@@ -110,13 +112,13 @@ def test_markdown_frontmatter_complete_no_violation():
 
 
 def test_markdown_dead_relative_link_violation(tmp_path):
-    doc_path = tmp_path / "docs" / "guide.md"
-    doc_path.parent.mkdir(parents=True)
+    source_path = tmp_path / "docs" / "guide.md"
+    source_path.parent.mkdir(parents=True)
     violations = _detect(
         MarkdownFrontMatterDetector(),
         "[Missing](./missing.md)\n",
-        MarkdownFrontMatterConfig(required_frontmatter_keys=["title", "description"]),
-        path=str(doc_path),
+        MarkdownFrontMatterConfig(),
+        path=str(source_path),
     )
     assert violations
 
@@ -129,10 +131,21 @@ def test_markdown_dead_relative_link_allows_existing_target(tmp_path):
     violations = _detect(
         MarkdownFrontMatterDetector(),
         "[Intro](./intro.md)\n",
-        MarkdownFrontMatterConfig(required_frontmatter_keys=["title", "description"]),
+        MarkdownFrontMatterConfig(),
         path=str(doc_path),
     )
     assert not violations
+
+
+def test_markdown_dead_relative_link_disallows_repo_escape():
+    doc_path = Path.cwd() / "docs" / "guide.md"
+    violations = _detect(
+        MarkdownFrontMatterDetector(),
+        "[Escape](../../etc/passwd)\n",
+        MarkdownFrontMatterConfig(),
+        path=str(doc_path),
+    )
+    assert violations
 
 
 def test_mdx_unnamed_default_export_violation():

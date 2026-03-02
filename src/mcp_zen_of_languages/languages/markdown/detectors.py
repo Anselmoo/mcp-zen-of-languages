@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import re
+
 from pathlib import Path
 
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
@@ -230,7 +231,9 @@ class MarkdownFrontMatterDetector(
                 if (match := _FRONTMATTER_RE.match(line.strip()))
             }
             missing = [
-                key for key in config.required_frontmatter_keys if key.lower() not in keys
+                key
+                for key in config.required_frontmatter_keys
+                if key.lower() not in keys
             ]
             if missing:
                 return [
@@ -242,7 +245,9 @@ class MarkdownFrontMatterDetector(
                 ]
         if not context.path:
             return []
-        base_dir = Path(context.path).parent
+        base_dir = Path(context.path).resolve().parent
+        repo_root = Path.cwd().resolve()
+        enforce_repo_boundary = repo_root in (base_dir, *base_dir.parents)
         for line_no, line in _iter_text_lines(context.code):
             for match in _MARKDOWN_LINK_TARGET_RE.finditer(line):
                 target = match.group(1).strip()
@@ -253,7 +258,19 @@ class MarkdownFrontMatterDetector(
                     or re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*:", target)
                 ):
                     continue
-                if (base_dir / target).exists():
+                resolved_target = (base_dir / target).resolve()
+                if enforce_repo_boundary and repo_root not in (
+                    resolved_target,
+                    *resolved_target.parents,
+                ):
+                    return [
+                        self.build_violation(
+                            config,
+                            location=Location(line=line_no, column=match.start() + 1),
+                            suggestion=f"Relative link target '{target}' must stay inside the repository.",
+                        ),
+                    ]
+                if resolved_target.exists():
                     continue
                 return [
                     self.build_violation(

@@ -23,10 +23,13 @@ from mcp_zen_of_languages.models import Violation
 
 _PROVIDER_START_RE = re.compile(r'^\s*provider\s+"([^"]+)"\s*\{')
 _MODULE_START_RE = re.compile(r'^\s*module\s+"([^"]+)"\s*\{')
+_VARIABLE_START_RE = re.compile(r'^\s*variable\s+"([^"]+)"\s*\{')
 _VARIABLE_OR_OUTPUT_START_RE = re.compile(r'^\s*(?:variable|output)\s+"([^"]+)"\s*\{')
 _RESOURCE_START_RE = re.compile(r'^\s*resource\s+"([^"]+)"\s+"([^"]+)"\s*\{')
 _TERRAFORM_BLOCK_RE = re.compile(r"^\s*terraform\s*\{")
 _BACKEND_RE = re.compile(r'^\s*backend\s+"[^"]+"\s*\{')
+_REQUIRED_PROVIDERS_RE = re.compile(r"^\s*required_providers\s*\{")
+_PROVIDER_ENTRY_RE = re.compile(r"^\s*([A-Za-z0-9_-]+)\s*=\s*\{")
 _DESCRIPTION_RE = re.compile(r"^\s*description\s*=")
 _VERSION_RE = re.compile(r"^\s*version\s*=")
 _SOURCE_RE = re.compile(r'^\s*source\s*=\s*"([^"]+)"')
@@ -55,7 +58,7 @@ def _iter_block_lines(
             idx += 1
             continue
         start_line = idx + 1
-        label = match.group(1)
+        label = match.group(1) if match.lastindex else ""
         brace_depth = line.count("{") - line.count("}")
         body: list[str] = []
         idx += 1
@@ -66,6 +69,39 @@ def _iter_block_lines(
             idx += 1
         blocks.append((start_line, label, body))
     return blocks
+
+
+def _providers_with_required_versions(code: str) -> set[str]:
+    providers: set[str] = set()
+    for _, _, terraform_body in _iter_block_lines(code, _TERRAFORM_BLOCK_RE):
+        idx = 0
+        while idx < len(terraform_body):
+            line = terraform_body[idx]
+            if not _REQUIRED_PROVIDERS_RE.match(line):
+                idx += 1
+                continue
+            brace_depth = line.count("{") - line.count("}")
+            idx += 1
+            while idx < len(terraform_body) and brace_depth > 0:
+                provider_line = terraform_body[idx]
+                brace_depth += provider_line.count("{") - provider_line.count("}")
+                if not (provider_entry := _PROVIDER_ENTRY_RE.match(provider_line)):
+                    idx += 1
+                    continue
+                provider_name = provider_entry[1]
+                provider_depth = provider_line.count("{") - provider_line.count("}")
+                idx += 1
+                has_version = False
+                while idx < len(terraform_body) and provider_depth > 0:
+                    entry_line = terraform_body[idx]
+                    provider_depth += entry_line.count("{") - entry_line.count("}")
+                    if _VERSION_RE.search(entry_line):
+                        has_version = True
+                    idx += 1
+                if has_version:
+                    providers.add(provider_name)
+            # idx already advanced through required_providers block
+    return providers
 
 
 class TerraformProviderVersionPinningDetector(
@@ -84,9 +120,12 @@ class TerraformProviderVersionPinningDetector(
         config: TerraformProviderVersionPinningConfig,
     ) -> list[Violation]:
         violations: list[Violation] = []
+        required_provider_versions = _providers_with_required_versions(context.code)
         for line_no, provider_name, body in _iter_block_lines(
             context.code, _PROVIDER_START_RE
         ):
+            if provider_name in required_provider_versions:
+                continue
             if any(_VERSION_RE.search(line) for line in body):
                 continue
             violations.append(
@@ -126,6 +165,8 @@ class TerraformModuleVersionPinningDetector(
                     has_version = True
                 if match := _SOURCE_RE.search(line):
                     source = match[1]
+            if source.startswith(("./", "../", "/")):
+                continue
             if has_version or "?ref=" in source:
                 continue
             violations.append(
@@ -257,17 +298,23 @@ class TerraformBackendConfigDetector(
         context: AnalysisContext,
         config: TerraformBackendConfig,
     ) -> list[Violation]:
-        has_terraform_block = any(
-            _TERRAFORM_BLOCK_RE.match(line) for line in context.code.splitlines()
+        lines = context.code.splitlines()
+        terraform_line = next(
+            (
+                idx
+                for idx, line in enumerate(lines, start=1)
+                if _TERRAFORM_BLOCK_RE.match(line)
+            ),
+            None,
         )
-        has_backend = any(_BACKEND_RE.match(line) for line in context.code.splitlines())
-        if not has_terraform_block or has_backend:
+        has_backend = any(_BACKEND_RE.match(line) for line in lines)
+        if terraform_line is None or has_backend:
             return []
         return [
             self.build_violation(
                 config,
                 contains="backend",
-                location=Location(line=1, column=1),
+                location=Location(line=terraform_line, column=1),
                 suggestion="Configure a remote state backend for team environments.",
             ),
         ]
@@ -301,7 +348,7 @@ class TerraformNamingConventionDetector(
                             suggestion="Use snake_case naming for resources and variables.",
                         ),
                     )
-            if match := _VARIABLE_OR_OUTPUT_START_RE.match(line):
+            if match := _VARIABLE_START_RE.match(line):
                 object_name = match[1]
                 if not _SNAKE_CASE_RE.match(object_name):
                     violations.append(

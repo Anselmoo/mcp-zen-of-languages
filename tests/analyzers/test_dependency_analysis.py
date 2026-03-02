@@ -278,6 +278,21 @@ class TestTerraformDependencyAnalysis:
         )
         assert result is None
 
+    def test_non_module_sources_ignored(self) -> None:
+        code = (
+            "terraform {\n"
+            "  required_providers {\n"
+            "    aws = {\n"
+            '      source  = "hashicorp/aws"\n'
+            '      version = "~> 5.0"\n'
+            "    }\n"
+            "  }\n"
+            "}\n"
+        )
+        analyzer = TerraformAnalyzer()
+        result = analyzer._build_dependency_analysis(_ctx(code, "terraform"))
+        assert result is None
+
 
 @pytest.mark.parametrize(
     "lang_cls",

@@ -11,11 +11,15 @@ from mcp_zen_of_languages.languages.configs import TerraformModuleVersionPinning
 from mcp_zen_of_languages.languages.configs import TerraformNamingConventionConfig
 from mcp_zen_of_languages.languages.configs import TerraformNoHardcodedSecretsConfig
 from mcp_zen_of_languages.languages.configs import TerraformProviderVersionPinningConfig
-from mcp_zen_of_languages.languages.configs import TerraformVariableOutputDescriptionConfig
+from mcp_zen_of_languages.languages.configs import (
+    TerraformVariableOutputDescriptionConfig,
+)
 from mcp_zen_of_languages.languages.terraform.detectors import (
     TerraformBackendConfigDetector,
 )
-from mcp_zen_of_languages.languages.terraform.detectors import TerraformHardcodedIdDetector
+from mcp_zen_of_languages.languages.terraform.detectors import (
+    TerraformHardcodedIdDetector,
+)
 from mcp_zen_of_languages.languages.terraform.detectors import (
     TerraformModuleVersionPinningDetector,
 )

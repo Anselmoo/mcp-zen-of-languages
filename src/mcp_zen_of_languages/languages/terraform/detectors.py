@@ -58,7 +58,7 @@ def _iter_block_lines(
             idx += 1
             continue
         start_line = idx + 1
-        label = match.group(1) if match.lastindex else ""
+        label = match.group(1)
         brace_depth = line.count("{") - line.count("}")
         body: list[str] = []
         idx += 1
@@ -71,36 +71,50 @@ def _iter_block_lines(
     return blocks
 
 
-def _providers_with_required_versions(code: str) -> set[str]:
+def _providers_with_required_versions(code: str) -> set[str]:  # noqa: C901
     providers: set[str] = set()
-    for _, _, terraform_body in _iter_block_lines(code, _TERRAFORM_BLOCK_RE):
-        idx = 0
-        while idx < len(terraform_body):
-            line = terraform_body[idx]
+    lines = code.splitlines()
+    idx = 0
+    while idx < len(lines):
+        terraform_line = lines[idx]
+        if not _TERRAFORM_BLOCK_RE.match(terraform_line):
+            idx += 1
+            continue
+        terraform_depth = terraform_line.count("{") - terraform_line.count("}")
+        idx += 1
+        terraform_body: list[str] = []
+        while idx < len(lines) and terraform_depth > 0:
+            current_line = lines[idx]
+            terraform_depth += current_line.count("{") - current_line.count("}")
+            terraform_body.append(current_line)
+            idx += 1
+        body_idx = 0
+        while body_idx < len(terraform_body):
+            line = terraform_body[body_idx]
             if not _REQUIRED_PROVIDERS_RE.match(line):
-                idx += 1
+                body_idx += 1
                 continue
             brace_depth = line.count("{") - line.count("}")
-            idx += 1
-            while idx < len(terraform_body) and brace_depth > 0:
-                provider_line = terraform_body[idx]
+            body_idx += 1
+            while body_idx < len(terraform_body) and brace_depth > 0:
+                provider_line = terraform_body[body_idx]
                 brace_depth += provider_line.count("{") - provider_line.count("}")
-                if not (provider_entry := _PROVIDER_ENTRY_RE.match(provider_line)):
-                    idx += 1
+                provider_entry = _PROVIDER_ENTRY_RE.match(provider_line)
+                if not provider_entry:
+                    body_idx += 1
                     continue
                 provider_name = provider_entry[1]
                 provider_depth = provider_line.count("{") - provider_line.count("}")
-                idx += 1
+                body_idx += 1
                 has_version = False
-                while idx < len(terraform_body) and provider_depth > 0:
-                    entry_line = terraform_body[idx]
+                while body_idx < len(terraform_body) and provider_depth > 0:
+                    entry_line = terraform_body[body_idx]
                     provider_depth += entry_line.count("{") - entry_line.count("}")
                     if _VERSION_RE.search(entry_line):
                         has_version = True
-                    idx += 1
+                    body_idx += 1
                 if has_version:
                     providers.add(provider_name)
-            # idx already advanced through required_providers block
     return providers
 
 

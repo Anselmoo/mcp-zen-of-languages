@@ -1268,6 +1268,48 @@ class AnsibleJinjaSpacingConfig(DetectorConfig):
     type: Literal["ansible-007"] = "ansible-007"
 
 
+class TerraformProviderVersionPinningConfig(DetectorConfig):
+    """Terraform provider version-pinning settings."""
+
+    type: Literal["tf-001"] = "tf-001"
+
+
+class TerraformModuleVersionPinningConfig(DetectorConfig):
+    """Terraform module version-pinning settings."""
+
+    type: Literal["tf-002"] = "tf-002"
+
+
+class TerraformVariableOutputDescriptionConfig(DetectorConfig):
+    """Terraform variable/output description coverage settings."""
+
+    type: Literal["tf-003"] = "tf-003"
+
+
+class TerraformHardcodedIdConfig(DetectorConfig):
+    """Terraform hardcoded ARN/ID detection settings."""
+
+    type: Literal["tf-004"] = "tf-004"
+
+
+class TerraformNoHardcodedSecretsConfig(DetectorConfig):
+    """Terraform hardcoded-secret detection settings."""
+
+    type: Literal["tf-005"] = "tf-005"
+
+
+class TerraformBackendConfig(DetectorConfig):
+    """Terraform backend-configuration presence settings."""
+
+    type: Literal["tf-006"] = "tf-006"
+
+
+class TerraformNamingConventionConfig(DetectorConfig):
+    """Terraform snake_case naming convention settings."""
+
+    type: Literal["tf-007"] = "tf-007"
+
+
 class DockerfileLatestTagConfig(DetectorConfig):
     """Dockerfile latest-tag usage detection settings."""
 

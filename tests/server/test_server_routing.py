@@ -34,6 +34,7 @@ from mcp_zen_of_languages import server
         ("latex", "\\documentclass{article}\n\\begin{document}Hello\\end{document}"),
         ("docker_compose", "services:\n  web:\n    image: nginx:latest\n"),
         ("dockerfile", "FROM ubuntu:latest\nUSER root\n"),
+        ("terraform", 'terraform {\n}\nresource "null_resource" "example_name" {}\n'),
     ],
 )
 async def test_analyze_zen_violations_supported_languages(language: str, code: str):

@@ -40,6 +40,8 @@ EXTENSION_LANGUAGE_MAP: dict[str, str] = {
     ".sql": "sql",
     ".ddl": "sql",
     ".dml": "sql",
+    ".tf": "terraform",
+    ".tfvars": "terraform",
     ".md": "markdown",
     ".markdown": "markdown",
     ".mdx": "markdown",

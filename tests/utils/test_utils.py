@@ -116,6 +116,17 @@ def test_detect_language_by_extension_ansible_content(tmp_path):
     )
     result = detect_language_by_extension(str(play))
     assert result.language == "ansible"
+
+
+def test_detect_language_by_extension_terraform_tf():
+    result = detect_language_by_extension("main.tf")
+    assert result.language == "terraform"
+    assert result.method == "extension"
+
+
+def test_detect_language_by_extension_terraform_tfvars():
+    result = detect_language_by_extension("dev.tfvars")
+    assert result.language == "terraform"
     assert result.method == "extension"
 
 

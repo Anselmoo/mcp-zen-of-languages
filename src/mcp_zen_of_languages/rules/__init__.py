@@ -76,6 +76,7 @@ def _initialize_registry() -> None:
     from mcp_zen_of_languages.languages.rust.rules import RUST_ZEN
     from mcp_zen_of_languages.languages.sql.rules import SQL_ZEN
     from mcp_zen_of_languages.languages.svg.rules import SVG_ZEN
+    from mcp_zen_of_languages.languages.terraform.rules import TERRAFORM_ZEN
     from mcp_zen_of_languages.languages.toml.rules import TOML_ZEN
     from mcp_zen_of_languages.languages.typescript.rules import TYPESCRIPT_ZEN
     from mcp_zen_of_languages.languages.xml.rules import XML_ZEN
@@ -90,6 +91,7 @@ def _initialize_registry() -> None:
             "go": GO_ZEN,
             "json": JSON_ZEN,
             "sql": SQL_ZEN,
+            "terraform": TERRAFORM_ZEN,
             "markdown": MARKDOWN_ZEN,
             "rust": RUST_ZEN,
             "svg": SVG_ZEN,

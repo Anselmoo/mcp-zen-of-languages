@@ -15,6 +15,7 @@ from mcp_zen_of_languages.languages.javascript.analyzer import JavaScriptAnalyze
 from mcp_zen_of_languages.languages.powershell.analyzer import PowerShellAnalyzer
 from mcp_zen_of_languages.languages.ruby.analyzer import RubyAnalyzer
 from mcp_zen_of_languages.languages.rust.analyzer import RustAnalyzer
+from mcp_zen_of_languages.languages.terraform.analyzer import TerraformAnalyzer
 from mcp_zen_of_languages.languages.typescript.analyzer import TypeScriptAnalyzer
 from mcp_zen_of_languages.models import DependencyAnalysis
 
@@ -260,6 +261,22 @@ class TestPowerShellDependencyAnalysis:
         assert result is None
 
 
+class TestTerraformDependencyAnalysis:
+    def test_module_source(self) -> None:
+        code = 'module "vpc" {\n  source = "terraform-aws-modules/vpc/aws"\n}'
+        analyzer = TerraformAnalyzer()
+        result = analyzer._build_dependency_analysis(_ctx(code, "terraform"))
+        assert isinstance(result, DependencyAnalysis)
+        assert "terraform-aws-modules/vpc/aws" in result.nodes
+
+    def test_comments_skipped(self) -> None:
+        analyzer = TerraformAnalyzer()
+        result = analyzer._build_dependency_analysis(
+            _ctx('# source = "fake/module"\nresource "null_resource" "x" {}', "terraform")
+        )
+        assert result is None
+
+
 @pytest.mark.parametrize(
     "lang_cls",
     [
@@ -274,6 +291,7 @@ class TestPowerShellDependencyAnalysis:
         CssAnalyzer,
         DockerfileAnalyzer,
         PowerShellAnalyzer,
+        TerraformAnalyzer,
     ],
 )
 def test_all_declare_supports_dependency_analysis(lang_cls: type) -> None:

@@ -120,6 +120,7 @@ async def test_analyze_zen_violations_applies_runtime_pipeline_override(monkeypa
         ("ansible-playbook", "ansible"),
         ("gitlab-ci", "gitlab_ci"),
         ("gitlabci", "gitlab_ci"),
+        ("tf", "terraform"),
         ("tex", "latex"),
         ("bibtex", "latex"),
     ],

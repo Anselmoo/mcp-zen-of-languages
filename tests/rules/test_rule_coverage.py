@@ -72,6 +72,7 @@ def test_build_explicit_rule_coverage_languages() -> None:
         "gitlab_ci",
         "docker_compose",
         "dockerfile",
+        "terraform",
     ):
         coverage = build_explicit_rule_coverage(language)
         assert coverage.rules

@@ -613,6 +613,7 @@ SAMPLES = {
     "latex": "\\documentclass{article}\n\\begin{document}Hello\\end{document}\n",
     "docker_compose": "services:\n  web:\n    image: nginx:latest\n",
     "dockerfile": "FROM ubuntu:latest\nUSER root\n",
+    "terraform": 'terraform {\n  required_version = ">= 1.6.0"\n}\nresource "null_resource" "example" {}\n',
 }
 
 

@@ -799,7 +799,7 @@ def render_index_page() -> str:
 
             Schema and structure-focused detectors for data formats. Checks consistency, naming conventions, and format-specific best practices.
 
-            **JSON · TOML · XML · YAML**
+            **JSON · SVG · TOML · XML · YAML**
 
         </div>
 
@@ -835,7 +835,7 @@ def render_index_page() -> str:
             [GitHub Actions](github-actions.md) focuses on workflow hardening: pinning actions, permission scoping, secret safety, and pipeline maintainability.
 
         === "Config files?"
-            The [config formats](config-formats.md) page covers JSON, TOML, XML, and YAML — consistency checks, naming conventions, and format-specific best practices.
+            The [config formats](config-formats.md) page covers JSON, SVG, TOML, XML, and YAML — consistency checks, naming conventions, and format-specific best practices.
 
         ## Programmatic Access
 

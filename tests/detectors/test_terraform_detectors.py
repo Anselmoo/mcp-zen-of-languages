@@ -33,6 +33,10 @@ from mcp_zen_of_languages.languages.terraform.detectors import (
 )
 
 
+EXTERNAL_MODULE_START_LINE = 4
+TERRAFORM_BLOCK_START_LINE = 7
+
+
 def test_terraform_detectors_emit_expected_violations() -> None:
     context = AnalysisContext(
         code=(
@@ -143,7 +147,7 @@ def test_terraform_module_version_pinning_ignores_local_sources() -> None:
     )
     assert len(violations) == 1
     assert violations[0].location is not None
-    assert violations[0].location.line == 4
+    assert violations[0].location.line == EXTERNAL_MODULE_START_LINE
 
 
 def test_terraform_backend_detector_uses_terraform_block_location() -> None:
@@ -156,10 +160,12 @@ def test_terraform_backend_detector_uses_terraform_block_location() -> None:
         ),
         language="terraform",
     )
-    violations = TerraformBackendConfigDetector().detect(context, TerraformBackendConfig())
+    violations = TerraformBackendConfigDetector().detect(
+        context, TerraformBackendConfig()
+    )
     assert violations
     assert violations[0].location is not None
-    assert violations[0].location.line == 7
+    assert violations[0].location.line == TERRAFORM_BLOCK_START_LINE
 
 
 def test_terraform_naming_detector_does_not_flag_output_names() -> None:
@@ -178,7 +184,9 @@ def test_terraform_naming_detector_does_not_flag_output_names() -> None:
     assert not violations
 
 
-def test_terraform_provider_version_detector_accepts_required_providers_version() -> None:
+def test_terraform_provider_version_detector_accepts_required_providers_version() -> (
+    None
+):
     context = AnalysisContext(
         code=(
             "terraform {\n"

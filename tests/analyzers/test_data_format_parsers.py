@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import pytest
 
+from mcp_zen_of_languages.languages.ansible.analyzer import AnsibleAnalyzer
 from mcp_zen_of_languages.languages.docker_compose.analyzer import DockerComposeAnalyzer
 from mcp_zen_of_languages.languages.gitlab_ci.analyzer import GitLabCIAnalyzer
-from mcp_zen_of_languages.languages.ansible.analyzer import AnsibleAnalyzer
 from mcp_zen_of_languages.languages.json.analyzer import JsonAnalyzer
 from mcp_zen_of_languages.languages.toml.analyzer import TomlAnalyzer
 from mcp_zen_of_languages.languages.xml.analyzer import XmlAnalyzer

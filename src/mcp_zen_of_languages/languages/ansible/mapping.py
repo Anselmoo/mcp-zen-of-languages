@@ -13,7 +13,9 @@ from mcp_zen_of_languages.languages.ansible.detectors import AnsibleNamingDetect
 from mcp_zen_of_languages.languages.ansible.detectors import (
     AnsibleNoCleartextPasswordDetector,
 )
-from mcp_zen_of_languages.languages.ansible.detectors import AnsibleStateExplicitDetector
+from mcp_zen_of_languages.languages.ansible.detectors import (
+    AnsibleStateExplicitDetector,
+)
 from mcp_zen_of_languages.languages.configs import AnsibleBecomeConfig
 from mcp_zen_of_languages.languages.configs import AnsibleFqcnConfig
 from mcp_zen_of_languages.languages.configs import AnsibleIdempotencyConfig

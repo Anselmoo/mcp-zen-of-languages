@@ -2,6 +2,7 @@ from mcp_zen_of_languages.analyzers.base import AnalysisContext
 from mcp_zen_of_languages.analyzers.registry import REGISTRY
 from mcp_zen_of_languages.languages.go.detectors import GoContextUsageDetector
 from mcp_zen_of_languages.languages.go.detectors import GoDeferUsageDetector
+from mcp_zen_of_languages.languages.go.detectors import GoEmbeddingDepthDetector
 from mcp_zen_of_languages.languages.go.detectors import GoErrorHandlingDetector
 from mcp_zen_of_languages.languages.go.detectors import GoGoroutineLeakDetector
 from mcp_zen_of_languages.languages.go.detectors import GoInterfaceSizeDetector
@@ -87,3 +88,83 @@ def test_go_goroutine_leak_detector_flags_unclosed_channels():
         config_for("go_goroutine_leaks"),
     )
     assert violations
+
+
+# --- GoEmbeddingDepthDetector tests ---
+
+
+def test_go_embedding_depth_detector_flags_deep_embedding():
+    """Three anonymous embedded types exceeds the default max of 2."""
+    code = "package main\ntype Deep struct {\n    Base\n    Logger\n    Tracer\n}\n"
+    cfg = config_for("go_embedding_depth")
+    violations = run_detector(GoEmbeddingDepthDetector(), code, cfg)
+    assert violations
+
+
+def test_go_embedding_depth_detector_no_violation_within_limit():
+    """Two anonymous embedded types is at the default max of 2 — no violation."""
+    code = "package main\ntype OK struct {\n    Base\n    Logger\n}\n"
+    cfg = config_for("go_embedding_depth")
+    violations = run_detector(GoEmbeddingDepthDetector(), code, cfg)
+    assert not violations
+
+
+def test_go_embedding_depth_detector_ignores_named_fields():
+    """Named fields (FieldName Type) must not be counted as embeddings."""
+    code = (
+        "package main\n"
+        "type Named struct {\n"
+        "    Name   string\n"
+        "    Logger *log.Logger\n"
+        "    Count  int\n"
+        "}\n"
+    )
+    cfg = config_for("go_embedding_depth")
+    violations = run_detector(GoEmbeddingDepthDetector(), code, cfg)
+    assert not violations
+
+
+def test_go_embedding_depth_detector_generic_struct():
+    """Generic struct declarations with type parameters are detected."""
+    code = (
+        "package main\n"
+        "type Generic[T any] struct {\n"
+        "    Base\n"
+        "    Logger\n"
+        "    Tracer\n"
+        "}\n"
+    )
+    cfg = config_for("go_embedding_depth")
+    violations = run_detector(GoEmbeddingDepthDetector(), code, cfg)
+    assert violations
+
+
+def test_go_embedding_depth_detector_with_struct_tags():
+    """Embedded types with struct tags are still counted as embeddings."""
+    code = (
+        "package main\n"
+        "type Tagged struct {\n"
+        '    Base    `json:"-"`\n'
+        '    Logger  `yaml:"logger"`\n'
+        "    Tracer\n"
+        "}\n"
+    )
+    cfg = config_for("go_embedding_depth")
+    violations = run_detector(GoEmbeddingDepthDetector(), code, cfg)
+    assert violations
+
+
+def test_go_embedding_depth_detector_pointer_embeddings():
+    """Pointer-embedded types (e.g. *Base) are counted."""
+    code = "package main\ntype Ptrs struct {\n    *Base\n    *Logger\n    *Tracer\n}\n"
+    cfg = config_for("go_embedding_depth")
+    violations = run_detector(GoEmbeddingDepthDetector(), code, cfg)
+    assert violations
+
+
+def test_go_embedding_depth_detector_no_struct():
+    """Files with no struct definitions produce no violations."""
+    code = "package main\nfunc main() {}\n"
+    cfg = config_for("go_embedding_depth")
+    violations = run_detector(GoEmbeddingDepthDetector(), code, cfg)
+    assert not violations

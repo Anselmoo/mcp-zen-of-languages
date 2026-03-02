@@ -755,10 +755,36 @@ class GoEmbeddingDepthDetector(ViolationDetector[GoEmbeddingDepthConfig]):
     """
 
     # Matches anonymous embedded fields: optional pointer, optional pkg prefix,
-    # then a single type name — no second identifier after the type.
-    _EMBEDDED_RE = re.compile(r"^\s+\*?(?:\w+\.)*\w+\s*(?://.*)?$", re.MULTILINE)
-    # Matches named fields: two distinct identifiers separated by whitespace.
-    _NAMED_RE = re.compile(r"^\s+\w+\s+\S", re.MULTILINE)
+    # type name, optional generic instantiation, optional struct tag, optional comment.
+    _EMBEDDED_RE = re.compile(
+        r"""
+        ^\s+                             # indentation
+        \*?                              # optional pointer
+        (?:\w+\.)*\w+                    # optional pkg prefix + type name
+        (?:\[[^\]]*\])?                  # optional type-parameter instantiation, e.g. [T, U]
+        (?:\s+`[^`]*`)?                  # optional struct tag, e.g. `json:"-"`
+        \s*(?://.*)?$                    # optional trailing comment
+        """,
+        re.MULTILINE | re.VERBOSE,
+    )
+    # Matches named fields: a field name followed by a type token
+    # (with optional generics), but not a bare struct tag.
+    # Use [^\S\n]+ for one or more horizontal whitespace characters (no newline)
+    # to prevent matching across line boundaries.
+    _NAMED_RE = re.compile(
+        r"""
+        ^\s+                             # indentation
+        (?P<name>\w+)                    # field name
+        [^\S\n]+                         # horizontal whitespace only (no newline)
+        (?P<type>                        # field type (not a struct tag)
+            \*?                          #   optional pointer
+            (?:\w+\.)*\w+                #   optional pkg prefix + type name
+            (?:\[[^\]]*\])?              #   optional type-parameter instantiation
+        )
+        \b
+        """,
+        re.MULTILINE | re.VERBOSE,
+    )
 
     @property
     def name(self) -> str:
@@ -768,6 +794,24 @@ class GoEmbeddingDepthDetector(ViolationDetector[GoEmbeddingDepthConfig]):
             str: Identifier string.
         """
         return "go_embedding_depth"
+
+    @staticmethod
+    def _bare_type_name(line: str) -> str:
+        """Extract the unqualified, undecorated type name from an embedded-field line.
+
+        Strips leading whitespace and an optional ``*`` pointer prefix, then
+        removes any package qualifier (``pkg.``), generic arguments (``[...]``),
+        and trailing struct tags or comments so that the result can be compared
+        against the set of named field names.
+
+        Args:
+            line (str): A single source line from a struct body.
+
+        Returns:
+            str: The bare type identifier (e.g. ``"Base"`` from ``"    *pkg.Base[T]"``).
+        """
+        token = line.strip().split()[0]  # first whitespace-delimited token
+        return token.lstrip("*").split(".")[-1].split("[")[0]
 
     def detect(
         self,
@@ -791,7 +835,10 @@ class GoEmbeddingDepthDetector(ViolationDetector[GoEmbeddingDepthConfig]):
         struct_lines: list[str] = []
         for line in context.code.splitlines():
             if not in_struct:
-                if re.match(r"^type\s+\w+\s+struct\s*\{", line):
+                if re.match(
+                    r"^\s*type\s+\w+(\s*\[[^\]]+\])?\s+struct\s*\{",
+                    line,
+                ):
                     in_struct = True
                     brace_depth = line.count("{") - line.count("}")
                     struct_lines = []
@@ -800,12 +847,13 @@ class GoEmbeddingDepthDetector(ViolationDetector[GoEmbeddingDepthConfig]):
                 if brace_depth <= 0:
                     # End of top-level struct body — count embedded fields.
                     body = "\n".join(struct_lines)
-                    named = set(self._NAMED_RE.findall(body))
+                    named_names = {
+                        m.group("name") for m in self._NAMED_RE.finditer(body)
+                    }
                     embedded = [
                         ln
                         for ln in self._EMBEDDED_RE.findall(body)
-                        if ln.strip().split()[0]
-                        not in {n.strip().split()[0] for n in named}
+                        if self._bare_type_name(ln) not in named_names
                     ]
                     if len(embedded) > config.max_embedding_depth:
                         return [

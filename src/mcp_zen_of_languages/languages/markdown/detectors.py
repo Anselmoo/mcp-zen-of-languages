@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import re
+from pathlib import Path
 
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
 from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
@@ -22,6 +23,7 @@ from mcp_zen_of_languages.models import Violation
 _HEADING_RE = re.compile(r"^\s{0,3}(#{1,6})\s+\S")
 _IMAGE_RE = re.compile(r"!\[([^\]]*)\]\(([^)]+)\)")
 _MARKDOWN_LINK_RE = re.compile(r"\[[^\]]+\]\([^)]+\)")
+_MARKDOWN_LINK_TARGET_RE = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
 _ANGLE_URL_RE = re.compile(r"<https?://[^>]+>")
 _INLINE_CODE_RE = re.compile(r"`[^`\n]+`")
 _URL_RE = re.compile(r"https?://[^\s<>)\]]+")
@@ -80,11 +82,22 @@ class MarkdownHeadingHierarchyDetector(
         context: AnalysisContext,
         config: MarkdownHeadingHierarchyConfig,
     ) -> list[Violation]:
+        first_heading_level: int | None = None
         previous_level: int | None = None
         for line_no, line in _iter_text_lines(context.code):
             if not (match := _HEADING_RE.match(line)):
                 continue
             level = len(match.group(1))
+            if first_heading_level is None:
+                first_heading_level = level
+                if first_heading_level != 1:
+                    return [
+                        self.build_violation(
+                            config,
+                            location=Location(line=line_no, column=1),
+                            suggestion="Start documents with a single H1 (`#`) heading.",
+                        ),
+                    ]
             if previous_level is not None and level > previous_level + 1:
                 return [
                     self.build_violation(
@@ -94,6 +107,14 @@ class MarkdownHeadingHierarchyDetector(
                     ),
                 ]
             previous_level = level
+        if first_heading_level is None:
+            return [
+                self.build_violation(
+                    config,
+                    location=Location(line=1, column=1),
+                    suggestion="Add a top-level H1 heading as the document title.",
+                ),
+            ]
         return []
 
 
@@ -202,24 +223,45 @@ class MarkdownFrontMatterDetector(
     ) -> list[Violation]:
         lines = context.code.splitlines()
         frontmatter_end = _frontmatter_end_line(lines)
-        if frontmatter_end is None:
-            return []
-        keys = {
-            match.group(1).lower()
-            for line in lines[1:frontmatter_end]
-            if (match := _FRONTMATTER_RE.match(line.strip()))
-        }
-        missing = [
-            key for key in config.required_frontmatter_keys if key.lower() not in keys
-        ]
-        if missing:
-            return [
-                self.build_violation(
-                    config,
-                    location=Location(line=1, column=1),
-                    suggestion=f"Add required front-matter keys: {', '.join(missing)}.",
-                ),
+        if frontmatter_end is not None:
+            keys = {
+                match.group(1).lower()
+                for line in lines[1:frontmatter_end]
+                if (match := _FRONTMATTER_RE.match(line.strip()))
+            }
+            missing = [
+                key for key in config.required_frontmatter_keys if key.lower() not in keys
             ]
+            if missing:
+                return [
+                    self.build_violation(
+                        config,
+                        location=Location(line=1, column=1),
+                        suggestion=f"Add required front-matter keys: {', '.join(missing)}.",
+                    ),
+                ]
+        if not context.path:
+            return []
+        base_dir = Path(context.path).parent
+        for line_no, line in _iter_text_lines(context.code):
+            for match in _MARKDOWN_LINK_TARGET_RE.finditer(line):
+                target = match.group(1).strip()
+                target = target.split("#", 1)[0].split("?", 1)[0].strip()
+                if (
+                    not target
+                    or target.startswith(("#", "<", "/"))
+                    or re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*:", target)
+                ):
+                    continue
+                if (base_dir / target).exists():
+                    continue
+                return [
+                    self.build_violation(
+                        config,
+                        location=Location(line=line_no, column=match.start() + 1),
+                        suggestion=f"Fix or remove dead relative link target '{target}'.",
+                    ),
+                ]
         return []
 
 

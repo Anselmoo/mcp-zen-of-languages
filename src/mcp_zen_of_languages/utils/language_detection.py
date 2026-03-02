@@ -34,6 +34,7 @@ EXTENSION_LANGUAGE_MAP: dict[str, str] = {
     ".toml": "toml",
     ".json": "json",
     ".xml": "xml",
+    ".svg": "svg",
     ".sql": "sql",
     ".ddl": "sql",
     ".dml": "sql",

@@ -39,6 +39,12 @@ def test_detect_language_by_extension_markdown():
     assert result.method == "extension"
 
 
+def test_detect_language_by_extension_svg():
+    result = detect_language_by_extension("icon.svg")
+    assert result.language == "svg"
+    assert result.method == "extension"
+
+
 def test_detect_language_by_extension_mdx():
     result = detect_language_by_extension("page.mdx")
     assert result.language == "markdown"

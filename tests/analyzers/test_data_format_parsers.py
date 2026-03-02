@@ -7,6 +7,7 @@ import pytest
 from mcp_zen_of_languages.languages.docker_compose.analyzer import DockerComposeAnalyzer
 from mcp_zen_of_languages.languages.gitlab_ci.analyzer import GitLabCIAnalyzer
 from mcp_zen_of_languages.languages.json.analyzer import JsonAnalyzer
+from mcp_zen_of_languages.languages.svg.analyzer import SvgAnalyzer
 from mcp_zen_of_languages.languages.toml.analyzer import TomlAnalyzer
 from mcp_zen_of_languages.languages.xml.analyzer import XmlAnalyzer
 from mcp_zen_of_languages.languages.yaml.analyzer import YamlAnalyzer
@@ -73,6 +74,23 @@ class TestXmlParseCode:
         assert XmlAnalyzer().capabilities().supports_ast is True
 
 
+class TestSvgParseCode:
+    def test_valid_svg(self) -> None:
+        result = SvgAnalyzer().parse_code(
+            '<svg xmlns="http://www.w3.org/2000/svg"><title>x</title></svg>',
+        )
+        assert isinstance(result, ParserResult)
+        assert result.type == "svg"
+        assert result.tree is not None
+
+    def test_invalid_svg_returns_none(self) -> None:
+        result = SvgAnalyzer().parse_code("<svg><g></svg>")
+        assert result is None
+
+    def test_capabilities(self) -> None:
+        assert SvgAnalyzer().capabilities().supports_ast is True
+
+
 class TestDockerComposeParseCode:
     def test_valid_compose(self) -> None:
         code = "services:\n  web:\n    image: nginx"
@@ -112,6 +130,7 @@ class TestGitLabCIParseCode:
         (JsonAnalyzer, '{"k": 1}', "json"),
         (TomlAnalyzer, "k = 1", "toml"),
         (XmlAnalyzer, "<r/>", "xml"),
+        (SvgAnalyzer, "<svg xmlns='http://www.w3.org/2000/svg'/>", "svg"),
         (DockerComposeAnalyzer, "services: {}", "yaml"),
         (GitLabCIAnalyzer, "stages: []", "yaml"),
     ],

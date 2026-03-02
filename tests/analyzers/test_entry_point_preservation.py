@@ -23,6 +23,7 @@ AST_CAPABLE_LANGUAGES = {
     "json",
     "toml",
     "xml",
+    "svg",
     "docker_compose",
     "gitlab_ci",
 }

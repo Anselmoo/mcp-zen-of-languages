@@ -1584,6 +1584,97 @@ class XmlClosingTagsConfig(DetectorConfig):
     type: Literal["xml-006"] = "xml-006"
 
 
+class SvgNodeCountConfig(DetectorConfig):
+    """SVG node-count detector settings."""
+
+    type: Literal["svg-014"] = "svg-014"
+    max_node_count: int = 500
+
+
+class SvgMissingTitleConfig(DetectorConfig):
+    """SVG title-presence detector settings."""
+
+    type: Literal["svg-001"] = "svg-001"
+
+
+class SvgAriaRoleConfig(DetectorConfig):
+    """SVG ARIA role/label detector settings."""
+
+    type: Literal["svg-002"] = "svg-002"
+
+
+class SvgImageAltConfig(DetectorConfig):
+    """SVG image alternate-text detector settings."""
+
+    type: Literal["svg-003"] = "svg-003"
+
+
+class SvgDescForComplexGraphicsConfig(DetectorConfig):
+    """SVG complex-graphic description detector settings."""
+
+    type: Literal["svg-004"] = "svg-004"
+
+
+class SvgInlineStyleConfig(DetectorConfig):
+    """SVG inline style detector settings."""
+
+    type: Literal["svg-005"] = "svg-005"
+
+
+class SvgViewBoxConfig(DetectorConfig):
+    """SVG viewBox detector settings."""
+
+    type: Literal["svg-006"] = "svg-006"
+
+
+class SvgUnusedDefsConfig(DetectorConfig):
+    """SVG unused defs detector settings."""
+
+    type: Literal["svg-007"] = "svg-007"
+
+
+class SvgNestedGroupsConfig(DetectorConfig):
+    """SVG nested groups detector settings."""
+
+    type: Literal["svg-008"] = "svg-008"
+
+
+class SvgDuplicateIdConfig(DetectorConfig):
+    """SVG duplicate id detector settings."""
+
+    type: Literal["svg-009"] = "svg-009"
+
+
+class SvgAbsolutePathOnlyConfig(DetectorConfig):
+    """SVG absolute-path detector settings."""
+
+    type: Literal["svg-010"] = "svg-010"
+
+
+class SvgBase64ImageConfig(DetectorConfig):
+    """SVG base64 image detector settings."""
+
+    type: Literal["svg-011"] = "svg-011"
+
+
+class SvgXmlnsConfig(DetectorConfig):
+    """SVG namespace detector settings."""
+
+    type: Literal["svg-012"] = "svg-012"
+
+
+class SvgDeprecatedXlinkHrefConfig(DetectorConfig):
+    """SVG deprecated xlink detector settings."""
+
+    type: Literal["svg-013"] = "svg-013"
+
+
+class SvgProductionBloatConfig(DetectorConfig):
+    """SVG metadata/comments bloat detector settings."""
+
+    type: Literal["svg-015"] = "svg-015"
+
+
 class LatexMacroDefinitionConfig(DetectorConfig):
     r"""LaTeX raw ``\def`` usage detection settings."""
 

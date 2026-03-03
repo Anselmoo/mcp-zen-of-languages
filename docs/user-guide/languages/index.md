@@ -35,7 +35,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 | [LaTeX](latex.md) | 9 | 9 | Regex | [LaTeX Project](https://www.latex-project.org/) |
 | [Markdown / MDX](markdown.md) | 7 | 7 | Regex | [CommonMark + MDX authoring best practices](https://commonmark.org/) |
 | [Terraform](terraform.md) | 7 | 7 | Regex | [Terraform language and module best-practice documentation](https://developer.hashicorp.com/terraform/language) |
-| **Programming & markup subtotal** | **210** | **230** | | |
+| **Programming & markup subtotal** | **217** | **237** | | |
 
 ### Workflows & Automation
 
@@ -54,8 +54,8 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 ### Coverage Totals
 
-- **Principles (all categories):** 281
-- **Detectors + workflow checks:** 301
+- **Principles (all categories):** 288
+- **Detectors + workflow checks:** 308
 
 ## Maturity Tiers
 

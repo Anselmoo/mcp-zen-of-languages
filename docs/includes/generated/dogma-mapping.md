@@ -78,6 +78,10 @@
 | svg | `svg-005` | Prefer presentation attributes over inline styles | 5 |
 | svg | `svg-009` | Keep id attributes unique | 8 |
 | svg | `svg-012` | Declare the SVG XML namespace | 7 |
+| Terraform | `tf-001` | Pin provider versions | 8 |
+| Terraform | `tf-002` | Pin module versions | 8 |
+| Terraform | `tf-004` | Avoid hardcoded resource IDs | 7 |
+| Terraform | `tf-006` | Configure remote state backend | 7 |
 | TOML | `toml-002` | Avoid duplicate keys | 8 |
 | TOML | `toml-003` | Use lowercase keys | 5 |
 | TOML | `toml-005` | Clarity is paramount | 5 |
@@ -154,6 +158,7 @@
 | Rust | `rust-001` | Avoid unwrap() and expect() in production code | 9 |
 | Rust | `rust-008` | Avoid unsafe unless necessary | 9 |
 | Rust | `rust-014` | Error types should implement standard error traits | 8 |
+| Terraform | `tf-006` | Configure remote state backend | 7 |
 | TypeScript | `ts-004` | Always specify return types | 7 |
 | TypeScript | `ts-010` | Prefer unknown over any for uncertain types | 7 |
 | TypeScript | `ts-012` | Prefer for-of and array methods over index loops | 4 |
@@ -282,6 +287,9 @@
 | svg | `svg-004` | Provide a long description for complex graphics | 6 |
 | svg | `svg-012` | Declare the SVG XML namespace | 7 |
 | svg | `svg-015` | Remove production-bloat metadata and comments | 4 |
+| Terraform | `tf-003` | Describe variables and outputs | 5 |
+| Terraform | `tf-004` | Avoid hardcoded resource IDs | 7 |
+| Terraform | `tf-007` | Use consistent snake_case naming | 5 |
 | TOML | `toml-001` | Avoid inline tables | 6 |
 | TOML | `toml-004` | Avoid trailing commas | 5 |
 | TypeScript | `ts-003` | Prefer interfaces over type aliases for objects | 5 |
@@ -325,6 +333,7 @@
 | Rust | `rust-013` | Send + Sync should be implemented when types allow | 7 |
 | Rust | `rust-016` | Implement Default when there is an obvious default value | 5 |
 | SQL | `sql-002` | Always include INSERT column lists | 7 |
+| Terraform | `tf-006` | Configure remote state backend | 7 |
 | TypeScript | `ts-005` | Use readonly when appropriate | 6 |
 
 ### Strict Fences — `ZEN-STRICT-FENCES`
@@ -367,6 +376,7 @@
 | svg | `svg-007` | Remove unused defs entries | 5 |
 | svg | `svg-012` | Declare the SVG XML namespace | 7 |
 | svg | `svg-015` | Remove production-bloat metadata and comments | 4 |
+| Terraform | `tf-005` | Avoid hardcoded secrets | 9 |
 | TOML | `toml-006` | Order implies importance | 4 |
 | TypeScript | `ts-014` | Prefer named exports over default exports | 4 |
 | XML | `xml-003` | Namespaces prevent local collisions | 6 |

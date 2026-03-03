@@ -141,7 +141,7 @@ tags:
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **MarkdownFrontMatterDetector** | Detect incomplete YAML front-matter blocks | `md-005` |
+| **MarkdownFrontMatterDetector** | Detect incomplete YAML front-matter blocks and unsafe/dead relative links | `md-005` |
 
 ### Correctness
 

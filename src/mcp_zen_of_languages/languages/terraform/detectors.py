@@ -109,7 +109,9 @@ def _providers_with_required_versions(code: str) -> set[str]:  # noqa: C901
                 has_version = False
                 while body_idx < len(terraform_body) and provider_depth > 0:
                     entry_line = terraform_body[body_idx]
-                    provider_depth += entry_line.count("{") - entry_line.count("}")
+                    delta = entry_line.count("{") - entry_line.count("}")
+                    provider_depth += delta
+                    brace_depth += delta
                     if _VERSION_RE.search(entry_line):
                         has_version = True
                     body_idx += 1
@@ -279,6 +281,8 @@ class TerraformNoHardcodedSecretsDetector(
     ) -> list[Violation]:
         violations: list[Violation] = []
         for idx, line in enumerate(context.code.splitlines(), start=1):
+            if line.strip().startswith(("#", "//")):
+                continue
             if not (match := _ASSIGNMENT_RE.match(line)):
                 continue
             key, value = match[1], match[2]

@@ -82,7 +82,7 @@ class MarkdownHeadingHierarchyDetector(
     ViolationDetector[MarkdownHeadingHierarchyConfig],
     LocationHelperMixin,
 ):
-    """Detect heading level skips in Markdown documents."""
+    """Detect heading level skips, missing H1, and headings-free documents."""
 
     @property
     def name(self) -> str:

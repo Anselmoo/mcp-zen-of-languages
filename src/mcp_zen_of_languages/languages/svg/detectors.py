@@ -408,11 +408,16 @@ class SvgDeprecatedXlinkHrefDetector(
         deprecated_key = f"{{{_XLINK_NS}}}href"
         for element in root.iter():
             if deprecated_key in element.attrib:
+                # Locate the actual `:href` token in source; fall back to `href`
+                search_token = next(
+                    (t for t in (":href", "href") if t in context.code),
+                    "href",
+                )
                 return [
                     self.build_violation(
                         config,
                         location=self.find_location_by_substring(
-                            context.code, "xlink:href"
+                            context.code, search_token
                         ),
                         suggestion="Replace xlink:href with href in SVG 2 documents.",
                     ),

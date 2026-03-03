@@ -129,13 +129,27 @@ def _commits_ahead(base_ref: str) -> list[str]:
     return [line for line in out.splitlines() if line]
 
 
+def _normalize_commit_type(value: str) -> str:
+    normalized = value.lower()
+    if normalized not in CONVENTIONAL_TYPES:
+        allowed = ", ".join(CONVENTIONAL_TYPES)
+        msg = f"invalid conventional type: {value!r} (choose one of: {allowed})"
+        raise argparse.ArgumentTypeError(msg)
+    return normalized
+
+
+def _join_description(parts: list[str]) -> str:
+    return " ".join(parts).strip()
+
+
 # ---------------------------------------------------------------------------
 # `new` subcommand
 # ---------------------------------------------------------------------------
 
 
 def cmd_new(args: argparse.Namespace) -> None:
-    branch = BranchName(type=args.type, description=args.description, scope=args.scope)
+    description = _join_description(args.description)
+    branch = BranchName(type=args.type, description=description, scope=args.scope)
     branch_name = branch.slug()
     commit_title = branch.commit_title()
 
@@ -175,7 +189,8 @@ def cmd_new(args: argparse.Namespace) -> None:
 
 
 def cmd_rescue(args: argparse.Namespace) -> None:
-    branch = BranchName(type=args.type, description=args.description, scope=args.scope)
+    description = _join_description(args.description)
+    branch = BranchName(type=args.type, description=description, scope=args.scope)
     branch_name = branch.slug()
     commit_title = branch.commit_title()
 
@@ -279,12 +294,14 @@ def main() -> None:
     )
     new_p.add_argument(
         "type",
-        choices=CONVENTIONAL_TYPES,
+        type=_normalize_commit_type,
+        metavar="TYPE",
         help="Conventional commit type (feat, fix, chore, …).",
     )
     new_p.add_argument(
         "description",
-        help="Short description — becomes the branch slug.",
+        nargs="+",
+        help="Short description (one or more words) — becomes the branch slug.",
     )
     new_p.add_argument(
         "--scope",
@@ -307,12 +324,14 @@ def main() -> None:
     )
     rescue_p.add_argument(
         "type",
-        choices=CONVENTIONAL_TYPES,
+        type=_normalize_commit_type,
+        metavar="TYPE",
         help="Conventional commit type for the rescue branch.",
     )
     rescue_p.add_argument(
         "description",
-        help="Short description for the rescue branch.",
+        nargs="+",
+        help="Short description (one or more words) for the rescue branch.",
     )
     rescue_p.add_argument(
         "--scope",

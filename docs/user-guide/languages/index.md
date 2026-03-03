@@ -17,13 +17,13 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 | Language | Principles | Detectors | Parser | Philosophy Origin |
 |----------|:----------:|:---------:|--------|-------------------|
-| [Python](python.md) | 19 | 30 | AST | [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/) |
+| [Python](python.md) | 20 | 30 | AST | [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/) |
 | [TypeScript](typescript.md) | 18 | 25 | Regex | [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html) |
 | [Rust](rust.md) | 17 | 18 | Regex | [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/) |
 | [Go](go.md) | 20 | 21 | Regex | [Effective Go & The Zen of Go](https://the-zen-of-go.netlify.app/) |
 | [JavaScript](javascript.md) | 18 | 18 | Regex | [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript) |
 | [CSS](css.md) | 8 | 8 | Regex | [CSSWG + common modular CSS practices](https://www.w3.org/TR/CSS/) |
-| [Ansible](ansible.md) | 7 | 7 | Regex | [Ansible Documentation](https://docs.ansible.com/) |
+| [Ansible](ansible.md) | 20 | 20 | Regex | [The Zen of Ansible (Red Hat)](https://www.redhat.com/en/blog/the-zen-of-ansible) |
 | [Bash](bash.md) | 14 | 14 | Regex | [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html) |
 | [PowerShell](powershell.md) | 15 | 15 | Regex | [PoshCode Style Guide](https://github.com/PoshCode/PowerShellPracticeAndStyle) |
 | [Ruby](ruby.md) | 11 | 11 | Regex | [Ruby Style Guide](https://rubystyle.guide/) |
@@ -35,7 +35,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 | [LaTeX](latex.md) | 9 | 9 | Regex | [LaTeX Project](https://www.latex-project.org/) |
 | [Markdown / MDX](markdown.md) | 7 | 7 | Regex | [CommonMark + MDX authoring best practices](https://commonmark.org/) |
 | [Terraform](terraform.md) | 7 | 7 | Regex | [Terraform language and module best-practice documentation](https://developer.hashicorp.com/terraform/language) |
-| **Programming & markup subtotal** | **217** | **237** | | |
+| **Programming & markup subtotal** | **231** | **250** | | |
 
 ### Workflows & Automation
 
@@ -54,8 +54,8 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 ### Coverage Totals
 
-- **Principles (all categories):** 288
-- **Detectors + workflow checks:** 308
+- **Principles (all categories):** 302
+- **Detectors + workflow checks:** 321
 
 ## Maturity Tiers
 

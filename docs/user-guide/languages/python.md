@@ -1,6 +1,6 @@
 ---
 title: Python
-description: "19 zen principles enforced by 30 detectors: The Zen of Python (PEP 20)."
+description: "20 zen principles enforced by 30 detectors: The Zen of Python (PEP 20)."
 icon: fontawesome/brands/python
 tags:
   - Python
@@ -32,7 +32,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 
 ## Zen Principles
 
-19 principles across 11 categories, drawn from [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/).
+20 principles across 11 categories, drawn from [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/).
 
 <div class="grid" markdown>
 
@@ -44,7 +44,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 :material-tag-outline: **Design** · 2 principles
 :material-tag-outline: **Error Handling** · 1 principle
 :material-tag-outline: **Idioms** · 2 principles
-:material-tag-outline: **Organization** · 1 principle
+:material-tag-outline: **Organization** · 2 principles
 :material-tag-outline: **Readability** · 5 principles
 :material-tag-outline: **Structure** · 2 principles
 
@@ -71,6 +71,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 | `python-017` | If the implementation is hard to explain, it's a bad idea | Readability | 6 | `ZEN-UNAMBIGUOUS-NAME` |
 | `python-018` | If the implementation is easy to explain, it may be a good idea | Readability | 3 | `ZEN-UNAMBIGUOUS-NAME`, `ZEN-PROPORTIONATE-COMPLEXITY` |
 | `python-019` | Although that way may not be obvious at first unless you're Dutch | Idioms | 5 | `ZEN-RIGHT-ABSTRACTION` |
+| `python-020` | Let's do more of those | Organization | 6 | `ZEN-STRICT-FENCES`, `ZEN-UNAMBIGUOUS-NAME` |
 
 ??? info "`python-001` — Beautiful is better than ugly"
     **Code should be aesthetically pleasing and well-formatted**
@@ -327,6 +328,23 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     - Using range(len()) instead of enumerate()
     - Comparing with == True/False instead of direct boolean checks
 
+??? info "`python-020` — Let's do more of those"
+    **Actively use namespaces to keep modules focused and maintainable**
+
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`, `ZEN-UNAMBIGUOUS-NAME`
+    **Common Violations:**
+
+    - Polluting global namespace
+    - Too many items in __all__
+    - Monolithic modules instead of focused namespaces
+
+    **Thresholds:**
+
+    | Parameter | Default |
+    |-----------|---------|
+    | `max_top_level_symbols` | `25` |
+    | `max_exports` | `20` |
+
 
 ## Detector Catalog
 
@@ -392,7 +410,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **NamespaceUsageDetector** | Detect modules with too many top-level symbols or ``__all__`` exports | `python-012` |
+| **NamespaceUsageDetector** | Detect modules with too many top-level symbols or ``__all__`` exports | `python-012`, `python-020` |
 
 ### Readability
 
@@ -438,6 +456,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     python_017["python-017<br/>If the implementation is hard to explain..."]
     python_018["python-018<br/>If the implementation is easy to explain..."]
     python_019["python-019<br/>Although that way may not be obvious at ..."]
+    python_020["python-020<br/>Let's do more of those"]
     det_BareExceptDetector["BareExceptDetector"]
     python_009 --> det_BareExceptDetector
     det_CircularDependencyDetector["CircularDependencyDetector"]
@@ -475,6 +494,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     det_NameStyleDetector["NameStyleDetector"]
     det_NamespaceUsageDetector["NamespaceUsageDetector"]
     python_012 --> det_NamespaceUsageDetector
+    python_020 --> det_NamespaceUsageDetector
     det_NestingDepthDetector["NestingDepthDetector"]
     python_005 --> det_NestingDepthDetector
     det_PythonComplexUndocumentedDetector["PythonComplexUndocumentedDetector"]
@@ -518,6 +538,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     class python_017 principle
     class python_018 principle
     class python_019 principle
+    class python_020 principle
     class det_BareExceptDetector detector
     class det_CircularDependencyDetector detector
     class det_ClassSizeDetector detector

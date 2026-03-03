@@ -272,5 +272,21 @@ PYTHON_ZEN = LanguageZenPrinciples(
                 "Comparing with == True/False instead of direct boolean checks",
             ],
         ),
+        ZenPrinciple(
+            id="python-020",
+            principle="Let's do more of those",
+            category=PrincipleCategory.ORGANIZATION,
+            severity=6,
+            description="Actively use namespaces to keep modules focused and maintainable",
+            violations=[
+                "Polluting global namespace",
+                "Too many items in __all__",
+                "Monolithic modules instead of focused namespaces",
+            ],
+            metrics={
+                "max_top_level_symbols": 25,
+                "max_exports": 20,
+            },
+        ),
     ],
 )

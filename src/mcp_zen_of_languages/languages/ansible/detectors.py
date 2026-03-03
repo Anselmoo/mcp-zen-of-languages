@@ -8,13 +8,28 @@ import re
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
 from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
 from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.languages.configs import AnsibleAutomationJourneyConfig
+from mcp_zen_of_languages.languages.configs import AnsibleAutomationOpportunityConfig
 from mcp_zen_of_languages.languages.configs import AnsibleBecomeConfig
+from mcp_zen_of_languages.languages.configs import (
+    AnsibleComplexityKillsProductivityConfig,
+)
+from mcp_zen_of_languages.languages.configs import AnsibleContinuousImprovementConfig
+from mcp_zen_of_languages.languages.configs import AnsibleConventionOverConfigConfig
+from mcp_zen_of_languages.languages.configs import AnsibleDeclarativeBiasConfig
+from mcp_zen_of_languages.languages.configs import AnsibleExplainabilityConfig
+from mcp_zen_of_languages.languages.configs import AnsibleFocusConfig
 from mcp_zen_of_languages.languages.configs import AnsibleFqcnConfig
+from mcp_zen_of_languages.languages.configs import AnsibleFrictionConfig
 from mcp_zen_of_languages.languages.configs import AnsibleIdempotencyConfig
 from mcp_zen_of_languages.languages.configs import AnsibleJinjaSpacingConfig
+from mcp_zen_of_languages.languages.configs import AnsibleMagicAutomationConfig
 from mcp_zen_of_languages.languages.configs import AnsibleNamingConfig
 from mcp_zen_of_languages.languages.configs import AnsibleNoCleartextPasswordConfig
+from mcp_zen_of_languages.languages.configs import AnsibleReadabilityCountsConfig
 from mcp_zen_of_languages.languages.configs import AnsibleStateExplicitConfig
+from mcp_zen_of_languages.languages.configs import AnsibleUserExperienceConfig
+from mcp_zen_of_languages.languages.configs import AnsibleUserOutcomeConfig
 from mcp_zen_of_languages.models import Location
 from mcp_zen_of_languages.models import Violation
 
@@ -24,6 +39,14 @@ _SECRET_RE = re.compile(
 )
 _BAD_JINJA_SPACING_RE = re.compile(r"\{\{\S|\S\}\}")
 _STATE_ARG_RE = re.compile(r"(^|\s)state=")
+_PYTHON_USAGE_RE = re.compile(r"(?i)\b(python3?|\\.py\\b)")
+_JINJA_CONTROL_FLOW_RE = re.compile(r"{%\s*(if|for|set|macro|filter)\b")
+_RAW_RE = re.compile(r"^\s*raw\s*:")
+_MANUAL_COMMAND_RE = re.compile(r"(?i)\b(apt-get|yum|dnf|systemctl|service)\b")
+_WHEN_OPERATOR_RE = re.compile(r"(?i)\b(and|or)\b")
+_TODO_RE = re.compile(r"(?i)\b(TODO|FIXME|HACK|XXX)\b")
+_FRICTION_RE = re.compile(r"^\s*(?:-\s*)?(vars_prompt|pause)\s*:")
+_READABILITY_MAX_LINE_LENGTH = 120
 
 _STATEFUL_MODULES = {
     "apt",
@@ -132,6 +155,37 @@ def _task_module(task: dict[str, object]) -> str | None:
             continue
         return key
     return None
+
+
+def _iter_all_tasks(tree: object) -> list[dict[str, object]]:
+    task_groups = [_iter_tasks(play) for play in _to_plays(tree)]
+    if root_tasks := _root_tasks(tree):
+        task_groups.append(root_tasks)
+    return [task for group in task_groups for task in group]
+
+
+def _task_command(task: dict[str, object]) -> str | None:
+    module = _task_module(task)
+    command: str | None = None
+    if module is not None:
+        module_args = task.get(module)
+        if isinstance(module_args, str):
+            command = module_args
+        elif isinstance(module_args, dict):
+            cmd = module_args.get("cmd")
+            if isinstance(cmd, str):
+                command = cmd
+    action = task.get("action")
+    if command is None and isinstance(action, str):
+        command = action
+    elif command is None and isinstance(action, dict):
+        cmd = action.get("cmd")
+        if isinstance(cmd, str):
+            command = cmd
+    local_action = task.get("local_action")
+    if command is None and isinstance(local_action, str):
+        command = local_action
+    return command
 
 
 def _line_of_token(code: str, token: str, default: int = 1, start_line: int = 1) -> int:
@@ -499,12 +553,553 @@ class AnsibleJinjaSpacingDetector(
         return violations
 
 
+class AnsibleReadabilityCountsDetector(
+    ViolationDetector[AnsibleReadabilityCountsConfig], LocationHelperMixin
+):
+    """Enforce naming and line readability signals for Ansible content."""
+
+    @property
+    def name(self) -> str:
+        return "ansible-008"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: AnsibleReadabilityCountsConfig,
+    ) -> list[Violation]:
+        tree = context.ast_tree.tree if context.ast_tree is not None else None
+        violations: list[Violation] = []
+        for play in _to_plays(tree):
+            if "hosts" in play and not play.get("name"):
+                line = _line_of_token(context.code, "hosts:")
+                violations.append(
+                    self.build_violation(
+                        config,
+                        location=Location(line=line, column=1),
+                        suggestion="Add a descriptive play name.",
+                    )
+                )
+        task_cursor = 1
+        for task in _iter_all_tasks(tree):
+            if task.get("name"):
+                module = _task_module(task)
+                task_cursor = _task_line(
+                    context.code,
+                    task,
+                    module,
+                    start_line=task_cursor,
+                    default=task_cursor,
+                )
+                continue
+            module = _task_module(task)
+            if module is None:
+                continue
+            line = _task_line(
+                context.code, task, module, start_line=task_cursor, default=1
+            )
+            task_cursor = line + 1
+            violations.append(
+                self.build_violation(
+                    config,
+                    location=Location(line=line, column=1),
+                    suggestion="Add a descriptive task name.",
+                )
+            )
+        for idx, line in enumerate(context.code.splitlines(), start=1):
+            if len(line) <= _READABILITY_MAX_LINE_LENGTH:
+                continue
+            violations.append(
+                self.build_violation(
+                    config,
+                    location=Location(line=idx, column=1),
+                    suggestion="Split long YAML lines to keep playbooks readable.",
+                )
+            )
+        return violations
+
+
+class AnsibleUserOutcomeDetector(
+    ViolationDetector[AnsibleUserOutcomeConfig], LocationHelperMixin
+):
+    """Flag patterns that hide failure outcomes from users."""
+
+    @property
+    def name(self) -> str:
+        return "ansible-009"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: AnsibleUserOutcomeConfig,
+    ) -> list[Violation]:
+        violations: list[Violation] = []
+        for idx, line in enumerate(context.code.splitlines(), start=1):
+            if re.search(r"^\s*ignore_errors\s*:\s*(true|yes)\b", line, re.IGNORECASE):
+                violations.append(
+                    self.build_violation(
+                        config,
+                        location=Location(line=idx, column=1),
+                        suggestion="Avoid blanket ignore_errors to preserve operator feedback.",
+                    )
+                )
+        return violations
+
+
+class AnsibleUserExperienceDetector(
+    ViolationDetector[AnsibleUserExperienceConfig], LocationHelperMixin
+):
+    """Prefer maintainable task constructs over raw command execution."""
+
+    @property
+    def name(self) -> str:
+        return "ansible-010"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: AnsibleUserExperienceConfig,
+    ) -> list[Violation]:
+        tree = context.ast_tree.tree if context.ast_tree is not None else None
+        violations: list[Violation] = []
+        task_cursor = 1
+        for task in _iter_all_tasks(tree):
+            module = _task_module(task)
+            if module is None or module.split(".")[-1] != "raw":
+                continue
+            line = _task_line(
+                context.code, task, module, start_line=task_cursor, default=1
+            )
+            task_cursor = line + 1
+            violations.append(
+                self.build_violation(
+                    config,
+                    location=Location(line=line, column=1),
+                    suggestion="Prefer purpose-built modules over raw task execution.",
+                )
+            )
+        return violations
+
+
+class AnsibleMagicAutomationDetector(
+    ViolationDetector[AnsibleMagicAutomationConfig], LocationHelperMixin
+):
+    """Detect manual shell command patterns that should be module-driven."""
+
+    @property
+    def name(self) -> str:
+        return "ansible-011"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: AnsibleMagicAutomationConfig,
+    ) -> list[Violation]:
+        tree = context.ast_tree.tree if context.ast_tree is not None else None
+        violations: list[Violation] = []
+        cursor = 1
+        for task in _iter_all_tasks(tree):
+            module = _task_module(task)
+            if module is None or module.split(".")[-1] not in {"shell", "command"}:
+                continue
+            line = _task_line(context.code, task, module, start_line=cursor, default=1)
+            cursor = line + 1
+            command = _task_command(task) or ""
+            if not _MANUAL_COMMAND_RE.search(command):
+                continue
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains=command[:80] if command else module,
+                    location=Location(line=line, column=1),
+                    suggestion="Replace manual package/service shell commands with modules.",
+                )
+            )
+        return violations
+
+
+class AnsibleConventionOverConfigDetector(
+    ViolationDetector[AnsibleConventionOverConfigConfig], LocationHelperMixin
+):
+    """Encourage conventional module invocation style (FQCN)."""
+
+    @property
+    def name(self) -> str:
+        return "ansible-012"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: AnsibleConventionOverConfigConfig,
+    ) -> list[Violation]:
+        tree = context.ast_tree.tree if context.ast_tree is not None else None
+        violations: list[Violation] = []
+        task_cursor = 1
+        for task in _iter_all_tasks(tree):
+            module = _task_module(task)
+            if module is None:
+                continue
+            if "." in module:
+                task_cursor = _task_line(
+                    context.code,
+                    task,
+                    module,
+                    start_line=task_cursor,
+                    default=task_cursor,
+                )
+                continue
+            line = _task_line(
+                context.code, task, module, start_line=task_cursor, default=1
+            )
+            task_cursor = line + 1
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains=module,
+                    location=Location(line=line, column=1),
+                    suggestion=f"Use conventional FQCN module naming (ansible.builtin.{module}).",
+                )
+            )
+        return violations
+
+
+class AnsibleDeclarativeBiasDetector(
+    ViolationDetector[AnsibleDeclarativeBiasConfig], LocationHelperMixin
+):
+    """Bias playbooks toward declarative module usage."""
+
+    @property
+    def name(self) -> str:
+        return "ansible-013"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: AnsibleDeclarativeBiasConfig,
+    ) -> list[Violation]:
+        tree = context.ast_tree.tree if context.ast_tree is not None else None
+        disallowed = {
+            "shell",
+            "command",
+            "ansible.builtin.shell",
+            "ansible.builtin.command",
+        }
+        violations: list[Violation] = []
+        task_cursor = 1
+        for task in _iter_all_tasks(tree):
+            module = _task_module(task)
+            if module is None:
+                continue
+            line = _task_line(
+                context.code, task, module, start_line=task_cursor, default=1
+            )
+            task_cursor = line + 1
+            if module in disallowed:
+                violations.append(
+                    self.build_violation(
+                        config,
+                        contains=module,
+                        location=Location(line=line, column=1),
+                        suggestion="Prefer declarative modules over imperative shell/command tasks.",
+                    )
+                )
+                continue
+            module_name = module.split(".")[-1]
+            if module_name not in _STATEFUL_MODULES:
+                continue
+            module_args = task.get(module)
+            action = task.get("action")
+            local_action = task.get("local_action")
+            if module_args is None and isinstance(action, dict):
+                module_args = action
+            if module_args is None and isinstance(local_action, dict):
+                module_args = local_action
+            if _has_explicit_state(task, module_args, action, local_action):
+                continue
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains=module,
+                    location=Location(line=line, column=1),
+                    suggestion="Declare desired state explicitly for stateful resources.",
+                )
+            )
+        return violations
+
+
+class AnsibleFocusDetector(ViolationDetector[AnsibleFocusConfig], LocationHelperMixin):
+    """Detect oversized, unfocused plays."""
+
+    @property
+    def name(self) -> str:
+        return "ansible-014"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: AnsibleFocusConfig,
+    ) -> list[Violation]:
+        tree = context.ast_tree.tree if context.ast_tree is not None else None
+        plays = _to_plays(tree)
+        violations: list[Violation] = []
+        play_cursor = 1
+        for play in plays:
+            tasks = _iter_tasks(play)
+            anchor = next(
+                (
+                    f"{key}:"
+                    for key in ("tasks", "pre_tasks", "post_tasks", "handlers")
+                    if isinstance(play.get(key), list)
+                ),
+                "tasks:",
+            )
+            line = _line_of_token(
+                context.code,
+                anchor,
+                default=play_cursor,
+                start_line=play_cursor,
+            )
+            play_cursor = line + 1
+            if len(tasks) <= config.max_tasks_per_play:
+                continue
+            violations.append(
+                self.build_violation(
+                    config,
+                    location=Location(line=line, column=1),
+                    suggestion=(
+                        f"Split this play into smaller focused units (>{config.max_tasks_per_play} tasks)."
+                    ),
+                )
+            )
+        return violations
+
+
+class AnsibleComplexityProductivityDetector(
+    ViolationDetector[AnsibleComplexityKillsProductivityConfig], LocationHelperMixin
+):
+    """Detect excessive boolean complexity in task conditions."""
+
+    @property
+    def name(self) -> str:
+        return "ansible-015"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: AnsibleComplexityKillsProductivityConfig,
+    ) -> list[Violation]:
+        violations: list[Violation] = []
+        for idx, line in enumerate(context.code.splitlines(), start=1):
+            stripped = line.strip()
+            if not stripped.startswith("when:"):
+                continue
+            operators = len(_WHEN_OPERATOR_RE.findall(stripped))
+            if operators <= config.max_condition_operators:
+                continue
+            violations.append(
+                self.build_violation(
+                    config,
+                    location=Location(line=idx, column=1),
+                    suggestion="Reduce boolean branching in when clauses.",
+                )
+            )
+        return violations
+
+
+class AnsibleExplainabilityDetector(
+    ViolationDetector[AnsibleExplainabilityConfig], LocationHelperMixin
+):
+    """Flag command bodies that are difficult to explain at a glance."""
+
+    @property
+    def name(self) -> str:
+        return "ansible-016"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: AnsibleExplainabilityConfig,
+    ) -> list[Violation]:
+        tree = context.ast_tree.tree if context.ast_tree is not None else None
+        violations: list[Violation] = []
+        cursor = 1
+        for task in _iter_all_tasks(tree):
+            module = _task_module(task)
+            if module is None:
+                continue
+            command = _task_command(task)
+            if command is None:
+                continue
+            line = _task_line(context.code, task, module, start_line=cursor, default=1)
+            cursor = line + 1
+            if len(command) <= config.max_inline_command_length:
+                continue
+            violations.append(
+                self.build_violation(
+                    config,
+                    location=Location(line=line, column=1),
+                    suggestion="Split complex commands into clearer module/task steps.",
+                )
+            )
+        return violations
+
+
+class AnsibleAutomationOpportunityDetector(
+    ViolationDetector[AnsibleAutomationOpportunityConfig], LocationHelperMixin
+):
+    """Detect repeated shell commands that indicate module opportunities."""
+
+    @property
+    def name(self) -> str:
+        return "ansible-017"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: AnsibleAutomationOpportunityConfig,
+    ) -> list[Violation]:
+        tree = context.ast_tree.tree if context.ast_tree is not None else None
+        occurrences: dict[str, list[int]] = {}
+        cursor = 1
+        for task in _iter_all_tasks(tree):
+            module = _task_module(task)
+            if module is None or module.split(".")[-1] not in {"shell", "command"}:
+                continue
+            command = (_task_command(task) or "").strip()
+            if not command:
+                continue
+            line = _task_line(context.code, task, module, start_line=cursor, default=1)
+            cursor = line + 1
+            occurrences.setdefault(command, []).append(line)
+        violations: list[Violation] = []
+        for command, lines in occurrences.items():
+            if len(lines) < config.min_repeated_shell_commands:
+                continue
+            violations.extend(
+                self.build_violation(
+                    config,
+                    contains=command[:80],
+                    location=Location(line=line, column=1),
+                    suggestion="Repeated shell commands should be captured as reusable automation.",
+                )
+                for line in lines
+            )
+        return violations
+
+
+class AnsibleContinuousImprovementDetector(
+    ViolationDetector[AnsibleContinuousImprovementConfig], LocationHelperMixin
+):
+    """Highlight inline debt markers that should become improvement backlog items."""
+
+    @property
+    def name(self) -> str:
+        return "ansible-018"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: AnsibleContinuousImprovementConfig,
+    ) -> list[Violation]:
+        violations: list[Violation] = []
+        for idx, line in enumerate(context.code.splitlines(), start=1):
+            match = _TODO_RE.search(line)
+            if not match:
+                continue
+            violations.append(
+                self.build_violation(
+                    config,
+                    contains=match.group(1),
+                    location=Location(line=idx, column=1),
+                    suggestion="Track improvement notes in issue backlog instead of long-lived TODOs.",
+                )
+            )
+        return violations
+
+
+class AnsibleFrictionDetector(
+    ViolationDetector[AnsibleFrictionConfig], LocationHelperMixin
+):
+    """Flag interactive workflow steps that add unnecessary execution friction."""
+
+    @property
+    def name(self) -> str:
+        return "ansible-019"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: AnsibleFrictionConfig,
+    ) -> list[Violation]:
+        violations: list[Violation] = []
+        for idx, line in enumerate(context.code.splitlines(), start=1):
+            if not _FRICTION_RE.search(line):
+                continue
+            violations.append(
+                self.build_violation(
+                    config,
+                    location=Location(line=idx, column=1),
+                    suggestion="Prefer fully non-interactive automation flow.",
+                )
+            )
+        return violations
+
+
+class AnsibleAutomationJourneyDetector(
+    ViolationDetector[AnsibleAutomationJourneyConfig], LocationHelperMixin
+):
+    """Encourage iterative maintenance by requiring task tags."""
+
+    @property
+    def name(self) -> str:
+        return "ansible-020"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: AnsibleAutomationJourneyConfig,
+    ) -> list[Violation]:
+        tree = context.ast_tree.tree if context.ast_tree is not None else None
+        violations: list[Violation] = []
+        cursor = 1
+        for task in _iter_all_tasks(tree):
+            module = _task_module(task)
+            if module is None:
+                continue
+            tags = task.get("tags")
+            if tags:
+                cursor = _task_line(context.code, task, module, start_line=cursor)
+                continue
+            line = _task_line(context.code, task, module, start_line=cursor, default=1)
+            cursor = line + 1
+            violations.append(
+                self.build_violation(
+                    config,
+                    location=Location(line=line, column=1),
+                    suggestion="Add tags to support incremental automation maintenance.",
+                )
+            )
+        return violations
+
+
 __all__ = [
+    "AnsibleAutomationJourneyDetector",
+    "AnsibleAutomationOpportunityDetector",
     "AnsibleBecomeDetector",
+    "AnsibleComplexityProductivityDetector",
+    "AnsibleContinuousImprovementDetector",
+    "AnsibleConventionOverConfigDetector",
+    "AnsibleDeclarativeBiasDetector",
+    "AnsibleExplainabilityDetector",
+    "AnsibleFocusDetector",
     "AnsibleFqcnDetector",
+    "AnsibleFrictionDetector",
     "AnsibleIdempotencyDetector",
     "AnsibleJinjaSpacingDetector",
+    "AnsibleMagicAutomationDetector",
     "AnsibleNamingDetector",
     "AnsibleNoCleartextPasswordDetector",
+    "AnsibleReadabilityCountsDetector",
     "AnsibleStateExplicitDetector",
+    "AnsibleUserExperienceDetector",
+    "AnsibleUserOutcomeDetector",
 ]

@@ -165,7 +165,7 @@ tags:
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **MarkdownHeadingHierarchyDetector** | Detect heading level skips in Markdown documents | `md-001` |
+| **MarkdownHeadingHierarchyDetector** | Detect heading level skips, missing H1, and headings-free documents | `md-001` |
 
 ### Usability
 

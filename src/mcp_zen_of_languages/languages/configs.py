@@ -1268,6 +1268,88 @@ class AnsibleJinjaSpacingConfig(DetectorConfig):
     type: Literal["ansible-007"] = "ansible-007"
 
 
+class AnsibleReadabilityCountsConfig(DetectorConfig):
+    """Ansible readability-counts enforcement settings."""
+
+    type: Literal["ansible-008"] = "ansible-008"
+
+
+class AnsibleUserOutcomeConfig(DetectorConfig):
+    """Ansible user-outcome-first enforcement settings."""
+
+    type: Literal["ansible-009"] = "ansible-009"
+
+
+class AnsibleUserExperienceConfig(DetectorConfig):
+    """Ansible UX-over-ideology enforcement settings."""
+
+    type: Literal["ansible-010"] = "ansible-010"
+
+
+class AnsibleMagicAutomationConfig(DetectorConfig):
+    """Ansible magic-over-manual automation settings."""
+
+    type: Literal["ansible-011"] = "ansible-011"
+
+
+class AnsibleConventionOverConfigConfig(DetectorConfig):
+    """Ansible convention-over-configuration settings."""
+
+    type: Literal["ansible-012"] = "ansible-012"
+
+
+class AnsibleDeclarativeBiasConfig(DetectorConfig):
+    """Ansible declarative-over-imperative preference settings."""
+
+    type: Literal["ansible-013"] = "ansible-013"
+
+
+class AnsibleFocusConfig(DetectorConfig):
+    """Ansible focus/size threshold settings."""
+
+    type: Literal["ansible-014"] = "ansible-014"
+    max_tasks_per_play: int = 20
+
+
+class AnsibleComplexityKillsProductivityConfig(DetectorConfig):
+    """Ansible complexity/productivity threshold settings."""
+
+    type: Literal["ansible-015"] = "ansible-015"
+    max_condition_operators: int = 3
+
+
+class AnsibleExplainabilityConfig(DetectorConfig):
+    """Ansible explainability enforcement settings."""
+
+    type: Literal["ansible-016"] = "ansible-016"
+    max_inline_command_length: int = 120
+
+
+class AnsibleAutomationOpportunityConfig(DetectorConfig):
+    """Ansible shell-to-automation opportunity detection settings."""
+
+    type: Literal["ansible-017"] = "ansible-017"
+    min_repeated_shell_commands: int = 2
+
+
+class AnsibleContinuousImprovementConfig(DetectorConfig):
+    """Ansible continuous-improvement marker settings."""
+
+    type: Literal["ansible-018"] = "ansible-018"
+
+
+class AnsibleFrictionConfig(DetectorConfig):
+    """Ansible friction-elimination settings."""
+
+    type: Literal["ansible-019"] = "ansible-019"
+
+
+class AnsibleAutomationJourneyConfig(DetectorConfig):
+    """Ansible automation-journey hygiene settings."""
+
+    type: Literal["ansible-020"] = "ansible-020"
+
+
 class TerraformProviderVersionPinningConfig(DetectorConfig):
     """Terraform provider version-pinning settings."""
 

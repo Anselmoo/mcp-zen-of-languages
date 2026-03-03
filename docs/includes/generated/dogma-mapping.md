@@ -2,9 +2,13 @@
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
-| ansible | `ansible-002` | Use fully qualified collection names | 5 |
-| ansible | `ansible-005` | State should be explicit | 6 |
-| ansible | `ansible-007` | Use clean Jinja2 variable spacing | 4 |
+| ansible | `ansible-001` | Ansible is not Python. | 7 |
+| ansible | `ansible-005` | Clear is better than cluttered. | 7 |
+| ansible | `ansible-009` | Helping users get things done matters most. | 7 |
+| ansible | `ansible-011` | "Magic" conquers the manual. | 6 |
+| ansible | `ansible-012` | When giving users options, use convention over configuration. | 6 |
+| ansible | `ansible-013` | Declarative is better than imperative -- most of the time. | 8 |
+| ansible | `ansible-016` | If the implementation is hard to explain, it's a bad idea. | 7 |
 | Bash | `bash-002` | Quote all variables | 8 |
 | Bash | `bash-009` | Use readonly for constants | 6 |
 | Bash | `bash-013` | Use arrays instead of string splitting | 7 |
@@ -108,6 +112,7 @@
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
+| ansible | `ansible-015` | Complexity kills productivity. | 8 |
 | Bash | `bash-004` | Use $() over backticks | 6 |
 | CSS | `css-001` | Avoid specificity creep | 7 |
 | GitLab CI | `gitlab-ci-004` | Avoid god pipelines | 6 |
@@ -133,6 +138,8 @@
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
+| ansible | `ansible-009` | Helping users get things done matters most. | 7 |
+| ansible | `ansible-020` | Automation is a journey that never ends. | 5 |
 | Bash | `bash-001` | Always use set -euo pipefail | 9 |
 | Bash | `bash-005` | Check command exit codes | 8 |
 | Bash | `bash-010` | Validate input and arguments | 8 |
@@ -170,8 +177,10 @@
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
-| ansible | `ansible-003` | Prefer idempotent modules over command or shell | 8 |
-| ansible | `ansible-004` | Use become instead of sudo | 7 |
+| ansible | `ansible-003` | Playbooks are not for programming. | 8 |
+| ansible | `ansible-011` | "Magic" conquers the manual. | 6 |
+| ansible | `ansible-017` | Every shell command and UI interaction is an opportunity to automate. | 6 |
+| ansible | `ansible-018` | Just because something works, doesn't mean it can't be improved. | 5 |
 | Bash | `bash-003` | Use [[ ]] over [ ] | 7 |
 | C++ | `cpp-003` | Use auto for type deduction | 6 |
 | C++ | `cpp-005` | Use range-based for loops | 6 |
@@ -241,9 +250,13 @@
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
-| ansible | `ansible-001` | Name all tasks and plays | 6 |
-| ansible | `ansible-002` | Use fully qualified collection names | 5 |
-| ansible | `ansible-007` | Use clean Jinja2 variable spacing | 4 |
+| ansible | `ansible-002` | YAML sucks for coding. | 7 |
+| ansible | `ansible-004` | Ansible users are (most likely) not programmers. | 6 |
+| ansible | `ansible-006` | Concise is better than verbose. | 5 |
+| ansible | `ansible-008` | Readability counts. | 8 |
+| ansible | `ansible-009` | Helping users get things done matters most. | 7 |
+| ansible | `ansible-010` | User experience beats ideological purity. | 6 |
+| ansible | `ansible-019` | Friction should be eliminated whenever possible. | 7 |
 | Bash | `bash-004` | Use $() over backticks | 6 |
 | Bash | `bash-011` | Use meaningful variable names | 7 |
 | Bash | `bash-014` | Include usage information | 6 |
@@ -275,6 +288,7 @@
 | Python | `python-012` | Namespaces are one honking great idea | 7 |
 | Python | `python-017` | If the implementation is hard to explain, it's a bad idea | 6 |
 | Python | `python-018` | If the implementation is easy to explain, it may be a good idea | 3 |
+| Python | `python-020` | Let's do more of those | 6 |
 | Ruby | `ruby-005` | Use meaningful method names with ?/! convention | 7 |
 | Ruby | `ruby-006` | Keep method chains readable | 6 |
 | Ruby | `ruby-007` | Prefer symbols over strings for keys | 5 |
@@ -305,7 +319,8 @@
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
-| ansible | `ansible-005` | State should be explicit | 6 |
+| ansible | `ansible-005` | Clear is better than cluttered. | 7 |
+| ansible | `ansible-013` | Declarative is better than imperative -- most of the time. | 8 |
 | Bash | `bash-009` | Use readonly for constants | 6 |
 | C++ | `cpp-002` | Prefer smart pointers over raw pointers | 9 |
 | C++ | `cpp-006` | Avoid manual memory allocation | 9 |
@@ -340,8 +355,7 @@
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
-| ansible | `ansible-002` | Use fully qualified collection names | 5 |
-| ansible | `ansible-006` | No cleartext passwords | 9 |
+| ansible | `ansible-014` | Focus avoids complexity. | 7 |
 | Bash | `bash-006` | Use functions for reusable code | 6 |
 | Bash | `bash-007` | Use local variables in functions | 7 |
 | Bash | `bash-008` | Avoid eval | 9 |
@@ -372,6 +386,7 @@
 | Markdown | `md-007` | Keep MDX imports hygienic | 5 |
 | PowerShell | `ps-014` | Use script scope carefully | 7 |
 | Python | `python-012` | Namespaces are one honking great idea | 7 |
+| Python | `python-020` | Let's do more of those | 6 |
 | SQL | `sql-003` | Prefer parameterized SQL over dynamic concatenation | 9 |
 | svg | `svg-007` | Remove unused defs entries | 5 |
 | svg | `svg-012` | Declare the SVG XML namespace | 7 |
@@ -385,6 +400,9 @@
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
+| ansible | `ansible-007` | Simple is better than complex. | 8 |
+| ansible | `ansible-014` | Focus avoids complexity. | 7 |
+| ansible | `ansible-015` | Complexity kills productivity. | 8 |
 | C++ | `cpp-010` | Use std::move for rvalue references | 7 |
 | C# | `cs-002` | Use expression-bodied members | 5 |
 | C# | `cs-006` | Prefer string interpolation | 6 |

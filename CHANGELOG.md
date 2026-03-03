@@ -1,3 +1,18 @@
+## [0.5.0] – 2026-03-03
+
+### Added
+- enhance branch creation with normalization and description joining functions; add tests for dry-run behavior (#107)
+- Add support for Ansible, Terraform, and SVG analysis (#105)
+- complete zen rules for all 5 languages (#75–#79) (#95)
+
+### Fixed
+- Update README to use PNG for dogma illustration and fix URL (#108)
+- Refactor docstrings and import statements for consistency (#93)
+
+### Documentation
+- extend abbreviations list with 17 new entries (#104)
+- Refactor documentation and add Dogma mapping generation script (#92)
+
 ## [0.4.0] – 2026-02-26
 
 ### Added

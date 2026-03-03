@@ -315,8 +315,9 @@ def _write_vscode_mcp_config() -> Path:
     """Create ``.vscode/mcp.json`` so VS Code discovers the Zen MCP server.
 
     Writes a workspace MCP JSON config pointing at
-    ``uvx --from mcp-zen-of-languages zen-mcp-server`` under
-    ``mcp.servers``. The ``.vscode/`` directory is created if absent.
+    ``uvx --from mcp-zen-of-languages zen-mcp-server`` using a single
+    top-level ``servers`` object.
+    The ``.vscode/`` directory is created if absent.
 
     Returns:
         Path: Absolute path to the written ``.vscode/mcp.json`` file.
@@ -328,15 +329,10 @@ def _write_vscode_mcp_config() -> Path:
     config_path = Path(".vscode") / "mcp.json"
     config_path.parent.mkdir(parents=True, exist_ok=True)
     payload = {
-        "mcp": {
-            "servers": {
-                "zen-of-languages": {
-                    "command": "uvx",
-                    "args": ["--from", "mcp-zen-of-languages", "zen-mcp-server"],
-                    "env": {
-                        "ZEN_CONFIG_PATH": "${workspaceFolder}/zen-config.yaml",
-                    },
-                },
+        "servers": {
+            "zen-of-languages": {
+                "command": "uvx",
+                "args": ["--from", "mcp-zen-of-languages", "zen-mcp-server"],
             },
         },
     }

@@ -1,10 +1,9 @@
 {
     "servers": {
         "zen-of-languages": {
-            "command": "uvx",
+            "command": "uv",
             "args": [
-                "--from",
-                "mcp-zen-of-languages",
+                "run",
                 "zen-mcp-server"
             ]
         }

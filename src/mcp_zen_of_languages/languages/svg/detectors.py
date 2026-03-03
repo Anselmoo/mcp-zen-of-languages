@@ -23,6 +23,7 @@ _PATH_CMD_RE = re.compile(r"[MmZzLlHhVvCcSsQqTtAa]")
 _RELATIVE_CMD_RE = re.compile(r"[mlhvcsqtaz]")
 _BASE64_IMAGE_RE = re.compile(r"data:image/[^;]+;base64,", re.IGNORECASE)
 _UNSAFE_XML_DIRECTIVE_RE = re.compile(r"<!\s*(DOCTYPE|ENTITY)\b", re.IGNORECASE)
+_PREFIXED_HREF_RE = re.compile(r"\b\w+:href\b")
 _COMPLEX_NODE_THRESHOLD = 20
 _GROUP_DEPTH_LIMIT = 5
 
@@ -408,11 +409,10 @@ class SvgDeprecatedXlinkHrefDetector(
         deprecated_key = f"{{{_XLINK_NS}}}href"
         for element in root.iter():
             if deprecated_key in element.attrib:
-                # Locate the actual `:href` token in source; fall back to `href`
-                search_token = next(
-                    (t for t in (":href", "href") if t in context.code),
-                    "href",
-                )
+                # Find the prefixed :href attribute token (e.g. xl:href, xlink:href)
+                # using a word-boundary pattern to avoid matching unrelated text.
+                m = _PREFIXED_HREF_RE.search(context.code)
+                search_token = m.group(0) if m else "href"
                 return [
                     self.build_violation(
                         config,

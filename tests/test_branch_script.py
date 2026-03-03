@@ -149,6 +149,12 @@ class TestNewCommandDryRun:
         result = _run_branch("new", "invalid_type", "something", "--dry-run")
         assert result.returncode != 0
 
+    def test_dry_run_accepts_uppercase_type_and_unquoted_description(self):
+        result = _run_branch("new", "FEAT", "Feature", "Update", "lock", "--dry-run")
+        assert result.returncode == 0
+        assert "feat/feature-update-lock" in result.stdout
+        assert "feat: Feature Update lock" in result.stdout
+
 
 class TestRescueCommandDryRun:
     def test_dry_run_exits_zero(self):
@@ -167,6 +173,18 @@ class TestRescueCommandDryRun:
     def test_dry_run_complete_marker(self):
         result = _run_branch("rescue", "feat", "my feature", "--dry-run")
         assert "dry-run complete" in result.stdout
+
+    def test_dry_run_accepts_uppercase_type_and_unquoted_description(self):
+        result = _run_branch(
+            "rescue",
+            "FIX",
+            "Feature",
+            "Update",
+            "lock",
+            "--dry-run",
+        )
+        assert result.returncode == 0
+        assert "fix/feature-update-lock" in result.stdout
 
 
 class TestHelpText:

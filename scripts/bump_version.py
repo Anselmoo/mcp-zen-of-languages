@@ -14,7 +14,7 @@ Steps performed:
     3. Update pyproject.toml  [version = "…"]
     4. Update src/…/__init__.py  [__version__ = "…"]
     5. Update CHANGELOG.md  (git log since last tag, grouped by type)
-    6. Run ``uv lock`` to refresh uv.lock
+    6. Run ``uv lock -U`` to refresh uv.lock
     7. ``git checkout -b release/v{new}``
     8. ``git add pyproject.toml uv.lock src/…/__init__.py CHANGELOG.md``
     9. ``git commit -m "chore: bump version to v{new}"``
@@ -367,12 +367,49 @@ def _working_tree_clean() -> bool:
     return result.stdout.strip() == ""
 
 
+def _confirm_branch_overwrite(branch: str) -> bool:
+    prompt = f"⚠  Branch '{branch}' already exists.\n   Delete and recreate it? [y/N]: "
+    while True:
+        response = input(prompt).strip().lower()
+        if response in {"y", "yes"}:
+            return True
+        if response in {"", "n", "no"}:
+            return False
+        print("Please answer 'y' or 'n'.")
+
+
+def _prepare_release_branch(branch_name: str, *, base: str, dry_run: bool) -> None:
+    if dry_run or not _branch_exists(branch_name):
+        return
+
+    if not _confirm_branch_overwrite(branch_name):
+        print(
+            f"i  Aborting: branch '{branch_name}' was kept unchanged.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    current = _current_branch()
+    if current == branch_name and base == branch_name:
+        print(
+            f"⚠  Branch '{branch_name}' is currently checked out.\n"
+            "   Pass --base-branch <branch> to recreate it from another branch.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    if current == branch_name:
+        _run(["git", "checkout", base], dry_run=False, label="git checkout base")
+
+    _run(["git", "branch", "-D", branch_name], dry_run=False, label="git branch -D")
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
 
-def main() -> None:  # noqa: C901, PLR0915
+def main() -> None:  # noqa: PLR0915
     parser = argparse.ArgumentParser(
         description="Bump version, refresh uv.lock, and create a release branch.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -427,6 +464,8 @@ def main() -> None:  # noqa: C901, PLR0915
     print(f"Target branch: {branch_name}\n")
 
     # --- Safety checks ---
+    base = args.base_branch or _current_branch()
+
     if not args.dry_run:
         if not _working_tree_clean():
             print(
@@ -435,16 +474,9 @@ def main() -> None:  # noqa: C901, PLR0915
                 file=sys.stderr,
             )
             sys.exit(1)
-        if _branch_exists(branch_name):
-            print(
-                f"⚠  Branch '{branch_name}' already exists.\n"
-                "   Delete it first or choose a different version.",
-                file=sys.stderr,
-            )
-            sys.exit(1)
+        _prepare_release_branch(branch_name, base=base, dry_run=False)
 
     # --- Base branch ---
-    base = args.base_branch or _current_branch()
     if not args.dry_run and _current_branch() != base:
         _run(["git", "checkout", base], dry_run=False, label="git checkout base")
 
@@ -466,7 +498,7 @@ def main() -> None:  # noqa: C901, PLR0915
 
     # 2. Refresh lockfile
     print("\n── Refreshing uv.lock ───────────────────────────────────────")
-    _run(["uv", "lock"], dry_run=args.dry_run, label="uv lock")
+    _run(["uv", "lock", "-U"], dry_run=args.dry_run, label="uv lock -U")
 
     # 3. Create branch
     print("\n── Git ───────────────────────────────────────────────────────")

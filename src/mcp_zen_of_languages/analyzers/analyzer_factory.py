@@ -184,6 +184,7 @@ def create_analyzer(
         SVG                             ``svg``
         Bash                            ``bash``, ``sh``, ``shell``
         PowerShell                      ``powershell``, ``ps``, ``pwsh``
+        Ansible                         ``ansible``, ``ansible-playbook``
         Ruby                            ``ruby``, ``rb``
         C++                             ``cpp``, ``c++``, ``cc``, ``cxx``
         C#                              ``csharp``, ``cs``

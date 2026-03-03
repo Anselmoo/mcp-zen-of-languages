@@ -2,6 +2,13 @@
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
+| ansible | `ansible-001` | Ansible is not Python. | 7 |
+| ansible | `ansible-005` | Clear is better than cluttered. | 7 |
+| ansible | `ansible-009` | Helping users get things done matters most. | 7 |
+| ansible | `ansible-011` | "Magic" conquers the manual. | 6 |
+| ansible | `ansible-012` | When giving users options, use convention over configuration. | 6 |
+| ansible | `ansible-013` | Declarative is better than imperative -- most of the time. | 8 |
+| ansible | `ansible-016` | If the implementation is hard to explain, it's a bad idea. | 7 |
 | Bash | `bash-002` | Quote all variables | 8 |
 | Bash | `bash-009` | Use readonly for constants | 6 |
 | Bash | `bash-013` | Use arrays instead of string splitting | 7 |
@@ -72,6 +79,13 @@
 | SQL | `sql-007` | Use descriptive table aliases | 4 |
 | SQL | `sql-008` | Keep transaction boundaries balanced | 8 |
 | SQL | `sql-009` | Prefer explicit JOIN syntax over ANSI-89 comma joins | 6 |
+| svg | `svg-005` | Prefer presentation attributes over inline styles | 5 |
+| svg | `svg-009` | Keep id attributes unique | 8 |
+| svg | `svg-012` | Declare the SVG XML namespace | 7 |
+| Terraform | `tf-001` | Pin provider versions | 8 |
+| Terraform | `tf-002` | Pin module versions | 8 |
+| Terraform | `tf-004` | Avoid hardcoded resource IDs | 7 |
+| Terraform | `tf-006` | Configure remote state backend | 7 |
 | TOML | `toml-002` | Avoid duplicate keys | 8 |
 | TOML | `toml-003` | Use lowercase keys | 5 |
 | TOML | `toml-005` | Clarity is paramount | 5 |
@@ -98,6 +112,7 @@
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
+| ansible | `ansible-015` | Complexity kills productivity. | 8 |
 | Bash | `bash-004` | Use $() over backticks | 6 |
 | CSS | `css-001` | Avoid specificity creep | 7 |
 | GitLab CI | `gitlab-ci-004` | Avoid god pipelines | 6 |
@@ -112,6 +127,8 @@
 | Python | `python-005` | Flat is better than nested | 8 |
 | Python | `python-015` | Now is better than never | 4 |
 | Ruby | `ruby-008` | Use guard clauses | 6 |
+| svg | `svg-006` | Use viewBox with fixed dimensions | 6 |
+| svg | `svg-008` | Avoid excessive nested group depth | 5 |
 | TypeScript | `ts-011` | Use optional chaining instead of manual null checks | 5 |
 | TypeScript | `ts-013` | Prefer async/await over raw promise chains | 6 |
 | XML | `xml-002` | Attributes for metadata, Elements for data | 5 |
@@ -121,6 +138,8 @@
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
+| ansible | `ansible-009` | Helping users get things done matters most. | 7 |
+| ansible | `ansible-020` | Automation is a journey that never ends. | 5 |
 | Bash | `bash-001` | Always use set -euo pipefail | 9 |
 | Bash | `bash-005` | Check command exit codes | 8 |
 | Bash | `bash-010` | Validate input and arguments | 8 |
@@ -146,6 +165,7 @@
 | Rust | `rust-001` | Avoid unwrap() and expect() in production code | 9 |
 | Rust | `rust-008` | Avoid unsafe unless necessary | 9 |
 | Rust | `rust-014` | Error types should implement standard error traits | 8 |
+| Terraform | `tf-006` | Configure remote state backend | 7 |
 | TypeScript | `ts-004` | Always specify return types | 7 |
 | TypeScript | `ts-010` | Prefer unknown over any for uncertain types | 7 |
 | TypeScript | `ts-012` | Prefer for-of and array methods over index loops | 4 |
@@ -157,6 +177,10 @@
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
+| ansible | `ansible-003` | Playbooks are not for programming. | 8 |
+| ansible | `ansible-011` | "Magic" conquers the manual. | 6 |
+| ansible | `ansible-017` | Every shell command and UI interaction is an opportunity to automate. | 6 |
+| ansible | `ansible-018` | Just because something works, doesn't mean it can't be improved. | 5 |
 | Bash | `bash-003` | Use [[ ]] over [ ] | 7 |
 | C++ | `cpp-003` | Use auto for type deduction | 6 |
 | C++ | `cpp-005` | Use range-based for loops | 6 |
@@ -213,6 +237,8 @@
 | Rust | `rust-012` | Avoid Rc<RefCell<T>> unless necessary | 7 |
 | Rust | `rust-016` | Implement Default when there is an obvious default value | 5 |
 | Rust | `rust-017` | Use From/Into for type conversions | 6 |
+| svg | `svg-010` | Prefer relative path commands when practical | 4 |
+| svg | `svg-013` | Use href instead of deprecated xlink:href | 4 |
 | TypeScript | `ts-003` | Prefer interfaces over type aliases for objects | 5 |
 | TypeScript | `ts-007` | Use utility types | 6 |
 | TypeScript | `ts-009` | Use enums or const assertions appropriately | 6 |
@@ -224,6 +250,13 @@
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
+| ansible | `ansible-002` | YAML sucks for coding. | 7 |
+| ansible | `ansible-004` | Ansible users are (most likely) not programmers. | 6 |
+| ansible | `ansible-006` | Concise is better than verbose. | 5 |
+| ansible | `ansible-008` | Readability counts. | 8 |
+| ansible | `ansible-009` | Helping users get things done matters most. | 7 |
+| ansible | `ansible-010` | User experience beats ideological purity. | 6 |
+| ansible | `ansible-019` | Friction should be eliminated whenever possible. | 7 |
 | Bash | `bash-004` | Use $() over backticks | 6 |
 | Bash | `bash-011` | Use meaningful variable names | 7 |
 | Bash | `bash-014` | Include usage information | 6 |
@@ -255,12 +288,22 @@
 | Python | `python-012` | Namespaces are one honking great idea | 7 |
 | Python | `python-017` | If the implementation is hard to explain, it's a bad idea | 6 |
 | Python | `python-018` | If the implementation is easy to explain, it may be a good idea | 3 |
+| Python | `python-020` | Let's do more of those | 6 |
 | Ruby | `ruby-005` | Use meaningful method names with ?/! convention | 7 |
 | Ruby | `ruby-006` | Keep method chains readable | 6 |
 | Ruby | `ruby-007` | Prefer symbols over strings for keys | 5 |
 | Rust | `rust-015` | Follow Rust naming conventions (RFC 430) | 6 |
 | SQL | `sql-007` | Use descriptive table aliases | 4 |
 | SQL | `sql-009` | Prefer explicit JOIN syntax over ANSI-89 comma joins | 6 |
+| svg | `svg-001` | Include a root title element for accessibility | 8 |
+| svg | `svg-002` | Use role=img with aria-labelledby for inline SVG | 8 |
+| svg | `svg-003` | Give image nodes alternative text | 7 |
+| svg | `svg-004` | Provide a long description for complex graphics | 6 |
+| svg | `svg-012` | Declare the SVG XML namespace | 7 |
+| svg | `svg-015` | Remove production-bloat metadata and comments | 4 |
+| Terraform | `tf-003` | Describe variables and outputs | 5 |
+| Terraform | `tf-004` | Avoid hardcoded resource IDs | 7 |
+| Terraform | `tf-007` | Use consistent snake_case naming | 5 |
 | TOML | `toml-001` | Avoid inline tables | 6 |
 | TOML | `toml-004` | Avoid trailing commas | 5 |
 | TypeScript | `ts-003` | Prefer interfaces over type aliases for objects | 5 |
@@ -276,6 +319,8 @@
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
+| ansible | `ansible-005` | Clear is better than cluttered. | 7 |
+| ansible | `ansible-013` | Declarative is better than imperative -- most of the time. | 8 |
 | Bash | `bash-009` | Use readonly for constants | 6 |
 | C++ | `cpp-002` | Prefer smart pointers over raw pointers | 9 |
 | C++ | `cpp-006` | Avoid manual memory allocation | 9 |
@@ -303,12 +348,14 @@
 | Rust | `rust-013` | Send + Sync should be implemented when types allow | 7 |
 | Rust | `rust-016` | Implement Default when there is an obvious default value | 5 |
 | SQL | `sql-002` | Always include INSERT column lists | 7 |
+| Terraform | `tf-006` | Configure remote state backend | 7 |
 | TypeScript | `ts-005` | Use readonly when appropriate | 6 |
 
 ### Strict Fences — `ZEN-STRICT-FENCES`
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
+| ansible | `ansible-014` | Focus avoids complexity. | 7 |
 | Bash | `bash-006` | Use functions for reusable code | 6 |
 | Bash | `bash-007` | Use local variables in functions | 7 |
 | Bash | `bash-008` | Avoid eval | 9 |
@@ -339,7 +386,12 @@
 | Markdown | `md-007` | Keep MDX imports hygienic | 5 |
 | PowerShell | `ps-014` | Use script scope carefully | 7 |
 | Python | `python-012` | Namespaces are one honking great idea | 7 |
+| Python | `python-020` | Let's do more of those | 6 |
 | SQL | `sql-003` | Prefer parameterized SQL over dynamic concatenation | 9 |
+| svg | `svg-007` | Remove unused defs entries | 5 |
+| svg | `svg-012` | Declare the SVG XML namespace | 7 |
+| svg | `svg-015` | Remove production-bloat metadata and comments | 4 |
+| Terraform | `tf-005` | Avoid hardcoded secrets | 9 |
 | TOML | `toml-006` | Order implies importance | 4 |
 | TypeScript | `ts-014` | Prefer named exports over default exports | 4 |
 | XML | `xml-003` | Namespaces prevent local collisions | 6 |
@@ -348,6 +400,9 @@
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
+| ansible | `ansible-007` | Simple is better than complex. | 8 |
+| ansible | `ansible-014` | Focus avoids complexity. | 7 |
+| ansible | `ansible-015` | Complexity kills productivity. | 8 |
 | C++ | `cpp-010` | Use std::move for rvalue references | 7 |
 | C# | `cs-002` | Use expression-bodied members | 5 |
 | C# | `cs-006` | Prefer string interpolation | 6 |
@@ -372,4 +427,9 @@
 | SQL | `sql-001` | Never use SELECT * | 6 |
 | SQL | `sql-005` | Avoid implicit type coercion in JOIN predicates | 6 |
 | SQL | `sql-006` | Bound result sets with WHERE/LIMIT/TOP | 5 |
+| svg | `svg-007` | Remove unused defs entries | 5 |
+| svg | `svg-008` | Avoid excessive nested group depth | 5 |
+| svg | `svg-011` | Avoid embedded base64 raster payloads | 7 |
+| svg | `svg-014` | Keep node count within maintainable limits | 6 |
+| svg | `svg-015` | Remove production-bloat metadata and comments | 4 |
 | TypeScript | `ts-003` | Prefer interfaces over type aliases for objects | 5 |

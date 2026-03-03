@@ -17,12 +17,13 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 | Language | Principles | Detectors | Parser | Philosophy Origin |
 |----------|:----------:|:---------:|--------|-------------------|
-| [Python](python.md) | 19 | 30 | AST | [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/) |
+| [Python](python.md) | 20 | 30 | AST | [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/) |
 | [TypeScript](typescript.md) | 18 | 25 | Regex | [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html) |
 | [Rust](rust.md) | 17 | 18 | Regex | [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/) |
 | [Go](go.md) | 20 | 21 | Regex | [Effective Go & The Zen of Go](https://the-zen-of-go.netlify.app/) |
 | [JavaScript](javascript.md) | 18 | 18 | Regex | [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript) |
 | [CSS](css.md) | 8 | 8 | Regex | [CSSWG + common modular CSS practices](https://www.w3.org/TR/CSS/) |
+| [Ansible](ansible.md) | 20 | 20 | Regex | [The Zen of Ansible (Red Hat)](https://www.redhat.com/en/blog/the-zen-of-ansible) |
 | [Bash](bash.md) | 14 | 14 | Regex | [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html) |
 | [PowerShell](powershell.md) | 15 | 15 | Regex | [PoshCode Style Guide](https://github.com/PoshCode/PowerShellPracticeAndStyle) |
 | [Ruby](ruby.md) | 11 | 11 | Regex | [Ruby Style Guide](https://rubystyle.guide/) |
@@ -33,7 +34,8 @@ Every language has its own philosophy — its own sense of what "good code" mean
 | [Dockerfile](dockerfile.md) | 8 | 8 | Regex | [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) |
 | [LaTeX](latex.md) | 9 | 9 | Regex | [LaTeX Project](https://www.latex-project.org/) |
 | [Markdown / MDX](markdown.md) | 7 | 7 | Regex | [CommonMark + MDX authoring best practices](https://commonmark.org/) |
-| **Programming & markup subtotal** | **203** | **223** | | |
+| [Terraform](terraform.md) | 7 | 7 | Regex | [Terraform language and module best-practice documentation](https://developer.hashicorp.com/terraform/language) |
+| **Programming & markup subtotal** | **231** | **250** | | |
 
 ### Workflows & Automation
 
@@ -47,13 +49,13 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 | Language Family | Principles | Detectors | Parser | Coverage Breakdown |
 |-----------------|:----------:|:---------:|--------|--------------------|
-| [Config formats](config-formats.md) | 31 | 31 | Regex | JSON (9), TOML (8), XML (6), YAML (8) |
-| **Config subtotal** | **31** | **31** | | |
+| [Config formats](config-formats.md) | 46 | 46 | Regex | JSON (9), SVG (15), TOML (8), XML (6), YAML (8) |
+| **Config subtotal** | **46** | **46** | | |
 
 ### Coverage Totals
 
-- **Principles (all categories):** 259
-- **Detectors + workflow checks:** 279
+- **Principles (all categories):** 302
+- **Detectors + workflow checks:** 321
 
 ## Maturity Tiers
 
@@ -73,7 +75,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
     Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
 
-    **TypeScript · Rust · Go · JavaScript · CSS · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile**
+    **TypeScript · Rust · Go · JavaScript · CSS · Ansible · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile · Terraform**
 
 -   :material-language-markdown:{ .lg .middle } **Documentation & Markup**
 
@@ -97,7 +99,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
     Schema and structure-focused detectors for data formats. Checks consistency, naming conventions, and format-specific best practices.
 
-    **JSON · TOML · XML · YAML**
+    **JSON · SVG · TOML · XML · YAML**
 
 </div>
 
@@ -133,7 +135,7 @@ You can tune severity thresholds and detector parameters per-language in your [`
     [GitHub Actions](github-actions.md) focuses on workflow hardening: pinning actions, permission scoping, secret safety, and pipeline maintainability.
 
 === "Config files?"
-    The [config formats](config-formats.md) page covers JSON, TOML, XML, and YAML — consistency checks, naming conventions, and format-specific best practices.
+    The [config formats](config-formats.md) page covers JSON, SVG, TOML, XML, and YAML — consistency checks, naming conventions, and format-specific best practices.
 
 ## Programmatic Access
 

@@ -37,6 +37,7 @@ PROGRAMMING_LANGUAGES: list[tuple[str, str]] = [
     ("go", "go"),
     ("javascript", "javascript"),
     ("css", "css"),
+    ("ansible", "ansible"),
     ("bash", "bash"),
     ("powershell", "powershell"),
     ("ruby", "ruby"),
@@ -45,6 +46,7 @@ PROGRAMMING_LANGUAGES: list[tuple[str, str]] = [
     ("csharp", "csharp"),
     ("docker_compose", "docker_compose"),
     ("dockerfile", "dockerfile"),
+    ("terraform", "terraform"),
     ("markdown", "markdown"),
     ("latex", "latex"),
 ]
@@ -55,6 +57,7 @@ WORKFLOW_LANGUAGES: list[tuple[str, str]] = [
 CONFIG_LANGUAGES: list[tuple[str, str]] = [
     ("json", "json"),
     ("toml", "toml"),
+    ("svg", "svg"),
     ("xml", "xml"),
     ("yaml", "yaml"),
 ]

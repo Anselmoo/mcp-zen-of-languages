@@ -600,6 +600,7 @@ SAMPLES = {
     "cpp": "int main() { return 0; }\n",
     "csharp": "public class Foo {}\n",
     "css": ".button { color: var(--text); }\n",
+    "ansible": "- hosts: all\n  tasks:\n    - name: ping\n      ansible.builtin.ping:\n",
     "yaml": "key: value\n",
     "gitlab_ci": "build:\n  image: python\n  script:\n    - echo hello\n",
     "github-actions": "name: CI\non: push\njobs:\n  build:\n    runs-on: ubuntu-latest\n    timeout-minutes: 5\n    steps:\n      - run: echo hi\n        shell: bash\n",
@@ -608,9 +609,11 @@ SAMPLES = {
     "sql": "SELECT id FROM users;\n",
     "markdown": "# Title\n\nSee http://example.com\n",
     "xml": "<root></root>\n",
+    "svg": '<svg xmlns="http://www.w3.org/2000/svg"><title>Icon</title></svg>\n',
     "latex": "\\documentclass{article}\n\\begin{document}Hello\\end{document}\n",
     "docker_compose": "services:\n  web:\n    image: nginx:latest\n",
     "dockerfile": "FROM ubuntu:latest\nUSER root\n",
+    "terraform": 'terraform {\n  required_version = ">= 1.6.0"\n}\nresource "null_resource" "example" {}\n',
 }
 
 

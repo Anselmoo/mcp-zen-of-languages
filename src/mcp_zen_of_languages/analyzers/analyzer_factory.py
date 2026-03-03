@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from mcp_zen_of_languages.languages.ansible.analyzer import AnsibleAnalyzer
 from mcp_zen_of_languages.languages.bash.analyzer import BashAnalyzer
 from mcp_zen_of_languages.languages.cpp.analyzer import CppAnalyzer
 from mcp_zen_of_languages.languages.csharp.analyzer import CSharpAnalyzer
@@ -29,6 +30,8 @@ from mcp_zen_of_languages.languages.python.analyzer import PythonAnalyzer
 from mcp_zen_of_languages.languages.ruby.analyzer import RubyAnalyzer
 from mcp_zen_of_languages.languages.rust.analyzer import RustAnalyzer
 from mcp_zen_of_languages.languages.sql.analyzer import SqlAnalyzer
+from mcp_zen_of_languages.languages.svg.analyzer import SvgAnalyzer
+from mcp_zen_of_languages.languages.terraform.analyzer import TerraformAnalyzer
 from mcp_zen_of_languages.languages.toml.analyzer import TomlAnalyzer
 from mcp_zen_of_languages.languages.typescript.analyzer import TypeScriptAnalyzer
 from mcp_zen_of_languages.languages.xml.analyzer import XmlAnalyzer
@@ -48,6 +51,7 @@ SUPPORTED_LANGUAGES: tuple[str, ...] = (
     "javascript",
     "go",
     "rust",
+    "svg",
     "bash",
     "powershell",
     "ruby",
@@ -56,12 +60,14 @@ SUPPORTED_LANGUAGES: tuple[str, ...] = (
     "css",
     "docker_compose",
     "dockerfile",
+    "ansible",
     "yaml",
     "github-actions",
     "toml",
     "xml",
     "json",
     "sql",
+    "terraform",
     "markdown",
     "latex",
     "gitlab_ci",
@@ -79,6 +85,7 @@ _ANALYZERS_BY_ALIAS: dict[str, AnalyzerClass] = {
     "go": GoAnalyzer,
     "rust": RustAnalyzer,
     "rs": RustAnalyzer,
+    "svg": SvgAnalyzer,
     "bash": BashAnalyzer,
     "sh": BashAnalyzer,
     "shell": BashAnalyzer,
@@ -100,6 +107,8 @@ _ANALYZERS_BY_ALIAS: dict[str, AnalyzerClass] = {
     "docker-compose": DockerComposeAnalyzer,
     "dockerfile": DockerfileAnalyzer,
     "docker": DockerfileAnalyzer,
+    "ansible": AnsibleAnalyzer,
+    "ansible-playbook": AnsibleAnalyzer,
     "yaml": YamlAnalyzer,
     "yml": YamlAnalyzer,
     "github-actions": GitHubActionsAnalyzer,
@@ -113,6 +122,8 @@ _ANALYZERS_BY_ALIAS: dict[str, AnalyzerClass] = {
     "mysql": SqlAnalyzer,
     "sqlite": SqlAnalyzer,
     "mssql": SqlAnalyzer,
+    "terraform": TerraformAnalyzer,
+    "tf": TerraformAnalyzer,
     "gitlab-ci": GitLabCIAnalyzer,
     "gitlab_ci": GitLabCIAnalyzer,
     "gitlabci": GitLabCIAnalyzer,
@@ -170,8 +181,10 @@ def create_analyzer(
         JavaScript                      ``javascript``, ``js``, ``jsx``
         Go                              ``go``
         Rust                            ``rust``, ``rs``
+        SVG                             ``svg``
         Bash                            ``bash``, ``sh``, ``shell``
         PowerShell                      ``powershell``, ``ps``, ``pwsh``
+        Ansible                         ``ansible``, ``ansible-playbook``
         Ruby                            ``ruby``, ``rb``
         C++                             ``cpp``, ``c++``, ``cc``, ``cxx``
         C#                              ``csharp``, ``cs``
@@ -183,10 +196,10 @@ def create_analyzer(
         TOML                            ``toml``
         XML                             ``xml``
         JSON                            ``json``
-        LaTeX                           ``latex``, ``tex``, ``ltx``, ``sty``, ``bib``, ``bibtex``
         SQL                             ``sql``, ``postgresql``, ``mysql``, ``sqlite``, ``mssql``
+        Terraform                       ``terraform``, ``tf``
         Markdown / MDX                  ``markdown``, ``mdx``
-        LaTeX                           ``latex``, ``tex``, ``ltx``, ``sty``
+        LaTeX                           ``latex``, ``tex``, ``ltx``, ``sty``, ``bib``, ``bibtex``
         =============================== ===================================
     """
     lang = language.lower()

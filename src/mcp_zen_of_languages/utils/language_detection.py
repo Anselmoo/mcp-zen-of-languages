@@ -8,6 +8,8 @@ lifecycle to route code to the appropriate language-specific pipeline.
 
 from __future__ import annotations
 
+import re
+
 from pathlib import Path
 
 from pydantic import BaseModel
@@ -34,9 +36,12 @@ EXTENSION_LANGUAGE_MAP: dict[str, str] = {
     ".toml": "toml",
     ".json": "json",
     ".xml": "xml",
+    ".svg": "svg",
     ".sql": "sql",
     ".ddl": "sql",
     ".dml": "sql",
+    ".tf": "terraform",
+    ".tfvars": "terraform",
     ".md": "markdown",
     ".markdown": "markdown",
     ".mdx": "markdown",
@@ -49,6 +54,9 @@ EXTENSION_LANGUAGE_MAP: dict[str, str] = {
 
 GITLAB_CI_FILENAMES = {".gitlab-ci.yml", ".gitlab-ci.yaml"}
 YAML_EXTENSIONS = {".yml", ".yaml"}
+ANSIBLE_PATH_SEGMENTS = {"tasks", "handlers", "vars", "defaults"}
+ANSIBLE_SIGNAL_THRESHOLD = 2
+ANSIBLE_DETECTION_READ_LIMIT = 16 * 1024
 
 
 class DetectionResult(BaseModel):
@@ -75,7 +83,60 @@ class DetectionResult(BaseModel):
         return self.model_dump()
 
 
-def detect_language_by_extension(path: str) -> DetectionResult:
+def _is_ansible_path(path_obj: Path) -> bool:
+    parts = {part.lower() for part in path_obj.parts}
+    parent_name = path_obj.parent.name.lower()
+    return (
+        parent_name in {"group_vars", "host_vars"}
+        or ("roles" in parts and parent_name in ANSIBLE_PATH_SEGMENTS)
+        or path_obj.name.lower()
+        in {"playbook.yml", "playbook.yaml", "site.yml", "site.yaml"}
+    )
+
+
+def _is_ansible_yaml_content(text: str) -> bool:
+    lowered = text.lower()
+    signals = 0
+    if re.search(r"(?m)^\s*-\s*hosts\s*:", lowered):
+        signals += 1
+    if re.search(r"(?m)^\s*(tasks|handlers|pre_tasks|post_tasks)\s*:", lowered):
+        signals += 1
+    if re.search(r"(?m)^\s*(become|gather_facts|roles)\s*:", lowered):
+        signals += 1
+    if re.search(
+        r"(?m)^\s*(?:ansible\.builtin\.[a-z_]+|-\s*(?:command|shell))\s*:",
+        lowered,
+    ):
+        signals += 1
+    return signals >= ANSIBLE_SIGNAL_THRESHOLD
+
+
+def _detect_ansible_yaml(path_obj: Path, ext: str) -> DetectionResult | None:
+    if ext not in YAML_EXTENSIONS or not path_obj.exists():
+        return None
+    if _is_ansible_path(path_obj):
+        return DetectionResult(
+            language="ansible",
+            confidence=0.99,
+            method="extension",
+            notes="Matched Ansible-specific YAML path",
+        )
+    try:
+        with path_obj.open(encoding="utf-8", errors="ignore") as handle:
+            contents = handle.read(ANSIBLE_DETECTION_READ_LIMIT)
+    except OSError:
+        return None
+    if contents and _is_ansible_yaml_content(contents):
+        return DetectionResult(
+            language="ansible",
+            confidence=0.9,
+            method="extension",
+            notes="Matched Ansible YAML structure",
+        )
+    return None
+
+
+def detect_language_by_extension(path: str) -> DetectionResult:  # noqa: PLR0911
     """Look up the file extension in ``EXTENSION_LANGUAGE_MAP`` and return a high-confidence result.
 
     This is the primary detection strategy and the fastest path. It
@@ -126,6 +187,8 @@ def detect_language_by_extension(path: str) -> DetectionResult:
             confidence=0.98,
             method="extension",
         )
+    if ansible_result := _detect_ansible_yaml(path_obj, ext):
+        return ansible_result
     lang = EXTENSION_LANGUAGE_MAP.get(ext, "unknown")
     return DetectionResult(language=lang, confidence=0.95, method="extension")
 
@@ -148,6 +211,8 @@ def detect_language_from_content(code: str) -> DetectionResult:
         ``method="heuristics"`` and a confidence between 0.1 (unknown)
         and 0.9 (strong keyword match).
     """
+    if _is_ansible_yaml_content(code):
+        return DetectionResult(language="ansible", confidence=0.85, method="heuristics")
     if "def " in code:
         return DetectionResult(language="python", confidence=0.9, method="heuristics")
     if "interface " in code or "=>" in code or "function " in code:

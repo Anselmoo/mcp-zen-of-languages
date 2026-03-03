@@ -82,6 +82,13 @@ GENERIC_PROMPTS_BY_LANGUAGE: dict[str, list[tuple[str, str]]] = {
             "standardize breakpoints and z-index scales.",
         ),
     ],
+    "ansible": [
+        (
+            "Ansible playbook hygiene",
+            "Name plays/tasks clearly, prefer FQCN modules, avoid shell/command when "
+            "idempotent modules exist, and keep privilege/state/secret handling explicit.",
+        ),
+    ],
     "javascript": [
         (
             "Safer JavaScript",
@@ -157,6 +164,13 @@ GENERIC_PROMPTS_BY_LANGUAGE: dict[str, list[tuple[str, str]]] = {
             "validate documents against a schema or contract.",
         ),
     ],
+    "svg": [
+        (
+            "SVG accessibility and optimization",
+            "Add title/desc metadata, remove unused defs and editor metadata, "
+            "and keep node depth/count optimized for responsive rendering.",
+        ),
+    ],
     "json": [
         (
             "JSON payload consistency",
@@ -204,6 +218,13 @@ GENERIC_PROMPTS_BY_LANGUAGE: dict[str, list[tuple[str, str]]] = {
             "GitLab pipeline hardening",
             "Pin images, replace only/except with rules, add needs/cache/expire_in, "
             "and extract duplicated job setup into reusable templates.",
+        ),
+    ],
+    "terraform": [
+        (
+            "Terraform state and security hygiene",
+            "Pin providers/modules, use remote backends, avoid hardcoded IDs/secrets, "
+            "and keep variable/resource naming consistently snake_case.",
         ),
     ],
 }

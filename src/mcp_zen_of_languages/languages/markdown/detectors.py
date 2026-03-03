@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import re
 
+from pathlib import Path
+
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
 from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
 from mcp_zen_of_languages.analyzers.base import ViolationDetector
@@ -22,6 +24,7 @@ from mcp_zen_of_languages.models import Violation
 _HEADING_RE = re.compile(r"^\s{0,3}(#{1,6})\s+\S")
 _IMAGE_RE = re.compile(r"!\[([^\]]*)\]\(([^)]+)\)")
 _MARKDOWN_LINK_RE = re.compile(r"\[[^\]]+\]\([^)]+\)")
+_MARKDOWN_LINK_TARGET_RE = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
 _ANGLE_URL_RE = re.compile(r"<https?://[^>]+>")
 _INLINE_CODE_RE = re.compile(r"`[^`\n]+`")
 _URL_RE = re.compile(r"https?://[^\s<>)\]]+")
@@ -65,11 +68,21 @@ def _is_mdx_context(context: AnalysisContext) -> bool:
     return False
 
 
+def _discover_project_root(start_dir: Path) -> Path | None:
+    for parent in (start_dir, *start_dir.parents):
+        if any(
+            (parent / marker).exists()
+            for marker in ("zen-config.yaml", "pyproject.toml")
+        ):
+            return parent
+    return None
+
+
 class MarkdownHeadingHierarchyDetector(
     ViolationDetector[MarkdownHeadingHierarchyConfig],
     LocationHelperMixin,
 ):
-    """Detect heading level skips in Markdown documents."""
+    """Detect heading level skips, missing H1, and headings-free documents."""
 
     @property
     def name(self) -> str:
@@ -80,11 +93,22 @@ class MarkdownHeadingHierarchyDetector(
         context: AnalysisContext,
         config: MarkdownHeadingHierarchyConfig,
     ) -> list[Violation]:
+        first_heading_level: int | None = None
         previous_level: int | None = None
         for line_no, line in _iter_text_lines(context.code):
             if not (match := _HEADING_RE.match(line)):
                 continue
             level = len(match.group(1))
+            if first_heading_level is None:
+                first_heading_level = level
+                if first_heading_level != 1:
+                    return [
+                        self.build_violation(
+                            config,
+                            location=Location(line=line_no, column=1),
+                            suggestion="Start documents with a single H1 (`#`) heading.",
+                        ),
+                    ]
             if previous_level is not None and level > previous_level + 1:
                 return [
                     self.build_violation(
@@ -94,6 +118,14 @@ class MarkdownHeadingHierarchyDetector(
                     ),
                 ]
             previous_level = level
+        if first_heading_level is None:
+            return [
+                self.build_violation(
+                    config,
+                    location=Location(line=1, column=1),
+                    suggestion="Add a top-level H1 heading as the document title.",
+                ),
+            ]
         return []
 
 
@@ -189,7 +221,7 @@ class MarkdownFrontMatterDetector(
     ViolationDetector[MarkdownFrontMatterConfig],
     LocationHelperMixin,
 ):
-    """Detect incomplete YAML front-matter blocks."""
+    """Detect incomplete YAML front-matter blocks and unsafe/dead relative links."""
 
     @property
     def name(self) -> str:
@@ -202,24 +234,60 @@ class MarkdownFrontMatterDetector(
     ) -> list[Violation]:
         lines = context.code.splitlines()
         frontmatter_end = _frontmatter_end_line(lines)
-        if frontmatter_end is None:
-            return []
-        keys = {
-            match.group(1).lower()
-            for line in lines[1:frontmatter_end]
-            if (match := _FRONTMATTER_RE.match(line.strip()))
-        }
-        missing = [
-            key for key in config.required_frontmatter_keys if key.lower() not in keys
-        ]
-        if missing:
-            return [
-                self.build_violation(
-                    config,
-                    location=Location(line=1, column=1),
-                    suggestion=f"Add required front-matter keys: {', '.join(missing)}.",
-                ),
+        if frontmatter_end is not None:
+            keys = {
+                match.group(1).lower()
+                for line in lines[1:frontmatter_end]
+                if (match := _FRONTMATTER_RE.match(line.strip()))
+            }
+            missing = [
+                key
+                for key in config.required_frontmatter_keys
+                if key.lower() not in keys
             ]
+            if missing:
+                return [
+                    self.build_violation(
+                        config,
+                        location=Location(line=1, column=1),
+                        suggestion=f"Add required front-matter keys: {', '.join(missing)}.",
+                    ),
+                ]
+        if not context.path:
+            return []
+        base_dir = Path(context.path).resolve().parent
+        project_root = _discover_project_root(base_dir)
+        for line_no, line in _iter_text_lines(context.code):
+            for match in _MARKDOWN_LINK_TARGET_RE.finditer(line):
+                target = match.group(1).strip()
+                target = target.split("#", 1)[0].split("?", 1)[0].strip()
+                if (
+                    not target
+                    or target.startswith(("#", "<", "/"))
+                    or re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*:", target)
+                ):
+                    continue
+                resolved_target = (base_dir / target).resolve()
+                if project_root is not None and project_root not in (
+                    resolved_target,
+                    *resolved_target.parents,
+                ):
+                    return [
+                        self.build_violation(
+                            config,
+                            location=Location(line=line_no, column=match.start() + 1),
+                            suggestion=f"Relative link target '{target}' must stay inside the repository.",
+                        ),
+                    ]
+                if resolved_target.exists():
+                    continue
+                return [
+                    self.build_violation(
+                        config,
+                        location=Location(line=line_no, column=match.start() + 1),
+                        suggestion=f"Fix or remove dead relative link target '{target}'.",
+                    ),
+                ]
         return []
 
 

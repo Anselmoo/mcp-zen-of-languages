@@ -46,6 +46,15 @@ def test_markdown_heading_hierarchy_violation():
     assert violations
 
 
+def test_markdown_heading_requires_top_level_h1():
+    violations = _detect(
+        MarkdownHeadingHierarchyDetector(),
+        "## Subtitle\n\nBody\n",
+        MarkdownHeadingHierarchyConfig(),
+    )
+    assert violations
+
+
 def test_markdown_alt_text_violation():
     violations = _detect(
         MarkdownAltTextDetector(),
@@ -98,6 +107,47 @@ def test_markdown_frontmatter_complete_no_violation():
         MarkdownFrontMatterConfig(required_frontmatter_keys=["title", "description"]),
     )
     assert not violations
+
+
+def test_markdown_dead_relative_link_violation(tmp_path):
+    source_path = tmp_path / "docs" / "guide.md"
+    source_path.parent.mkdir(parents=True)
+    violations = _detect(
+        MarkdownFrontMatterDetector(),
+        "[Missing](./missing.md)\n",
+        MarkdownFrontMatterConfig(),
+        path=str(source_path),
+    )
+    assert violations
+
+
+def test_markdown_dead_relative_link_allows_existing_target(tmp_path):
+    docs_dir = tmp_path / "docs"
+    docs_dir.mkdir()
+    (docs_dir / "intro.md").write_text("# Intro\n", encoding="utf-8")
+    doc_path = docs_dir / "guide.md"
+    violations = _detect(
+        MarkdownFrontMatterDetector(),
+        "[Intro](./intro.md)\n",
+        MarkdownFrontMatterConfig(),
+        path=str(doc_path),
+    )
+    assert not violations
+
+
+def test_markdown_dead_relative_link_disallows_repo_escape(tmp_path):
+    (tmp_path / "pyproject.toml").write_text(
+        "[project]\nname = 'tmp'\n", encoding="utf-8"
+    )
+    (tmp_path / "docs").mkdir()
+    doc_path = tmp_path / "docs" / "guide.md"
+    violations = _detect(
+        MarkdownFrontMatterDetector(),
+        "[Escape](../../etc/passwd)\n",
+        MarkdownFrontMatterConfig(),
+        path=str(doc_path),
+    )
+    assert violations
 
 
 def test_mdx_unnamed_default_export_violation():

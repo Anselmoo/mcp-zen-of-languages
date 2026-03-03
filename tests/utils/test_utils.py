@@ -39,6 +39,12 @@ def test_detect_language_by_extension_markdown():
     assert result.method == "extension"
 
 
+def test_detect_language_by_extension_svg():
+    result = detect_language_by_extension("icon.svg")
+    assert result.language == "svg"
+    assert result.method == "extension"
+
+
 def test_detect_language_by_extension_mdx():
     result = detect_language_by_extension("page.mdx")
     assert result.language == "markdown"
@@ -90,6 +96,40 @@ def test_detect_language_by_extension_docker_compose_name():
     assert result.method == "extension"
 
 
+def test_detect_language_by_extension_ansible_path(tmp_path):
+    path = tmp_path / "roles" / "web" / "tasks"
+    path.mkdir(parents=True)
+    play = path / "main.yml"
+    play.write_text(
+        "- name: install\n  ansible.builtin.package:\n    name: nginx\n",
+        encoding="utf-8",
+    )
+    result = detect_language_by_extension(str(play))
+    assert result.language == "ansible"
+    assert result.method == "extension"
+
+
+def test_detect_language_by_extension_ansible_content(tmp_path):
+    play = tmp_path / "playbook.yaml"
+    play.write_text(
+        "- hosts: all\n  tasks:\n    - command: echo hi\n", encoding="utf-8"
+    )
+    result = detect_language_by_extension(str(play))
+    assert result.language == "ansible"
+
+
+def test_detect_language_by_extension_terraform_tf():
+    result = detect_language_by_extension("main.tf")
+    assert result.language == "terraform"
+    assert result.method == "extension"
+
+
+def test_detect_language_by_extension_terraform_tfvars():
+    result = detect_language_by_extension("dev.tfvars")
+    assert result.language == "terraform"
+    assert result.method == "extension"
+
+
 def test_detect_language_from_content_python():
     result = detect_language_from_content("def foo():\n    pass\n")
     assert result.language == "python"
@@ -107,6 +147,18 @@ def test_detect_language_from_content_javascript():
 
 def test_detect_language_from_content_unknown():
     result = detect_language_from_content("just some text")
+    assert result.language == "unknown"
+
+
+def test_detect_language_from_content_ansible():
+    result = detect_language_from_content(
+        "- hosts: all\n  tasks:\n    - name: run\n      ansible.builtin.command: echo hi\n"
+    )
+    assert result.language == "ansible"
+
+
+def test_detect_language_from_content_tasks_shell_without_task_item_not_ansible():
+    result = detect_language_from_content("tasks:\n  shell: echo hi\n")
     assert result.language == "unknown"
 
 

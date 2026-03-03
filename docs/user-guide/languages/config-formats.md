@@ -133,6 +133,188 @@ Configuration files are code too — they're read by humans, versioned in git, a
 ---
 
 
+## SVG — 15 Principles, 15 Detectors
+
+| Rule ID | Principle | Category | Severity | Dogma |
+|---------|-----------|----------|:--------:|-------|
+| `svg-001` | Include a root title element for accessibility | Usability | 8 | `ZEN-UNAMBIGUOUS-NAME` |
+| `svg-002` | Use role=img with aria-labelledby for inline SVG | Usability | 8 | `ZEN-UNAMBIGUOUS-NAME` |
+| `svg-003` | Give image nodes alternative text | Usability | 7 | `ZEN-UNAMBIGUOUS-NAME` |
+| `svg-004` | Provide a long description for complex graphics | Documentation | 6 | `ZEN-UNAMBIGUOUS-NAME` |
+| `svg-005` | Prefer presentation attributes over inline styles | Consistency | 5 | `ZEN-EXPLICIT-INTENT` |
+| `svg-006` | Use viewBox with fixed dimensions | Structure | 6 | `ZEN-RETURN-EARLY` |
+| `svg-007` | Remove unused defs entries | Organization | 5 | `ZEN-STRICT-FENCES`, `ZEN-PROPORTIONATE-COMPLEXITY` |
+| `svg-008` | Avoid excessive nested group depth | Complexity | 5 | `ZEN-PROPORTIONATE-COMPLEXITY`, `ZEN-RETURN-EARLY` |
+| `svg-009` | Keep id attributes unique | Correctness | 8 | `ZEN-EXPLICIT-INTENT` |
+| `svg-010` | Prefer relative path commands when practical | Idioms | 4 | `ZEN-RIGHT-ABSTRACTION` |
+| `svg-011` | Avoid embedded base64 raster payloads | Performance | 7 | `ZEN-PROPORTIONATE-COMPLEXITY` |
+| `svg-012` | Declare the SVG XML namespace | Correctness | 7 | `ZEN-EXPLICIT-INTENT`, `ZEN-UNAMBIGUOUS-NAME`, `ZEN-STRICT-FENCES` |
+| `svg-013` | Use href instead of deprecated xlink:href | Idioms | 4 | `ZEN-RIGHT-ABSTRACTION` |
+| `svg-014` | Keep node count within maintainable limits | Performance | 6 | `ZEN-PROPORTIONATE-COMPLEXITY` |
+| `svg-015` | Remove production-bloat metadata and comments | Performance | 4 | `ZEN-PROPORTIONATE-COMPLEXITY`, `ZEN-UNAMBIGUOUS-NAME`, `ZEN-STRICT-FENCES` |
+
+??? info "`svg-001` — Include a root title element for accessibility"
+    **SVGs without a <title> child on the root are not announced well by screen readers.**
+
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
+
+    **Common Violations:**
+
+    - Missing <title> child on root <svg>
+
+??? info "`svg-002` — Use role=img with aria-labelledby for inline SVG"
+    **Inline SVGs should be exposed as images and linked to accessible labels.**
+
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
+
+    **Common Violations:**
+
+    - Missing role="img" and/or aria-labelledby on root <svg>
+
+??? info "`svg-003` — Give image nodes alternative text"
+    **Embedded raster images should carry alternative text for assistive technologies.**
+
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
+
+    **Common Violations:**
+
+    - <image> element missing alt/title/aria-label text
+
+??? info "`svg-004` — Provide a long description for complex graphics"
+    **Charts or diagrams should provide a <desc> element to explain non-trivial content.**
+
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`
+
+    **Common Violations:**
+
+    - Complex SVG missing <desc> element
+
+??? info "`svg-005` — Prefer presentation attributes over inline styles"
+    **Inline style attributes reduce maintainability and hinder targeted optimization.**
+
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
+
+    **Common Violations:**
+
+    - Inline style attribute found in SVG element
+
+??? info "`svg-006` — Use viewBox with fixed dimensions"
+    **Hardcoded width/height without viewBox reduces responsive scalability.**
+
+    **Universal Dogmas:** `ZEN-RETURN-EARLY`
+
+    **Common Violations:**
+
+    - Root SVG has width/height but no viewBox
+
+??? info "`svg-007` — Remove unused defs entries"
+    **Unused gradients, symbols, or patterns in <defs> increase file complexity.**
+
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`, `ZEN-PROPORTIONATE-COMPLEXITY`
+
+    **Common Violations:**
+
+    - Unused ID defined under <defs>
+
+??? info "`svg-008` — Avoid excessive nested group depth"
+    **Deeply nested <g> structures increase DOM complexity without semantic gain.**
+
+    **Universal Dogmas:** `ZEN-PROPORTIONATE-COMPLEXITY`, `ZEN-RETURN-EARLY`
+
+    **Common Violations:**
+
+    - Nested <g> depth exceeds recommended threshold
+
+??? info "`svg-009` — Keep id attributes unique"
+    **Duplicate IDs break references like <use>, url(#id), and ARIA links.**
+
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
+
+    **Common Violations:**
+
+    - Duplicate id attribute value in SVG
+
+??? info "`svg-010` — Prefer relative path commands when practical"
+    **Paths composed only of absolute commands are often larger and less portable.**
+
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
+
+    **Common Violations:**
+
+    - Path uses only absolute commands
+
+??? info "`svg-011` — Avoid embedded base64 raster payloads"
+    **Base64 raster data inflates file size and should usually be externalized.**
+
+    **Universal Dogmas:** `ZEN-PROPORTIONATE-COMPLEXITY`
+
+    **Common Violations:**
+
+    - <image> uses data:image/*;base64 payload
+
+??? info "`svg-012` — Declare the SVG XML namespace"
+    **Missing xmlns="http://www.w3.org/2000/svg" breaks parsing in non-browser contexts.**
+
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`, `ZEN-UNAMBIGUOUS-NAME`, `ZEN-STRICT-FENCES`
+
+    **Common Violations:**
+
+    - Missing SVG namespace declaration
+
+??? info "`svg-013` — Use href instead of deprecated xlink:href"
+    **xlink:href is deprecated in SVG 2 and should be replaced with href.**
+
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
+
+    **Common Violations:**
+
+    - Deprecated xlink:href attribute detected
+
+??? info "`svg-014` — Keep node count within maintainable limits"
+    **Very large SVG DOM trees should be simplified or delivered as sprites.**
+
+    **Universal Dogmas:** `ZEN-PROPORTIONATE-COMPLEXITY`
+
+    **Common Violations:**
+
+    - SVG element count exceeds configured threshold
+
+    **Thresholds:**
+
+    | Parameter | Default |
+    |-----------|---------|
+    | `max_node_count` | `500` |
+
+??? info "`svg-015` — Remove production-bloat metadata and comments"
+    **Editor metadata, vendor namespaces, and XML comments add unnecessary payload.**
+
+    **Universal Dogmas:** `ZEN-PROPORTIONATE-COMPLEXITY`, `ZEN-UNAMBIGUOUS-NAME`, `ZEN-STRICT-FENCES`
+
+    **Common Violations:**
+
+    - Metadata/comments/editor namespaces found in production SVG
+
+| Detector | What It Catches |
+|----------|-----------------|
+| **SvgMissingTitleDetector** | Detects root SVG elements that omit an accessible title child |
+| **SvgAriaRoleDetector** | Detects root SVG elements missing image role and labeling attributes |
+| **SvgImageAltDetector** | Detects embedded image elements lacking alternative text metadata |
+| **SvgDescForComplexGraphicsDetector** | Detects complex SVG documents that lack a descriptive <desc> element |
+| **SvgInlineStyleDetector** | Detects inline style usage inside SVG markup |
+| **SvgViewBoxDetector** | Detects fixed dimensions used without a responsive viewBox |
+| **SvgUnusedDefsDetector** | Detects IDs declared under defs that are never referenced |
+| **SvgNestedGroupsDetector** | Detects excessive nesting depth of SVG group elements |
+| **SvgDuplicateIdDetector** | Detects duplicate ID values across SVG elements |
+| **SvgAbsolutePathOnlyDetector** | Detects paths composed only of absolute command letters |
+| **SvgBase64ImageDetector** | Detects base64-embedded raster images in SVG content |
+| **SvgXmlnsDetector** | Detects missing core SVG XML namespace declarations |
+| **SvgDeprecatedXlinkHrefDetector** | Detects deprecated xlink:href attributes in SVG markup |
+| **SvgNodeCountDetector** | Detects SVG documents exceeding a configurable node-count threshold |
+| **SvgProductionBloatDetector** | Detects metadata/comments and editor namespace bloat in production SVG |
+
+---
+
+
 ## TOML — 8 Principles, 8 Detectors
 
 | Rule ID | Principle | Category | Severity | Dogma |

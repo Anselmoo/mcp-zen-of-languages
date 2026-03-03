@@ -53,4 +53,7 @@ def test_init_interactive_writes_vscode_config(tmp_path, monkeypatch):
     payload = json.loads(
         (tmp_path / ".vscode" / "mcp.json").read_text(encoding="utf-8"),
     )
-    assert "zen-of-languages" in payload["mcp"]["servers"]
+    assert "zen-of-languages" in payload["servers"]
+    server = payload["servers"]["zen-of-languages"]
+    assert server["command"] == "uvx"
+    assert server["args"] == ["--from", "mcp-zen-of-languages", "zen-mcp-server"]

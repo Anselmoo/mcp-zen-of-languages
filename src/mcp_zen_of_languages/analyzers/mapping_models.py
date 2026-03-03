@@ -108,3 +108,32 @@ class FullDetectorMap(BaseModel):
     languages: dict[str, LanguageDetectorMap] = Field(default_factory=dict)
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
+
+
+class DetectorGearbox:
+    """Reusable binding interface for building language detector maps.
+
+    Provides a light, chainable API so language mappings can share one
+    construction pattern while still controlling exact binding metadata.
+    """
+
+    def __init__(self, language: str) -> None:
+        """Initialize gearbox state for one language mapping."""
+        self.language = language
+        self._bindings: list[DetectorBinding] = []
+
+    def add(self, binding: DetectorBinding) -> DetectorGearbox:
+        """Add a pre-built detector binding."""
+        self._bindings.append(binding)
+        return self
+
+    def extend(self, bindings: list[DetectorBinding]) -> DetectorGearbox:
+        """Add multiple pre-built detector bindings."""
+        self._bindings.extend(bindings)
+        return self
+
+    def build_map(self) -> LanguageDetectorMap:
+        """Build a language detector map from accumulated bindings."""
+        return LanguageDetectorMap(
+            language=self.language, bindings=list(self._bindings)
+        )

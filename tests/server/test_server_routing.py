@@ -18,6 +18,7 @@ from mcp_zen_of_languages import server
         ("cpp", "#include <iostream>\nint main() { return 0; }"),
         ("csharp", "class Program { static void Main() {} }"),
         ("css", ".btn { color: var(--text); }"),
+        ("ansible", "- hosts: all\n  tasks:\n    - ansible.builtin.ping:"),
         ("yaml", "name: value"),
         (
             "github-actions",
@@ -26,12 +27,14 @@ from mcp_zen_of_languages import server
         ("gitlab_ci", "build:\n  script:\n    - echo hello"),
         ("toml", "name = 'value'"),
         ("xml", "<root><item /></root>"),
+        ("svg", '<svg xmlns="http://www.w3.org/2000/svg"><title>x</title></svg>'),
         ("json", '{"name": "value"}'),
         ("sql", "SELECT * FROM users;"),
         ("markdown", "# Title\n\nSome text.\n"),
         ("latex", "\\documentclass{article}\n\\begin{document}Hello\\end{document}"),
         ("docker_compose", "services:\n  web:\n    image: nginx:latest\n"),
         ("dockerfile", "FROM ubuntu:latest\nUSER root\n"),
+        ("terraform", 'terraform {\n}\nresource "null_resource" "example_name" {}\n'),
     ],
 )
 async def test_analyze_zen_violations_supported_languages(language: str, code: str):

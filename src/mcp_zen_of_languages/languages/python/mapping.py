@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
 from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorGearbox
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
 from mcp_zen_of_languages.languages.configs import BareExceptConfig
@@ -269,7 +270,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_id="namespace_usage",
             detector_class=NamespaceUsageDetector,
             config_model=NamespaceConfig,
-            rule_ids=["python-012"],
+            rule_ids=["python-012", "python-020"],
             universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=170,
         ),
@@ -331,3 +332,7 @@ DETECTOR_MAP = LanguageDetectorMap(
         ),
     ],
 )
+
+GEARBOX = DetectorGearbox(language="python")
+GEARBOX.extend(DETECTOR_MAP.bindings)
+DETECTOR_MAP = GEARBOX.build_map()

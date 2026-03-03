@@ -141,7 +141,7 @@ tags:
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **MarkdownFrontMatterDetector** | Detect incomplete YAML front-matter blocks | `md-005` |
+| **MarkdownFrontMatterDetector** | Detect incomplete YAML front-matter blocks and unsafe/dead relative links | `md-005` |
 
 ### Correctness
 
@@ -165,7 +165,7 @@ tags:
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **MarkdownHeadingHierarchyDetector** | Detect heading level skips in Markdown documents | `md-001` |
+| **MarkdownHeadingHierarchyDetector** | Detect heading level skips, missing H1, and headings-free documents | `md-001` |
 
 ### Usability
 

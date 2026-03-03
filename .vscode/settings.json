@@ -11,4 +11,9 @@
     "github.copilot.chat.anthropic.tools.websearch.enabled": true,
     "github.copilot.chat.generateTests.codeLens": true,
     "github.copilot.chat.githubMcpServer.enabled": true,
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
 }

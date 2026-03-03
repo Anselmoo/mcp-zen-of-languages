@@ -12,6 +12,8 @@ def test_create_analyzer_types():
     assert json.language() == "json"
     xml = create_analyzer("xml")
     assert xml.language() == "xml"
+    svg = create_analyzer("svg")
+    assert svg.language() == "svg"
     gha = create_analyzer("github-actions")
     assert gha.language() == "github-actions"
     css = create_analyzer("css")
@@ -22,6 +24,8 @@ def test_create_analyzer_types():
     assert docker_compose.language() == "docker_compose"
     dockerfile = create_analyzer("dockerfile")
     assert dockerfile.language() == "dockerfile"
+    ansible = create_analyzer("ansible")
+    assert ansible.language() == "ansible"
     sql = create_analyzer("sql")
     assert sql.language() == "sql"
     postgres = create_analyzer("postgresql")
@@ -38,3 +42,7 @@ def test_create_analyzer_types():
     assert bibtex.language() == "latex"
     gitlab_ci = create_analyzer("gitlab-ci")
     assert gitlab_ci.language() == "gitlab_ci"
+    terraform = create_analyzer("terraform")
+    assert terraform.language() == "terraform"
+    tf = create_analyzer("tf")
+    assert tf.language() == "terraform"

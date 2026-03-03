@@ -1226,6 +1226,172 @@ class YamlStringStyleConfig(DetectorConfig):
     require_quotes_for_specials: bool = True
 
 
+class AnsibleNamingConfig(DetectorConfig):
+    """Ansible play and task naming enforcement settings."""
+
+    type: Literal["ansible-001"] = "ansible-001"
+
+
+class AnsibleFqcnConfig(DetectorConfig):
+    """Ansible fully qualified collection name enforcement settings."""
+
+    type: Literal["ansible-002"] = "ansible-002"
+
+
+class AnsibleIdempotencyConfig(DetectorConfig):
+    """Ansible idempotency-over-shell enforcement settings."""
+
+    type: Literal["ansible-003"] = "ansible-003"
+
+
+class AnsibleBecomeConfig(DetectorConfig):
+    """Ansible become-vs-sudo enforcement settings."""
+
+    type: Literal["ansible-004"] = "ansible-004"
+
+
+class AnsibleStateExplicitConfig(DetectorConfig):
+    """Ansible explicit-state enforcement settings."""
+
+    type: Literal["ansible-005"] = "ansible-005"
+
+
+class AnsibleNoCleartextPasswordConfig(DetectorConfig):
+    """Ansible cleartext secret detection settings."""
+
+    type: Literal["ansible-006"] = "ansible-006"
+
+
+class AnsibleJinjaSpacingConfig(DetectorConfig):
+    """Ansible Jinja spacing enforcement settings."""
+
+    type: Literal["ansible-007"] = "ansible-007"
+
+
+class AnsibleReadabilityCountsConfig(DetectorConfig):
+    """Ansible readability-counts enforcement settings."""
+
+    type: Literal["ansible-008"] = "ansible-008"
+
+
+class AnsibleUserOutcomeConfig(DetectorConfig):
+    """Ansible user-outcome-first enforcement settings."""
+
+    type: Literal["ansible-009"] = "ansible-009"
+
+
+class AnsibleUserExperienceConfig(DetectorConfig):
+    """Ansible UX-over-ideology enforcement settings."""
+
+    type: Literal["ansible-010"] = "ansible-010"
+
+
+class AnsibleMagicAutomationConfig(DetectorConfig):
+    """Ansible magic-over-manual automation settings."""
+
+    type: Literal["ansible-011"] = "ansible-011"
+
+
+class AnsibleConventionOverConfigConfig(DetectorConfig):
+    """Ansible convention-over-configuration settings."""
+
+    type: Literal["ansible-012"] = "ansible-012"
+
+
+class AnsibleDeclarativeBiasConfig(DetectorConfig):
+    """Ansible declarative-over-imperative preference settings."""
+
+    type: Literal["ansible-013"] = "ansible-013"
+
+
+class AnsibleFocusConfig(DetectorConfig):
+    """Ansible focus/size threshold settings."""
+
+    type: Literal["ansible-014"] = "ansible-014"
+    max_tasks_per_play: int = 20
+
+
+class AnsibleComplexityKillsProductivityConfig(DetectorConfig):
+    """Ansible complexity/productivity threshold settings."""
+
+    type: Literal["ansible-015"] = "ansible-015"
+    max_condition_operators: int = 3
+
+
+class AnsibleExplainabilityConfig(DetectorConfig):
+    """Ansible explainability enforcement settings."""
+
+    type: Literal["ansible-016"] = "ansible-016"
+    max_inline_command_length: int = 120
+
+
+class AnsibleAutomationOpportunityConfig(DetectorConfig):
+    """Ansible shell-to-automation opportunity detection settings."""
+
+    type: Literal["ansible-017"] = "ansible-017"
+    min_repeated_shell_commands: int = 2
+
+
+class AnsibleContinuousImprovementConfig(DetectorConfig):
+    """Ansible continuous-improvement marker settings."""
+
+    type: Literal["ansible-018"] = "ansible-018"
+
+
+class AnsibleFrictionConfig(DetectorConfig):
+    """Ansible friction-elimination settings."""
+
+    type: Literal["ansible-019"] = "ansible-019"
+
+
+class AnsibleAutomationJourneyConfig(DetectorConfig):
+    """Ansible automation-journey hygiene settings."""
+
+    type: Literal["ansible-020"] = "ansible-020"
+
+
+class TerraformProviderVersionPinningConfig(DetectorConfig):
+    """Terraform provider version-pinning settings."""
+
+    type: Literal["tf-001"] = "tf-001"
+
+
+class TerraformModuleVersionPinningConfig(DetectorConfig):
+    """Terraform module version-pinning settings."""
+
+    type: Literal["tf-002"] = "tf-002"
+
+
+class TerraformVariableOutputDescriptionConfig(DetectorConfig):
+    """Terraform variable/output description coverage settings."""
+
+    type: Literal["tf-003"] = "tf-003"
+
+
+class TerraformHardcodedIdConfig(DetectorConfig):
+    """Terraform hardcoded ARN/ID detection settings."""
+
+    type: Literal["tf-004"] = "tf-004"
+
+
+class TerraformNoHardcodedSecretsConfig(DetectorConfig):
+    """Terraform hardcoded-secret detection settings."""
+
+    type: Literal["tf-005"] = "tf-005"
+
+
+class TerraformBackendConfig(DetectorConfig):
+    """Terraform backend-configuration presence settings."""
+
+    type: Literal["tf-006"] = "tf-006"
+
+
+class TerraformNamingConventionConfig(DetectorConfig):
+    """Terraform snake_case naming convention settings."""
+
+    type: Literal["tf-007"] = "tf-007"
+
+
 class DockerfileLatestTagConfig(DetectorConfig):
     """Dockerfile latest-tag usage detection settings."""
 
@@ -1582,6 +1748,97 @@ class XmlClosingTagsConfig(DetectorConfig):
     """XML self-closing tag detection settings."""
 
     type: Literal["xml-006"] = "xml-006"
+
+
+class SvgNodeCountConfig(DetectorConfig):
+    """SVG node-count detector settings."""
+
+    type: Literal["svg-014"] = "svg-014"
+    max_node_count: int = 500
+
+
+class SvgMissingTitleConfig(DetectorConfig):
+    """SVG title-presence detector settings."""
+
+    type: Literal["svg-001"] = "svg-001"
+
+
+class SvgAriaRoleConfig(DetectorConfig):
+    """SVG ARIA role/label detector settings."""
+
+    type: Literal["svg-002"] = "svg-002"
+
+
+class SvgImageAltConfig(DetectorConfig):
+    """SVG image alternate-text detector settings."""
+
+    type: Literal["svg-003"] = "svg-003"
+
+
+class SvgDescForComplexGraphicsConfig(DetectorConfig):
+    """SVG complex-graphic description detector settings."""
+
+    type: Literal["svg-004"] = "svg-004"
+
+
+class SvgInlineStyleConfig(DetectorConfig):
+    """SVG inline style detector settings."""
+
+    type: Literal["svg-005"] = "svg-005"
+
+
+class SvgViewBoxConfig(DetectorConfig):
+    """SVG viewBox detector settings."""
+
+    type: Literal["svg-006"] = "svg-006"
+
+
+class SvgUnusedDefsConfig(DetectorConfig):
+    """SVG unused defs detector settings."""
+
+    type: Literal["svg-007"] = "svg-007"
+
+
+class SvgNestedGroupsConfig(DetectorConfig):
+    """SVG nested groups detector settings."""
+
+    type: Literal["svg-008"] = "svg-008"
+
+
+class SvgDuplicateIdConfig(DetectorConfig):
+    """SVG duplicate id detector settings."""
+
+    type: Literal["svg-009"] = "svg-009"
+
+
+class SvgAbsolutePathOnlyConfig(DetectorConfig):
+    """SVG absolute-path detector settings."""
+
+    type: Literal["svg-010"] = "svg-010"
+
+
+class SvgBase64ImageConfig(DetectorConfig):
+    """SVG base64 image detector settings."""
+
+    type: Literal["svg-011"] = "svg-011"
+
+
+class SvgXmlnsConfig(DetectorConfig):
+    """SVG namespace detector settings."""
+
+    type: Literal["svg-012"] = "svg-012"
+
+
+class SvgDeprecatedXlinkHrefConfig(DetectorConfig):
+    """SVG deprecated xlink detector settings."""
+
+    type: Literal["svg-013"] = "svg-013"
+
+
+class SvgProductionBloatConfig(DetectorConfig):
+    """SVG metadata/comments bloat detector settings."""
+
+    type: Literal["svg-015"] = "svg-015"
 
 
 class LatexMacroDefinitionConfig(DetectorConfig):

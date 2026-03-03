@@ -186,6 +186,7 @@ def _canonical_language(language: str) -> str:
         "github_actions": "github-actions",
         "gha": "github-actions",
         "docker-compose": "docker_compose",
+        "ansible-playbook": "ansible",
         "gitlab-ci": "gitlab_ci",
         "gitlabci": "gitlab_ci",
         "tex": "latex",
@@ -193,6 +194,7 @@ def _canonical_language(language: str) -> str:
         "sty": "latex",
         "bib": "latex",
         "bibtex": "latex",
+        "tf": "terraform",
     }
     return alias_map.get(lang, lang)
 

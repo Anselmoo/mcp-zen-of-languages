@@ -78,6 +78,7 @@ theme:
       yaml: material/code-json
       docker_compose: material/docker
       dockerfile: material/docker
+      terraform: material/cloud-outline
       mcp: material/api
       cli: material/console
       api: material/book-open-variant
@@ -218,6 +219,7 @@ extra:
     YAML: yaml
     Dockerfile: dockerfile
     Docker Compose: docker_compose
+    Terraform: terraform
     MCP: mcp
     CLI: cli
     API: api
@@ -253,6 +255,7 @@ nav:
           - Go: user-guide/languages/go.md
           - JavaScript: user-guide/languages/javascript.md
           - CSS: user-guide/languages/css.md
+          - Ansible: user-guide/languages/ansible.md
           - Bash: user-guide/languages/bash.md
           - PowerShell: user-guide/languages/powershell.md
           - Ruby: user-guide/languages/ruby.md
@@ -261,6 +264,7 @@ nav:
           - "C#": user-guide/languages/csharp.md
           - Docker Compose: user-guide/languages/docker-compose.md
           - Dockerfile: user-guide/languages/dockerfile.md
+          - Terraform: user-guide/languages/terraform.md
           - LaTeX: user-guide/languages/latex.md
           - GitHub Actions: user-guide/languages/github-actions.md
           - GitLab CI: user-guide/languages/gitlab-ci.md

@@ -60,7 +60,7 @@ Zen of Languages treats idioms as engineering constraints, not style preferences
 The project is guided by the **[10 Dogmas of Zen](https://anselmoo.github.io/mcp-zen-of-languages/philosophy/)** — a set of language-agnostic principles that drive every detector and architectural decision. Read the full philosophy document for anti-patterns, rationale, and detector mappings.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Anselmoo/mcp-zen-of-languages/main/docs/assets/illustration-zen-dogma.svg" alt="The 10 Dogmas of Zen — code quality principles visualised as zen garden stones" width="600" />
+  <img src="https://raw.githubusercontent.com/Anselmoo/mcp-zen-of-languages/main/docs/assets/illustration-zen-dogma.png" alt="The 10 Dogmas of Zen — code quality principles visualised as zen garden stones" width="600" />
 </p>
 
 <!-- --8<-- [end:zen-philosophy] -->

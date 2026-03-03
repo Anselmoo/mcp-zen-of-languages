@@ -13,6 +13,12 @@ DEFAULT_ASSETS: tuple[tuple[Path, Path, int | None, int | None], ...] = (
     (Path("docs/assets/logo.svg"), Path("docs/assets/logo.png"), None, None),
     (Path("docs/assets/hero-zen.svg"), Path("docs/assets/hero-zen.png"), None, None),
     (
+        Path("docs/assets/illustration-zen-dogma.svg"),
+        Path("docs/assets/illustration-zen-dogma.png"),
+        None,
+        None,
+    ),
+    (
         Path("docs/assets/social-card-bg.svg"),
         Path("docs/assets/social-card-bg.png"),
         1200,

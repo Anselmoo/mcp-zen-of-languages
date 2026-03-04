@@ -655,6 +655,140 @@ class DependencyAnalysis(BaseModel):
     cycles: list[DependencyCycle]
 
 
+class BatchViolation(BaseModel):
+    """A zen-principle violation enriched with its source file context.
+
+    ``analyze_batch`` collects violations from multiple files and adds
+    the originating file path and language to each entry so that LLM
+    agents can act on them without needing to correlate back to the
+    original per-file result.
+
+    Attributes:
+        file: Repository-relative path of the file that produced this violation.
+        language: Language key used to analyse the file (e.g. ``"python"``).
+        principle: Canonical rule identifier, e.g. ``"zen-of-python.flat"``.
+        severity: Impact weight from 1 (cosmetic) to 10 (critical defect).
+        message: One-sentence description of what went wrong.
+        suggestion: Actionable fix hint, or ``None`` when self-evident.
+        location: Source position (line + column), if determinable.
+
+    See Also:
+        ``BatchPage``: Carries a list of ``BatchViolation`` entries per page.
+        ``Violation``: The underlying single-file violation model.
+    """
+
+    file: str
+    language: str
+    principle: str
+    severity: int
+    message: str
+    suggestion: str | None = None
+    location: Location | None = None
+
+
+class BatchHotspot(BaseModel):
+    """File-level hotspot record for the batch summary.
+
+    The ``analyze_batch_summary`` tool ranks files by their worst
+    violations and returns the top offenders as ``BatchHotspot`` entries.
+    Each entry captures the file path, language, violation count, and the
+    maximum severity found so that LLM agents can prioritise remediation
+    effort without reading every violation.
+
+    Attributes:
+        path: Repository-relative path to the hotspot file.
+        language: Language key resolved for this file.
+        violations: Total number of violations found in the file.
+        top_severity: Highest severity score among all violations in the file.
+
+    See Also:
+        ``BatchSummary``: Carries the ranked list of ``BatchHotspot`` entries.
+    """
+
+    path: str
+    language: str
+    violations: int
+    top_severity: int
+
+
+class BatchPage(BaseModel):
+    """Paginated result returned by a single ``analyze_batch`` call.
+
+    Each invocation of ``analyze_batch`` returns exactly one ``BatchPage``.
+    The ``cursor`` field encodes the position to resume from on the next
+    call; a ``None`` cursor means the caller has received all violations.
+    The ``violations`` list contains only the highest-severity items that
+    fit within the requested ``max_tokens`` budget.
+
+    Attributes:
+        cursor: Opaque base-64 continuation token, or ``None`` when exhausted.
+        page: 1-based page number for display purposes.
+        has_more: ``True`` when further violations remain beyond this page.
+        violations: Highest-severity violations fitting within the token budget.
+        files_processed: Number of files whose violations appear in this page.
+        files_total: Total number of analysed files across all pages.
+
+    Example:
+        >>> page = BatchPage(
+        ...     cursor=None,
+        ...     page=1,
+        ...     has_more=False,
+        ...     violations=[],
+        ...     files_processed=3,
+        ...     files_total=3,
+        ... )
+        >>> page.has_more
+        False
+
+    See Also:
+        ``BatchViolation``: Individual entries inside the ``violations`` list.
+        ``BatchSummary``: One-shot overview companion to this paginated model.
+    """
+
+    cursor: str | None
+    page: int
+    has_more: bool
+    violations: list[BatchViolation]
+    files_processed: int
+    files_total: int
+
+
+class BatchSummary(BaseModel):
+    """One-shot health overview for the ``analyze_batch_summary`` tool.
+
+    Unlike the paginated ``BatchPage``, a ``BatchSummary`` always fits in
+    a single LLM context window — it trades full violation detail for a
+    compact health score and the top-5 hotspot files.  LLM agents can use
+    this as a quick triage step before deciding which ``analyze_batch``
+    pages to retrieve.
+
+    Attributes:
+        health_score: Project health expressed as a 0-100 score (higher is better).
+        hotspots: Up to five files ranked by severity-weighted violation count.
+        total_violations: Sum of violations across every analysed file.
+        total_files: Total number of source files that were analysed.
+
+    Example:
+        >>> summary = BatchSummary(
+        ...     health_score=74.0,
+        ...     hotspots=[],
+        ...     total_violations=142,
+        ...     total_files=47,
+        ... )
+        >>> summary.health_score
+        74.0
+
+    See Also:
+        ``BatchHotspot``: Individual entries in the ``hotspots`` list.
+        ``BatchPage``: Full paginated detail companion to this summary.
+    """
+
+    health_score: float
+    hotspots: list[BatchHotspot]
+    total_violations: int
+    total_files: int
+
+
 class LanguagesResult(BaseModel):
     """Enumeration of every language the server can currently analyse.
 

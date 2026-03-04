@@ -664,7 +664,8 @@ class BatchViolation(BaseModel):
     original per-file result.
 
     Attributes:
-        file: Repository-relative path of the file that produced this violation.
+        file: Filesystem path of the file that produced this violation as
+            returned by the repository analyser (may be absolute).
         language: Language key used to analyse the file (e.g. ``"python"``).
         principle: Canonical rule identifier, e.g. ``"zen-of-python.flat"``.
         severity: Impact weight from 1 (cosmetic) to 10 (critical defect).
@@ -696,7 +697,8 @@ class BatchHotspot(BaseModel):
     effort without reading every violation.
 
     Attributes:
-        path: Repository-relative path to the hotspot file.
+        path: Filesystem path to the hotspot file as returned by the
+            repository analyser (may be absolute).
         language: Language key resolved for this file.
         violations: Total number of violations found in the file.
         top_severity: Highest severity score among all violations in the file.
@@ -722,10 +724,11 @@ class BatchPage(BaseModel):
 
     Attributes:
         cursor: Opaque base-64 continuation token, or ``None`` when exhausted.
-        page: 1-based page number for display purposes.
+        page: 1-based logical page number derived from a fixed page size of 50
+            violations, independent of the token-budget-based actual page size.
         has_more: ``True`` when further violations remain beyond this page.
         violations: Highest-severity violations fitting within the token budget.
-        files_processed: Number of files whose violations appear in this page.
+        files_in_page: Number of distinct files whose violations appear in this page.
         files_total: Total number of analysed files across all pages.
 
     Example:
@@ -734,7 +737,7 @@ class BatchPage(BaseModel):
         ...     page=1,
         ...     has_more=False,
         ...     violations=[],
-        ...     files_processed=3,
+        ...     files_in_page=3,
         ...     files_total=3,
         ... )
         >>> page.has_more
@@ -749,7 +752,7 @@ class BatchPage(BaseModel):
     page: int
     has_more: bool
     violations: list[BatchViolation]
-    files_processed: int
+    files_in_page: int
     files_total: int
 
 
@@ -764,7 +767,8 @@ class BatchSummary(BaseModel):
 
     Attributes:
         health_score: Project health expressed as a 0-100 score (higher is better).
-        hotspots: Up to five files ranked by severity-weighted violation count.
+        hotspots: Up to five files ranked by total violation count (with highest
+            top severity used to break ties).
         total_violations: Sum of violations across every analysed file.
         total_files: Total number of source files that were analysed.
 

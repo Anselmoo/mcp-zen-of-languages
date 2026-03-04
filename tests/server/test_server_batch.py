@@ -172,6 +172,7 @@ async def test_analyze_batch_no_violations_no_more(tmp_path, monkeypatch):
 @pytest.mark.asyncio
 async def test_analyze_batch_token_budget_enforced(tmp_path, monkeypatch):
     """Violations are truncated to respect max_tokens budget."""
+    max_tokens = 500
     many_violations = [
         Violation(
             principle=f"p{i}",
@@ -186,9 +187,37 @@ async def test_analyze_batch_token_budget_enforced(tmp_path, monkeypatch):
         "_analyze_repository_internal",
         lambda *_a, **_kw: _async_return(fake_results),
     )
-    page = await server.analyze_batch.fn(str(tmp_path), "python", max_tokens=500)
+    page = await server.analyze_batch.fn(str(tmp_path), "python", max_tokens=max_tokens)
     # Should not include all 50 violations
     assert len(page.violations) < 50
+    # Serialised payload must fit within the token budget
+    tokens = server._estimate_tokens(json.dumps(page.model_dump()))
+    assert tokens <= max_tokens
+
+
+@pytest.mark.asyncio
+async def test_analyze_batch_token_budget_oversized_single_violation(
+    tmp_path, monkeypatch
+):
+    """A single violation too large for the budget is skipped, not included."""
+    oversized = Violation(
+        principle="oversized",
+        severity=5,
+        message="x" * 10000,  # extremely large message
+    )
+    fake_results = [_make_result(str(tmp_path / "a.py"), violations=[oversized])]
+    monkeypatch.setattr(
+        server,
+        "_analyze_repository_internal",
+        lambda *_a, **_kw: _async_return(fake_results),
+    )
+    max_tokens = 100
+    page = await server.analyze_batch.fn(str(tmp_path), "python", max_tokens=max_tokens)
+    # Oversized item must not be included (budget exceeded on first item)
+    assert len(page.violations) == 0
+    # Serialised payload must still fit within the token budget
+    tokens = server._estimate_tokens(json.dumps(page.model_dump()))
+    assert tokens <= max_tokens
 
 
 @pytest.mark.asyncio

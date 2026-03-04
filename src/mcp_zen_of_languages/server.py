@@ -159,7 +159,7 @@ GENERATE_PROMPTS_VERSION = "1.0"
 ANALYZE_ZEN_VIOLATIONS_V2_VERSION = "2.0"
 GENERATE_PROMPTS_V2_VERSION = "2.0"
 # Conservative token overhead reserved for the BatchPage envelope fields
-# (cursor, page, has_more, files_processed, files_total, JSON structure).
+# (cursor, page, has_more, files_in_page, files_total, JSON structure).
 _BATCH_ENVELOPE_TOKEN_OVERHEAD = 200
 
 
@@ -260,7 +260,7 @@ def _decode_cursor(cursor: str) -> tuple[int, int]:
         ValueError: When *cursor* is not valid base-64 JSON.
     """
     try:
-        data = json.loads(base64.b64decode(cursor).decode())
+        data = json.loads(base64.b64decode(cursor, validate=True).decode())
         return int(data["file"]), int(data.get("offset", 0))
     except Exception as exc:
         msg = f"Invalid batch cursor: {exc}"
@@ -270,16 +270,17 @@ def _decode_cursor(cursor: str) -> tuple[int, int]:
 def _estimate_tokens(text: str) -> int:
     """Rough token count estimate for a serialised string.
 
-    Uses a conservative 4-characters-per-token heuristic that errs on
-    the side of under-counting to stay safely within LLM context budgets.
+    Uses a conservative 4-characters-per-token heuristic with ceiling
+    division so the estimate errs on the side of *over*-counting, which
+    keeps the pager safely within the requested ``max_tokens`` budget.
 
     Args:
         text: Any string whose token count should be estimated.
 
     Returns:
-        int: Estimated number of tokens.
+        int: Estimated number of tokens (at least 1).
     """
-    return max(1, len(text) // 4)
+    return max(1, -(-len(text) // 4))
 
 
 class LanguageCoverage(BaseModel):
@@ -970,7 +971,11 @@ async def analyze_batch(  # noqa: PLR0913
     for bv in all_violations[start_index:]:
         serialised = json.dumps(bv.model_dump())
         cost = _estimate_tokens(serialised)
-        if used_tokens + cost > token_budget and page_violations:
+        if used_tokens + cost > token_budget:
+            if not page_violations:
+                # Single violation is too large for the budget; skip it so the
+                # cursor advances and we do not get stuck on the same item.
+                next_index += 1
             break
         page_violations.append(bv)
         used_tokens += cost
@@ -979,19 +984,19 @@ async def analyze_batch(  # noqa: PLR0913
     has_more = next_index < len(all_violations)
     next_cursor = _encode_cursor(next_index) if has_more else None
 
-    # files_processed: distinct files represented in this page
+    # files_in_page: distinct files represented in this page's violations
     files_in_page = len({bv.file for bv in page_violations})
-    # page number: estimate based on cursor position
-    page_num = 1
-    if start_index > 0 and all_violations:
-        page_num = start_index // max(1, len(page_violations)) + 1
+    # Use a fixed logical page size (independent of token budget) so that the
+    # page number is stable across calls with different max_tokens values.
+    _logical_page_size = 50
+    page_num = start_index // _logical_page_size + 1 if all_violations else 1
 
     return BatchPage(
         cursor=next_cursor,
         page=page_num,
         has_more=has_more,
         violations=page_violations,
-        files_processed=files_in_page,
+        files_in_page=files_in_page,
         files_total=files_total,
     )
 

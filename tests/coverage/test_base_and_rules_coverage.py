@@ -22,7 +22,7 @@ from mcp_zen_of_languages.rules.base_models import PrincipleCategory
 from mcp_zen_of_languages.rules.base_models import ZenPrinciple
 
 
-EMPTY_VIOLATIONS_SCORE = 100.0
+EMPTY_VIOLATIONS_SCORE = 10.0
 REPORT_FAILURE_EXIT_CODE = 2
 
 

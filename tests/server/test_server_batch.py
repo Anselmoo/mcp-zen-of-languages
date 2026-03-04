@@ -385,9 +385,162 @@ async def test_analyze_batch_summary_health_score_range(tmp_path, monkeypatch):
 
 
 def test_batch_tools_have_fn_attribute():
-    """Both batch tools have the .fn attribute expected by tests."""
+    """All batch tools have the .fn attribute expected by tests."""
     assert hasattr(server.analyze_batch, "fn")
     assert hasattr(server.analyze_batch_summary, "fn")
+    assert hasattr(server.analyze_batch_auto, "fn")
+
+
+# ---------------------------------------------------------------------------
+# Unit tests for _compute_health_score
+# ---------------------------------------------------------------------------
+
+
+def test_compute_health_score_empty():
+    """Empty repository returns 100.0."""
+    assert server._compute_health_score([]) == 100.0
+
+
+def test_compute_health_score_clean_repo():
+    """Repository with no violations has a high health score."""
+    results = [_make_result(f"f{i}.py", violations=[]) for i in range(5)]
+    score = server._compute_health_score(results)
+    assert score >= 90.0
+
+
+def test_compute_health_score_with_violations():
+    """Repository with violations scores below 100."""
+    results = [
+        _make_result(
+            "bad.py",
+            violations=[Violation(principle="p", severity=8, message="m")] * 3,
+        )
+    ]
+    score = server._compute_health_score(results)
+    assert 0.0 <= score < 100.0
+
+
+def test_compute_health_score_high_severity_penalises_more():
+    """Quadratic penalty ensures high-severity violations hurt more than low-severity."""
+    low = [
+        _make_result(
+            "a.py",
+            violations=[Violation(principle="p", severity=1, message="m")] * 10,
+        )
+    ]
+    high = [
+        _make_result(
+            "a.py",
+            violations=[Violation(principle="p", severity=10, message="m")] * 10,
+        )
+    ]
+    assert server._compute_health_score(low) > server._compute_health_score(high)
+
+
+def test_compute_health_score_clamped():
+    """Health score is always within [0.0, 100.0]."""
+    extreme = [
+        _make_result(
+            f"f{i}.py",
+            violations=[Violation(principle="p", severity=10, message="m")] * 50,
+        )
+        for i in range(20)
+    ]
+    score = server._compute_health_score(extreme)
+    assert 0.0 <= score <= 100.0
+
+
+# ---------------------------------------------------------------------------
+# Integration tests for analyze_batch_auto
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.asyncio
+async def test_analyze_batch_auto_small_repo_returns_all(tmp_path, monkeypatch):
+    """Small repo: all violations fit in budget → has_more=False, cursor=None."""
+    fake_results = [
+        _make_result(
+            str(tmp_path / "a.py"),
+            violations=[Violation(principle="p", severity=3, message="m")],
+        ),
+        _make_result(str(tmp_path / "b.py"), violations=[]),
+    ]
+    monkeypatch.setattr(
+        server,
+        "_analyze_repository_internal",
+        lambda *_a, **_kw: _async_return(fake_results),
+    )
+    page = await server.analyze_batch_auto.fn(str(tmp_path), "python", max_tokens=8000)
+    assert isinstance(page, BatchPage)
+    assert page.has_more is False
+    assert page.cursor is None
+    assert len(page.violations) == 1
+
+
+@pytest.mark.asyncio
+async def test_analyze_batch_auto_large_repo_paginates(tmp_path, monkeypatch):
+    """Large repo: violations exceed budget → has_more=True, cursor is set."""
+    # Many violations to force pagination with a tiny token budget
+    fake_results = [
+        _make_result(
+            str(tmp_path / f"f{i}.py"),
+            violations=[Violation(principle="p", severity=5, message="x" * 100)] * 5,
+        )
+        for i in range(20)
+    ]
+    monkeypatch.setattr(
+        server,
+        "_analyze_repository_internal",
+        lambda *_a, **_kw: _async_return(fake_results),
+    )
+    page = await server.analyze_batch_auto.fn(str(tmp_path), "python", max_tokens=500)
+    assert isinstance(page, BatchPage)
+    assert page.has_more is True
+    assert page.cursor is not None
+
+
+@pytest.mark.asyncio
+async def test_analyze_batch_auto_cursor_continuation(tmp_path, monkeypatch):
+    """Passing a cursor delegates to analyze_batch and advances the page."""
+    fake_results = [
+        _make_result(
+            str(tmp_path / f"f{i}.py"),
+            violations=[Violation(principle="p", severity=5, message="x" * 100)] * 5,
+        )
+        for i in range(20)
+    ]
+    monkeypatch.setattr(
+        server,
+        "_analyze_repository_internal",
+        lambda *_a, **_kw: _async_return(fake_results),
+    )
+    # Get first page via auto tool
+    page1 = await server.analyze_batch_auto.fn(str(tmp_path), "python", max_tokens=500)
+    assert page1.has_more
+    # Continue via cursor — should advance
+    page2 = await server.analyze_batch_auto.fn(
+        str(tmp_path), "python", cursor=page1.cursor, max_tokens=500
+    )
+    assert isinstance(page2, BatchPage)
+    # Both pages are non-empty (there are many violations)
+    assert len(page1.violations) > 0
+    assert len(page2.violations) > 0 or not page2.has_more
+
+
+@pytest.mark.asyncio
+async def test_analyze_batch_auto_empty_repo(tmp_path, monkeypatch):
+    """Empty repository returns empty page with has_more=False."""
+    monkeypatch.setattr(
+        server,
+        "_analyze_repository_internal",
+        lambda *_a, **_kw: _async_return([]),
+    )
+    page = await server.analyze_batch_auto.fn(str(tmp_path), "python")
+    assert isinstance(page, BatchPage)
+    assert page.has_more is False
+    assert page.cursor is None
+    assert page.violations == []
+    assert page.files_total == 0
 
 
 # ---------------------------------------------------------------------------

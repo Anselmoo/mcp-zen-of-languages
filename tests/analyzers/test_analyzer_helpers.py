@@ -8,8 +8,8 @@ from mcp_zen_of_languages.models import Location
 from mcp_zen_of_languages.models import Violation
 
 
-EMPTY_VIOLATIONS_SCORE = 100.0
-SINGLE_VIOLATION_SCORE = 90.0
+EMPTY_VIOLATIONS_SCORE = 10.0
+SINGLE_VIOLATION_SCORE = 9.0
 
 
 class _Analyzer(BaseAnalyzer, LocationHelperMixin):

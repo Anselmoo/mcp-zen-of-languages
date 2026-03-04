@@ -5,7 +5,7 @@ from mcp_zen_of_languages.models import CyclomaticSummary
 from mcp_zen_of_languages.models import Violation
 
 
-SINGLE_VIOLATION_SCORE = 90.0
+SINGLE_VIOLATION_SCORE = 9.0
 
 
 class _Analyzer(BaseAnalyzer):

@@ -1168,7 +1168,7 @@ class BaseAnalyzer(ABC):
     ) -> AnalysisResult:
         """Assemble the final ``AnalysisResult`` from context and violations.
 
-        Computes the overall quality score (``100 - 2 x total_severity``,
+        Computes the overall quality score (``10.0 - 2 x total_severity``,
         floored at 0) and packages metrics together with violations into
         the result model returned to callers.
 
@@ -1182,7 +1182,7 @@ class BaseAnalyzer(ABC):
             AnalysisResult: Complete analysis payload ready for serialization or
             rendering.
         """
-        overall_score = max(0.0, 100.0 - (sum(v.severity for v in violations) * 2))
+        overall_score = max(0.0, 10.0 - (sum(v.severity for v in violations) * 0.2))
 
         metrics = Metrics(
             cyclomatic=context.cyclomatic_summary
@@ -1212,11 +1212,11 @@ class BaseAnalyzer(ABC):
         )
 
     def _calculate_overall_score(self, violations: list[Violation]) -> float:
-        """Derive a 0-100 quality score from accumulated violation severities.
+        """Derive a 0-10 quality score from accumulated violation severities.
 
         The formula is intentionally simple:
-        ``score = max(0, 100 - 2 x Σ severity)``.  A file with no
-        violations scores a perfect 100; each severity point costs two
+        ``score = max(0, 10 - 0.2 x Σ severity)``.  A file with no
+        violations scores a perfect 10; each severity point costs 0.2
         score points.
 
         Args:
@@ -1224,13 +1224,13 @@ class BaseAnalyzer(ABC):
                 values are summed to compute the penalty.
 
         Returns:
-            float: Clamped quality score between ``0.0`` and ``100.0``.
+            float: Clamped quality score between ``0.0`` and ``10.0``.
         """
         if not violations:
-            return 100.0
+            return 10.0
 
         total_severity = sum(v.severity for v in violations)
-        return max(0.0, 100.0 - (total_severity * 2))
+        return max(0.0, 10.0 - (total_severity * 0.2))
 
 
 # ============================================================================

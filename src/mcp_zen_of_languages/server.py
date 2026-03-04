@@ -871,6 +871,63 @@ def _build_batch_violations_list(
     return all_violations
 
 
+def _compute_health_score(results: list[RepositoryAnalysis]) -> float:
+    """Compute a weighted 0-100 project health score from per-file analysis results.
+
+    Three factors contribute to the score:
+
+    * **Severity-weighted penalty** (70 % weight): squares each violation's severity
+      so critical violations are penalised far more than minor ones.
+    * **Violation density** (20 % weight): average violation count per file, capped
+      at 10 violations/file for a zero-density score.
+    * **Maintainability index** (10 % weight): Halstead-derived MI (0-100) averaged
+      across files that report a non-zero value; defaults to 50 when unavailable.
+
+    Args:
+        results: Per-file analysis entries from ``_analyze_repository_internal``.
+
+    Returns:
+        float: Health score clamped to ``[0.0, 100.0]``, rounded to one decimal place.
+            100.0 means a perfectly clean, well-maintained repository.
+
+    Example:
+        >>> score = _compute_health_score([])
+        >>> score
+        100.0
+    """
+    if not results:
+        return 100.0
+
+    total_files = len(results)
+
+    # Factor 1 — quadratic severity penalty (weight 70 %)
+    # Normalise by the worst-case scenario: every file has one severity-10 violation.
+    total_weighted_severity = sum(
+        sum(v.severity**2 for v in entry.result.violations) for entry in results
+    )
+    worst_case_severity = total_files * (10**2)
+    severity_score = max(
+        0.0, 100.0 - (total_weighted_severity / worst_case_severity * 100.0)
+    )
+
+    # Factor 2 — violation density: violations per file, saturates at 10 (weight 20 %)
+    avg_violations_per_file = (
+        sum(len(e.result.violations) for e in results) / total_files
+    )
+    density_score = max(0.0, 100.0 - min(100.0, avg_violations_per_file * 10.0))
+
+    # Factor 3 — average maintainability index (weight 10 %)
+    mi_values = [
+        e.result.metrics.maintainability_index
+        for e in results
+        if e.result.metrics.maintainability_index > 0
+    ]
+    maintainability_score = sum(mi_values) / len(mi_values) if mi_values else 50.0
+
+    health = 0.70 * severity_score + 0.20 * density_score + 0.10 * maintainability_score
+    return round(max(0.0, min(100.0, health)), 1)
+
+
 @mcp.tool(
     name="analyze_batch",
     title="Analyze repository (batch / LLM-safe)",
@@ -1074,12 +1131,7 @@ async def analyze_batch_summary(
     total_files = len(results)
     total_violations = sum(len(entry.result.violations) for entry in results)
 
-    # Health score: average overall_score (0-10 scale) mapped to 0-100
-    if results:
-        avg_score = sum(entry.result.overall_score for entry in results) / total_files
-    else:
-        avg_score = 10.0
-    health_score = round(avg_score * 10.0, 1)
+    health_score = _compute_health_score(results)
 
     # Top-5 hotspots by violation count, tie-broken by top severity
     sorted_results = sorted(
@@ -1105,6 +1157,148 @@ async def analyze_batch_summary(
         hotspots=hotspots,
         total_violations=total_violations,
         total_files=total_files,
+    )
+
+
+@mcp.tool(
+    name="analyze_batch_auto",
+    title="Analyze repository (auto-routing)",
+    description=(
+        "Smart entry point for LLM agents: automatically decides between returning "
+        "all violations at once (small repos) or paginating (large repos). "
+        "Pass the returned cursor back to continue pagination if has_more is true. "
+        "Prefer this over manually choosing between analyze_repository and analyze_batch."
+    ),
+    tags={"analysis", "batch", "pagination", "auto"},
+    annotations=READONLY_ANNOTATIONS,
+    output_schema=_output_schema(BatchPage),
+    task=BACKGROUND_TASK,
+)
+async def analyze_batch_auto(  # noqa: PLR0913
+    path: str,
+    language: str,
+    cursor: str | None = None,
+    max_tokens: int = 8000,
+    max_files: int = 100,
+    *,
+    enable_external_tools: bool = False,
+    allow_temporary_runners: bool = False,
+) -> BatchPage:
+    """Analyse a repository, routing automatically between full and paginated mode.
+
+    This tool eliminates the need to choose between ``analyze_repository``
+    (full, unbounded) and ``analyze_batch`` (always paginated).  It analyses
+    the repository once, then decides:
+
+    * If all violations fit within *max_tokens*: returns them all in a single
+      page (``has_more=False``, ``cursor=None``).
+    * If violations exceed *max_tokens*: returns the first token-budgeted page
+      with a continuation cursor (``has_more=True``).
+
+    Cursor continuation is handled identically to ``analyze_batch`` — pass the
+    opaque cursor from the previous response unchanged.
+
+    Args:
+        path (str): Absolute or relative path to the repository root.
+        language (str): Language identifier to restrict analysis (e.g. ``"python"``).
+        cursor (str | None, optional): Opaque continuation token from a previous
+            call.  Omit or pass ``None`` to start from the first page. Default to None.
+        max_tokens (int, optional): Approximate token budget for the ``violations``
+            payload.  When all violations fit, they are returned in full; otherwise
+            the first page is returned. Default to 8000.
+        max_files (int, optional): Cap on the number of files to analyse.
+            Default to 100.
+        enable_external_tools (bool, optional): Opt-in execution of external linters.
+            Default to False.
+        allow_temporary_runners (bool, optional): Permit temporary-runner strategies.
+            Default to False.
+
+    Returns:
+        BatchPage: A page with ``has_more=False`` when all violations were returned,
+        or a page with a continuation cursor when more pages remain.
+
+    Example:
+        ```python
+        # Single call for small repos; LLM paginates only when needed
+        page = await analyze_batch_auto("/repo", "python")
+        while page.has_more:
+            page = await analyze_batch_auto("/repo", "python", cursor=page.cursor)
+        ```
+
+    See Also:
+        [`analyze_batch`][mcp_zen_of_languages.server.analyze_batch]:
+            Always-paginated variant with explicit cursor management.
+        [`analyze_batch_summary`][mcp_zen_of_languages.server.analyze_batch_summary]:
+            Compact overview (health score + hotspots) to decide if pagination is needed.
+    """
+    canonical_language = _canonical_language(language)
+
+    # Cursor continuation: delegate entirely to analyze_batch
+    if cursor is not None:
+        return await analyze_batch.fn(
+            path,
+            canonical_language,
+            cursor=cursor,
+            max_tokens=max_tokens,
+            max_files=max_files,
+            enable_external_tools=enable_external_tools,
+            allow_temporary_runners=allow_temporary_runners,
+        )
+
+    results = await _analyze_repository_internal(
+        path,
+        [canonical_language],
+        max_files,
+        None,
+        enable_external_tools=enable_external_tools,
+        allow_temporary_runners=allow_temporary_runners,
+    )
+    files_total = len(results)
+    all_violations = _build_batch_violations_list(results)
+
+    # Estimate total token cost for all violations
+    token_budget = max(1, max_tokens - _BATCH_ENVELOPE_TOKEN_OVERHEAD)
+    total_estimated = sum(
+        _estimate_tokens(json.dumps(bv.model_dump())) for bv in all_violations
+    )
+
+    if total_estimated <= token_budget:
+        # Small enough: return everything at once
+        return BatchPage(
+            cursor=None,
+            page=1,
+            has_more=False,
+            violations=all_violations,
+            files_in_page=len({bv.file for bv in all_violations}),
+            files_total=files_total,
+        )
+
+    # Too large: apply token-budget paging from the start (cursor=None → index 0)
+    page_violations: list[BatchViolation] = []
+    used_tokens = 0
+    next_index = 0
+    for bv in all_violations:
+        serialised = json.dumps(bv.model_dump())
+        cost = _estimate_tokens(serialised)
+        if used_tokens + cost > token_budget:
+            if not page_violations:
+                next_index += 1
+            break
+        page_violations.append(bv)
+        used_tokens += cost
+        next_index += 1
+
+    has_more = next_index < len(all_violations)
+    next_cursor = _encode_cursor(next_index) if has_more else None
+    files_in_page = len({bv.file for bv in page_violations})
+
+    return BatchPage(
+        cursor=next_cursor,
+        page=1,
+        has_more=has_more,
+        violations=page_violations,
+        files_in_page=files_in_page,
+        files_total=files_total,
     )
 
 
@@ -1805,6 +1999,7 @@ def _attach_legacy_test_compat() -> None:
         (analyze_repository, READONLY_ANNOTATIONS),
         (analyze_batch, READONLY_ANNOTATIONS),
         (analyze_batch_summary, READONLY_ANNOTATIONS),
+        (analyze_batch_auto, READONLY_ANNOTATIONS),
         (generate_agent_tasks_tool, READONLY_ANNOTATIONS),
         (check_architectural_patterns, READONLY_ANNOTATIONS),
         (generate_report_tool, READONLY_ANNOTATIONS),

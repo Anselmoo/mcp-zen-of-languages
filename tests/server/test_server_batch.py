@@ -395,5 +395,5 @@ def test_batch_tools_have_fn_attribute():
 # ---------------------------------------------------------------------------
 
 
-async def _async_return(value):  # type: ignore[return]
+async def _async_return(value):
     return value

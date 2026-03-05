@@ -27,6 +27,8 @@ Note:
     current server session.
 """
 
+import base64
+import json
 import logging
 import os
 
@@ -52,6 +54,10 @@ from mcp_zen_of_languages.config import load_config
 from mcp_zen_of_languages.lifespan import zen_server_lifespan
 from mcp_zen_of_languages.middleware import build_default_middleware
 from mcp_zen_of_languages.models import AnalysisResult
+from mcp_zen_of_languages.models import BatchHotspot
+from mcp_zen_of_languages.models import BatchPage
+from mcp_zen_of_languages.models import BatchSummary
+from mcp_zen_of_languages.models import BatchViolation
 from mcp_zen_of_languages.models import LanguagesResult
 from mcp_zen_of_languages.models import PatternsResult
 from mcp_zen_of_languages.models import RepositoryAnalysis
@@ -152,6 +158,9 @@ ANALYZE_ZEN_VIOLATIONS_VERSION = "1.0"
 GENERATE_PROMPTS_VERSION = "1.0"
 ANALYZE_ZEN_VIOLATIONS_V2_VERSION = "2.0"
 GENERATE_PROMPTS_V2_VERSION = "2.0"
+# Conservative token overhead reserved for the BatchPage envelope fields
+# (cursor, page, has_more, files_in_page, files_total, JSON structure).
+_BATCH_ENVELOPE_TOKEN_OVERHEAD = 200
 
 
 def _output_schema(annotation: object) -> dict[str, object]:
@@ -216,6 +225,62 @@ def _pipeline_with_runtime_overrides(language: str) -> PipelineConfig:
         language=pipeline_config.language,
         detectors=[*pipeline_config.detectors, runtime_defaults],
     )
+
+
+def _encode_cursor(file_idx: int, offset: int = 0) -> str:
+    """Encode a batch-page cursor as a base-64 JSON string.
+
+    The cursor is a stateless continuation token that records the next
+    file index and intra-file violation offset to resume from.  Encoding
+    as base-64 JSON keeps the token opaque to callers while remaining
+    easy to inspect during debugging.
+
+    Args:
+        file_idx: 0-based index of the next file to process.
+        offset: 0-based index of the first violation within that file.
+
+    Returns:
+        str: Base-64-encoded JSON string, e.g. ``"eyJmaWxlIjogMSwgIm9mZnNldCI6IDB9"``.
+    """
+    payload = json.dumps({"file": file_idx, "offset": offset})
+    return base64.b64encode(payload.encode()).decode()
+
+
+def _decode_cursor(cursor: str) -> tuple[int, int]:
+    """Decode a batch-page cursor back into (file_idx, offset).
+
+    Args:
+        cursor: Base-64-encoded JSON cursor previously produced by
+            ``_encode_cursor``.
+
+    Returns:
+        tuple[int, int]: ``(file_idx, offset)`` pair.
+
+    Raises:
+        ValueError: When *cursor* is not valid base-64 JSON.
+    """
+    try:
+        data = json.loads(base64.b64decode(cursor, validate=True).decode())
+        return int(data["file"]), int(data.get("offset", 0))
+    except Exception as exc:
+        msg = f"Invalid batch cursor: {exc}"
+        raise ValueError(msg) from exc
+
+
+def _estimate_tokens(text: str) -> int:
+    """Rough token count estimate for a serialised string.
+
+    Uses a conservative 4-characters-per-token heuristic with ceiling
+    division so the estimate errs on the side of *over*-counting, which
+    keeps the pager safely within the requested ``max_tokens`` budget.
+
+    Args:
+        text: Any string whose token count should be estimated.
+
+    Returns:
+        int: Estimated number of tokens (at least 1).
+    """
+    return max(1, -(-len(text) // 4))
 
 
 class LanguageCoverage(BaseModel):
@@ -770,6 +835,470 @@ async def analyze_repository(  # noqa: PLR0913
         ctx,
         enable_external_tools=enable_external_tools,
         allow_temporary_runners=allow_temporary_runners,
+    )
+
+
+def _build_batch_violations_list(
+    results: list[RepositoryAnalysis],
+) -> list[BatchViolation]:
+    """Flatten and sort all violations from repository results, worst-first.
+
+    Violations from every file are collected into a single list and sorted
+    by descending severity so that the most critical issues appear first
+    across all pages, regardless of which file they belong to.
+
+    Args:
+        results: Per-file analysis results from ``_analyze_repository_internal``.
+
+    Returns:
+        list[BatchViolation]: All violations sorted by severity (highest first).
+    """
+    all_violations: list[BatchViolation] = []
+    for entry in results:
+        all_violations.extend(
+            BatchViolation(
+                file=entry.path,
+                language=entry.language,
+                principle=v.principle,
+                severity=v.severity,
+                message=v.message,
+                suggestion=v.suggestion,
+                location=v.location,
+            )
+            for v in entry.result.violations
+        )
+    all_violations.sort(key=lambda bv: bv.severity, reverse=True)
+    return all_violations
+
+
+def _compute_health_score(results: list[RepositoryAnalysis]) -> float:
+    """Compute a weighted 0-100 project health score from per-file analysis results.
+
+    Three factors contribute to the score:
+
+    * **Severity-weighted penalty** (70 % weight): squares each violation's severity
+      so critical violations are penalised far more than minor ones.
+    * **Violation density** (20 % weight): average violation count per file, capped
+      at 10 violations/file for a zero-density score.
+    * **Maintainability index** (10 % weight): Halstead-derived MI (0-100) averaged
+      across files that report a non-zero value; defaults to 50 when unavailable.
+
+    Args:
+        results: Per-file analysis entries from ``_analyze_repository_internal``.
+
+    Returns:
+        float: Health score clamped to ``[0.0, 100.0]``, rounded to one decimal place.
+            100.0 means a perfectly clean, well-maintained repository.
+
+    Example:
+        >>> score = _compute_health_score([])
+        >>> score
+        100.0
+    """
+    if not results:
+        return 100.0
+
+    total_files = len(results)
+
+    # Factor 1 — quadratic severity penalty (weight 70 %)
+    # Normalise by the worst-case scenario: every file has one severity-10 violation.
+    total_weighted_severity = sum(
+        sum(v.severity**2 for v in entry.result.violations) for entry in results
+    )
+    worst_case_severity = total_files * (10**2)
+    severity_score = max(
+        0.0, 100.0 - (total_weighted_severity / worst_case_severity * 100.0)
+    )
+
+    # Factor 2 — violation density: violations per file, saturates at 10 (weight 20 %)
+    avg_violations_per_file = (
+        sum(len(e.result.violations) for e in results) / total_files
+    )
+    density_score = max(0.0, 100.0 - min(100.0, avg_violations_per_file * 10.0))
+
+    # Factor 3 — average maintainability index (weight 10 %)
+    mi_values = [
+        e.result.metrics.maintainability_index
+        for e in results
+        if e.result.metrics.maintainability_index > 0
+    ]
+    maintainability_score = sum(mi_values) / len(mi_values) if mi_values else 50.0
+
+    health = 0.70 * severity_score + 0.20 * density_score + 0.10 * maintainability_score
+    return round(max(0.0, min(100.0, health)), 1)
+
+
+@mcp.tool(
+    name="analyze_batch",
+    title="Analyze repository (batch / LLM-safe)",
+    description=(
+        "Analyse a repository path and return token-budgeted, paginated violations "
+        "designed for LLM context windows. Highest-severity violations appear first. "
+        "Pass the returned cursor to resume from the next page."
+    ),
+    tags={"analysis", "batch", "pagination"},
+    annotations=READONLY_ANNOTATIONS,
+    output_schema=_output_schema(BatchPage),
+    task=BACKGROUND_TASK,
+)
+async def analyze_batch(  # noqa: PLR0913
+    path: str,
+    language: str,
+    cursor: str | None = None,
+    max_tokens: int = 8000,
+    max_files: int = 100,
+    *,
+    enable_external_tools: bool = False,
+    allow_temporary_runners: bool = False,
+) -> BatchPage:
+    """Analyse a repository and return one token-budgeted page of violations.
+
+    This tool is explicitly designed for LLM agent workflows where the
+    full violation list would exceed the model's context window.  It
+    analyses the repository, sorts violations globally by severity
+    (highest first), and returns only as many as fit within *max_tokens*.
+    The opaque *cursor* field in the response encodes the resume position;
+    pass it back unchanged on the next call to advance to the next page.
+
+    Design principles:
+
+    * **Stateless** — the cursor encodes the exact position in the sorted
+      violation list; no server-side session state is required.
+    * **Token-budget aware** — the response is trimmed so that the
+      serialised payload stays within *max_tokens*.
+    * **Priority ordering** — highest-severity violations are surfaced
+      first across all pages.
+
+    Args:
+        path (str): Absolute or relative path to the repository root.
+        language (str): Language identifier to restrict analysis (e.g. ``"python"``).
+        cursor (str | None, optional): Opaque continuation token from a previous
+            call.  Omit or pass ``None`` to start from the first page. Default to None.
+        max_tokens (int, optional): Approximate token budget for the ``violations``
+            payload.  Violations are added until the budget would be exceeded;
+            the envelope overhead is excluded from this count. Default to 8000.
+        max_files (int, optional): Cap on the number of files to analyse.
+            Default to 100.
+        enable_external_tools (bool, optional): Opt-in execution of external linters.
+            Default to False.
+        allow_temporary_runners (bool, optional): Permit temporary-runner strategies.
+            Default to False.
+
+    Returns:
+        BatchPage: A page carrying the token-budgeted violations, a continuation
+        cursor (``None`` when all violations have been returned), and file
+        count metadata.
+
+    Example:
+        ```python
+        # First page
+        page = await analyze_batch("/repo", "python", max_tokens=4000)
+        while page.has_more:
+            page = await analyze_batch("/repo", "python", cursor=page.cursor)
+        ```
+
+    See Also:
+        [`analyze_batch_summary`][mcp_zen_of_languages.server.analyze_batch_summary]:
+            Returns a compact health-score overview that always fits in one
+            context window.
+        [`analyze_repository`][mcp_zen_of_languages.server.analyze_repository]:
+            Full (unpaginated) repository analysis for non-LLM consumers.
+    """
+    canonical_language = _canonical_language(language)
+    results = await _analyze_repository_internal(
+        path,
+        [canonical_language],
+        max_files,
+        None,
+        enable_external_tools=enable_external_tools,
+        allow_temporary_runners=allow_temporary_runners,
+    )
+    files_total = len(results)
+
+    all_violations = _build_batch_violations_list(results)
+
+    start_index, _ = _decode_cursor(cursor) if cursor else (0, 0)
+    start_index = max(0, min(start_index, len(all_violations)))
+
+    page_violations: list[BatchViolation] = []
+    used_tokens = 0
+    token_budget = max(1, max_tokens - _BATCH_ENVELOPE_TOKEN_OVERHEAD)
+
+    next_index = start_index
+    for bv in all_violations[start_index:]:
+        serialised = json.dumps(bv.model_dump())
+        cost = _estimate_tokens(serialised)
+        if used_tokens + cost > token_budget:
+            if not page_violations:
+                # Single violation is too large for the budget; skip it so the
+                # cursor advances and we do not get stuck on the same item.
+                next_index += 1
+            break
+        page_violations.append(bv)
+        used_tokens += cost
+        next_index += 1
+
+    has_more = next_index < len(all_violations)
+    next_cursor = _encode_cursor(next_index) if has_more else None
+
+    # files_in_page: distinct files represented in this page's violations
+    files_in_page = len({bv.file for bv in page_violations})
+    # Use a fixed logical page size (independent of token budget) so that the
+    # page number is stable across calls with different max_tokens values.
+    _logical_page_size = 50
+    page_num = start_index // _logical_page_size + 1 if all_violations else 1
+
+    return BatchPage(
+        cursor=next_cursor,
+        page=page_num,
+        has_more=has_more,
+        violations=page_violations,
+        files_in_page=files_in_page,
+        files_total=files_total,
+    )
+
+
+@mcp.tool(
+    name="analyze_batch_summary",
+    title="Analyze repository — batch summary",
+    description=(
+        "Return a compact project health score and top-5 hotspot files from a "
+        "repository scan. Always fits within a single LLM context window. "
+        "Use this before analyze_batch to decide whether full pagination is needed."
+    ),
+    tags={"analysis", "batch", "summary"},
+    annotations=READONLY_ANNOTATIONS,
+    output_schema=_output_schema(BatchSummary),
+    task=BACKGROUND_TASK,
+)
+async def analyze_batch_summary(
+    path: str,
+    language: str,
+    max_files: int = 100,
+    *,
+    enable_external_tools: bool = False,
+    allow_temporary_runners: bool = False,
+) -> BatchSummary:
+    """Return a compact health overview for a repository — always one page.
+
+    Unlike ``analyze_batch``, which paginates a potentially large violation
+    list, this tool summarises the entire repository in a single response.
+    It is designed to fit comfortably inside any LLM context window so that
+    an agent can assess project health and identify where to focus before
+    deciding whether to call ``analyze_batch`` for deeper detail.
+
+    The returned ``health_score`` is the repository's average ``overall_score``
+    expressed on a 0-100 scale (higher is better).  The ``hotspots`` list
+    contains the five files with the highest violation count, ordered by
+    descending total violations.
+
+    Args:
+        path (str): Absolute or relative path to the repository root.
+        language (str): Language identifier to restrict analysis (e.g. ``"python"``).
+        max_files (int, optional): Cap on the number of files to analyse.
+            Default to 100.
+        enable_external_tools (bool, optional): Opt-in execution of external linters.
+            Default to False.
+        allow_temporary_runners (bool, optional): Permit temporary-runner strategies.
+            Default to False.
+
+    Returns:
+        BatchSummary: Compact summary with ``health_score`` (0-100),
+        up to five ``hotspots``, ``total_violations``, and ``total_files``.
+
+    Example:
+        ```python
+        summary = await analyze_batch_summary("/repo", "python")
+        print(summary.health_score, summary.hotspots)
+        ```
+
+    See Also:
+        [`analyze_batch`][mcp_zen_of_languages.server.analyze_batch]:
+            Full paginated violation detail for LLM agents.
+        [`analyze_repository`][mcp_zen_of_languages.server.analyze_repository]:
+            Complete unpaginated results for non-LLM consumers.
+    """
+    canonical_language = _canonical_language(language)
+    results = await _analyze_repository_internal(
+        path,
+        [canonical_language],
+        max_files,
+        None,
+        enable_external_tools=enable_external_tools,
+        allow_temporary_runners=allow_temporary_runners,
+    )
+
+    total_files = len(results)
+    total_violations = sum(len(entry.result.violations) for entry in results)
+
+    health_score = _compute_health_score(results)
+
+    # Top-5 hotspots by violation count, tie-broken by top severity
+    sorted_results = sorted(
+        results,
+        key=lambda e: (
+            len(e.result.violations),
+            max((v.severity for v in e.result.violations), default=0),
+        ),
+        reverse=True,
+    )
+    hotspots = [
+        BatchHotspot(
+            path=entry.path,
+            language=entry.language,
+            violations=len(entry.result.violations),
+            top_severity=max((v.severity for v in entry.result.violations), default=0),
+        )
+        for entry in sorted_results[:5]
+    ]
+
+    return BatchSummary(
+        health_score=health_score,
+        hotspots=hotspots,
+        total_violations=total_violations,
+        total_files=total_files,
+    )
+
+
+@mcp.tool(
+    name="analyze_batch_auto",
+    title="Analyze repository (auto-routing)",
+    description=(
+        "Smart entry point for LLM agents: automatically decides between returning "
+        "all violations at once (small repos) or paginating (large repos). "
+        "Pass the returned cursor back to continue pagination if has_more is true. "
+        "Prefer this over manually choosing between analyze_repository and analyze_batch."
+    ),
+    tags={"analysis", "batch", "pagination", "auto"},
+    annotations=READONLY_ANNOTATIONS,
+    output_schema=_output_schema(BatchPage),
+    task=BACKGROUND_TASK,
+)
+async def analyze_batch_auto(  # noqa: PLR0913
+    path: str,
+    language: str,
+    cursor: str | None = None,
+    max_tokens: int = 8000,
+    max_files: int = 100,
+    *,
+    enable_external_tools: bool = False,
+    allow_temporary_runners: bool = False,
+) -> BatchPage:
+    """Analyse a repository, routing automatically between full and paginated mode.
+
+    This tool eliminates the need to choose between ``analyze_repository``
+    (full, unbounded) and ``analyze_batch`` (always paginated).  It analyses
+    the repository once, then decides:
+
+    * If all violations fit within *max_tokens*: returns them all in a single
+      page (``has_more=False``, ``cursor=None``).
+    * If violations exceed *max_tokens*: returns the first token-budgeted page
+      with a continuation cursor (``has_more=True``).
+
+    Cursor continuation is handled identically to ``analyze_batch`` — pass the
+    opaque cursor from the previous response unchanged.
+
+    Args:
+        path (str): Absolute or relative path to the repository root.
+        language (str): Language identifier to restrict analysis (e.g. ``"python"``).
+        cursor (str | None, optional): Opaque continuation token from a previous
+            call.  Omit or pass ``None`` to start from the first page. Default to None.
+        max_tokens (int, optional): Approximate token budget for the ``violations``
+            payload.  When all violations fit, they are returned in full; otherwise
+            the first page is returned. Default to 8000.
+        max_files (int, optional): Cap on the number of files to analyse.
+            Default to 100.
+        enable_external_tools (bool, optional): Opt-in execution of external linters.
+            Default to False.
+        allow_temporary_runners (bool, optional): Permit temporary-runner strategies.
+            Default to False.
+
+    Returns:
+        BatchPage: A page with ``has_more=False`` when all violations were returned,
+        or a page with a continuation cursor when more pages remain.
+
+    Example:
+        ```python
+        # Single call for small repos; LLM paginates only when needed
+        page = await analyze_batch_auto("/repo", "python")
+        while page.has_more:
+            page = await analyze_batch_auto("/repo", "python", cursor=page.cursor)
+        ```
+
+    See Also:
+        [`analyze_batch`][mcp_zen_of_languages.server.analyze_batch]:
+            Always-paginated variant with explicit cursor management.
+        [`analyze_batch_summary`][mcp_zen_of_languages.server.analyze_batch_summary]:
+            Compact overview (health score + hotspots) to decide if pagination is needed.
+    """
+    canonical_language = _canonical_language(language)
+
+    # Cursor continuation: delegate entirely to analyze_batch
+    if cursor is not None:
+        return await analyze_batch.fn(
+            path,
+            canonical_language,
+            cursor=cursor,
+            max_tokens=max_tokens,
+            max_files=max_files,
+            enable_external_tools=enable_external_tools,
+            allow_temporary_runners=allow_temporary_runners,
+        )
+
+    results = await _analyze_repository_internal(
+        path,
+        [canonical_language],
+        max_files,
+        None,
+        enable_external_tools=enable_external_tools,
+        allow_temporary_runners=allow_temporary_runners,
+    )
+    files_total = len(results)
+    all_violations = _build_batch_violations_list(results)
+
+    # Estimate total token cost for all violations
+    token_budget = max(1, max_tokens - _BATCH_ENVELOPE_TOKEN_OVERHEAD)
+    total_estimated = sum(
+        _estimate_tokens(json.dumps(bv.model_dump())) for bv in all_violations
+    )
+
+    if total_estimated <= token_budget:
+        # Small enough: return everything at once
+        return BatchPage(
+            cursor=None,
+            page=1,
+            has_more=False,
+            violations=all_violations,
+            files_in_page=len({bv.file for bv in all_violations}),
+            files_total=files_total,
+        )
+
+    # Too large: apply token-budget paging from the start (cursor=None → index 0)
+    page_violations: list[BatchViolation] = []
+    used_tokens = 0
+    next_index = 0
+    for bv in all_violations:
+        serialised = json.dumps(bv.model_dump())
+        cost = _estimate_tokens(serialised)
+        if used_tokens + cost > token_budget:
+            if not page_violations:
+                next_index += 1
+            break
+        page_violations.append(bv)
+        used_tokens += cost
+        next_index += 1
+
+    has_more = next_index < len(all_violations)
+    next_cursor = _encode_cursor(next_index) if has_more else None
+    files_in_page = len({bv.file for bv in page_violations})
+
+    return BatchPage(
+        cursor=next_cursor,
+        page=1,
+        has_more=has_more,
+        violations=page_violations,
+        files_in_page=files_in_page,
+        files_total=files_total,
     )
 
 
@@ -1468,6 +1997,9 @@ def _attach_legacy_test_compat() -> None:
         (generate_prompts_tool, READONLY_ANNOTATIONS),
         (generate_prompts_tool_v2, READONLY_ANNOTATIONS),
         (analyze_repository, READONLY_ANNOTATIONS),
+        (analyze_batch, READONLY_ANNOTATIONS),
+        (analyze_batch_summary, READONLY_ANNOTATIONS),
+        (analyze_batch_auto, READONLY_ANNOTATIONS),
         (generate_agent_tasks_tool, READONLY_ANNOTATIONS),
         (check_architectural_patterns, READONLY_ANNOTATIONS),
         (generate_report_tool, READONLY_ANNOTATIONS),

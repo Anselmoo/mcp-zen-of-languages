@@ -43,3 +43,4 @@ async def test_onboard_project_relaxed():
         guide.recommended_config["max_cyclomatic_complexity"]
         == RELAXED_COMPLEXITY_TARGET
     )
+    assert any(step.action == "configure_ignore" for step in guide.steps)

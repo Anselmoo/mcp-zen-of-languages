@@ -1863,27 +1863,37 @@ async def onboard_project(
         ),
         OnboardingStep(
             step=2,
+            title="Define ignored files and folders",
+            description=(
+                "Create .zen-of-languages.ignore for local exclusions; "
+                "existing .gitignore entries are also respected during scans."
+            ),
+            action="configure_ignore",
+            example=".venv/\nnode_modules/\ndist/",
+        ),
+        OnboardingStep(
+            step=3,
             title="Set up VS Code integration",
             description="Add the MCP server configuration to .vscode/mcp.json for VS Code integration.",
             action="setup_vscode",
             example='{"servers":{"zen-of-languages":{"command":"uvx","args":["--from","mcp-zen-of-languages","zen-mcp-server"]}}}',
         ),
         OnboardingStep(
-            step=3,
+            step=4,
             title="Run initial analysis",
             description="Analyze your codebase to establish a baseline of zen violations.",
             action="analyze",
             example=f"analyze_repository('{project_path}', languages=['{canonical_primary_language}'])",
         ),
         OnboardingStep(
-            step=4,
+            step=5,
             title="Review and adjust thresholds",
             description="Based on initial results, adjust thresholds using set_config_override if needed.",
             action="tune_config",
             example=f"set_config_override('{canonical_primary_language}', max_cyclomatic_complexity={t['complexity']})",
         ),
         OnboardingStep(
-            step=5,
+            step=6,
             title="Integrate MCP analysis in CI/CD",
             description=(
                 "Use MCP tool calls in CI agents for continuous code quality "

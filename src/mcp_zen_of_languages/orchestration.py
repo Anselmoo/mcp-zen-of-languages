@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import logging
 
+from pathlib import Path
+from pathlib import PurePosixPath
 from typing import TYPE_CHECKING
 from typing import Literal
 
@@ -18,7 +20,6 @@ from mcp_zen_of_languages.utils.language_detection import detect_language_by_ext
 
 if TYPE_CHECKING:
     from collections.abc import Callable
-    from pathlib import Path
 
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
 
@@ -26,6 +27,85 @@ logger = logging.getLogger(__name__)
 
 # Minimum number of whitespace-split tokens in an import statement to extract the module name
 MIN_IMPORT_PARTS = 2
+IGNORE_FILES = (".gitignore", ".zen-of-languages.ignore")
+
+
+class _IgnoreRule:
+    def __init__(self, pattern: str, *, negate: bool, directory_only: bool) -> None:
+        self.pattern = pattern
+        self.negate = negate
+        self.directory_only = directory_only
+
+
+def _parse_ignore_rules(path: Path) -> list[_IgnoreRule]:
+    rules: list[_IgnoreRule] = []
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        negate = line.startswith("!")
+        if negate:
+            line = line[1:].strip()
+            if not line:
+                continue
+        directory_only = line.endswith("/")
+        rules.append(_IgnoreRule(line.rstrip("/"), negate=negate, directory_only=directory_only))
+    return rules
+
+
+def _collect_ignore_rule_sets(scan_root: Path) -> list[tuple[Path, list[_IgnoreRule]]]:
+    roots = [*reversed(scan_root.parents), scan_root]
+    rule_sets: list[tuple[Path, list[_IgnoreRule]]] = []
+    for root in roots:
+        for ignore_name in IGNORE_FILES:
+            ignore_path = root / ignore_name
+            if not ignore_path.is_file():
+                continue
+            try:
+                rules = _parse_ignore_rules(ignore_path)
+            except OSError as exc:
+                logger.debug("Unable to read ignore file %s: %s", ignore_path, exc)
+                continue
+            if rules:
+                rule_sets.append((root, rules))
+    return rule_sets
+
+
+def _rule_matches(rule: _IgnoreRule, rel_path: str) -> bool:
+    pattern = rule.pattern
+    if not pattern:
+        return False
+
+    if rule.directory_only:
+        if "/" in pattern:
+            return rel_path == pattern or rel_path.startswith(f"{pattern}/")
+        return f"/{pattern}/" in f"/{rel_path}/"
+
+    if "/" in pattern:
+        direct_match = rel_path == pattern
+        subtree_match = rel_path.startswith(f"{pattern}/")
+        glob_match = PurePosixPath(rel_path).match(pattern)
+        return direct_match or subtree_match or glob_match
+
+    parts = rel_path.split("/")
+    return any(PurePosixPath(part).match(pattern) for part in parts)
+
+
+def _is_ignored(
+    path: Path,
+    *,
+    rule_sets: list[tuple[Path, list[_IgnoreRule]]],
+) -> bool:
+    ignored = False
+    for root, rules in rule_sets:
+        try:
+            rel_path = path.relative_to(root).as_posix()
+        except ValueError:
+            continue
+        for rule in rules:
+            if _rule_matches(rule, rel_path):
+                ignored = not rule.negate
+    return ignored
 
 
 def collect_targets(
@@ -33,7 +113,11 @@ def collect_targets(
     language_override: str | None,
 ) -> list[tuple[Path, str]]:
     """Discover analysable source files under a target path."""
+    scan_root = target if target.is_dir() else target.parent
+    rule_sets = _collect_ignore_rule_sets(scan_root)
     if target.is_file():
+        if _is_ignored(target, rule_sets=rule_sets):
+            return []
         if language_override:
             return [(target, language_override)]
         detected = detect_language_by_extension(str(target)).language
@@ -41,6 +125,8 @@ def collect_targets(
 
     targets: list[tuple[Path, str]] = []
     for path in target.rglob("*"):
+        if _is_ignored(path, rule_sets=rule_sets):
+            continue
         if not path.is_file():
             continue
         detected = detect_language_by_extension(str(path)).language

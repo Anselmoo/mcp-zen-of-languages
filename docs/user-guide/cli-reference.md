@@ -181,4 +181,3 @@ Display a table of zen rule IDs, severities, and principle texts.
 | `0` | Success — no violations above the configured threshold |
 | `1` | Violations found above the severity threshold |
 | `2` | Invalid configuration or arguments |
-

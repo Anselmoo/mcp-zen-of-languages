@@ -86,7 +86,7 @@ zen report path/to/file.py
 zen report path/to/project --include-prompts
 ```
 
-### Ignore rules during analysis
+### Ignore files during analysis
 
 Directory scans in both CLI and MCP repository analysis honor:
 

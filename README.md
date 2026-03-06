@@ -86,6 +86,15 @@ zen report path/to/file.py
 zen report path/to/project --include-prompts
 ```
 
+### Ignore rules during analysis
+
+Directory scans in both CLI and MCP repository analysis honor:
+
+- `.gitignore`
+- `.zen-of-languages.ignore`
+
+`zen init` now bootstraps a starter `.zen-of-languages.ignore` file when one is missing.
+
 <!-- --8<-- [end:quickstart] -->
 
 ## Naming Guide

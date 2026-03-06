@@ -1666,6 +1666,9 @@ def check(  # noqa: PLR0913
 ) -> int:
     """Run zen analysis for a path with optional CI gating and machine output.
 
+    Recursive target discovery honors both `.gitignore` and
+    `.zen-of-languages.ignore`.
+
     Args:
         path (str, optional): File or directory to analyze. Default to typer.Argument(..., help='File or directory to analyze').
         language (str | None, optional): Optional language override. Default to typer.Option(None, help='Override language detection').
@@ -1822,12 +1825,13 @@ def init(
         show_choices=True,
     ),
 ) -> int:
-    """Interactively scaffold a ``zen-config.yaml`` and optional VS Code integration.
+    """Interactively scaffold `zen-config.yaml`, ignore config, and VS Code integration.
 
     Walks the user through language selection, strictness presets, and
     editor integration choices.  With ``--yes`` or in non-interactive
     terminals the wizard is skipped and detected defaults are used.  Pass
-    ``--force`` to overwrite an existing config file.
+    ``--force`` to overwrite an existing config file.  When missing, a
+    starter ``.zen-of-languages.ignore`` file is created.
 
     Args:
         force (bool, optional): Allow overwriting an existing ``zen-config.yaml``. Default to False.

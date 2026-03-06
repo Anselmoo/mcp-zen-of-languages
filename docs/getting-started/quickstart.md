@@ -56,9 +56,11 @@ The CLI is the ideal tool for **first code anamnesis**: an initial diagnostic sw
 zen init  # (1)!
 ```
 
-1. Creates `zen-config.yaml` with sensible defaults for all 14 languages. Can also bootstrap `.vscode/mcp.json` for MCP integration.
+1. Creates `zen-config.yaml`, bootstraps `.zen-of-languages.ignore`, and can also bootstrap `.vscode/mcp.json` for MCP integration.
 
 This creates a `zen-config.yaml` in your project root. It enables all languages and sets default thresholds — you can [tune these later](../user-guide/configuration.md).
+
+Repository scans honor both `.gitignore` and `.zen-of-languages.ignore`.
 
 ### 2. Run a report
 

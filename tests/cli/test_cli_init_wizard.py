@@ -27,8 +27,13 @@ def test_init_yes_writes_config(tmp_path, monkeypatch):
     assert "  - python" in contents
     assert "  - go" in contents
     assert "severity_threshold: 7" in contents
-    ignore_contents = (tmp_path / ".zen-of-languages.ignore").read_text(encoding="utf-8")
+    ignore_contents = (tmp_path / ".zen-of-languages.ignore").read_text(
+        encoding="utf-8"
+    )
+    assert ".venv/" in ignore_contents
     assert "node_modules/" in ignore_contents
+    assert "dist/" in ignore_contents
+    assert "build/" in ignore_contents
 
 
 def test_init_interactive_writes_vscode_config(tmp_path, monkeypatch):

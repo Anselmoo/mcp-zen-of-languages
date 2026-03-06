@@ -31,6 +31,8 @@ IGNORE_FILES = (".gitignore", ".zen-of-languages.ignore")
 
 
 class _IgnoreRule:
+    """Normalized ignore rule parsed from .gitignore-style files."""
+
     def __init__(self, pattern: str, *, negate: bool, directory_only: bool) -> None:
         self.pattern = pattern
         self.negate = negate
@@ -38,6 +40,11 @@ class _IgnoreRule:
 
 
 def _parse_ignore_rules(path: Path) -> list[_IgnoreRule]:
+    """Parse supported ignore rules from one ignore file.
+
+    Supports comments (``#``), negation (``!pattern``), and directory-only
+    markers (trailing ``/``).
+    """
     rules: list[_IgnoreRule] = []
     for raw_line in path.read_text(encoding="utf-8").splitlines():
         line = raw_line.strip()
@@ -49,11 +56,14 @@ def _parse_ignore_rules(path: Path) -> list[_IgnoreRule]:
             if not line:
                 continue
         directory_only = line.endswith("/")
-        rules.append(_IgnoreRule(line.rstrip("/"), negate=negate, directory_only=directory_only))
+        rules.append(
+            _IgnoreRule(line.rstrip("/"), negate=negate, directory_only=directory_only)
+        )
     return rules
 
 
 def _collect_ignore_rule_sets(scan_root: Path) -> list[tuple[Path, list[_IgnoreRule]]]:
+    """Load ignore rule sets from filesystem root down to ``scan_root``."""
     roots = [*reversed(scan_root.parents), scan_root]
     rule_sets: list[tuple[Path, list[_IgnoreRule]]] = []
     for root in roots:
@@ -63,7 +73,7 @@ def _collect_ignore_rule_sets(scan_root: Path) -> list[tuple[Path, list[_IgnoreR
                 continue
             try:
                 rules = _parse_ignore_rules(ignore_path)
-            except OSError as exc:
+            except (OSError, UnicodeError) as exc:
                 logger.debug("Unable to read ignore file %s: %s", ignore_path, exc)
                 continue
             if rules:
@@ -72,6 +82,7 @@ def _collect_ignore_rule_sets(scan_root: Path) -> list[tuple[Path, list[_IgnoreR
 
 
 def _rule_matches(rule: _IgnoreRule, rel_path: str) -> bool:
+    """Return whether one normalized rule matches a root-relative path."""
     pattern = rule.pattern
     if not pattern:
         return False
@@ -79,7 +90,8 @@ def _rule_matches(rule: _IgnoreRule, rel_path: str) -> bool:
     if rule.directory_only:
         if "/" in pattern:
             return rel_path == pattern or rel_path.startswith(f"{pattern}/")
-        return f"/{pattern}/" in f"/{rel_path}/"
+        parts = rel_path.split("/")
+        return pattern in parts
 
     if "/" in pattern:
         direct_match = rel_path == pattern
@@ -96,6 +108,7 @@ def _is_ignored(
     *,
     rule_sets: list[tuple[Path, list[_IgnoreRule]]],
 ) -> bool:
+    """Evaluate ignore rule sets with last-match-wins semantics."""
     ignored = False
     for root, rules in rule_sets:
         try:

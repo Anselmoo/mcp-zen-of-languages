@@ -1274,12 +1274,13 @@ def _run_init(args: InitArgs) -> int:
     if not is_quiet():
         details = [
             f"{file_glyph()} Config: {target}",
-            "Ignore file: .zen-of-languages.ignore",
             f"Languages: {', '.join(languages)}",
             f"Strictness: {strictness}",
         ]
         if ignore_file is not None:
-            details.append("Created starter ignore patterns")
+            details.append("Ignore file: .zen-of-languages.ignore (created)")
+        else:
+            details.append("Ignore file: .zen-of-languages.ignore (kept existing)")
         if setup_vscode:
             details.append("VS Code MCP config: .vscode/mcp.json")
         console.print(zen_header_panel(*details, title="Zen Init"))

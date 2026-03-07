@@ -12,6 +12,7 @@ from mcp_zen_of_languages.models import AnalysisResult
 from mcp_zen_of_languages.models import BatchPage
 from mcp_zen_of_languages.models import BatchSummary
 from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import Location
 from mcp_zen_of_languages.models import Metrics
 from mcp_zen_of_languages.models import RepositoryAnalysis
 from mcp_zen_of_languages.models import Violation
@@ -133,6 +134,62 @@ def test_build_batch_violations_carries_file_path():
     assert violations[0].language == "python"
 
 
+def test_build_batch_violations_equal_severity_sorted_deterministically():
+    results = [
+        _make_result(
+            "src/zeta.py",
+            violations=[
+                Violation(
+                    principle="rule-b",
+                    severity=5,
+                    message="later message",
+                    location=Location(line=4, column=2),
+                )
+            ],
+        ),
+        _make_result(
+            "src/alpha.py",
+            violations=[
+                Violation(
+                    principle="rule-b",
+                    severity=5,
+                    message="later message",
+                    location=Location(line=9, column=1),
+                ),
+                Violation(
+                    principle="rule-a",
+                    severity=5,
+                    message="earlier message",
+                    location=Location(line=3, column=4),
+                ),
+            ],
+        ),
+    ]
+
+    violations = server._build_batch_violations_list(results)
+
+    assert [(v.file, v.principle, v.message, v.location) for v in violations] == [
+        (
+            "src/alpha.py",
+            "rule-a",
+            "earlier message",
+            Location(line=3, column=4),
+        ),
+        (
+            "src/alpha.py",
+            "rule-b",
+            "later message",
+            Location(line=9, column=1),
+        ),
+        (
+            "src/zeta.py",
+            "rule-b",
+            "later message",
+            Location(line=4, column=2),
+        ),
+    ]
+
+
 # ---------------------------------------------------------------------------
 # Integration tests for analyze_batch
 # ---------------------------------------------------------------------------
@@ -245,6 +302,57 @@ async def test_analyze_batch_cursor_pagination(tmp_path, monkeypatch):
     p1_principles = {v.principle for v in page1.violations}
     p2_principles = {v.principle for v in page2.violations}
     assert p1_principles.isdisjoint(p2_principles)
+
+
+@pytest.mark.asyncio
+async def test_analyze_batch_cursor_stable_when_result_order_changes(
+    tmp_path, monkeypatch
+):
+    """Cursor pagination stays stable even if repository result order changes."""
+    alpha_result = _make_result(
+        str(tmp_path / "alpha.py"),
+        violations=[
+            Violation(
+                principle="alpha",
+                severity=5,
+                message="x" * 700,
+                location=Location(line=1, column=1),
+            )
+        ],
+    )
+    beta_result = _make_result(
+        str(tmp_path / "beta.py"),
+        violations=[
+            Violation(
+                principle="beta",
+                severity=5,
+                message="x" * 700,
+                location=Location(line=1, column=1),
+            )
+        ],
+    )
+    call_count = 0
+
+    async def _fake_analyze_repository_internal(*_args, **_kwargs):
+        nonlocal call_count
+        call_count += 1
+        if call_count == 1:
+            return [beta_result, alpha_result]
+        return [alpha_result, beta_result]
+
+    monkeypatch.setattr(
+        server,
+        "_analyze_repository_internal",
+        _fake_analyze_repository_internal,
+    )
+
+    page1 = await server.analyze_batch.fn(str(tmp_path), "python", max_tokens=450)
+    page2 = await server.analyze_batch.fn(
+        str(tmp_path), "python", cursor=page1.cursor, max_tokens=450
+    )
+
+    assert [v.principle for v in page1.violations] == ["alpha"]
+    assert [v.principle for v in page2.violations] == ["beta"]
 
 
 @pytest.mark.asyncio

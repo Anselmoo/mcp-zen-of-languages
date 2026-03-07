@@ -35,7 +35,7 @@ dependencies = [
     "pydantic>=2.12.5",
     "pygments>=2.19.2",
     "radon>=6.0.1",
-    "typer>=0.12.0",
+    "typer[all]>=0.12.0",
     "tree-sitter>=0.25.2",
     "sqlglot==29.0.1",
 ]
@@ -144,41 +144,42 @@ invalid-type-form = "ignore"
 invalid-method-override = "ignore"
 
 [tool.poe.tasks]
-check_docs_assets = "python scripts/check_docs_assets.py"
-check_content_quality = "python scripts/check_content_quality.py"
-check_docs_contrast = "python scripts/check_docs_contrast.py --build --mode check"
-check_docs_links = "python scripts/check_docs_links.py"
-check_implementation_counts = "python scripts/generate_implementation_counts.py --check"
-check_language_structure = "python scripts/check_language_structure.py"
-check_orphan_docs = "python scripts/check_orphan_docs.py"
-check_sphinx_roles = "python scripts/check_sphinx_roles.py"
-generate_config_docs = "python scripts/generate_config_docs.py"
-generate_implementation_counts = "python scripts/generate_implementation_counts.py"
-generate_language_docs = "python scripts/generate_language_docs.py"
-generate_cli_docs = "python scripts/generate_cli_docs.py"
-generate_mcp_tools_docs = "python scripts/generate_mcp_tools_docs.py"
-bump_version = "python scripts/bump_version.py"
-bump_patch = "python scripts/bump_version.py patch"
-bump_minor = "python scripts/bump_version.py minor"
-bump_major = "python scripts/bump_version.py major"
-bump_no_changelog = "python scripts/bump_version.py patch --no-changelog"
-changelog_preview = "python scripts/bump_version.py patch --dry-run"
-branch_new = "python scripts/branch.py new"
-branch_feat = "python scripts/branch.py new feat"
-branch_fix = "python scripts/branch.py new fix"
-branch_chore = "python scripts/branch.py new chore"
-branch_docs = "python scripts/branch.py new docs"
-branch_refactor = "python scripts/branch.py new refactor"
-branch_test = "python scripts/branch.py new test"
-branch_ci = "python scripts/branch.py new ci"
-branch_perf = "python scripts/branch.py new perf"
-branch_style = "python scripts/branch.py new style"
-branch_build = "python scripts/branch.py new build"
-branch_rescue = "python scripts/branch.py rescue"
-warn_missing_rule_coverage = "python scripts/warn_missing_rule_coverage.py"
-export_svg_assets = "python scripts/export_svg_assets.py"
-run_server = "zensical serve"
-build_docs = "zensical build"
+check_docs_assets = { cmd = "python scripts/check_docs_assets.py", help = "Validate docs asset, CSS, JS, and SVG quality gates" }
+check_content_quality = { cmd = "python scripts/check_content_quality.py", help = "Audit Markdown content quality across docs and README" }
+check_docs_contrast = { cmd = "python scripts/check_docs_contrast.py --build --mode check", help = "Build docs and verify WCAG contrast compliance" }
+check_docs_links = { cmd = "python scripts/check_docs_links.py", help = "Check documentation hyperlinks and anchor coverage" }
+check_implementation_counts = { cmd = "python scripts/generate_implementation_counts.py --check", help = "Verify generated implementation counts are up to date" }
+check_language_structure = { cmd = "python scripts/check_language_structure.py", help = "Validate language folder layout and analyzer structure" }
+check_orphan_docs = { cmd = "python scripts/check_orphan_docs.py", help = "Detect documentation pages missing from the navigation" }
+check_sphinx_roles = { cmd = "python scripts/check_sphinx_roles.py", help = "Find leaked or invalid Sphinx role markup in docs" }
+generate_config_docs = { cmd = "python scripts/generate_config_docs.py", help = "Regenerate the configuration reference from code" }
+generate_implementation_counts = { cmd = "python scripts/generate_implementation_counts.py", help = "Regenerate implementation count snapshots" }
+generate_language_docs = { cmd = "python scripts/generate_language_docs.py", help = "Regenerate per-language documentation pages" }
+generate_cli_docs = { cmd = "python scripts/generate_cli_docs.py", help = "Regenerate the CLI reference documentation" }
+generate_mcp_tools_docs = { cmd = "python scripts/generate_mcp_tools_docs.py", help = "Regenerate the MCP tools reference documentation" }
+warn_missing_rule_coverage = { cmd = "python scripts/warn_missing_rule_coverage.py", help = "Report rule-to-detector coverage gaps" }
+export_svg_assets = { cmd = "python scripts/export_svg_assets.py", help = "Export generated SVG assets used by the docs site" }
+run_server = { cmd = "zensical serve", help = "Start the local documentation development server" }
+build_docs = { cmd = "zensical build", help = "Build the documentation site" }
+bump_version = { cmd = "python scripts/bump_version.py", help = "Bump the project version and update release artifacts" }
+bump_patch = { cmd = "python scripts/bump_version.py patch", help = "Create a patch release version bump" }
+bump_minor = { cmd = "python scripts/bump_version.py minor", help = "Create a minor release version bump" }
+bump_major = { cmd = "python scripts/bump_version.py major", help = "Create a major release version bump" }
+bump_no_changelog = { cmd = "python scripts/bump_version.py patch --no-changelog", help = "Create a patch version bump without editing the changelog" }
+changelog_preview = { cmd = "python scripts/bump_version.py patch --dry-run", help = "Preview the next patch changelog and version bump without writing files" }
+branch_new = { cmd = "python scripts/branch.py new", help = "Create a new branch using the project naming workflow" }
+branch_feat = { cmd = "python scripts/branch.py new feat", help = "Create a feature branch" }
+branch_fix = { cmd = "python scripts/branch.py new fix", help = "Create a bugfix branch" }
+branch_chore = { cmd = "python scripts/branch.py new chore", help = "Create a chore branch" }
+branch_docs = { cmd = "python scripts/branch.py new docs", help = "Create a documentation branch" }
+branch_refactor = { cmd = "python scripts/branch.py new refactor", help = "Create a refactor branch" }
+branch_test = { cmd = "python scripts/branch.py new test", help = "Create a testing-focused branch" }
+branch_ci = { cmd = "python scripts/branch.py new ci", help = "Create a CI branch" }
+branch_perf = { cmd = "python scripts/branch.py new perf", help = "Create a performance branch" }
+branch_style = { cmd = "python scripts/branch.py new style", help = "Create a style-only branch" }
+branch_build = { cmd = "python scripts/branch.py new build", help = "Create a build-system branch" }
+branch_rescue = { cmd = "python scripts/branch.py rescue", help = "Recover or realign the current branch using the rescue workflow" }
+
 
 [tool.pytest.ini_options]
 addopts = "--cov=src/mcp_zen_of_languages --cov-report=term-missing --cov-fail-under=95"

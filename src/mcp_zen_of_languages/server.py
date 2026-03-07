@@ -142,14 +142,6 @@ mcp.zen_cache_backend = _CACHE_BACKEND
 
 CONFIG = load_config(path=os.environ.get("ZEN_CONFIG_PATH"))
 logger = logging.getLogger(__name__)
-
-
-async def _await_if_needed(result: object) -> None:
-    """Await FastMCP context calls when the context exposes async methods."""
-    if inspect.isawaitable(result):
-        await result
-
-
 logger.setLevel(
     getattr(
         logging,
@@ -157,6 +149,13 @@ logger.setLevel(
         logging.WARNING,
     ),
 )
+
+
+async def _await_if_needed(result: object) -> None:
+    """Await FastMCP context calls when the context exposes async methods."""
+    if inspect.isawaitable(result):
+        await result
+
 
 READONLY_ANNOTATIONS = ToolAnnotations(
     readOnlyHint=True,

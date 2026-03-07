@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import os
 
 from pathlib import Path
 from pathlib import PurePosixPath
@@ -137,20 +138,27 @@ def collect_targets(
         return [(target, detected if detected != "unknown" else "python")]
 
     targets: list[tuple[Path, str]] = []
-    for path in target.rglob("*"):
-        if _is_ignored(path, rule_sets=rule_sets):
-            continue
-        if not path.is_file():
-            continue
-        detected = detect_language_by_extension(str(path)).language
-        if language_override:
-            if detected != language_override:
+    for dirpath_str, dirnames, filenames in os.walk(target):
+        dirpath = Path(dirpath_str)
+        # Prune ignored directories in-place to skip descending into them entirely.
+        # This avoids calling _is_ignored for every file inside an ignored subtree
+        # (e.g. node_modules/, .git/, venv/) which can contain thousands of files.
+        dirnames[:] = [
+            d for d in dirnames if not _is_ignored(dirpath / d, rule_sets=rule_sets)
+        ]
+        for filename in filenames:
+            path = dirpath / filename
+            if _is_ignored(path, rule_sets=rule_sets):
                 continue
-            targets.append((path, language_override))
-            continue
-        if detected == "unknown":
-            continue
-        targets.append((path, detected))
+            detected = detect_language_by_extension(str(path)).language
+            if language_override:
+                if detected != language_override:
+                    continue
+                targets.append((path, language_override))
+                continue
+            if detected == "unknown":
+                continue
+            targets.append((path, detected))
     return targets
 
 

@@ -162,7 +162,7 @@ def _rich_format_help_with_banner(
 ) -> None:
     if not is_quiet():
         console.print(get_banner_art())
-    _ORIGINAL_RICH_FORMAT_HELP(obj=obj, ctx=ctx, markup_mode=markup_mode)  # type: ignore[arg-type]
+    _ORIGINAL_RICH_FORMAT_HELP(obj=obj, ctx=ctx, markup_mode=markup_mode)
 
 
 _typer_rich_utils_any.rich_format_help = _rich_format_help_with_banner

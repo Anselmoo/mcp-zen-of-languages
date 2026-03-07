@@ -880,8 +880,9 @@ def _build_batch_violations_list(
     """Flatten and sort all violations from repository results, worst-first.
 
     Violations from every file are collected into a single list and sorted
-    by descending severity so that the most critical issues appear first
-    across all pages, regardless of which file they belong to.
+    by descending severity. Ties are broken deterministically so the same
+    continuation cursor always resumes from the same logical position even
+    when repository traversal order varies between calls.
 
     Args:
         results: Per-file analysis results from ``_analyze_repository_internal``.
@@ -903,7 +904,16 @@ def _build_batch_violations_list(
             )
             for v in entry.result.violations
         )
-    all_violations.sort(key=lambda bv: bv.severity, reverse=True)
+    all_violations.sort(
+        key=lambda bv: (
+            -bv.severity,
+            bv.file,
+            bv.principle,
+            bv.message,
+            bv.location.line if bv.location is not None else 0,
+            bv.location.column if bv.location is not None else 0,
+        )
+    )
     return all_violations
 
 

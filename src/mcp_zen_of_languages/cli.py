@@ -98,6 +98,13 @@ logger.setLevel(
 )
 
 _THRESHOLDS = {"relaxed": 5, "moderate": 6, "strict": 7}
+ZEN_IGNORE_TEMPLATE = """# Additional files/folders for Zen analysis to skip
+# One glob-style pattern per line
+.venv/
+node_modules/
+dist/
+build/
+"""
 
 # Severity tier thresholds (1-10 scale)
 SEVERITY_CRITICAL = 9
@@ -338,6 +345,15 @@ def _write_vscode_mcp_config() -> Path:
     }
     config_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     return config_path
+
+
+def _write_zen_ignore_file(*, force: bool = False) -> Path | None:
+    """Create a starter ``.zen-of-languages.ignore`` file when missing."""
+    ignore_path = Path(".zen-of-languages.ignore")
+    if ignore_path.exists() and not force:
+        return None
+    ignore_path.write_text(ZEN_IGNORE_TEMPLATE, encoding="utf-8")
+    return ignore_path
 
 
 def _build_welcome_panel() -> None:
@@ -1252,6 +1268,7 @@ def _run_init(args: InitArgs) -> int:
 
     config_text = _build_config_yaml(languages, _normalize_strictness(strictness))
     target.write_text(config_text, encoding="utf-8")
+    ignore_file = _write_zen_ignore_file(force=False)
     if setup_vscode:
         _write_vscode_mcp_config()
     if not is_quiet():
@@ -1260,6 +1277,10 @@ def _run_init(args: InitArgs) -> int:
             f"Languages: {', '.join(languages)}",
             f"Strictness: {strictness}",
         ]
+        if ignore_file is not None:
+            details.append("Ignore file: .zen-of-languages.ignore (created)")
+        else:
+            details.append("Ignore file: .zen-of-languages.ignore (kept existing)")
         if setup_vscode:
             details.append("VS Code MCP config: .vscode/mcp.json")
         console.print(zen_header_panel(*details, title="Zen Init"))
@@ -1645,6 +1666,9 @@ def check(  # noqa: PLR0913
 ) -> int:
     """Run zen analysis for a path with optional CI gating and machine output.
 
+    Recursive target discovery honors both `.gitignore` and
+    `.zen-of-languages.ignore`.
+
     Args:
         path (str, optional): File or directory to analyze. Default to typer.Argument(..., help='File or directory to analyze').
         language (str | None, optional): Optional language override. Default to typer.Option(None, help='Override language detection').
@@ -1801,12 +1825,13 @@ def init(
         show_choices=True,
     ),
 ) -> int:
-    """Interactively scaffold a ``zen-config.yaml`` and optional VS Code integration.
+    """Interactively scaffold `zen-config.yaml`, ignore config, and VS Code integration.
 
     Walks the user through language selection, strictness presets, and
     editor integration choices.  With ``--yes`` or in non-interactive
     terminals the wizard is skipped and detected defaults are used.  Pass
-    ``--force`` to overwrite an existing config file.
+    ``--force`` to overwrite an existing config file.  When missing, a
+    starter ``.zen-of-languages.ignore`` file is created.
 
     Args:
         force (bool, optional): Allow overwriting an existing ``zen-config.yaml``. Default to False.

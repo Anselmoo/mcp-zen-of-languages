@@ -52,6 +52,16 @@ def test_collect_targets_file_uses_override(tmp_path):
     assert targets == [(sample, "python")]
 
 
+def test_collect_targets_file_ignored_by_gitignore_returns_empty(tmp_path):
+    sample = tmp_path / "sample.py"
+    sample.write_text("x = 1\n", encoding="utf-8")
+    (tmp_path / ".gitignore").write_text("sample.py\n", encoding="utf-8")
+
+    targets = cli._collect_targets(sample, None)
+
+    assert targets == []
+
+
 def test_collect_targets_directory_filters_unknown(tmp_path):
     known = tmp_path / "sample.py"
     unknown = tmp_path / "sample.unknown"
@@ -72,6 +82,47 @@ def test_collect_targets_directory_with_override_filters_language(tmp_path):
     targets = cli._collect_targets(tmp_path, "python")
     assert (py_file, "python") in targets
     assert all(path != js_file for path, _ in targets)
+
+
+def test_collect_targets_directory_respects_gitignore(tmp_path):
+    (tmp_path / ".gitignore").write_text("ignored.py\nignored_dir/\n", encoding="utf-8")
+    included = tmp_path / "included.py"
+    ignored = tmp_path / "ignored.py"
+    ignored_dir = tmp_path / "ignored_dir"
+    ignored_nested = ignored_dir / "nested.py"
+    ignored_dir.mkdir()
+    included.write_text("x = 1\n", encoding="utf-8")
+    ignored.write_text("x = 1\n", encoding="utf-8")
+    ignored_nested.write_text("x = 1\n", encoding="utf-8")
+
+    targets = cli._collect_targets(tmp_path, None)
+    target_paths = {path for path, _ in targets}
+
+    assert included in target_paths
+    assert ignored not in target_paths
+    assert ignored_nested not in target_paths
+
+
+def test_collect_targets_directory_respects_zen_ignore_file(tmp_path):
+    (tmp_path / ".zen-of-languages.ignore").write_text(
+        "generated/\n*.min.js\n",
+        encoding="utf-8",
+    )
+    included = tmp_path / "app.js"
+    ignored_minified = tmp_path / "bundle.min.js"
+    generated_dir = tmp_path / "generated"
+    generated_file = generated_dir / "data.py"
+    generated_dir.mkdir()
+    included.write_text("const app = true;\n", encoding="utf-8")
+    ignored_minified.write_text("const minified = true;\n", encoding="utf-8")
+    generated_file.write_text("x = 1\n", encoding="utf-8")
+
+    targets = cli._collect_targets(tmp_path, None)
+    target_paths = {path for path, _ in targets}
+
+    assert included in target_paths
+    assert ignored_minified not in target_paths
+    assert generated_file not in target_paths
 
 
 def test_analyze_targets_placeholder(tmp_path):

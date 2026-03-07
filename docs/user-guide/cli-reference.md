@@ -26,7 +26,7 @@ The CLI executable is `zen`. It is the local/CI interface for the same analysis 
 |---------|--------|
 | `zen check` | Run zen analysis for a path with optional CI gating and machine output. |
 | `zen export-mapping` | Export rule-to-detector mappings as a Rich table or JSON payload. |
-| `zen init` | Interactively scaffold a ``zen-config.yaml`` and optional VS Code integration. |
+| `zen init` | Interactively scaffold `zen-config.yaml`, ignore config, and VS Code integration. |
 | `zen list-rules` | Display a table of zen rule IDs, severities, and principle texts. |
 | `zen prompts` | Turn analysis violations into actionable remediation prompts or agent tasks. |
 | `zen reports` | Generate a comprehensive analysis report for a file or directory. |
@@ -36,7 +36,7 @@ The CLI executable is `zen`. It is the local/CI interface for the same analysis 
 ### zen check {{ #check }}
 
 ```bash
-zen check <PATH> [--language <TEXT>] [--config <TEXT>] [--format terminal|json|sarif] [--out <TEXT>] [--fail-on-severity <INTEGER RANGE>] [--show-files]
+zen check <PATH> [--language <TEXT>] [--config <TEXT>] [--format terminal|json|sarif] [--out <TEXT>] [--fail-on-severity <INTEGER RANGE>] [--show-files] [--enable-external-tools] [--allow-temporary-runners]
 ```
 
 Run zen analysis for a path with optional CI gating and machine output.
@@ -51,6 +51,8 @@ Run zen analysis for a path with optional CI gating and machine output.
 | `--out <TEXT>` | — | Write output to file |
 | `--fail-on-severity <INTEGER RANGE>` | — | Exit with code 1 when any violation has severity >= this threshold |
 | `--show-files` | — | Include per-file violation details in terminal output |
+| `--enable-external-tools` | — | Opt-in to run available external language tools (no auto-install; missing tools emit recommendations). |
+| `--allow-temporary-runners` | — | Allow temporary runner fallback (for example npx/uvx) when external tools are enabled. |
 
 **Returns:** int: Exit code ``0`` on success, ``1`` for severity-gated failure, and ``2`` for input/target errors.
 
@@ -59,7 +61,7 @@ Run zen analysis for a path with optional CI gating and machine output.
 ### zen prompts {{ #prompts }}
 
 ```bash
-zen prompts <PATH> [--language <TEXT>] [--config <TEXT>] [--mode remediation|agent|both] [--export-prompts <TEXT>] [--export-agent <TEXT>] [--severity <INTEGER>]
+zen prompts <PATH> [--language <TEXT>] [--config <TEXT>] [--mode remediation|agent|both] [--export-prompts <TEXT>] [--export-agent <TEXT>] [--severity <INTEGER>] [--enable-external-tools] [--allow-temporary-runners]
 ```
 
 Turn analysis violations into actionable remediation prompts or agent tasks.
@@ -74,6 +76,8 @@ Turn analysis violations into actionable remediation prompts or agent tasks.
 | `--export-prompts <TEXT>` | — | Write prompts markdown to file |
 | `--export-agent <TEXT>` | — | Write agent JSON to file |
 | `--severity <INTEGER>` | — | Minimum severity threshold |
+| `--enable-external-tools` | — | Opt-in to run available external language tools (no auto-install; missing tools emit recommendations). |
+| `--allow-temporary-runners` | — | Allow temporary runner fallback (for example npx/uvx) when external tools are enabled. |
 
 **Returns:** int: Process exit code — ``0`` on success, ``2`` on input errors.
 
@@ -134,7 +138,7 @@ Export rule-to-detector mappings as a Rich table or JSON payload.
 zen init [--force] [--yes] [--languages <TEXT>] [--strictness relaxed|moderate|strict]
 ```
 
-Interactively scaffold a ``zen-config.yaml`` and optional VS Code integration.
+Interactively scaffold `zen-config.yaml`, ignore config, and VS Code integration.
 
 **Options:**
 

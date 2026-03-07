@@ -1,0 +1,6 @@
+# Additional files/folders for Zen analysis to skip
+# One glob-style pattern per line
+.venv/
+node_modules/
+dist/
+build/

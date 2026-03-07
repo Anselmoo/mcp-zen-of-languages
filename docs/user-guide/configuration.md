@@ -19,6 +19,16 @@ The config file controls three things:
 2. **Pipeline overrides** — tune thresholds per detector type
 3. **Severity threshold** — set the minimum severity that triggers a non-zero exit code
 
+## Ignore files during analysis
+
+When scanning directories, Zen excludes files and folders matched by:
+
+- `.gitignore`
+- `.zen-of-languages.ignore`
+
+Running `zen init` creates a starter `.zen-of-languages.ignore` if it does not
+already exist.
+
 ## Basic example
 
 === "Python + TypeScript"

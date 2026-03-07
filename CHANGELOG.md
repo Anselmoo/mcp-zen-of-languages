@@ -1,6 +1,7 @@
-## [Unreleased]
+## [0.5.1] – 2026-03-07
 
 ### Added
+- Batch mode — LLM-safe chunked analysis with cursor pagination (#110)
 - Fix `overall_score` scale (0–100 → 0–10) to match documented contract in `models.py` (#110)
 - Implement proper weighted health score in `analyze_batch_summary`: severity² penalty (70%), violation density (20%), maintainability index (10%) (#19, #110)
 - Add `analyze_batch_auto` MCP tool: auto-routes to full result or paginated batch based on token budget (#20, #110)

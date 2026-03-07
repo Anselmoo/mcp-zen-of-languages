@@ -27,13 +27,16 @@ Note:
     current server session.
 """
 
+import asyncio
 import base64
+import inspect
 import json
 import logging
 import os
 
 from datetime import timedelta
 from pathlib import Path
+from typing import TYPE_CHECKING
 from typing import Any
 from typing import cast
 
@@ -78,6 +81,10 @@ from mcp_zen_of_languages.rules import get_language_zen
 from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
 from mcp_zen_of_languages.storage import create_cache_backend
 from mcp_zen_of_languages.telemetry import analysis_span
+
+
+if TYPE_CHECKING:
+    from concurrent.futures import Future
 
 
 SERVER_ICONS = [
@@ -142,6 +149,13 @@ logger.setLevel(
         logging.WARNING,
     ),
 )
+
+
+async def _await_if_needed(result: object) -> None:
+    """Await FastMCP context calls when the context exposes async methods."""
+    if inspect.isawaitable(result):
+        await result
+
 
 READONLY_ANNOTATIONS = ToolAnnotations(
     readOnlyHint=True,
@@ -733,15 +747,30 @@ async def _analyze_repository_internal(  # noqa: C901, PLR0913
             limited_targets.append((path, language))
 
         total_targets = len(limited_targets)
+        progress_updates: list[Future[None]] = []
         ordered_paths: list[Path] = []
         if ctx is not None and total_targets:
-            ctx.report_progress(0, total_targets)
+            await _await_if_needed(ctx.report_progress(0, total_targets))
+            loop = asyncio.get_running_loop()
             grouped_targets: dict[str, list[Path]] = {}
             for path, language in limited_targets:
                 grouped_targets.setdefault(language, []).append(path)
             for files in grouped_targets.values():
                 ordered_paths.extend(files)
+        else:
+            loop = None
         progress_count = 0
+
+        def _submit_progress(result: object) -> None:
+            if loop is None:
+                return
+            if inspect.isawaitable(result):
+                progress_updates.append(
+                    asyncio.run_coroutine_threadsafe(
+                        _await_if_needed(result),
+                        loop,
+                    )
+                )
 
         def _progress_callback() -> None:
             nonlocal progress_count
@@ -749,10 +778,13 @@ async def _analyze_repository_internal(  # noqa: C901, PLR0913
                 return
             progress_count += 1
             if progress_count <= len(ordered_paths):
-                ctx.log(f"Analyzing {ordered_paths[progress_count - 1]}")
-            ctx.report_progress(progress_count, total_targets)
+                _submit_progress(
+                    ctx.log(f"Analyzing {ordered_paths[progress_count - 1]}")
+                )
+            _submit_progress(ctx.report_progress(progress_count, total_targets))
 
-        analysis_results = _shared_analyze_targets(
+        analysis_results = await asyncio.to_thread(
+            _shared_analyze_targets,
             limited_targets,
             pipeline_resolver=_pipeline_with_runtime_overrides,
             unsupported_language="placeholder",
@@ -761,6 +793,10 @@ async def _analyze_repository_internal(  # noqa: C901, PLR0913
             enable_external_tools=enable_external_tools,
             allow_temporary_tools=allow_temporary_runners,
         )
+        if progress_updates:
+            await asyncio.gather(
+                *(asyncio.wrap_future(update) for update in progress_updates)
+            )
         return [
             RepositoryAnalysis(
                 path=result.path or "",
@@ -1456,8 +1492,10 @@ async def generate_report_tool(  # noqa: PLR0913
 
     """
     if ctx is not None:
-        ctx.log(f"Generating zen-of-languages report for {target_path}")
-        ctx.report_progress(0, 1)
+        await _await_if_needed(
+            ctx.log(f"Generating zen-of-languages report for {target_path}")
+        )
+        await _await_if_needed(ctx.report_progress(0, 1))
 
     report = generate_report(
         target_path,
@@ -1467,7 +1505,7 @@ async def generate_report_tool(  # noqa: PLR0913
         include_gaps=include_gaps,
     )
     if ctx is not None:
-        ctx.report_progress(1, 1)
+        await _await_if_needed(ctx.report_progress(1, 1))
     return ReportOutput(markdown=report.markdown, data=report.data)
 
 

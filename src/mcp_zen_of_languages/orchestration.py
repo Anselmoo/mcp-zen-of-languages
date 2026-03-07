@@ -9,6 +9,7 @@ from pathlib import Path
 from pathlib import PurePosixPath
 from typing import TYPE_CHECKING
 from typing import Literal
+from typing import TypedDict
 
 from mcp_zen_of_languages.analyzers.analyzer_factory import create_analyzer
 from mcp_zen_of_languages.config import load_config
@@ -38,6 +39,14 @@ class _IgnoreRule:
         self.pattern = pattern
         self.negate = negate
         self.directory_only = directory_only
+
+
+class _AnalyzeKwargs(TypedDict, total=False):
+    path: str
+    other_files: dict[str, str]
+    repository_imports: dict[str, list[str]]
+    enable_external_tools: bool
+    allow_temporary_tools: bool
 
 
 def _parse_ignore_rules(path: Path) -> list[_IgnoreRule]:
@@ -295,7 +304,7 @@ def analyze_targets(  # noqa: C901, PLR0912, PLR0913, PLR0915
                     raise
 
             for path_str, code in file_contents.items():
-                analyze_kwargs: dict[str, object] = {
+                analyze_kwargs: _AnalyzeKwargs = {
                     "path": path_str,
                     "other_files": file_contents,
                     "repository_imports": repository_imports,
@@ -331,7 +340,7 @@ def analyze_targets(  # noqa: C901, PLR0912, PLR0913, PLR0915
                 if progress_callback is not None:
                     progress_callback()
                 raise
-            analyze_kwargs = {
+            analyze_kwargs: _AnalyzeKwargs = {
                 "path": str(path),
                 "repository_imports": repository_imports,
             }

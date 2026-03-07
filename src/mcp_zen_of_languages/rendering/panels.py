@@ -16,6 +16,7 @@ from rich.table import Table
 
 from .console import console
 from .layout import get_output_width
+from .themes import BORDER_STYLE
 from .themes import BOX_CONTENT
 from .themes import BOX_SUMMARY
 
@@ -60,7 +61,7 @@ def build_project_summary_panel(summary: object) -> Panel:
         table,
         title="Project Summary",
         expand=False,
-        border_style="cyan",
+        border_style=BORDER_STYLE,
         box=BOX_SUMMARY,
         width=width,
     )
@@ -103,7 +104,7 @@ def build_worst_offenders_panel(offenders: Sequence[object]) -> Panel:
     return Panel(
         table,
         expand=False,
-        border_style="cyan",
+        border_style=BORDER_STYLE,
         box=BOX_CONTENT,
         width=width,
     )

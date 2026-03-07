@@ -49,6 +49,32 @@ uv run poe export_svg_assets
 
 Use `uv run poe` (without a task) to list all available developer tasks.
 
+Tasks are now documented with Poe `help` text, so discovery is much nicer:
+
+```bash
+uv run poe --help
+uv run poe --help check_docs_assets
+```
+
+When defining or reviewing tasks, you can use either inline-table notation or a
+dedicated task table:
+
+```toml
+check_docs_assets = { cmd = "python scripts/check_docs_assets.py", help = "Validate docs asset, CSS, JS, and SVG quality gates" }
+```
+
+```toml
+[tool.poe.tasks.check_docs_assets]
+cmd = "python scripts/check_docs_assets.py"
+help = "Validate docs asset, CSS, JS, and SVG quality gates"
+```
+
+Poe also supports configuring the `uv` executor globally or per task. See the
+official guidance for details and examples:
+
+- <https://poethepoet.natn.io/global_options.html#uv-executor>
+- <https://poethepoet.natn.io/guides/help_guide.html>
+
 ## Pre-commit
 
 ```bash

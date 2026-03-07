@@ -147,6 +147,26 @@ _typer_rich_utils_any.STYLE_HELPTEXT_FIRST_LINE = "bold"
 # leaving them as the default (empty string / no inner box) prevents the
 # double-border visual glitch where a ROUNDED table nests inside a panel.
 
+# Inject the banner into every Typer help render.
+# `rich_format_help` is the single hook called for all `--help` paths.
+# Routing through `get_banner_art()` (the cli-module reference) lets tests
+# monkeypatch `cli.get_banner_art` and verify the banner appears in help output.
+_ORIGINAL_RICH_FORMAT_HELP = typer_rich_utils.rich_format_help
+
+
+def _rich_format_help_with_banner(
+    *,
+    obj: object,
+    ctx: object,
+    markup_mode: object,
+) -> None:
+    if not is_quiet():
+        console.print(get_banner_art())
+    _ORIGINAL_RICH_FORMAT_HELP(obj=obj, ctx=ctx, markup_mode=markup_mode)  # type: ignore[arg-type]
+
+
+_typer_rich_utils_any.rich_format_help = _rich_format_help_with_banner
+
 
 app = typer.Typer(
     name="mcp-zen-of-languages",

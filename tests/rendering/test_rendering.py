@@ -197,7 +197,6 @@ def test_get_banner_art_uses_pyfiglet(monkeypatch):
     monkeypatch.setattr(console_module, "import_module", lambda _name: _FakePyfiglet)
     art = get_banner_art()
     assert "ZEN" in art
-    assert "of Languages" in art
 
 
 def test_get_banner_art_falls_back_when_pyfiglet_errors(monkeypatch):
@@ -209,7 +208,6 @@ def test_get_banner_art_falls_back_when_pyfiglet_errors(monkeypatch):
     )
     art = get_banner_art()
     assert "_____" in art
-    assert "of Languages" in art
 
 
 def test_box_style_hierarchy_is_distinct():

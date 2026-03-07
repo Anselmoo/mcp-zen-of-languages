@@ -17,6 +17,7 @@ from rich.table import Table
 
 from .console import console as _default_console
 from .layout import get_output_width
+from .themes import BORDER_STYLE
 from .themes import BOX_CONTENT
 from .themes import BOX_SUMMARY
 
@@ -37,7 +38,7 @@ def zen_panel(  # noqa: PLR0913
     title: str | None = None,
     subtitle: str | None = None,
     box: _box_module.Box = BOX_CONTENT,
-    border_style: str = "cyan",
+    border_style: str = BORDER_STYLE,
     output_console: Console | None = None,
     width: int | None = None,
     expand: bool = False,
@@ -55,7 +56,7 @@ def zen_panel(  # noqa: PLR0913
         title (str | None, optional): Optional heading rendered in the top border. Default to None.
         subtitle (str | None, optional): Optional text rendered in the bottom border. Default to None.
         box (_box_module.Box, optional): Box drawing style; defaults to ``BOX_CONTENT`` (``ROUNDED``).
-        border_style (str, optional): Rich colour token for the panel border. Default to "cyan".
+        border_style (str, optional): Rich colour token for the panel border. Default to ``BORDER_STYLE`` (subdued purple).
         output_console (Console | None, optional): Console used to derive the width cap; falls back
             to the module-level ``console`` singleton. Default to None.
         width (int | None, optional): Explicit width override.  When ``None``, computed via

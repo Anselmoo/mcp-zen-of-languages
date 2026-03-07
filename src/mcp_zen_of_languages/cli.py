@@ -4,10 +4,11 @@ Exposes ``check``, ``report``, ``prompts``, ``list-rules``, ``init``, and
 ``export-mapping`` subcommands through a single :pydata:`app` Typer instance.
 Terminal output relies on Rich renderables — pyfiglet banners, severity badges,
 and structured tables — all capped at :pydata:`MAX_OUTPUT_WIDTH` columns so
-panels never blow past a comfortable terminal width.  Typer's own help renderer
-is monkey-patched via [`_rich_format_help_with_banner`][_rich_format_help_with_banner] to prepend the
-shared Zen banner, and panel/table border styles are forced to ``cyan``
-``ROUNDED`` boxes for visual consistency.
+panels never blow past a comfortable terminal width.  The ``_configure_app``
+callback prints the pyfiglet banner on real TTYs before any subcommand runs;
+``typer.Typer(epilog=...)`` carries a Rich-markup brand line into every
+``--help`` page without monkey-patching.  Panel and table border styles use the
+Caligo accent-muted token (subdued purple) for visual consistency.
 
 Each public Typer command thin-delegates to a private ``_run_*`` orchestrator,
 keeping argument parsing separate from business logic and enabling unit testing
@@ -36,6 +37,8 @@ import typer
 import typer.rich_utils as typer_rich_utils
 
 from rich.console import Group
+from rich.panel import Panel
+from rich.rule import Rule
 from rich.text import Text
 
 from mcp_zen_of_languages import __version__
@@ -66,10 +69,14 @@ from mcp_zen_of_languages.rendering import render_report_terminal
 from mcp_zen_of_languages.rendering import set_quiet
 from mcp_zen_of_languages.rendering import severity_badge
 from mcp_zen_of_languages.rendering.factories import zen_header_panel
-from mcp_zen_of_languages.rendering.factories import zen_panel
 from mcp_zen_of_languages.rendering.factories import zen_table
 from mcp_zen_of_languages.rendering.layout import MAX_OUTPUT_WIDTH
 from mcp_zen_of_languages.rendering.sarif import analysis_results_to_sarif
+from mcp_zen_of_languages.rendering.themes import BORDER_STYLE
+from mcp_zen_of_languages.rendering.themes import BRAND_ACCENT
+from mcp_zen_of_languages.rendering.themes import BRAND_COOL
+from mcp_zen_of_languages.rendering.themes import BRAND_MUTED
+from mcp_zen_of_languages.rendering.themes import BRAND_PRIMARY
 from mcp_zen_of_languages.reporting.agent_tasks import AgentTaskList
 from mcp_zen_of_languages.reporting.agent_tasks import build_agent_tasks
 from mcp_zen_of_languages.reporting.prompts import build_prompt_bundle
@@ -117,41 +124,29 @@ TEMPORARY_RUNNERS_DEFAULT = False
 if typer_rich_utils.MAX_WIDTH is None or typer_rich_utils.MAX_WIDTH > MAX_OUTPUT_WIDTH:
     typer_rich_utils.MAX_WIDTH = MAX_OUTPUT_WIDTH
 _typer_rich_utils_any = cast("Any", typer_rich_utils)
-_typer_rich_utils_any.STYLE_OPTIONS_PANEL_BORDER = "cyan"
-_typer_rich_utils_any.STYLE_COMMANDS_PANEL_BORDER = "cyan"
-_typer_rich_utils_any.STYLE_OPTIONS_TABLE_BOX = "ROUNDED"
-_typer_rich_utils_any.STYLE_COMMANDS_TABLE_BOX = "ROUNDED"
 
-_ORIGINAL_RICH_FORMAT_HELP = typer_rich_utils.rich_format_help
+# ── Brand-aligned Typer help styles ──────────────────────────────────
+# Panel borders use subdued purple; options use primary purple; switches use cool cyan.
+_typer_rich_utils_any.STYLE_OPTIONS_PANEL_BORDER = BORDER_STYLE
+_typer_rich_utils_any.STYLE_COMMANDS_PANEL_BORDER = BORDER_STYLE
+_typer_rich_utils_any.STYLE_ERRORS_PANEL_BORDER = "bold red"
+# Option/switch/metavar colours follow the Caligo palette
+_typer_rich_utils_any.STYLE_OPTION = f"bold {BRAND_PRIMARY}"
+_typer_rich_utils_any.STYLE_SWITCH = f"bold {BRAND_COOL}"
+_typer_rich_utils_any.STYLE_METAVAR = BORDER_STYLE
+_typer_rich_utils_any.STYLE_METAVAR_SEPARATOR = f"dim {BRAND_MUTED}"
+_typer_rich_utils_any.STYLE_USAGE = f"bold {BRAND_PRIMARY}"
+_typer_rich_utils_any.STYLE_USAGE_COMMAND = f"bold {BRAND_PRIMARY}"
+_typer_rich_utils_any.STYLE_COMMANDS_TABLE_FIRST_COLUMN = f"bold {BRAND_PRIMARY}"
+_typer_rich_utils_any.STYLE_REQUIRED_LONG = f"dim {BRAND_ACCENT}"
+_typer_rich_utils_any.STYLE_REQUIRED_SHORT = BRAND_ACCENT
+_typer_rich_utils_any.STYLE_OPTION_DEFAULT = f"dim {BRAND_MUTED}"
+_typer_rich_utils_any.STYLE_OPTION_ENVVAR = f"dim {BRAND_MUTED}"
+_typer_rich_utils_any.STYLE_HELPTEXT_FIRST_LINE = "bold"
+# Do NOT set STYLE_OPTIONS_TABLE_BOX or STYLE_COMMANDS_TABLE_BOX:
+# leaving them as the default (empty string / no inner box) prevents the
+# double-border visual glitch where a ROUNDED table nests inside a panel.
 
-
-def _rich_format_help_with_banner(
-    *,
-    obj: click.Command | click.Group,
-    ctx: click.Context,
-    markup_mode: Literal["markdown", "rich"],
-) -> None:
-    """Prepend the pyfiglet Zen banner before Typer's standard help output.
-
-    Typer delegates help rendering to ``rich_format_help``.  This wrapper
-    prints the ASCII art banner first, then forwards to the original renderer,
-    so every ``--help`` invocation feels branded without duplicating layout
-    logic across subcommands.
-
-    Args:
-        obj (click.Command | click.Group): Click command or group whose help text is being rendered.
-        ctx (click.Context): Active Click context carrying invocation metadata and parent chain.
-        markup_mode (Literal['markdown', 'rich']): Markup dialect Typer selected for panel content.
-
-    See Also:
-        ``_build_welcome_panel``: Renders the no-args welcome screen using
-        the same banner art but a different Rich layout.
-    """
-    console.print(Text(get_banner_art(), style="bold cyan"))
-    _ORIGINAL_RICH_FORMAT_HELP(obj=obj, ctx=ctx, markup_mode=markup_mode)
-
-
-_typer_rich_utils_any.rich_format_help = _rich_format_help_with_banner
 
 app = typer.Typer(
     name="mcp-zen-of-languages",
@@ -159,6 +154,7 @@ app = typer.Typer(
     add_completion=False,
     rich_markup_mode="rich",
     help="Zen of Languages — consistent rich terminal UI for multi-language code analysis (no full-screen TUI).",
+    epilog=f"[bold {BRAND_PRIMARY}]Zen of Languages[/] — [dim]multi-language code analysis[/]",
 )
 
 
@@ -360,16 +356,18 @@ def _build_welcome_panel() -> None:
     """Display a Rich welcome panel when ``zen`` is invoked with no arguments.
 
     Combines the pyfiglet banner, version string, and quick-start command
-    hints inside a bordered ``zen_panel``, giving first-time users an
-    immediate overview without requiring ``--help``.
+    hints inside a ``Panel`` that matches Typer's own help-page style
+    (``expand=True``, ROUNDED border, left-aligned title), giving first-time
+    users an immediate overview without requiring ``--help``.
 
     See Also:
         [`main`][main]: Calls this helper when *argv* is empty and quiet mode
         is off.
     """
     welcome_group = Group(
-        Text(get_banner_art(), style="bold cyan"),
-        Text(f"v{__version__}", style="dim"),
+        Text(get_banner_art(), style="banner", justify="center"),
+        Rule("of Languages", style=BORDER_STYLE),
+        Text(f"  v{__version__}", style="muted"),
         Text(""),
         Text("Welcome to Zen of Languages."),
         Text("Rich CLI output (no full-screen TUI).", style="dim"),
@@ -377,11 +375,18 @@ def _build_welcome_panel() -> None:
         Text("Run `zen --help` for the full command reference."),
         Text(""),
         Text("Quick Commands", style="bold"),
-        Text("• zen reports <path> — Generate a full report"),
-        Text("• zen prompts <path> — Generate remediation guidance"),
-        Text("• zen init — Create zen-config.yaml"),
+        Text("• zen reports <path>  — Generate a full report"),
+        Text("• zen prompts <path>  — Generate remediation guidance"),
+        Text("• zen init            — Create zen-config.yaml"),
     )
-    console.print(zen_panel(welcome_group, title="Welcome"))
+    console.print(
+        Panel(
+            welcome_group,
+            title=f"[bold {BRAND_PRIMARY}]Zen of Languages[/]",
+            title_align="left",
+            border_style=BORDER_STYLE,
+        )
+    )
 
 
 class ReportArgs(Protocol):
@@ -1581,25 +1586,6 @@ def reports(  # noqa: PLR0913
     ``--export-log``) can be written independently of the primary output.
     Section toggles let callers skip analysis details or gap analysis to
     keep reports compact.
-
-    Args:
-        path (str, optional): File or directory to analyse — directories are walked recursively. Default to typer.Argument(..., help='File or directory to analyze').
-        language (str | None, optional): Override extension-based language detection. Default to typer.Option(None, help='Override language detection').
-        config (str | None, optional): Path to a custom ``zen-config.yaml``; auto-discovered when omitted. Default to typer.Option(None, help='Path to zen-config.yaml').
-        output_format (Literal['markdown', 'json', 'both'], optional): Primary output serialisation format. Default to typer.Option('markdown', '--format', help='Output format', show_choices=True).
-        out (str | None, optional): Write the rendered report to this file instead of stdout. Default to typer.Option(None, help='Write output to file').
-        export_json (str | None, optional): Sidecar path for the raw JSON data export. Default to typer.Option(None, '--export-json', help='Write report JSON to file').
-        export_markdown (str | None, optional): Sidecar path for the rendered markdown export. Default to typer.Option(None, '--export-markdown', help='Write report markdown to file').
-        export_log (str | None, optional): Sidecar path for a compact key-value log summary. Default to typer.Option(None, '--export-log', help='Write log summary to file').
-        include_prompts (bool, optional): Append remediation prompt text to the report body. Default to False.
-        skip_analysis (bool, optional): Omit the per-file analysis details chapter. Default to False.
-        skip_gaps (bool, optional): Omit the gap-analysis chapter. Default to False.
-
-    Returns:
-        int: Process exit code — ``0`` on success, ``2`` on input errors.
-
-    See Also:
-        [`_run_report`][_run_report]: Contains the actual report orchestration logic.
     """
     args = _ns(
         path=path,
@@ -1666,26 +1652,9 @@ def check(  # noqa: PLR0913
 ) -> int:
     """Run zen analysis for a path with optional CI gating and machine output.
 
-    Recursive target discovery honors both `.gitignore` and
-    `.zen-of-languages.ignore`.
-
-    Args:
-        path (str, optional): File or directory to analyze. Default to typer.Argument(..., help='File or directory to analyze').
-        language (str | None, optional): Optional language override. Default to typer.Option(None, help='Override language detection').
-        config (str | None, optional): Optional path to ``zen-config.yaml``. Default to typer.Option(None, help='Path to zen-config.yaml').
-        output_format (Literal["terminal", "json", "sarif"], optional): Output format. Default to typer.Option('terminal', '--format', help='Output format', show_choices=True).
-        out (str | None, optional): Optional file path for output payload. Default to typer.Option(None, help='Write output to file').
-        fail_on_severity (int | None, optional): Exit with code ``1`` when any
-            violation has severity greater than or equal to this threshold. Default to typer.Option(None, '--fail-on-severity', min=1, max=10, help='Exit with code 1 when any violation has severity >= this threshold').
-        show_files (bool, optional): Include per-file violation details in terminal output. Default to False.
-        enable_external_tools (bool, optional): Opt-in execution of allow-listed external
-            analysis tools. Default to typer.Option(EXTERNAL_TOOLS_DEFAULT, '--enable-external-tools', help='Opt-in to run available external language tools (no auto-install; missing tools emit recommendations).').
-        allow_temporary_runners (bool, optional): Permit temporary-runner fallback
-            strategies for optional external tools. Default to typer.Option(TEMPORARY_RUNNERS_DEFAULT, '--allow-temporary-runners', help='Allow temporary runner fallback (for example npx/uvx) when external tools are enabled.').
-
-    Returns:
-        int: Exit code ``0`` on success, ``1`` for severity-gated failure,
-        and ``2`` for input/target errors.
+    Recursive target discovery honors both ``.gitignore`` and
+    ``.zen-of-languages.ignore``.  Use ``--fail-on-severity`` to gate CI
+    pipelines and ``--format sarif`` for IDE integration.
     """
     args = _ns(
         path=path,
@@ -1746,25 +1715,6 @@ def prompts(  # noqa: PLR0913
     human-readable remediation markdown, structured agent-task JSON, or
     both.  Results can be rendered to the terminal, exported to disk, or
     both — depending on the mode and export flags.
-
-    Args:
-        path (str, optional): File or directory whose violations drive prompt generation. Default to typer.Argument(..., help='File or directory to analyze').
-        language (str | None, optional): Override extension-based language detection. Default to typer.Option(None, help='Override language detection').
-        config (str | None, optional): Path to a custom ``zen-config.yaml``; auto-discovered when omitted. Default to typer.Option(None, help='Path to zen-config.yaml').
-        mode (Literal['remediation', 'agent', 'both'], optional): Which prompt artefact to produce. Default to typer.Option('remediation', help='Prompt generation mode', show_choices=True).
-        export_prompts (str | None, optional): Write remediation markdown to this path. Default to typer.Option(None, '--export-prompts', help='Write prompts markdown to file').
-        export_agent (str | None, optional): Write agent-task JSON to this path. Default to typer.Option(None, '--export-agent', help='Write agent JSON to file').
-        severity (int | None, optional): Exclude violations below this severity threshold. Default to typer.Option(None, help='Minimum severity threshold').
-        enable_external_tools (bool, optional): Opt-in execution of allow-listed external
-            analysis tools. Default to typer.Option(EXTERNAL_TOOLS_DEFAULT, '--enable-external-tools', help='Opt-in to run available external language tools (no auto-install; missing tools emit recommendations).').
-        allow_temporary_runners (bool, optional): Permit temporary-runner fallback
-            strategies for optional external tools. Default to typer.Option(TEMPORARY_RUNNERS_DEFAULT, '--allow-temporary-runners', help='Allow temporary runner fallback (for example npx/uvx) when external tools are enabled.').
-
-    Returns:
-        int: Process exit code — ``0`` on success, ``2`` on input errors.
-
-    See Also:
-        [`_run_prompts`][_run_prompts]: Contains the actual prompt orchestration logic.
     """
     args = _ns(
         path=path,
@@ -1790,15 +1740,6 @@ def list_rules(language: str = typer.Argument(..., help="Language identifier")) 
     Loads the canonical zen definition for *language* and renders each
     principle as a row with a colour-coded severity badge, making it
     easy to audit which rules are active and how severe they are.
-
-    Args:
-        language (str, optional): Language whose zen principles should be listed (e.g. ``"python"``). Default to typer.Argument(..., help='Language identifier').
-
-    Returns:
-        int: Process exit code — ``0`` on success, ``2`` if the language is unknown.
-
-    See Also:
-        [`_run_list_rules`][_run_list_rules]: Contains the table-building logic.
     """
     args = _ns(language=language)
     return _run_list_rules(args)
@@ -1825,25 +1766,13 @@ def init(
         show_choices=True,
     ),
 ) -> int:
-    """Interactively scaffold `zen-config.yaml`, ignore config, and VS Code integration.
+    """Interactively scaffold ``zen-config.yaml``, ignore config, and VS Code integration.
 
     Walks the user through language selection, strictness presets, and
     editor integration choices.  With ``--yes`` or in non-interactive
     terminals the wizard is skipped and detected defaults are used.  Pass
     ``--force`` to overwrite an existing config file.  When missing, a
     starter ``.zen-of-languages.ignore`` file is created.
-
-    Args:
-        force (bool, optional): Allow overwriting an existing ``zen-config.yaml``. Default to False.
-        yes (bool, optional): Accept all defaults without interactive prompts. Default to False.
-        languages (list[str] | None, optional): Pre-selected languages; ``None`` triggers auto-detection. Default to None.
-        strictness (Literal['relaxed', 'moderate', 'strict'], optional): Severity threshold preset. Default to typer.Option('moderate', help='Strictness: relaxed|moderate|strict', show_choices=True).
-
-    Returns:
-        int: Process exit code — ``0`` on success, ``2`` if the file exists without ``--force``.
-
-    See Also:
-        [`_run_init`][_run_init]: Contains the file-writing orchestration.
     """
     args = _ns(
         force=force,
@@ -1874,17 +1803,6 @@ def export_mapping(
     coverage level (``full``, ``partial``, ``none``).  Useful for
     pipeline debugging and verifying that new detectors are correctly
     registered.
-
-    Args:
-        out (str | None, optional): Write JSON mapping to this file and exit. Default to typer.Option(None, help='Write output to file').
-        languages (list[str] | None, optional): Restrict output to these languages; ``None`` includes all. Default to None.
-        output_format (Literal['terminal', 'json'], optional): Output style — Rich table or raw JSON. Default to typer.Option('terminal', '--format', help='Output format', show_choices=True).
-
-    Returns:
-        int: Process exit code — always ``0``.
-
-    See Also:
-        [`_run_export_mapping`][_run_export_mapping]: Contains the mapping-build and rendering logic.
     """
     args = _ns(out=out, languages=languages, format=output_format)
     return _run_export_mapping(args)

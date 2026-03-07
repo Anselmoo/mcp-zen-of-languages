@@ -19,11 +19,15 @@ import sys
 from importlib import import_module
 
 from rich.console import Console
+from rich.console import Group as RichGroup
 from rich.panel import Panel
+from rich.rule import Rule
+from rich.text import Text
 
 from mcp_zen_of_languages import __version__
 
 from .layout import get_output_width
+from .themes import BORDER_STYLE
 from .themes import BOX_BANNER
 from .themes import ZEN_THEME
 from .themes import pass_fail_glyph
@@ -78,15 +82,13 @@ _ZEN_SUBTITLE = "of Languages"
 def _render_banner_art() -> str:
     """Compose the ASCII-art banner, optionally enhanced by pyfiglet.
 
-    Attempts to import ``pyfiglet`` and render the word *Zen* in the
-    ``banner3-d`` font at a 55-column width.  Falls back to the
-    hard-coded ``ZEN_BANNER`` constant when pyfiglet is unavailable.
-    The subtitle *"of Languages"* is right-aligned beneath the art
-    block so the two elements form a cohesive visual unit inside the
-    88-column panel produced by ``print_banner``.
+    Attempts to render *Zen* in the ``slant`` font at 55 columns.
+    Falls back to the hard-coded ``ZEN_BANNER`` constant when pyfiglet
+    is unavailable.  Returns only the art block — callers are
+    responsible for appending the *"of Languages"* subtitle.
 
     Returns:
-        str: Multi-line ASCII art string with appended subtitle.
+        str: Multi-line ASCII art string.
     """
     try:
         figlet_format = import_module("pyfiglet").figlet_format
@@ -99,11 +101,7 @@ def _render_banner_art() -> str:
         ).rstrip()
     except Exception:  # noqa: BLE001
         art = ZEN_BANNER.strip()
-
-    # Right-align the subtitle to the width of the art block
-    art_width = max((len(line) for line in art.splitlines()), default=0)
-    subtitle = _ZEN_SUBTITLE.rjust(art_width)
-    return f"{art}\n{subtitle}"
+    return art
 
 
 def get_banner_art() -> str:
@@ -112,10 +110,12 @@ def get_banner_art() -> str:
     Delegates to ``_render_banner_art`` and exposes the result as a
     stable public API.  Callers that build their own ``Panel`` or
     ``Group`` around the banner should use this instead of calling
-    ``print_banner``, which writes directly to the console.
+    ``print_banner``, which writes directly to the console.  The
+    returned string does **not** include the *"of Languages"* subtitle;
+    callers are responsible for appending it (e.g. via a ``Rule``).
 
     Returns:
-        str: Multi-line ASCII art including the *"of Languages"* subtitle.
+        str: Multi-line ASCII art (no subtitle).
     """
     return _render_banner_art()
 
@@ -143,12 +143,13 @@ def is_quiet() -> bool:
 
 
 def print_banner(output_console: Console | None = None) -> None:
-    """Render the Zen ASCII-art banner inside a double-bordered panel.
+    """Render the Zen ASCII-art banner with a Rule subtitle and version.
 
     Skipped silently when quiet mode is active or stdout is not a TTY.
-    The panel is sized via ``get_output_width`` (capped at 88 columns)
-    and styled with the ``BOX_BANNER`` (``DOUBLE``) box and a cyan
-    border, producing the distinctive header shown at CLI startup.
+    Composes a ``RichGroup`` containing the art, a brand-blue ``Rule``
+    carrying the *"of Languages"* subtitle, and the version string —
+    all wrapped in a ``BOX_BANNER`` (``DOUBLE``) panel sized to the
+    88-column contract.
 
     Args:
         output_console (Console | None, optional): Alternate console to print to; defaults to the
@@ -157,14 +158,17 @@ def print_banner(output_console: Console | None = None) -> None:
     if _STATE.quiet or not sys.stdout.isatty():
         return
     target_console = output_console or console
-    banner = f"[bold cyan]{_render_banner_art()}[/]\n[dim]v{__version__}[/]"
     width = get_output_width(target_console)
+    banner_group = RichGroup(
+        Text(_render_banner_art(), style="banner", justify="center"),
+        Rule(_ZEN_SUBTITLE, style=BORDER_STYLE),
+        Text(f"  v{__version__}", style="muted"),
+    )
     target_console.print(
         Panel(
-            banner,
-            style="banner",
+            banner_group,
             expand=False,
-            border_style="cyan",
+            border_style=BORDER_STYLE,
             box=BOX_BANNER,
             width=width,
         ),

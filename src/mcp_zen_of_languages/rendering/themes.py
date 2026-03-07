@@ -9,6 +9,13 @@ constants (``BOX_BANNER``, ``BOX_SUMMARY``, ``BOX_CONTENT``, ``BOX_ACTION``,
 Glyph helpers (``severity_badge``, ``pass_fail_glyph``, ``file_glyph``,
 ``score_glyph``) return emoji on capable terminals and fall back to
 ASCII on legacy Windows consoles, detected once via ``_use_emoji``.
+
+Brand palette (Caligo design system — docs/stylesheets/tokens/palette.css):
+  BRAND_PRIMARY  #989cff  Soft purple — primary UI colour (caligo-accent)
+  BRAND_ACCENT   #c8315a  Cherry red — vibrant highlights, required, scores
+  BRAND_COOL     #63c8ff  Cool cyan — success, low-severity, switches
+  BRAND_MUTED    #9b95ad  Muted purple-gray — dim/subtle elements
+  BORDER_STYLE   #767bd8  Subdued purple — panel borders (caligo-accent-muted)
 """
 
 from __future__ import annotations
@@ -20,6 +27,16 @@ from rich.console import Console
 from rich.theme import Theme
 
 
+# ── Brand color palette (Caligo design system) ──────────────────────
+BRAND_PRIMARY = "#989cff"  # caligo-accent: soft purple — primary UI colour
+BRAND_ACCENT = "#c8315a"  # caligo-cherry: vibrant red — highlights, scores
+BRAND_COOL = "#63c8ff"  # caligo-harmony-cool: bright cyan — success, switches
+BRAND_MUTED = "#9b95ad"  # caligo-fg-muted: muted purple-gray — dim elements
+
+
+# Panel borders use subdued purple — coherent with primary but less prominent
+BORDER_STYLE = "#767bd8"  # caligo-accent-muted
+
 # Severity tier thresholds (1-10 scale)
 SEVERITY_CRITICAL = 9
 SEVERITY_HIGH = 7
@@ -28,13 +45,14 @@ SEVERITY_MEDIUM = 4
 ZEN_THEME = Theme(
     {
         "severity.critical": "bold red",
-        "severity.high": "bold yellow",
-        "severity.medium": "cyan",
-        "severity.low": "dim green",
-        "path": "bold blue",
-        "metric": "magenta",
-        "score": "bold white",
-        "banner": "bold cyan",
+        "severity.high": f"bold {BRAND_ACCENT}",
+        "severity.medium": BRAND_PRIMARY,
+        "severity.low": BRAND_COOL,
+        "path": f"bold {BRAND_PRIMARY}",
+        "metric": BRAND_PRIMARY,
+        "score": f"bold {BRAND_ACCENT}",
+        "banner": f"bold {BRAND_PRIMARY}",
+        "muted": f"dim {BRAND_MUTED}",
     },
 )
 
@@ -52,9 +70,9 @@ def severity_style(severity: int) -> str:
     ``ZEN_THEME`` severity entries:
 
     * **≥ 9** → ``severity.critical`` (bold red)
-    * **≥ 7** → ``severity.high`` (bold yellow)
-    * **≥ 4** → ``severity.medium`` (cyan)
-    * **< 4** → ``severity.low`` (dim green)
+    * **≥ 7** → ``severity.high`` (bold orange)
+    * **≥ 4** → ``severity.medium`` (steel blue)
+    * **< 4** → ``severity.low`` (earthy green)
 
     Args:
         severity (int): Integer severity score assigned to a violation.

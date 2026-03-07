@@ -34,6 +34,11 @@ from .panels import build_worst_offenders_panel
 from .progress import analysis_progress
 from .report import render_report_terminal
 from .tables import build_violation_table
+from .themes import BORDER_STYLE
+from .themes import BRAND_ACCENT
+from .themes import BRAND_COOL
+from .themes import BRAND_MUTED
+from .themes import BRAND_PRIMARY
 from .themes import ZEN_THEME
 from .themes import file_glyph
 from .themes import pass_fail_glyph
@@ -43,6 +48,11 @@ from .themes import severity_style
 
 
 __all__ = [
+    "BORDER_STYLE",
+    "BRAND_ACCENT",
+    "BRAND_COOL",
+    "BRAND_MUTED",
+    "BRAND_PRIMARY",
     "ZEN_THEME",
     "analysis_progress",
     "build_project_summary_panel",

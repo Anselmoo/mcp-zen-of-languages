@@ -1,3 +1,8 @@
+## [0.5.2] – 2026-03-09
+
+### Changed
+- enhance CLI with brand-aligned styles and improved documentation (#115)
+
 ## [0.5.1] – 2026-03-07
 
 ### Added

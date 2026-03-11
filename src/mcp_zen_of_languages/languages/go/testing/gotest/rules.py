@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pydantic import HttpUrl
+
 from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
 from mcp_zen_of_languages.rules.base_models import PrincipleCategory
 from mcp_zen_of_languages.rules.base_models import ZenPrinciple
@@ -12,6 +14,7 @@ GOTEST_ZEN = LanguageZenPrinciples(
     name="Go testing",
     philosophy="Go testing Zen — fast, parallel, table-driven, and idiomatic Go tests",
     source_text="Go testing documentation and community best practices",
+    source_url=HttpUrl("https://pkg.go.dev/testing"),
     principles=[
         ZenPrinciple(
             id="gotest-001",

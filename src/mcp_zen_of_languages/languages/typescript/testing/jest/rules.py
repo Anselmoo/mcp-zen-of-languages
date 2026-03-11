@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pydantic import HttpUrl
+
 from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
 from mcp_zen_of_languages.rules.base_models import PrincipleCategory
 from mcp_zen_of_languages.rules.base_models import ZenPrinciple
@@ -12,6 +14,7 @@ JEST_ZEN = LanguageZenPrinciples(
     name="Jest/Vitest",
     philosophy="Jest/Vitest Zen — reliable, isolated, and readable JavaScript/TypeScript tests",
     source_text="Jest documentation and JavaScript testing best practices",
+    source_url=HttpUrl("https://jestjs.io/docs/getting-started"),
     principles=[
         ZenPrinciple(
             id="jest-001",

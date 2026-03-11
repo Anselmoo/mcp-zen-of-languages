@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pydantic import HttpUrl
+
 from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
 from mcp_zen_of_languages.rules.base_models import PrincipleCategory
 from mcp_zen_of_languages.rules.base_models import ZenPrinciple
@@ -12,6 +14,7 @@ PYTEST_ZEN = LanguageZenPrinciples(
     name="pytest",
     philosophy="pytest Zen — idiomatic, trustworthy, and maintainable Python tests",
     source_text="pytest documentation and testing best practices",
+    source_url=HttpUrl("https://docs.pytest.org/en/stable/"),
     principles=[
         ZenPrinciple(
             id="pytest-001",

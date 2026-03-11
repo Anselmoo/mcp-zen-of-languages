@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pydantic import HttpUrl
+
 from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
 from mcp_zen_of_languages.rules.base_models import PrincipleCategory
 from mcp_zen_of_languages.rules.base_models import ZenPrinciple
@@ -12,6 +14,7 @@ RSPEC_ZEN = LanguageZenPrinciples(
     name="RSpec",
     philosophy="RSpec Zen — readable, isolated, and confident Ruby specifications",
     source_text="RSpec documentation and Ruby testing best practices",
+    source_url=HttpUrl("https://rspec.info/"),
     principles=[
         ZenPrinciple(
             id="rspec-001",

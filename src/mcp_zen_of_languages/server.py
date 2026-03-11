@@ -54,6 +54,7 @@ from mcp_zen_of_languages.analyzers.analyzer_factory import supported_languages
 from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
 from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
 from mcp_zen_of_languages.config import load_config
+from mcp_zen_of_languages.core.universal_dogmas import DogmaCatalogue
 from mcp_zen_of_languages.lifespan import zen_server_lifespan
 from mcp_zen_of_languages.middleware import build_default_middleware
 from mcp_zen_of_languages.models import AnalysisResult
@@ -2016,6 +2017,33 @@ async def get_supported_languages() -> dict[str, list[str]]:
     return result
 
 
+@mcp.tool(
+    name="get_dogma_catalogue",
+    tags={"dogma", "catalogue", "zen"},
+)
+async def get_dogma_catalogue() -> DogmaCatalogue:
+    """Return the full universal dogma catalogue including all testing families.
+
+    The catalogue contains three families:
+    - ``universal``: The 10 core zen dogma identifiers (``ZEN-*``).
+    - ``testing_tactics``: 10 micro-level testing dogmas (``ZEN-TEST-*``)
+      rooted in F.I.R.S.T. / Clean Code.
+    - ``testing_strategy``: 10 macro-level testing dogmas (``ZEN-MACRO-*``)
+      rooted in V-Model / Test Pyramid / ASPICE.
+
+    Returns:
+        DogmaCatalogue: Structured catalogue with all families and their parent
+            universal dogma cross-references.
+
+    See Also:
+        [`get_supported_languages`][mcp_zen_of_languages.server.get_supported_languages]:
+            Returns language coverage instead of dogma definitions.
+    """
+    from mcp_zen_of_languages.core.universal_dogmas import build_dogma_catalogue
+
+    return build_dogma_catalogue()
+
+
 class _LegacyResourceManager:
     """Minimal compatibility shim for older tests expecting private managers."""
 
@@ -2067,6 +2095,7 @@ def _attach_legacy_test_compat() -> None:
         (clear_config_overrides, MUTATING_ANNOTATIONS),
         (onboard_project, READONLY_ANNOTATIONS),
         (get_supported_languages, READONLY_ANNOTATIONS),
+        (get_dogma_catalogue, READONLY_ANNOTATIONS),
     ]
 
     for tool_fn, annotations in tools_with_annotations:

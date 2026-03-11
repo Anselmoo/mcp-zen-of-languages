@@ -1765,6 +1765,87 @@ def list_rules(language: str = typer.Argument(..., help="Language identifier")) 
     return _run_list_rules(args)
 
 
+def _run_list_dogmas(args: object) -> int:
+    """Render the universal dogma catalogue as Rich tables.
+
+    Calls ``build_dogma_catalogue()``, optionally filters by family, and
+    renders one panel + table per family using the standard zen visual style.
+    Returns exit code ``2`` when the ``--family`` value is not recognised.
+
+    Args:
+        args: Namespace-like object with a ``family`` attribute (``str | None``).
+
+    Returns:
+        int: Exit code — ``0`` on success, ``2`` for unrecognised family.
+    """
+    from mcp_zen_of_languages.core.universal_dogmas import build_dogma_catalogue
+
+    catalogue = build_dogma_catalogue()
+    families_to_show = catalogue.families
+
+    valid_families = {"universal", "testing-tactics", "testing-strategy"}
+    family_map = {
+        "universal": "universal",
+        "testing-tactics": "testing_tactics",
+        "testing-strategy": "testing_strategy",
+    }
+
+    family_arg = getattr(args, "family", None)
+    if family_arg:
+        if family_arg not in valid_families:
+            print_error(
+                f"Unknown family: {family_arg}. Choose from: {', '.join(sorted(valid_families))}"
+            )
+            return 2
+        internal = family_map[family_arg]
+        families_to_show = [f for f in catalogue.families if f.family == internal]
+
+    console.print(
+        zen_header_panel(
+            "🧘 Universal Dogma Catalogue",
+            f"Families: {len(catalogue.families)} | Total dogmas: {catalogue.total}",
+            title="Dogma Catalogue",
+        ),
+    )
+    for fam in families_to_show:
+        console.print(
+            zen_header_panel(
+                f"Family: {fam.family}",
+                f"Philosophy: {fam.philosophy} | Dogmas: {fam.count}",
+                title=fam.family.replace("_", " ").title(),
+            ),
+        )
+        table = zen_table(title=fam.family)
+        table.add_column("ID", width=30, no_wrap=True)
+        table.add_column("Parent Universal ID", ratio=1, no_wrap=True)
+        for entry in fam.dogmas:
+            table.add_row(
+                entry.id,
+                entry.parent_universal_id or "\u2014",
+            )
+        console.print(table)
+    return 0
+
+
+@app.command("list-dogmas", rich_help_panel="Configuration")
+def list_dogmas(
+    family: str | None = typer.Option(
+        None,
+        "--family",
+        help="Filter by family: universal | testing-tactics | testing-strategy",
+    ),
+) -> int:
+    """Display the universal dogma catalogue with all testing families.
+
+    Lists all dogma IDs across the three families:
+    ``universal`` (ZEN-*), ``testing-tactics`` (ZEN-TEST-*), and
+    ``testing-strategy`` (ZEN-MACRO-*).  Use ``--family`` to focus on
+    one family.
+    """
+    args = _ns(family=family)
+    return _run_list_dogmas(args)
+
+
 @app.command(rich_help_panel="Configuration")
 def init(
     *,

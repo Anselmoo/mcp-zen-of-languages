@@ -5,9 +5,14 @@ import importlib
 from mcp_zen_of_languages.analyzers.analyzer_factory import supported_languages
 from mcp_zen_of_languages.analyzers.registry import REGISTRY
 from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
+from mcp_zen_of_languages.core.universal_dogmas import TestingStrategyDogmaID
+from mcp_zen_of_languages.core.universal_dogmas import TestingTacticsDogmaID
 from mcp_zen_of_languages.core.universal_dogmas import UniversalDogmaID
+from mcp_zen_of_languages.core.universal_dogmas import build_dogma_catalogue
 from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule
 from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule_ids
+from mcp_zen_of_languages.core.universal_dogmas import resolve_strategy_dogma
+from mcp_zen_of_languages.core.universal_dogmas import resolve_tactics_dogma
 from mcp_zen_of_languages.languages.python.mapping import (
     DETECTOR_MAP as PYTHON_DETECTOR_MAP,
 )
@@ -109,3 +114,62 @@ def test_registry_all_supported_languages_have_full_dogma_metadata() -> None:
             set(meta.universal_dogma_ids).issubset(set(DOGMA_RULE_IDS))
             for meta in language_metas
         )
+
+
+def test_testing_tactics_dogma_id_has_ten_members() -> None:
+    assert len(TestingTacticsDogmaID) == 10
+
+
+def test_testing_strategy_dogma_id_has_ten_members() -> None:
+    assert len(TestingStrategyDogmaID) == 10
+
+
+def test_dogma_rule_ids_contains_all_thirty_ids() -> None:
+    assert len(DOGMA_RULE_IDS) == 30
+
+
+def test_dogma_rule_ids_has_no_duplicates() -> None:
+    assert len(DOGMA_RULE_IDS) == len(set(DOGMA_RULE_IDS))
+
+
+def test_testing_tactics_ids_have_zen_test_prefix() -> None:
+    assert all(v.startswith("ZEN-TEST-") for v in TestingTacticsDogmaID)
+
+
+def test_testing_strategy_ids_have_zen_macro_prefix() -> None:
+    assert all(v.startswith("ZEN-MACRO-") for v in TestingStrategyDogmaID)
+
+
+def test_resolve_tactics_dogma_returns_valid_universal_dogma() -> None:
+    for tactics_id in TestingTacticsDogmaID:
+        parent = resolve_tactics_dogma(tactics_id)
+        assert parent in UniversalDogmaID
+
+
+def test_resolve_strategy_dogma_returns_valid_universal_dogma() -> None:
+    for strategy_id in TestingStrategyDogmaID:
+        parent = resolve_strategy_dogma(strategy_id)
+        assert parent in UniversalDogmaID
+
+
+def test_build_dogma_catalogue_total_is_thirty() -> None:
+    catalogue = build_dogma_catalogue()
+    assert catalogue.total == 30
+
+
+def test_build_dogma_catalogue_has_three_families() -> None:
+    catalogue = build_dogma_catalogue()
+    family_names = {f.family for f in catalogue.families}
+    assert family_names == {"universal", "testing_tactics", "testing_strategy"}
+
+
+def test_build_dogma_catalogue_testing_tactics_entries_have_parent() -> None:
+    catalogue = build_dogma_catalogue()
+    tactics = next(f for f in catalogue.families if f.family == "testing_tactics")
+    assert all(entry.parent_universal_id is not None for entry in tactics.dogmas)
+
+
+def test_build_dogma_catalogue_universal_entries_have_no_parent() -> None:
+    catalogue = build_dogma_catalogue()
+    universal = next(f for f in catalogue.families if f.family == "universal")
+    assert all(entry.parent_universal_id is None for entry in universal.dogmas)

@@ -6,6 +6,8 @@ from enum import StrEnum
 from functools import cache
 from typing import TYPE_CHECKING
 
+from pydantic import BaseModel
+
 from mcp_zen_of_languages.rules import get_language_zen
 from mcp_zen_of_languages.rules.base_models import PrincipleCategory
 
@@ -31,7 +33,41 @@ class UniversalDogmaID(StrEnum):
     PROPORTIONATE_COMPLEXITY = "ZEN-PROPORTIONATE-COMPLEXITY"
 
 
-DOGMA_RULE_IDS: tuple[str, ...] = tuple(dogma.value for dogma in UniversalDogmaID)
+class TestingTacticsDogmaID(StrEnum):
+    """Micro-level testing dogma identifiers (F.I.R.S.T. + Clean Code + Kent Beck's Test Desiderata)."""
+
+    ISOLATED = "ZEN-TEST-ISOLATED"
+    DETERMINISTIC = "ZEN-TEST-DETERMINISTIC"
+    SINGLE_CONCEPT = "ZEN-TEST-SINGLE-CONCEPT"
+    EXPRESSIVE_NAME = "ZEN-TEST-EXPRESSIVE-NAME"
+    NO_BRANCHING = "ZEN-TEST-NO-BRANCHING"
+    FAST = "ZEN-TEST-FAST"
+    DOCUMENTED_INTENT = "ZEN-TEST-DOCUMENTED-INTENT"
+    FALSE_NEGATIVE_FREE = "ZEN-TEST-FALSE-NEGATIVE-FREE"
+    CLEAN_CODE = "ZEN-TEST-CLEAN-CODE"
+    PROPORTIONAL = "ZEN-TEST-PROPORTIONAL"
+
+
+class TestingStrategyDogmaID(StrEnum):
+    """Macro-level testing dogma identifiers (V-Model / Test Pyramid / ASPICE / Testing Manifesto)."""
+
+    BOUNDARY = "ZEN-MACRO-BOUNDARY"
+    TRACEABILITY = "ZEN-MACRO-TRACEABILITY"
+    INTEGRATION = "ZEN-MACRO-INTEGRATION"
+    RISK = "ZEN-MACRO-RISK"
+    REALITY_CHECK = "ZEN-MACRO-REALITY-CHECK"
+    FLAKINESS = "ZEN-MACRO-FLAKINESS"
+    SHIFT_RIGHT = "ZEN-MACRO-SHIFT-RIGHT"
+    OWNERSHIP = "ZEN-MACRO-OWNERSHIP"
+    EVOLVABILITY = "ZEN-MACRO-EVOLVABILITY"
+    VISIBILITY = "ZEN-MACRO-VISIBILITY"
+
+
+DOGMA_RULE_IDS: tuple[str, ...] = (
+    *tuple(dogma.value for dogma in UniversalDogmaID),
+    *tuple(dogma.value for dogma in TestingTacticsDogmaID),
+    *tuple(dogma.value for dogma in TestingStrategyDogmaID),
+)
 
 _CATEGORY_TO_DOGMAS: dict[PrincipleCategory, tuple[UniversalDogmaID, ...]] = {
     PrincipleCategory.READABILITY: (UniversalDogmaID.UNAMBIGUOUS_NAME,),
@@ -94,7 +130,118 @@ _KEYWORD_TO_DOGMAS: tuple[tuple[str, UniversalDogmaID], ...] = (
     ("unreachable", UniversalDogmaID.RUTHLESS_DELETION),
     ("complexity", UniversalDogmaID.PROPORTIONATE_COMPLEXITY),
     ("simple", UniversalDogmaID.PROPORTIONATE_COMPLEXITY),
+    ("flaky test", UniversalDogmaID.FAIL_FAST),
+    ("test isolation", UniversalDogmaID.STRICT_FENCES),
+    ("shared state", UniversalDogmaID.STRICT_FENCES),
+    ("test branching", UniversalDogmaID.EXPLICIT_INTENT),
+    ("assert all", UniversalDogmaID.PROPORTIONATE_COMPLEXITY),
+    ("over-mocking", UniversalDogmaID.VISIBLE_STATE),
+    ("slow test", UniversalDogmaID.FAIL_FAST),
+    ("zombie test", UniversalDogmaID.RUTHLESS_DELETION),
 )
+
+_TESTING_TACTICS_UNIVERSAL_MAP: dict[TestingTacticsDogmaID, UniversalDogmaID] = {
+    TestingTacticsDogmaID.ISOLATED: UniversalDogmaID.STRICT_FENCES,
+    TestingTacticsDogmaID.DETERMINISTIC: UniversalDogmaID.VISIBLE_STATE,
+    TestingTacticsDogmaID.SINGLE_CONCEPT: UniversalDogmaID.PROPORTIONATE_COMPLEXITY,
+    TestingTacticsDogmaID.EXPRESSIVE_NAME: UniversalDogmaID.UNAMBIGUOUS_NAME,
+    TestingTacticsDogmaID.NO_BRANCHING: UniversalDogmaID.EXPLICIT_INTENT,
+    TestingTacticsDogmaID.FAST: UniversalDogmaID.FAIL_FAST,
+    TestingTacticsDogmaID.DOCUMENTED_INTENT: UniversalDogmaID.EXPLICIT_INTENT,
+    TestingTacticsDogmaID.FALSE_NEGATIVE_FREE: UniversalDogmaID.FAIL_FAST,
+    TestingTacticsDogmaID.CLEAN_CODE: UniversalDogmaID.RUTHLESS_DELETION,
+    TestingTacticsDogmaID.PROPORTIONAL: UniversalDogmaID.PROPORTIONATE_COMPLEXITY,
+}
+
+_TESTING_STRATEGY_UNIVERSAL_MAP: dict[TestingStrategyDogmaID, UniversalDogmaID] = {
+    TestingStrategyDogmaID.BOUNDARY: UniversalDogmaID.RIGHT_ABSTRACTION,
+    TestingStrategyDogmaID.TRACEABILITY: UniversalDogmaID.EXPLICIT_INTENT,
+    TestingStrategyDogmaID.INTEGRATION: UniversalDogmaID.STRICT_FENCES,
+    TestingStrategyDogmaID.RISK: UniversalDogmaID.PROPORTIONATE_COMPLEXITY,
+    TestingStrategyDogmaID.REALITY_CHECK: UniversalDogmaID.VISIBLE_STATE,
+    TestingStrategyDogmaID.FLAKINESS: UniversalDogmaID.FAIL_FAST,
+    TestingStrategyDogmaID.SHIFT_RIGHT: UniversalDogmaID.VISIBLE_STATE,
+    TestingStrategyDogmaID.OWNERSHIP: UniversalDogmaID.STRICT_FENCES,
+    TestingStrategyDogmaID.EVOLVABILITY: UniversalDogmaID.RUTHLESS_DELETION,
+    TestingStrategyDogmaID.VISIBILITY: UniversalDogmaID.UNAMBIGUOUS_NAME,
+}
+
+
+def resolve_tactics_dogma(tactics_id: TestingTacticsDogmaID) -> UniversalDogmaID:
+    """Return the parent UniversalDogmaID for a micro testing dogma."""
+    return _TESTING_TACTICS_UNIVERSAL_MAP[tactics_id]
+
+
+def resolve_strategy_dogma(strategy_id: TestingStrategyDogmaID) -> UniversalDogmaID:
+    """Return the parent UniversalDogmaID for a macro testing dogma."""
+    return _TESTING_STRATEGY_UNIVERSAL_MAP[strategy_id]
+
+
+class DogmaFamilyEntry(BaseModel):
+    """Single dogma entry within a catalogue family."""
+
+    id: str
+    parent_universal_id: str | None = None
+
+
+class DogmaFamily(BaseModel):
+    """One named family of dogmas with its philosophy root."""
+
+    family: str
+    philosophy: str
+    count: int
+    dogmas: list[DogmaFamilyEntry]
+
+
+class DogmaCatalogue(BaseModel):
+    """Full cross-family dogma catalogue — single source of truth for all dogma discovery."""
+
+    families: list[DogmaFamily]
+    total: int
+
+
+def build_dogma_catalogue() -> DogmaCatalogue:
+    """Build and return the full dogma catalogue across all families.
+
+    Returns:
+        DogmaCatalogue: Structured catalogue with universal, testing-tactics,
+            and testing-strategy families.
+    """
+    universal_family = DogmaFamily(
+        family="universal",
+        philosophy="Canonical zen principles",
+        count=len(UniversalDogmaID),
+        dogmas=[DogmaFamilyEntry(id=d.value) for d in UniversalDogmaID],
+    )
+    tactics_family = DogmaFamily(
+        family="testing_tactics",
+        philosophy="F.I.R.S.T. + Clean Code + Kent Beck's Test Desiderata",
+        count=len(TestingTacticsDogmaID),
+        dogmas=[
+            DogmaFamilyEntry(
+                id=d.value,
+                parent_universal_id=_TESTING_TACTICS_UNIVERSAL_MAP[d].value,
+            )
+            for d in TestingTacticsDogmaID
+        ],
+    )
+    strategy_family = DogmaFamily(
+        family="testing_strategy",
+        philosophy="V-Model, Test Pyramid, ASPICE, Testing Manifesto",
+        count=len(TestingStrategyDogmaID),
+        dogmas=[
+            DogmaFamilyEntry(
+                id=d.value,
+                parent_universal_id=_TESTING_STRATEGY_UNIVERSAL_MAP[d].value,
+            )
+            for d in TestingStrategyDogmaID
+        ],
+    )
+    families = [universal_family, tactics_family, strategy_family]
+    return DogmaCatalogue(
+        families=families,
+        total=sum(f.count for f in families),
+    )
 
 
 @cache

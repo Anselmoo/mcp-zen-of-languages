@@ -144,6 +144,24 @@ def main(_check: bool = False) -> int:  # noqa: C901, PLR0912, PLR0915, FBT001, 
                     f"FULL_DOGMA_IDS contains unknown dogma IDs: {sorted(unknown)}"
                 )
 
+            # Check individual framework detector bindings
+            detector_map = getattr(fw_mod, "DETECTOR_MAP", None)
+            if detector_map is not None:
+                for binding in getattr(detector_map, "bindings", []):
+                    dogma_ids = getattr(binding, "universal_dogma_ids", [])
+                    if not dogma_ids and binding.rule_ids:
+                        errors.append(
+                            f"{lang_dir.name}/testing/{fw_dir.name}/mapping.py: "
+                            f"detector {binding.detector_id!r} missing explicit testing dogma IDs"
+                        )
+                    production_leak = set(dogma_ids) & universal_set
+                    if production_leak:
+                        errors.append(
+                            f"{lang_dir.name}/testing/{fw_dir.name}/mapping.py: "
+                            f"detector {binding.detector_id!r} uses production dogma IDs: "
+                            f"{sorted(production_leak)}"
+                        )
+
     if errors:
         print("Dogma consistency validation failures:")
         for error in errors:

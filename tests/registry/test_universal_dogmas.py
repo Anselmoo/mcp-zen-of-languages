@@ -66,13 +66,32 @@ def test_registry_metadata_contains_inferred_universal_dogmas() -> None:
     assert UniversalDogmaID.EXPLICIT_INTENT.value in meta.universal_dogma_ids
 
 
-def test_pilot_mappings_define_explicit_universal_dogma_overlays() -> None:
-    for detector_map, detector_id, expected_dogma in PILOT_DETECTOR_EXPECTATIONS:
+def test_pilot_mappings_infer_universal_dogma_via_registry() -> None:
+    """Production bindings have no explicit dogma IDs; the registry infers them.
+
+    This test verifies the inference chain:
+    DetectorBinding(universal_dogma_ids=[]) → registry → inferred ZEN-* IDs.
+    """
+    REGISTRY.adapter()
+    # Verify the bindings themselves are empty (new production invariant)
+    for detector_map, detector_id, _expected_dogma in PILOT_DETECTOR_EXPECTATIONS:
         binding = next(
             item for item in detector_map.bindings if item.detector_id == detector_id
         )
-        assert binding.universal_dogma_ids
-        assert expected_dogma in binding.universal_dogma_ids
+        assert not binding.universal_dogma_ids, (
+            f"{detector_id} should rely on registry inference "
+            "(remove explicit universal_dogma_ids from production bindings)"
+        )
+    # Verify the registry correctly infers the expected dogmas
+    for _detector_map, detector_id, expected_dogma in PILOT_DETECTOR_EXPECTATIONS:
+        meta = REGISTRY.get(detector_id)
+        assert meta is not None, f"Registry missing detector: {detector_id}"
+        assert meta.universal_dogma_ids, (
+            f"{detector_id} has no inferred dogmas in registry"
+        )
+        assert expected_dogma in meta.universal_dogma_ids, (
+            f"{detector_id}: expected {expected_dogma!r} in {meta.universal_dogma_ids}"
+        )
 
 
 def test_registry_pilot_languages_have_universal_dogma_matrix_coverage() -> None:
@@ -88,15 +107,29 @@ def test_registry_pilot_languages_have_universal_dogma_matrix_coverage() -> None
     assert all(meta.universal_dogma_ids for meta in pilot_metas)
 
 
-def test_all_supported_language_mappings_have_full_dogma_overlay() -> None:
+def test_all_production_mappings_have_empty_binding_dogmas_relying_on_inference() -> (
+    None
+):
+    """Production DetectorBinding.universal_dogma_ids must be empty (when rule_ids exist).
+
+    The registry infers dogmas from PrincipleCategory → UniversalDogmaID mappings.
+    Explicit blanket dogma IDs on production bindings are the anti-pattern this
+    test guards against.  Bindings with rule_ids=[] (no inference possible) are
+    exempt and may carry specific semantic dogma IDs.
+    """
     for language in supported_languages():
         module_name = "github_actions" if language == "github-actions" else language
         mapping = importlib.import_module(
             f"mcp_zen_of_languages.languages.{module_name}.mapping"
         ).DETECTOR_MAP
         for binding in mapping.bindings:
-            assert binding.universal_dogma_ids
-            assert set(binding.universal_dogma_ids).issubset(set(DOGMA_RULE_IDS))
+            if not binding.rule_ids:
+                # No rule IDs → inference not possible; explicit IDs are acceptable
+                continue
+            assert not binding.universal_dogma_ids, (
+                f"{module_name}/{binding.detector_id}: production binding must not carry "
+                "explicit universal_dogma_ids — use registry inference instead"
+            )
 
 
 def test_registry_all_supported_languages_have_full_dogma_metadata() -> None:

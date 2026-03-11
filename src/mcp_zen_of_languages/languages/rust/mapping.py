@@ -52,7 +52,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RustUnwrapUsageDetector,
             config_model=RustUnwrapUsageConfig,
             rule_ids=["rust-001"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
         DetectorBinding(
@@ -60,7 +59,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RustTypeSafetyDetector,
             config_model=RustTypeSafetyConfig,
             rule_ids=["rust-002"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=15,
         ),
         DetectorBinding(
@@ -68,7 +66,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RustIteratorPreferenceDetector,
             config_model=RustIteratorPreferenceConfig,
             rule_ids=["rust-003"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=18,
         ),
         DetectorBinding(
@@ -76,7 +73,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RustUnsafeBlocksDetector,
             config_model=RustUnsafeBlocksConfig,
             rule_ids=["rust-008"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=20,
         ),
         DetectorBinding(
@@ -84,7 +80,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RustCloneOverheadDetector,
             config_model=RustCloneOverheadConfig,
             rule_ids=["rust-004"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=30,
         ),
         DetectorBinding(
@@ -92,7 +87,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RustErrorHandlingDetector,
             config_model=RustErrorHandlingConfig,
             rule_ids=["rust-001"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=40,
         ),
         DetectorBinding(
@@ -100,7 +94,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RustMustUseDetector,
             config_model=RustMustUseConfig,
             rule_ids=["rust-005"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=50,
         ),
         DetectorBinding(
@@ -108,7 +101,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RustDebugDeriveDetector,
             config_model=RustDebugDeriveConfig,
             rule_ids=["rust-006"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=60,
         ),
         DetectorBinding(
@@ -116,7 +108,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RustNewtypePatternDetector,
             config_model=RustNewtypePatternConfig,
             rule_ids=["rust-007"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=70,
         ),
         DetectorBinding(
@@ -124,7 +115,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RustStdTraitsDetector,
             config_model=RustStdTraitsConfig,
             rule_ids=["rust-009"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=80,
         ),
         DetectorBinding(
@@ -132,7 +122,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RustEnumOverBoolDetector,
             config_model=RustEnumOverBoolConfig,
             rule_ids=["rust-010"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=90,
         ),
         DetectorBinding(
@@ -140,7 +129,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RustLifetimeUsageDetector,
             config_model=RustLifetimeUsageConfig,
             rule_ids=["rust-011"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=100,
         ),
         DetectorBinding(
@@ -148,7 +136,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RustInteriorMutabilityDetector,
             config_model=RustInteriorMutabilityConfig,
             rule_ids=["rust-012"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=110,
         ),
         DetectorBinding(
@@ -156,7 +143,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RustSendSyncDetector,
             config_model=RustSendSyncConfig,
             rule_ids=["rust-013"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=120,
         ),
         DetectorBinding(
@@ -164,7 +150,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RustErrorTraitsDetector,
             config_model=RustErrorTraitsConfig,
             rule_ids=["rust-014"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=130,
         ),
         DetectorBinding(
@@ -172,7 +157,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RustNamingDetector,
             config_model=RustNamingConfig,
             rule_ids=["rust-015"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=140,
         ),
         DetectorBinding(
@@ -180,7 +164,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RustDefaultImplDetector,
             config_model=RustDefaultImplConfig,
             rule_ids=["rust-016"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=150,
         ),
         DetectorBinding(
@@ -188,7 +171,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RustFromIntoDetector,
             config_model=RustFromIntoConfig,
             rule_ids=["rust-017"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=160,
         ),
     ],

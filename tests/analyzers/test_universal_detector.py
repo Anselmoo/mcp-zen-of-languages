@@ -106,7 +106,7 @@ def test_universal_detector_rejects_unsupported_language() -> None:
 
 
 def test_dogma_stub_detectors_expose_expected_rule_ids() -> None:
-    expected_dogmas = 10
+    expected_dogmas = 30  # 10 Universal + 10 TestingTactics + 10 TestingStrategy
     assert "ZEN-FAIL-FAST" in ControlFlowDetector().rule_ids
     assert "ZEN-UTILIZE-ARGUMENTS" in SignatureDetector().rule_ids
     assert "ZEN-VISIBLE-STATE" in StateMutationDetector().rule_ids

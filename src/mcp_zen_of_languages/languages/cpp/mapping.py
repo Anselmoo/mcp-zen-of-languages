@@ -42,7 +42,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CppSmartPointerDetector,
             config_model=CppSmartPointerConfig,
             rule_ids=["cpp-002"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
         DetectorBinding(
@@ -50,7 +49,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CppNullptrDetector,
             config_model=CppNullptrConfig,
             rule_ids=["cpp-004"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=20,
         ),
         DetectorBinding(
@@ -58,7 +56,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CppRaiiDetector,
             config_model=CppRaiiConfig,
             rule_ids=["cpp-001"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=5,
         ),
         DetectorBinding(
@@ -66,7 +63,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CppAutoDetector,
             config_model=CppAutoConfig,
             rule_ids=["cpp-003"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=15,
         ),
         DetectorBinding(
@@ -74,7 +70,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CppRangeForDetector,
             config_model=CppRangeForConfig,
             rule_ids=["cpp-005"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=25,
         ),
         DetectorBinding(
@@ -82,7 +77,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CppManualAllocationDetector,
             config_model=CppManualAllocationConfig,
             rule_ids=["cpp-006"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=35,
         ),
         DetectorBinding(
@@ -90,7 +84,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CppConstCorrectnessDetector,
             config_model=CppConstCorrectnessConfig,
             rule_ids=["cpp-007"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=45,
         ),
         DetectorBinding(
@@ -98,7 +91,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CppCStyleCastDetector,
             config_model=CppCStyleCastConfig,
             rule_ids=["cpp-008"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=55,
         ),
         DetectorBinding(
@@ -106,7 +98,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CppRuleOfFiveDetector,
             config_model=CppRuleOfFiveConfig,
             rule_ids=["cpp-009"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=65,
         ),
         DetectorBinding(
@@ -114,7 +105,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CppMoveDetector,
             config_model=CppMoveConfig,
             rule_ids=["cpp-010"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=75,
         ),
         DetectorBinding(
@@ -122,7 +112,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CppAvoidGlobalsDetector,
             config_model=CppAvoidGlobalsConfig,
             rule_ids=["cpp-011"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=85,
         ),
         DetectorBinding(
@@ -130,7 +119,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CppOverrideFinalDetector,
             config_model=CppOverrideFinalConfig,
             rule_ids=["cpp-012"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=95,
         ),
         DetectorBinding(
@@ -138,7 +126,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CppOptionalDetector,
             config_model=CppOptionalConfig,
             rule_ids=["cpp-013"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=105,
         ),
     ],

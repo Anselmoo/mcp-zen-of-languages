@@ -82,7 +82,6 @@ GEARBOX.extend(
             detector_class=AnsibleNamingDetector,
             config_model=AnsibleNamingConfig,
             rule_ids=["ansible-001"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
         DetectorBinding(
@@ -90,7 +89,6 @@ GEARBOX.extend(
             detector_class=AnsibleFqcnDetector,
             config_model=AnsibleFqcnConfig,
             rule_ids=["ansible-002"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=20,
         ),
         DetectorBinding(
@@ -98,7 +96,6 @@ GEARBOX.extend(
             detector_class=AnsibleIdempotencyDetector,
             config_model=AnsibleIdempotencyConfig,
             rule_ids=["ansible-003"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=30,
         ),
         DetectorBinding(
@@ -106,7 +103,6 @@ GEARBOX.extend(
             detector_class=AnsibleBecomeDetector,
             config_model=AnsibleBecomeConfig,
             rule_ids=["ansible-004"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=40,
         ),
         DetectorBinding(
@@ -114,7 +110,6 @@ GEARBOX.extend(
             detector_class=AnsibleStateExplicitDetector,
             config_model=AnsibleStateExplicitConfig,
             rule_ids=["ansible-005"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=50,
         ),
         DetectorBinding(
@@ -122,7 +117,6 @@ GEARBOX.extend(
             detector_class=AnsibleNoCleartextPasswordDetector,
             config_model=AnsibleNoCleartextPasswordConfig,
             rule_ids=["ansible-006"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=60,
         ),
         DetectorBinding(
@@ -130,7 +124,6 @@ GEARBOX.extend(
             detector_class=AnsibleJinjaSpacingDetector,
             config_model=AnsibleJinjaSpacingConfig,
             rule_ids=["ansible-007"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=70,
         ),
         DetectorBinding(
@@ -138,7 +131,6 @@ GEARBOX.extend(
             detector_class=AnsibleReadabilityCountsDetector,
             config_model=AnsibleReadabilityCountsConfig,
             rule_ids=["ansible-008"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=80,
         ),
         DetectorBinding(
@@ -146,7 +138,6 @@ GEARBOX.extend(
             detector_class=AnsibleUserOutcomeDetector,
             config_model=AnsibleUserOutcomeConfig,
             rule_ids=["ansible-009"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=90,
         ),
         DetectorBinding(
@@ -154,7 +145,6 @@ GEARBOX.extend(
             detector_class=AnsibleUserExperienceDetector,
             config_model=AnsibleUserExperienceConfig,
             rule_ids=["ansible-010"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=100,
         ),
         DetectorBinding(
@@ -162,7 +152,6 @@ GEARBOX.extend(
             detector_class=AnsibleMagicAutomationDetector,
             config_model=AnsibleMagicAutomationConfig,
             rule_ids=["ansible-011"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=110,
         ),
         DetectorBinding(
@@ -170,7 +159,6 @@ GEARBOX.extend(
             detector_class=AnsibleConventionOverConfigDetector,
             config_model=AnsibleConventionOverConfigConfig,
             rule_ids=["ansible-012"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=120,
         ),
         DetectorBinding(
@@ -178,7 +166,6 @@ GEARBOX.extend(
             detector_class=AnsibleDeclarativeBiasDetector,
             config_model=AnsibleDeclarativeBiasConfig,
             rule_ids=["ansible-013"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=130,
         ),
         DetectorBinding(
@@ -186,7 +173,6 @@ GEARBOX.extend(
             detector_class=AnsibleFocusDetector,
             config_model=AnsibleFocusConfig,
             rule_ids=["ansible-014"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=140,
         ),
         DetectorBinding(
@@ -194,7 +180,6 @@ GEARBOX.extend(
             detector_class=AnsibleComplexityProductivityDetector,
             config_model=AnsibleComplexityKillsProductivityConfig,
             rule_ids=["ansible-015"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=150,
         ),
         DetectorBinding(
@@ -202,7 +187,6 @@ GEARBOX.extend(
             detector_class=AnsibleExplainabilityDetector,
             config_model=AnsibleExplainabilityConfig,
             rule_ids=["ansible-016"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=160,
         ),
         DetectorBinding(
@@ -210,7 +194,6 @@ GEARBOX.extend(
             detector_class=AnsibleAutomationOpportunityDetector,
             config_model=AnsibleAutomationOpportunityConfig,
             rule_ids=["ansible-017"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=170,
         ),
         DetectorBinding(
@@ -218,7 +201,6 @@ GEARBOX.extend(
             detector_class=AnsibleContinuousImprovementDetector,
             config_model=AnsibleContinuousImprovementConfig,
             rule_ids=["ansible-018"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=180,
         ),
         DetectorBinding(
@@ -226,7 +208,6 @@ GEARBOX.extend(
             detector_class=AnsibleFrictionDetector,
             config_model=AnsibleFrictionConfig,
             rule_ids=["ansible-019"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=190,
         ),
         DetectorBinding(
@@ -234,7 +215,6 @@ GEARBOX.extend(
             detector_class=AnsibleAutomationJourneyDetector,
             config_model=AnsibleAutomationJourneyConfig,
             rule_ids=["ansible-020"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=200,
         ),
     ]

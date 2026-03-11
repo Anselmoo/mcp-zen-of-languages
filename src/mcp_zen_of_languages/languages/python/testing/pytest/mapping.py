@@ -43,7 +43,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=UnittestAssertDetector,
             config_model=AnalyzerConfig,
             rule_ids=["pytest-001"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=["ZEN-TEST-NO-LOGIC"],
             default_order=10,
         ),
         DetectorBinding(
@@ -51,7 +51,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SleepInTestDetector,
             config_model=AnalyzerConfig,
             rule_ids=["pytest-003"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=["ZEN-TEST-FAST", "ZEN-TEST-DETERMINISTIC"],
             default_order=20,
         ),
         DetectorBinding(
@@ -59,7 +59,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=LoopInTestDetector,
             config_model=AnalyzerConfig,
             rule_ids=["pytest-004"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=["ZEN-TEST-NO-LOGIC"],
             default_order=30,
         ),
         DetectorBinding(
@@ -67,7 +67,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=NoAssertInTestDetector,
             config_model=AnalyzerConfig,
             rule_ids=["pytest-005"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=["ZEN-TEST-TRUSTWORTHY"],
             default_order=40,
         ),
         DetectorBinding(
@@ -75,7 +75,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=VagueTestNameDetector,
             config_model=AnalyzerConfig,
             rule_ids=["pytest-006"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=["ZEN-TEST-NAMED-BEHAVIOR"],
             default_order=50,
         ),
         DetectorBinding(
@@ -83,7 +83,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=BareExceptInTestDetector,
             config_model=AnalyzerConfig,
             rule_ids=["pytest-007"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=["ZEN-TEST-TRUSTWORTHY"],
             default_order=60,
         ),
         DetectorBinding(
@@ -91,7 +91,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PytestRaisesDetector,
             config_model=AnalyzerConfig,
             rule_ids=["pytest-009"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=["ZEN-TEST-TRUSTWORTHY", "ZEN-TEST-NO-LOGIC"],
             default_order=70,
         ),
         DetectorBinding(
@@ -99,7 +99,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=ModuleLevelMockDetector,
             config_model=AnalyzerConfig,
             rule_ids=["pytest-010"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=["ZEN-TEST-ISOLATED"],
             default_order=80,
         ),
     ],

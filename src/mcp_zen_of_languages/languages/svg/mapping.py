@@ -48,7 +48,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SvgMissingTitleDetector,
             config_model=SvgMissingTitleConfig,
             rule_ids=["svg-001"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
         DetectorBinding(
@@ -56,7 +55,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SvgAriaRoleDetector,
             config_model=SvgAriaRoleConfig,
             rule_ids=["svg-002"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=20,
         ),
         DetectorBinding(
@@ -64,7 +62,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SvgImageAltDetector,
             config_model=SvgImageAltConfig,
             rule_ids=["svg-003"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=30,
         ),
         DetectorBinding(
@@ -72,7 +69,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SvgDescForComplexGraphicsDetector,
             config_model=SvgDescForComplexGraphicsConfig,
             rule_ids=["svg-004"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=40,
         ),
         DetectorBinding(
@@ -80,7 +76,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SvgInlineStyleDetector,
             config_model=SvgInlineStyleConfig,
             rule_ids=["svg-005"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=50,
         ),
         DetectorBinding(
@@ -88,7 +83,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SvgViewBoxDetector,
             config_model=SvgViewBoxConfig,
             rule_ids=["svg-006"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=60,
         ),
         DetectorBinding(
@@ -96,7 +90,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SvgUnusedDefsDetector,
             config_model=SvgUnusedDefsConfig,
             rule_ids=["svg-007"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=70,
         ),
         DetectorBinding(
@@ -104,7 +97,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SvgNestedGroupsDetector,
             config_model=SvgNestedGroupsConfig,
             rule_ids=["svg-008"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=80,
         ),
         DetectorBinding(
@@ -112,7 +104,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SvgDuplicateIdDetector,
             config_model=SvgDuplicateIdConfig,
             rule_ids=["svg-009"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=90,
         ),
         DetectorBinding(
@@ -120,7 +111,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SvgAbsolutePathOnlyDetector,
             config_model=SvgAbsolutePathOnlyConfig,
             rule_ids=["svg-010"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=100,
         ),
         DetectorBinding(
@@ -128,7 +118,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SvgBase64ImageDetector,
             config_model=SvgBase64ImageConfig,
             rule_ids=["svg-011"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=110,
         ),
         DetectorBinding(
@@ -136,7 +125,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SvgXmlnsDetector,
             config_model=SvgXmlnsConfig,
             rule_ids=["svg-012"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=120,
         ),
         DetectorBinding(
@@ -144,7 +132,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SvgDeprecatedXlinkHrefDetector,
             config_model=SvgDeprecatedXlinkHrefConfig,
             rule_ids=["svg-013"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=130,
         ),
         DetectorBinding(
@@ -152,7 +139,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SvgNodeCountDetector,
             config_model=SvgNodeCountConfig,
             rule_ids=["svg-014"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=140,
         ),
         DetectorBinding(
@@ -160,7 +146,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SvgProductionBloatDetector,
             config_model=SvgProductionBloatConfig,
             rule_ids=["svg-015"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=150,
         ),
     ],

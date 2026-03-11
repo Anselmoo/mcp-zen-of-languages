@@ -34,7 +34,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsonStrictnessDetector,
             config_model=JsonStrictnessConfig,
             rule_ids=["json-001"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
         DetectorBinding(
@@ -42,7 +41,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsonSchemaConsistencyDetector,
             config_model=JsonSchemaConsistencyConfig,
             rule_ids=["json-002"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=20,
         ),
         DetectorBinding(
@@ -50,7 +48,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsonDuplicateKeyDetector,
             config_model=JsonDuplicateKeyConfig,
             rule_ids=["json-003"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=30,
         ),
         DetectorBinding(
@@ -58,7 +55,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsonMagicStringDetector,
             config_model=JsonMagicStringConfig,
             rule_ids=["json-004"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=40,
         ),
         DetectorBinding(
@@ -66,7 +62,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsonKeyCasingDetector,
             config_model=JsonKeyCasingConfig,
             rule_ids=["json-005"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=50,
         ),
         DetectorBinding(
@@ -74,7 +69,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsonArrayOrderDetector,
             config_model=JsonArrayOrderConfig,
             rule_ids=["json-006"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=60,
         ),
         DetectorBinding(
@@ -82,7 +76,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsonNullSprawlDetector,
             config_model=JsonNullSprawlConfig,
             rule_ids=["json-007"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=70,
         ),
         DetectorBinding(
@@ -90,7 +83,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsonDateFormatDetector,
             config_model=JsonDateFormatConfig,
             rule_ids=["json-008"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=80,
         ),
         DetectorBinding(
@@ -98,7 +90,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsonNullHandlingDetector,
             config_model=JsonNullHandlingConfig,
             rule_ids=["json-009"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=90,
         ),
     ],

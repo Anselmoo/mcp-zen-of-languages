@@ -46,7 +46,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TerraformProviderVersionPinningDetector,
             config_model=TerraformProviderVersionPinningConfig,
             rule_ids=["tf-001"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
         DetectorBinding(
@@ -54,7 +53,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TerraformModuleVersionPinningDetector,
             config_model=TerraformModuleVersionPinningConfig,
             rule_ids=["tf-002"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=20,
         ),
         DetectorBinding(
@@ -62,7 +60,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TerraformVariableOutputDescriptionDetector,
             config_model=TerraformVariableOutputDescriptionConfig,
             rule_ids=["tf-003"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=30,
         ),
         DetectorBinding(
@@ -70,7 +67,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TerraformHardcodedIdDetector,
             config_model=TerraformHardcodedIdConfig,
             rule_ids=["tf-004"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=40,
         ),
         DetectorBinding(
@@ -78,7 +74,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TerraformNoHardcodedSecretsDetector,
             config_model=TerraformNoHardcodedSecretsConfig,
             rule_ids=["tf-005"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=50,
         ),
         DetectorBinding(
@@ -86,7 +81,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TerraformBackendConfigDetector,
             config_model=TerraformBackendConfig,
             rule_ids=["tf-006"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=60,
         ),
         DetectorBinding(
@@ -94,7 +88,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TerraformNamingConventionDetector,
             config_model=TerraformNamingConventionConfig,
             rule_ids=["tf-007"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=70,
         ),
     ],

@@ -62,7 +62,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsCallbackNestingDetector,
             config_model=JsCallbackNestingConfig,
             rule_ids=["js-001"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
         DetectorBinding(
@@ -70,7 +69,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsNoVarDetector,
             config_model=JsNoVarConfig,
             rule_ids=["js-002"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=20,
         ),
         DetectorBinding(
@@ -78,7 +76,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsStrictEqualityDetector,
             config_model=JsStrictEqualityConfig,
             rule_ids=["js-003"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=30,
         ),
         DetectorBinding(
@@ -86,7 +83,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsAsyncErrorHandlingDetector,
             config_model=JsAsyncErrorHandlingConfig,
             rule_ids=["js-007"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=40,
         ),
         DetectorBinding(
@@ -94,7 +90,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsFunctionLengthDetector,
             config_model=JsFunctionLengthConfig,
             rule_ids=["js-005"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=50,
         ),
         DetectorBinding(
@@ -102,7 +97,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsGlobalStateDetector,
             config_model=JsGlobalStateConfig,
             rule_ids=["js-004"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=60,
         ),
         DetectorBinding(
@@ -110,7 +104,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsModernFeaturesDetector,
             config_model=JsModernFeaturesConfig,
             rule_ids=["js-006"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=70,
         ),
         DetectorBinding(
@@ -118,7 +111,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsMagicNumbersDetector,
             config_model=JsMagicNumbersConfig,
             rule_ids=["js-008"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=80,
         ),
         DetectorBinding(
@@ -126,7 +118,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsInheritanceDepthDetector,
             config_model=Js009Config,
             rule_ids=["js-009"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=90,
         ),
         DetectorBinding(
@@ -134,7 +125,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsPureFunctionDetector,
             config_model=JsPureFunctionConfig,
             rule_ids=["js-010"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=100,
         ),
         DetectorBinding(
@@ -142,7 +132,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsMeaningfulNamesDetector,
             config_model=Js011Config,
             rule_ids=["js-011"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=110,
         ),
         DetectorBinding(
@@ -150,7 +139,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsDestructuringDetector,
             config_model=JsDestructuringConfig,
             rule_ids=["js-012"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=120,
         ),
         DetectorBinding(
@@ -158,7 +146,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsObjectSpreadDetector,
             config_model=JsObjectSpreadConfig,
             rule_ids=["js-013"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=130,
         ),
         DetectorBinding(
@@ -166,7 +153,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsNoWithDetector,
             config_model=JsNoWithConfig,
             rule_ids=["js-014"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=140,
         ),
         DetectorBinding(
@@ -174,7 +160,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsParamCountDetector,
             config_model=JsParamCountConfig,
             rule_ids=["js-015"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=150,
         ),
         DetectorBinding(
@@ -182,7 +167,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsNoEvalDetector,
             config_model=JsNoEvalConfig,
             rule_ids=["js-016"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=160,
         ),
         DetectorBinding(
@@ -190,7 +174,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsNoArgumentsDetector,
             config_model=JsNoArgumentsConfig,
             rule_ids=["js-017"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=170,
         ),
         DetectorBinding(
@@ -198,7 +181,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsNoPrototypeMutationDetector,
             config_model=JsNoPrototypeMutationConfig,
             rule_ids=["js-018"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=180,
         ),
     ],

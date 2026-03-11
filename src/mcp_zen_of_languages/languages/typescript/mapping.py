@@ -74,7 +74,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsAnyUsageDetector,
             config_model=TsAnyUsageConfig,
             rule_ids=["ts-001"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
         DetectorBinding(
@@ -82,7 +81,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsStrictModeDetector,
             config_model=TsStrictModeConfig,
             rule_ids=["ts-002"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=20,
         ),
         DetectorBinding(
@@ -90,7 +88,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsInterfacePreferenceDetector,
             config_model=TsInterfacePreferenceConfig,
             rule_ids=["ts-003"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=30,
         ),
         DetectorBinding(
@@ -98,7 +95,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsReturnTypeDetector,
             config_model=TsReturnTypeConfig,
             rule_ids=["ts-004"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=40,
         ),
         DetectorBinding(
@@ -106,7 +102,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsReadonlyDetector,
             config_model=TsReadonlyConfig,
             rule_ids=["ts-005"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=50,
         ),
         DetectorBinding(
@@ -114,7 +109,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsTypeGuardDetector,
             config_model=TsTypeGuardConfig,
             rule_ids=["ts-006"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=60,
         ),
         DetectorBinding(
@@ -122,7 +116,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsUtilityTypesDetector,
             config_model=TsUtilityTypesConfig,
             rule_ids=["ts-007"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=70,
         ),
         DetectorBinding(
@@ -130,7 +123,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsNonNullAssertionDetector,
             config_model=TsNonNullAssertionConfig,
             rule_ids=["ts-008"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=80,
         ),
         DetectorBinding(
@@ -138,7 +130,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsEnumConstDetector,
             config_model=TsEnumConstConfig,
             rule_ids=["ts-009"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=90,
         ),
         DetectorBinding(
@@ -146,7 +137,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsUnknownOverAnyDetector,
             config_model=TsUnknownOverAnyConfig,
             rule_ids=["ts-010"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=100,
         ),
         DetectorBinding(
@@ -154,7 +144,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsOptionalChainingDetector,
             config_model=TsOptionalChainingConfig,
             rule_ids=["ts-011"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=110,
         ),
         DetectorBinding(
@@ -162,7 +151,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsIndexLoopDetector,
             config_model=TsIndexLoopConfig,
             rule_ids=["ts-012"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=120,
         ),
         DetectorBinding(
@@ -170,7 +158,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsPromiseChainDetector,
             config_model=TsPromiseChainConfig,
             rule_ids=["ts-013"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=130,
         ),
         DetectorBinding(
@@ -178,7 +165,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsDefaultExportDetector,
             config_model=TsDefaultExportConfig,
             rule_ids=["ts-014"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=140,
         ),
         DetectorBinding(
@@ -186,7 +172,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsCatchAllTypeDetector,
             config_model=TsCatchAllTypeConfig,
             rule_ids=["ts-015"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=150,
         ),
         DetectorBinding(
@@ -194,7 +179,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsConsoleUsageDetector,
             config_model=TsConsoleUsageConfig,
             rule_ids=["ts-016"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=160,
         ),
         DetectorBinding(
@@ -202,7 +186,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsRequireImportDetector,
             config_model=TsRequireImportConfig,
             rule_ids=["ts-017"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=170,
         ),
         DetectorBinding(
@@ -210,7 +193,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsStringConcatDetector,
             config_model=TsStringConcatConfig,
             rule_ids=["ts-018"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=180,
         ),
         DetectorBinding(
@@ -218,7 +200,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsForOfDetector,
             config_model=TsForOfConfig,
             rule_ids=["ts-012"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=190,
         ),
         DetectorBinding(
@@ -226,7 +207,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsAsyncAwaitDetector,
             config_model=TsAsyncAwaitConfig,
             rule_ids=["ts-013"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=200,
         ),
         DetectorBinding(
@@ -234,7 +214,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsNamedExportDetector,
             config_model=TsNamedExportConfig,
             rule_ids=["ts-014"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=210,
         ),
         DetectorBinding(
@@ -242,7 +221,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsObjectTypeDetector,
             config_model=TsObjectTypeConfig,
             rule_ids=["ts-015"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=220,
         ),
         DetectorBinding(
@@ -250,7 +228,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsNoConsoleDetector,
             config_model=TsNoConsoleConfig,
             rule_ids=["ts-016"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=230,
         ),
         DetectorBinding(
@@ -258,7 +235,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsImportOrderDetector,
             config_model=TsImportOrderConfig,
             rule_ids=["ts-017"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=240,
         ),
         DetectorBinding(
@@ -266,7 +242,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TsTemplateLiteralDetector,
             config_model=TsTemplateLiteralConfig,
             rule_ids=["ts-018"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=250,
         ),
     ],

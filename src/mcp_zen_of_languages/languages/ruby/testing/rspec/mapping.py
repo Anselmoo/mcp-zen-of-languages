@@ -36,7 +36,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=AnonItDetector,
             config_model=AnalyzerConfig,
             rule_ids=["rspec-001"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=["ZEN-TEST-NAMED-BEHAVIOR"],
             default_order=10,
         ),
         DetectorBinding(
@@ -44,7 +44,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=InstanceVarInBeforeDetector,
             config_model=AnalyzerConfig,
             rule_ids=["rspec-002"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=["ZEN-TEST-DETERMINISTIC"],
             default_order=20,
         ),
         DetectorBinding(
@@ -52,7 +52,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=LetBangDetector,
             config_model=AnalyzerConfig,
             rule_ids=["rspec-003"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=["ZEN-TEST-FAST"],
             default_order=30,
         ),
         DetectorBinding(
@@ -60,7 +60,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=BeforeAllMutationDetector,
             config_model=AnalyzerConfig,
             rule_ids=["rspec-006"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=["ZEN-TEST-ISOLATED"],
             default_order=40,
         ),
         DetectorBinding(
@@ -68,7 +68,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=AnyInstanceDetector,
             config_model=AnalyzerConfig,
             rule_ids=["rspec-007"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=["ZEN-TEST-ISOLATED"],
             default_order=50,
         ),
         DetectorBinding(
@@ -76,7 +76,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PendingExampleDetector,
             config_model=AnalyzerConfig,
             rule_ids=["rspec-008"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=["ZEN-TEST-CLEAN-CODE"],
             default_order=60,
         ),
         DetectorBinding(
@@ -84,7 +84,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=FocusMarkerDetector,
             config_model=AnalyzerConfig,
             rule_ids=["rspec-010"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=["ZEN-TEST-CLEAN-CODE"],
             default_order=70,
         ),
     ],

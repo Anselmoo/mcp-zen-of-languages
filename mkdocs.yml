@@ -276,6 +276,8 @@ nav:
           - user-guide/rules/index.md
           - The 10 Dogmas: user-guide/rules/the-ten-dogmas.md
           - Testing Dogmas: user-guide/rules/testing-dogmas.md
+      - Philosophy:
+          - Yin-Yang of Code Quality: user-guide/philosophy/yin-yang.md
       - Prompt Generation: user-guide/prompt-generation.md
       - Project Analysis: user-guide/project-analysis.md
       - Examples: user-guide/examples.md

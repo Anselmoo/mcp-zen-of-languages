@@ -36,7 +36,6 @@ DETECTOR_MAP = LanguageDetectorMap(
                 "gha-014",
                 "gha-015",
             ],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
     ],

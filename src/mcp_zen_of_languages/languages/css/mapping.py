@@ -32,7 +32,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CssSpecificityDetector,
             config_model=CssSpecificityConfig,
             rule_ids=["css-001"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
         DetectorBinding(
@@ -40,7 +39,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CssMagicPixelsDetector,
             config_model=CssMagicPixelsConfig,
             rule_ids=["css-002"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=20,
         ),
         DetectorBinding(
@@ -48,7 +46,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CssColorLiteralDetector,
             config_model=CssColorLiteralConfig,
             rule_ids=["css-003"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=30,
         ),
         DetectorBinding(
@@ -56,7 +53,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CssGodStylesheetDetector,
             config_model=CssGodStylesheetConfig,
             rule_ids=["css-004"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=40,
         ),
         DetectorBinding(
@@ -64,7 +60,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CssImportChainDetector,
             config_model=CssImportChainConfig,
             rule_ids=["css-005"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=50,
         ),
         DetectorBinding(
@@ -72,7 +67,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CssZIndexScaleDetector,
             config_model=CssZIndexScaleConfig,
             rule_ids=["css-006"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=60,
         ),
         DetectorBinding(
@@ -80,7 +74,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CssVendorPrefixDetector,
             config_model=CssVendorPrefixConfig,
             rule_ids=["css-007"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=70,
         ),
         DetectorBinding(
@@ -88,7 +81,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CssMediaQueryScaleDetector,
             config_model=CssMediaQueryScaleConfig,
             rule_ids=["css-008"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=80,
         ),
     ],

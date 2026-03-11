@@ -40,7 +40,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=ParallelTestDetector,
             config_model=AnalyzerConfig,
             rule_ids=["gotest-001"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=["ZEN-TEST-DETERMINISTIC"],
             default_order=10,
         ),
         DetectorBinding(
@@ -48,7 +48,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=FatalInAssertDetector,
             config_model=AnalyzerConfig,
             rule_ids=["gotest-003"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=["ZEN-TEST-FAST"],
             default_order=20,
         ),
         DetectorBinding(
@@ -56,7 +56,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=MissingTHelperDetector,
             config_model=AnalyzerConfig,
             rule_ids=["gotest-004"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=["ZEN-TEST-CLEAN-CODE"],
             default_order=30,
         ),
         DetectorBinding(
@@ -64,7 +64,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=OsExitInTestDetector,
             config_model=AnalyzerConfig,
             rule_ids=["gotest-005"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=["ZEN-TEST-TRUSTWORTHY"],
             default_order=40,
         ),
         DetectorBinding(
@@ -72,7 +72,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TimeSleepInTestDetector,
             config_model=AnalyzerConfig,
             rule_ids=["gotest-006"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=["ZEN-TEST-FAST", "ZEN-TEST-DETERMINISTIC"],
             default_order=50,
         ),
         DetectorBinding(
@@ -80,7 +80,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=EmptySubtestNameDetector,
             config_model=AnalyzerConfig,
             rule_ids=["gotest-007"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=["ZEN-TEST-NAMED-BEHAVIOR"],
             default_order=60,
         ),
         DetectorBinding(
@@ -88,7 +88,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GlobalMutableStateDetector,
             config_model=AnalyzerConfig,
             rule_ids=["gotest-010"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=["ZEN-TEST-ISOLATED"],
             default_order=70,
         ),
     ],

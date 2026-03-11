@@ -86,7 +86,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=NameStyleDetector,
             config_model=AnalyzerConfig,
             rule_ids=[],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=0,
             enabled_by_default=False,
         ),
@@ -95,7 +94,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=NameStyleDetector,
             config_model=NameStyleConfig,
             rule_ids=["python-001"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
         DetectorBinding(
@@ -103,7 +101,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CyclomaticComplexityDetector,
             config_model=CyclomaticComplexityConfig,
             rule_ids=["python-003"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=20,
         ),
         DetectorBinding(
@@ -111,7 +108,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=ComplexOneLinersDetector,
             config_model=ComplexOneLinersConfig,
             rule_ids=["python-003"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=25,
         ),
         DetectorBinding(
@@ -119,7 +115,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=NestingDepthDetector,
             config_model=NestingDepthConfig,
             rule_ids=["python-005"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=30,
         ),
         DetectorBinding(
@@ -127,7 +122,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=LongFunctionDetector,
             config_model=LongFunctionConfig,
             rule_ids=["python-007"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=40,
         ),
         DetectorBinding(
@@ -135,7 +129,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=ShortVariableNamesDetector,
             config_model=ShortVariableNamesConfig,
             rule_ids=["python-007"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=45,
         ),
         DetectorBinding(
@@ -143,7 +136,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GodClassDetector,
             config_model=GodClassConfig,
             rule_ids=["python-004"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=50,
         ),
         DetectorBinding(
@@ -151,7 +143,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=MagicMethodDetector,
             config_model=MagicMethodConfig,
             rule_ids=["python-002"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=60,
         ),
         DetectorBinding(
@@ -159,7 +150,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=CircularDependencyDetector,
             config_model=CircularDependencyConfig,
             rule_ids=["python-004"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=70,
         ),
         DetectorBinding(
@@ -167,7 +157,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=DeepInheritanceDetector,
             config_model=DeepInheritanceConfig,
             rule_ids=["python-004"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=80,
         ),
         DetectorBinding(
@@ -175,7 +164,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=FeatureEnvyDetector,
             config_model=FeatureEnvyConfig,
             rule_ids=["python-011"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=90,
         ),
         DetectorBinding(
@@ -183,7 +171,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=DuplicateImplementationDetector,
             config_model=DuplicateImplementationConfig,
             rule_ids=["python-011"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=100,
         ),
         DetectorBinding(
@@ -191,7 +178,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=ClassSizeDetector,
             config_model=ClassSizeConfig,
             rule_ids=["python-007"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=110,
         ),
         DetectorBinding(
@@ -199,7 +185,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=StarImportDetector,
             config_model=StarImportConfig,
             rule_ids=["python-002"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=120,
         ),
         DetectorBinding(
@@ -207,7 +192,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=MagicNumberDetector,
             config_model=MagicNumberConfig,
             rule_ids=["python-002"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=125,
         ),
         DetectorBinding(
@@ -215,7 +199,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=BareExceptDetector,
             config_model=BareExceptConfig,
             rule_ids=["python-009"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=130,
         ),
         DetectorBinding(
@@ -223,7 +206,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=LineLengthDetector,
             config_model=LineLengthConfig,
             rule_ids=["python-001"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=140,
         ),
         DetectorBinding(
@@ -231,7 +213,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SparseCodeDetector,
             config_model=SparseCodeConfig,
             rule_ids=["python-006"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=145,
         ),
         DetectorBinding(
@@ -239,7 +220,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=DocstringDetector,
             config_model=DocstringConfig,
             rule_ids=["python-007"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=150,
         ),
         DetectorBinding(
@@ -247,7 +227,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=ConsistencyDetector,
             config_model=ConsistencyConfig,
             rule_ids=["python-008"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=155,
         ),
         DetectorBinding(
@@ -255,7 +234,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=ContextManagerDetector,
             config_model=ContextManagerConfig,
             rule_ids=["python-011"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=160,
         ),
         DetectorBinding(
@@ -263,7 +241,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=ExplicitnessDetector,
             config_model=ExplicitnessConfig,
             rule_ids=["python-010"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=165,
         ),
         DetectorBinding(
@@ -271,7 +248,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=NamespaceUsageDetector,
             config_model=NamespaceConfig,
             rule_ids=["python-012", "python-020"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=170,
         ),
         DetectorBinding(
@@ -279,7 +255,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PythonPracticalityDetector,
             config_model=PythonPracticalityConfig,
             rule_ids=["python-013"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=180,
         ),
         DetectorBinding(
@@ -287,7 +262,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PythonExplicitSilenceDetector,
             config_model=PythonExplicitSilenceConfig,
             rule_ids=["python-014"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=190,
         ),
         DetectorBinding(
@@ -295,7 +269,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PythonTodoStubDetector,
             config_model=PythonTodoStubConfig,
             rule_ids=["python-015"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=200,
         ),
         DetectorBinding(
@@ -303,7 +276,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PythonPrematureImplDetector,
             config_model=PythonPrematureImplConfig,
             rule_ids=["python-016"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=210,
         ),
         DetectorBinding(
@@ -311,7 +283,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PythonComplexUndocumentedDetector,
             config_model=PythonComplexUndocumentedConfig,
             rule_ids=["python-017"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=220,
         ),
         DetectorBinding(
@@ -319,7 +290,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PythonSimpleDocumentedDetector,
             config_model=PythonSimpleDocumentedConfig,
             rule_ids=["python-018"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=230,
         ),
         DetectorBinding(
@@ -327,7 +297,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=PythonIdiomDetector,
             config_model=PythonIdiomConfig,
             rule_ids=["python-019"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=240,
         ),
     ],

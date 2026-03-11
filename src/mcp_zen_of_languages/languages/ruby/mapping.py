@@ -38,7 +38,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RubyNamingConventionDetector,
             config_model=RubyNamingConventionConfig,
             rule_ids=["ruby-001"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
         DetectorBinding(
@@ -46,7 +45,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RubyMethodChainDetector,
             config_model=RubyMethodChainConfig,
             rule_ids=["ruby-006"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=20,
         ),
         DetectorBinding(
@@ -54,7 +52,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RubyDryDetector,
             config_model=RubyDryConfig,
             rule_ids=["ruby-002"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=30,
         ),
         DetectorBinding(
@@ -62,7 +59,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RubyBlockPreferenceDetector,
             config_model=RubyBlockPreferenceConfig,
             rule_ids=["ruby-003"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=40,
         ),
         DetectorBinding(
@@ -70,7 +66,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RubyMonkeyPatchDetector,
             config_model=RubyMonkeyPatchConfig,
             rule_ids=["ruby-004"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=50,
         ),
         DetectorBinding(
@@ -78,7 +73,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RubyMethodNamingDetector,
             config_model=RubyMethodNamingConfig,
             rule_ids=["ruby-005"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=60,
         ),
         DetectorBinding(
@@ -86,7 +80,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RubySymbolKeysDetector,
             config_model=RubySymbolKeysConfig,
             rule_ids=["ruby-007"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=70,
         ),
         DetectorBinding(
@@ -94,7 +87,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RubyGuardClauseDetector,
             config_model=RubyGuardClauseConfig,
             rule_ids=["ruby-008"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=80,
         ),
         DetectorBinding(
@@ -102,7 +94,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RubyMetaprogrammingDetector,
             config_model=RubyMetaprogrammingConfig,
             rule_ids=["ruby-009"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=90,
         ),
         DetectorBinding(
@@ -110,7 +101,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RubyExpressiveSyntaxDetector,
             config_model=RubyExpressiveSyntaxConfig,
             rule_ids=["ruby-010"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=100,
         ),
         DetectorBinding(
@@ -118,7 +108,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RubyPreferFailDetector,
             config_model=RubyPreferFailConfig,
             rule_ids=["ruby-011"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=110,
         ),
     ],

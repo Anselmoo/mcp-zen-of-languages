@@ -32,7 +32,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=YamlIndentationDetector,
             config_model=YamlIndentationConfig,
             rule_ids=["yaml-001"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
         DetectorBinding(
@@ -40,7 +39,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=YamlNoTabsDetector,
             config_model=YamlNoTabsConfig,
             rule_ids=["yaml-002"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=20,
         ),
         DetectorBinding(
@@ -48,7 +46,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=YamlDuplicateKeysDetector,
             config_model=YamlDuplicateKeysConfig,
             rule_ids=["yaml-003"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=30,
         ),
         DetectorBinding(
@@ -56,7 +53,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=YamlLowercaseKeysDetector,
             config_model=YamlLowercaseKeysConfig,
             rule_ids=["yaml-004"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=40,
         ),
         DetectorBinding(
@@ -64,7 +60,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=YamlKeyClarityDetector,
             config_model=YamlKeyClarityConfig,
             rule_ids=["yaml-005"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=50,
         ),
         DetectorBinding(
@@ -72,7 +67,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=YamlConsistencyDetector,
             config_model=YamlConsistencyConfig,
             rule_ids=["yaml-006"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=60,
         ),
         DetectorBinding(
@@ -80,7 +74,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=YamlCommentIntentDetector,
             config_model=YamlCommentIntentConfig,
             rule_ids=["yaml-007"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=70,
         ),
         DetectorBinding(
@@ -88,7 +81,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=YamlStringStyleDetector,
             config_model=YamlStringStyleConfig,
             rule_ids=["yaml-008"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=80,
         ),
     ],

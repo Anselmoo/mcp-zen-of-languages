@@ -58,7 +58,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoErrorHandlingDetector,
             config_model=GoErrorHandlingConfig,
             rule_ids=["go-001"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=10,
         ),
         DetectorBinding(
@@ -66,7 +65,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoInterfaceSizeDetector,
             config_model=GoInterfaceSizeConfig,
             rule_ids=["go-010"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=20,
         ),
         DetectorBinding(
@@ -74,7 +72,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoContextUsageDetector,
             config_model=GoContextUsageConfig,
             rule_ids=["go-011"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=30,
         ),
         DetectorBinding(
@@ -82,7 +79,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoDeferUsageDetector,
             config_model=GoDeferUsageConfig,
             rule_ids=["go-007"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=40,
         ),
         DetectorBinding(
@@ -90,7 +86,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoNamingConventionDetector,
             config_model=GoNamingConventionConfig,
             rule_ids=["go-004"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=50,
         ),
         DetectorBinding(
@@ -98,7 +93,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoInterfaceReturnDetector,
             config_model=GoInterfaceReturnConfig,
             rule_ids=["go-002"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=60,
         ),
         DetectorBinding(
@@ -106,7 +100,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoZeroValueDetector,
             config_model=GoZeroValueConfig,
             rule_ids=["go-003"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=70,
         ),
         DetectorBinding(
@@ -114,7 +107,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoInterfacePointerDetector,
             config_model=GoInterfacePointerConfig,
             rule_ids=["go-005"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=80,
         ),
         DetectorBinding(
@@ -122,7 +114,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoGoroutineLeakDetector,
             config_model=GoGoroutineLeakConfig,
             rule_ids=["go-006"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=90,
         ),
         DetectorBinding(
@@ -130,7 +121,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoPackageNamingDetector,
             config_model=GoPackageNamingConfig,
             rule_ids=["go-008"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=100,
         ),
         DetectorBinding(
@@ -138,7 +128,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoPackageStateDetector,
             config_model=GoPackageStateConfig,
             rule_ids=["go-009"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=110,
         ),
         DetectorBinding(
@@ -146,7 +135,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoInitUsageDetector,
             config_model=GoInitUsageConfig,
             rule_ids=["go-012"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=120,
         ),
         DetectorBinding(
@@ -154,7 +142,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoOrganizeResponsibilityDetector,
             config_model=GoSinglePurposePackageConfig,
             rule_ids=["go-013"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=130,
         ),
         DetectorBinding(
@@ -162,7 +149,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoEmbeddingDepthDetector,
             config_model=GoEmbeddingDepthConfig,
             rule_ids=["go-014"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=135,
         ),
         DetectorBinding(
@@ -170,7 +156,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoEarlyReturnDetector,
             config_model=GoEarlyReturnConfig,
             rule_ids=["go-017"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=140,
         ),
         DetectorBinding(
@@ -178,7 +163,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoConcurrencyCallerDetector,
             config_model=GoConcurrencyCallerConfig,
             rule_ids=["go-015"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=150,
         ),
         DetectorBinding(
@@ -186,7 +170,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoSimplicityDetector,
             config_model=GoSimplicityConfig,
             rule_ids=["go-016"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=160,
         ),
         DetectorBinding(
@@ -194,7 +177,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoTestPresenceDetector,
             config_model=GoTestPresenceConfig,
             rule_ids=["go-019"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=170,
         ),
         DetectorBinding(
@@ -202,7 +184,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoBenchmarkDetector,
             config_model=GoBenchmarkConfig,
             rule_ids=["go-018"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=180,
         ),
         DetectorBinding(
@@ -210,7 +191,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoModerationDetector,
             config_model=GoModerationConfig,
             rule_ids=[],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=["ZEN-VISIBLE-STATE", "ZEN-PROPORTIONATE-COMPLEXITY"],
             default_order=190,
         ),
         DetectorBinding(
@@ -218,7 +199,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=GoMaintainabilityDetector,
             config_model=GoMaintainabilityConfig,
             rule_ids=["go-020"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
             default_order=200,
         ),
     ],

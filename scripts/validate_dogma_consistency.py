@@ -84,6 +84,7 @@ def main(_check: bool = False) -> int:  # noqa: C901, PLR0912, PLR0915, FBT001, 
         # Also check detector bindings for testing leaks
         detector_map = getattr(mod, "DETECTOR_MAP", None)
         if detector_map is not None:
+            binding_ids = {b.detector_id for b in getattr(detector_map, "bindings", [])}
             errors.extend(
                 f"{lang_dir.name}/mapping.py: detector {binding.detector_id!r} "
                 f"references testing dogma ID {dogma_id!r} in production mapping"
@@ -91,6 +92,20 @@ def main(_check: bool = False) -> int:  # noqa: C901, PLR0912, PLR0915, FBT001, 
                 for dogma_id in getattr(binding, "universal_dogma_ids", [])
                 if dogma_id in testing_ids
             )
+            # Verify universal stub detectors are wired
+            _universal_ids = {
+                "universal_clutter",
+                "universal_control_flow",
+                "universal_state_mutation",
+                "universal_signature",
+                "universal_shared_keyword",
+            }
+            missing_universal = _universal_ids - binding_ids
+            if missing_universal:
+                errors.append(
+                    f"{lang_dir.name}/mapping.py: missing universal detector(s) "
+                    f"{sorted(missing_universal)} — did you extend UNIVERSAL_DETECTOR_MAP?"
+                )
 
     # --- 2. Validate framework mapping.py files ---
     for lang_dir in sorted(languages_root.iterdir()):

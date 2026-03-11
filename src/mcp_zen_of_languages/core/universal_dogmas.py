@@ -38,12 +38,12 @@ class TestingTacticsDogmaID(StrEnum):
 
     ISOLATED = "ZEN-TEST-ISOLATED"
     DETERMINISTIC = "ZEN-TEST-DETERMINISTIC"
-    SINGLE_CONCEPT = "ZEN-TEST-SINGLE-CONCEPT"
-    EXPRESSIVE_NAME = "ZEN-TEST-EXPRESSIVE-NAME"
-    NO_BRANCHING = "ZEN-TEST-NO-BRANCHING"
+    SINGLE_REASON = "ZEN-TEST-SINGLE-REASON"
+    NAMED_BEHAVIOR = "ZEN-TEST-NAMED-BEHAVIOR"
+    NO_LOGIC = "ZEN-TEST-NO-LOGIC"
     FAST = "ZEN-TEST-FAST"
     DOCUMENTED_INTENT = "ZEN-TEST-DOCUMENTED-INTENT"
-    FALSE_NEGATIVE_FREE = "ZEN-TEST-FALSE-NEGATIVE-FREE"
+    TRUSTWORTHY = "ZEN-TEST-TRUSTWORTHY"
     CLEAN_CODE = "ZEN-TEST-CLEAN-CODE"
     PROPORTIONAL = "ZEN-TEST-PROPORTIONAL"
 
@@ -68,6 +68,18 @@ DOGMA_RULE_IDS: tuple[str, ...] = (
     *tuple(dogma.value for dogma in TestingTacticsDogmaID),
     *tuple(dogma.value for dogma in TestingStrategyDogmaID),
 )
+
+# Scoped constants for per-tier dogma binding in language mappings.
+# Production language detectors should reference UNIVERSAL_DOGMA_IDS only.
+# Framework (test) detectors should reference TESTING_TACTICS_IDS (+ optionally UNIVERSAL_DOGMA_IDS).
+UNIVERSAL_DOGMA_IDS: tuple[str, ...] = tuple(dogma.value for dogma in UniversalDogmaID)
+TESTING_TACTICS_IDS: tuple[str, ...] = tuple(
+    dogma.value for dogma in TestingTacticsDogmaID
+)
+TESTING_STRATEGY_IDS: tuple[str, ...] = tuple(
+    dogma.value for dogma in TestingStrategyDogmaID
+)
+ALL_DOGMA_IDS: tuple[str, ...] = DOGMA_RULE_IDS  # alias for clarity
 
 _CATEGORY_TO_DOGMAS: dict[PrincipleCategory, tuple[UniversalDogmaID, ...]] = {
     PrincipleCategory.READABILITY: (UniversalDogmaID.UNAMBIGUOUS_NAME,),
@@ -143,12 +155,12 @@ _KEYWORD_TO_DOGMAS: tuple[tuple[str, UniversalDogmaID], ...] = (
 _TESTING_TACTICS_UNIVERSAL_MAP: dict[TestingTacticsDogmaID, UniversalDogmaID] = {
     TestingTacticsDogmaID.ISOLATED: UniversalDogmaID.STRICT_FENCES,
     TestingTacticsDogmaID.DETERMINISTIC: UniversalDogmaID.VISIBLE_STATE,
-    TestingTacticsDogmaID.SINGLE_CONCEPT: UniversalDogmaID.PROPORTIONATE_COMPLEXITY,
-    TestingTacticsDogmaID.EXPRESSIVE_NAME: UniversalDogmaID.UNAMBIGUOUS_NAME,
-    TestingTacticsDogmaID.NO_BRANCHING: UniversalDogmaID.EXPLICIT_INTENT,
+    TestingTacticsDogmaID.SINGLE_REASON: UniversalDogmaID.PROPORTIONATE_COMPLEXITY,
+    TestingTacticsDogmaID.NAMED_BEHAVIOR: UniversalDogmaID.UNAMBIGUOUS_NAME,
+    TestingTacticsDogmaID.NO_LOGIC: UniversalDogmaID.EXPLICIT_INTENT,
     TestingTacticsDogmaID.FAST: UniversalDogmaID.FAIL_FAST,
     TestingTacticsDogmaID.DOCUMENTED_INTENT: UniversalDogmaID.EXPLICIT_INTENT,
-    TestingTacticsDogmaID.FALSE_NEGATIVE_FREE: UniversalDogmaID.FAIL_FAST,
+    TestingTacticsDogmaID.TRUSTWORTHY: UniversalDogmaID.FAIL_FAST,
     TestingTacticsDogmaID.CLEAN_CODE: UniversalDogmaID.RUTHLESS_DELETION,
     TestingTacticsDogmaID.PROPORTIONAL: UniversalDogmaID.PROPORTIONATE_COMPLEXITY,
 }

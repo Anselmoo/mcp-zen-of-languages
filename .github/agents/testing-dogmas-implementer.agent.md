@@ -7,7 +7,7 @@ description: >
   the universal dogma catalogue with any new domain-level family.
 name: testing-dogmas-implementer
 tools:
-  [execute/getTerminalOutput, execute/killTerminal, execute/createAndRunTask, execute/runInTerminal, read, agent, edit, search, web, github/search_code, github/search_repositories, ai-agent-guidelines/gap-frameworks-analyzers, ai-agent-guidelines/hierarchical-prompt-builder, 'context7/*', github/search_code, github/search_repositories, 'serena/*', ms-python.python/getPythonEnvironmentInfo, ms-python.python/getPythonExecutableCommand, ms-python.python/installPythonPackage, ms-python.python/configurePythonEnvironment]
+  [execute/getTerminalOutput, execute/killTerminal, execute/createAndRunTask, execute/runInTerminal, read, agent, edit, search, web, github/get_file_contents, github/search_code, github/search_repositories, ai-agent-guidelines/gap-frameworks-analyzers, ai-agent-guidelines/hierarchical-prompt-builder, 'context7/*', 'serena/*', ms-python.python/getPythonEnvironmentInfo, ms-python.python/getPythonExecutableCommand, ms-python.python/installPythonPackage, ms-python.python/configurePythonEnvironment]
 model: Claude Sonnet 4
 handoffs:
   - label: Test-First Coverage

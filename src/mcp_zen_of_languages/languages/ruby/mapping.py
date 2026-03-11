@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
-from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
+from mcp_zen_of_languages.core.universal_dogmas import UNIVERSAL_DOGMA_IDS
 from mcp_zen_of_languages.languages.configs import RubyBlockPreferenceConfig
 from mcp_zen_of_languages.languages.configs import RubyDryConfig
 from mcp_zen_of_languages.languages.configs import RubyExpressiveSyntaxConfig
@@ -29,7 +29,7 @@ from mcp_zen_of_languages.languages.ruby.detectors import RubyPreferFailDetector
 from mcp_zen_of_languages.languages.ruby.detectors import RubySymbolKeysDetector
 
 
-FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
+FULL_DOGMA_IDS = list(UNIVERSAL_DOGMA_IDS)
 DETECTOR_MAP = LanguageDetectorMap(
     language="ruby",
     bindings=[

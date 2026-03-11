@@ -116,6 +116,15 @@ prompts:
       the bridge. A git branch/merge graph symbol below. Trees with trunk, branches,
       and foliage clusters on each shore. Five drifting cherry-blossom petals.
       Faint bridge reflection in water. ~60 elements.
+  section_testing_dogmas:
+    prompt: >-
+      Testing dogmas illustration (960×320): a zen garden with a central magnifying
+      glass over a stylised test scroll, revealing fine detail lines. A four-panel
+      grid represents the four test frameworks (pytest, Jest, RSpec, Go), each with
+      a small badge motif. A delicate balance scale weighing a single assertion
+      against a production code block. Bamboo stalks on both sides with drooping
+      leaves. Faint ensō ring in background at low opacity, layered terrain, and
+      warm/cool accent motes in Caligo palette. ~52 elements.
   section_tags:
     prompt: >-
       Tags illustration (960×320): layered soft terrain with bamboo on both sides,

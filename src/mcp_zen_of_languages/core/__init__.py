@@ -4,6 +4,10 @@ from mcp_zen_of_languages.core.detector import DOGMA_RULE_IDS
 from mcp_zen_of_languages.core.detector import LanguageAdapter
 from mcp_zen_of_languages.core.detector import ReporterInterface
 from mcp_zen_of_languages.core.detector import UniversalZenDetector
+from mcp_zen_of_languages.core.universal_dogmas import ALL_DOGMA_IDS
+from mcp_zen_of_languages.core.universal_dogmas import TESTING_STRATEGY_IDS
+from mcp_zen_of_languages.core.universal_dogmas import TESTING_TACTICS_IDS
+from mcp_zen_of_languages.core.universal_dogmas import UNIVERSAL_DOGMA_IDS
 from mcp_zen_of_languages.core.universal_dogmas import DogmaCatalogue
 from mcp_zen_of_languages.core.universal_dogmas import DogmaFamily
 from mcp_zen_of_languages.core.universal_dogmas import DogmaFamilyEntry
@@ -19,7 +23,11 @@ from mcp_zen_of_languages.core.universal_dogmas import resolve_tactics_dogma
 
 
 __all__ = [
+    "ALL_DOGMA_IDS",
     "DOGMA_RULE_IDS",
+    "TESTING_STRATEGY_IDS",
+    "TESTING_TACTICS_IDS",
+    "UNIVERSAL_DOGMA_IDS",
     "DogmaCatalogue",
     "DogmaFamily",
     "DogmaFamilyEntry",

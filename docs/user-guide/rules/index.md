@@ -34,6 +34,16 @@ tags:
 
     [Languages](../languages/index.md)
 
+-   :material-test-tube:{ .lg .middle } **Testing Dogmas**
+
+    ---
+
+    20 framework-specific testing dogmas (ZEN-TEST-\* micro tactics and
+    ZEN-MACRO-\* strategy principles) detected in pytest, Jest, RSpec, and
+    Go test files.
+
+    [Testing Dogmas](testing-dogmas.md)
+
 </div>
 
 ## How the layers connect

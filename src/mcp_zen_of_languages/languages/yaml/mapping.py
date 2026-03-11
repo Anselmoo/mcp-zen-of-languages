@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
-from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
+from mcp_zen_of_languages.core.universal_dogmas import UNIVERSAL_DOGMA_IDS
 from mcp_zen_of_languages.languages.configs import YamlCommentIntentConfig
 from mcp_zen_of_languages.languages.configs import YamlConsistencyConfig
 from mcp_zen_of_languages.languages.configs import YamlDuplicateKeysConfig
@@ -23,7 +23,7 @@ from mcp_zen_of_languages.languages.yaml.detectors import YamlNoTabsDetector
 from mcp_zen_of_languages.languages.yaml.detectors import YamlStringStyleDetector
 
 
-FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
+FULL_DOGMA_IDS = list(UNIVERSAL_DOGMA_IDS)
 DETECTOR_MAP = LanguageDetectorMap(
     language="yaml",
     bindings=[

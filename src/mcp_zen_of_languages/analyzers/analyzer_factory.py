@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from mcp_zen_of_languages.analyzers.framework_bridge import FRAMEWORK_REGISTRY
 from mcp_zen_of_languages.languages.ansible.analyzer import AnsibleAnalyzer
 from mcp_zen_of_languages.languages.bash.analyzer import BashAnalyzer
 from mcp_zen_of_languages.languages.cpp.analyzer import CppAnalyzer
@@ -38,9 +39,19 @@ from mcp_zen_of_languages.languages.xml.analyzer import XmlAnalyzer
 from mcp_zen_of_languages.languages.yaml.analyzer import YamlAnalyzer
 
 
+# Trigger framework registrations (side-effect imports)
+try:
+    import mcp_zen_of_languages.languages.go.testing.gotest
+    import mcp_zen_of_languages.languages.python.testing.pytest
+    import mcp_zen_of_languages.languages.ruby.testing.rspec
+    import mcp_zen_of_languages.languages.typescript.testing.jest  # noqa: F401
+except ImportError:
+    pass
+
 if TYPE_CHECKING:
     from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
     from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
+    from mcp_zen_of_languages.analyzers.framework_bridge import FrameworkAnalyzer
     from mcp_zen_of_languages.analyzers.pipeline import PipelineConfig
 
     type AnalyzerClass = type[BaseAnalyzer]
@@ -208,3 +219,24 @@ def create_analyzer(
         msg = f"Unsupported language: {language}"
         raise ValueError(msg)
     return analyzer_class(config=config, pipeline_config=pipeline_config)
+
+
+def get_framework_analyzers(
+    language: str,
+    path: str | None,
+) -> list[FrameworkAnalyzer]:
+    """Return framework-specific analyzers matching *language* and *path*.
+
+    Consults `FRAMEWORK_REGISTRY` to find all registered
+    [`FrameworkAnalyzer`][mcp_zen_of_languages.analyzers.framework_bridge.FrameworkAnalyzer]
+    subclasses whose ``parent_language`` matches and whose
+    ``is_test_file(path)`` returns ``True``.
+
+    Args:
+        language: Language identifier (e.g. ``"python"``).
+        path: File path of the code, or ``None`` for in-memory snippets.
+
+    Returns:
+        list[FrameworkAnalyzer]: Zero or more instantiated analyzers.
+    """
+    return FRAMEWORK_REGISTRY.get_frameworks(language=language, path=path)

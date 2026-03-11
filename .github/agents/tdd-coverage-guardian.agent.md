@@ -11,7 +11,9 @@ tools:
     "mcp-zen-of-languages/*",
     "context7/*",
     "serena/*",
+    "github/get_file_contents",
     "github/search_code",
+    "github/search_issues",
     "github/search_repositories",
     "task_complete",
   ]

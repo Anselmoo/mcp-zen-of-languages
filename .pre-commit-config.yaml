@@ -65,6 +65,12 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
+      - id: validate-dogma-consistency
+        name: Validate dogma ID tier consistency
+        entry: uv run python scripts/validate_dogma_consistency.py
+        language: system
+        pass_filenames: false
+        always_run: true
       - id: check-docs-assets
         name: Check docs CSS/JS quality
         entry: uv run python scripts/check_docs_assets.py

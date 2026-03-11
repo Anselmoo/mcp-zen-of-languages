@@ -13,6 +13,7 @@ tools:
     "context7/*",
     "sequentialthinking/*",
     "serena/*",
+    "github/get_file_contents",
     "github/search_code",
     "github/search_issues",
     "github/search_repositories",

@@ -202,6 +202,23 @@ def main() -> int:  # noqa: C901, PLR0912, PLR0915
                     f"{entry.name}: {principle.id} missing violations {missing_specs}",
                 )
 
+    # --- Validate testing framework subdirectories ---
+    _framework_required = {"__init__.py", "rules.py", "detectors.py", "mapping.py"}
+    for lang_dir in sorted(languages_root.iterdir()):
+        if not lang_dir.is_dir() or lang_dir.name.startswith("__"):
+            continue
+        testing_dir = lang_dir / "testing"
+        if not testing_dir.is_dir():
+            continue
+        for fw_dir in sorted(testing_dir.iterdir()):
+            if not fw_dir.is_dir() or fw_dir.name.startswith("__"):
+                continue
+            present = {p.name for p in fw_dir.iterdir() if p.is_file()}
+            if missing := sorted(_framework_required - present):
+                errors.append(
+                    f"{lang_dir.name}/testing/{fw_dir.name}: missing {', '.join(missing)}"
+                )
+
     if errors:
         print("Language module validation failures found:")
         for error in errors:

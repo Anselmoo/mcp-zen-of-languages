@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
-from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
+from mcp_zen_of_languages.core.universal_dogmas import UNIVERSAL_DOGMA_IDS
 from mcp_zen_of_languages.languages.configs import RustCloneOverheadConfig
 from mcp_zen_of_languages.languages.configs import RustDebugDeriveConfig
 from mcp_zen_of_languages.languages.configs import RustDefaultImplConfig
@@ -43,7 +43,7 @@ from mcp_zen_of_languages.languages.rust.detectors import RustUnsafeBlocksDetect
 from mcp_zen_of_languages.languages.rust.detectors import RustUnwrapUsageDetector
 
 
-FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
+FULL_DOGMA_IDS = list(UNIVERSAL_DOGMA_IDS)
 DETECTOR_MAP = LanguageDetectorMap(
     language="rust",
     bindings=[

@@ -3,13 +3,21 @@
   padding: var(--zen-space-2);
   border-radius: var(--zen-radius-md);
   border: var(--zen-border-thin) solid color-mix(in oklch, var(--caligo-accent) 30%, transparent);
+  overflow-x: auto;
 }
 
-.md-typeset .mermaid text,
-.md-typeset .mermaid .nodeLabel,
-.md-typeset .mermaid .edgeLabel {
-  fill: var(--zen-text-primary) !important;
-  color: var(--zen-text-primary) !important;
+/* Ensure SVG diagrams are not clipped and scale properly */
+.md-typeset .mermaid svg {
+  max-width: 100%;
+  height: auto;
+  font-size: 0.85em;
+}
+
+/* Edge labels: use theme-aware text color (they appear on bg, not inside nodes) */
+.md-typeset .mermaid .edgeLabel,
+.md-typeset .mermaid .edgeLabel span {
+  color: var(--zen-text-primary);
+  background-color: transparent !important;
 }
 
 /* --- Dark theme --- */
@@ -17,20 +25,14 @@
   background-color: color-mix(in oklch, var(--caligo-bg-overlay) 90%, transparent);
 }
 
+/* Dark: ensure all diagram text is legible on dark backgrounds.
+   classDef color:#fff is respected when !important matches its specificity,
+   but #f0ecf6 (off-white) works equally well for both default and classDef nodes. */
 :is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid text,
 :is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid .nodeLabel,
 :is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid .edgeLabel {
   fill: #f0ecf6 !important;
   color: #f0ecf6 !important;
-}
-
-:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid .node rect,
-:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid .node circle,
-:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid .node ellipse,
-:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid .node polygon {
-  fill: color-mix(in oklch, var(--caligo-bg2) 48%, var(--caligo-harmony-bridge) 52%) !important;
-  stroke: color-mix(in oklch, var(--caligo-harmony-cool) 70%, #fff 30%) !important;
-  stroke-width: 1.5px !important;
 }
 
 :is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid .cluster rect,
@@ -52,13 +54,8 @@
   background-color: color-mix(in oklch, var(--caligo-light-elevated) 80%, var(--caligo-accent-soft));
 }
 
-:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset .mermaid .node rect,
-:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset .mermaid .node circle,
-:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset .mermaid .node ellipse,
-:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset .mermaid .node polygon {
-  fill: color-mix(in oklch, var(--caligo-light-bg2) 68%, var(--caligo-accent-soft)) !important;
-  stroke: color-mix(in oklch, var(--caligo-accent-dark) 56%, var(--caligo-harmony-cool)) !important;
-}
+/* Light: do NOT override node text — let classDef color:#fff apply to colored nodes.
+   Mermaid's default dark text is correct for uncolored (default) nodes. */
 
 :is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset .mermaid .cluster rect,
 :is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset .mermaid .section0,

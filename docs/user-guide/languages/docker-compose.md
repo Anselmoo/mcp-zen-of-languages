@@ -109,11 +109,12 @@ tags:
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-    graph LR
-    docker_compose_001["docker-compose-001<br/>Avoid latest tags in image definitions"]
-    docker_compose_002["docker-compose-002<br/>Run services as non-root user"]
-    docker_compose_003["docker-compose-003<br/>Declare service healthchecks"]
-    docker_compose_004["docker-compose-004<br/>Keep secrets out of environment literals"]
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    graph TD
+    docker_compose_001["docker-compose-001<br/>Avoid latest tags in imag..."]
+    docker_compose_002["docker-compose-002<br/>Run services as non-root ..."]
+    docker_compose_003["docker-compose-003<br/>Declare service healthche..."]
+    docker_compose_004["docker-compose-004<br/>Keep secrets out of envir..."]
     det_DockerComposeHealthcheckDetector["DockerComposeHealthcheckDetector"]
     docker_compose_003 --> det_DockerComposeHealthcheckDetector
     det_DockerComposeLatestTagDetector["DockerComposeLatestTagDetector"]
@@ -122,8 +123,8 @@ tags:
     docker_compose_002 --> det_DockerComposeNonRootUserDetector
     det_DockerComposeSecretHygieneDetector["DockerComposeSecretHygieneDetector"]
     docker_compose_004 --> det_DockerComposeSecretHygieneDetector
-    classDef principle fill:#4051b5,color:#fff,stroke:none
-    classDef detector fill:#26a269,color:#fff,stroke:none
+    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
     class docker_compose_001 principle
     class docker_compose_002 principle
     class docker_compose_003 principle
@@ -132,6 +133,68 @@ tags:
     class det_DockerComposeLatestTagDetector detector
     class det_DockerComposeNonRootUserDetector detector
     class det_DockerComposeSecretHygieneDetector detector
+    ```
+
+??? example "Detector Class Hierarchy"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    classDiagram
+        direction TB
+        class ViolationDetector {
+            <<abstract>>
+            +detect(context, config) list~Violation~
+        }
+        class DockerComposeHealthcheckDetector {
+            +rules "docker-compose-003"
+        }
+        ViolationDetector <|-- DockerComposeHealthcheckDetector
+        class DockerComposeLatestTagDetector {
+            +rules "docker-compose-001"
+        }
+        ViolationDetector <|-- DockerComposeLatestTagDetector
+        class DockerComposeNonRootUserDetector {
+            +rules "docker-compose-002"
+        }
+        ViolationDetector <|-- DockerComposeNonRootUserDetector
+        class DockerComposeSecretHygieneDetector {
+            +rules "docker-compose-004"
+        }
+        ViolationDetector <|-- DockerComposeSecretHygieneDetector
+        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+        class ViolationDetector abstract
+        class DockerComposeHealthcheckDetector,DockerComposeLatestTagDetector,DockerComposeNonRootUserDetector,DockerComposeSecretHygieneDetector detector
+    ```
+
+??? example "Analysis Pipeline"
+    ```mermaid
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TD
+    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]
+    Parse --> Metrics["Compute Metrics"]
+    Metrics --> Pipeline{"4 Detectors"}
+    Pipeline --> Collect["Aggregate Violations"]
+    Collect --> Result(["✅ AnalysisResult · 4 principles"])
+
+    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px
+    class Source,Result io
+    class Parse,Metrics,Collect process
+    class Pipeline decision
+    ```
+
+??? example "Analysis States"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    stateDiagram-v2
+        [*] --> Ready
+        Ready --> Parsing : analyze(code)
+        Parsing --> Computing : AST ready
+        Computing --> Detecting : metrics ready
+        Detecting --> Reporting : 4 detectors run
+        Reporting --> [*] : AnalysisResult
+        Parsing --> Reporting : parse error (best-effort)
     ```
 
 ## Configuration

@@ -29,8 +29,9 @@ from mcp_zen_of_languages.core.universal_dogmas import infer_dogmas_for_principl
 from mcp_zen_of_languages.utils.subprocess_runner import KNOWN_TOOLS
 
 
-# Maximum characters shown from a principle description in diagram labels
-PRINCIPLE_PREVIEW_LENGTH = 40
+# Maximum characters shown from a principle description in diagram labels.
+# Kept short so text fits inside Mermaid node boxes without overflow.
+PRINCIPLE_PREVIEW_LENGTH = 25
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -302,8 +303,11 @@ def _build_external_tools(config_key: str) -> list[dict[str, str]]:
 # Mermaid diagram generation
 # ---------------------------------------------------------------------------
 def _build_mermaid(principles, detector_map) -> str:
-    """Build a mermaid graph LR showing principle→detector wiring."""
-    lines = ["    graph LR"]
+    """Build a mermaid flowchart (TD) showing principle→detector wiring."""
+    lines = [
+        '%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%',
+        "    graph TD",
+    ]
 
     # Build rule_id → principle label mapping
     rule_labels: dict[str, str] = {}
@@ -335,10 +339,12 @@ def _build_mermaid(principles, detector_map) -> str:
             ],
         )
 
+    # Explicit palette colors ensure correct contrast in both light and dark themes.
+    # BRAND_PRIMARY (#4051b5) and BRAND_DETECTOR (#26a269) have 4.5:1+ contrast with #fff.
     lines.extend(
         (
-            "    classDef principle fill:#4051b5,color:#fff,stroke:none",
-            "    classDef detector fill:#26a269,color:#fff,stroke:none",
+            "    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px",
+            "    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px",
         ),
     )
     for p in principles:
@@ -349,9 +355,104 @@ def _build_mermaid(principles, detector_map) -> str:
     return "\n".join(lines)
 
 
-# ---------------------------------------------------------------------------
-# Config block generation
-# ---------------------------------------------------------------------------
+def _build_class_diagram(_principles, detector_map) -> str:
+    """Build a Mermaid classDiagram showing the detector class hierarchy."""
+    lines = [
+        '%%{init: {"theme": "base"}}%%',
+        "    classDiagram",
+        "        direction TB",
+        "        class ViolationDetector {",
+        "            <<abstract>>",
+        "            +detect(context, config) list~Violation~",
+        "        }",
+    ]
+
+    seen: set[str] = set()
+    detector_names: list[str] = []
+    for binding in sorted(
+        detector_map.bindings,
+        key=lambda b: b.detector_class.__name__,
+    ):
+        det_name = binding.detector_class.__name__
+        if det_name in seen or binding.detector_id == "analyzer_defaults":
+            continue
+        seen.add(det_name)
+        detector_names.append(det_name)
+
+        # Rule IDs as a compact annotation
+        rule_ids_str = ", ".join(sorted(binding.rule_ids)) if binding.rule_ids else ""
+        lines.append(f"        class {det_name} {{")
+        if rule_ids_str:
+            lines.append(f'            +rules "{rule_ids_str}"')
+        lines.append("        }")
+        lines.append(f"        ViolationDetector <|-- {det_name}")
+
+    # Apply palette colors
+    lines.append(
+        "        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px",
+    )
+    lines.append(
+        "        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px",
+    )
+    lines.append("        class ViolationDetector abstract")
+    if detector_names:
+        lines.append(f"        class {','.join(detector_names)} detector")
+
+    return "\n".join(lines)
+
+
+def _build_flow_diagram(principles, detector_map) -> str:
+    """Build a Mermaid flowchart of the analysis pipeline for this language."""
+    num_principles = len(principles)
+    num_detectors = len(
+        {
+            b.detector_class.__name__
+            for b in detector_map.bindings
+            if b.detector_id != "analyzer_defaults"
+        },
+    )
+    lines = [
+        '%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%',
+        "    flowchart TD",
+        '    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]',
+        '    Parse --> Metrics["Compute Metrics"]',
+        f'    Metrics --> Pipeline{{"{num_detectors} Detectors"}}',
+        '    Pipeline --> Collect["Aggregate Violations"]',
+        f'    Collect --> Result(["✅ AnalysisResult · {num_principles} principles"])',
+        "",
+        "    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px",
+        "    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px",
+        "    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px",
+        "    class Source,Result io",
+        "    class Parse,Metrics,Collect process",
+        "    class Pipeline decision",
+    ]
+    return "\n".join(lines)
+
+
+def _build_state_diagram(_principles, detector_map) -> str:
+    """Build a Mermaid stateDiagram for the violation detection lifecycle."""
+    num_detectors = len(
+        {
+            b.detector_class.__name__
+            for b in detector_map.bindings
+            if b.detector_id != "analyzer_defaults"
+        },
+    )
+    lines = [
+        '%%{init: {"theme": "base"}}%%',
+        "    stateDiagram-v2",
+        "        [*] --> Ready",
+        "        Ready --> Parsing : analyze(code)",
+        "        Parsing --> Computing : AST ready",
+        "        Computing --> Detecting : metrics ready",
+        f"        Detecting --> Reporting : {num_detectors} detectors run",
+        "        Reporting --> [*] : AnalysisResult",
+        "        Parsing --> Reporting : parse error (best-effort)",
+    ]
+    return "\n".join(lines)
+
+
 def _build_config_entries(_principles, detector_map) -> list[dict]:
     """Build config YAML entries from metrics and detector bindings."""
     entries: list[dict] = []
@@ -471,6 +572,9 @@ def render_language_page(
     detector_groups = _group_detectors(zen.principles, detector_map)
     config_entries = _build_config_entries(zen.principles, detector_map)
     mermaid = _build_mermaid(zen.principles, detector_map)
+    class_diagram = _build_class_diagram(zen.principles, detector_map)
+    flow_diagram = _build_flow_diagram(zen.principles, detector_map)
+    state_diagram = _build_state_diagram(zen.principles, detector_map)
 
     # Category summary
     cat_counter: Counter[str] = Counter()
@@ -516,6 +620,9 @@ def render_language_page(
         external_tools=_build_external_tools(config_key),
         has_temporary_runner=(config_key in TEMP_RUNNER_LANGUAGES),
         mermaid_diagram=mermaid,
+        class_diagram=class_diagram,
+        flow_diagram=flow_diagram,
+        state_diagram=state_diagram,
         see_also=see_also,
     )
 

@@ -436,26 +436,27 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-    graph LR
-    python_001["python-001<br/>Beautiful is better than ugly"]
-    python_002["python-002<br/>Explicit is better than implicit"]
-    python_003["python-003<br/>Simple is better than complex"]
-    python_004["python-004<br/>Complex is better than complicated"]
-    python_005["python-005<br/>Flat is better than nested"]
-    python_006["python-006<br/>Sparse is better than dense"]
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    graph TD
+    python_001["python-001<br/>Beautiful is better than ..."]
+    python_002["python-002<br/>Explicit is better than i..."]
+    python_003["python-003<br/>Simple is better than com..."]
+    python_004["python-004<br/>Complex is better than co..."]
+    python_005["python-005<br/>Flat is better than neste..."]
+    python_006["python-006<br/>Sparse is better than den..."]
     python_007["python-007<br/>Readability counts"]
-    python_008["python-008<br/>Special cases aren't special enough to b..."]
-    python_009["python-009<br/>Errors should never pass silently"]
-    python_010["python-010<br/>In the face of ambiguity, refuse the tem..."]
-    python_011["python-011<br/>There should be one-- and preferably onl..."]
-    python_012["python-012<br/>Namespaces are one honking great idea"]
+    python_008["python-008<br/>Special cases aren't spec..."]
+    python_009["python-009<br/>Errors should never pass ..."]
+    python_010["python-010<br/>In the face of ambiguity,..."]
+    python_011["python-011<br/>There should be one-- and..."]
+    python_012["python-012<br/>Namespaces are one honkin..."]
     python_013["python-013<br/>Practicality beats purity"]
-    python_014["python-014<br/>Unless explicitly silenced"]
+    python_014["python-014<br/>Unless explicitly silence..."]
     python_015["python-015<br/>Now is better than never"]
-    python_016["python-016<br/>Although never is often better than *rig..."]
-    python_017["python-017<br/>If the implementation is hard to explain..."]
-    python_018["python-018<br/>If the implementation is easy to explain..."]
-    python_019["python-019<br/>Although that way may not be obvious at ..."]
+    python_016["python-016<br/>Although never is often b..."]
+    python_017["python-017<br/>If the implementation is ..."]
+    python_018["python-018<br/>If the implementation is ..."]
+    python_019["python-019<br/>Although that way may not..."]
     python_020["python-020<br/>Let's do more of those"]
     det_BareExceptDetector["BareExceptDetector"]
     python_009 --> det_BareExceptDetector
@@ -517,8 +518,8 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     python_006 --> det_SparseCodeDetector
     det_StarImportDetector["StarImportDetector"]
     python_002 --> det_StarImportDetector
-    classDef principle fill:#4051b5,color:#fff,stroke:none
-    classDef detector fill:#26a269,color:#fff,stroke:none
+    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
     class python_001 principle
     class python_002 principle
     class python_003 principle
@@ -569,6 +570,172 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     class det_ShortVariableNamesDetector detector
     class det_SparseCodeDetector detector
     class det_StarImportDetector detector
+    ```
+
+??? example "Detector Class Hierarchy"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    classDiagram
+        direction TB
+        class ViolationDetector {
+            <<abstract>>
+            +detect(context, config) list~Violation~
+        }
+        class BareExceptDetector {
+            +rules "python-009"
+        }
+        ViolationDetector <|-- BareExceptDetector
+        class CircularDependencyDetector {
+            +rules "python-004"
+        }
+        ViolationDetector <|-- CircularDependencyDetector
+        class ClassSizeDetector {
+            +rules "python-007"
+        }
+        ViolationDetector <|-- ClassSizeDetector
+        class ComplexOneLinersDetector {
+            +rules "python-003"
+        }
+        ViolationDetector <|-- ComplexOneLinersDetector
+        class ConsistencyDetector {
+            +rules "python-008"
+        }
+        ViolationDetector <|-- ConsistencyDetector
+        class ContextManagerDetector {
+            +rules "python-011"
+        }
+        ViolationDetector <|-- ContextManagerDetector
+        class CyclomaticComplexityDetector {
+            +rules "python-003"
+        }
+        ViolationDetector <|-- CyclomaticComplexityDetector
+        class DeepInheritanceDetector {
+            +rules "python-004"
+        }
+        ViolationDetector <|-- DeepInheritanceDetector
+        class DocstringDetector {
+            +rules "python-007"
+        }
+        ViolationDetector <|-- DocstringDetector
+        class DuplicateImplementationDetector {
+            +rules "python-011"
+        }
+        ViolationDetector <|-- DuplicateImplementationDetector
+        class ExplicitnessDetector {
+            +rules "python-010"
+        }
+        ViolationDetector <|-- ExplicitnessDetector
+        class FeatureEnvyDetector {
+            +rules "python-011"
+        }
+        ViolationDetector <|-- FeatureEnvyDetector
+        class GodClassDetector {
+            +rules "python-004"
+        }
+        ViolationDetector <|-- GodClassDetector
+        class LineLengthDetector {
+            +rules "python-001"
+        }
+        ViolationDetector <|-- LineLengthDetector
+        class LongFunctionDetector {
+            +rules "python-007"
+        }
+        ViolationDetector <|-- LongFunctionDetector
+        class MagicMethodDetector {
+            +rules "python-002"
+        }
+        ViolationDetector <|-- MagicMethodDetector
+        class MagicNumberDetector {
+            +rules "python-002"
+        }
+        ViolationDetector <|-- MagicNumberDetector
+        class NameStyleDetector {
+            +rules "python-001"
+        }
+        ViolationDetector <|-- NameStyleDetector
+        class NamespaceUsageDetector {
+            +rules "python-012, python-020"
+        }
+        ViolationDetector <|-- NamespaceUsageDetector
+        class NestingDepthDetector {
+            +rules "python-005"
+        }
+        ViolationDetector <|-- NestingDepthDetector
+        class PythonComplexUndocumentedDetector {
+            +rules "python-017"
+        }
+        ViolationDetector <|-- PythonComplexUndocumentedDetector
+        class PythonExplicitSilenceDetector {
+            +rules "python-014"
+        }
+        ViolationDetector <|-- PythonExplicitSilenceDetector
+        class PythonIdiomDetector {
+            +rules "python-019"
+        }
+        ViolationDetector <|-- PythonIdiomDetector
+        class PythonPracticalityDetector {
+            +rules "python-013"
+        }
+        ViolationDetector <|-- PythonPracticalityDetector
+        class PythonPrematureImplDetector {
+            +rules "python-016"
+        }
+        ViolationDetector <|-- PythonPrematureImplDetector
+        class PythonSimpleDocumentedDetector {
+            +rules "python-018"
+        }
+        ViolationDetector <|-- PythonSimpleDocumentedDetector
+        class PythonTodoStubDetector {
+            +rules "python-015"
+        }
+        ViolationDetector <|-- PythonTodoStubDetector
+        class ShortVariableNamesDetector {
+            +rules "python-007"
+        }
+        ViolationDetector <|-- ShortVariableNamesDetector
+        class SparseCodeDetector {
+            +rules "python-006"
+        }
+        ViolationDetector <|-- SparseCodeDetector
+        class StarImportDetector {
+            +rules "python-002"
+        }
+        ViolationDetector <|-- StarImportDetector
+        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+        class ViolationDetector abstract
+        class BareExceptDetector,CircularDependencyDetector,ClassSizeDetector,ComplexOneLinersDetector,ConsistencyDetector,ContextManagerDetector,CyclomaticComplexityDetector,DeepInheritanceDetector,DocstringDetector,DuplicateImplementationDetector,ExplicitnessDetector,FeatureEnvyDetector,GodClassDetector,LineLengthDetector,LongFunctionDetector,MagicMethodDetector,MagicNumberDetector,NameStyleDetector,NamespaceUsageDetector,NestingDepthDetector,PythonComplexUndocumentedDetector,PythonExplicitSilenceDetector,PythonIdiomDetector,PythonPracticalityDetector,PythonPrematureImplDetector,PythonSimpleDocumentedDetector,PythonTodoStubDetector,ShortVariableNamesDetector,SparseCodeDetector,StarImportDetector detector
+    ```
+
+??? example "Analysis Pipeline"
+    ```mermaid
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TD
+    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]
+    Parse --> Metrics["Compute Metrics"]
+    Metrics --> Pipeline{"30 Detectors"}
+    Pipeline --> Collect["Aggregate Violations"]
+    Collect --> Result(["✅ AnalysisResult · 20 principles"])
+
+    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px
+    class Source,Result io
+    class Parse,Metrics,Collect process
+    class Pipeline decision
+    ```
+
+??? example "Analysis States"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    stateDiagram-v2
+        [*] --> Ready
+        Ready --> Parsing : analyze(code)
+        Parsing --> Computing : AST ready
+        Computing --> Detecting : metrics ready
+        Detecting --> Reporting : 30 detectors run
+        Reporting --> [*] : AnalysisResult
+        Parsing --> Reporting : parse error (best-effort)
     ```
 
 ## Configuration

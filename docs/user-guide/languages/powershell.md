@@ -402,22 +402,23 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-    graph LR
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    graph TD
     ps_001["ps-001<br/>Use approved verbs"]
     ps_002["ps-002<br/>Use proper error handling"]
-    ps_003["ps-003<br/>Use cmdlet binding and parameters"]
-    ps_004["ps-004<br/>Use PascalCase for function names"]
-    ps_005["ps-005<br/>Use Write-Verbose and Write-Debug"]
-    ps_006["ps-006<br/>Avoid positional parameters"]
+    ps_003["ps-003<br/>Use cmdlet binding and pa..."]
+    ps_004["ps-004<br/>Use PascalCase for functi..."]
+    ps_005["ps-005<br/>Use Write-Verbose and Wri..."]
+    ps_006["ps-006<br/>Avoid positional paramete..."]
     ps_007["ps-007<br/>Use pipeline properly"]
-    ps_008["ps-008<br/>Use -WhatIf and -Confirm support"]
-    ps_009["ps-009<br/>Use splatting for readability"]
-    ps_010["ps-010<br/>Validate parameters properly"]
+    ps_008["ps-008<br/>Use -WhatIf and -Confirm ..."]
+    ps_009["ps-009<br/>Use splatting for readabi..."]
+    ps_010["ps-010<br/>Validate parameters prope..."]
     ps_011["ps-011<br/>Use comment-based help"]
     ps_012["ps-012<br/>Avoid aliases in scripts"]
-    ps_013["ps-013<br/>Return objects, not formatted text"]
-    ps_014["ps-014<br/>Use script scope carefully"]
-    ps_015["ps-015<br/>Handle null values explicitly"]
+    ps_013["ps-013<br/>Return objects, not forma..."]
+    ps_014["ps-014<br/>Use script scope carefull..."]
+    ps_015["ps-015<br/>Handle null values explic..."]
     det_PowerShellAliasUsageDetector["PowerShellAliasUsageDetector"]
     ps_012 --> det_PowerShellAliasUsageDetector
     det_PowerShellApprovedVerbDetector["PowerShellApprovedVerbDetector"]
@@ -448,8 +449,8 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
     ps_009 --> det_PowerShellSplattingDetector
     det_PowerShellVerboseDebugDetector["PowerShellVerboseDebugDetector"]
     ps_005 --> det_PowerShellVerboseDebugDetector
-    classDef principle fill:#4051b5,color:#fff,stroke:none
-    classDef detector fill:#26a269,color:#fff,stroke:none
+    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
     class ps_001 principle
     class ps_002 principle
     class ps_003 principle
@@ -480,6 +481,112 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
     class det_PowerShellShouldProcessDetector detector
     class det_PowerShellSplattingDetector detector
     class det_PowerShellVerboseDebugDetector detector
+    ```
+
+??? example "Detector Class Hierarchy"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    classDiagram
+        direction TB
+        class ViolationDetector {
+            <<abstract>>
+            +detect(context, config) list~Violation~
+        }
+        class PowerShellAliasUsageDetector {
+            +rules "ps-012"
+        }
+        ViolationDetector <|-- PowerShellAliasUsageDetector
+        class PowerShellApprovedVerbDetector {
+            +rules "ps-001"
+        }
+        ViolationDetector <|-- PowerShellApprovedVerbDetector
+        class PowerShellCmdletBindingDetector {
+            +rules "ps-003"
+        }
+        ViolationDetector <|-- PowerShellCmdletBindingDetector
+        class PowerShellCommentHelpDetector {
+            +rules "ps-011"
+        }
+        ViolationDetector <|-- PowerShellCommentHelpDetector
+        class PowerShellErrorHandlingDetector {
+            +rules "ps-002"
+        }
+        ViolationDetector <|-- PowerShellErrorHandlingDetector
+        class PowerShellNullHandlingDetector {
+            +rules "ps-015"
+        }
+        ViolationDetector <|-- PowerShellNullHandlingDetector
+        class PowerShellParameterValidationDetector {
+            +rules "ps-010"
+        }
+        ViolationDetector <|-- PowerShellParameterValidationDetector
+        class PowerShellPascalCaseDetector {
+            +rules "ps-004"
+        }
+        ViolationDetector <|-- PowerShellPascalCaseDetector
+        class PowerShellPipelineUsageDetector {
+            +rules "ps-007"
+        }
+        ViolationDetector <|-- PowerShellPipelineUsageDetector
+        class PowerShellPositionalParamsDetector {
+            +rules "ps-006"
+        }
+        ViolationDetector <|-- PowerShellPositionalParamsDetector
+        class PowerShellReturnObjectsDetector {
+            +rules "ps-013"
+        }
+        ViolationDetector <|-- PowerShellReturnObjectsDetector
+        class PowerShellScopeUsageDetector {
+            +rules "ps-014"
+        }
+        ViolationDetector <|-- PowerShellScopeUsageDetector
+        class PowerShellShouldProcessDetector {
+            +rules "ps-008"
+        }
+        ViolationDetector <|-- PowerShellShouldProcessDetector
+        class PowerShellSplattingDetector {
+            +rules "ps-009"
+        }
+        ViolationDetector <|-- PowerShellSplattingDetector
+        class PowerShellVerboseDebugDetector {
+            +rules "ps-005"
+        }
+        ViolationDetector <|-- PowerShellVerboseDebugDetector
+        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+        class ViolationDetector abstract
+        class PowerShellAliasUsageDetector,PowerShellApprovedVerbDetector,PowerShellCmdletBindingDetector,PowerShellCommentHelpDetector,PowerShellErrorHandlingDetector,PowerShellNullHandlingDetector,PowerShellParameterValidationDetector,PowerShellPascalCaseDetector,PowerShellPipelineUsageDetector,PowerShellPositionalParamsDetector,PowerShellReturnObjectsDetector,PowerShellScopeUsageDetector,PowerShellShouldProcessDetector,PowerShellSplattingDetector,PowerShellVerboseDebugDetector detector
+    ```
+
+??? example "Analysis Pipeline"
+    ```mermaid
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TD
+    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]
+    Parse --> Metrics["Compute Metrics"]
+    Metrics --> Pipeline{"15 Detectors"}
+    Pipeline --> Collect["Aggregate Violations"]
+    Collect --> Result(["✅ AnalysisResult · 15 principles"])
+
+    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px
+    class Source,Result io
+    class Parse,Metrics,Collect process
+    class Pipeline decision
+    ```
+
+??? example "Analysis States"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    stateDiagram-v2
+        [*] --> Ready
+        Ready --> Parsing : analyze(code)
+        Parsing --> Computing : AST ready
+        Computing --> Detecting : metrics ready
+        Detecting --> Reporting : 15 detectors run
+        Reporting --> [*] : AnalysisResult
+        Parsing --> Reporting : parse error (best-effort)
     ```
 
 ## Configuration

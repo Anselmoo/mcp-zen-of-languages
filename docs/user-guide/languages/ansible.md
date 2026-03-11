@@ -305,27 +305,28 @@ tags:
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-    graph LR
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    graph TD
     ansible_001["ansible-001<br/>Ansible is not Python."]
     ansible_002["ansible-002<br/>YAML sucks for coding."]
-    ansible_003["ansible-003<br/>Playbooks are not for programming."]
-    ansible_004["ansible-004<br/>Ansible users are (most likely) not prog..."]
-    ansible_005["ansible-005<br/>Clear is better than cluttered."]
-    ansible_006["ansible-006<br/>Concise is better than verbose."]
-    ansible_007["ansible-007<br/>Simple is better than complex."]
+    ansible_003["ansible-003<br/>Playbooks are not for pro..."]
+    ansible_004["ansible-004<br/>Ansible users are (most l..."]
+    ansible_005["ansible-005<br/>Clear is better than clut..."]
+    ansible_006["ansible-006<br/>Concise is better than ve..."]
+    ansible_007["ansible-007<br/>Simple is better than com..."]
     ansible_008["ansible-008<br/>Readability counts."]
-    ansible_009["ansible-009<br/>Helping users get things done matters mo..."]
-    ansible_010["ansible-010<br/>User experience beats ideological purity..."]
-    ansible_011["ansible-011<br/>"Magic" conquers the manual."]
-    ansible_012["ansible-012<br/>When giving users options, use conventio..."]
-    ansible_013["ansible-013<br/>Declarative is better than imperative --..."]
+    ansible_009["ansible-009<br/>Helping users get things ..."]
+    ansible_010["ansible-010<br/>User experience beats ide..."]
+    ansible_011["ansible-011<br/>"Magic" conquers the manu..."]
+    ansible_012["ansible-012<br/>When giving users options..."]
+    ansible_013["ansible-013<br/>Declarative is better tha..."]
     ansible_014["ansible-014<br/>Focus avoids complexity."]
-    ansible_015["ansible-015<br/>Complexity kills productivity."]
-    ansible_016["ansible-016<br/>If the implementation is hard to explain..."]
-    ansible_017["ansible-017<br/>Every shell command and UI interaction i..."]
-    ansible_018["ansible-018<br/>Just because something works, doesn't me..."]
-    ansible_019["ansible-019<br/>Friction should be eliminated whenever p..."]
-    ansible_020["ansible-020<br/>Automation is a journey that never ends."]
+    ansible_015["ansible-015<br/>Complexity kills producti..."]
+    ansible_016["ansible-016<br/>If the implementation is ..."]
+    ansible_017["ansible-017<br/>Every shell command and U..."]
+    ansible_018["ansible-018<br/>Just because something wo..."]
+    ansible_019["ansible-019<br/>Friction should be elimin..."]
+    ansible_020["ansible-020<br/>Automation is a journey t..."]
     det_AnsibleAutomationJourneyDetector["AnsibleAutomationJourneyDetector"]
     ansible_020 --> det_AnsibleAutomationJourneyDetector
     det_AnsibleAutomationOpportunityDetector["AnsibleAutomationOpportunityDetector"]
@@ -366,8 +367,8 @@ tags:
     ansible_010 --> det_AnsibleUserExperienceDetector
     det_AnsibleUserOutcomeDetector["AnsibleUserOutcomeDetector"]
     ansible_009 --> det_AnsibleUserOutcomeDetector
-    classDef principle fill:#4051b5,color:#fff,stroke:none
-    classDef detector fill:#26a269,color:#fff,stroke:none
+    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
     class ansible_001 principle
     class ansible_002 principle
     class ansible_003 principle
@@ -408,6 +409,132 @@ tags:
     class det_AnsibleStateExplicitDetector detector
     class det_AnsibleUserExperienceDetector detector
     class det_AnsibleUserOutcomeDetector detector
+    ```
+
+??? example "Detector Class Hierarchy"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    classDiagram
+        direction TB
+        class ViolationDetector {
+            <<abstract>>
+            +detect(context, config) list~Violation~
+        }
+        class AnsibleAutomationJourneyDetector {
+            +rules "ansible-020"
+        }
+        ViolationDetector <|-- AnsibleAutomationJourneyDetector
+        class AnsibleAutomationOpportunityDetector {
+            +rules "ansible-017"
+        }
+        ViolationDetector <|-- AnsibleAutomationOpportunityDetector
+        class AnsibleBecomeDetector {
+            +rules "ansible-004"
+        }
+        ViolationDetector <|-- AnsibleBecomeDetector
+        class AnsibleComplexityProductivityDetector {
+            +rules "ansible-015"
+        }
+        ViolationDetector <|-- AnsibleComplexityProductivityDetector
+        class AnsibleContinuousImprovementDetector {
+            +rules "ansible-018"
+        }
+        ViolationDetector <|-- AnsibleContinuousImprovementDetector
+        class AnsibleConventionOverConfigDetector {
+            +rules "ansible-012"
+        }
+        ViolationDetector <|-- AnsibleConventionOverConfigDetector
+        class AnsibleDeclarativeBiasDetector {
+            +rules "ansible-013"
+        }
+        ViolationDetector <|-- AnsibleDeclarativeBiasDetector
+        class AnsibleExplainabilityDetector {
+            +rules "ansible-016"
+        }
+        ViolationDetector <|-- AnsibleExplainabilityDetector
+        class AnsibleFocusDetector {
+            +rules "ansible-014"
+        }
+        ViolationDetector <|-- AnsibleFocusDetector
+        class AnsibleFqcnDetector {
+            +rules "ansible-002"
+        }
+        ViolationDetector <|-- AnsibleFqcnDetector
+        class AnsibleFrictionDetector {
+            +rules "ansible-019"
+        }
+        ViolationDetector <|-- AnsibleFrictionDetector
+        class AnsibleIdempotencyDetector {
+            +rules "ansible-003"
+        }
+        ViolationDetector <|-- AnsibleIdempotencyDetector
+        class AnsibleJinjaSpacingDetector {
+            +rules "ansible-007"
+        }
+        ViolationDetector <|-- AnsibleJinjaSpacingDetector
+        class AnsibleMagicAutomationDetector {
+            +rules "ansible-011"
+        }
+        ViolationDetector <|-- AnsibleMagicAutomationDetector
+        class AnsibleNamingDetector {
+            +rules "ansible-001"
+        }
+        ViolationDetector <|-- AnsibleNamingDetector
+        class AnsibleNoCleartextPasswordDetector {
+            +rules "ansible-006"
+        }
+        ViolationDetector <|-- AnsibleNoCleartextPasswordDetector
+        class AnsibleReadabilityCountsDetector {
+            +rules "ansible-008"
+        }
+        ViolationDetector <|-- AnsibleReadabilityCountsDetector
+        class AnsibleStateExplicitDetector {
+            +rules "ansible-005"
+        }
+        ViolationDetector <|-- AnsibleStateExplicitDetector
+        class AnsibleUserExperienceDetector {
+            +rules "ansible-010"
+        }
+        ViolationDetector <|-- AnsibleUserExperienceDetector
+        class AnsibleUserOutcomeDetector {
+            +rules "ansible-009"
+        }
+        ViolationDetector <|-- AnsibleUserOutcomeDetector
+        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+        class ViolationDetector abstract
+        class AnsibleAutomationJourneyDetector,AnsibleAutomationOpportunityDetector,AnsibleBecomeDetector,AnsibleComplexityProductivityDetector,AnsibleContinuousImprovementDetector,AnsibleConventionOverConfigDetector,AnsibleDeclarativeBiasDetector,AnsibleExplainabilityDetector,AnsibleFocusDetector,AnsibleFqcnDetector,AnsibleFrictionDetector,AnsibleIdempotencyDetector,AnsibleJinjaSpacingDetector,AnsibleMagicAutomationDetector,AnsibleNamingDetector,AnsibleNoCleartextPasswordDetector,AnsibleReadabilityCountsDetector,AnsibleStateExplicitDetector,AnsibleUserExperienceDetector,AnsibleUserOutcomeDetector detector
+    ```
+
+??? example "Analysis Pipeline"
+    ```mermaid
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TD
+    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]
+    Parse --> Metrics["Compute Metrics"]
+    Metrics --> Pipeline{"20 Detectors"}
+    Pipeline --> Collect["Aggregate Violations"]
+    Collect --> Result(["✅ AnalysisResult · 20 principles"])
+
+    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px
+    class Source,Result io
+    class Parse,Metrics,Collect process
+    class Pipeline decision
+    ```
+
+??? example "Analysis States"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    stateDiagram-v2
+        [*] --> Ready
+        Ready --> Parsing : analyze(code)
+        Parsing --> Computing : AST ready
+        Computing --> Detecting : metrics ready
+        Detecting --> Reporting : 20 detectors run
+        Reporting --> [*] : AnalysisResult
+        Parsing --> Reporting : parse error (best-effort)
     ```
 
 ## Configuration

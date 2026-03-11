@@ -207,15 +207,16 @@ Stylesheets can accumulate hidden complexity quickly — deeply nested selectors
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-    graph LR
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    graph TD
     css_001["css-001<br/>Avoid specificity creep"]
     css_002["css-002<br/>Avoid magic pixel values"]
-    css_003["css-003<br/>Limit inline color literals"]
+    css_003["css-003<br/>Limit inline color litera..."]
     css_004["css-004<br/>Keep stylesheets modular"]
-    css_005["css-005<br/>Prefer modern import strategy"]
+    css_005["css-005<br/>Prefer modern import stra..."]
     css_006["css-006<br/>Use a z-index scale"]
-    css_007["css-007<br/>Avoid manual vendor prefixes"]
-    css_008["css-008<br/>Use a consistent breakpoint scale"]
+    css_007["css-007<br/>Avoid manual vendor prefi..."]
+    css_008["css-008<br/>Use a consistent breakpoi..."]
     det_CssColorLiteralDetector["CssColorLiteralDetector"]
     css_003 --> det_CssColorLiteralDetector
     det_CssGodStylesheetDetector["CssGodStylesheetDetector"]
@@ -232,8 +233,8 @@ Stylesheets can accumulate hidden complexity quickly — deeply nested selectors
     css_007 --> det_CssVendorPrefixDetector
     det_CssZIndexScaleDetector["CssZIndexScaleDetector"]
     css_006 --> det_CssZIndexScaleDetector
-    classDef principle fill:#4051b5,color:#fff,stroke:none
-    classDef detector fill:#26a269,color:#fff,stroke:none
+    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
     class css_001 principle
     class css_002 principle
     class css_003 principle
@@ -250,6 +251,84 @@ Stylesheets can accumulate hidden complexity quickly — deeply nested selectors
     class det_CssSpecificityDetector detector
     class det_CssVendorPrefixDetector detector
     class det_CssZIndexScaleDetector detector
+    ```
+
+??? example "Detector Class Hierarchy"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    classDiagram
+        direction TB
+        class ViolationDetector {
+            <<abstract>>
+            +detect(context, config) list~Violation~
+        }
+        class CssColorLiteralDetector {
+            +rules "css-003"
+        }
+        ViolationDetector <|-- CssColorLiteralDetector
+        class CssGodStylesheetDetector {
+            +rules "css-004"
+        }
+        ViolationDetector <|-- CssGodStylesheetDetector
+        class CssImportChainDetector {
+            +rules "css-005"
+        }
+        ViolationDetector <|-- CssImportChainDetector
+        class CssMagicPixelsDetector {
+            +rules "css-002"
+        }
+        ViolationDetector <|-- CssMagicPixelsDetector
+        class CssMediaQueryScaleDetector {
+            +rules "css-008"
+        }
+        ViolationDetector <|-- CssMediaQueryScaleDetector
+        class CssSpecificityDetector {
+            +rules "css-001"
+        }
+        ViolationDetector <|-- CssSpecificityDetector
+        class CssVendorPrefixDetector {
+            +rules "css-007"
+        }
+        ViolationDetector <|-- CssVendorPrefixDetector
+        class CssZIndexScaleDetector {
+            +rules "css-006"
+        }
+        ViolationDetector <|-- CssZIndexScaleDetector
+        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+        class ViolationDetector abstract
+        class CssColorLiteralDetector,CssGodStylesheetDetector,CssImportChainDetector,CssMagicPixelsDetector,CssMediaQueryScaleDetector,CssSpecificityDetector,CssVendorPrefixDetector,CssZIndexScaleDetector detector
+    ```
+
+??? example "Analysis Pipeline"
+    ```mermaid
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TD
+    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]
+    Parse --> Metrics["Compute Metrics"]
+    Metrics --> Pipeline{"8 Detectors"}
+    Pipeline --> Collect["Aggregate Violations"]
+    Collect --> Result(["✅ AnalysisResult · 8 principles"])
+
+    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px
+    class Source,Result io
+    class Parse,Metrics,Collect process
+    class Pipeline decision
+    ```
+
+??? example "Analysis States"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    stateDiagram-v2
+        [*] --> Ready
+        Ready --> Parsing : analyze(code)
+        Parsing --> Computing : AST ready
+        Computing --> Detecting : metrics ready
+        Detecting --> Reporting : 8 detectors run
+        Reporting --> [*] : AnalysisResult
+        Parsing --> Reporting : parse error (best-effort)
     ```
 
 ## Configuration

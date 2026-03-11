@@ -403,25 +403,26 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-    graph LR
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    graph TD
     js_001["js-001<br/>Avoid callback hell"]
-    js_002["js-002<br/>Prefer const over let, never var"]
+    js_002["js-002<br/>Prefer const over let, ne..."]
     js_003["js-003<br/>Use strict equality"]
     js_004["js-004<br/>Avoid global state"]
-    js_005["js-005<br/>Functions should do one thing"]
+    js_005["js-005<br/>Functions should do one t..."]
     js_006["js-006<br/>Use modern ES6+ features"]
     js_007["js-007<br/>Handle errors explicitly"]
-    js_008["js-008<br/>Avoid magic numbers and strings"]
-    js_009["js-009<br/>Prefer composition over inheritance"]
-    js_010["js-010<br/>Keep functions pure when possible"]
+    js_008["js-008<br/>Avoid magic numbers and s..."]
+    js_009["js-009<br/>Prefer composition over i..."]
+    js_010["js-010<br/>Keep functions pure when ..."]
     js_011["js-011<br/>Use meaningful names"]
-    js_012["js-012<br/>Use destructuring for assignment"]
-    js_013["js-013<br/>Use object spread over Object.assign"]
+    js_012["js-012<br/>Use destructuring for ass..."]
+    js_013["js-013<br/>Use object spread over Ob..."]
     js_014["js-014<br/>Avoid with statement"]
-    js_015["js-015<br/>Limit function parameter count"]
+    js_015["js-015<br/>Limit function parameter ..."]
     js_016["js-016<br/>No eval()"]
-    js_017["js-017<br/>Prefer Array.from/spread over arguments"]
-    js_018["js-018<br/>No prototype mutation on built-in object..."]
+    js_017["js-017<br/>Prefer Array.from/spread ..."]
+    js_018["js-018<br/>No prototype mutation on ..."]
     det_JsAsyncErrorHandlingDetector["JsAsyncErrorHandlingDetector"]
     js_007 --> det_JsAsyncErrorHandlingDetector
     det_JsCallbackNestingDetector["JsCallbackNestingDetector"]
@@ -458,8 +459,8 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
     js_010 --> det_JsPureFunctionDetector
     det_JsStrictEqualityDetector["JsStrictEqualityDetector"]
     js_003 --> det_JsStrictEqualityDetector
-    classDef principle fill:#4051b5,color:#fff,stroke:none
-    classDef detector fill:#26a269,color:#fff,stroke:none
+    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
     class js_001 principle
     class js_002 principle
     class js_003 principle
@@ -496,6 +497,124 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
     class det_JsParamCountDetector detector
     class det_JsPureFunctionDetector detector
     class det_JsStrictEqualityDetector detector
+    ```
+
+??? example "Detector Class Hierarchy"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    classDiagram
+        direction TB
+        class ViolationDetector {
+            <<abstract>>
+            +detect(context, config) list~Violation~
+        }
+        class JsAsyncErrorHandlingDetector {
+            +rules "js-007"
+        }
+        ViolationDetector <|-- JsAsyncErrorHandlingDetector
+        class JsCallbackNestingDetector {
+            +rules "js-001"
+        }
+        ViolationDetector <|-- JsCallbackNestingDetector
+        class JsDestructuringDetector {
+            +rules "js-012"
+        }
+        ViolationDetector <|-- JsDestructuringDetector
+        class JsFunctionLengthDetector {
+            +rules "js-005"
+        }
+        ViolationDetector <|-- JsFunctionLengthDetector
+        class JsGlobalStateDetector {
+            +rules "js-004"
+        }
+        ViolationDetector <|-- JsGlobalStateDetector
+        class JsInheritanceDepthDetector {
+            +rules "js-009"
+        }
+        ViolationDetector <|-- JsInheritanceDepthDetector
+        class JsMagicNumbersDetector {
+            +rules "js-008"
+        }
+        ViolationDetector <|-- JsMagicNumbersDetector
+        class JsMeaningfulNamesDetector {
+            +rules "js-011"
+        }
+        ViolationDetector <|-- JsMeaningfulNamesDetector
+        class JsModernFeaturesDetector {
+            +rules "js-006"
+        }
+        ViolationDetector <|-- JsModernFeaturesDetector
+        class JsNoArgumentsDetector {
+            +rules "js-017"
+        }
+        ViolationDetector <|-- JsNoArgumentsDetector
+        class JsNoEvalDetector {
+            +rules "js-016"
+        }
+        ViolationDetector <|-- JsNoEvalDetector
+        class JsNoPrototypeMutationDetector {
+            +rules "js-018"
+        }
+        ViolationDetector <|-- JsNoPrototypeMutationDetector
+        class JsNoVarDetector {
+            +rules "js-002"
+        }
+        ViolationDetector <|-- JsNoVarDetector
+        class JsNoWithDetector {
+            +rules "js-014"
+        }
+        ViolationDetector <|-- JsNoWithDetector
+        class JsObjectSpreadDetector {
+            +rules "js-013"
+        }
+        ViolationDetector <|-- JsObjectSpreadDetector
+        class JsParamCountDetector {
+            +rules "js-015"
+        }
+        ViolationDetector <|-- JsParamCountDetector
+        class JsPureFunctionDetector {
+            +rules "js-010"
+        }
+        ViolationDetector <|-- JsPureFunctionDetector
+        class JsStrictEqualityDetector {
+            +rules "js-003"
+        }
+        ViolationDetector <|-- JsStrictEqualityDetector
+        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+        class ViolationDetector abstract
+        class JsAsyncErrorHandlingDetector,JsCallbackNestingDetector,JsDestructuringDetector,JsFunctionLengthDetector,JsGlobalStateDetector,JsInheritanceDepthDetector,JsMagicNumbersDetector,JsMeaningfulNamesDetector,JsModernFeaturesDetector,JsNoArgumentsDetector,JsNoEvalDetector,JsNoPrototypeMutationDetector,JsNoVarDetector,JsNoWithDetector,JsObjectSpreadDetector,JsParamCountDetector,JsPureFunctionDetector,JsStrictEqualityDetector detector
+    ```
+
+??? example "Analysis Pipeline"
+    ```mermaid
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TD
+    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]
+    Parse --> Metrics["Compute Metrics"]
+    Metrics --> Pipeline{"18 Detectors"}
+    Pipeline --> Collect["Aggregate Violations"]
+    Collect --> Result(["✅ AnalysisResult · 18 principles"])
+
+    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px
+    class Source,Result io
+    class Parse,Metrics,Collect process
+    class Pipeline decision
+    ```
+
+??? example "Analysis States"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    stateDiagram-v2
+        [*] --> Ready
+        Ready --> Parsing : analyze(code)
+        Parsing --> Computing : AST ready
+        Computing --> Detecting : metrics ready
+        Detecting --> Reporting : 18 detectors run
+        Reporting --> [*] : AnalysisResult
+        Parsing --> Reporting : parse error (best-effort)
     ```
 
 ## Configuration

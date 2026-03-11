@@ -176,13 +176,14 @@ tags:
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-    graph LR
-    md_001["md-001<br/>Preserve heading hierarchy"]
-    md_002["md-002<br/>Images require meaningful alt text"]
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    graph TD
+    md_001["md-001<br/>Preserve heading hierarch..."]
+    md_002["md-002<br/>Images require meaningful..."]
     md_003["md-003<br/>Avoid bare URLs in prose"]
-    md_004["md-004<br/>Fence code blocks with explicit language..."]
-    md_005["md-005<br/>Keep front-matter complete when present"]
-    md_006["md-006<br/>Use named default exports in MDX"]
+    md_004["md-004<br/>Fence code blocks with ex..."]
+    md_005["md-005<br/>Keep front-matter complet..."]
+    md_006["md-006<br/>Use named default exports..."]
     md_007["md-007<br/>Keep MDX imports hygienic"]
     det_MarkdownAltTextDetector["MarkdownAltTextDetector"]
     md_002 --> det_MarkdownAltTextDetector
@@ -198,8 +199,8 @@ tags:
     md_007 --> det_MarkdownMdxImportHygieneDetector
     det_MarkdownMdxNamedDefaultExportDetector["MarkdownMdxNamedDefaultExportDetector"]
     md_006 --> det_MarkdownMdxNamedDefaultExportDetector
-    classDef principle fill:#4051b5,color:#fff,stroke:none
-    classDef detector fill:#26a269,color:#fff,stroke:none
+    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
     class md_001 principle
     class md_002 principle
     class md_003 principle
@@ -214,6 +215,80 @@ tags:
     class det_MarkdownHeadingHierarchyDetector detector
     class det_MarkdownMdxImportHygieneDetector detector
     class det_MarkdownMdxNamedDefaultExportDetector detector
+    ```
+
+??? example "Detector Class Hierarchy"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    classDiagram
+        direction TB
+        class ViolationDetector {
+            <<abstract>>
+            +detect(context, config) list~Violation~
+        }
+        class MarkdownAltTextDetector {
+            +rules "md-002"
+        }
+        ViolationDetector <|-- MarkdownAltTextDetector
+        class MarkdownBareUrlDetector {
+            +rules "md-003"
+        }
+        ViolationDetector <|-- MarkdownBareUrlDetector
+        class MarkdownCodeFenceLanguageDetector {
+            +rules "md-004"
+        }
+        ViolationDetector <|-- MarkdownCodeFenceLanguageDetector
+        class MarkdownFrontMatterDetector {
+            +rules "md-005"
+        }
+        ViolationDetector <|-- MarkdownFrontMatterDetector
+        class MarkdownHeadingHierarchyDetector {
+            +rules "md-001"
+        }
+        ViolationDetector <|-- MarkdownHeadingHierarchyDetector
+        class MarkdownMdxImportHygieneDetector {
+            +rules "md-007"
+        }
+        ViolationDetector <|-- MarkdownMdxImportHygieneDetector
+        class MarkdownMdxNamedDefaultExportDetector {
+            +rules "md-006"
+        }
+        ViolationDetector <|-- MarkdownMdxNamedDefaultExportDetector
+        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+        class ViolationDetector abstract
+        class MarkdownAltTextDetector,MarkdownBareUrlDetector,MarkdownCodeFenceLanguageDetector,MarkdownFrontMatterDetector,MarkdownHeadingHierarchyDetector,MarkdownMdxImportHygieneDetector,MarkdownMdxNamedDefaultExportDetector detector
+    ```
+
+??? example "Analysis Pipeline"
+    ```mermaid
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TD
+    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]
+    Parse --> Metrics["Compute Metrics"]
+    Metrics --> Pipeline{"7 Detectors"}
+    Pipeline --> Collect["Aggregate Violations"]
+    Collect --> Result(["✅ AnalysisResult · 7 principles"])
+
+    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px
+    class Source,Result io
+    class Parse,Metrics,Collect process
+    class Pipeline decision
+    ```
+
+??? example "Analysis States"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    stateDiagram-v2
+        [*] --> Ready
+        Ready --> Parsing : analyze(code)
+        Parsing --> Computing : AST ready
+        Computing --> Detecting : metrics ready
+        Detecting --> Reporting : 7 detectors run
+        Reporting --> [*] : AnalysisResult
+        Parsing --> Reporting : parse error (best-effort)
     ```
 
 ## Configuration

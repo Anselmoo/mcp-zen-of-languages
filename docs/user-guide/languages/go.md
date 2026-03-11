@@ -430,27 +430,28 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-    graph LR
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    graph TD
     go_001["go-001<br/>Errors are values"]
-    go_002["go-002<br/>Accept interfaces, return structs"]
-    go_003["go-003<br/>Make the zero value useful"]
+    go_002["go-002<br/>Accept interfaces, return..."]
+    go_003["go-003<br/>Make the zero value usefu..."]
     go_004["go-004<br/>Use short variable names"]
-    go_005["go-005<br/>Don't use pointer to interface"]
+    go_005["go-005<br/>Don't use pointer to inte..."]
     go_006["go-006<br/>Avoid goroutine leaks"]
     go_007["go-007<br/>Use defer for cleanup"]
-    go_008["go-008<br/>Package names are singular"]
+    go_008["go-008<br/>Package names are singula..."]
     go_009["go-009<br/>Avoid package-level state"]
     go_010["go-010<br/>Keep interfaces small"]
-    go_011["go-011<br/>Use context for cancellation"]
-    go_012["go-012<br/>Avoid init() when possible"]
-    go_013["go-013<br/>Organize by responsibility"]
-    go_014["go-014<br/>Embed for composition, not inheritance"]
-    go_015["go-015<br/>Communicate by sharing memory through ch..."]
-    go_016["go-016<br/>Avoid unnecessary complexity"]
+    go_011["go-011<br/>Use context for cancellat..."]
+    go_012["go-012<br/>Avoid init() when possibl..."]
+    go_013["go-013<br/>Organize by responsibilit..."]
+    go_014["go-014<br/>Embed for composition, no..."]
+    go_015["go-015<br/>Communicate by sharing me..."]
+    go_016["go-016<br/>Avoid unnecessary complex..."]
     go_017["go-017<br/>Handle every error path"]
-    go_018["go-018<br/>Avoid premature optimization"]
+    go_018["go-018<br/>Avoid premature optimizat..."]
     go_019["go-019<br/>Design for testability"]
-    go_020["go-020<br/>Write self-documenting code"]
+    go_020["go-020<br/>Write self-documenting co..."]
     det_GoBenchmarkDetector["GoBenchmarkDetector"]
     go_018 --> det_GoBenchmarkDetector
     det_GoConcurrencyCallerDetector["GoConcurrencyCallerDetector"]
@@ -492,8 +493,8 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
     go_019 --> det_GoTestPresenceDetector
     det_GoZeroValueDetector["GoZeroValueDetector"]
     go_003 --> det_GoZeroValueDetector
-    classDef principle fill:#4051b5,color:#fff,stroke:none
-    classDef detector fill:#26a269,color:#fff,stroke:none
+    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
     class go_001 principle
     class go_002 principle
     class go_003 principle
@@ -535,6 +536,135 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
     class det_GoSimplicityDetector detector
     class det_GoTestPresenceDetector detector
     class det_GoZeroValueDetector detector
+    ```
+
+??? example "Detector Class Hierarchy"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    classDiagram
+        direction TB
+        class ViolationDetector {
+            <<abstract>>
+            +detect(context, config) list~Violation~
+        }
+        class GoBenchmarkDetector {
+            +rules "go-018"
+        }
+        ViolationDetector <|-- GoBenchmarkDetector
+        class GoConcurrencyCallerDetector {
+            +rules "go-015"
+        }
+        ViolationDetector <|-- GoConcurrencyCallerDetector
+        class GoContextUsageDetector {
+            +rules "go-011"
+        }
+        ViolationDetector <|-- GoContextUsageDetector
+        class GoDeferUsageDetector {
+            +rules "go-007"
+        }
+        ViolationDetector <|-- GoDeferUsageDetector
+        class GoEarlyReturnDetector {
+            +rules "go-017"
+        }
+        ViolationDetector <|-- GoEarlyReturnDetector
+        class GoEmbeddingDepthDetector {
+            +rules "go-014"
+        }
+        ViolationDetector <|-- GoEmbeddingDepthDetector
+        class GoErrorHandlingDetector {
+            +rules "go-001"
+        }
+        ViolationDetector <|-- GoErrorHandlingDetector
+        class GoGoroutineLeakDetector {
+            +rules "go-006"
+        }
+        ViolationDetector <|-- GoGoroutineLeakDetector
+        class GoInitUsageDetector {
+            +rules "go-012"
+        }
+        ViolationDetector <|-- GoInitUsageDetector
+        class GoInterfacePointerDetector {
+            +rules "go-005"
+        }
+        ViolationDetector <|-- GoInterfacePointerDetector
+        class GoInterfaceReturnDetector {
+            +rules "go-002"
+        }
+        ViolationDetector <|-- GoInterfaceReturnDetector
+        class GoInterfaceSizeDetector {
+            +rules "go-010"
+        }
+        ViolationDetector <|-- GoInterfaceSizeDetector
+        class GoMaintainabilityDetector {
+            +rules "go-020"
+        }
+        ViolationDetector <|-- GoMaintainabilityDetector
+        class GoModerationDetector {
+        }
+        ViolationDetector <|-- GoModerationDetector
+        class GoNamingConventionDetector {
+            +rules "go-004"
+        }
+        ViolationDetector <|-- GoNamingConventionDetector
+        class GoOrganizeResponsibilityDetector {
+            +rules "go-013"
+        }
+        ViolationDetector <|-- GoOrganizeResponsibilityDetector
+        class GoPackageNamingDetector {
+            +rules "go-008"
+        }
+        ViolationDetector <|-- GoPackageNamingDetector
+        class GoPackageStateDetector {
+            +rules "go-009"
+        }
+        ViolationDetector <|-- GoPackageStateDetector
+        class GoSimplicityDetector {
+            +rules "go-016"
+        }
+        ViolationDetector <|-- GoSimplicityDetector
+        class GoTestPresenceDetector {
+            +rules "go-019"
+        }
+        ViolationDetector <|-- GoTestPresenceDetector
+        class GoZeroValueDetector {
+            +rules "go-003"
+        }
+        ViolationDetector <|-- GoZeroValueDetector
+        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+        class ViolationDetector abstract
+        class GoBenchmarkDetector,GoConcurrencyCallerDetector,GoContextUsageDetector,GoDeferUsageDetector,GoEarlyReturnDetector,GoEmbeddingDepthDetector,GoErrorHandlingDetector,GoGoroutineLeakDetector,GoInitUsageDetector,GoInterfacePointerDetector,GoInterfaceReturnDetector,GoInterfaceSizeDetector,GoMaintainabilityDetector,GoModerationDetector,GoNamingConventionDetector,GoOrganizeResponsibilityDetector,GoPackageNamingDetector,GoPackageStateDetector,GoSimplicityDetector,GoTestPresenceDetector,GoZeroValueDetector detector
+    ```
+
+??? example "Analysis Pipeline"
+    ```mermaid
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TD
+    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]
+    Parse --> Metrics["Compute Metrics"]
+    Metrics --> Pipeline{"21 Detectors"}
+    Pipeline --> Collect["Aggregate Violations"]
+    Collect --> Result(["✅ AnalysisResult · 20 principles"])
+
+    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px
+    class Source,Result io
+    class Parse,Metrics,Collect process
+    class Pipeline decision
+    ```
+
+??? example "Analysis States"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    stateDiagram-v2
+        [*] --> Ready
+        Ready --> Parsing : analyze(code)
+        Parsing --> Computing : AST ready
+        Computing --> Detecting : metrics ready
+        Detecting --> Reporting : 21 detectors run
+        Reporting --> [*] : AnalysisResult
+        Parsing --> Reporting : parse error (best-effort)
     ```
 
 ## Configuration

@@ -358,20 +358,21 @@ Shell scripts are the glue of infrastructure — and the source of some of the m
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-    graph LR
-    bash_001["bash-001<br/>Always use set -euo pipefail"]
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    graph TD
+    bash_001["bash-001<br/>Always use set -euo pipef..."]
     bash_002["bash-002<br/>Quote all variables"]
     bash_003["bash-003<br/>Use [[ ]] over [ ]"]
     bash_004["bash-004<br/>Use $() over backticks"]
     bash_005["bash-005<br/>Check command exit codes"]
-    bash_006["bash-006<br/>Use functions for reusable code"]
-    bash_007["bash-007<br/>Use local variables in functions"]
+    bash_006["bash-006<br/>Use functions for reusabl..."]
+    bash_007["bash-007<br/>Use local variables in fu..."]
     bash_008["bash-008<br/>Avoid eval"]
-    bash_009["bash-009<br/>Use readonly for constants"]
-    bash_010["bash-010<br/>Validate input and arguments"]
-    bash_011["bash-011<br/>Use meaningful variable names"]
+    bash_009["bash-009<br/>Use readonly for constant..."]
+    bash_010["bash-010<br/>Validate input and argume..."]
+    bash_011["bash-011<br/>Use meaningful variable n..."]
     bash_012["bash-012<br/>Handle signals properly"]
-    bash_013["bash-013<br/>Use arrays instead of string splitting"]
+    bash_013["bash-013<br/>Use arrays instead of str..."]
     bash_014["bash-014<br/>Include usage information"]
     det_BashArgumentValidationDetector["BashArgumentValidationDetector"]
     bash_010 --> det_BashArgumentValidationDetector
@@ -401,8 +402,8 @@ Shell scripts are the glue of infrastructure — and the source of some of the m
     bash_001 --> det_BashStrictModeDetector
     det_BashUsageInfoDetector["BashUsageInfoDetector"]
     bash_014 --> det_BashUsageInfoDetector
-    classDef principle fill:#4051b5,color:#fff,stroke:none
-    classDef detector fill:#26a269,color:#fff,stroke:none
+    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
     class bash_001 principle
     class bash_002 principle
     class bash_003 principle
@@ -431,6 +432,108 @@ Shell scripts are the glue of infrastructure — and the source of some of the m
     class det_BashSignalHandlingDetector detector
     class det_BashStrictModeDetector detector
     class det_BashUsageInfoDetector detector
+    ```
+
+??? example "Detector Class Hierarchy"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    classDiagram
+        direction TB
+        class ViolationDetector {
+            <<abstract>>
+            +detect(context, config) list~Violation~
+        }
+        class BashArgumentValidationDetector {
+            +rules "bash-010"
+        }
+        ViolationDetector <|-- BashArgumentValidationDetector
+        class BashArrayUsageDetector {
+            +rules "bash-013"
+        }
+        ViolationDetector <|-- BashArrayUsageDetector
+        class BashCommandSubstitutionDetector {
+            +rules "bash-004"
+        }
+        ViolationDetector <|-- BashCommandSubstitutionDetector
+        class BashDoubleBracketsDetector {
+            +rules "bash-003"
+        }
+        ViolationDetector <|-- BashDoubleBracketsDetector
+        class BashEvalUsageDetector {
+            +rules "bash-008"
+        }
+        ViolationDetector <|-- BashEvalUsageDetector
+        class BashExitCodeChecksDetector {
+            +rules "bash-005"
+        }
+        ViolationDetector <|-- BashExitCodeChecksDetector
+        class BashFunctionUsageDetector {
+            +rules "bash-006"
+        }
+        ViolationDetector <|-- BashFunctionUsageDetector
+        class BashLocalVariablesDetector {
+            +rules "bash-007"
+        }
+        ViolationDetector <|-- BashLocalVariablesDetector
+        class BashMeaningfulNamesDetector {
+            +rules "bash-011"
+        }
+        ViolationDetector <|-- BashMeaningfulNamesDetector
+        class BashQuoteVariablesDetector {
+            +rules "bash-002"
+        }
+        ViolationDetector <|-- BashQuoteVariablesDetector
+        class BashReadonlyConstantsDetector {
+            +rules "bash-009"
+        }
+        ViolationDetector <|-- BashReadonlyConstantsDetector
+        class BashSignalHandlingDetector {
+            +rules "bash-012"
+        }
+        ViolationDetector <|-- BashSignalHandlingDetector
+        class BashStrictModeDetector {
+            +rules "bash-001"
+        }
+        ViolationDetector <|-- BashStrictModeDetector
+        class BashUsageInfoDetector {
+            +rules "bash-014"
+        }
+        ViolationDetector <|-- BashUsageInfoDetector
+        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+        class ViolationDetector abstract
+        class BashArgumentValidationDetector,BashArrayUsageDetector,BashCommandSubstitutionDetector,BashDoubleBracketsDetector,BashEvalUsageDetector,BashExitCodeChecksDetector,BashFunctionUsageDetector,BashLocalVariablesDetector,BashMeaningfulNamesDetector,BashQuoteVariablesDetector,BashReadonlyConstantsDetector,BashSignalHandlingDetector,BashStrictModeDetector,BashUsageInfoDetector detector
+    ```
+
+??? example "Analysis Pipeline"
+    ```mermaid
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TD
+    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]
+    Parse --> Metrics["Compute Metrics"]
+    Metrics --> Pipeline{"14 Detectors"}
+    Pipeline --> Collect["Aggregate Violations"]
+    Collect --> Result(["✅ AnalysisResult · 14 principles"])
+
+    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px
+    class Source,Result io
+    class Parse,Metrics,Collect process
+    class Pipeline decision
+    ```
+
+??? example "Analysis States"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    stateDiagram-v2
+        [*] --> Ready
+        Ready --> Parsing : analyze(code)
+        Parsing --> Computing : AST ready
+        Computing --> Detecting : metrics ready
+        Detecting --> Reporting : 14 detectors run
+        Reporting --> [*] : AnalysisResult
+        Parsing --> Reporting : parse error (best-effort)
     ```
 
 ## Configuration

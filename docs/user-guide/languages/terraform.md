@@ -129,14 +129,15 @@ tags:
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-    graph LR
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    graph TD
     tf_001["tf-001<br/>Pin provider versions"]
     tf_002["tf-002<br/>Pin module versions"]
-    tf_003["tf-003<br/>Describe variables and outputs"]
-    tf_004["tf-004<br/>Avoid hardcoded resource IDs"]
+    tf_003["tf-003<br/>Describe variables and ou..."]
+    tf_004["tf-004<br/>Avoid hardcoded resource ..."]
     tf_005["tf-005<br/>Avoid hardcoded secrets"]
-    tf_006["tf-006<br/>Configure remote state backend"]
-    tf_007["tf-007<br/>Use consistent snake_case naming"]
+    tf_006["tf-006<br/>Configure remote state ba..."]
+    tf_007["tf-007<br/>Use consistent snake_case..."]
     det_TerraformBackendConfigDetector["TerraformBackendConfigDetector"]
     tf_006 --> det_TerraformBackendConfigDetector
     det_TerraformHardcodedIdDetector["TerraformHardcodedIdDetector"]
@@ -151,8 +152,8 @@ tags:
     tf_001 --> det_TerraformProviderVersionPinningDetector
     det_TerraformVariableOutputDescriptionDetector["TerraformVariableOutputDescriptionDetector"]
     tf_003 --> det_TerraformVariableOutputDescriptionDetector
-    classDef principle fill:#4051b5,color:#fff,stroke:none
-    classDef detector fill:#26a269,color:#fff,stroke:none
+    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
     class tf_001 principle
     class tf_002 principle
     class tf_003 principle
@@ -167,6 +168,80 @@ tags:
     class det_TerraformNoHardcodedSecretsDetector detector
     class det_TerraformProviderVersionPinningDetector detector
     class det_TerraformVariableOutputDescriptionDetector detector
+    ```
+
+??? example "Detector Class Hierarchy"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    classDiagram
+        direction TB
+        class ViolationDetector {
+            <<abstract>>
+            +detect(context, config) list~Violation~
+        }
+        class TerraformBackendConfigDetector {
+            +rules "tf-006"
+        }
+        ViolationDetector <|-- TerraformBackendConfigDetector
+        class TerraformHardcodedIdDetector {
+            +rules "tf-004"
+        }
+        ViolationDetector <|-- TerraformHardcodedIdDetector
+        class TerraformModuleVersionPinningDetector {
+            +rules "tf-002"
+        }
+        ViolationDetector <|-- TerraformModuleVersionPinningDetector
+        class TerraformNamingConventionDetector {
+            +rules "tf-007"
+        }
+        ViolationDetector <|-- TerraformNamingConventionDetector
+        class TerraformNoHardcodedSecretsDetector {
+            +rules "tf-005"
+        }
+        ViolationDetector <|-- TerraformNoHardcodedSecretsDetector
+        class TerraformProviderVersionPinningDetector {
+            +rules "tf-001"
+        }
+        ViolationDetector <|-- TerraformProviderVersionPinningDetector
+        class TerraformVariableOutputDescriptionDetector {
+            +rules "tf-003"
+        }
+        ViolationDetector <|-- TerraformVariableOutputDescriptionDetector
+        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+        class ViolationDetector abstract
+        class TerraformBackendConfigDetector,TerraformHardcodedIdDetector,TerraformModuleVersionPinningDetector,TerraformNamingConventionDetector,TerraformNoHardcodedSecretsDetector,TerraformProviderVersionPinningDetector,TerraformVariableOutputDescriptionDetector detector
+    ```
+
+??? example "Analysis Pipeline"
+    ```mermaid
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TD
+    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]
+    Parse --> Metrics["Compute Metrics"]
+    Metrics --> Pipeline{"7 Detectors"}
+    Pipeline --> Collect["Aggregate Violations"]
+    Collect --> Result(["✅ AnalysisResult · 7 principles"])
+
+    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px
+    class Source,Result io
+    class Parse,Metrics,Collect process
+    class Pipeline decision
+    ```
+
+??? example "Analysis States"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    stateDiagram-v2
+        [*] --> Ready
+        Ready --> Parsing : analyze(code)
+        Parsing --> Computing : AST ready
+        Computing --> Detecting : metrics ready
+        Detecting --> Reporting : 7 detectors run
+        Reporting --> [*] : AnalysisResult
+        Parsing --> Reporting : parse error (best-effort)
     ```
 
 ## Configuration

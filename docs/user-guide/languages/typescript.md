@@ -453,25 +453,26 @@ TypeScript's power lies in its type system — but that power is easily undermin
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-    graph LR
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    graph TD
     ts_001["ts-001<br/>Avoid 'any' type"]
     ts_002["ts-002<br/>Use strict mode"]
-    ts_003["ts-003<br/>Prefer interfaces over type aliases for ..."]
-    ts_004["ts-004<br/>Always specify return types"]
-    ts_005["ts-005<br/>Use readonly when appropriate"]
+    ts_003["ts-003<br/>Prefer interfaces over ty..."]
+    ts_004["ts-004<br/>Always specify return typ..."]
+    ts_005["ts-005<br/>Use readonly when appropr..."]
     ts_006["ts-006<br/>Leverage type guards"]
     ts_007["ts-007<br/>Use utility types"]
     ts_008["ts-008<br/>Avoid non-null assertions"]
-    ts_009["ts-009<br/>Use enums or const assertions appropriat..."]
-    ts_010["ts-010<br/>Prefer unknown over any for uncertain ty..."]
-    ts_011["ts-011<br/>Use optional chaining instead of manual ..."]
-    ts_012["ts-012<br/>Prefer for-of and array methods over ind..."]
-    ts_013["ts-013<br/>Prefer async/await over raw promise chai..."]
-    ts_014["ts-014<br/>Prefer named exports over default export..."]
-    ts_015["ts-015<br/>Avoid catch-all types like Object or {}"]
-    ts_016["ts-016<br/>Avoid console usage in production code"]
-    ts_017["ts-017<br/>Use ES module imports instead of require..."]
-    ts_018["ts-018<br/>Use template literals instead of string ..."]
+    ts_009["ts-009<br/>Use enums or const assert..."]
+    ts_010["ts-010<br/>Prefer unknown over any f..."]
+    ts_011["ts-011<br/>Use optional chaining ins..."]
+    ts_012["ts-012<br/>Prefer for-of and array m..."]
+    ts_013["ts-013<br/>Prefer async/await over r..."]
+    ts_014["ts-014<br/>Prefer named exports over..."]
+    ts_015["ts-015<br/>Avoid catch-all types lik..."]
+    ts_016["ts-016<br/>Avoid console usage in pr..."]
+    ts_017["ts-017<br/>Use ES module imports ins..."]
+    ts_018["ts-018<br/>Use template literals ins..."]
     det_TsAnyUsageDetector["TsAnyUsageDetector"]
     ts_001 --> det_TsAnyUsageDetector
     det_TsAsyncAwaitDetector["TsAsyncAwaitDetector"]
@@ -522,8 +523,8 @@ TypeScript's power lies in its type system — but that power is easily undermin
     ts_010 --> det_TsUnknownOverAnyDetector
     det_TsUtilityTypesDetector["TsUtilityTypesDetector"]
     ts_007 --> det_TsUtilityTypesDetector
-    classDef principle fill:#4051b5,color:#fff,stroke:none
-    classDef detector fill:#26a269,color:#fff,stroke:none
+    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
     class ts_001 principle
     class ts_002 principle
     class ts_003 principle
@@ -567,6 +568,152 @@ TypeScript's power lies in its type system — but that power is easily undermin
     class det_TsTypeGuardDetector detector
     class det_TsUnknownOverAnyDetector detector
     class det_TsUtilityTypesDetector detector
+    ```
+
+??? example "Detector Class Hierarchy"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    classDiagram
+        direction TB
+        class ViolationDetector {
+            <<abstract>>
+            +detect(context, config) list~Violation~
+        }
+        class TsAnyUsageDetector {
+            +rules "ts-001"
+        }
+        ViolationDetector <|-- TsAnyUsageDetector
+        class TsAsyncAwaitDetector {
+            +rules "ts-013"
+        }
+        ViolationDetector <|-- TsAsyncAwaitDetector
+        class TsCatchAllTypeDetector {
+            +rules "ts-015"
+        }
+        ViolationDetector <|-- TsCatchAllTypeDetector
+        class TsConsoleUsageDetector {
+            +rules "ts-016"
+        }
+        ViolationDetector <|-- TsConsoleUsageDetector
+        class TsDefaultExportDetector {
+            +rules "ts-014"
+        }
+        ViolationDetector <|-- TsDefaultExportDetector
+        class TsEnumConstDetector {
+            +rules "ts-009"
+        }
+        ViolationDetector <|-- TsEnumConstDetector
+        class TsForOfDetector {
+            +rules "ts-012"
+        }
+        ViolationDetector <|-- TsForOfDetector
+        class TsImportOrderDetector {
+            +rules "ts-017"
+        }
+        ViolationDetector <|-- TsImportOrderDetector
+        class TsIndexLoopDetector {
+            +rules "ts-012"
+        }
+        ViolationDetector <|-- TsIndexLoopDetector
+        class TsInterfacePreferenceDetector {
+            +rules "ts-003"
+        }
+        ViolationDetector <|-- TsInterfacePreferenceDetector
+        class TsNamedExportDetector {
+            +rules "ts-014"
+        }
+        ViolationDetector <|-- TsNamedExportDetector
+        class TsNoConsoleDetector {
+            +rules "ts-016"
+        }
+        ViolationDetector <|-- TsNoConsoleDetector
+        class TsNonNullAssertionDetector {
+            +rules "ts-008"
+        }
+        ViolationDetector <|-- TsNonNullAssertionDetector
+        class TsObjectTypeDetector {
+            +rules "ts-015"
+        }
+        ViolationDetector <|-- TsObjectTypeDetector
+        class TsOptionalChainingDetector {
+            +rules "ts-011"
+        }
+        ViolationDetector <|-- TsOptionalChainingDetector
+        class TsPromiseChainDetector {
+            +rules "ts-013"
+        }
+        ViolationDetector <|-- TsPromiseChainDetector
+        class TsReadonlyDetector {
+            +rules "ts-005"
+        }
+        ViolationDetector <|-- TsReadonlyDetector
+        class TsRequireImportDetector {
+            +rules "ts-017"
+        }
+        ViolationDetector <|-- TsRequireImportDetector
+        class TsReturnTypeDetector {
+            +rules "ts-004"
+        }
+        ViolationDetector <|-- TsReturnTypeDetector
+        class TsStrictModeDetector {
+            +rules "ts-002"
+        }
+        ViolationDetector <|-- TsStrictModeDetector
+        class TsStringConcatDetector {
+            +rules "ts-018"
+        }
+        ViolationDetector <|-- TsStringConcatDetector
+        class TsTemplateLiteralDetector {
+            +rules "ts-018"
+        }
+        ViolationDetector <|-- TsTemplateLiteralDetector
+        class TsTypeGuardDetector {
+            +rules "ts-006"
+        }
+        ViolationDetector <|-- TsTypeGuardDetector
+        class TsUnknownOverAnyDetector {
+            +rules "ts-010"
+        }
+        ViolationDetector <|-- TsUnknownOverAnyDetector
+        class TsUtilityTypesDetector {
+            +rules "ts-007"
+        }
+        ViolationDetector <|-- TsUtilityTypesDetector
+        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+        class ViolationDetector abstract
+        class TsAnyUsageDetector,TsAsyncAwaitDetector,TsCatchAllTypeDetector,TsConsoleUsageDetector,TsDefaultExportDetector,TsEnumConstDetector,TsForOfDetector,TsImportOrderDetector,TsIndexLoopDetector,TsInterfacePreferenceDetector,TsNamedExportDetector,TsNoConsoleDetector,TsNonNullAssertionDetector,TsObjectTypeDetector,TsOptionalChainingDetector,TsPromiseChainDetector,TsReadonlyDetector,TsRequireImportDetector,TsReturnTypeDetector,TsStrictModeDetector,TsStringConcatDetector,TsTemplateLiteralDetector,TsTypeGuardDetector,TsUnknownOverAnyDetector,TsUtilityTypesDetector detector
+    ```
+
+??? example "Analysis Pipeline"
+    ```mermaid
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TD
+    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]
+    Parse --> Metrics["Compute Metrics"]
+    Metrics --> Pipeline{"25 Detectors"}
+    Pipeline --> Collect["Aggregate Violations"]
+    Collect --> Result(["✅ AnalysisResult · 18 principles"])
+
+    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px
+    class Source,Result io
+    class Parse,Metrics,Collect process
+    class Pipeline decision
+    ```
+
+??? example "Analysis States"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    stateDiagram-v2
+        [*] --> Ready
+        Ready --> Parsing : analyze(code)
+        Parsing --> Computing : AST ready
+        Computing --> Detecting : metrics ready
+        Detecting --> Reporting : 25 detectors run
+        Reporting --> [*] : AnalysisResult
+        Parsing --> Reporting : parse error (best-effort)
     ```
 
 ## Configuration

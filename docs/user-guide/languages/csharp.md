@@ -316,19 +316,20 @@ Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullab
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-    graph LR
-    cs_001["cs-001<br/>Use nullable reference types"]
-    cs_002["cs-002<br/>Use expression-bodied members"]
-    cs_003["cs-003<br/>Prefer var for local variables"]
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    graph TD
+    cs_001["cs-001<br/>Use nullable reference ty..."]
+    cs_002["cs-002<br/>Use expression-bodied mem..."]
+    cs_003["cs-003<br/>Prefer var for local vari..."]
     cs_004["cs-004<br/>Use async/await properly"]
     cs_005["cs-005<br/>Use pattern matching"]
-    cs_006["cs-006<br/>Prefer string interpolation"]
-    cs_007["cs-007<br/>Use collection expressions"]
+    cs_006["cs-006<br/>Prefer string interpolati..."]
+    cs_007["cs-007<br/>Use collection expression..."]
     cs_008["cs-008<br/>Follow naming conventions"]
-    cs_009["cs-009<br/>Use IDisposable and using statements"]
+    cs_009["cs-009<br/>Use IDisposable and using..."]
     cs_010["cs-010<br/>Avoid magic numbers"]
     cs_011["cs-011<br/>Use LINQ appropriately"]
-    cs_012["cs-012<br/>Handle exceptions properly"]
+    cs_012["cs-012<br/>Handle exceptions properl..."]
     cs_013["cs-013<br/>Use records for DTOs"]
     det_CSharpAsyncAwaitDetector["CSharpAsyncAwaitDetector"]
     cs_004 --> det_CSharpAsyncAwaitDetector
@@ -356,8 +357,8 @@ Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullab
     cs_006 --> det_CSharpStringInterpolationDetector
     det_CSharpVarDetector["CSharpVarDetector"]
     cs_003 --> det_CSharpVarDetector
-    classDef principle fill:#4051b5,color:#fff,stroke:none
-    classDef detector fill:#26a269,color:#fff,stroke:none
+    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
     class cs_001 principle
     class cs_002 principle
     class cs_003 principle
@@ -384,6 +385,104 @@ Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullab
     class det_CSharpRecordDetector detector
     class det_CSharpStringInterpolationDetector detector
     class det_CSharpVarDetector detector
+    ```
+
+??? example "Detector Class Hierarchy"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    classDiagram
+        direction TB
+        class ViolationDetector {
+            <<abstract>>
+            +detect(context, config) list~Violation~
+        }
+        class CSharpAsyncAwaitDetector {
+            +rules "cs-004"
+        }
+        ViolationDetector <|-- CSharpAsyncAwaitDetector
+        class CSharpCollectionExpressionDetector {
+            +rules "cs-007"
+        }
+        ViolationDetector <|-- CSharpCollectionExpressionDetector
+        class CSharpDisposableDetector {
+            +rules "cs-009"
+        }
+        ViolationDetector <|-- CSharpDisposableDetector
+        class CSharpExceptionHandlingDetector {
+            +rules "cs-012"
+        }
+        ViolationDetector <|-- CSharpExceptionHandlingDetector
+        class CSharpExpressionBodiedDetector {
+            +rules "cs-002"
+        }
+        ViolationDetector <|-- CSharpExpressionBodiedDetector
+        class CSharpLinqDetector {
+            +rules "cs-011"
+        }
+        ViolationDetector <|-- CSharpLinqDetector
+        class CSharpMagicNumberDetector {
+            +rules "cs-010"
+        }
+        ViolationDetector <|-- CSharpMagicNumberDetector
+        class CSharpNamingConventionDetector {
+            +rules "cs-008"
+        }
+        ViolationDetector <|-- CSharpNamingConventionDetector
+        class CSharpNullableDetector {
+            +rules "cs-001"
+        }
+        ViolationDetector <|-- CSharpNullableDetector
+        class CSharpPatternMatchingDetector {
+            +rules "cs-005"
+        }
+        ViolationDetector <|-- CSharpPatternMatchingDetector
+        class CSharpRecordDetector {
+            +rules "cs-013"
+        }
+        ViolationDetector <|-- CSharpRecordDetector
+        class CSharpStringInterpolationDetector {
+            +rules "cs-006"
+        }
+        ViolationDetector <|-- CSharpStringInterpolationDetector
+        class CSharpVarDetector {
+            +rules "cs-003"
+        }
+        ViolationDetector <|-- CSharpVarDetector
+        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+        class ViolationDetector abstract
+        class CSharpAsyncAwaitDetector,CSharpCollectionExpressionDetector,CSharpDisposableDetector,CSharpExceptionHandlingDetector,CSharpExpressionBodiedDetector,CSharpLinqDetector,CSharpMagicNumberDetector,CSharpNamingConventionDetector,CSharpNullableDetector,CSharpPatternMatchingDetector,CSharpRecordDetector,CSharpStringInterpolationDetector,CSharpVarDetector detector
+    ```
+
+??? example "Analysis Pipeline"
+    ```mermaid
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TD
+    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]
+    Parse --> Metrics["Compute Metrics"]
+    Metrics --> Pipeline{"13 Detectors"}
+    Pipeline --> Collect["Aggregate Violations"]
+    Collect --> Result(["✅ AnalysisResult · 13 principles"])
+
+    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px
+    class Source,Result io
+    class Parse,Metrics,Collect process
+    class Pipeline decision
+    ```
+
+??? example "Analysis States"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    stateDiagram-v2
+        [*] --> Ready
+        Ready --> Parsing : analyze(code)
+        Parsing --> Computing : AST ready
+        Computing --> Detecting : metrics ready
+        Detecting --> Reporting : 13 detectors run
+        Reporting --> [*] : AnalysisResult
+        Parsing --> Reporting : parse error (best-effort)
     ```
 
 ## Configuration

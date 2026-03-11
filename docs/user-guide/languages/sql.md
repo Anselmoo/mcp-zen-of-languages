@@ -183,16 +183,17 @@ SQL queries are production code: they shape correctness, latency, and security j
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-    graph LR
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    graph TD
     sql_001["sql-001<br/>Never use SELECT *"]
-    sql_002["sql-002<br/>Always include INSERT column lists"]
-    sql_003["sql-003<br/>Prefer parameterized SQL over dynamic co..."]
-    sql_004["sql-004<br/>Avoid NOLOCK and dirty reads"]
-    sql_005["sql-005<br/>Avoid implicit type coercion in JOIN pre..."]
-    sql_006["sql-006<br/>Bound result sets with WHERE/LIMIT/TOP"]
-    sql_007["sql-007<br/>Use descriptive table aliases"]
-    sql_008["sql-008<br/>Keep transaction boundaries balanced"]
-    sql_009["sql-009<br/>Prefer explicit JOIN syntax over ANSI-89..."]
+    sql_002["sql-002<br/>Always include INSERT col..."]
+    sql_003["sql-003<br/>Prefer parameterized SQL ..."]
+    sql_004["sql-004<br/>Avoid NOLOCK and dirty re..."]
+    sql_005["sql-005<br/>Avoid implicit type coerc..."]
+    sql_006["sql-006<br/>Bound result sets with WH..."]
+    sql_007["sql-007<br/>Use descriptive table ali..."]
+    sql_008["sql-008<br/>Keep transaction boundari..."]
+    sql_009["sql-009<br/>Prefer explicit JOIN synt..."]
     det_SqlAliasClarityDetector["SqlAliasClarityDetector"]
     sql_007 --> det_SqlAliasClarityDetector
     det_SqlAnsi89JoinDetector["SqlAnsi89JoinDetector"]
@@ -211,8 +212,8 @@ SQL queries are production code: they shape correctness, latency, and security j
     sql_008 --> det_SqlTransactionBoundaryDetector
     det_SqlUnboundedQueryDetector["SqlUnboundedQueryDetector"]
     sql_006 --> det_SqlUnboundedQueryDetector
-    classDef principle fill:#4051b5,color:#fff,stroke:none
-    classDef detector fill:#26a269,color:#fff,stroke:none
+    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
     class sql_001 principle
     class sql_002 principle
     class sql_003 principle
@@ -231,6 +232,88 @@ SQL queries are production code: they shape correctness, latency, and security j
     class det_SqlSelectStarDetector detector
     class det_SqlTransactionBoundaryDetector detector
     class det_SqlUnboundedQueryDetector detector
+    ```
+
+??? example "Detector Class Hierarchy"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    classDiagram
+        direction TB
+        class ViolationDetector {
+            <<abstract>>
+            +detect(context, config) list~Violation~
+        }
+        class SqlAliasClarityDetector {
+            +rules "sql-007"
+        }
+        ViolationDetector <|-- SqlAliasClarityDetector
+        class SqlAnsi89JoinDetector {
+            +rules "sql-009"
+        }
+        ViolationDetector <|-- SqlAnsi89JoinDetector
+        class SqlDynamicSqlDetector {
+            +rules "sql-003"
+        }
+        ViolationDetector <|-- SqlDynamicSqlDetector
+        class SqlImplicitJoinCoercionDetector {
+            +rules "sql-005"
+        }
+        ViolationDetector <|-- SqlImplicitJoinCoercionDetector
+        class SqlInsertColumnListDetector {
+            +rules "sql-002"
+        }
+        ViolationDetector <|-- SqlInsertColumnListDetector
+        class SqlNolockDetector {
+            +rules "sql-004"
+        }
+        ViolationDetector <|-- SqlNolockDetector
+        class SqlSelectStarDetector {
+            +rules "sql-001"
+        }
+        ViolationDetector <|-- SqlSelectStarDetector
+        class SqlTransactionBoundaryDetector {
+            +rules "sql-008"
+        }
+        ViolationDetector <|-- SqlTransactionBoundaryDetector
+        class SqlUnboundedQueryDetector {
+            +rules "sql-006"
+        }
+        ViolationDetector <|-- SqlUnboundedQueryDetector
+        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+        class ViolationDetector abstract
+        class SqlAliasClarityDetector,SqlAnsi89JoinDetector,SqlDynamicSqlDetector,SqlImplicitJoinCoercionDetector,SqlInsertColumnListDetector,SqlNolockDetector,SqlSelectStarDetector,SqlTransactionBoundaryDetector,SqlUnboundedQueryDetector detector
+    ```
+
+??? example "Analysis Pipeline"
+    ```mermaid
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TD
+    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]
+    Parse --> Metrics["Compute Metrics"]
+    Metrics --> Pipeline{"9 Detectors"}
+    Pipeline --> Collect["Aggregate Violations"]
+    Collect --> Result(["✅ AnalysisResult · 9 principles"])
+
+    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px
+    class Source,Result io
+    class Parse,Metrics,Collect process
+    class Pipeline decision
+    ```
+
+??? example "Analysis States"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    stateDiagram-v2
+        [*] --> Ready
+        Ready --> Parsing : analyze(code)
+        Parsing --> Computing : AST ready
+        Computing --> Detecting : metrics ready
+        Detecting --> Reporting : 9 detectors run
+        Reporting --> [*] : AnalysisResult
+        Parsing --> Reporting : parse error (best-effort)
     ```
 
 ## Configuration

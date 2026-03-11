@@ -276,18 +276,19 @@ Ruby is designed for programmer happiness — expressive, elegant, optimized for
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-    graph LR
-    ruby_001["ruby-001<br/>Convention over configuration"]
-    ruby_002["ruby-002<br/>DRY (Don't Repeat Yourself)"]
-    ruby_003["ruby-003<br/>Prefer blocks over lambdas/procs"]
-    ruby_004["ruby-004<br/>Avoid monkey-patching core classes"]
-    ruby_005["ruby-005<br/>Use meaningful method names with ?/! con..."]
-    ruby_006["ruby-006<br/>Keep method chains readable"]
-    ruby_007["ruby-007<br/>Prefer symbols over strings for keys"]
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    graph TD
+    ruby_001["ruby-001<br/>Convention over configura..."]
+    ruby_002["ruby-002<br/>DRY (Don't Repeat Yoursel..."]
+    ruby_003["ruby-003<br/>Prefer blocks over lambda..."]
+    ruby_004["ruby-004<br/>Avoid monkey-patching cor..."]
+    ruby_005["ruby-005<br/>Use meaningful method nam..."]
+    ruby_006["ruby-006<br/>Keep method chains readab..."]
+    ruby_007["ruby-007<br/>Prefer symbols over strin..."]
     ruby_008["ruby-008<br/>Use guard clauses"]
-    ruby_009["ruby-009<br/>Avoid needless metaprogramming"]
-    ruby_010["ruby-010<br/>Use Ruby's expressive syntax"]
-    ruby_011["ruby-011<br/>Prefer fail over raise for exceptions"]
+    ruby_009["ruby-009<br/>Avoid needless metaprogra..."]
+    ruby_010["ruby-010<br/>Use Ruby's expressive syn..."]
+    ruby_011["ruby-011<br/>Prefer fail over raise fo..."]
     det_RubyBlockPreferenceDetector["RubyBlockPreferenceDetector"]
     ruby_003 --> det_RubyBlockPreferenceDetector
     det_RubyDryDetector["RubyDryDetector"]
@@ -310,8 +311,8 @@ Ruby is designed for programmer happiness — expressive, elegant, optimized for
     ruby_011 --> det_RubyPreferFailDetector
     det_RubySymbolKeysDetector["RubySymbolKeysDetector"]
     ruby_007 --> det_RubySymbolKeysDetector
-    classDef principle fill:#4051b5,color:#fff,stroke:none
-    classDef detector fill:#26a269,color:#fff,stroke:none
+    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
     class ruby_001 principle
     class ruby_002 principle
     class ruby_003 principle
@@ -334,6 +335,96 @@ Ruby is designed for programmer happiness — expressive, elegant, optimized for
     class det_RubyNamingConventionDetector detector
     class det_RubyPreferFailDetector detector
     class det_RubySymbolKeysDetector detector
+    ```
+
+??? example "Detector Class Hierarchy"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    classDiagram
+        direction TB
+        class ViolationDetector {
+            <<abstract>>
+            +detect(context, config) list~Violation~
+        }
+        class RubyBlockPreferenceDetector {
+            +rules "ruby-003"
+        }
+        ViolationDetector <|-- RubyBlockPreferenceDetector
+        class RubyDryDetector {
+            +rules "ruby-002"
+        }
+        ViolationDetector <|-- RubyDryDetector
+        class RubyExpressiveSyntaxDetector {
+            +rules "ruby-010"
+        }
+        ViolationDetector <|-- RubyExpressiveSyntaxDetector
+        class RubyGuardClauseDetector {
+            +rules "ruby-008"
+        }
+        ViolationDetector <|-- RubyGuardClauseDetector
+        class RubyMetaprogrammingDetector {
+            +rules "ruby-009"
+        }
+        ViolationDetector <|-- RubyMetaprogrammingDetector
+        class RubyMethodChainDetector {
+            +rules "ruby-006"
+        }
+        ViolationDetector <|-- RubyMethodChainDetector
+        class RubyMethodNamingDetector {
+            +rules "ruby-005"
+        }
+        ViolationDetector <|-- RubyMethodNamingDetector
+        class RubyMonkeyPatchDetector {
+            +rules "ruby-004"
+        }
+        ViolationDetector <|-- RubyMonkeyPatchDetector
+        class RubyNamingConventionDetector {
+            +rules "ruby-001"
+        }
+        ViolationDetector <|-- RubyNamingConventionDetector
+        class RubyPreferFailDetector {
+            +rules "ruby-011"
+        }
+        ViolationDetector <|-- RubyPreferFailDetector
+        class RubySymbolKeysDetector {
+            +rules "ruby-007"
+        }
+        ViolationDetector <|-- RubySymbolKeysDetector
+        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+        class ViolationDetector abstract
+        class RubyBlockPreferenceDetector,RubyDryDetector,RubyExpressiveSyntaxDetector,RubyGuardClauseDetector,RubyMetaprogrammingDetector,RubyMethodChainDetector,RubyMethodNamingDetector,RubyMonkeyPatchDetector,RubyNamingConventionDetector,RubyPreferFailDetector,RubySymbolKeysDetector detector
+    ```
+
+??? example "Analysis Pipeline"
+    ```mermaid
+%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TD
+    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]
+    Parse --> Metrics["Compute Metrics"]
+    Metrics --> Pipeline{"11 Detectors"}
+    Pipeline --> Collect["Aggregate Violations"]
+    Collect --> Result(["✅ AnalysisResult · 11 principles"])
+
+    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
+    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
+    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px
+    class Source,Result io
+    class Parse,Metrics,Collect process
+    class Pipeline decision
+    ```
+
+??? example "Analysis States"
+    ```mermaid
+%%{init: {"theme": "base"}}%%
+    stateDiagram-v2
+        [*] --> Ready
+        Ready --> Parsing : analyze(code)
+        Parsing --> Computing : AST ready
+        Computing --> Detecting : metrics ready
+        Detecting --> Reporting : 11 detectors run
+        Reporting --> [*] : AnalysisResult
+        Parsing --> Reporting : parse error (best-effort)
     ```
 
 ## Configuration

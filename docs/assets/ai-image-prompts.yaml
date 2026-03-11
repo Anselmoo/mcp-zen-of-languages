@@ -125,6 +125,18 @@ prompts:
       against a production code block. Bamboo stalks on both sides with drooping
       leaves. Faint ensō ring in background at low opacity, layered terrain, and
       warm/cool accent motes in Caligo palette. ~52 elements.
+  section_yin_yang:
+    prompt: >-
+      Yin-yang of code quality illustration (960×320): a zen garden split
+      into two mirrored halves by a soft dashed line. Left (Yang, warm
+      purple/lavender) shows ten rounded stone forms with production dogma
+      labels floating above a layered lavender ground. Right (Yin, cool
+      cyan/teal) shows ten mirrored stone forms with testing dogma labels
+      above a cool-blue ground. A central ensō ring bridges both worlds,
+      its brush stroke spanning the divide. Three dashed cherry-red arcs
+      represent the indirect bridges. Bamboo stalks frame each side.
+      Caligo palette: BRAND_PRIMARY=#989cff left, BRAND_COOL=#63c8ff right,
+      BRAND_ACCENT=#c8315a for bridge arcs. Wabi-sabi asymmetry, ~65 elements.
   section_tags:
     prompt: >-
       Tags illustration (960×320): layered soft terrain with bamboo on both sides,

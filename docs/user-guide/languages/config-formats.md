@@ -13,7 +13,7 @@ tags:
 
 Configuration files are code too — they're read by humans, versioned in git, and debugged at 2am during outages. MCP Zen of Languages analyzes four data formats with dedicated detectors for each.
 
-## JSON — 9 Principles, 9 Detectors
+## JSON — 9 Principles, 14 Detectors
 
 | Rule ID | Principle | Category | Severity | Dogma |
 |---------|-----------|----------|:--------:|-------|
@@ -129,11 +129,16 @@ Configuration files are code too — they're read by humans, versioned in git, a
 | **JsonNullSprawlDetector** | Detect excessive null values across JSON objects/arrays |
 | **JsonDateFormatDetector** | Identify date strings that deviate from ISO 8601 formatting |
 | **JsonNullHandlingDetector** | Report top-level object keys whose values are explicitly ``null`` |
+| **ClutterDetector** | Stub detector for naming, dead-code, and complexity dogmas |
+| **ControlFlowDetector** | Stub detector for return-early and fail-fast dogmas |
+| **StateMutationDetector** | Stub detector for visible-state and strict-fences dogmas |
+| **SignatureDetector** | Stub detector for argument-use, explicit-intent, and abstraction dogmas |
+| **SharedDogmaKeywordDetector** | Detect configured literal patterns in source text across any language |
 
 ---
 
 
-## SVG — 15 Principles, 15 Detectors
+## SVG — 15 Principles, 20 Detectors
 
 | Rule ID | Principle | Category | Severity | Dogma |
 |---------|-----------|----------|:--------:|-------|
@@ -311,11 +316,16 @@ Configuration files are code too — they're read by humans, versioned in git, a
 | **SvgDeprecatedXlinkHrefDetector** | Detects deprecated xlink:href attributes in SVG markup |
 | **SvgNodeCountDetector** | Detects SVG documents exceeding a configurable node-count threshold |
 | **SvgProductionBloatDetector** | Detects metadata/comments and editor namespace bloat in production SVG |
+| **ClutterDetector** | Stub detector for naming, dead-code, and complexity dogmas |
+| **ControlFlowDetector** | Stub detector for return-early and fail-fast dogmas |
+| **StateMutationDetector** | Stub detector for visible-state and strict-fences dogmas |
+| **SignatureDetector** | Stub detector for argument-use, explicit-intent, and abstraction dogmas |
+| **SharedDogmaKeywordDetector** | Detect configured literal patterns in source text across any language |
 
 ---
 
 
-## TOML — 8 Principles, 8 Detectors
+## TOML — 8 Principles, 13 Detectors
 
 | Rule ID | Principle | Category | Severity | Dogma |
 |---------|-----------|----------|:--------:|-------|
@@ -416,11 +426,16 @@ Configuration files are code too — they're read by humans, versioned in git, a
 | **TomlOrderDetector** | Detects poorly grouped table sections that are separated by excessive whitespace |
 | **TomlIsoDatetimeDetector** | Enforces ISO 8601 datetime formatting in quoted TOML string values |
 | **TomlFloatIntegerDetector** | Flags float literals ending in ``.0`` that should be plain integers |
+| **ClutterDetector** | Stub detector for naming, dead-code, and complexity dogmas |
+| **ControlFlowDetector** | Stub detector for return-early and fail-fast dogmas |
+| **StateMutationDetector** | Stub detector for visible-state and strict-fences dogmas |
+| **SignatureDetector** | Stub detector for argument-use, explicit-intent, and abstraction dogmas |
+| **SharedDogmaKeywordDetector** | Detect configured literal patterns in source text across any language |
 
 ---
 
 
-## XML — 6 Principles, 6 Detectors
+## XML — 6 Principles, 11 Detectors
 
 | Rule ID | Principle | Category | Severity | Dogma |
 |---------|-----------|----------|:--------:|-------|
@@ -493,11 +508,16 @@ Configuration files are code too — they're read by humans, versioned in git, a
 | **XmlValidityDetector** | Checks for schema or DTD references that enable structural validation |
 | **XmlHierarchyDetector** | Flags repeated sibling elements that lack a grouping parent container |
 | **XmlClosingTagsDetector** | Identifies self-closing tags (``<tag />``) where explicit closing tags are preferred |
+| **ClutterDetector** | Stub detector for naming, dead-code, and complexity dogmas |
+| **ControlFlowDetector** | Stub detector for return-early and fail-fast dogmas |
+| **StateMutationDetector** | Stub detector for visible-state and strict-fences dogmas |
+| **SignatureDetector** | Stub detector for argument-use, explicit-intent, and abstraction dogmas |
+| **SharedDogmaKeywordDetector** | Detect configured literal patterns in source text across any language |
 
 ---
 
 
-## YAML — 8 Principles, 8 Detectors
+## YAML — 8 Principles, 13 Detectors
 
 | Rule ID | Principle | Category | Severity | Dogma |
 |---------|-----------|----------|:--------:|-------|
@@ -628,6 +648,11 @@ Configuration files are code too — they're read by humans, versioned in git, a
 | **YamlConsistencyDetector** | Ensures a single, consistent list-marker style is used throughout the document |
 | **YamlCommentIntentDetector** | Ensures complex YAML files include explanatory comments |
 | **YamlStringStyleDetector** | Flags unquoted string values that contain spaces or special YAML characters |
+| **ClutterDetector** | Stub detector for naming, dead-code, and complexity dogmas |
+| **ControlFlowDetector** | Stub detector for return-early and fail-fast dogmas |
+| **StateMutationDetector** | Stub detector for visible-state and strict-fences dogmas |
+| **SignatureDetector** | Stub detector for argument-use, explicit-intent, and abstraction dogmas |
+| **SharedDogmaKeywordDetector** | Detect configured literal patterns in source text across any language |
 
 ---
 

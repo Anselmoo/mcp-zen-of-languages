@@ -1,6 +1,6 @@
 ---
 title: Terraform
-description: "7 zen principles enforced by 7 detectors: Terraform Language Documentation."
+description: "7 zen principles enforced by 12 detectors: Terraform Language Documentation."
 icon: material/cloud-outline
 tags:
   - Terraform
@@ -108,6 +108,16 @@ tags:
 |----------|----------------|----------|
 | **TerraformVariableOutputDescriptionDetector** | Require description fields on variable and output blocks | `tf-003` |
 
+### General
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **ClutterDetector** | Stub detector for naming, dead-code, and complexity dogmas |  |
+| **ControlFlowDetector** | Stub detector for return-early and fail-fast dogmas |  |
+| **StateMutationDetector** | Stub detector for visible-state and strict-fences dogmas |  |
+| **SignatureDetector** | Stub detector for argument-use, explicit-intent, and abstraction dogmas |  |
+| **SharedDogmaKeywordDetector** | Detect configured literal patterns in source text across any language |  |
+
 ### Naming
 
 | Detector | What It Catches | Rule IDs |
@@ -137,6 +147,11 @@ tags:
     tf_005["tf-005<br/>Avoid hardcoded secrets"]
     tf_006["tf-006<br/>Configure remote state backend"]
     tf_007["tf-007<br/>Use consistent snake_case naming"]
+    det_ClutterDetector["ClutterDetector"]
+    det_ControlFlowDetector["ControlFlowDetector"]
+    det_SharedDogmaKeywordDetector["SharedDogmaKeywordDetector"]
+    det_SignatureDetector["SignatureDetector"]
+    det_StateMutationDetector["StateMutationDetector"]
     det_TerraformBackendConfigDetector["TerraformBackendConfigDetector"]
     tf_006 --> det_TerraformBackendConfigDetector
     det_TerraformHardcodedIdDetector["TerraformHardcodedIdDetector"]
@@ -160,6 +175,11 @@ tags:
     class tf_005 principle
     class tf_006 principle
     class tf_007 principle
+    class det_ClutterDetector detector
+    class det_ControlFlowDetector detector
+    class det_SharedDogmaKeywordDetector detector
+    class det_SignatureDetector detector
+    class det_StateMutationDetector detector
     class det_TerraformBackendConfigDetector detector
     class det_TerraformHardcodedIdDetector detector
     class det_TerraformModuleVersionPinningDetector detector

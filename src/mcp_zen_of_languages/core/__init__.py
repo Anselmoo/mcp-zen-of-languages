@@ -20,6 +20,8 @@ from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule_ids
 from mcp_zen_of_languages.core.universal_dogmas import infer_dogmas_for_principle
 from mcp_zen_of_languages.core.universal_dogmas import resolve_strategy_dogma
 from mcp_zen_of_languages.core.universal_dogmas import resolve_tactics_dogma
+from mcp_zen_of_languages.core.universal_mapping import UNIVERSAL_DETECTOR_MAP
+from mcp_zen_of_languages.core.universal_mapping import UNIVERSAL_TESTING_MAP
 
 
 __all__ = [
@@ -27,7 +29,9 @@ __all__ = [
     "DOGMA_RULE_IDS",
     "TESTING_STRATEGY_IDS",
     "TESTING_TACTICS_IDS",
+    "UNIVERSAL_DETECTOR_MAP",
     "UNIVERSAL_DOGMA_IDS",
+    "UNIVERSAL_TESTING_MAP",
     "DogmaCatalogue",
     "DogmaFamily",
     "DogmaFamilyEntry",

@@ -1,6 +1,6 @@
 ---
 title: SQL
-description: "9 zen principles enforced by 9 detectors: Pragmatic SQL correctness, security, and performance hygiene."
+description: "9 zen principles enforced by 14 detectors: Pragmatic SQL correctness, security, and performance hygiene."
 icon: material/database
 tags:
   - SQL
@@ -160,6 +160,16 @@ SQL queries are production code: they shape correctness, latency, and security j
 | **SqlNolockDetector** | Flag NOLOCK table-hint usage | `sql-004` |
 | **SqlTransactionBoundaryDetector** | Ensure explicit transaction blocks are balanced | `sql-008` |
 
+### General
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **ClutterDetector** | Stub detector for naming, dead-code, and complexity dogmas |  |
+| **ControlFlowDetector** | Stub detector for return-early and fail-fast dogmas |  |
+| **StateMutationDetector** | Stub detector for visible-state and strict-fences dogmas |  |
+| **SignatureDetector** | Stub detector for argument-use, explicit-intent, and abstraction dogmas |  |
+| **SharedDogmaKeywordDetector** | Detect configured literal patterns in source text across any language |  |
+
 ### Performance
 
 | Detector | What It Catches | Rule IDs |
@@ -193,6 +203,10 @@ SQL queries are production code: they shape correctness, latency, and security j
     sql_007["sql-007<br/>Use descriptive table aliases"]
     sql_008["sql-008<br/>Keep transaction boundaries balanced"]
     sql_009["sql-009<br/>Prefer explicit JOIN syntax over ANSI-89..."]
+    det_ClutterDetector["ClutterDetector"]
+    det_ControlFlowDetector["ControlFlowDetector"]
+    det_SharedDogmaKeywordDetector["SharedDogmaKeywordDetector"]
+    det_SignatureDetector["SignatureDetector"]
     det_SqlAliasClarityDetector["SqlAliasClarityDetector"]
     sql_007 --> det_SqlAliasClarityDetector
     det_SqlAnsi89JoinDetector["SqlAnsi89JoinDetector"]
@@ -211,6 +225,7 @@ SQL queries are production code: they shape correctness, latency, and security j
     sql_008 --> det_SqlTransactionBoundaryDetector
     det_SqlUnboundedQueryDetector["SqlUnboundedQueryDetector"]
     sql_006 --> det_SqlUnboundedQueryDetector
+    det_StateMutationDetector["StateMutationDetector"]
     classDef principle fill:#4051b5,color:#fff,stroke:none
     classDef detector fill:#26a269,color:#fff,stroke:none
     class sql_001 principle
@@ -222,6 +237,10 @@ SQL queries are production code: they shape correctness, latency, and security j
     class sql_007 principle
     class sql_008 principle
     class sql_009 principle
+    class det_ClutterDetector detector
+    class det_ControlFlowDetector detector
+    class det_SharedDogmaKeywordDetector detector
+    class det_SignatureDetector detector
     class det_SqlAliasClarityDetector detector
     class det_SqlAnsi89JoinDetector detector
     class det_SqlDynamicSqlDetector detector
@@ -231,6 +250,7 @@ SQL queries are production code: they shape correctness, latency, and security j
     class det_SqlSelectStarDetector detector
     class det_SqlTransactionBoundaryDetector detector
     class det_SqlUnboundedQueryDetector detector
+    class det_StateMutationDetector detector
     ```
 
 ## Configuration

@@ -1,6 +1,6 @@
 ---
 title: Rust
-description: "17 zen principles enforced by 18 detectors: Safety, Concurrency, and Zero-Cost Abstractions."
+description: "17 zen principles enforced by 23 detectors: Safety, Concurrency, and Zero-Cost Abstractions."
 icon: material/language-rust
 tags:
   - Rust
@@ -365,6 +365,16 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
 | **RustErrorHandlingDetector** | Flags functions that use ``Result`` without propagating errors and detects ``panic!`` abuse | `rust-001` |
 | **RustErrorTraitsDetector** | Flags error types that do not implement ``std::error::Error`` | `rust-014` |
 
+### General
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **ClutterDetector** | Stub detector for naming, dead-code, and complexity dogmas |  |
+| **ControlFlowDetector** | Stub detector for return-early and fail-fast dogmas |  |
+| **StateMutationDetector** | Stub detector for visible-state and strict-fences dogmas |  |
+| **SignatureDetector** | Stub detector for argument-use, explicit-intent, and abstraction dogmas |  |
+| **SharedDogmaKeywordDetector** | Detect configured literal patterns in source text across any language |  |
+
 ### Idioms
 
 | Detector | What It Catches | Rule IDs |
@@ -425,6 +435,8 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
     rust_015["rust-015<br/>Follow Rust naming conventions (RFC 430)"]
     rust_016["rust-016<br/>Implement Default when there is an obvio..."]
     rust_017["rust-017<br/>Use From/Into for type conversions"]
+    det_ClutterDetector["ClutterDetector"]
+    det_ControlFlowDetector["ControlFlowDetector"]
     det_RustCloneOverheadDetector["RustCloneOverheadDetector"]
     rust_004 --> det_RustCloneOverheadDetector
     det_RustDebugDeriveDetector["RustDebugDeriveDetector"]
@@ -461,6 +473,9 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
     rust_008 --> det_RustUnsafeBlocksDetector
     det_RustUnwrapUsageDetector["RustUnwrapUsageDetector"]
     rust_001 --> det_RustUnwrapUsageDetector
+    det_SharedDogmaKeywordDetector["SharedDogmaKeywordDetector"]
+    det_SignatureDetector["SignatureDetector"]
+    det_StateMutationDetector["StateMutationDetector"]
     classDef principle fill:#4051b5,color:#fff,stroke:none
     classDef detector fill:#26a269,color:#fff,stroke:none
     class rust_001 principle
@@ -480,6 +495,8 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
     class rust_015 principle
     class rust_016 principle
     class rust_017 principle
+    class det_ClutterDetector detector
+    class det_ControlFlowDetector detector
     class det_RustCloneOverheadDetector detector
     class det_RustDebugDeriveDetector detector
     class det_RustDefaultImplDetector detector
@@ -498,6 +515,9 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
     class det_RustTypeSafetyDetector detector
     class det_RustUnsafeBlocksDetector detector
     class det_RustUnwrapUsageDetector detector
+    class det_SharedDogmaKeywordDetector detector
+    class det_SignatureDetector detector
+    class det_StateMutationDetector detector
     ```
 
 ## Configuration

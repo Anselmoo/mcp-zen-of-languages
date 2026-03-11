@@ -1,6 +1,6 @@
 ---
 title: Python
-description: "20 zen principles enforced by 30 detectors: The Zen of Python (PEP 20)."
+description: "20 zen principles enforced by 35 detectors: The Zen of Python (PEP 20)."
 icon: fontawesome/brands/python
 tags:
   - Python
@@ -397,6 +397,16 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 |----------|----------------|----------|
 | **BareExceptDetector** | Detect bare ``except:`` clauses and silently swallowed exceptions | `python-009` |
 
+### General
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **ClutterDetector** | Stub detector for naming, dead-code, and complexity dogmas |  |
+| **ControlFlowDetector** | Stub detector for return-early and fail-fast dogmas |  |
+| **StateMutationDetector** | Stub detector for visible-state and strict-fences dogmas |  |
+| **SignatureDetector** | Stub detector for argument-use, explicit-intent, and abstraction dogmas |  |
+| **SharedDogmaKeywordDetector** | Detect configured literal patterns in source text across any language |  |
+
 ### Idioms
 
 | Detector | What It Catches | Rule IDs |
@@ -463,12 +473,14 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     python_004 --> det_CircularDependencyDetector
     det_ClassSizeDetector["ClassSizeDetector"]
     python_007 --> det_ClassSizeDetector
+    det_ClutterDetector["ClutterDetector"]
     det_ComplexOneLinersDetector["ComplexOneLinersDetector"]
     python_003 --> det_ComplexOneLinersDetector
     det_ConsistencyDetector["ConsistencyDetector"]
     python_008 --> det_ConsistencyDetector
     det_ContextManagerDetector["ContextManagerDetector"]
     python_011 --> det_ContextManagerDetector
+    det_ControlFlowDetector["ControlFlowDetector"]
     det_CyclomaticComplexityDetector["CyclomaticComplexityDetector"]
     python_003 --> det_CyclomaticComplexityDetector
     det_DeepInheritanceDetector["DeepInheritanceDetector"]
@@ -511,12 +523,15 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     python_018 --> det_PythonSimpleDocumentedDetector
     det_PythonTodoStubDetector["PythonTodoStubDetector"]
     python_015 --> det_PythonTodoStubDetector
+    det_SharedDogmaKeywordDetector["SharedDogmaKeywordDetector"]
     det_ShortVariableNamesDetector["ShortVariableNamesDetector"]
     python_007 --> det_ShortVariableNamesDetector
+    det_SignatureDetector["SignatureDetector"]
     det_SparseCodeDetector["SparseCodeDetector"]
     python_006 --> det_SparseCodeDetector
     det_StarImportDetector["StarImportDetector"]
     python_002 --> det_StarImportDetector
+    det_StateMutationDetector["StateMutationDetector"]
     classDef principle fill:#4051b5,color:#fff,stroke:none
     classDef detector fill:#26a269,color:#fff,stroke:none
     class python_001 principle
@@ -542,9 +557,11 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     class det_BareExceptDetector detector
     class det_CircularDependencyDetector detector
     class det_ClassSizeDetector detector
+    class det_ClutterDetector detector
     class det_ComplexOneLinersDetector detector
     class det_ConsistencyDetector detector
     class det_ContextManagerDetector detector
+    class det_ControlFlowDetector detector
     class det_CyclomaticComplexityDetector detector
     class det_DeepInheritanceDetector detector
     class det_DocstringDetector detector
@@ -566,9 +583,12 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     class det_PythonPrematureImplDetector detector
     class det_PythonSimpleDocumentedDetector detector
     class det_PythonTodoStubDetector detector
+    class det_SharedDogmaKeywordDetector detector
     class det_ShortVariableNamesDetector detector
+    class det_SignatureDetector detector
     class det_SparseCodeDetector detector
     class det_StarImportDetector detector
+    class det_StateMutationDetector detector
     ```
 
 ## Configuration

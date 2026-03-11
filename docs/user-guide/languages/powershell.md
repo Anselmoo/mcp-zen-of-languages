@@ -1,6 +1,6 @@
 ---
 title: PowerShell
-description: "15 zen principles enforced by 15 detectors: PowerShell Best Practices and Style Guide."
+description: "15 zen principles enforced by 20 detectors: PowerShell Best Practices and Style Guide."
 icon: material/console-line
 tags:
   - PowerShell
@@ -361,6 +361,16 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
 |----------|----------------|----------|
 | **PowerShellErrorHandlingDetector** | Detect scripts that lack any form of error handling | `ps-002` |
 
+### General
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **ClutterDetector** | Stub detector for naming, dead-code, and complexity dogmas |  |
+| **ControlFlowDetector** | Stub detector for return-early and fail-fast dogmas |  |
+| **StateMutationDetector** | Stub detector for visible-state and strict-fences dogmas |  |
+| **SignatureDetector** | Stub detector for argument-use, explicit-intent, and abstraction dogmas |  |
+| **SharedDogmaKeywordDetector** | Detect configured literal patterns in source text across any language |  |
+
 ### Idioms
 
 | Detector | What It Catches | Rule IDs |
@@ -418,6 +428,8 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
     ps_013["ps-013<br/>Return objects, not formatted text"]
     ps_014["ps-014<br/>Use script scope carefully"]
     ps_015["ps-015<br/>Handle null values explicitly"]
+    det_ClutterDetector["ClutterDetector"]
+    det_ControlFlowDetector["ControlFlowDetector"]
     det_PowerShellAliasUsageDetector["PowerShellAliasUsageDetector"]
     ps_012 --> det_PowerShellAliasUsageDetector
     det_PowerShellApprovedVerbDetector["PowerShellApprovedVerbDetector"]
@@ -448,6 +460,9 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
     ps_009 --> det_PowerShellSplattingDetector
     det_PowerShellVerboseDebugDetector["PowerShellVerboseDebugDetector"]
     ps_005 --> det_PowerShellVerboseDebugDetector
+    det_SharedDogmaKeywordDetector["SharedDogmaKeywordDetector"]
+    det_SignatureDetector["SignatureDetector"]
+    det_StateMutationDetector["StateMutationDetector"]
     classDef principle fill:#4051b5,color:#fff,stroke:none
     classDef detector fill:#26a269,color:#fff,stroke:none
     class ps_001 principle
@@ -465,6 +480,8 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
     class ps_013 principle
     class ps_014 principle
     class ps_015 principle
+    class det_ClutterDetector detector
+    class det_ControlFlowDetector detector
     class det_PowerShellAliasUsageDetector detector
     class det_PowerShellApprovedVerbDetector detector
     class det_PowerShellCmdletBindingDetector detector
@@ -480,6 +497,9 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
     class det_PowerShellShouldProcessDetector detector
     class det_PowerShellSplattingDetector detector
     class det_PowerShellVerboseDebugDetector detector
+    class det_SharedDogmaKeywordDetector detector
+    class det_SignatureDetector detector
+    class det_StateMutationDetector detector
     ```
 
 ## Configuration

@@ -4,9 +4,11 @@ from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
 from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorGearbox
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.core.universal_dogmas import TESTING_TACTICS_IDS
 from mcp_zen_of_languages.core.universal_dogmas import UNIVERSAL_DOGMA_IDS
+from mcp_zen_of_languages.core.universal_mapping import UNIVERSAL_TESTING_MAP
 from mcp_zen_of_languages.languages.python.testing.pytest.detectors import (
     BareExceptInTestDetector,
 )
@@ -104,3 +106,8 @@ DETECTOR_MAP = LanguageDetectorMap(
         ),
     ],
 )
+
+GEARBOX = DetectorGearbox(language="pytest")
+GEARBOX.extend(DETECTOR_MAP.bindings)
+GEARBOX.extend(UNIVERSAL_TESTING_MAP.bindings)
+DETECTOR_MAP = GEARBOX.build_map()

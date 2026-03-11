@@ -1,6 +1,6 @@
 ---
 title: Dockerfile
-description: "8 zen principles enforced by 8 detectors: Docker build and runtime hardening best practices."
+description: "8 zen principles enforced by 13 detectors: Docker build and runtime hardening best practices."
 icon: material/docker
 tags:
   - Dockerfile
@@ -166,6 +166,16 @@ tags:
 |----------|----------------|----------|
 | **DockerfileAddInstructionDetector** | Discourages broad ``ADD`` usage when ``COPY`` is sufficient | `dockerfile-003` |
 
+### General
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **ClutterDetector** | Stub detector for naming, dead-code, and complexity dogmas |  |
+| **ControlFlowDetector** | Stub detector for return-early and fail-fast dogmas |  |
+| **StateMutationDetector** | Stub detector for visible-state and strict-fences dogmas |  |
+| **SignatureDetector** | Stub detector for argument-use, explicit-intent, and abstraction dogmas |  |
+| **SharedDogmaKeywordDetector** | Detect configured literal patterns in source text across any language |  |
+
 ### Performance
 
 | Detector | What It Catches | Rule IDs |
@@ -199,6 +209,8 @@ tags:
     dockerfile_006["dockerfile-006<br/>Keep secrets out of ENV and ARG instruct..."]
     dockerfile_007["dockerfile-007<br/>Maintain layer discipline"]
     dockerfile_008["dockerfile-008<br/>Keep .dockerignore coherent with broad c..."]
+    det_ClutterDetector["ClutterDetector"]
+    det_ControlFlowDetector["ControlFlowDetector"]
     det_DockerfileAddInstructionDetector["DockerfileAddInstructionDetector"]
     dockerfile_003 --> det_DockerfileAddInstructionDetector
     det_DockerfileDockerignoreDetector["DockerfileDockerignoreDetector"]
@@ -215,6 +227,9 @@ tags:
     dockerfile_002 --> det_DockerfileNonRootUserDetector
     det_DockerfileSecretHygieneDetector["DockerfileSecretHygieneDetector"]
     dockerfile_006 --> det_DockerfileSecretHygieneDetector
+    det_SharedDogmaKeywordDetector["SharedDogmaKeywordDetector"]
+    det_SignatureDetector["SignatureDetector"]
+    det_StateMutationDetector["StateMutationDetector"]
     classDef principle fill:#4051b5,color:#fff,stroke:none
     classDef detector fill:#26a269,color:#fff,stroke:none
     class dockerfile_001 principle
@@ -225,6 +240,8 @@ tags:
     class dockerfile_006 principle
     class dockerfile_007 principle
     class dockerfile_008 principle
+    class det_ClutterDetector detector
+    class det_ControlFlowDetector detector
     class det_DockerfileAddInstructionDetector detector
     class det_DockerfileDockerignoreDetector detector
     class det_DockerfileHealthcheckDetector detector
@@ -233,6 +250,9 @@ tags:
     class det_DockerfileMultiStageDetector detector
     class det_DockerfileNonRootUserDetector detector
     class det_DockerfileSecretHygieneDetector detector
+    class det_SharedDogmaKeywordDetector detector
+    class det_SignatureDetector detector
+    class det_StateMutationDetector detector
     ```
 
 ## Configuration

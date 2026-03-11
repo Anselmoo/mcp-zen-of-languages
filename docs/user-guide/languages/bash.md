@@ -1,6 +1,6 @@
 ---
 title: Bash
-description: "14 zen principles enforced by 14 detectors: Shell Scripting Best Practices."
+description: "14 zen principles enforced by 19 detectors: Shell Scripting Best Practices."
 icon: material/console
 tags:
   - Bash
@@ -305,6 +305,16 @@ Shell scripts are the glue of infrastructure — and the source of some of the m
 | **BashStrictModeDetector** | Detect scripts missing the unofficial Bash strict mode header | `bash-001` |
 | **BashExitCodeChecksDetector** | Detect external commands whose exit codes are silently ignored | `bash-005` |
 
+### General
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **ClutterDetector** | Stub detector for naming, dead-code, and complexity dogmas |  |
+| **ControlFlowDetector** | Stub detector for return-early and fail-fast dogmas |  |
+| **StateMutationDetector** | Stub detector for visible-state and strict-fences dogmas |  |
+| **SignatureDetector** | Stub detector for argument-use, explicit-intent, and abstraction dogmas |  |
+| **SharedDogmaKeywordDetector** | Detect configured literal patterns in source text across any language |  |
+
 ### Idioms
 
 | Detector | What It Catches | Rule IDs |
@@ -401,6 +411,11 @@ Shell scripts are the glue of infrastructure — and the source of some of the m
     bash_001 --> det_BashStrictModeDetector
     det_BashUsageInfoDetector["BashUsageInfoDetector"]
     bash_014 --> det_BashUsageInfoDetector
+    det_ClutterDetector["ClutterDetector"]
+    det_ControlFlowDetector["ControlFlowDetector"]
+    det_SharedDogmaKeywordDetector["SharedDogmaKeywordDetector"]
+    det_SignatureDetector["SignatureDetector"]
+    det_StateMutationDetector["StateMutationDetector"]
     classDef principle fill:#4051b5,color:#fff,stroke:none
     classDef detector fill:#26a269,color:#fff,stroke:none
     class bash_001 principle
@@ -431,6 +446,11 @@ Shell scripts are the glue of infrastructure — and the source of some of the m
     class det_BashSignalHandlingDetector detector
     class det_BashStrictModeDetector detector
     class det_BashUsageInfoDetector detector
+    class det_ClutterDetector detector
+    class det_ControlFlowDetector detector
+    class det_SharedDogmaKeywordDetector detector
+    class det_SignatureDetector detector
+    class det_StateMutationDetector detector
     ```
 
 ## Configuration

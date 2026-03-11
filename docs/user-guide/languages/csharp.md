@@ -1,6 +1,6 @@
 ---
 title: C#
-description: "13 zen principles enforced by 13 detectors: Modern C# Best Practices (.NET 6+)."
+description: "13 zen principles enforced by 18 detectors: Modern C# Best Practices (.NET 6+)."
 icon: material/language-csharp
 tags:
   - C#
@@ -284,6 +284,16 @@ Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullab
 |----------|----------------|----------|
 | **CSharpExceptionHandlingDetector** | Flags overly broad ``catch (Exception)`` or empty ``catch`` blocks | `cs-012` |
 
+### General
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **ClutterDetector** | Stub detector for naming, dead-code, and complexity dogmas |  |
+| **ControlFlowDetector** | Stub detector for return-early and fail-fast dogmas |  |
+| **StateMutationDetector** | Stub detector for visible-state and strict-fences dogmas |  |
+| **SignatureDetector** | Stub detector for argument-use, explicit-intent, and abstraction dogmas |  |
+| **SharedDogmaKeywordDetector** | Detect configured literal patterns in source text across any language |  |
+
 ### Idioms
 
 | Detector | What It Catches | Rule IDs |
@@ -356,6 +366,11 @@ Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullab
     cs_006 --> det_CSharpStringInterpolationDetector
     det_CSharpVarDetector["CSharpVarDetector"]
     cs_003 --> det_CSharpVarDetector
+    det_ClutterDetector["ClutterDetector"]
+    det_ControlFlowDetector["ControlFlowDetector"]
+    det_SharedDogmaKeywordDetector["SharedDogmaKeywordDetector"]
+    det_SignatureDetector["SignatureDetector"]
+    det_StateMutationDetector["StateMutationDetector"]
     classDef principle fill:#4051b5,color:#fff,stroke:none
     classDef detector fill:#26a269,color:#fff,stroke:none
     class cs_001 principle
@@ -384,6 +399,11 @@ Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullab
     class det_CSharpRecordDetector detector
     class det_CSharpStringInterpolationDetector detector
     class det_CSharpVarDetector detector
+    class det_ClutterDetector detector
+    class det_ControlFlowDetector detector
+    class det_SharedDogmaKeywordDetector detector
+    class det_SignatureDetector detector
+    class det_StateMutationDetector detector
     ```
 
 ## Configuration

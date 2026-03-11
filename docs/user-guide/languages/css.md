@@ -1,6 +1,6 @@
 ---
 title: CSS
-description: "8 zen principles enforced by 8 detectors: Maintainable stylesheets through consistency and design tokens.."
+description: "8 zen principles enforced by 13 detectors: Maintainable stylesheets through consistency and design tokens.."
 icon: material/language-css3
 tags:
   - CSS
@@ -192,6 +192,16 @@ Stylesheets can accumulate hidden complexity quickly — deeply nested selectors
 |----------|----------------|----------|
 | **CssMagicPixelsDetector** | Detect raw pixel literals | `css-002` |
 
+### General
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **ClutterDetector** | Stub detector for naming, dead-code, and complexity dogmas |  |
+| **ControlFlowDetector** | Stub detector for return-early and fail-fast dogmas |  |
+| **StateMutationDetector** | Stub detector for visible-state and strict-fences dogmas |  |
+| **SignatureDetector** | Stub detector for argument-use, explicit-intent, and abstraction dogmas |  |
+| **SharedDogmaKeywordDetector** | Detect configured literal patterns in source text across any language |  |
+
 ### Organization
 
 | Detector | What It Catches | Rule IDs |
@@ -216,6 +226,8 @@ Stylesheets can accumulate hidden complexity quickly — deeply nested selectors
     css_006["css-006<br/>Use a z-index scale"]
     css_007["css-007<br/>Avoid manual vendor prefixes"]
     css_008["css-008<br/>Use a consistent breakpoint scale"]
+    det_ClutterDetector["ClutterDetector"]
+    det_ControlFlowDetector["ControlFlowDetector"]
     det_CssColorLiteralDetector["CssColorLiteralDetector"]
     css_003 --> det_CssColorLiteralDetector
     det_CssGodStylesheetDetector["CssGodStylesheetDetector"]
@@ -232,6 +244,9 @@ Stylesheets can accumulate hidden complexity quickly — deeply nested selectors
     css_007 --> det_CssVendorPrefixDetector
     det_CssZIndexScaleDetector["CssZIndexScaleDetector"]
     css_006 --> det_CssZIndexScaleDetector
+    det_SharedDogmaKeywordDetector["SharedDogmaKeywordDetector"]
+    det_SignatureDetector["SignatureDetector"]
+    det_StateMutationDetector["StateMutationDetector"]
     classDef principle fill:#4051b5,color:#fff,stroke:none
     classDef detector fill:#26a269,color:#fff,stroke:none
     class css_001 principle
@@ -242,6 +257,8 @@ Stylesheets can accumulate hidden complexity quickly — deeply nested selectors
     class css_006 principle
     class css_007 principle
     class css_008 principle
+    class det_ClutterDetector detector
+    class det_ControlFlowDetector detector
     class det_CssColorLiteralDetector detector
     class det_CssGodStylesheetDetector detector
     class det_CssImportChainDetector detector
@@ -250,6 +267,9 @@ Stylesheets can accumulate hidden complexity quickly — deeply nested selectors
     class det_CssSpecificityDetector detector
     class det_CssVendorPrefixDetector detector
     class det_CssZIndexScaleDetector detector
+    class det_SharedDogmaKeywordDetector detector
+    class det_SignatureDetector detector
+    class det_StateMutationDetector detector
     ```
 
 ## Configuration

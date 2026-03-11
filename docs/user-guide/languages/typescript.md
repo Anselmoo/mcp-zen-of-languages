@@ -1,6 +1,6 @@
 ---
 title: TypeScript
-description: "18 zen principles enforced by 25 detectors: Type Safety and Maintainability."
+description: "18 zen principles enforced by 30 detectors: Type Safety and Maintainability."
 icon: material/language-typescript
 tags:
   - TypeScript
@@ -405,6 +405,16 @@ TypeScript's power lies in its type system — but that power is easily undermin
 |----------|----------------|----------|
 | **TsStrictModeDetector** | Checks whether strict compiler options are enabled in the project | `ts-002` |
 
+### General
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **ClutterDetector** | Stub detector for naming, dead-code, and complexity dogmas |  |
+| **ControlFlowDetector** | Stub detector for return-early and fail-fast dogmas |  |
+| **StateMutationDetector** | Stub detector for visible-state and strict-fences dogmas |  |
+| **SignatureDetector** | Stub detector for argument-use, explicit-intent, and abstraction dogmas |  |
+| **SharedDogmaKeywordDetector** | Detect configured literal patterns in source text across any language |  |
+
 ### Idioms
 
 | Detector | What It Catches | Rule IDs |
@@ -472,6 +482,11 @@ TypeScript's power lies in its type system — but that power is easily undermin
     ts_016["ts-016<br/>Avoid console usage in production code"]
     ts_017["ts-017<br/>Use ES module imports instead of require..."]
     ts_018["ts-018<br/>Use template literals instead of string ..."]
+    det_ClutterDetector["ClutterDetector"]
+    det_ControlFlowDetector["ControlFlowDetector"]
+    det_SharedDogmaKeywordDetector["SharedDogmaKeywordDetector"]
+    det_SignatureDetector["SignatureDetector"]
+    det_StateMutationDetector["StateMutationDetector"]
     det_TsAnyUsageDetector["TsAnyUsageDetector"]
     ts_001 --> det_TsAnyUsageDetector
     det_TsAsyncAwaitDetector["TsAsyncAwaitDetector"]
@@ -542,6 +557,11 @@ TypeScript's power lies in its type system — but that power is easily undermin
     class ts_016 principle
     class ts_017 principle
     class ts_018 principle
+    class det_ClutterDetector detector
+    class det_ControlFlowDetector detector
+    class det_SharedDogmaKeywordDetector detector
+    class det_SignatureDetector detector
+    class det_StateMutationDetector detector
     class det_TsAnyUsageDetector detector
     class det_TsAsyncAwaitDetector detector
     class det_TsCatchAllTypeDetector detector

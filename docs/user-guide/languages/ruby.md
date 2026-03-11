@@ -1,6 +1,6 @@
 ---
 title: Ruby
-description: "11 zen principles enforced by 11 detectors: Principle of Least Surprise (POLS) and Developer Happiness."
+description: "11 zen principles enforced by 16 detectors: Principle of Least Surprise (POLS) and Developer Happiness."
 icon: material/language-ruby
 tags:
   - Ruby
@@ -251,6 +251,16 @@ Ruby is designed for programmer happiness — expressive, elegant, optimized for
 |----------|----------------|----------|
 | **RubyPreferFailDetector** | Flags use of ``raise`` where ``fail`` is the preferred convention for programmer errors | `ruby-011` |
 
+### General
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **ClutterDetector** | Stub detector for naming, dead-code, and complexity dogmas |  |
+| **ControlFlowDetector** | Stub detector for return-early and fail-fast dogmas |  |
+| **StateMutationDetector** | Stub detector for visible-state and strict-fences dogmas |  |
+| **SignatureDetector** | Stub detector for argument-use, explicit-intent, and abstraction dogmas |  |
+| **SharedDogmaKeywordDetector** | Detect configured literal patterns in source text across any language |  |
+
 ### Idioms
 
 | Detector | What It Catches | Rule IDs |
@@ -288,6 +298,8 @@ Ruby is designed for programmer happiness — expressive, elegant, optimized for
     ruby_009["ruby-009<br/>Avoid needless metaprogramming"]
     ruby_010["ruby-010<br/>Use Ruby's expressive syntax"]
     ruby_011["ruby-011<br/>Prefer fail over raise for exceptions"]
+    det_ClutterDetector["ClutterDetector"]
+    det_ControlFlowDetector["ControlFlowDetector"]
     det_RubyBlockPreferenceDetector["RubyBlockPreferenceDetector"]
     ruby_003 --> det_RubyBlockPreferenceDetector
     det_RubyDryDetector["RubyDryDetector"]
@@ -310,6 +322,9 @@ Ruby is designed for programmer happiness — expressive, elegant, optimized for
     ruby_011 --> det_RubyPreferFailDetector
     det_RubySymbolKeysDetector["RubySymbolKeysDetector"]
     ruby_007 --> det_RubySymbolKeysDetector
+    det_SharedDogmaKeywordDetector["SharedDogmaKeywordDetector"]
+    det_SignatureDetector["SignatureDetector"]
+    det_StateMutationDetector["StateMutationDetector"]
     classDef principle fill:#4051b5,color:#fff,stroke:none
     classDef detector fill:#26a269,color:#fff,stroke:none
     class ruby_001 principle
@@ -323,6 +338,8 @@ Ruby is designed for programmer happiness — expressive, elegant, optimized for
     class ruby_009 principle
     class ruby_010 principle
     class ruby_011 principle
+    class det_ClutterDetector detector
+    class det_ControlFlowDetector detector
     class det_RubyBlockPreferenceDetector detector
     class det_RubyDryDetector detector
     class det_RubyExpressiveSyntaxDetector detector
@@ -334,6 +351,9 @@ Ruby is designed for programmer happiness — expressive, elegant, optimized for
     class det_RubyNamingConventionDetector detector
     class det_RubyPreferFailDetector detector
     class det_RubySymbolKeysDetector detector
+    class det_SharedDogmaKeywordDetector detector
+    class det_SignatureDetector detector
+    class det_StateMutationDetector detector
     ```
 
 ## Configuration

@@ -1,6 +1,6 @@
 ---
 title: Docker Compose
-description: "4 zen principles enforced by 4 detectors: Docker Compose service configuration hardening best practices."
+description: "4 zen principles enforced by 9 detectors: Docker Compose service configuration hardening best practices."
 icon: material/docker
 tags:
   - Docker Compose
@@ -92,6 +92,16 @@ tags:
 
 ## Detector Catalog
 
+### General
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **ClutterDetector** | Stub detector for naming, dead-code, and complexity dogmas |  |
+| **ControlFlowDetector** | Stub detector for return-early and fail-fast dogmas |  |
+| **StateMutationDetector** | Stub detector for visible-state and strict-fences dogmas |  |
+| **SignatureDetector** | Stub detector for argument-use, explicit-intent, and abstraction dogmas |  |
+| **SharedDogmaKeywordDetector** | Detect configured literal patterns in source text across any language |  |
+
 ### Robustness
 
 | Detector | What It Catches | Rule IDs |
@@ -114,6 +124,8 @@ tags:
     docker_compose_002["docker-compose-002<br/>Run services as non-root user"]
     docker_compose_003["docker-compose-003<br/>Declare service healthchecks"]
     docker_compose_004["docker-compose-004<br/>Keep secrets out of environment literals"]
+    det_ClutterDetector["ClutterDetector"]
+    det_ControlFlowDetector["ControlFlowDetector"]
     det_DockerComposeHealthcheckDetector["DockerComposeHealthcheckDetector"]
     docker_compose_003 --> det_DockerComposeHealthcheckDetector
     det_DockerComposeLatestTagDetector["DockerComposeLatestTagDetector"]
@@ -122,16 +134,24 @@ tags:
     docker_compose_002 --> det_DockerComposeNonRootUserDetector
     det_DockerComposeSecretHygieneDetector["DockerComposeSecretHygieneDetector"]
     docker_compose_004 --> det_DockerComposeSecretHygieneDetector
+    det_SharedDogmaKeywordDetector["SharedDogmaKeywordDetector"]
+    det_SignatureDetector["SignatureDetector"]
+    det_StateMutationDetector["StateMutationDetector"]
     classDef principle fill:#4051b5,color:#fff,stroke:none
     classDef detector fill:#26a269,color:#fff,stroke:none
     class docker_compose_001 principle
     class docker_compose_002 principle
     class docker_compose_003 principle
     class docker_compose_004 principle
+    class det_ClutterDetector detector
+    class det_ControlFlowDetector detector
     class det_DockerComposeHealthcheckDetector detector
     class det_DockerComposeLatestTagDetector detector
     class det_DockerComposeNonRootUserDetector detector
     class det_DockerComposeSecretHygieneDetector detector
+    class det_SharedDogmaKeywordDetector detector
+    class det_SignatureDetector detector
+    class det_StateMutationDetector detector
     ```
 
 ## Configuration

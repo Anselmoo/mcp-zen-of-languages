@@ -15,6 +15,11 @@ class SharedDogmaKeywordDetector(
 ):
     """Detect configured literal patterns in source text across any language."""
 
+    UNIVERSAL_RULE_IDS = (
+        "ZEN-EXPLICIT-INTENT",
+        "ZEN-UNAMBIGUOUS-NAME",
+    )
+
     @property
     def name(self) -> str:
         """Return a stable detector name for registry and logging."""

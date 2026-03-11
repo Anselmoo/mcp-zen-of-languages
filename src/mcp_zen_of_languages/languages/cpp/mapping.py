@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import DetectorGearbox
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.core.universal_dogmas import UNIVERSAL_DOGMA_IDS
+from mcp_zen_of_languages.core.universal_mapping import UNIVERSAL_DETECTOR_MAP
 from mcp_zen_of_languages.languages.configs import CppAutoConfig
 from mcp_zen_of_languages.languages.configs import CppAvoidGlobalsConfig
 from mcp_zen_of_languages.languages.configs import CppCStyleCastConfig
@@ -130,3 +132,8 @@ DETECTOR_MAP = LanguageDetectorMap(
         ),
     ],
 )
+
+GEARBOX = DetectorGearbox(language="cpp")
+GEARBOX.extend(DETECTOR_MAP.bindings)
+GEARBOX.extend(UNIVERSAL_DETECTOR_MAP.bindings)
+DETECTOR_MAP = GEARBOX.build_map()

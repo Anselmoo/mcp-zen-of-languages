@@ -1,6 +1,6 @@
 ---
 title: JavaScript
-description: "18 zen principles enforced by 18 detectors: Modern JavaScript Best Practices."
+description: "18 zen principles enforced by 23 detectors: Modern JavaScript Best Practices."
 icon: fontawesome/brands/js
 tags:
   - JavaScript
@@ -373,6 +373,16 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 |----------|----------------|----------|
 | **JsPureFunctionDetector** | Detect in-place array mutations that break functional programming principles | `js-010` |
 
+### General
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **ClutterDetector** | Stub detector for naming, dead-code, and complexity dogmas |  |
+| **ControlFlowDetector** | Stub detector for return-early and fail-fast dogmas |  |
+| **StateMutationDetector** | Stub detector for visible-state and strict-fences dogmas |  |
+| **SignatureDetector** | Stub detector for argument-use, explicit-intent, and abstraction dogmas |  |
+| **SharedDogmaKeywordDetector** | Detect configured literal patterns in source text across any language |  |
+
 ### Idioms
 
 | Detector | What It Catches | Rule IDs |
@@ -422,6 +432,8 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
     js_016["js-016<br/>No eval()"]
     js_017["js-017<br/>Prefer Array.from/spread over arguments"]
     js_018["js-018<br/>No prototype mutation on built-in object..."]
+    det_ClutterDetector["ClutterDetector"]
+    det_ControlFlowDetector["ControlFlowDetector"]
     det_JsAsyncErrorHandlingDetector["JsAsyncErrorHandlingDetector"]
     js_007 --> det_JsAsyncErrorHandlingDetector
     det_JsCallbackNestingDetector["JsCallbackNestingDetector"]
@@ -458,6 +470,9 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
     js_010 --> det_JsPureFunctionDetector
     det_JsStrictEqualityDetector["JsStrictEqualityDetector"]
     js_003 --> det_JsStrictEqualityDetector
+    det_SharedDogmaKeywordDetector["SharedDogmaKeywordDetector"]
+    det_SignatureDetector["SignatureDetector"]
+    det_StateMutationDetector["StateMutationDetector"]
     classDef principle fill:#4051b5,color:#fff,stroke:none
     classDef detector fill:#26a269,color:#fff,stroke:none
     class js_001 principle
@@ -478,6 +493,8 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
     class js_016 principle
     class js_017 principle
     class js_018 principle
+    class det_ClutterDetector detector
+    class det_ControlFlowDetector detector
     class det_JsAsyncErrorHandlingDetector detector
     class det_JsCallbackNestingDetector detector
     class det_JsDestructuringDetector detector
@@ -496,6 +513,9 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
     class det_JsParamCountDetector detector
     class det_JsPureFunctionDetector detector
     class det_JsStrictEqualityDetector detector
+    class det_SharedDogmaKeywordDetector detector
+    class det_SignatureDetector detector
+    class det_StateMutationDetector detector
     ```
 
 ## Configuration

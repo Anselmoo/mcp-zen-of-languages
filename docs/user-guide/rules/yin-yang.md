@@ -1,4 +1,20 @@
+---
+title: "The Yin-Yang of Code Quality"
+description: >-
+  Production code (Yang) and test code (Yin) are two complementary pillars of
+  the same zen philosophy — not hierarchical, but two halves of a complete
+  picture of code quality.
+icon: material/yin-yang
+tags:
+  - Dogmas
+  - Testing
+  - Architecture
+  - Philosophy
+---
+
 # The Yin-Yang of Code Quality
+
+![Yin-Yang illustration — a zen garden split into production code (yang, warm) and test code (yin, cool) with a central enso ring and the ten dogmas flowing between both sides](../../assets/illustration-yin-yang.svg)
 
 *In Chinese philosophy, yin and yang are complementary forces — not opposing,
 not hierarchical, but two halves of a single whole. Light and shadow. Structure
@@ -21,7 +37,7 @@ structure of a test suite has over-engineered itself into paralysis.
 
 In zen terms:
 
-> **Yang (production code)** — governed by the 10 Universal Dogmas (`ZEN-*`)  
+> **Yang (production code)** — governed by the 10 Universal Dogmas (`ZEN-*`)
 > **Yin (test code)** — governed by 10 Testing Tactics (`ZEN-TEST-*`) and 10 Testing Strategy (`ZEN-MACRO-*`) dogmas
 
 Neither pillar is more important. Neither is a subset of the other. Together
@@ -109,22 +125,28 @@ The Testing Strategy dogmas (`ZEN-MACRO-*`) are grounded in:
 
 This yin-yang duality is not merely philosophical — it is structural.
 
-!!! tip "Why production detectors have empty `universal_dogma_ids`"
-    Every production language detector (`NestingDepthDetector`,
-    `NameStyleDetector`, etc.) deliberately leaves `universal_dogma_ids`
-    unset in its `DetectorBinding`. The field defaults to `[]`, which
-    activates the registry's inference engine:
+!!! tip "The universal detector bridge"
+    Every language pipeline is composed of two layers that together provide
+    complete dogma coverage:
+
+    1. **Language-specific bindings** — `DetectorBinding` entries in each
+       language's `mapping.py`, with empty `universal_dogma_ids=[]`.
+       The registry infers the correct `ZEN-*` IDs from the rule's
+       `PrincipleCategory`.
+
+    2. **Universal bindings** — `UNIVERSAL_DETECTOR_MAP` from
+       `core/universal_mapping.py`, merged via the `DetectorGearbox`:
 
     ```python
-    universal_dogma_ids = binding.universal_dogma_ids or list(
-        dogmas_for_rule_ids(language, binding.rule_ids)
-    )
+    GEARBOX = DetectorGearbox(language="python")
+    GEARBOX.extend(DETECTOR_MAP.bindings)          # language-specific
+    GEARBOX.extend(UNIVERSAL_DETECTOR_MAP.bindings) # universal layer
+    DETECTOR_MAP = GEARBOX.build_map()
     ```
 
-    The inference follows `PrincipleCategory → UniversalDogmaID` mappings
-    defined in `core/universal_dogmas.py`. This means the registry derives
-    *only* `ZEN-*` IDs for production detectors — the yin layer never leaks
-    into the yang layer.
+    Together they guarantee that all 10 `ZEN-*` dogmas are represented in
+    every language's analysis, even if a particular language lacks a rule
+    for a given dogma.
 
 !!! tip "Why framework detectors have explicit `universal_dogma_ids`"
     Framework test detectors (`PytestSleepDetector`, `JestNoExpectDetector`,
@@ -140,8 +162,9 @@ This yin-yang duality is not merely philosophical — it is structural.
 | Layer | Dogma tier used | How set |
 |---|---|---|
 | Production language detectors | `ZEN-*` only | Inferred by registry from `PrincipleCategory` |
+| Universal production detectors | `ZEN-*` only | Explicit in `UNIVERSAL_DETECTOR_MAP` |
 | Framework test detectors | `ZEN-TEST-*` (and/or `ZEN-MACRO-*`) | Explicit in `DetectorBinding` |
-| Module-level `FULL_DOGMA_IDS` in framework files | Both tiers | Reference constant, not used in bindings |
+| Universal test detectors | `ZEN-TEST-*` only | Explicit in `UNIVERSAL_TESTING_MAP` |
 
 The `scripts/validate_dogma_consistency.py` script enforces this contract at
 every CI run:

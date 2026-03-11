@@ -1,6 +1,6 @@
 ---
 title: Go
-description: "20 zen principles enforced by 21 detectors: Simplicity, Clarity, and Pragmatism."
+description: "20 zen principles enforced by 26 detectors: Simplicity, Clarity, and Pragmatism."
 icon: material/language-go
 tags:
   - Go
@@ -388,6 +388,11 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
 | **GoModerationDetector** | Flags excessive goroutine spawning within a single file |  |
+| **ClutterDetector** | Stub detector for naming, dead-code, and complexity dogmas |  |
+| **ControlFlowDetector** | Stub detector for return-early and fail-fast dogmas |  |
+| **StateMutationDetector** | Stub detector for visible-state and strict-fences dogmas |  |
+| **SignatureDetector** | Stub detector for argument-use, explicit-intent, and abstraction dogmas |  |
+| **SharedDogmaKeywordDetector** | Detect configured literal patterns in source text across any language |  |
 
 ### Idioms
 
@@ -451,6 +456,8 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
     go_018["go-018<br/>Avoid premature optimization"]
     go_019["go-019<br/>Design for testability"]
     go_020["go-020<br/>Write self-documenting code"]
+    det_ClutterDetector["ClutterDetector"]
+    det_ControlFlowDetector["ControlFlowDetector"]
     det_GoBenchmarkDetector["GoBenchmarkDetector"]
     go_018 --> det_GoBenchmarkDetector
     det_GoConcurrencyCallerDetector["GoConcurrencyCallerDetector"]
@@ -492,6 +499,9 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
     go_019 --> det_GoTestPresenceDetector
     det_GoZeroValueDetector["GoZeroValueDetector"]
     go_003 --> det_GoZeroValueDetector
+    det_SharedDogmaKeywordDetector["SharedDogmaKeywordDetector"]
+    det_SignatureDetector["SignatureDetector"]
+    det_StateMutationDetector["StateMutationDetector"]
     classDef principle fill:#4051b5,color:#fff,stroke:none
     classDef detector fill:#26a269,color:#fff,stroke:none
     class go_001 principle
@@ -514,6 +524,8 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
     class go_018 principle
     class go_019 principle
     class go_020 principle
+    class det_ClutterDetector detector
+    class det_ControlFlowDetector detector
     class det_GoBenchmarkDetector detector
     class det_GoConcurrencyCallerDetector detector
     class det_GoContextUsageDetector detector
@@ -535,6 +547,9 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
     class det_GoSimplicityDetector detector
     class det_GoTestPresenceDetector detector
     class det_GoZeroValueDetector detector
+    class det_SharedDogmaKeywordDetector detector
+    class det_SignatureDetector detector
+    class det_StateMutationDetector detector
     ```
 
 ## Configuration

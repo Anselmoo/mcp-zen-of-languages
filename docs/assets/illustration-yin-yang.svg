@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 320" role="img" aria-labelledby="yy-title yy-desc">
+  <title id="yy-title">Yin-Yang of Code Quality</title>
+  <desc id="yy-desc">A zen garden split into two halves: warm purple Yang (production code) on the left with ten stone dogma markers, and cool cyan Yin (test code) on the right with ten mirrored testing markers. A central enso ring connects the two worlds, symbolising their complementary nature.</desc>
+  <defs>
+    <linearGradient id="yy-bg-left" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#f2effb"/>
+      <stop offset="100%" stop-color="#ece8f8"/>
+    </linearGradient>
+    <linearGradient id="yy-bg-right" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#e8f4fb"/>
+      <stop offset="100%" stop-color="#dff0f8"/>
+    </linearGradient>
+    <linearGradient id="yy-ground-l" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#e9e4f7"/>
+      <stop offset="100%" stop-color="#dfd8f2"/>
+    </linearGradient>
+    <linearGradient id="yy-ground-r" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#dceef8"/>
+      <stop offset="100%" stop-color="#c8e4f4"/>
+    </linearGradient>
+    <linearGradient id="stone-yang" x1="0.2" x2="0.8" y1="0" y2="1">
+      <stop offset="0%" stop-color="#989cff"/>
+      <stop offset="100%" stop-color="#767bd8"/>
+    </linearGradient>
+    <linearGradient id="stone-yin" x1="0.2" x2="0.8" y1="0" y2="1">
+      <stop offset="0%" stop-color="#63c8ff"/>
+      <stop offset="100%" stop-color="#3da8e0"/>
+    </linearGradient>
+    <linearGradient id="enso-grad" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#989cff" stop-opacity="0.7"/>
+      <stop offset="50%" stop-color="#c8315a" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#63c8ff" stop-opacity="0.7"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Backgrounds -->
+  <rect x="0" y="0" width="480" height="320" fill="url(#yy-bg-left)"/>
+  <rect x="480" y="0" width="480" height="320" fill="url(#yy-bg-right)"/>
+
+  <!-- Ground layers left (Yang) -->
+  <ellipse cx="240" cy="310" rx="280" ry="40" fill="url(#yy-ground-l)" opacity="0.7"/>
+  <ellipse cx="240" cy="295" rx="220" ry="28" fill="#e9e4f7" opacity="0.5"/>
+
+  <!-- Ground layers right (Yin) -->
+  <ellipse cx="720" cy="310" rx="280" ry="40" fill="url(#yy-ground-r)" opacity="0.7"/>
+  <ellipse cx="720" cy="295" rx="220" ry="28" fill="#dceef8" opacity="0.5"/>
+
+  <!-- Central dividing line (soft) -->
+  <line x1="480" y1="0" x2="480" y2="320" stroke="#9b95ad" stroke-width="1" stroke-dasharray="6,4" opacity="0.4"/>
+
+  <!-- Central Enso ring -->
+  <circle cx="480" cy="160" r="72" fill="none" stroke="url(#enso-grad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="420,30" opacity="0.75" filter="url(#glow)"/>
+  <!-- Enso gap (brush stroke character) -->
+  <circle cx="480" cy="160" r="72" fill="none" stroke="#f2effb" stroke-width="10" stroke-dasharray="0,380,50,0" opacity="0.9"/>
+
+  <!-- Yang label (left) -->
+  <text x="90" y="42" font-family="serif" font-size="13" fill="#767bd8" opacity="0.85" font-style="italic">Yang — production code</text>
+  <text x="90" y="57" font-family="monospace" font-size="10" fill="#989cff" opacity="0.75">ZEN-* (10 universal dogmas)</text>
+
+  <!-- Yin label (right) -->
+  <text x="570" y="42" font-family="serif" font-size="13" fill="#3da8e0" opacity="0.85" font-style="italic">Yin — test code</text>
+  <text x="570" y="57" font-family="monospace" font-size="10" fill="#63c8ff" opacity="0.75">ZEN-TEST-* · ZEN-MACRO-*</text>
+
+  <!-- Yang stones (production dogmas) — 5 upper + 5 lower left side -->
+  <!-- Row 1 -->
+  <ellipse cx="80" cy="130" rx="38" ry="22" fill="url(#stone-yang)" opacity="0.88"/>
+  <text x="80" y="134" font-family="monospace" font-size="7.5" fill="white" text-anchor="middle" font-weight="bold">UTILIZE-ARGS</text>
+
+  <ellipse cx="165" cy="105" rx="38" ry="22" fill="url(#stone-yang)" opacity="0.88"/>
+  <text x="165" y="109" font-family="monospace" font-size="7.5" fill="white" text-anchor="middle" font-weight="bold">EXPLICIT-INTENT</text>
+
+  <ellipse cx="255" cy="118" rx="40" ry="23" fill="url(#stone-yang)" opacity="0.88"/>
+  <text x="255" y="122" font-family="monospace" font-size="7.5" fill="white" text-anchor="middle" font-weight="bold">RETURN-EARLY</text>
+
+  <ellipse cx="355" cy="100" rx="38" ry="22" fill="url(#stone-yang)" opacity="0.88"/>
+  <text x="355" y="104" font-family="monospace" font-size="7.5" fill="white" text-anchor="middle" font-weight="bold">FAIL-FAST</text>
+
+  <ellipse cx="415" cy="135" rx="38" ry="21" fill="url(#stone-yang)" opacity="0.82"/>
+  <text x="415" y="139" font-family="monospace" font-size="7.5" fill="white" text-anchor="middle" font-weight="bold">RIGHT-ABSTR.</text>
+
+  <!-- Row 2 -->
+  <ellipse cx="80" cy="220" rx="40" ry="23" fill="url(#stone-yang)" opacity="0.84"/>
+  <text x="80" y="224" font-family="monospace" font-size="7.5" fill="white" text-anchor="middle" font-weight="bold">UNAMB.-NAME</text>
+
+  <ellipse cx="170" cy="235" rx="38" ry="22" fill="url(#stone-yang)" opacity="0.84"/>
+  <text x="170" y="239" font-family="monospace" font-size="7.5" fill="white" text-anchor="middle" font-weight="bold">VISIBLE-STATE</text>
+
+  <ellipse cx="260" cy="248" rx="40" ry="22" fill="url(#stone-yang)" opacity="0.84"/>
+  <text x="260" y="252" font-family="monospace" font-size="7.5" fill="white" text-anchor="middle" font-weight="bold">STRICT-FENCES</text>
+
+  <ellipse cx="355" cy="238" rx="42" ry="22" fill="url(#stone-yang)" opacity="0.84"/>
+  <text x="355" y="242" font-family="monospace" font-size="7.5" fill="white" text-anchor="middle" font-weight="bold">RUTHLESS-DEL.</text>
+
+  <ellipse cx="430" cy="218" rx="42" ry="22" fill="url(#stone-yang)" opacity="0.84"/>
+  <text x="430" y="222" font-family="monospace" font-size="7.5" fill="white" text-anchor="middle" font-weight="bold">PROP.COMPLEX.</text>
+
+  <!-- Yin stones (testing tactics) — mirrored right side -->
+  <!-- Row 1 -->
+  <ellipse cx="545" cy="135" rx="40" ry="21" fill="url(#stone-yin)" opacity="0.82"/>
+  <text x="545" y="139" font-family="monospace" font-size="7.5" fill="white" text-anchor="middle" font-weight="bold">TRUSTWORTHY</text>
+
+  <ellipse cx="608" cy="100" rx="40" ry="22" fill="url(#stone-yin)" opacity="0.88"/>
+  <text x="608" y="104" font-family="monospace" font-size="7.5" fill="white" text-anchor="middle" font-weight="bold">NO-LOGIC</text>
+
+  <ellipse cx="700" cy="118" rx="42" ry="23" fill="url(#stone-yin)" opacity="0.88"/>
+  <text x="700" y="122" font-family="monospace" font-size="7.5" fill="white" text-anchor="middle" font-weight="bold">SINGLE-REASON</text>
+
+  <ellipse cx="793" cy="105" rx="40" ry="22" fill="url(#stone-yin)" opacity="0.88"/>
+  <text x="793" y="109" font-family="monospace" font-size="7.5" fill="white" text-anchor="middle" font-weight="bold">FAST</text>
+
+  <ellipse cx="878" cy="130" rx="40" ry="22" fill="url(#stone-yin)" opacity="0.88"/>
+  <text x="878" y="134" font-family="monospace" font-size="7.5" fill="white" text-anchor="middle" font-weight="bold">MACRO-BOUNDARY</text>
+
+  <!-- Row 2 -->
+  <ellipse cx="530" cy="218" rx="44" ry="22" fill="url(#stone-yin)" opacity="0.84"/>
+  <text x="530" y="222" font-family="monospace" font-size="7.5" fill="white" text-anchor="middle" font-weight="bold">NAMED-BEHAV.</text>
+
+  <ellipse cx="608" cy="235" rx="42" ry="22" fill="url(#stone-yin)" opacity="0.84"/>
+  <text x="608" y="239" font-family="monospace" font-size="7.5" fill="white" text-anchor="middle" font-weight="bold">DETERMINISTIC</text>
+
+  <ellipse cx="700" cy="248" rx="38" ry="22" fill="url(#stone-yin)" opacity="0.84"/>
+  <text x="700" y="252" font-family="monospace" font-size="7.5" fill="white" text-anchor="middle" font-weight="bold">ISOLATED</text>
+
+  <ellipse cx="793" cy="238" rx="38" ry="22" fill="url(#stone-yin)" opacity="0.84"/>
+  <text x="793" y="242" font-family="monospace" font-size="7.5" fill="white" text-anchor="middle" font-weight="bold">CLEAN-CODE</text>
+
+  <ellipse cx="878" cy="220" rx="42" ry="22" fill="url(#stone-yin)" opacity="0.84"/>
+  <text x="878" y="224" font-family="monospace" font-size="7.5" fill="white" text-anchor="middle" font-weight="bold">PROPORTIONAL</text>
+
+  <!-- Bridge arrows (subtle) — three indirect bridges -->
+  <path d="M415,125 Q447,160 545,135" fill="none" stroke="#c8315a" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.55"/>
+  <path d="M355,120 Q420,165 480,160" fill="none" stroke="#c8315a" stroke-width="1" stroke-dasharray="3,4" opacity="0.35"/>
+
+  <!-- Bamboo left -->
+  <line x1="30" y1="270" x2="30" y2="60" stroke="#b8bcff" stroke-width="3" opacity="0.4"/>
+  <line x1="36" y1="270" x2="36" y2="70" stroke="#b8bcff" stroke-width="2" opacity="0.3"/>
+  <ellipse cx="30" cy="80" rx="18" ry="6" fill="none" stroke="#b8bcff" stroke-width="1.5" opacity="0.35"/>
+  <ellipse cx="30" cy="120" rx="18" ry="6" fill="none" stroke="#b8bcff" stroke-width="1.5" opacity="0.35"/>
+  <ellipse cx="30" cy="165" rx="18" ry="6" fill="none" stroke="#b8bcff" stroke-width="1.5" opacity="0.35"/>
+
+  <!-- Bamboo right -->
+  <line x1="930" y1="270" x2="930" y2="60" stroke="#63c8ff" stroke-width="3" opacity="0.35"/>
+  <line x1="924" y1="270" x2="924" y2="70" stroke="#63c8ff" stroke-width="2" opacity="0.25"/>
+  <ellipse cx="930" cy="80" rx="18" ry="6" fill="none" stroke="#63c8ff" stroke-width="1.5" opacity="0.3"/>
+  <ellipse cx="930" cy="120" rx="18" ry="6" fill="none" stroke="#63c8ff" stroke-width="1.5" opacity="0.3"/>
+  <ellipse cx="930" cy="165" rx="18" ry="6" fill="none" stroke="#63c8ff" stroke-width="1.5" opacity="0.3"/>
+
+  <!-- Floating cherry petals -->
+  <ellipse cx="130" cy="72" rx="5" ry="3" fill="#c8315a" opacity="0.35" transform="rotate(-20,130,72)"/>
+  <ellipse cx="310" cy="58" rx="4" ry="2.5" fill="#989cff" opacity="0.4" transform="rotate(15,310,58)"/>
+  <ellipse cx="650" cy="68" rx="5" ry="3" fill="#63c8ff" opacity="0.35" transform="rotate(25,650,68)"/>
+  <ellipse cx="820" cy="55" rx="4" ry="2.5" fill="#c8315a" opacity="0.3" transform="rotate(-10,820,55)"/>
+</svg>

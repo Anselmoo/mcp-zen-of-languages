@@ -17,25 +17,25 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 | Language | Principles | Detectors | Parser | Philosophy Origin |
 |----------|:----------:|:---------:|--------|-------------------|
-| [Python](python.md) | 20 | 30 | AST | [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/) |
-| [TypeScript](typescript.md) | 18 | 25 | Regex | [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html) |
-| [Rust](rust.md) | 17 | 18 | Regex | [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/) |
-| [Go](go.md) | 20 | 21 | Regex | [Effective Go & The Zen of Go](https://the-zen-of-go.netlify.app/) |
-| [JavaScript](javascript.md) | 18 | 18 | Regex | [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript) |
-| [CSS](css.md) | 8 | 8 | Regex | [CSSWG + common modular CSS practices](https://www.w3.org/TR/CSS/) |
-| [Ansible](ansible.md) | 20 | 20 | Regex | [The Zen of Ansible (Red Hat)](https://www.redhat.com/en/blog/the-zen-of-ansible) |
-| [Bash](bash.md) | 14 | 14 | Regex | [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html) |
-| [PowerShell](powershell.md) | 15 | 15 | Regex | [PoshCode Style Guide](https://github.com/PoshCode/PowerShellPracticeAndStyle) |
-| [Ruby](ruby.md) | 11 | 11 | Regex | [Ruby Style Guide](https://rubystyle.guide/) |
-| [SQL](sql.md) | 9 | 9 | SQLGlot | [ANSI SQL + production database best practices](https://www.iso.org/standard/76584.html) |
-| [C++](cpp.md) | 13 | 13 | Regex | [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines) |
-| [C#](csharp.md) | 13 | 13 | Regex | [C# Coding Conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions) |
-| [Docker Compose](docker-compose.md) | 4 | 4 | Regex | [Compose Specification](https://compose-spec.io/) |
-| [Dockerfile](dockerfile.md) | 8 | 8 | Regex | [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) |
-| [LaTeX](latex.md) | 9 | 9 | Regex | [LaTeX Project](https://www.latex-project.org/) |
-| [Markdown / MDX](markdown.md) | 7 | 7 | Regex | [CommonMark + MDX authoring best practices](https://commonmark.org/) |
-| [Terraform](terraform.md) | 7 | 7 | Regex | [Terraform language and module best-practice documentation](https://developer.hashicorp.com/terraform/language) |
-| **Programming & markup subtotal** | **231** | **250** | | |
+| [Python](python.md) | 20 | 35 | AST | [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/) |
+| [TypeScript](typescript.md) | 18 | 30 | Regex | [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html) |
+| [Rust](rust.md) | 17 | 23 | Regex | [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/) |
+| [Go](go.md) | 20 | 26 | Regex | [Effective Go & The Zen of Go](https://the-zen-of-go.netlify.app/) |
+| [JavaScript](javascript.md) | 18 | 23 | Regex | [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript) |
+| [CSS](css.md) | 8 | 13 | Regex | [CSSWG + common modular CSS practices](https://www.w3.org/TR/CSS/) |
+| [Ansible](ansible.md) | 20 | 25 | Regex | [The Zen of Ansible (Red Hat)](https://www.redhat.com/en/blog/the-zen-of-ansible) |
+| [Bash](bash.md) | 14 | 19 | Regex | [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html) |
+| [PowerShell](powershell.md) | 15 | 20 | Regex | [PoshCode Style Guide](https://github.com/PoshCode/PowerShellPracticeAndStyle) |
+| [Ruby](ruby.md) | 11 | 16 | Regex | [Ruby Style Guide](https://rubystyle.guide/) |
+| [SQL](sql.md) | 9 | 14 | SQLGlot | [ANSI SQL + production database best practices](https://www.iso.org/standard/76584.html) |
+| [C++](cpp.md) | 13 | 18 | Regex | [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines) |
+| [C#](csharp.md) | 13 | 18 | Regex | [C# Coding Conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions) |
+| [Docker Compose](docker-compose.md) | 4 | 9 | Regex | [Compose Specification](https://compose-spec.io/) |
+| [Dockerfile](dockerfile.md) | 8 | 13 | Regex | [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) |
+| [LaTeX](latex.md) | 9 | 14 | Regex | [LaTeX Project](https://www.latex-project.org/) |
+| [Markdown / MDX](markdown.md) | 7 | 12 | Regex | [CommonMark + MDX authoring best practices](https://commonmark.org/) |
+| [Terraform](terraform.md) | 7 | 12 | Regex | [Terraform language and module best-practice documentation](https://developer.hashicorp.com/terraform/language) |
+| **Programming & markup subtotal** | **231** | **340** | | |
 
 ### Workflows & Automation
 
@@ -49,13 +49,13 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 | Language Family | Principles | Detectors | Parser | Coverage Breakdown |
 |-----------------|:----------:|:---------:|--------|--------------------|
-| [Config formats](config-formats.md) | 46 | 46 | Regex | JSON (9), SVG (15), TOML (8), XML (6), YAML (8) |
-| **Config subtotal** | **46** | **46** | | |
+| [Config formats](config-formats.md) | 46 | 71 | Regex | JSON (9), SVG (15), TOML (8), XML (6), YAML (8) |
+| **Config subtotal** | **46** | **71** | | |
 
 ### Coverage Totals
 
 - **Principles (all categories):** 302
-- **Detectors + workflow checks:** 321
+- **Detectors + workflow checks:** 436
 
 ## Maturity Tiers
 

@@ -1,6 +1,6 @@
 ---
 title: Ansible
-description: "20 zen principles enforced by 20 detectors: Simple, powerful, and human-centered automation."
+description: "20 zen principles enforced by 25 detectors: Simple, powerful, and human-centered automation."
 icon: material/console
 tags:
   - Ansible
@@ -266,6 +266,16 @@ tags:
 | **AnsibleIdempotencyDetector** | Flag shell/command usage where idempotent modules should be preferred | `ansible-003` |
 | **AnsibleContinuousImprovementDetector** | Highlight inline debt markers that should become improvement backlog items | `ansible-018` |
 
+### General
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **ClutterDetector** | Stub detector for naming, dead-code, and complexity dogmas |  |
+| **ControlFlowDetector** | Stub detector for return-early and fail-fast dogmas |  |
+| **StateMutationDetector** | Stub detector for visible-state and strict-fences dogmas |  |
+| **SignatureDetector** | Stub detector for argument-use, explicit-intent, and abstraction dogmas |  |
+| **SharedDogmaKeywordDetector** | Detect configured literal patterns in source text across any language |  |
+
 ### Idioms
 
 | Detector | What It Catches | Rule IDs |
@@ -366,6 +376,11 @@ tags:
     ansible_010 --> det_AnsibleUserExperienceDetector
     det_AnsibleUserOutcomeDetector["AnsibleUserOutcomeDetector"]
     ansible_009 --> det_AnsibleUserOutcomeDetector
+    det_ClutterDetector["ClutterDetector"]
+    det_ControlFlowDetector["ControlFlowDetector"]
+    det_SharedDogmaKeywordDetector["SharedDogmaKeywordDetector"]
+    det_SignatureDetector["SignatureDetector"]
+    det_StateMutationDetector["StateMutationDetector"]
     classDef principle fill:#4051b5,color:#fff,stroke:none
     classDef detector fill:#26a269,color:#fff,stroke:none
     class ansible_001 principle
@@ -408,6 +423,11 @@ tags:
     class det_AnsibleStateExplicitDetector detector
     class det_AnsibleUserExperienceDetector detector
     class det_AnsibleUserOutcomeDetector detector
+    class det_ClutterDetector detector
+    class det_ControlFlowDetector detector
+    class det_SharedDogmaKeywordDetector detector
+    class det_SignatureDetector detector
+    class det_StateMutationDetector detector
     ```
 
 ## Configuration

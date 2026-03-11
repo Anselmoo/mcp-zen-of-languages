@@ -1,6 +1,6 @@
 ---
 title: Markdown / MDX
-description: "7 zen principles enforced by 7 detectors: Documentation structure, accessibility, and MDX component hygiene."
+description: "7 zen principles enforced by 12 detectors: Documentation structure, accessibility, and MDX component hygiene."
 icon: material/language-markdown
 tags:
   - Markdown / MDX
@@ -155,6 +155,16 @@ tags:
 |----------|----------------|----------|
 | **MarkdownCodeFenceLanguageDetector** | Detect fenced code blocks that omit a language identifier | `md-004` |
 
+### General
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **ClutterDetector** | Stub detector for naming, dead-code, and complexity dogmas |  |
+| **ControlFlowDetector** | Stub detector for return-early and fail-fast dogmas |  |
+| **StateMutationDetector** | Stub detector for visible-state and strict-fences dogmas |  |
+| **SignatureDetector** | Stub detector for argument-use, explicit-intent, and abstraction dogmas |  |
+| **SharedDogmaKeywordDetector** | Detect configured literal patterns in source text across any language |  |
+
 ### Organization
 
 | Detector | What It Catches | Rule IDs |
@@ -184,6 +194,8 @@ tags:
     md_005["md-005<br/>Keep front-matter complete when present"]
     md_006["md-006<br/>Use named default exports in MDX"]
     md_007["md-007<br/>Keep MDX imports hygienic"]
+    det_ClutterDetector["ClutterDetector"]
+    det_ControlFlowDetector["ControlFlowDetector"]
     det_MarkdownAltTextDetector["MarkdownAltTextDetector"]
     md_002 --> det_MarkdownAltTextDetector
     det_MarkdownBareUrlDetector["MarkdownBareUrlDetector"]
@@ -198,6 +210,9 @@ tags:
     md_007 --> det_MarkdownMdxImportHygieneDetector
     det_MarkdownMdxNamedDefaultExportDetector["MarkdownMdxNamedDefaultExportDetector"]
     md_006 --> det_MarkdownMdxNamedDefaultExportDetector
+    det_SharedDogmaKeywordDetector["SharedDogmaKeywordDetector"]
+    det_SignatureDetector["SignatureDetector"]
+    det_StateMutationDetector["StateMutationDetector"]
     classDef principle fill:#4051b5,color:#fff,stroke:none
     classDef detector fill:#26a269,color:#fff,stroke:none
     class md_001 principle
@@ -207,6 +222,8 @@ tags:
     class md_005 principle
     class md_006 principle
     class md_007 principle
+    class det_ClutterDetector detector
+    class det_ControlFlowDetector detector
     class det_MarkdownAltTextDetector detector
     class det_MarkdownBareUrlDetector detector
     class det_MarkdownCodeFenceLanguageDetector detector
@@ -214,6 +231,9 @@ tags:
     class det_MarkdownHeadingHierarchyDetector detector
     class det_MarkdownMdxImportHygieneDetector detector
     class det_MarkdownMdxNamedDefaultExportDetector detector
+    class det_SharedDogmaKeywordDetector detector
+    class det_SignatureDetector detector
+    class det_StateMutationDetector detector
     ```
 
 ## Configuration

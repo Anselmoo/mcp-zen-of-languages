@@ -1,6 +1,6 @@
 ---
 title: LaTeX
-description: "9 zen principles enforced by 9 detectors: LaTeX document quality and semantic authoring."
+description: "9 zen principles enforced by 14 detectors: LaTeX document quality and semantic authoring."
 icon: material/math-integral
 tags:
   - LaTeX
@@ -158,6 +158,16 @@ tags:
 |----------|----------------|----------|
 | **LatexCaptionCompletenessDetector** | Check that ``figure`` and ``table`` environments define captions | `latex-003` |
 
+### General
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **ClutterDetector** | Stub detector for naming, dead-code, and complexity dogmas |  |
+| **ControlFlowDetector** | Stub detector for return-early and fail-fast dogmas |  |
+| **StateMutationDetector** | Stub detector for visible-state and strict-fences dogmas |  |
+| **SignatureDetector** | Stub detector for argument-use, explicit-intent, and abstraction dogmas |  |
+| **SharedDogmaKeywordDetector** | Detect configured literal patterns in source text across any language |  |
+
 ### Organization
 
 | Detector | What It Catches | Rule IDs |
@@ -178,6 +188,8 @@ tags:
     latex_007["latex-007<br/>Prevent circular \input and \include cha..."]
     latex_008["latex-008<br/>Declare UTF-8 encoding intent"]
     latex_009["latex-009<br/>Remove unused packages"]
+    det_ClutterDetector["ClutterDetector"]
+    det_ControlFlowDetector["ControlFlowDetector"]
     det_LatexBibliographyHygieneDetector["LatexBibliographyHygieneDetector"]
     latex_004 --> det_LatexBibliographyHygieneDetector
     det_LatexCaptionCompletenessDetector["LatexCaptionCompletenessDetector"]
@@ -196,6 +208,9 @@ tags:
     latex_009 --> det_LatexUnusedPackagesDetector
     det_LatexWidthAbstractionDetector["LatexWidthAbstractionDetector"]
     latex_005 --> det_LatexWidthAbstractionDetector
+    det_SharedDogmaKeywordDetector["SharedDogmaKeywordDetector"]
+    det_SignatureDetector["SignatureDetector"]
+    det_StateMutationDetector["StateMutationDetector"]
     classDef principle fill:#4051b5,color:#fff,stroke:none
     classDef detector fill:#26a269,color:#fff,stroke:none
     class latex_001 principle
@@ -207,6 +222,8 @@ tags:
     class latex_007 principle
     class latex_008 principle
     class latex_009 principle
+    class det_ClutterDetector detector
+    class det_ControlFlowDetector detector
     class det_LatexBibliographyHygieneDetector detector
     class det_LatexCaptionCompletenessDetector detector
     class det_LatexEncodingDeclarationDetector detector
@@ -216,6 +233,9 @@ tags:
     class det_LatexSemanticMarkupDetector detector
     class det_LatexUnusedPackagesDetector detector
     class det_LatexWidthAbstractionDetector detector
+    class det_SharedDogmaKeywordDetector detector
+    class det_SignatureDetector detector
+    class det_StateMutationDetector detector
     ```
 
 ## Configuration

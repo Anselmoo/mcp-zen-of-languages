@@ -213,7 +213,22 @@ class DetectorRegistry:
                 msg = f"Missing DETECTOR_MAP in {module_name}"
                 raise ValueError(msg)
             for binding in lang_map.bindings:
-                self.register(DetectorMetadata.from_binding(binding, lang_map.language))
+                if binding.detector_id in self._registry:
+                    # Universal (cross-language) bindings are identical across every
+                    # language map — silently skip re-registration rather than raising.
+                    continue
+                # Bindings with the base DetectorConfig (no Literal type) are universal
+                # stubs shared across every language; register them under "universal" so
+                # per-language structure checks don't expect them in each language's
+                # detectors.py __all__.
+                from mcp_zen_of_languages.languages.configs import DetectorConfig
+
+                reg_language = (
+                    "universal"
+                    if binding.config_model is DetectorConfig
+                    else lang_map.language
+                )
+                self.register(DetectorMetadata.from_binding(binding, reg_language))
 
     def items(self) -> list[DetectorMetadata]:
         """Return a snapshot of every registered detector's metadata.

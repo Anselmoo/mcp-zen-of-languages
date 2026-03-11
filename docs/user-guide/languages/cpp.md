@@ -1,6 +1,6 @@
 ---
 title: C++
-description: "13 zen principles enforced by 13 detectors: Modern C++ Best Practices (C++11/14/17/20)."
+description: "13 zen principles enforced by 18 detectors: Modern C++ Best Practices (C++11/14/17/20)."
 icon: material/language-cpp
 tags:
   - C++
@@ -279,6 +279,16 @@ Modern C++ (C++11 through C++20) is a fundamentally different language from the 
 | **CppAvoidGlobalsDetector** | Detects mutable global and file-scope ``static``/``extern`` variables | `cpp-011` |
 | **CppOptionalDetector** | Suggests ``std::optional`` over nullable raw pointers for optional values | `cpp-013` |
 
+### General
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **ClutterDetector** | Stub detector for naming, dead-code, and complexity dogmas |  |
+| **ControlFlowDetector** | Stub detector for return-early and fail-fast dogmas |  |
+| **StateMutationDetector** | Stub detector for visible-state and strict-fences dogmas |  |
+| **SignatureDetector** | Stub detector for argument-use, explicit-intent, and abstraction dogmas |  |
+| **SharedDogmaKeywordDetector** | Detect configured literal patterns in source text across any language |  |
+
 ### Idioms
 
 | Detector | What It Catches | Rule IDs |
@@ -328,6 +338,8 @@ Modern C++ (C++11 through C++20) is a fundamentally different language from the 
     cpp_011["cpp-011<br/>Avoid global variables"]
     cpp_012["cpp-012<br/>Use override and final keywords"]
     cpp_013["cpp-013<br/>Prefer std::optional over null pointers"]
+    det_ClutterDetector["ClutterDetector"]
+    det_ControlFlowDetector["ControlFlowDetector"]
     det_CppAutoDetector["CppAutoDetector"]
     cpp_003 --> det_CppAutoDetector
     det_CppAvoidGlobalsDetector["CppAvoidGlobalsDetector"]
@@ -354,6 +366,9 @@ Modern C++ (C++11 through C++20) is a fundamentally different language from the 
     cpp_009 --> det_CppRuleOfFiveDetector
     det_CppSmartPointerDetector["CppSmartPointerDetector"]
     cpp_002 --> det_CppSmartPointerDetector
+    det_SharedDogmaKeywordDetector["SharedDogmaKeywordDetector"]
+    det_SignatureDetector["SignatureDetector"]
+    det_StateMutationDetector["StateMutationDetector"]
     classDef principle fill:#4051b5,color:#fff,stroke:none
     classDef detector fill:#26a269,color:#fff,stroke:none
     class cpp_001 principle
@@ -369,6 +384,8 @@ Modern C++ (C++11 through C++20) is a fundamentally different language from the 
     class cpp_011 principle
     class cpp_012 principle
     class cpp_013 principle
+    class det_ClutterDetector detector
+    class det_ControlFlowDetector detector
     class det_CppAutoDetector detector
     class det_CppAvoidGlobalsDetector detector
     class det_CppCStyleCastDetector detector
@@ -382,6 +399,9 @@ Modern C++ (C++11 through C++20) is a fundamentally different language from the 
     class det_CppRangeForDetector detector
     class det_CppRuleOfFiveDetector detector
     class det_CppSmartPointerDetector detector
+    class det_SharedDogmaKeywordDetector detector
+    class det_SignatureDetector detector
+    class det_StateMutationDetector detector
     ```
 
 ## Configuration

@@ -8,11 +8,13 @@ from pydantic import create_model
 
 from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
-from mcp_zen_of_languages.frameworks.vue.detectors import VueRuleDetector
+from mcp_zen_of_languages.frameworks.dogmas import framework_rule_dogmas
+from mcp_zen_of_languages.frameworks.vue.detectors import VueConditionalLoopDetector
+from mcp_zen_of_languages.frameworks.vue.detectors import VueListKeyDetector
+from mcp_zen_of_languages.frameworks.vue.detectors import VueMultiWordNameDetector
+from mcp_zen_of_languages.frameworks.vue.detectors import VuePropMutationDetector
+from mcp_zen_of_languages.frameworks.vue.detectors import VueTypedPropsDetector
 from mcp_zen_of_languages.languages.configs import DetectorConfig
-
-
-_RULE_IDS = ["vue-001", "vue-002", "vue-003", "vue-004", "vue-005"]
 
 
 def _rule_config(rule_id: str) -> type[DetectorConfig]:
@@ -28,12 +30,44 @@ DETECTOR_MAP = LanguageDetectorMap(
     language="vue",
     bindings=[
         DetectorBinding(
-            detector_id=rule_id,
-            detector_class=VueRuleDetector,
-            config_model=_rule_config(rule_id),
-            rule_ids=[rule_id],
-            default_order=index * 10,
-        )
-        for index, rule_id in enumerate(_RULE_IDS, start=1)
+            detector_id="vue-004",
+            detector_class=VueConditionalLoopDetector,
+            config_model=_rule_config("vue-004"),
+            rule_ids=["vue-004"],
+            universal_dogma_ids=list(framework_rule_dogmas("vue-004")),
+            default_order=10,
+        ),
+        DetectorBinding(
+            detector_id="vue-003",
+            detector_class=VueListKeyDetector,
+            config_model=_rule_config("vue-003"),
+            rule_ids=["vue-003"],
+            universal_dogma_ids=list(framework_rule_dogmas("vue-003")),
+            default_order=20,
+        ),
+        DetectorBinding(
+            detector_id="vue-001",
+            detector_class=VueMultiWordNameDetector,
+            config_model=_rule_config("vue-001"),
+            rule_ids=["vue-001"],
+            universal_dogma_ids=list(framework_rule_dogmas("vue-001")),
+            default_order=30,
+        ),
+        DetectorBinding(
+            detector_id="vue-005",
+            detector_class=VuePropMutationDetector,
+            config_model=_rule_config("vue-005"),
+            rule_ids=["vue-005"],
+            universal_dogma_ids=list(framework_rule_dogmas("vue-005")),
+            default_order=40,
+        ),
+        DetectorBinding(
+            detector_id="vue-002",
+            detector_class=VueTypedPropsDetector,
+            config_model=_rule_config("vue-002"),
+            rule_ids=["vue-002"],
+            universal_dogma_ids=list(framework_rule_dogmas("vue-002")),
+            default_order=50,
+        ),
     ],
 )

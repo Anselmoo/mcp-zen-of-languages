@@ -1,6 +1,6 @@
 ---
 title: FastAPI
-description: "6 zen principles enforced by 1 detectors: Type-driven API design with async-first I/O and explicit request/response contracts.."
+description: "6 zen principles enforced by 6 detectors: Type-driven API design with async-first I/O and explicit request/response contracts.."
 icon: material/api
 tags:
   - FastAPI
@@ -130,7 +130,27 @@ tags:
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **FastapiRuleDetector** | Framework-specific rule-pattern detector for fastapi rule coverage | `fastapi-001` |
+| **FastapiResponseModelDetector** | Concrete detector binding for FastapiResponseModelDetector | `fastapi-001` |
+| **FastapiStatusCodeDetector** | Concrete detector binding for FastapiStatusCodeDetector | `fastapi-002` |
+
+### Correctness
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **FastapiBackgroundTasksDetector** | Concrete detector binding for FastapiBackgroundTasksDetector | `fastapi-004` |
+| **FastapiHttpExceptionDetector** | Concrete detector binding for FastapiHttpExceptionDetector | `fastapi-003` |
+
+### Idioms
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **FastapiVerbDecoratorDetector** | Concrete detector binding for FastapiVerbDecoratorDetector | `fastapi-006` |
+
+### Performance
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **FastapiAsyncIoDetector** | Concrete detector binding for FastapiAsyncIoDetector | `fastapi-005` |
 
 
 ??? example "Principle → Detector Wiring"
@@ -143,8 +163,18 @@ tags:
     fastapi_004["fastapi-004<br/>Background work should us..."]
     fastapi_005["fastapi-005<br/>Async routes should avoid..."]
     fastapi_006["fastapi-006<br/>Prefer explicit HTTP verb..."]
-    det_FastapiRuleDetector["Fastapi Rule"]
-    fastapi_001 --> det_FastapiRuleDetector
+    det_FastapiAsyncIoDetector["Fastapi Async<br/>Io"]
+    fastapi_005 --> det_FastapiAsyncIoDetector
+    det_FastapiBackgroundTasksDetector["Fastapi Background<br/>Tasks"]
+    fastapi_004 --> det_FastapiBackgroundTasksDetector
+    det_FastapiHttpExceptionDetector["Fastapi Http<br/>Exception"]
+    fastapi_003 --> det_FastapiHttpExceptionDetector
+    det_FastapiResponseModelDetector["Fastapi Response<br/>Model"]
+    fastapi_001 --> det_FastapiResponseModelDetector
+    det_FastapiStatusCodeDetector["Fastapi Status<br/>Code"]
+    fastapi_002 --> det_FastapiStatusCodeDetector
+    det_FastapiVerbDecoratorDetector["Fastapi Verb<br/>Decorator"]
+    fastapi_006 --> det_FastapiVerbDecoratorDetector
     ```
 
 ??? example "Detector Class Hierarchy"
@@ -156,8 +186,18 @@ tags:
             <<abstract>>
             +detect(context, config)
         }
-        class det_01["Fastapi Rule"]
+        class det_01["Fastapi Async Io"]
         ViolationDetector <|-- det_01
+        class det_02["Fastapi Background Tasks"]
+        ViolationDetector <|-- det_02
+        class det_03["Fastapi Http Exception"]
+        ViolationDetector <|-- det_03
+        class det_04["Fastapi Response Model"]
+        ViolationDetector <|-- det_04
+        class det_05["Fastapi Status Code"]
+        ViolationDetector <|-- det_05
+        class det_06["Fastapi Verb Decorator"]
+        ViolationDetector <|-- det_06
     ```
 
 ??? example "Analysis Pipeline"
@@ -166,7 +206,7 @@ tags:
     flowchart TD
     Source(["Source Code"]) --> Parse["Parse & Tokenize"]
     Parse --> Metrics["Compute Metrics"]
-    Metrics --> Pipeline{"1 Detectors"}
+    Metrics --> Pipeline{"6 Detectors"}
     Pipeline --> Collect["Aggregate Violations"]
     Collect --> Result(["AnalysisResult<br/>6 principles"])
     ```
@@ -179,7 +219,7 @@ tags:
         Ready --> Parsing : analyze(code)
         Parsing --> Computing : AST ready
         Computing --> Detecting : metrics ready
-        Detecting --> Reporting : 1 detectors run
+        Detecting --> Reporting : 6 detectors run
         Reporting --> [*] : AnalysisResult
         Parsing --> Reporting : parse error (best-effort)
     ```

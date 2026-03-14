@@ -1,6 +1,6 @@
 ---
 title: React
-description: "5 zen principles enforced by 1 detectors: Composable, predictable UI driven by state and props.."
+description: "5 zen principles enforced by 5 detectors: Composable, predictable UI driven by state and props.."
 icon: fontawesome/brands/react
 tags:
   - React
@@ -109,11 +109,25 @@ tags:
 
 ## Detector Catalog
 
+### Architecture
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **ReactDirectDomAccessDetector** | Concrete detector binding for ReactDirectDomAccessDetector | `react-003` |
+
 ### Correctness
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **ReactRuleDetector** | Framework-specific rule-pattern detector for react rule coverage | `react-001` |
+| **ReactConditionalHookDetector** | Concrete detector binding for ReactConditionalHookDetector | `react-004` |
+| **ReactEffectCleanupDetector** | Concrete detector binding for ReactEffectCleanupDetector | `react-005` |
+| **ReactStableKeyDetector** | Concrete detector binding for ReactStableKeyDetector | `react-001` |
+
+### Performance
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **ReactInlineHandlerDetector** | Concrete detector binding for ReactInlineHandlerDetector | `react-002` |
 
 
 ??? example "Principle → Detector Wiring"
@@ -125,8 +139,16 @@ tags:
     react_003["react-003<br/>Component logic should no..."]
     react_004["react-004<br/>Hooks must not be called ..."]
     react_005["react-005<br/>Effects that register tim..."]
-    det_ReactRuleDetector["React Rule"]
-    react_001 --> det_ReactRuleDetector
+    det_ReactConditionalHookDetector["React Conditional<br/>Hook"]
+    react_004 --> det_ReactConditionalHookDetector
+    det_ReactDirectDomAccessDetector["React Direct<br/>Dom Access"]
+    react_003 --> det_ReactDirectDomAccessDetector
+    det_ReactEffectCleanupDetector["React Effect<br/>Cleanup"]
+    react_005 --> det_ReactEffectCleanupDetector
+    det_ReactInlineHandlerDetector["React Inline<br/>Handler"]
+    react_002 --> det_ReactInlineHandlerDetector
+    det_ReactStableKeyDetector["React Stable<br/>Key"]
+    react_001 --> det_ReactStableKeyDetector
     ```
 
 ??? example "Detector Class Hierarchy"
@@ -138,8 +160,16 @@ tags:
             <<abstract>>
             +detect(context, config)
         }
-        class det_01["React Rule"]
+        class det_01["React Conditional Hook"]
         ViolationDetector <|-- det_01
+        class det_02["React Direct Dom Access"]
+        ViolationDetector <|-- det_02
+        class det_03["React Effect Cleanup"]
+        ViolationDetector <|-- det_03
+        class det_04["React Inline Handler"]
+        ViolationDetector <|-- det_04
+        class det_05["React Stable Key"]
+        ViolationDetector <|-- det_05
     ```
 
 ??? example "Analysis Pipeline"
@@ -148,7 +178,7 @@ tags:
     flowchart TD
     Source(["Source Code"]) --> Parse["Parse & Tokenize"]
     Parse --> Metrics["Compute Metrics"]
-    Metrics --> Pipeline{"1 Detectors"}
+    Metrics --> Pipeline{"5 Detectors"}
     Pipeline --> Collect["Aggregate Violations"]
     Collect --> Result(["AnalysisResult<br/>5 principles"])
     ```
@@ -161,7 +191,7 @@ tags:
         Ready --> Parsing : analyze(code)
         Parsing --> Computing : AST ready
         Computing --> Detecting : metrics ready
-        Detecting --> Reporting : 1 detectors run
+        Detecting --> Reporting : 5 detectors run
         Reporting --> [*] : AnalysisResult
         Parsing --> Reporting : parse error (best-effort)
     ```

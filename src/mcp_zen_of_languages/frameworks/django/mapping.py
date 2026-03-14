@@ -8,18 +8,20 @@ from pydantic import create_model
 
 from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
-from mcp_zen_of_languages.frameworks.django.detectors import DjangoRuleDetector
+from mcp_zen_of_languages.frameworks.django.detectors import DjangoDebugConfigDetector
+from mcp_zen_of_languages.frameworks.django.detectors import (
+    DjangoParameterizedSqlDetector,
+)
+from mcp_zen_of_languages.frameworks.django.detectors import (
+    DjangoQuerysetLoadingDetector,
+)
+from mcp_zen_of_languages.frameworks.django.detectors import DjangoReverseUrlDetector
+from mcp_zen_of_languages.frameworks.django.detectors import (
+    DjangoSecretSettingsDetector,
+)
+from mcp_zen_of_languages.frameworks.django.detectors import DjangoSignalHookDetector
+from mcp_zen_of_languages.frameworks.dogmas import framework_rule_dogmas
 from mcp_zen_of_languages.languages.configs import DetectorConfig
-
-
-_RULE_IDS = [
-    "django-001",
-    "django-002",
-    "django-003",
-    "django-004",
-    "django-005",
-    "django-006",
-]
 
 
 def _rule_config(rule_id: str) -> type[DetectorConfig]:
@@ -35,12 +37,52 @@ DETECTOR_MAP = LanguageDetectorMap(
     language="django",
     bindings=[
         DetectorBinding(
-            detector_id=rule_id,
-            detector_class=DjangoRuleDetector,
-            config_model=_rule_config(rule_id),
-            rule_ids=[rule_id],
-            default_order=index * 10,
-        )
-        for index, rule_id in enumerate(_RULE_IDS, start=1)
+            detector_id="django-003",
+            detector_class=DjangoDebugConfigDetector,
+            config_model=_rule_config("django-003"),
+            rule_ids=["django-003"],
+            universal_dogma_ids=list(framework_rule_dogmas("django-003")),
+            default_order=10,
+        ),
+        DetectorBinding(
+            detector_id="django-001",
+            detector_class=DjangoParameterizedSqlDetector,
+            config_model=_rule_config("django-001"),
+            rule_ids=["django-001"],
+            universal_dogma_ids=list(framework_rule_dogmas("django-001")),
+            default_order=20,
+        ),
+        DetectorBinding(
+            detector_id="django-006",
+            detector_class=DjangoQuerysetLoadingDetector,
+            config_model=_rule_config("django-006"),
+            rule_ids=["django-006"],
+            universal_dogma_ids=list(framework_rule_dogmas("django-006")),
+            default_order=30,
+        ),
+        DetectorBinding(
+            detector_id="django-004",
+            detector_class=DjangoReverseUrlDetector,
+            config_model=_rule_config("django-004"),
+            rule_ids=["django-004"],
+            universal_dogma_ids=list(framework_rule_dogmas("django-004")),
+            default_order=40,
+        ),
+        DetectorBinding(
+            detector_id="django-002",
+            detector_class=DjangoSecretSettingsDetector,
+            config_model=_rule_config("django-002"),
+            rule_ids=["django-002"],
+            universal_dogma_ids=list(framework_rule_dogmas("django-002")),
+            default_order=50,
+        ),
+        DetectorBinding(
+            detector_id="django-005",
+            detector_class=DjangoSignalHookDetector,
+            config_model=_rule_config("django-005"),
+            rule_ids=["django-005"],
+            universal_dogma_ids=list(framework_rule_dogmas("django-005")),
+            default_order=60,
+        ),
     ],
 )

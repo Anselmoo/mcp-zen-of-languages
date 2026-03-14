@@ -1,6 +1,6 @@
 ---
 title: Django
-description: "6 zen principles enforced by 1 detectors: Explicit, batteries-included web architecture with strong defaults for security and maintainability.."
+description: "6 zen principles enforced by 6 detectors: Explicit, batteries-included web architecture with strong defaults for security and maintainability.."
 icon: material/web-box
 tags:
   - Django
@@ -126,11 +126,31 @@ tags:
 
 ## Detector Catalog
 
+### Architecture
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **DjangoSignalHookDetector** | Concrete detector binding for DjangoSignalHookDetector | `django-005` |
+
+### Organization
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **DjangoReverseUrlDetector** | Concrete detector binding for DjangoReverseUrlDetector | `django-004` |
+
+### Performance
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **DjangoQuerysetLoadingDetector** | Concrete detector binding for DjangoQuerysetLoadingDetector | `django-006` |
+
 ### Security
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **DjangoRuleDetector** | Framework-specific rule-pattern detector for django rule coverage | `django-001` |
+| **DjangoDebugConfigDetector** | Concrete detector binding for DjangoDebugConfigDetector | `django-003` |
+| **DjangoParameterizedSqlDetector** | Concrete detector binding for DjangoParameterizedSqlDetector | `django-001` |
+| **DjangoSecretSettingsDetector** | Concrete detector binding for DjangoSecretSettingsDetector | `django-002` |
 
 
 ??? example "Principle → Detector Wiring"
@@ -143,8 +163,18 @@ tags:
     django_004["django-004<br/>Redirects and URL constru..."]
     django_005["django-005<br/>Signal hookups should be ..."]
     django_006["django-006<br/>Looping over querysets wi..."]
-    det_DjangoRuleDetector["Django Rule"]
-    django_001 --> det_DjangoRuleDetector
+    det_DjangoDebugConfigDetector["Django Debug<br/>Config"]
+    django_003 --> det_DjangoDebugConfigDetector
+    det_DjangoParameterizedSqlDetector["Django Parameterized<br/>Sql"]
+    django_001 --> det_DjangoParameterizedSqlDetector
+    det_DjangoQuerysetLoadingDetector["Django Queryset<br/>Loading"]
+    django_006 --> det_DjangoQuerysetLoadingDetector
+    det_DjangoReverseUrlDetector["Django Reverse<br/>Url"]
+    django_004 --> det_DjangoReverseUrlDetector
+    det_DjangoSecretSettingsDetector["Django Secret<br/>Settings"]
+    django_002 --> det_DjangoSecretSettingsDetector
+    det_DjangoSignalHookDetector["Django Signal<br/>Hook"]
+    django_005 --> det_DjangoSignalHookDetector
     ```
 
 ??? example "Detector Class Hierarchy"
@@ -156,8 +186,18 @@ tags:
             <<abstract>>
             +detect(context, config)
         }
-        class det_01["Django Rule"]
+        class det_01["Django Debug Config"]
         ViolationDetector <|-- det_01
+        class det_02["Django Parameterized Sql"]
+        ViolationDetector <|-- det_02
+        class det_03["Django Queryset Loading"]
+        ViolationDetector <|-- det_03
+        class det_04["Django Reverse Url"]
+        ViolationDetector <|-- det_04
+        class det_05["Django Secret Settings"]
+        ViolationDetector <|-- det_05
+        class det_06["Django Signal Hook"]
+        ViolationDetector <|-- det_06
     ```
 
 ??? example "Analysis Pipeline"
@@ -166,7 +206,7 @@ tags:
     flowchart TD
     Source(["Source Code"]) --> Parse["Parse & Tokenize"]
     Parse --> Metrics["Compute Metrics"]
-    Metrics --> Pipeline{"1 Detectors"}
+    Metrics --> Pipeline{"6 Detectors"}
     Pipeline --> Collect["Aggregate Violations"]
     Collect --> Result(["AnalysisResult<br/>6 principles"])
     ```
@@ -179,7 +219,7 @@ tags:
         Ready --> Parsing : analyze(code)
         Parsing --> Computing : AST ready
         Computing --> Detecting : metrics ready
-        Detecting --> Reporting : 1 detectors run
+        Detecting --> Reporting : 6 detectors run
         Reporting --> [*] : AnalysisResult
         Parsing --> Reporting : parse error (best-effort)
     ```

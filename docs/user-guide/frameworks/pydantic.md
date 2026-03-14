@@ -1,6 +1,6 @@
 ---
 title: Pydantic
-description: "8 zen principles enforced by 1 detectors: Declarative data validation driven by explicit type annotations and fail-fast contracts.."
+description: "8 zen principles enforced by 8 detectors: Declarative data validation driven by explicit type annotations and fail-fast contracts.."
 icon: material/shield-check-outline
 tags:
   - Pydantic
@@ -156,11 +156,23 @@ tags:
 
 ## Detector Catalog
 
+### Correctness
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **PydanticDefaultFactoryDetector** | Concrete detector binding for PydanticDefaultFactoryDetector | `pydantic-003` |
+
 ### Idioms
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **PydanticRuleDetector** | Framework-specific rule-pattern detector for pydantic rule coverage | `pydantic-001` |
+| **PydanticFieldValidatorDetector** | Concrete detector binding for PydanticFieldValidatorDetector | `pydantic-005` |
+| **PydanticFromAttributesDetector** | Concrete detector binding for PydanticFromAttributesDetector | `pydantic-008` |
+| **PydanticModelConfigDetector** | Concrete detector binding for PydanticModelConfigDetector | `pydantic-004` |
+| **PydanticModelDumpDetector** | Concrete detector binding for PydanticModelDumpDetector | `pydantic-001` |
+| **PydanticModelFieldsDetector** | Concrete detector binding for PydanticModelFieldsDetector | `pydantic-006` |
+| **PydanticModelValidateDetector** | Concrete detector binding for PydanticModelValidateDetector | `pydantic-002` |
+| **PydanticModernTypingDetector** | Concrete detector binding for PydanticModernTypingDetector | `pydantic-007` |
 
 
 ??? example "Principle → Detector Wiring"
@@ -175,8 +187,22 @@ tags:
     pydantic_006["pydantic-006<br/>Avoid __fields__; use mod..."]
     pydantic_007["pydantic-007<br/>Prefer X | None over Opti..."]
     pydantic_008["pydantic-008<br/>Use from_attributes inste..."]
-    det_PydanticRuleDetector["Pydantic Rule"]
-    pydantic_001 --> det_PydanticRuleDetector
+    det_PydanticDefaultFactoryDetector["Pydantic Default<br/>Factory"]
+    pydantic_003 --> det_PydanticDefaultFactoryDetector
+    det_PydanticFieldValidatorDetector["Pydantic Field<br/>Validator"]
+    pydantic_005 --> det_PydanticFieldValidatorDetector
+    det_PydanticFromAttributesDetector["Pydantic From<br/>Attributes"]
+    pydantic_008 --> det_PydanticFromAttributesDetector
+    det_PydanticModelConfigDetector["Pydantic Model<br/>Config"]
+    pydantic_004 --> det_PydanticModelConfigDetector
+    det_PydanticModelDumpDetector["Pydantic Model<br/>Dump"]
+    pydantic_001 --> det_PydanticModelDumpDetector
+    det_PydanticModelFieldsDetector["Pydantic Model<br/>Fields"]
+    pydantic_006 --> det_PydanticModelFieldsDetector
+    det_PydanticModelValidateDetector["Pydantic Model<br/>Validate"]
+    pydantic_002 --> det_PydanticModelValidateDetector
+    det_PydanticModernTypingDetector["Pydantic Modern<br/>Typing"]
+    pydantic_007 --> det_PydanticModernTypingDetector
     ```
 
 ??? example "Detector Class Hierarchy"
@@ -188,8 +214,22 @@ tags:
             <<abstract>>
             +detect(context, config)
         }
-        class det_01["Pydantic Rule"]
+        class det_01["Pydantic Default Factory"]
         ViolationDetector <|-- det_01
+        class det_02["Pydantic Field Validator"]
+        ViolationDetector <|-- det_02
+        class det_03["Pydantic From Attributes"]
+        ViolationDetector <|-- det_03
+        class det_04["Pydantic Model Config"]
+        ViolationDetector <|-- det_04
+        class det_05["Pydantic Model Dump"]
+        ViolationDetector <|-- det_05
+        class det_06["Pydantic Model Fields"]
+        ViolationDetector <|-- det_06
+        class det_07["Pydantic Model Validate"]
+        ViolationDetector <|-- det_07
+        class det_08["Pydantic Modern Typing"]
+        ViolationDetector <|-- det_08
     ```
 
 ??? example "Analysis Pipeline"
@@ -198,7 +238,7 @@ tags:
     flowchart TD
     Source(["Source Code"]) --> Parse["Parse & Tokenize"]
     Parse --> Metrics["Compute Metrics"]
-    Metrics --> Pipeline{"1 Detectors"}
+    Metrics --> Pipeline{"8 Detectors"}
     Pipeline --> Collect["Aggregate Violations"]
     Collect --> Result(["AnalysisResult<br/>8 principles"])
     ```
@@ -211,7 +251,7 @@ tags:
         Ready --> Parsing : analyze(code)
         Parsing --> Computing : AST ready
         Computing --> Detecting : metrics ready
-        Detecting --> Reporting : 1 detectors run
+        Detecting --> Reporting : 8 detectors run
         Reporting --> [*] : AnalysisResult
         Parsing --> Reporting : parse error (best-effort)
     ```

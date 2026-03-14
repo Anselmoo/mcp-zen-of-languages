@@ -1,6 +1,6 @@
 ---
 title: Angular
-description: "5 zen principles enforced by 1 detectors: Scalable frontend architecture with strong conventions around DI, templates, and change detection.."
+description: "5 zen principles enforced by 5 detectors: Scalable frontend architecture with strong conventions around DI, templates, and change detection.."
 icon: fontawesome/brands/angular
 tags:
   - Angular
@@ -109,11 +109,25 @@ tags:
 
 ## Detector Catalog
 
+### Correctness
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **AngularNoAnyDetector** | Concrete detector binding for AngularNoAnyDetector | `angular-002` |
+| **AngularSubscriptionLifecycleDetector** | Concrete detector binding for AngularSubscriptionLifecycleDetector | `angular-003` |
+
 ### Performance
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **AngularRuleDetector** | Framework-specific rule-pattern detector for angular rule coverage | `angular-001` |
+| **AngularLazyRouteDetector** | Concrete detector binding for AngularLazyRouteDetector | `angular-005` |
+| **AngularOnPushDetector** | Concrete detector binding for AngularOnPushDetector | `angular-001` |
+
+### Readability
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **AngularSelectorPrefixDetector** | Concrete detector binding for AngularSelectorPrefixDetector | `angular-004` |
 
 
 ??? example "Principle → Detector Wiring"
@@ -125,8 +139,16 @@ tags:
     angular_003["angular-003<br/>Manual subscriptions need..."]
     angular_004["angular-004<br/>Component selectors shoul..."]
     angular_005["angular-005<br/>Feature routes should pre..."]
-    det_AngularRuleDetector["Angular Rule"]
-    angular_001 --> det_AngularRuleDetector
+    det_AngularLazyRouteDetector["Angular Lazy<br/>Route"]
+    angular_005 --> det_AngularLazyRouteDetector
+    det_AngularNoAnyDetector["Angular No<br/>Any"]
+    angular_002 --> det_AngularNoAnyDetector
+    det_AngularOnPushDetector["Angular On<br/>Push"]
+    angular_001 --> det_AngularOnPushDetector
+    det_AngularSelectorPrefixDetector["Angular Selector<br/>Prefix"]
+    angular_004 --> det_AngularSelectorPrefixDetector
+    det_AngularSubscriptionLifecycleDetector["Angular Subscription<br/>Lifecycle"]
+    angular_003 --> det_AngularSubscriptionLifecycleDetector
     ```
 
 ??? example "Detector Class Hierarchy"
@@ -138,8 +160,16 @@ tags:
             <<abstract>>
             +detect(context, config)
         }
-        class det_01["Angular Rule"]
+        class det_01["Angular Lazy Route"]
         ViolationDetector <|-- det_01
+        class det_02["Angular No Any"]
+        ViolationDetector <|-- det_02
+        class det_03["Angular On Push"]
+        ViolationDetector <|-- det_03
+        class det_04["Angular Selector Prefix"]
+        ViolationDetector <|-- det_04
+        class det_05["Angular Subscription Lifecycle"]
+        ViolationDetector <|-- det_05
     ```
 
 ??? example "Analysis Pipeline"
@@ -148,7 +178,7 @@ tags:
     flowchart TD
     Source(["Source Code"]) --> Parse["Parse & Tokenize"]
     Parse --> Metrics["Compute Metrics"]
-    Metrics --> Pipeline{"1 Detectors"}
+    Metrics --> Pipeline{"5 Detectors"}
     Pipeline --> Collect["Aggregate Violations"]
     Collect --> Result(["AnalysisResult<br/>5 principles"])
     ```
@@ -161,7 +191,7 @@ tags:
         Ready --> Parsing : analyze(code)
         Parsing --> Computing : AST ready
         Computing --> Detecting : metrics ready
-        Detecting --> Reporting : 1 detectors run
+        Detecting --> Reporting : 5 detectors run
         Reporting --> [*] : AnalysisResult
         Parsing --> Reporting : parse error (best-effort)
     ```

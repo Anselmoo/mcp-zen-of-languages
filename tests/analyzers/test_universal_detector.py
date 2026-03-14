@@ -3,12 +3,14 @@ import pytest
 from mcp_zen_of_languages.adapters.universal import AnalyzerFactoryAdapter
 from mcp_zen_of_languages.adapters.universal import build_universal_adapters
 from mcp_zen_of_languages.analyzers.analyzer_factory import supported_languages
+from mcp_zen_of_languages.analyzers.base import AnalysisContext
 from mcp_zen_of_languages.core.detector import DOGMA_RULE_IDS
 from mcp_zen_of_languages.core.detector import UniversalZenDetector
 from mcp_zen_of_languages.core.detectors import ClutterDetector
 from mcp_zen_of_languages.core.detectors import ControlFlowDetector
 from mcp_zen_of_languages.core.detectors import SignatureDetector
 from mcp_zen_of_languages.core.detectors import StateMutationDetector
+from mcp_zen_of_languages.languages.configs import DetectorConfig
 from mcp_zen_of_languages.transport.reporters import CliReporter
 from mcp_zen_of_languages.transport.reporters import McpReporter
 
@@ -120,3 +122,34 @@ def test_dogma_stub_detectors_expose_expected_rule_ids() -> None:
     assert "ZEN-VISIBLE-STATE" in StateMutationDetector().rule_ids
     assert "ZEN-RUTHLESS-DELETION" in ClutterDetector().rule_ids
     assert len(DOGMA_RULE_IDS) == expected_dogmas
+
+
+@pytest.mark.parametrize(
+    ("detector", "pattern", "code"),
+    [
+        (
+            ControlFlowDetector(),
+            "re:raise\\s+ValueError",
+            "if bad:\n    raise ValueError()\n",
+        ),
+        (SignatureDetector(), "TODO", "def fn(x):\n    # TODO: use x\n    return 1\n"),
+        (StateMutationDetector(), "settings.DEBUG = True", "settings.DEBUG = True\n"),
+        (ClutterDetector(), "re:\\btmp\\b", "tmp = compute()\n"),
+    ],
+)
+def test_universal_detectors_use_rule_pattern_engine(
+    detector: object,
+    pattern: str,
+    code: str,
+) -> None:
+    config = DetectorConfig(
+        type="universal-test",
+        principle="Universal detector pattern",
+        detectable_patterns=[pattern],
+    )
+    context = AnalysisContext(code=code, language="python")
+
+    violations = detector.detect(context, config)
+
+    assert len(violations) == 1
+    assert violations[0].message == "Universal detector pattern"

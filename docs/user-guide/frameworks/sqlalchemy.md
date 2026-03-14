@@ -1,6 +1,6 @@
 ---
 title: SQLAlchemy
-description: "6 zen principles enforced by 1 detectors: Explicit database access with disciplined session lifecycles and parameterized queries.."
+description: "6 zen principles enforced by 6 detectors: Explicit database access with disciplined session lifecycles and parameterized queries.."
 icon: material/database
 tags:
   - SQLAlchemy
@@ -126,11 +126,31 @@ tags:
 
 ## Detector Catalog
 
+### Correctness
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **SqlalchemySessionScopeDetector** | Concrete detector binding for SqlalchemySessionScopeDetector | `sqlalchemy-002` |
+
+### Idioms
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **SqlalchemyDeclarativeBaseDetector** | Concrete detector binding for SqlalchemyDeclarativeBaseDetector | `sqlalchemy-004` |
+| **SqlalchemyMappedColumnDetector** | Concrete detector binding for SqlalchemyMappedColumnDetector | `sqlalchemy-003` |
+
+### Performance
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **SqlalchemyBulkInsertDetector** | Concrete detector binding for SqlalchemyBulkInsertDetector | `sqlalchemy-006` |
+| **SqlalchemyRelationshipLoadingDetector** | Concrete detector binding for SqlalchemyRelationshipLoadingDetector | `sqlalchemy-005` |
+
 ### Security
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **SqlalchemyRuleDetector** | Framework-specific rule-pattern detector for sqlalchemy rule coverage | `sqlalchemy-001` |
+| **SqlalchemyParameterizedTextDetector** | Concrete detector binding for SqlalchemyParameterizedTextDetector | `sqlalchemy-001` |
 
 
 ??? example "Principle → Detector Wiring"
@@ -143,8 +163,18 @@ tags:
     sqlalchemy_004["sqlalchemy-004<br/>DeclarativeBase should re..."]
     sqlalchemy_005["sqlalchemy-005<br/>relationship loading shou..."]
     sqlalchemy_006["sqlalchemy-006<br/>Bulk inserts should avoid..."]
-    det_SqlalchemyRuleDetector["Sqlalchemy Rule"]
-    sqlalchemy_001 --> det_SqlalchemyRuleDetector
+    det_SqlalchemyBulkInsertDetector["Sqlalchemy Bulk<br/>Insert"]
+    sqlalchemy_006 --> det_SqlalchemyBulkInsertDetector
+    det_SqlalchemyDeclarativeBaseDetector["Sqlalchemy Declarative<br/>Base"]
+    sqlalchemy_004 --> det_SqlalchemyDeclarativeBaseDetector
+    det_SqlalchemyMappedColumnDetector["Sqlalchemy Mapped<br/>Column"]
+    sqlalchemy_003 --> det_SqlalchemyMappedColumnDetector
+    det_SqlalchemyParameterizedTextDetector["Sqlalchemy Parameterized<br/>Text"]
+    sqlalchemy_001 --> det_SqlalchemyParameterizedTextDetector
+    det_SqlalchemyRelationshipLoadingDetector["Sqlalchemy Relationship<br/>Loading"]
+    sqlalchemy_005 --> det_SqlalchemyRelationshipLoadingDetector
+    det_SqlalchemySessionScopeDetector["Sqlalchemy Session<br/>Scope"]
+    sqlalchemy_002 --> det_SqlalchemySessionScopeDetector
     ```
 
 ??? example "Detector Class Hierarchy"
@@ -156,8 +186,18 @@ tags:
             <<abstract>>
             +detect(context, config)
         }
-        class det_01["Sqlalchemy Rule"]
+        class det_01["Sqlalchemy Bulk Insert"]
         ViolationDetector <|-- det_01
+        class det_02["Sqlalchemy Declarative Base"]
+        ViolationDetector <|-- det_02
+        class det_03["Sqlalchemy Mapped Column"]
+        ViolationDetector <|-- det_03
+        class det_04["Sqlalchemy Parameterized Text"]
+        ViolationDetector <|-- det_04
+        class det_05["Sqlalchemy Relationship Loading"]
+        ViolationDetector <|-- det_05
+        class det_06["Sqlalchemy Session Scope"]
+        ViolationDetector <|-- det_06
     ```
 
 ??? example "Analysis Pipeline"
@@ -166,7 +206,7 @@ tags:
     flowchart TD
     Source(["Source Code"]) --> Parse["Parse & Tokenize"]
     Parse --> Metrics["Compute Metrics"]
-    Metrics --> Pipeline{"1 Detectors"}
+    Metrics --> Pipeline{"6 Detectors"}
     Pipeline --> Collect["Aggregate Violations"]
     Collect --> Result(["AnalysisResult<br/>6 principles"])
     ```
@@ -179,7 +219,7 @@ tags:
         Ready --> Parsing : analyze(code)
         Parsing --> Computing : AST ready
         Computing --> Detecting : metrics ready
-        Detecting --> Reporting : 1 detectors run
+        Detecting --> Reporting : 6 detectors run
         Reporting --> [*] : AnalysisResult
         Parsing --> Reporting : parse error (best-effort)
     ```

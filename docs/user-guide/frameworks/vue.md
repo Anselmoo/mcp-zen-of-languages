@@ -1,6 +1,6 @@
 ---
 title: Vue
-description: "5 zen principles enforced by 1 detectors: Progressive UI architecture with explicit reactivity and readable templates.."
+description: "5 zen principles enforced by 5 detectors: Progressive UI architecture with explicit reactivity and readable templates.."
 icon: fontawesome/brands/vuejs
 tags:
   - Vue
@@ -108,11 +108,20 @@ tags:
 
 ## Detector Catalog
 
+### Correctness
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **VueConditionalLoopDetector** | Concrete detector binding for VueConditionalLoopDetector | `vue-004` |
+| **VueListKeyDetector** | Concrete detector binding for VueListKeyDetector | `vue-003` |
+| **VuePropMutationDetector** | Concrete detector binding for VuePropMutationDetector | `vue-005` |
+| **VueTypedPropsDetector** | Concrete detector binding for VueTypedPropsDetector | `vue-002` |
+
 ### Readability
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **VueRuleDetector** | Framework-specific rule-pattern detector for vue rule coverage | `vue-001` |
+| **VueMultiWordNameDetector** | Concrete detector binding for VueMultiWordNameDetector | `vue-001` |
 
 
 ??? example "Principle → Detector Wiring"
@@ -124,8 +133,16 @@ tags:
     vue_003["vue-003<br/>v-for directives need a :..."]
     vue_004["vue-004<br/>Avoid using v-if and v-fo..."]
     vue_005["vue-005<br/>Props should not be mutat..."]
-    det_VueRuleDetector["Vue Rule"]
-    vue_001 --> det_VueRuleDetector
+    det_VueConditionalLoopDetector["Vue Conditional<br/>Loop"]
+    vue_004 --> det_VueConditionalLoopDetector
+    det_VueListKeyDetector["Vue List<br/>Key"]
+    vue_003 --> det_VueListKeyDetector
+    det_VueMultiWordNameDetector["Vue Multi<br/>Word Name"]
+    vue_001 --> det_VueMultiWordNameDetector
+    det_VuePropMutationDetector["Vue Prop<br/>Mutation"]
+    vue_005 --> det_VuePropMutationDetector
+    det_VueTypedPropsDetector["Vue Typed<br/>Props"]
+    vue_002 --> det_VueTypedPropsDetector
     ```
 
 ??? example "Detector Class Hierarchy"
@@ -137,8 +154,16 @@ tags:
             <<abstract>>
             +detect(context, config)
         }
-        class det_01["Vue Rule"]
+        class det_01["Vue Conditional Loop"]
         ViolationDetector <|-- det_01
+        class det_02["Vue List Key"]
+        ViolationDetector <|-- det_02
+        class det_03["Vue Multi Word Name"]
+        ViolationDetector <|-- det_03
+        class det_04["Vue Prop Mutation"]
+        ViolationDetector <|-- det_04
+        class det_05["Vue Typed Props"]
+        ViolationDetector <|-- det_05
     ```
 
 ??? example "Analysis Pipeline"
@@ -147,7 +172,7 @@ tags:
     flowchart TD
     Source(["Source Code"]) --> Parse["Parse & Tokenize"]
     Parse --> Metrics["Compute Metrics"]
-    Metrics --> Pipeline{"1 Detectors"}
+    Metrics --> Pipeline{"5 Detectors"}
     Pipeline --> Collect["Aggregate Violations"]
     Collect --> Result(["AnalysisResult<br/>5 principles"])
     ```
@@ -160,7 +185,7 @@ tags:
         Ready --> Parsing : analyze(code)
         Parsing --> Computing : AST ready
         Computing --> Detecting : metrics ready
-        Detecting --> Reporting : 1 detectors run
+        Detecting --> Reporting : 5 detectors run
         Reporting --> [*] : AnalysisResult
         Parsing --> Reporting : parse error (best-effort)
     ```

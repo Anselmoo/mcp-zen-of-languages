@@ -1,6 +1,6 @@
 ---
 title: Next.js
-description: "5 zen principles enforced by 1 detectors: Server-first React with framework-level performance, routing, and deployment conventions.."
+description: "5 zen principles enforced by 5 detectors: Server-first React with framework-level performance, routing, and deployment conventions.."
 icon: material/web
 tags:
   - Next.js
@@ -110,11 +110,30 @@ tags:
 
 ## Detector Catalog
 
+### Correctness
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **NextjsAppRouterDetector** | Concrete detector binding for NextjsAppRouterDetector | `nextjs-003` |
+
 ### Idioms
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **NextjsRuleDetector** | Framework-specific rule-pattern detector for nextjs rule coverage | `nextjs-001` |
+| **NextjsLinkDetector** | Concrete detector binding for NextjsLinkDetector | `nextjs-001` |
+
+### Performance
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **NextjsImageOptimizationDetector** | Concrete detector binding for NextjsImageOptimizationDetector | `nextjs-002` |
+| **NextjsServerDataDetector** | Concrete detector binding for NextjsServerDataDetector | `nextjs-005` |
+
+### Security
+
+| Detector | What It Catches | Rule IDs |
+|----------|----------------|----------|
+| **NextjsErrorResponseDetector** | Concrete detector binding for NextjsErrorResponseDetector | `nextjs-004` |
 
 
 ??? example "Principle → Detector Wiring"
@@ -126,8 +145,16 @@ tags:
     nextjs_003["nextjs-003<br/>App Router files should n..."]
     nextjs_004["nextjs-004<br/>Route handlers should not..."]
     nextjs_005["nextjs-005<br/>Client-side fetching insi..."]
-    det_NextjsRuleDetector["Nextjs Rule"]
-    nextjs_001 --> det_NextjsRuleDetector
+    det_NextjsAppRouterDetector["Nextjs App<br/>Router"]
+    nextjs_003 --> det_NextjsAppRouterDetector
+    det_NextjsErrorResponseDetector["Nextjs Error<br/>Response"]
+    nextjs_004 --> det_NextjsErrorResponseDetector
+    det_NextjsImageOptimizationDetector["Nextjs Image<br/>Optimization"]
+    nextjs_002 --> det_NextjsImageOptimizationDetector
+    det_NextjsLinkDetector["Nextjs Link"]
+    nextjs_001 --> det_NextjsLinkDetector
+    det_NextjsServerDataDetector["Nextjs Server<br/>Data"]
+    nextjs_005 --> det_NextjsServerDataDetector
     ```
 
 ??? example "Detector Class Hierarchy"
@@ -139,8 +166,16 @@ tags:
             <<abstract>>
             +detect(context, config)
         }
-        class det_01["Nextjs Rule"]
+        class det_01["Nextjs App Router"]
         ViolationDetector <|-- det_01
+        class det_02["Nextjs Error Response"]
+        ViolationDetector <|-- det_02
+        class det_03["Nextjs Image Optimization"]
+        ViolationDetector <|-- det_03
+        class det_04["Nextjs Link"]
+        ViolationDetector <|-- det_04
+        class det_05["Nextjs Server Data"]
+        ViolationDetector <|-- det_05
     ```
 
 ??? example "Analysis Pipeline"
@@ -149,7 +184,7 @@ tags:
     flowchart TD
     Source(["Source Code"]) --> Parse["Parse & Tokenize"]
     Parse --> Metrics["Compute Metrics"]
-    Metrics --> Pipeline{"1 Detectors"}
+    Metrics --> Pipeline{"5 Detectors"}
     Pipeline --> Collect["Aggregate Violations"]
     Collect --> Result(["AnalysisResult<br/>5 principles"])
     ```
@@ -162,7 +197,7 @@ tags:
         Ready --> Parsing : analyze(code)
         Parsing --> Computing : AST ready
         Computing --> Detecting : metrics ready
-        Detecting --> Reporting : 1 detectors run
+        Detecting --> Reporting : 5 detectors run
         Reporting --> [*] : AnalysisResult
         Parsing --> Reporting : parse error (best-effort)
     ```

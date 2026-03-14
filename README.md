@@ -29,7 +29,7 @@ An **MCP server for AI assistants** that brings multi-language idiomatic code an
 <!-- --8<-- [start:what-you-get] -->
 
 - **348 zen principles** across programming, markup, workflow, and config domains
-- **329 detector/check coverage points** with severity scoring
+- **367 detector/check coverage points** with severity scoring
 - **MCP server** for IDE and agent workflows (13 tools, 3 resources, 1 prompt)
 - **CLI reports** with remediation prompts and JSON / Markdown export
 - **Rule-driven pipelines** configurable per language and project

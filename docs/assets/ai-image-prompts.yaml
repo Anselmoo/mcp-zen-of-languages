@@ -96,6 +96,19 @@ prompts:
       heads, typed return-value labels ("list", "dict"), a terminal/REPL window
       with traffic-light dots and cursor, curly-brace data-flow symbols, and a
       faint ensō background circle. Gradient background. ~55 elements.
+  section_frameworks:
+    output_file: "docs/assets/illustration-frameworks.svg"
+    prompt: >-
+      Framework architecture illustration (960×320): two asymmetric ecosystem shores
+      facing each other across a zen-garden bridge. On the left, a frontend shore
+      with a compact panel labeling React, Vue, Angular, and Next.js, plus subtle
+      cool-blue cues. On the right, a Python-framework shore with a matching panel
+      labeling Pydantic, FastAPI, Django, and SQLAlchemy, plus warm accent details.
+      In the center, a framed registry bridge card representing shared rules, mappings,
+      analyzers, and docs. Add a faint ensō echo ring behind the bridge, layered
+      terrain, two ripple bands, a few stepping stones or garden stones near the
+      foreground, and a slim shared-runtime caption bar. Use the established Caligo
+      palette, rounded geometry, soft gradients, and wabi-sabi asymmetry. ~45 elements.
   section_mcp_tools:
     prompt: >-
       MCP workflow illustration (960×320): zen garden inspired network with a

@@ -13,6 +13,13 @@
   font-size: 0.85em;
 }
 
+/* Theme all diagram nodes through CSS so flowcharts, class diagrams, and state
+   diagrams stay visually consistent across light/dark modes without hardcoded
+   Mermaid classDef colors in generated docs. */
+.md-typeset .mermaid :is(.node rect, .node polygon, .node circle, .node ellipse, .node path, .label-container, .classGroup rect, .classGroup line, .divider, .stateGroup rect) {
+  stroke-width: 1.5px !important;
+}
+
 /* Edge labels: use theme-aware text color (they appear on bg, not inside nodes) */
 .md-typeset .mermaid .edgeLabel,
 .md-typeset .mermaid .edgeLabel span {
@@ -42,6 +49,15 @@
   stroke: color-mix(in oklch, var(--caligo-harmony-cool) 50%, #fff 20%) !important;
 }
 
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid :is(.node rect, .node polygon, .node circle, .node ellipse, .node path, .label-container, .classGroup rect, .stateGroup rect) {
+  fill: color-mix(in oklch, var(--caligo-bg-overlay) 52%, var(--caligo-harmony-bridge) 48%) !important;
+  stroke: color-mix(in oklch, var(--caligo-harmony-cool) 60%, #fff 15%) !important;
+}
+
+:is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid :is(.classGroup line, .divider) {
+  stroke: color-mix(in oklch, var(--caligo-harmony-cool) 60%, #fff 15%) !important;
+}
+
 :is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid .edgePath .path,
 :is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid .flowchart-link,
 :is([data-md-color-scheme="caligo-dark"], [data-md-color-scheme="zen-dark"], [data-md-color-scheme="slate"]) .md-typeset .mermaid marker path {
@@ -62,6 +78,15 @@
 :is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset .mermaid .section2 {
   fill: color-mix(in oklch, var(--caligo-light-bg1) 82%, var(--caligo-harmony-bridge)) !important;
   stroke: color-mix(in oklch, var(--caligo-accent-dark) 40%, transparent) !important;
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset .mermaid :is(.node rect, .node polygon, .node circle, .node ellipse, .node path, .label-container, .classGroup rect, .stateGroup rect) {
+  fill: color-mix(in oklch, var(--caligo-light-bg1) 84%, var(--caligo-accent-soft)) !important;
+  stroke: color-mix(in oklch, var(--caligo-accent-dark) 55%, transparent) !important;
+}
+
+:is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset .mermaid :is(.classGroup line, .divider) {
+  stroke: color-mix(in oklch, var(--caligo-accent-dark) 55%, transparent) !important;
 }
 
 :is([data-md-color-scheme="caligo-light"], [data-md-color-scheme="zen"], [data-md-color-scheme="default"]) .md-typeset .mermaid .edgePath .path,

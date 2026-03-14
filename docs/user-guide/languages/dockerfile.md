@@ -190,7 +190,7 @@ tags:
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
     graph TD
     dockerfile_001["dockerfile-001<br/>Avoid latest tags in base..."]
     dockerfile_002["dockerfile-002<br/>Run containers as non-roo..."]
@@ -200,110 +200,65 @@ tags:
     dockerfile_006["dockerfile-006<br/>Keep secrets out of ENV a..."]
     dockerfile_007["dockerfile-007<br/>Maintain layer discipline"]
     dockerfile_008["dockerfile-008<br/>Keep .dockerignore cohere..."]
-    det_DockerfileAddInstructionDetector["DockerfileAddInstructionDetector"]
+    det_DockerfileAddInstructionDetector["Dockerfile Add<br/>Instruction"]
     dockerfile_003 --> det_DockerfileAddInstructionDetector
-    det_DockerfileDockerignoreDetector["DockerfileDockerignoreDetector"]
+    det_DockerfileDockerignoreDetector["Dockerfile Dockerignore"]
     dockerfile_008 --> det_DockerfileDockerignoreDetector
-    det_DockerfileHealthcheckDetector["DockerfileHealthcheckDetector"]
+    det_DockerfileHealthcheckDetector["Dockerfile Healthcheck"]
     dockerfile_004 --> det_DockerfileHealthcheckDetector
-    det_DockerfileLatestTagDetector["DockerfileLatestTagDetector"]
+    det_DockerfileLatestTagDetector["Dockerfile Latest<br/>Tag"]
     dockerfile_001 --> det_DockerfileLatestTagDetector
-    det_DockerfileLayerDisciplineDetector["DockerfileLayerDisciplineDetector"]
+    det_DockerfileLayerDisciplineDetector["Dockerfile Layer<br/>Discipline"]
     dockerfile_007 --> det_DockerfileLayerDisciplineDetector
-    det_DockerfileMultiStageDetector["DockerfileMultiStageDetector"]
+    det_DockerfileMultiStageDetector["Dockerfile Multi<br/>Stage"]
     dockerfile_005 --> det_DockerfileMultiStageDetector
-    det_DockerfileNonRootUserDetector["DockerfileNonRootUserDetector"]
+    det_DockerfileNonRootUserDetector["Dockerfile Non<br/>Root User"]
     dockerfile_002 --> det_DockerfileNonRootUserDetector
-    det_DockerfileSecretHygieneDetector["DockerfileSecretHygieneDetector"]
+    det_DockerfileSecretHygieneDetector["Dockerfile Secret<br/>Hygiene"]
     dockerfile_006 --> det_DockerfileSecretHygieneDetector
-    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-    class dockerfile_001 principle
-    class dockerfile_002 principle
-    class dockerfile_003 principle
-    class dockerfile_004 principle
-    class dockerfile_005 principle
-    class dockerfile_006 principle
-    class dockerfile_007 principle
-    class dockerfile_008 principle
-    class det_DockerfileAddInstructionDetector detector
-    class det_DockerfileDockerignoreDetector detector
-    class det_DockerfileHealthcheckDetector detector
-    class det_DockerfileLatestTagDetector detector
-    class det_DockerfileLayerDisciplineDetector detector
-    class det_DockerfileMultiStageDetector detector
-    class det_DockerfileNonRootUserDetector detector
-    class det_DockerfileSecretHygieneDetector detector
     ```
 
 ??? example "Detector Class Hierarchy"
     ```mermaid
-%%{init: {"theme": "base"}}%%
+    %%{init: {"theme": "base"}}%%
     classDiagram
         direction TB
         class ViolationDetector {
             <<abstract>>
-            +detect(context, config) list~Violation~
+            +detect(context, config)
         }
-        class DockerfileAddInstructionDetector {
-            +rules "dockerfile-003"
-        }
-        ViolationDetector <|-- DockerfileAddInstructionDetector
-        class DockerfileDockerignoreDetector {
-            +rules "dockerfile-008"
-        }
-        ViolationDetector <|-- DockerfileDockerignoreDetector
-        class DockerfileHealthcheckDetector {
-            +rules "dockerfile-004"
-        }
-        ViolationDetector <|-- DockerfileHealthcheckDetector
-        class DockerfileLatestTagDetector {
-            +rules "dockerfile-001"
-        }
-        ViolationDetector <|-- DockerfileLatestTagDetector
-        class DockerfileLayerDisciplineDetector {
-            +rules "dockerfile-007"
-        }
-        ViolationDetector <|-- DockerfileLayerDisciplineDetector
-        class DockerfileMultiStageDetector {
-            +rules "dockerfile-005"
-        }
-        ViolationDetector <|-- DockerfileMultiStageDetector
-        class DockerfileNonRootUserDetector {
-            +rules "dockerfile-002"
-        }
-        ViolationDetector <|-- DockerfileNonRootUserDetector
-        class DockerfileSecretHygieneDetector {
-            +rules "dockerfile-006"
-        }
-        ViolationDetector <|-- DockerfileSecretHygieneDetector
-        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-        class ViolationDetector abstract
-        class DockerfileAddInstructionDetector,DockerfileDockerignoreDetector,DockerfileHealthcheckDetector,DockerfileLatestTagDetector,DockerfileLayerDisciplineDetector,DockerfileMultiStageDetector,DockerfileNonRootUserDetector,DockerfileSecretHygieneDetector detector
+        class det_01["Dockerfile Add Instruction"]
+        ViolationDetector <|-- det_01
+        class det_02["Dockerfile Dockerignore"]
+        ViolationDetector <|-- det_02
+        class det_03["Dockerfile Healthcheck"]
+        ViolationDetector <|-- det_03
+        class det_04["Dockerfile Latest Tag"]
+        ViolationDetector <|-- det_04
+        class det_05["Dockerfile Layer Discipline"]
+        ViolationDetector <|-- det_05
+        class det_06["Dockerfile Multi Stage"]
+        ViolationDetector <|-- det_06
+        class det_07["Dockerfile Non Root User"]
+        ViolationDetector <|-- det_07
+        class det_08["Dockerfile Secret Hygiene"]
+        ViolationDetector <|-- det_08
     ```
 
 ??? example "Analysis Pipeline"
     ```mermaid
-%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
     flowchart TD
-    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]
+    Source(["Source Code"]) --> Parse["Parse & Tokenize"]
     Parse --> Metrics["Compute Metrics"]
     Metrics --> Pipeline{"8 Detectors"}
     Pipeline --> Collect["Aggregate Violations"]
-    Collect --> Result(["✅ AnalysisResult · 8 principles"])
-
-    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px
-    class Source,Result io
-    class Parse,Metrics,Collect process
-    class Pipeline decision
+    Collect --> Result(["AnalysisResult<br/>8 principles"])
     ```
 
 ??? example "Analysis States"
     ```mermaid
-%%{init: {"theme": "base"}}%%
+    %%{init: {"theme": "base"}}%%
     stateDiagram-v2
         [*] --> Ready
         Ready --> Parsing : analyze(code)

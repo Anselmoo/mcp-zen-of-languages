@@ -316,7 +316,7 @@ Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullab
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
     graph TD
     cs_001["cs-001<br/>Use nullable reference ty..."]
     cs_002["cs-002<br/>Use expression-bodied mem..."]
@@ -331,150 +331,85 @@ Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullab
     cs_011["cs-011<br/>Use LINQ appropriately"]
     cs_012["cs-012<br/>Handle exceptions properl..."]
     cs_013["cs-013<br/>Use records for DTOs"]
-    det_CSharpAsyncAwaitDetector["CSharpAsyncAwaitDetector"]
+    det_CSharpAsyncAwaitDetector["C Sharp<br/>Async Await"]
     cs_004 --> det_CSharpAsyncAwaitDetector
-    det_CSharpCollectionExpressionDetector["CSharpCollectionExpressionDetector"]
+    det_CSharpCollectionExpressionDetector["C Sharp<br/>Collection Expression"]
     cs_007 --> det_CSharpCollectionExpressionDetector
-    det_CSharpDisposableDetector["CSharpDisposableDetector"]
+    det_CSharpDisposableDetector["C Sharp<br/>Disposable"]
     cs_009 --> det_CSharpDisposableDetector
-    det_CSharpExceptionHandlingDetector["CSharpExceptionHandlingDetector"]
+    det_CSharpExceptionHandlingDetector["C Sharp<br/>Exception Handling"]
     cs_012 --> det_CSharpExceptionHandlingDetector
-    det_CSharpExpressionBodiedDetector["CSharpExpressionBodiedDetector"]
+    det_CSharpExpressionBodiedDetector["C Sharp<br/>Expression Bodied"]
     cs_002 --> det_CSharpExpressionBodiedDetector
-    det_CSharpLinqDetector["CSharpLinqDetector"]
+    det_CSharpLinqDetector["C Sharp<br/>Linq"]
     cs_011 --> det_CSharpLinqDetector
-    det_CSharpMagicNumberDetector["CSharpMagicNumberDetector"]
+    det_CSharpMagicNumberDetector["C Sharp<br/>Magic Number"]
     cs_010 --> det_CSharpMagicNumberDetector
-    det_CSharpNamingConventionDetector["CSharpNamingConventionDetector"]
+    det_CSharpNamingConventionDetector["C Sharp<br/>Naming Convention"]
     cs_008 --> det_CSharpNamingConventionDetector
-    det_CSharpNullableDetector["CSharpNullableDetector"]
+    det_CSharpNullableDetector["C Sharp<br/>Nullable"]
     cs_001 --> det_CSharpNullableDetector
-    det_CSharpPatternMatchingDetector["CSharpPatternMatchingDetector"]
+    det_CSharpPatternMatchingDetector["C Sharp<br/>Pattern Matching"]
     cs_005 --> det_CSharpPatternMatchingDetector
-    det_CSharpRecordDetector["CSharpRecordDetector"]
+    det_CSharpRecordDetector["C Sharp<br/>Record"]
     cs_013 --> det_CSharpRecordDetector
-    det_CSharpStringInterpolationDetector["CSharpStringInterpolationDetector"]
+    det_CSharpStringInterpolationDetector["C Sharp<br/>String Interpolation"]
     cs_006 --> det_CSharpStringInterpolationDetector
-    det_CSharpVarDetector["CSharpVarDetector"]
+    det_CSharpVarDetector["C Sharp<br/>Var"]
     cs_003 --> det_CSharpVarDetector
-    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-    class cs_001 principle
-    class cs_002 principle
-    class cs_003 principle
-    class cs_004 principle
-    class cs_005 principle
-    class cs_006 principle
-    class cs_007 principle
-    class cs_008 principle
-    class cs_009 principle
-    class cs_010 principle
-    class cs_011 principle
-    class cs_012 principle
-    class cs_013 principle
-    class det_CSharpAsyncAwaitDetector detector
-    class det_CSharpCollectionExpressionDetector detector
-    class det_CSharpDisposableDetector detector
-    class det_CSharpExceptionHandlingDetector detector
-    class det_CSharpExpressionBodiedDetector detector
-    class det_CSharpLinqDetector detector
-    class det_CSharpMagicNumberDetector detector
-    class det_CSharpNamingConventionDetector detector
-    class det_CSharpNullableDetector detector
-    class det_CSharpPatternMatchingDetector detector
-    class det_CSharpRecordDetector detector
-    class det_CSharpStringInterpolationDetector detector
-    class det_CSharpVarDetector detector
     ```
 
 ??? example "Detector Class Hierarchy"
     ```mermaid
-%%{init: {"theme": "base"}}%%
+    %%{init: {"theme": "base"}}%%
     classDiagram
         direction TB
         class ViolationDetector {
             <<abstract>>
-            +detect(context, config) list~Violation~
+            +detect(context, config)
         }
-        class CSharpAsyncAwaitDetector {
-            +rules "cs-004"
-        }
-        ViolationDetector <|-- CSharpAsyncAwaitDetector
-        class CSharpCollectionExpressionDetector {
-            +rules "cs-007"
-        }
-        ViolationDetector <|-- CSharpCollectionExpressionDetector
-        class CSharpDisposableDetector {
-            +rules "cs-009"
-        }
-        ViolationDetector <|-- CSharpDisposableDetector
-        class CSharpExceptionHandlingDetector {
-            +rules "cs-012"
-        }
-        ViolationDetector <|-- CSharpExceptionHandlingDetector
-        class CSharpExpressionBodiedDetector {
-            +rules "cs-002"
-        }
-        ViolationDetector <|-- CSharpExpressionBodiedDetector
-        class CSharpLinqDetector {
-            +rules "cs-011"
-        }
-        ViolationDetector <|-- CSharpLinqDetector
-        class CSharpMagicNumberDetector {
-            +rules "cs-010"
-        }
-        ViolationDetector <|-- CSharpMagicNumberDetector
-        class CSharpNamingConventionDetector {
-            +rules "cs-008"
-        }
-        ViolationDetector <|-- CSharpNamingConventionDetector
-        class CSharpNullableDetector {
-            +rules "cs-001"
-        }
-        ViolationDetector <|-- CSharpNullableDetector
-        class CSharpPatternMatchingDetector {
-            +rules "cs-005"
-        }
-        ViolationDetector <|-- CSharpPatternMatchingDetector
-        class CSharpRecordDetector {
-            +rules "cs-013"
-        }
-        ViolationDetector <|-- CSharpRecordDetector
-        class CSharpStringInterpolationDetector {
-            +rules "cs-006"
-        }
-        ViolationDetector <|-- CSharpStringInterpolationDetector
-        class CSharpVarDetector {
-            +rules "cs-003"
-        }
-        ViolationDetector <|-- CSharpVarDetector
-        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-        class ViolationDetector abstract
-        class CSharpAsyncAwaitDetector,CSharpCollectionExpressionDetector,CSharpDisposableDetector,CSharpExceptionHandlingDetector,CSharpExpressionBodiedDetector,CSharpLinqDetector,CSharpMagicNumberDetector,CSharpNamingConventionDetector,CSharpNullableDetector,CSharpPatternMatchingDetector,CSharpRecordDetector,CSharpStringInterpolationDetector,CSharpVarDetector detector
+        class det_01["C Sharp Async Await"]
+        ViolationDetector <|-- det_01
+        class det_02["C Sharp Collection Expression"]
+        ViolationDetector <|-- det_02
+        class det_03["C Sharp Disposable"]
+        ViolationDetector <|-- det_03
+        class det_04["C Sharp Exception Handling"]
+        ViolationDetector <|-- det_04
+        class det_05["C Sharp Expression Bodied"]
+        ViolationDetector <|-- det_05
+        class det_06["C Sharp Linq"]
+        ViolationDetector <|-- det_06
+        class det_07["C Sharp Magic Number"]
+        ViolationDetector <|-- det_07
+        class det_08["C Sharp Naming Convention"]
+        ViolationDetector <|-- det_08
+        class det_09["C Sharp Nullable"]
+        ViolationDetector <|-- det_09
+        class det_10["C Sharp Pattern Matching"]
+        ViolationDetector <|-- det_10
+        class det_11["C Sharp Record"]
+        ViolationDetector <|-- det_11
+        class det_12["C Sharp String Interpolation"]
+        ViolationDetector <|-- det_12
+        class det_13["C Sharp Var"]
+        ViolationDetector <|-- det_13
     ```
 
 ??? example "Analysis Pipeline"
     ```mermaid
-%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
     flowchart TD
-    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]
+    Source(["Source Code"]) --> Parse["Parse & Tokenize"]
     Parse --> Metrics["Compute Metrics"]
     Metrics --> Pipeline{"13 Detectors"}
     Pipeline --> Collect["Aggregate Violations"]
-    Collect --> Result(["✅ AnalysisResult · 13 principles"])
-
-    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px
-    class Source,Result io
-    class Parse,Metrics,Collect process
-    class Pipeline decision
+    Collect --> Result(["AnalysisResult<br/>13 principles"])
     ```
 
 ??? example "Analysis States"
     ```mermaid
-%%{init: {"theme": "base"}}%%
+    %%{init: {"theme": "base"}}%%
     stateDiagram-v2
         [*] --> Ready
         Ready --> Parsing : analyze(code)

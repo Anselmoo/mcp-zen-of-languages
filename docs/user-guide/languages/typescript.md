@@ -453,9 +453,9 @@ TypeScript's power lies in its type system — but that power is easily undermin
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
     graph TD
-    ts_001["ts-001<br/>Avoid 'any' type"]
+    ts_001["ts-001<br/>Avoid &#x27;any&#x27; type"]
     ts_002["ts-002<br/>Use strict mode"]
     ts_003["ts-003<br/>Prefer interfaces over ty..."]
     ts_004["ts-004<br/>Always specify return typ..."]
@@ -473,239 +473,133 @@ TypeScript's power lies in its type system — but that power is easily undermin
     ts_016["ts-016<br/>Avoid console usage in pr..."]
     ts_017["ts-017<br/>Use ES module imports ins..."]
     ts_018["ts-018<br/>Use template literals ins..."]
-    det_TsAnyUsageDetector["TsAnyUsageDetector"]
+    det_TsAnyUsageDetector["Ts Any<br/>Usage"]
     ts_001 --> det_TsAnyUsageDetector
-    det_TsAsyncAwaitDetector["TsAsyncAwaitDetector"]
+    det_TsAsyncAwaitDetector["Ts Async<br/>Await"]
     ts_013 --> det_TsAsyncAwaitDetector
-    det_TsCatchAllTypeDetector["TsCatchAllTypeDetector"]
+    det_TsCatchAllTypeDetector["Ts Catch<br/>All Type"]
     ts_015 --> det_TsCatchAllTypeDetector
-    det_TsConsoleUsageDetector["TsConsoleUsageDetector"]
+    det_TsConsoleUsageDetector["Ts Console<br/>Usage"]
     ts_016 --> det_TsConsoleUsageDetector
-    det_TsDefaultExportDetector["TsDefaultExportDetector"]
+    det_TsDefaultExportDetector["Ts Default<br/>Export"]
     ts_014 --> det_TsDefaultExportDetector
-    det_TsEnumConstDetector["TsEnumConstDetector"]
+    det_TsEnumConstDetector["Ts Enum<br/>Const"]
     ts_009 --> det_TsEnumConstDetector
-    det_TsForOfDetector["TsForOfDetector"]
+    det_TsForOfDetector["Ts For<br/>Of"]
     ts_012 --> det_TsForOfDetector
-    det_TsImportOrderDetector["TsImportOrderDetector"]
+    det_TsImportOrderDetector["Ts Import<br/>Order"]
     ts_017 --> det_TsImportOrderDetector
-    det_TsIndexLoopDetector["TsIndexLoopDetector"]
+    det_TsIndexLoopDetector["Ts Index<br/>Loop"]
     ts_012 --> det_TsIndexLoopDetector
-    det_TsInterfacePreferenceDetector["TsInterfacePreferenceDetector"]
+    det_TsInterfacePreferenceDetector["Ts Interface<br/>Preference"]
     ts_003 --> det_TsInterfacePreferenceDetector
-    det_TsNamedExportDetector["TsNamedExportDetector"]
+    det_TsNamedExportDetector["Ts Named<br/>Export"]
     ts_014 --> det_TsNamedExportDetector
-    det_TsNoConsoleDetector["TsNoConsoleDetector"]
+    det_TsNoConsoleDetector["Ts No<br/>Console"]
     ts_016 --> det_TsNoConsoleDetector
-    det_TsNonNullAssertionDetector["TsNonNullAssertionDetector"]
+    det_TsNonNullAssertionDetector["Ts Non<br/>Null Assertion"]
     ts_008 --> det_TsNonNullAssertionDetector
-    det_TsObjectTypeDetector["TsObjectTypeDetector"]
+    det_TsObjectTypeDetector["Ts Object<br/>Type"]
     ts_015 --> det_TsObjectTypeDetector
-    det_TsOptionalChainingDetector["TsOptionalChainingDetector"]
+    det_TsOptionalChainingDetector["Ts Optional<br/>Chaining"]
     ts_011 --> det_TsOptionalChainingDetector
-    det_TsPromiseChainDetector["TsPromiseChainDetector"]
+    det_TsPromiseChainDetector["Ts Promise<br/>Chain"]
     ts_013 --> det_TsPromiseChainDetector
-    det_TsReadonlyDetector["TsReadonlyDetector"]
+    det_TsReadonlyDetector["Ts Readonly"]
     ts_005 --> det_TsReadonlyDetector
-    det_TsRequireImportDetector["TsRequireImportDetector"]
+    det_TsRequireImportDetector["Ts Require<br/>Import"]
     ts_017 --> det_TsRequireImportDetector
-    det_TsReturnTypeDetector["TsReturnTypeDetector"]
+    det_TsReturnTypeDetector["Ts Return<br/>Type"]
     ts_004 --> det_TsReturnTypeDetector
-    det_TsStrictModeDetector["TsStrictModeDetector"]
+    det_TsStrictModeDetector["Ts Strict<br/>Mode"]
     ts_002 --> det_TsStrictModeDetector
-    det_TsStringConcatDetector["TsStringConcatDetector"]
+    det_TsStringConcatDetector["Ts String<br/>Concat"]
     ts_018 --> det_TsStringConcatDetector
-    det_TsTemplateLiteralDetector["TsTemplateLiteralDetector"]
+    det_TsTemplateLiteralDetector["Ts Template<br/>Literal"]
     ts_018 --> det_TsTemplateLiteralDetector
-    det_TsTypeGuardDetector["TsTypeGuardDetector"]
+    det_TsTypeGuardDetector["Ts Type<br/>Guard"]
     ts_006 --> det_TsTypeGuardDetector
-    det_TsUnknownOverAnyDetector["TsUnknownOverAnyDetector"]
+    det_TsUnknownOverAnyDetector["Ts Unknown<br/>Over Any"]
     ts_010 --> det_TsUnknownOverAnyDetector
-    det_TsUtilityTypesDetector["TsUtilityTypesDetector"]
+    det_TsUtilityTypesDetector["Ts Utility<br/>Types"]
     ts_007 --> det_TsUtilityTypesDetector
-    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-    class ts_001 principle
-    class ts_002 principle
-    class ts_003 principle
-    class ts_004 principle
-    class ts_005 principle
-    class ts_006 principle
-    class ts_007 principle
-    class ts_008 principle
-    class ts_009 principle
-    class ts_010 principle
-    class ts_011 principle
-    class ts_012 principle
-    class ts_013 principle
-    class ts_014 principle
-    class ts_015 principle
-    class ts_016 principle
-    class ts_017 principle
-    class ts_018 principle
-    class det_TsAnyUsageDetector detector
-    class det_TsAsyncAwaitDetector detector
-    class det_TsCatchAllTypeDetector detector
-    class det_TsConsoleUsageDetector detector
-    class det_TsDefaultExportDetector detector
-    class det_TsEnumConstDetector detector
-    class det_TsForOfDetector detector
-    class det_TsImportOrderDetector detector
-    class det_TsIndexLoopDetector detector
-    class det_TsInterfacePreferenceDetector detector
-    class det_TsNamedExportDetector detector
-    class det_TsNoConsoleDetector detector
-    class det_TsNonNullAssertionDetector detector
-    class det_TsObjectTypeDetector detector
-    class det_TsOptionalChainingDetector detector
-    class det_TsPromiseChainDetector detector
-    class det_TsReadonlyDetector detector
-    class det_TsRequireImportDetector detector
-    class det_TsReturnTypeDetector detector
-    class det_TsStrictModeDetector detector
-    class det_TsStringConcatDetector detector
-    class det_TsTemplateLiteralDetector detector
-    class det_TsTypeGuardDetector detector
-    class det_TsUnknownOverAnyDetector detector
-    class det_TsUtilityTypesDetector detector
     ```
 
 ??? example "Detector Class Hierarchy"
     ```mermaid
-%%{init: {"theme": "base"}}%%
+    %%{init: {"theme": "base"}}%%
     classDiagram
         direction TB
         class ViolationDetector {
             <<abstract>>
-            +detect(context, config) list~Violation~
+            +detect(context, config)
         }
-        class TsAnyUsageDetector {
-            +rules "ts-001"
-        }
-        ViolationDetector <|-- TsAnyUsageDetector
-        class TsAsyncAwaitDetector {
-            +rules "ts-013"
-        }
-        ViolationDetector <|-- TsAsyncAwaitDetector
-        class TsCatchAllTypeDetector {
-            +rules "ts-015"
-        }
-        ViolationDetector <|-- TsCatchAllTypeDetector
-        class TsConsoleUsageDetector {
-            +rules "ts-016"
-        }
-        ViolationDetector <|-- TsConsoleUsageDetector
-        class TsDefaultExportDetector {
-            +rules "ts-014"
-        }
-        ViolationDetector <|-- TsDefaultExportDetector
-        class TsEnumConstDetector {
-            +rules "ts-009"
-        }
-        ViolationDetector <|-- TsEnumConstDetector
-        class TsForOfDetector {
-            +rules "ts-012"
-        }
-        ViolationDetector <|-- TsForOfDetector
-        class TsImportOrderDetector {
-            +rules "ts-017"
-        }
-        ViolationDetector <|-- TsImportOrderDetector
-        class TsIndexLoopDetector {
-            +rules "ts-012"
-        }
-        ViolationDetector <|-- TsIndexLoopDetector
-        class TsInterfacePreferenceDetector {
-            +rules "ts-003"
-        }
-        ViolationDetector <|-- TsInterfacePreferenceDetector
-        class TsNamedExportDetector {
-            +rules "ts-014"
-        }
-        ViolationDetector <|-- TsNamedExportDetector
-        class TsNoConsoleDetector {
-            +rules "ts-016"
-        }
-        ViolationDetector <|-- TsNoConsoleDetector
-        class TsNonNullAssertionDetector {
-            +rules "ts-008"
-        }
-        ViolationDetector <|-- TsNonNullAssertionDetector
-        class TsObjectTypeDetector {
-            +rules "ts-015"
-        }
-        ViolationDetector <|-- TsObjectTypeDetector
-        class TsOptionalChainingDetector {
-            +rules "ts-011"
-        }
-        ViolationDetector <|-- TsOptionalChainingDetector
-        class TsPromiseChainDetector {
-            +rules "ts-013"
-        }
-        ViolationDetector <|-- TsPromiseChainDetector
-        class TsReadonlyDetector {
-            +rules "ts-005"
-        }
-        ViolationDetector <|-- TsReadonlyDetector
-        class TsRequireImportDetector {
-            +rules "ts-017"
-        }
-        ViolationDetector <|-- TsRequireImportDetector
-        class TsReturnTypeDetector {
-            +rules "ts-004"
-        }
-        ViolationDetector <|-- TsReturnTypeDetector
-        class TsStrictModeDetector {
-            +rules "ts-002"
-        }
-        ViolationDetector <|-- TsStrictModeDetector
-        class TsStringConcatDetector {
-            +rules "ts-018"
-        }
-        ViolationDetector <|-- TsStringConcatDetector
-        class TsTemplateLiteralDetector {
-            +rules "ts-018"
-        }
-        ViolationDetector <|-- TsTemplateLiteralDetector
-        class TsTypeGuardDetector {
-            +rules "ts-006"
-        }
-        ViolationDetector <|-- TsTypeGuardDetector
-        class TsUnknownOverAnyDetector {
-            +rules "ts-010"
-        }
-        ViolationDetector <|-- TsUnknownOverAnyDetector
-        class TsUtilityTypesDetector {
-            +rules "ts-007"
-        }
-        ViolationDetector <|-- TsUtilityTypesDetector
-        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-        class ViolationDetector abstract
-        class TsAnyUsageDetector,TsAsyncAwaitDetector,TsCatchAllTypeDetector,TsConsoleUsageDetector,TsDefaultExportDetector,TsEnumConstDetector,TsForOfDetector,TsImportOrderDetector,TsIndexLoopDetector,TsInterfacePreferenceDetector,TsNamedExportDetector,TsNoConsoleDetector,TsNonNullAssertionDetector,TsObjectTypeDetector,TsOptionalChainingDetector,TsPromiseChainDetector,TsReadonlyDetector,TsRequireImportDetector,TsReturnTypeDetector,TsStrictModeDetector,TsStringConcatDetector,TsTemplateLiteralDetector,TsTypeGuardDetector,TsUnknownOverAnyDetector,TsUtilityTypesDetector detector
+        class det_01["Ts Any Usage"]
+        ViolationDetector <|-- det_01
+        class det_02["Ts Async Await"]
+        ViolationDetector <|-- det_02
+        class det_03["Ts Catch All Type"]
+        ViolationDetector <|-- det_03
+        class det_04["Ts Console Usage"]
+        ViolationDetector <|-- det_04
+        class det_05["Ts Default Export"]
+        ViolationDetector <|-- det_05
+        class det_06["Ts Enum Const"]
+        ViolationDetector <|-- det_06
+        class det_07["Ts For Of"]
+        ViolationDetector <|-- det_07
+        class det_08["Ts Import Order"]
+        ViolationDetector <|-- det_08
+        class det_09["Ts Index Loop"]
+        ViolationDetector <|-- det_09
+        class det_10["Ts Interface Preference"]
+        ViolationDetector <|-- det_10
+        class det_11["Ts Named Export"]
+        ViolationDetector <|-- det_11
+        class det_12["Ts No Console"]
+        ViolationDetector <|-- det_12
+        class det_13["Ts Non Null Assertion"]
+        ViolationDetector <|-- det_13
+        class det_14["Ts Object Type"]
+        ViolationDetector <|-- det_14
+        class det_15["Ts Optional Chaining"]
+        ViolationDetector <|-- det_15
+        class det_16["Ts Promise Chain"]
+        ViolationDetector <|-- det_16
+        class det_17["Ts Readonly"]
+        ViolationDetector <|-- det_17
+        class det_18["Ts Require Import"]
+        ViolationDetector <|-- det_18
+        class det_19["Ts Return Type"]
+        ViolationDetector <|-- det_19
+        class det_20["Ts Strict Mode"]
+        ViolationDetector <|-- det_20
+        class det_21["Ts String Concat"]
+        ViolationDetector <|-- det_21
+        class det_22["Ts Template Literal"]
+        ViolationDetector <|-- det_22
+        class det_23["Ts Type Guard"]
+        ViolationDetector <|-- det_23
+        class det_24["Ts Unknown Over Any"]
+        ViolationDetector <|-- det_24
+        class det_25["Ts Utility Types"]
+        ViolationDetector <|-- det_25
     ```
 
 ??? example "Analysis Pipeline"
     ```mermaid
-%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
     flowchart TD
-    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]
+    Source(["Source Code"]) --> Parse["Parse & Tokenize"]
     Parse --> Metrics["Compute Metrics"]
     Metrics --> Pipeline{"25 Detectors"}
     Pipeline --> Collect["Aggregate Violations"]
-    Collect --> Result(["✅ AnalysisResult · 18 principles"])
-
-    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px
-    class Source,Result io
-    class Parse,Metrics,Collect process
-    class Pipeline decision
+    Collect --> Result(["AnalysisResult<br/>18 principles"])
     ```
 
 ??? example "Analysis States"
     ```mermaid
-%%{init: {"theme": "base"}}%%
+    %%{init: {"theme": "base"}}%%
     stateDiagram-v2
         [*] --> Ready
         Ready --> Parsing : analyze(code)

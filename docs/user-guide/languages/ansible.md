@@ -305,7 +305,7 @@ tags:
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
     graph TD
     ansible_001["ansible-001<br/>Ansible is not Python."]
     ansible_002["ansible-002<br/>YAML sucks for coding."]
@@ -317,7 +317,7 @@ tags:
     ansible_008["ansible-008<br/>Readability counts."]
     ansible_009["ansible-009<br/>Helping users get things ..."]
     ansible_010["ansible-010<br/>User experience beats ide..."]
-    ansible_011["ansible-011<br/>"Magic" conquers the manu..."]
+    ansible_011["ansible-011<br/>&quot;Magic&quot; conquers the manu..."]
     ansible_012["ansible-012<br/>When giving users options..."]
     ansible_013["ansible-013<br/>Declarative is better tha..."]
     ansible_014["ansible-014<br/>Focus avoids complexity."]
@@ -327,206 +327,113 @@ tags:
     ansible_018["ansible-018<br/>Just because something wo..."]
     ansible_019["ansible-019<br/>Friction should be elimin..."]
     ansible_020["ansible-020<br/>Automation is a journey t..."]
-    det_AnsibleAutomationJourneyDetector["AnsibleAutomationJourneyDetector"]
+    det_AnsibleAutomationJourneyDetector["Ansible Automation<br/>Journey"]
     ansible_020 --> det_AnsibleAutomationJourneyDetector
-    det_AnsibleAutomationOpportunityDetector["AnsibleAutomationOpportunityDetector"]
+    det_AnsibleAutomationOpportunityDetector["Ansible Automation<br/>Opportunity"]
     ansible_017 --> det_AnsibleAutomationOpportunityDetector
-    det_AnsibleBecomeDetector["AnsibleBecomeDetector"]
+    det_AnsibleBecomeDetector["Ansible Become"]
     ansible_004 --> det_AnsibleBecomeDetector
-    det_AnsibleComplexityProductivityDetector["AnsibleComplexityProductivityDetector"]
+    det_AnsibleComplexityProductivityDetector["Ansible Complexity<br/>Productivity"]
     ansible_015 --> det_AnsibleComplexityProductivityDetector
-    det_AnsibleContinuousImprovementDetector["AnsibleContinuousImprovementDetector"]
+    det_AnsibleContinuousImprovementDetector["Ansible Continuous<br/>Improvement"]
     ansible_018 --> det_AnsibleContinuousImprovementDetector
-    det_AnsibleConventionOverConfigDetector["AnsibleConventionOverConfigDetector"]
+    det_AnsibleConventionOverConfigDetector["Ansible Convention<br/>Over Config"]
     ansible_012 --> det_AnsibleConventionOverConfigDetector
-    det_AnsibleDeclarativeBiasDetector["AnsibleDeclarativeBiasDetector"]
+    det_AnsibleDeclarativeBiasDetector["Ansible Declarative<br/>Bias"]
     ansible_013 --> det_AnsibleDeclarativeBiasDetector
-    det_AnsibleExplainabilityDetector["AnsibleExplainabilityDetector"]
+    det_AnsibleExplainabilityDetector["Ansible Explainability"]
     ansible_016 --> det_AnsibleExplainabilityDetector
-    det_AnsibleFocusDetector["AnsibleFocusDetector"]
+    det_AnsibleFocusDetector["Ansible Focus"]
     ansible_014 --> det_AnsibleFocusDetector
-    det_AnsibleFqcnDetector["AnsibleFqcnDetector"]
+    det_AnsibleFqcnDetector["Ansible Fqcn"]
     ansible_002 --> det_AnsibleFqcnDetector
-    det_AnsibleFrictionDetector["AnsibleFrictionDetector"]
+    det_AnsibleFrictionDetector["Ansible Friction"]
     ansible_019 --> det_AnsibleFrictionDetector
-    det_AnsibleIdempotencyDetector["AnsibleIdempotencyDetector"]
+    det_AnsibleIdempotencyDetector["Ansible Idempotency"]
     ansible_003 --> det_AnsibleIdempotencyDetector
-    det_AnsibleJinjaSpacingDetector["AnsibleJinjaSpacingDetector"]
+    det_AnsibleJinjaSpacingDetector["Ansible Jinja<br/>Spacing"]
     ansible_007 --> det_AnsibleJinjaSpacingDetector
-    det_AnsibleMagicAutomationDetector["AnsibleMagicAutomationDetector"]
+    det_AnsibleMagicAutomationDetector["Ansible Magic<br/>Automation"]
     ansible_011 --> det_AnsibleMagicAutomationDetector
-    det_AnsibleNamingDetector["AnsibleNamingDetector"]
+    det_AnsibleNamingDetector["Ansible Naming"]
     ansible_001 --> det_AnsibleNamingDetector
-    det_AnsibleNoCleartextPasswordDetector["AnsibleNoCleartextPasswordDetector"]
+    det_AnsibleNoCleartextPasswordDetector["Ansible No<br/>Cleartext Password"]
     ansible_006 --> det_AnsibleNoCleartextPasswordDetector
-    det_AnsibleReadabilityCountsDetector["AnsibleReadabilityCountsDetector"]
+    det_AnsibleReadabilityCountsDetector["Ansible Readability<br/>Counts"]
     ansible_008 --> det_AnsibleReadabilityCountsDetector
-    det_AnsibleStateExplicitDetector["AnsibleStateExplicitDetector"]
+    det_AnsibleStateExplicitDetector["Ansible State<br/>Explicit"]
     ansible_005 --> det_AnsibleStateExplicitDetector
-    det_AnsibleUserExperienceDetector["AnsibleUserExperienceDetector"]
+    det_AnsibleUserExperienceDetector["Ansible User<br/>Experience"]
     ansible_010 --> det_AnsibleUserExperienceDetector
-    det_AnsibleUserOutcomeDetector["AnsibleUserOutcomeDetector"]
+    det_AnsibleUserOutcomeDetector["Ansible User<br/>Outcome"]
     ansible_009 --> det_AnsibleUserOutcomeDetector
-    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-    class ansible_001 principle
-    class ansible_002 principle
-    class ansible_003 principle
-    class ansible_004 principle
-    class ansible_005 principle
-    class ansible_006 principle
-    class ansible_007 principle
-    class ansible_008 principle
-    class ansible_009 principle
-    class ansible_010 principle
-    class ansible_011 principle
-    class ansible_012 principle
-    class ansible_013 principle
-    class ansible_014 principle
-    class ansible_015 principle
-    class ansible_016 principle
-    class ansible_017 principle
-    class ansible_018 principle
-    class ansible_019 principle
-    class ansible_020 principle
-    class det_AnsibleAutomationJourneyDetector detector
-    class det_AnsibleAutomationOpportunityDetector detector
-    class det_AnsibleBecomeDetector detector
-    class det_AnsibleComplexityProductivityDetector detector
-    class det_AnsibleContinuousImprovementDetector detector
-    class det_AnsibleConventionOverConfigDetector detector
-    class det_AnsibleDeclarativeBiasDetector detector
-    class det_AnsibleExplainabilityDetector detector
-    class det_AnsibleFocusDetector detector
-    class det_AnsibleFqcnDetector detector
-    class det_AnsibleFrictionDetector detector
-    class det_AnsibleIdempotencyDetector detector
-    class det_AnsibleJinjaSpacingDetector detector
-    class det_AnsibleMagicAutomationDetector detector
-    class det_AnsibleNamingDetector detector
-    class det_AnsibleNoCleartextPasswordDetector detector
-    class det_AnsibleReadabilityCountsDetector detector
-    class det_AnsibleStateExplicitDetector detector
-    class det_AnsibleUserExperienceDetector detector
-    class det_AnsibleUserOutcomeDetector detector
     ```
 
 ??? example "Detector Class Hierarchy"
     ```mermaid
-%%{init: {"theme": "base"}}%%
+    %%{init: {"theme": "base"}}%%
     classDiagram
         direction TB
         class ViolationDetector {
             <<abstract>>
-            +detect(context, config) list~Violation~
+            +detect(context, config)
         }
-        class AnsibleAutomationJourneyDetector {
-            +rules "ansible-020"
-        }
-        ViolationDetector <|-- AnsibleAutomationJourneyDetector
-        class AnsibleAutomationOpportunityDetector {
-            +rules "ansible-017"
-        }
-        ViolationDetector <|-- AnsibleAutomationOpportunityDetector
-        class AnsibleBecomeDetector {
-            +rules "ansible-004"
-        }
-        ViolationDetector <|-- AnsibleBecomeDetector
-        class AnsibleComplexityProductivityDetector {
-            +rules "ansible-015"
-        }
-        ViolationDetector <|-- AnsibleComplexityProductivityDetector
-        class AnsibleContinuousImprovementDetector {
-            +rules "ansible-018"
-        }
-        ViolationDetector <|-- AnsibleContinuousImprovementDetector
-        class AnsibleConventionOverConfigDetector {
-            +rules "ansible-012"
-        }
-        ViolationDetector <|-- AnsibleConventionOverConfigDetector
-        class AnsibleDeclarativeBiasDetector {
-            +rules "ansible-013"
-        }
-        ViolationDetector <|-- AnsibleDeclarativeBiasDetector
-        class AnsibleExplainabilityDetector {
-            +rules "ansible-016"
-        }
-        ViolationDetector <|-- AnsibleExplainabilityDetector
-        class AnsibleFocusDetector {
-            +rules "ansible-014"
-        }
-        ViolationDetector <|-- AnsibleFocusDetector
-        class AnsibleFqcnDetector {
-            +rules "ansible-002"
-        }
-        ViolationDetector <|-- AnsibleFqcnDetector
-        class AnsibleFrictionDetector {
-            +rules "ansible-019"
-        }
-        ViolationDetector <|-- AnsibleFrictionDetector
-        class AnsibleIdempotencyDetector {
-            +rules "ansible-003"
-        }
-        ViolationDetector <|-- AnsibleIdempotencyDetector
-        class AnsibleJinjaSpacingDetector {
-            +rules "ansible-007"
-        }
-        ViolationDetector <|-- AnsibleJinjaSpacingDetector
-        class AnsibleMagicAutomationDetector {
-            +rules "ansible-011"
-        }
-        ViolationDetector <|-- AnsibleMagicAutomationDetector
-        class AnsibleNamingDetector {
-            +rules "ansible-001"
-        }
-        ViolationDetector <|-- AnsibleNamingDetector
-        class AnsibleNoCleartextPasswordDetector {
-            +rules "ansible-006"
-        }
-        ViolationDetector <|-- AnsibleNoCleartextPasswordDetector
-        class AnsibleReadabilityCountsDetector {
-            +rules "ansible-008"
-        }
-        ViolationDetector <|-- AnsibleReadabilityCountsDetector
-        class AnsibleStateExplicitDetector {
-            +rules "ansible-005"
-        }
-        ViolationDetector <|-- AnsibleStateExplicitDetector
-        class AnsibleUserExperienceDetector {
-            +rules "ansible-010"
-        }
-        ViolationDetector <|-- AnsibleUserExperienceDetector
-        class AnsibleUserOutcomeDetector {
-            +rules "ansible-009"
-        }
-        ViolationDetector <|-- AnsibleUserOutcomeDetector
-        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-        class ViolationDetector abstract
-        class AnsibleAutomationJourneyDetector,AnsibleAutomationOpportunityDetector,AnsibleBecomeDetector,AnsibleComplexityProductivityDetector,AnsibleContinuousImprovementDetector,AnsibleConventionOverConfigDetector,AnsibleDeclarativeBiasDetector,AnsibleExplainabilityDetector,AnsibleFocusDetector,AnsibleFqcnDetector,AnsibleFrictionDetector,AnsibleIdempotencyDetector,AnsibleJinjaSpacingDetector,AnsibleMagicAutomationDetector,AnsibleNamingDetector,AnsibleNoCleartextPasswordDetector,AnsibleReadabilityCountsDetector,AnsibleStateExplicitDetector,AnsibleUserExperienceDetector,AnsibleUserOutcomeDetector detector
+        class det_01["Ansible Automation Journey"]
+        ViolationDetector <|-- det_01
+        class det_02["Ansible Automation Opportunity"]
+        ViolationDetector <|-- det_02
+        class det_03["Ansible Become"]
+        ViolationDetector <|-- det_03
+        class det_04["Ansible Complexity Productivity"]
+        ViolationDetector <|-- det_04
+        class det_05["Ansible Continuous Improvement"]
+        ViolationDetector <|-- det_05
+        class det_06["Ansible Convention Over Config"]
+        ViolationDetector <|-- det_06
+        class det_07["Ansible Declarative Bias"]
+        ViolationDetector <|-- det_07
+        class det_08["Ansible Explainability"]
+        ViolationDetector <|-- det_08
+        class det_09["Ansible Focus"]
+        ViolationDetector <|-- det_09
+        class det_10["Ansible Fqcn"]
+        ViolationDetector <|-- det_10
+        class det_11["Ansible Friction"]
+        ViolationDetector <|-- det_11
+        class det_12["Ansible Idempotency"]
+        ViolationDetector <|-- det_12
+        class det_13["Ansible Jinja Spacing"]
+        ViolationDetector <|-- det_13
+        class det_14["Ansible Magic Automation"]
+        ViolationDetector <|-- det_14
+        class det_15["Ansible Naming"]
+        ViolationDetector <|-- det_15
+        class det_16["Ansible No Cleartext Password"]
+        ViolationDetector <|-- det_16
+        class det_17["Ansible Readability Counts"]
+        ViolationDetector <|-- det_17
+        class det_18["Ansible State Explicit"]
+        ViolationDetector <|-- det_18
+        class det_19["Ansible User Experience"]
+        ViolationDetector <|-- det_19
+        class det_20["Ansible User Outcome"]
+        ViolationDetector <|-- det_20
     ```
 
 ??? example "Analysis Pipeline"
     ```mermaid
-%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
     flowchart TD
-    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]
+    Source(["Source Code"]) --> Parse["Parse & Tokenize"]
     Parse --> Metrics["Compute Metrics"]
     Metrics --> Pipeline{"20 Detectors"}
     Pipeline --> Collect["Aggregate Violations"]
-    Collect --> Result(["✅ AnalysisResult · 20 principles"])
-
-    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px
-    class Source,Result io
-    class Parse,Metrics,Collect process
-    class Pipeline decision
+    Collect --> Result(["AnalysisResult<br/>20 principles"])
     ```
 
 ??? example "Analysis States"
     ```mermaid
-%%{init: {"theme": "base"}}%%
+    %%{init: {"theme": "base"}}%%
     stateDiagram-v2
         [*] --> Ready
         Ready --> Parsing : analyze(code)

@@ -402,7 +402,7 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
     graph TD
     ps_001["ps-001<br/>Use approved verbs"]
     ps_002["ps-002<br/>Use proper error handling"]
@@ -419,166 +419,93 @@ PowerShell is a shell built around objects, pipelines, and cmdlet conventions. C
     ps_013["ps-013<br/>Return objects, not forma..."]
     ps_014["ps-014<br/>Use script scope carefull..."]
     ps_015["ps-015<br/>Handle null values explic..."]
-    det_PowerShellAliasUsageDetector["PowerShellAliasUsageDetector"]
+    det_PowerShellAliasUsageDetector["Power Shell<br/>Alias Usage"]
     ps_012 --> det_PowerShellAliasUsageDetector
-    det_PowerShellApprovedVerbDetector["PowerShellApprovedVerbDetector"]
+    det_PowerShellApprovedVerbDetector["Power Shell<br/>Approved Verb"]
     ps_001 --> det_PowerShellApprovedVerbDetector
-    det_PowerShellCmdletBindingDetector["PowerShellCmdletBindingDetector"]
+    det_PowerShellCmdletBindingDetector["Power Shell<br/>Cmdlet Binding"]
     ps_003 --> det_PowerShellCmdletBindingDetector
-    det_PowerShellCommentHelpDetector["PowerShellCommentHelpDetector"]
+    det_PowerShellCommentHelpDetector["Power Shell<br/>Comment Help"]
     ps_011 --> det_PowerShellCommentHelpDetector
-    det_PowerShellErrorHandlingDetector["PowerShellErrorHandlingDetector"]
+    det_PowerShellErrorHandlingDetector["Power Shell<br/>Error Handling"]
     ps_002 --> det_PowerShellErrorHandlingDetector
-    det_PowerShellNullHandlingDetector["PowerShellNullHandlingDetector"]
+    det_PowerShellNullHandlingDetector["Power Shell<br/>Null Handling"]
     ps_015 --> det_PowerShellNullHandlingDetector
-    det_PowerShellParameterValidationDetector["PowerShellParameterValidationDetector"]
+    det_PowerShellParameterValidationDetector["Power Shell<br/>Parameter Validation"]
     ps_010 --> det_PowerShellParameterValidationDetector
-    det_PowerShellPascalCaseDetector["PowerShellPascalCaseDetector"]
+    det_PowerShellPascalCaseDetector["Power Shell<br/>Pascal Case"]
     ps_004 --> det_PowerShellPascalCaseDetector
-    det_PowerShellPipelineUsageDetector["PowerShellPipelineUsageDetector"]
+    det_PowerShellPipelineUsageDetector["Power Shell<br/>Pipeline Usage"]
     ps_007 --> det_PowerShellPipelineUsageDetector
-    det_PowerShellPositionalParamsDetector["PowerShellPositionalParamsDetector"]
+    det_PowerShellPositionalParamsDetector["Power Shell<br/>Positional Params"]
     ps_006 --> det_PowerShellPositionalParamsDetector
-    det_PowerShellReturnObjectsDetector["PowerShellReturnObjectsDetector"]
+    det_PowerShellReturnObjectsDetector["Power Shell<br/>Return Objects"]
     ps_013 --> det_PowerShellReturnObjectsDetector
-    det_PowerShellScopeUsageDetector["PowerShellScopeUsageDetector"]
+    det_PowerShellScopeUsageDetector["Power Shell<br/>Scope Usage"]
     ps_014 --> det_PowerShellScopeUsageDetector
-    det_PowerShellShouldProcessDetector["PowerShellShouldProcessDetector"]
+    det_PowerShellShouldProcessDetector["Power Shell<br/>Should Process"]
     ps_008 --> det_PowerShellShouldProcessDetector
-    det_PowerShellSplattingDetector["PowerShellSplattingDetector"]
+    det_PowerShellSplattingDetector["Power Shell<br/>Splatting"]
     ps_009 --> det_PowerShellSplattingDetector
-    det_PowerShellVerboseDebugDetector["PowerShellVerboseDebugDetector"]
+    det_PowerShellVerboseDebugDetector["Power Shell<br/>Verbose Debug"]
     ps_005 --> det_PowerShellVerboseDebugDetector
-    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-    class ps_001 principle
-    class ps_002 principle
-    class ps_003 principle
-    class ps_004 principle
-    class ps_005 principle
-    class ps_006 principle
-    class ps_007 principle
-    class ps_008 principle
-    class ps_009 principle
-    class ps_010 principle
-    class ps_011 principle
-    class ps_012 principle
-    class ps_013 principle
-    class ps_014 principle
-    class ps_015 principle
-    class det_PowerShellAliasUsageDetector detector
-    class det_PowerShellApprovedVerbDetector detector
-    class det_PowerShellCmdletBindingDetector detector
-    class det_PowerShellCommentHelpDetector detector
-    class det_PowerShellErrorHandlingDetector detector
-    class det_PowerShellNullHandlingDetector detector
-    class det_PowerShellParameterValidationDetector detector
-    class det_PowerShellPascalCaseDetector detector
-    class det_PowerShellPipelineUsageDetector detector
-    class det_PowerShellPositionalParamsDetector detector
-    class det_PowerShellReturnObjectsDetector detector
-    class det_PowerShellScopeUsageDetector detector
-    class det_PowerShellShouldProcessDetector detector
-    class det_PowerShellSplattingDetector detector
-    class det_PowerShellVerboseDebugDetector detector
     ```
 
 ??? example "Detector Class Hierarchy"
     ```mermaid
-%%{init: {"theme": "base"}}%%
+    %%{init: {"theme": "base"}}%%
     classDiagram
         direction TB
         class ViolationDetector {
             <<abstract>>
-            +detect(context, config) list~Violation~
+            +detect(context, config)
         }
-        class PowerShellAliasUsageDetector {
-            +rules "ps-012"
-        }
-        ViolationDetector <|-- PowerShellAliasUsageDetector
-        class PowerShellApprovedVerbDetector {
-            +rules "ps-001"
-        }
-        ViolationDetector <|-- PowerShellApprovedVerbDetector
-        class PowerShellCmdletBindingDetector {
-            +rules "ps-003"
-        }
-        ViolationDetector <|-- PowerShellCmdletBindingDetector
-        class PowerShellCommentHelpDetector {
-            +rules "ps-011"
-        }
-        ViolationDetector <|-- PowerShellCommentHelpDetector
-        class PowerShellErrorHandlingDetector {
-            +rules "ps-002"
-        }
-        ViolationDetector <|-- PowerShellErrorHandlingDetector
-        class PowerShellNullHandlingDetector {
-            +rules "ps-015"
-        }
-        ViolationDetector <|-- PowerShellNullHandlingDetector
-        class PowerShellParameterValidationDetector {
-            +rules "ps-010"
-        }
-        ViolationDetector <|-- PowerShellParameterValidationDetector
-        class PowerShellPascalCaseDetector {
-            +rules "ps-004"
-        }
-        ViolationDetector <|-- PowerShellPascalCaseDetector
-        class PowerShellPipelineUsageDetector {
-            +rules "ps-007"
-        }
-        ViolationDetector <|-- PowerShellPipelineUsageDetector
-        class PowerShellPositionalParamsDetector {
-            +rules "ps-006"
-        }
-        ViolationDetector <|-- PowerShellPositionalParamsDetector
-        class PowerShellReturnObjectsDetector {
-            +rules "ps-013"
-        }
-        ViolationDetector <|-- PowerShellReturnObjectsDetector
-        class PowerShellScopeUsageDetector {
-            +rules "ps-014"
-        }
-        ViolationDetector <|-- PowerShellScopeUsageDetector
-        class PowerShellShouldProcessDetector {
-            +rules "ps-008"
-        }
-        ViolationDetector <|-- PowerShellShouldProcessDetector
-        class PowerShellSplattingDetector {
-            +rules "ps-009"
-        }
-        ViolationDetector <|-- PowerShellSplattingDetector
-        class PowerShellVerboseDebugDetector {
-            +rules "ps-005"
-        }
-        ViolationDetector <|-- PowerShellVerboseDebugDetector
-        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-        class ViolationDetector abstract
-        class PowerShellAliasUsageDetector,PowerShellApprovedVerbDetector,PowerShellCmdletBindingDetector,PowerShellCommentHelpDetector,PowerShellErrorHandlingDetector,PowerShellNullHandlingDetector,PowerShellParameterValidationDetector,PowerShellPascalCaseDetector,PowerShellPipelineUsageDetector,PowerShellPositionalParamsDetector,PowerShellReturnObjectsDetector,PowerShellScopeUsageDetector,PowerShellShouldProcessDetector,PowerShellSplattingDetector,PowerShellVerboseDebugDetector detector
+        class det_01["Power Shell Alias Usage"]
+        ViolationDetector <|-- det_01
+        class det_02["Power Shell Approved Verb"]
+        ViolationDetector <|-- det_02
+        class det_03["Power Shell Cmdlet Binding"]
+        ViolationDetector <|-- det_03
+        class det_04["Power Shell Comment Help"]
+        ViolationDetector <|-- det_04
+        class det_05["Power Shell Error Handling"]
+        ViolationDetector <|-- det_05
+        class det_06["Power Shell Null Handling"]
+        ViolationDetector <|-- det_06
+        class det_07["Power Shell Parameter Validation"]
+        ViolationDetector <|-- det_07
+        class det_08["Power Shell Pascal Case"]
+        ViolationDetector <|-- det_08
+        class det_09["Power Shell Pipeline Usage"]
+        ViolationDetector <|-- det_09
+        class det_10["Power Shell Positional Params"]
+        ViolationDetector <|-- det_10
+        class det_11["Power Shell Return Objects"]
+        ViolationDetector <|-- det_11
+        class det_12["Power Shell Scope Usage"]
+        ViolationDetector <|-- det_12
+        class det_13["Power Shell Should Process"]
+        ViolationDetector <|-- det_13
+        class det_14["Power Shell Splatting"]
+        ViolationDetector <|-- det_14
+        class det_15["Power Shell Verbose Debug"]
+        ViolationDetector <|-- det_15
     ```
 
 ??? example "Analysis Pipeline"
     ```mermaid
-%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
     flowchart TD
-    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]
+    Source(["Source Code"]) --> Parse["Parse & Tokenize"]
     Parse --> Metrics["Compute Metrics"]
     Metrics --> Pipeline{"15 Detectors"}
     Pipeline --> Collect["Aggregate Violations"]
-    Collect --> Result(["✅ AnalysisResult · 15 principles"])
-
-    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px
-    class Source,Result io
-    class Parse,Metrics,Collect process
-    class Pipeline decision
+    Collect --> Result(["AnalysisResult<br/>15 principles"])
     ```
 
 ??? example "Analysis States"
     ```mermaid
-%%{init: {"theme": "base"}}%%
+    %%{init: {"theme": "base"}}%%
     stateDiagram-v2
         [*] --> Ready
         Ready --> Parsing : analyze(code)

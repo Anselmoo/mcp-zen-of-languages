@@ -407,7 +407,7 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
     graph TD
     rust_001["rust-001<br/>Avoid unwrap() and expect..."]
     rust_002["rust-002<br/>Use the type system to pr..."]
@@ -420,195 +420,111 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
     rust_009["rust-009<br/>Use std traits appropriat..."]
     rust_010["rust-010<br/>Prefer enums over boolean..."]
     rust_011["rust-011<br/>Use lifetimes judiciously"]
-    rust_012["rust-012<br/>Avoid Rc<RefCell<T>> unle..."]
+    rust_012["rust-012<br/>Avoid Rc&lt;RefCell&lt;T&gt;&gt; unle..."]
     rust_013["rust-013<br/>Send + Sync should be imp..."]
     rust_014["rust-014<br/>Error types should implem..."]
     rust_015["rust-015<br/>Follow Rust naming conven..."]
     rust_016["rust-016<br/>Implement Default when th..."]
     rust_017["rust-017<br/>Use From/Into for type co..."]
-    det_RustCloneOverheadDetector["RustCloneOverheadDetector"]
+    det_RustCloneOverheadDetector["Rust Clone<br/>Overhead"]
     rust_004 --> det_RustCloneOverheadDetector
-    det_RustDebugDeriveDetector["RustDebugDeriveDetector"]
+    det_RustDebugDeriveDetector["Rust Debug<br/>Derive"]
     rust_006 --> det_RustDebugDeriveDetector
-    det_RustDefaultImplDetector["RustDefaultImplDetector"]
+    det_RustDefaultImplDetector["Rust Default<br/>Impl"]
     rust_016 --> det_RustDefaultImplDetector
-    det_RustEnumOverBoolDetector["RustEnumOverBoolDetector"]
+    det_RustEnumOverBoolDetector["Rust Enum<br/>Over Bool"]
     rust_010 --> det_RustEnumOverBoolDetector
-    det_RustErrorHandlingDetector["RustErrorHandlingDetector"]
+    det_RustErrorHandlingDetector["Rust Error<br/>Handling"]
     rust_001 --> det_RustErrorHandlingDetector
-    det_RustErrorTraitsDetector["RustErrorTraitsDetector"]
+    det_RustErrorTraitsDetector["Rust Error<br/>Traits"]
     rust_014 --> det_RustErrorTraitsDetector
-    det_RustFromIntoDetector["RustFromIntoDetector"]
+    det_RustFromIntoDetector["Rust From<br/>Into"]
     rust_017 --> det_RustFromIntoDetector
-    det_RustInteriorMutabilityDetector["RustInteriorMutabilityDetector"]
+    det_RustInteriorMutabilityDetector["Rust Interior<br/>Mutability"]
     rust_012 --> det_RustInteriorMutabilityDetector
-    det_RustIteratorPreferenceDetector["RustIteratorPreferenceDetector"]
+    det_RustIteratorPreferenceDetector["Rust Iterator<br/>Preference"]
     rust_003 --> det_RustIteratorPreferenceDetector
-    det_RustLifetimeUsageDetector["RustLifetimeUsageDetector"]
+    det_RustLifetimeUsageDetector["Rust Lifetime<br/>Usage"]
     rust_011 --> det_RustLifetimeUsageDetector
-    det_RustMustUseDetector["RustMustUseDetector"]
+    det_RustMustUseDetector["Rust Must<br/>Use"]
     rust_005 --> det_RustMustUseDetector
-    det_RustNamingDetector["RustNamingDetector"]
+    det_RustNamingDetector["Rust Naming"]
     rust_015 --> det_RustNamingDetector
-    det_RustNewtypePatternDetector["RustNewtypePatternDetector"]
+    det_RustNewtypePatternDetector["Rust Newtype<br/>Pattern"]
     rust_007 --> det_RustNewtypePatternDetector
-    det_RustSendSyncDetector["RustSendSyncDetector"]
+    det_RustSendSyncDetector["Rust Send<br/>Sync"]
     rust_013 --> det_RustSendSyncDetector
-    det_RustStdTraitsDetector["RustStdTraitsDetector"]
+    det_RustStdTraitsDetector["Rust Std<br/>Traits"]
     rust_009 --> det_RustStdTraitsDetector
-    det_RustTypeSafetyDetector["RustTypeSafetyDetector"]
+    det_RustTypeSafetyDetector["Rust Type<br/>Safety"]
     rust_002 --> det_RustTypeSafetyDetector
-    det_RustUnsafeBlocksDetector["RustUnsafeBlocksDetector"]
+    det_RustUnsafeBlocksDetector["Rust Unsafe<br/>Blocks"]
     rust_008 --> det_RustUnsafeBlocksDetector
-    det_RustUnwrapUsageDetector["RustUnwrapUsageDetector"]
+    det_RustUnwrapUsageDetector["Rust Unwrap<br/>Usage"]
     rust_001 --> det_RustUnwrapUsageDetector
-    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-    class rust_001 principle
-    class rust_002 principle
-    class rust_003 principle
-    class rust_004 principle
-    class rust_005 principle
-    class rust_006 principle
-    class rust_007 principle
-    class rust_008 principle
-    class rust_009 principle
-    class rust_010 principle
-    class rust_011 principle
-    class rust_012 principle
-    class rust_013 principle
-    class rust_014 principle
-    class rust_015 principle
-    class rust_016 principle
-    class rust_017 principle
-    class det_RustCloneOverheadDetector detector
-    class det_RustDebugDeriveDetector detector
-    class det_RustDefaultImplDetector detector
-    class det_RustEnumOverBoolDetector detector
-    class det_RustErrorHandlingDetector detector
-    class det_RustErrorTraitsDetector detector
-    class det_RustFromIntoDetector detector
-    class det_RustInteriorMutabilityDetector detector
-    class det_RustIteratorPreferenceDetector detector
-    class det_RustLifetimeUsageDetector detector
-    class det_RustMustUseDetector detector
-    class det_RustNamingDetector detector
-    class det_RustNewtypePatternDetector detector
-    class det_RustSendSyncDetector detector
-    class det_RustStdTraitsDetector detector
-    class det_RustTypeSafetyDetector detector
-    class det_RustUnsafeBlocksDetector detector
-    class det_RustUnwrapUsageDetector detector
     ```
 
 ??? example "Detector Class Hierarchy"
     ```mermaid
-%%{init: {"theme": "base"}}%%
+    %%{init: {"theme": "base"}}%%
     classDiagram
         direction TB
         class ViolationDetector {
             <<abstract>>
-            +detect(context, config) list~Violation~
+            +detect(context, config)
         }
-        class RustCloneOverheadDetector {
-            +rules "rust-004"
-        }
-        ViolationDetector <|-- RustCloneOverheadDetector
-        class RustDebugDeriveDetector {
-            +rules "rust-006"
-        }
-        ViolationDetector <|-- RustDebugDeriveDetector
-        class RustDefaultImplDetector {
-            +rules "rust-016"
-        }
-        ViolationDetector <|-- RustDefaultImplDetector
-        class RustEnumOverBoolDetector {
-            +rules "rust-010"
-        }
-        ViolationDetector <|-- RustEnumOverBoolDetector
-        class RustErrorHandlingDetector {
-            +rules "rust-001"
-        }
-        ViolationDetector <|-- RustErrorHandlingDetector
-        class RustErrorTraitsDetector {
-            +rules "rust-014"
-        }
-        ViolationDetector <|-- RustErrorTraitsDetector
-        class RustFromIntoDetector {
-            +rules "rust-017"
-        }
-        ViolationDetector <|-- RustFromIntoDetector
-        class RustInteriorMutabilityDetector {
-            +rules "rust-012"
-        }
-        ViolationDetector <|-- RustInteriorMutabilityDetector
-        class RustIteratorPreferenceDetector {
-            +rules "rust-003"
-        }
-        ViolationDetector <|-- RustIteratorPreferenceDetector
-        class RustLifetimeUsageDetector {
-            +rules "rust-011"
-        }
-        ViolationDetector <|-- RustLifetimeUsageDetector
-        class RustMustUseDetector {
-            +rules "rust-005"
-        }
-        ViolationDetector <|-- RustMustUseDetector
-        class RustNamingDetector {
-            +rules "rust-015"
-        }
-        ViolationDetector <|-- RustNamingDetector
-        class RustNewtypePatternDetector {
-            +rules "rust-007"
-        }
-        ViolationDetector <|-- RustNewtypePatternDetector
-        class RustSendSyncDetector {
-            +rules "rust-013"
-        }
-        ViolationDetector <|-- RustSendSyncDetector
-        class RustStdTraitsDetector {
-            +rules "rust-009"
-        }
-        ViolationDetector <|-- RustStdTraitsDetector
-        class RustTypeSafetyDetector {
-            +rules "rust-002"
-        }
-        ViolationDetector <|-- RustTypeSafetyDetector
-        class RustUnsafeBlocksDetector {
-            +rules "rust-008"
-        }
-        ViolationDetector <|-- RustUnsafeBlocksDetector
-        class RustUnwrapUsageDetector {
-            +rules "rust-001"
-        }
-        ViolationDetector <|-- RustUnwrapUsageDetector
-        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-        class ViolationDetector abstract
-        class RustCloneOverheadDetector,RustDebugDeriveDetector,RustDefaultImplDetector,RustEnumOverBoolDetector,RustErrorHandlingDetector,RustErrorTraitsDetector,RustFromIntoDetector,RustInteriorMutabilityDetector,RustIteratorPreferenceDetector,RustLifetimeUsageDetector,RustMustUseDetector,RustNamingDetector,RustNewtypePatternDetector,RustSendSyncDetector,RustStdTraitsDetector,RustTypeSafetyDetector,RustUnsafeBlocksDetector,RustUnwrapUsageDetector detector
+        class det_01["Rust Clone Overhead"]
+        ViolationDetector <|-- det_01
+        class det_02["Rust Debug Derive"]
+        ViolationDetector <|-- det_02
+        class det_03["Rust Default Impl"]
+        ViolationDetector <|-- det_03
+        class det_04["Rust Enum Over Bool"]
+        ViolationDetector <|-- det_04
+        class det_05["Rust Error Handling"]
+        ViolationDetector <|-- det_05
+        class det_06["Rust Error Traits"]
+        ViolationDetector <|-- det_06
+        class det_07["Rust From Into"]
+        ViolationDetector <|-- det_07
+        class det_08["Rust Interior Mutability"]
+        ViolationDetector <|-- det_08
+        class det_09["Rust Iterator Preference"]
+        ViolationDetector <|-- det_09
+        class det_10["Rust Lifetime Usage"]
+        ViolationDetector <|-- det_10
+        class det_11["Rust Must Use"]
+        ViolationDetector <|-- det_11
+        class det_12["Rust Naming"]
+        ViolationDetector <|-- det_12
+        class det_13["Rust Newtype Pattern"]
+        ViolationDetector <|-- det_13
+        class det_14["Rust Send Sync"]
+        ViolationDetector <|-- det_14
+        class det_15["Rust Std Traits"]
+        ViolationDetector <|-- det_15
+        class det_16["Rust Type Safety"]
+        ViolationDetector <|-- det_16
+        class det_17["Rust Unsafe Blocks"]
+        ViolationDetector <|-- det_17
+        class det_18["Rust Unwrap Usage"]
+        ViolationDetector <|-- det_18
     ```
 
 ??? example "Analysis Pipeline"
     ```mermaid
-%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
     flowchart TD
-    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]
+    Source(["Source Code"]) --> Parse["Parse & Tokenize"]
     Parse --> Metrics["Compute Metrics"]
     Metrics --> Pipeline{"18 Detectors"}
     Pipeline --> Collect["Aggregate Violations"]
-    Collect --> Result(["✅ AnalysisResult · 17 principles"])
-
-    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px
-    class Source,Result io
-    class Parse,Metrics,Collect process
-    class Pipeline decision
+    Collect --> Result(["AnalysisResult<br/>17 principles"])
     ```
 
 ??? example "Analysis States"
     ```mermaid
-%%{init: {"theme": "base"}}%%
+    %%{init: {"theme": "base"}}%%
     stateDiagram-v2
         [*] --> Ready
         Ready --> Parsing : analyze(code)

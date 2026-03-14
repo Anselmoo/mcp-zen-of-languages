@@ -176,7 +176,7 @@ tags:
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
     graph TD
     md_001["md-001<br/>Preserve heading hierarch..."]
     md_002["md-002<br/>Images require meaningful..."]
@@ -185,102 +185,61 @@ tags:
     md_005["md-005<br/>Keep front-matter complet..."]
     md_006["md-006<br/>Use named default exports..."]
     md_007["md-007<br/>Keep MDX imports hygienic"]
-    det_MarkdownAltTextDetector["MarkdownAltTextDetector"]
+    det_MarkdownAltTextDetector["Markdown Alt<br/>Text"]
     md_002 --> det_MarkdownAltTextDetector
-    det_MarkdownBareUrlDetector["MarkdownBareUrlDetector"]
+    det_MarkdownBareUrlDetector["Markdown Bare<br/>Url"]
     md_003 --> det_MarkdownBareUrlDetector
-    det_MarkdownCodeFenceLanguageDetector["MarkdownCodeFenceLanguageDetector"]
+    det_MarkdownCodeFenceLanguageDetector["Markdown Code<br/>Fence Language"]
     md_004 --> det_MarkdownCodeFenceLanguageDetector
-    det_MarkdownFrontMatterDetector["MarkdownFrontMatterDetector"]
+    det_MarkdownFrontMatterDetector["Markdown Front<br/>Matter"]
     md_005 --> det_MarkdownFrontMatterDetector
-    det_MarkdownHeadingHierarchyDetector["MarkdownHeadingHierarchyDetector"]
+    det_MarkdownHeadingHierarchyDetector["Markdown Heading<br/>Hierarchy"]
     md_001 --> det_MarkdownHeadingHierarchyDetector
-    det_MarkdownMdxImportHygieneDetector["MarkdownMdxImportHygieneDetector"]
+    det_MarkdownMdxImportHygieneDetector["Markdown Mdx<br/>Import Hygiene"]
     md_007 --> det_MarkdownMdxImportHygieneDetector
-    det_MarkdownMdxNamedDefaultExportDetector["MarkdownMdxNamedDefaultExportDetector"]
+    det_MarkdownMdxNamedDefaultExportDetector["Markdown Mdx<br/>Named Default<br/>Export"]
     md_006 --> det_MarkdownMdxNamedDefaultExportDetector
-    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-    class md_001 principle
-    class md_002 principle
-    class md_003 principle
-    class md_004 principle
-    class md_005 principle
-    class md_006 principle
-    class md_007 principle
-    class det_MarkdownAltTextDetector detector
-    class det_MarkdownBareUrlDetector detector
-    class det_MarkdownCodeFenceLanguageDetector detector
-    class det_MarkdownFrontMatterDetector detector
-    class det_MarkdownHeadingHierarchyDetector detector
-    class det_MarkdownMdxImportHygieneDetector detector
-    class det_MarkdownMdxNamedDefaultExportDetector detector
     ```
 
 ??? example "Detector Class Hierarchy"
     ```mermaid
-%%{init: {"theme": "base"}}%%
+    %%{init: {"theme": "base"}}%%
     classDiagram
         direction TB
         class ViolationDetector {
             <<abstract>>
-            +detect(context, config) list~Violation~
+            +detect(context, config)
         }
-        class MarkdownAltTextDetector {
-            +rules "md-002"
-        }
-        ViolationDetector <|-- MarkdownAltTextDetector
-        class MarkdownBareUrlDetector {
-            +rules "md-003"
-        }
-        ViolationDetector <|-- MarkdownBareUrlDetector
-        class MarkdownCodeFenceLanguageDetector {
-            +rules "md-004"
-        }
-        ViolationDetector <|-- MarkdownCodeFenceLanguageDetector
-        class MarkdownFrontMatterDetector {
-            +rules "md-005"
-        }
-        ViolationDetector <|-- MarkdownFrontMatterDetector
-        class MarkdownHeadingHierarchyDetector {
-            +rules "md-001"
-        }
-        ViolationDetector <|-- MarkdownHeadingHierarchyDetector
-        class MarkdownMdxImportHygieneDetector {
-            +rules "md-007"
-        }
-        ViolationDetector <|-- MarkdownMdxImportHygieneDetector
-        class MarkdownMdxNamedDefaultExportDetector {
-            +rules "md-006"
-        }
-        ViolationDetector <|-- MarkdownMdxNamedDefaultExportDetector
-        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-        class ViolationDetector abstract
-        class MarkdownAltTextDetector,MarkdownBareUrlDetector,MarkdownCodeFenceLanguageDetector,MarkdownFrontMatterDetector,MarkdownHeadingHierarchyDetector,MarkdownMdxImportHygieneDetector,MarkdownMdxNamedDefaultExportDetector detector
+        class det_01["Markdown Alt Text"]
+        ViolationDetector <|-- det_01
+        class det_02["Markdown Bare Url"]
+        ViolationDetector <|-- det_02
+        class det_03["Markdown Code Fence Language"]
+        ViolationDetector <|-- det_03
+        class det_04["Markdown Front Matter"]
+        ViolationDetector <|-- det_04
+        class det_05["Markdown Heading Hierarchy"]
+        ViolationDetector <|-- det_05
+        class det_06["Markdown Mdx Import Hygiene"]
+        ViolationDetector <|-- det_06
+        class det_07["Markdown Mdx Named Default Export"]
+        ViolationDetector <|-- det_07
     ```
 
 ??? example "Analysis Pipeline"
     ```mermaid
-%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
     flowchart TD
-    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]
+    Source(["Source Code"]) --> Parse["Parse & Tokenize"]
     Parse --> Metrics["Compute Metrics"]
     Metrics --> Pipeline{"7 Detectors"}
     Pipeline --> Collect["Aggregate Violations"]
-    Collect --> Result(["✅ AnalysisResult · 7 principles"])
-
-    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px
-    class Source,Result io
-    class Parse,Metrics,Collect process
-    class Pipeline decision
+    Collect --> Result(["AnalysisResult<br/>7 principles"])
     ```
 
 ??? example "Analysis States"
     ```mermaid
-%%{init: {"theme": "base"}}%%
+    %%{init: {"theme": "base"}}%%
     stateDiagram-v2
         [*] --> Ready
         Ready --> Parsing : analyze(code)

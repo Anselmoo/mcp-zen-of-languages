@@ -183,7 +183,7 @@ SQL queries are production code: they shape correctness, latency, and security j
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
     graph TD
     sql_001["sql-001<br/>Never use SELECT *"]
     sql_002["sql-002<br/>Always include INSERT col..."]
@@ -194,118 +194,69 @@ SQL queries are production code: they shape correctness, latency, and security j
     sql_007["sql-007<br/>Use descriptive table ali..."]
     sql_008["sql-008<br/>Keep transaction boundari..."]
     sql_009["sql-009<br/>Prefer explicit JOIN synt..."]
-    det_SqlAliasClarityDetector["SqlAliasClarityDetector"]
+    det_SqlAliasClarityDetector["Sql Alias<br/>Clarity"]
     sql_007 --> det_SqlAliasClarityDetector
-    det_SqlAnsi89JoinDetector["SqlAnsi89JoinDetector"]
+    det_SqlAnsi89JoinDetector["Sql Ansi<br/>89 Join"]
     sql_009 --> det_SqlAnsi89JoinDetector
-    det_SqlDynamicSqlDetector["SqlDynamicSqlDetector"]
+    det_SqlDynamicSqlDetector["Sql Dynamic<br/>Sql"]
     sql_003 --> det_SqlDynamicSqlDetector
-    det_SqlImplicitJoinCoercionDetector["SqlImplicitJoinCoercionDetector"]
+    det_SqlImplicitJoinCoercionDetector["Sql Implicit<br/>Join Coercion"]
     sql_005 --> det_SqlImplicitJoinCoercionDetector
-    det_SqlInsertColumnListDetector["SqlInsertColumnListDetector"]
+    det_SqlInsertColumnListDetector["Sql Insert<br/>Column List"]
     sql_002 --> det_SqlInsertColumnListDetector
-    det_SqlNolockDetector["SqlNolockDetector"]
+    det_SqlNolockDetector["Sql Nolock"]
     sql_004 --> det_SqlNolockDetector
-    det_SqlSelectStarDetector["SqlSelectStarDetector"]
+    det_SqlSelectStarDetector["Sql Select<br/>Star"]
     sql_001 --> det_SqlSelectStarDetector
-    det_SqlTransactionBoundaryDetector["SqlTransactionBoundaryDetector"]
+    det_SqlTransactionBoundaryDetector["Sql Transaction<br/>Boundary"]
     sql_008 --> det_SqlTransactionBoundaryDetector
-    det_SqlUnboundedQueryDetector["SqlUnboundedQueryDetector"]
+    det_SqlUnboundedQueryDetector["Sql Unbounded<br/>Query"]
     sql_006 --> det_SqlUnboundedQueryDetector
-    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-    class sql_001 principle
-    class sql_002 principle
-    class sql_003 principle
-    class sql_004 principle
-    class sql_005 principle
-    class sql_006 principle
-    class sql_007 principle
-    class sql_008 principle
-    class sql_009 principle
-    class det_SqlAliasClarityDetector detector
-    class det_SqlAnsi89JoinDetector detector
-    class det_SqlDynamicSqlDetector detector
-    class det_SqlImplicitJoinCoercionDetector detector
-    class det_SqlInsertColumnListDetector detector
-    class det_SqlNolockDetector detector
-    class det_SqlSelectStarDetector detector
-    class det_SqlTransactionBoundaryDetector detector
-    class det_SqlUnboundedQueryDetector detector
     ```
 
 ??? example "Detector Class Hierarchy"
     ```mermaid
-%%{init: {"theme": "base"}}%%
+    %%{init: {"theme": "base"}}%%
     classDiagram
         direction TB
         class ViolationDetector {
             <<abstract>>
-            +detect(context, config) list~Violation~
+            +detect(context, config)
         }
-        class SqlAliasClarityDetector {
-            +rules "sql-007"
-        }
-        ViolationDetector <|-- SqlAliasClarityDetector
-        class SqlAnsi89JoinDetector {
-            +rules "sql-009"
-        }
-        ViolationDetector <|-- SqlAnsi89JoinDetector
-        class SqlDynamicSqlDetector {
-            +rules "sql-003"
-        }
-        ViolationDetector <|-- SqlDynamicSqlDetector
-        class SqlImplicitJoinCoercionDetector {
-            +rules "sql-005"
-        }
-        ViolationDetector <|-- SqlImplicitJoinCoercionDetector
-        class SqlInsertColumnListDetector {
-            +rules "sql-002"
-        }
-        ViolationDetector <|-- SqlInsertColumnListDetector
-        class SqlNolockDetector {
-            +rules "sql-004"
-        }
-        ViolationDetector <|-- SqlNolockDetector
-        class SqlSelectStarDetector {
-            +rules "sql-001"
-        }
-        ViolationDetector <|-- SqlSelectStarDetector
-        class SqlTransactionBoundaryDetector {
-            +rules "sql-008"
-        }
-        ViolationDetector <|-- SqlTransactionBoundaryDetector
-        class SqlUnboundedQueryDetector {
-            +rules "sql-006"
-        }
-        ViolationDetector <|-- SqlUnboundedQueryDetector
-        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-        class ViolationDetector abstract
-        class SqlAliasClarityDetector,SqlAnsi89JoinDetector,SqlDynamicSqlDetector,SqlImplicitJoinCoercionDetector,SqlInsertColumnListDetector,SqlNolockDetector,SqlSelectStarDetector,SqlTransactionBoundaryDetector,SqlUnboundedQueryDetector detector
+        class det_01["Sql Alias Clarity"]
+        ViolationDetector <|-- det_01
+        class det_02["Sql Ansi 89 Join"]
+        ViolationDetector <|-- det_02
+        class det_03["Sql Dynamic Sql"]
+        ViolationDetector <|-- det_03
+        class det_04["Sql Implicit Join Coercion"]
+        ViolationDetector <|-- det_04
+        class det_05["Sql Insert Column List"]
+        ViolationDetector <|-- det_05
+        class det_06["Sql Nolock"]
+        ViolationDetector <|-- det_06
+        class det_07["Sql Select Star"]
+        ViolationDetector <|-- det_07
+        class det_08["Sql Transaction Boundary"]
+        ViolationDetector <|-- det_08
+        class det_09["Sql Unbounded Query"]
+        ViolationDetector <|-- det_09
     ```
 
 ??? example "Analysis Pipeline"
     ```mermaid
-%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
     flowchart TD
-    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]
+    Source(["Source Code"]) --> Parse["Parse & Tokenize"]
     Parse --> Metrics["Compute Metrics"]
     Metrics --> Pipeline{"9 Detectors"}
     Pipeline --> Collect["Aggregate Violations"]
-    Collect --> Result(["✅ AnalysisResult · 9 principles"])
-
-    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px
-    class Source,Result io
-    class Parse,Metrics,Collect process
-    class Pipeline decision
+    Collect --> Result(["AnalysisResult<br/>9 principles"])
     ```
 
 ??? example "Analysis States"
     ```mermaid
-%%{init: {"theme": "base"}}%%
+    %%{init: {"theme": "base"}}%%
     stateDiagram-v2
         [*] --> Ready
         Ready --> Parsing : analyze(code)

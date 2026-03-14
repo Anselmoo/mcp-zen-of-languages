@@ -436,7 +436,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
     graph TD
     python_001["python-001<br/>Beautiful is better than ..."]
     python_002["python-002<br/>Explicit is better than i..."]
@@ -445,7 +445,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     python_005["python-005<br/>Flat is better than neste..."]
     python_006["python-006<br/>Sparse is better than den..."]
     python_007["python-007<br/>Readability counts"]
-    python_008["python-008<br/>Special cases aren't spec..."]
+    python_008["python-008<br/>Special cases aren&#x27;t spec..."]
     python_009["python-009<br/>Errors should never pass ..."]
     python_010["python-010<br/>In the face of ambiguity,..."]
     python_011["python-011<br/>There should be one-- and..."]
@@ -457,277 +457,154 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     python_017["python-017<br/>If the implementation is ..."]
     python_018["python-018<br/>If the implementation is ..."]
     python_019["python-019<br/>Although that way may not..."]
-    python_020["python-020<br/>Let's do more of those"]
-    det_BareExceptDetector["BareExceptDetector"]
+    python_020["python-020<br/>Let&#x27;s do more of those"]
+    det_BareExceptDetector["Bare Except"]
     python_009 --> det_BareExceptDetector
-    det_CircularDependencyDetector["CircularDependencyDetector"]
+    det_CircularDependencyDetector["Circular Dependency"]
     python_004 --> det_CircularDependencyDetector
-    det_ClassSizeDetector["ClassSizeDetector"]
+    det_ClassSizeDetector["Class Size"]
     python_007 --> det_ClassSizeDetector
-    det_ComplexOneLinersDetector["ComplexOneLinersDetector"]
+    det_ComplexOneLinersDetector["Complex One<br/>Liners"]
     python_003 --> det_ComplexOneLinersDetector
-    det_ConsistencyDetector["ConsistencyDetector"]
+    det_ConsistencyDetector["Consistency"]
     python_008 --> det_ConsistencyDetector
-    det_ContextManagerDetector["ContextManagerDetector"]
+    det_ContextManagerDetector["Context Manager"]
     python_011 --> det_ContextManagerDetector
-    det_CyclomaticComplexityDetector["CyclomaticComplexityDetector"]
+    det_CyclomaticComplexityDetector["Cyclomatic Complexity"]
     python_003 --> det_CyclomaticComplexityDetector
-    det_DeepInheritanceDetector["DeepInheritanceDetector"]
+    det_DeepInheritanceDetector["Deep Inheritance"]
     python_004 --> det_DeepInheritanceDetector
-    det_DocstringDetector["DocstringDetector"]
+    det_DocstringDetector["Docstring"]
     python_007 --> det_DocstringDetector
-    det_DuplicateImplementationDetector["DuplicateImplementationDetector"]
+    det_DuplicateImplementationDetector["Duplicate Implementation"]
     python_011 --> det_DuplicateImplementationDetector
-    det_ExplicitnessDetector["ExplicitnessDetector"]
+    det_ExplicitnessDetector["Explicitness"]
     python_010 --> det_ExplicitnessDetector
-    det_FeatureEnvyDetector["FeatureEnvyDetector"]
+    det_FeatureEnvyDetector["Feature Envy"]
     python_011 --> det_FeatureEnvyDetector
-    det_GodClassDetector["GodClassDetector"]
+    det_GodClassDetector["God Class"]
     python_004 --> det_GodClassDetector
-    det_LineLengthDetector["LineLengthDetector"]
+    det_LineLengthDetector["Line Length"]
     python_001 --> det_LineLengthDetector
-    det_LongFunctionDetector["LongFunctionDetector"]
+    det_LongFunctionDetector["Long Function"]
     python_007 --> det_LongFunctionDetector
-    det_MagicMethodDetector["MagicMethodDetector"]
+    det_MagicMethodDetector["Magic Method"]
     python_002 --> det_MagicMethodDetector
-    det_MagicNumberDetector["MagicNumberDetector"]
+    det_MagicNumberDetector["Magic Number"]
     python_002 --> det_MagicNumberDetector
-    det_NameStyleDetector["NameStyleDetector"]
-    det_NamespaceUsageDetector["NamespaceUsageDetector"]
+    det_NameStyleDetector["Name Style"]
+    det_NamespaceUsageDetector["Namespace Usage"]
     python_012 --> det_NamespaceUsageDetector
     python_020 --> det_NamespaceUsageDetector
-    det_NestingDepthDetector["NestingDepthDetector"]
+    det_NestingDepthDetector["Nesting Depth"]
     python_005 --> det_NestingDepthDetector
-    det_PythonComplexUndocumentedDetector["PythonComplexUndocumentedDetector"]
+    det_PythonComplexUndocumentedDetector["Python Complex<br/>Undocumented"]
     python_017 --> det_PythonComplexUndocumentedDetector
-    det_PythonExplicitSilenceDetector["PythonExplicitSilenceDetector"]
+    det_PythonExplicitSilenceDetector["Python Explicit<br/>Silence"]
     python_014 --> det_PythonExplicitSilenceDetector
-    det_PythonIdiomDetector["PythonIdiomDetector"]
+    det_PythonIdiomDetector["Python Idiom"]
     python_019 --> det_PythonIdiomDetector
-    det_PythonPracticalityDetector["PythonPracticalityDetector"]
+    det_PythonPracticalityDetector["Python Practicality"]
     python_013 --> det_PythonPracticalityDetector
-    det_PythonPrematureImplDetector["PythonPrematureImplDetector"]
+    det_PythonPrematureImplDetector["Python Premature<br/>Impl"]
     python_016 --> det_PythonPrematureImplDetector
-    det_PythonSimpleDocumentedDetector["PythonSimpleDocumentedDetector"]
+    det_PythonSimpleDocumentedDetector["Python Simple<br/>Documented"]
     python_018 --> det_PythonSimpleDocumentedDetector
-    det_PythonTodoStubDetector["PythonTodoStubDetector"]
+    det_PythonTodoStubDetector["Python Todo<br/>Stub"]
     python_015 --> det_PythonTodoStubDetector
-    det_ShortVariableNamesDetector["ShortVariableNamesDetector"]
+    det_ShortVariableNamesDetector["Short Variable<br/>Names"]
     python_007 --> det_ShortVariableNamesDetector
-    det_SparseCodeDetector["SparseCodeDetector"]
+    det_SparseCodeDetector["Sparse Code"]
     python_006 --> det_SparseCodeDetector
-    det_StarImportDetector["StarImportDetector"]
+    det_StarImportDetector["Star Import"]
     python_002 --> det_StarImportDetector
-    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-    class python_001 principle
-    class python_002 principle
-    class python_003 principle
-    class python_004 principle
-    class python_005 principle
-    class python_006 principle
-    class python_007 principle
-    class python_008 principle
-    class python_009 principle
-    class python_010 principle
-    class python_011 principle
-    class python_012 principle
-    class python_013 principle
-    class python_014 principle
-    class python_015 principle
-    class python_016 principle
-    class python_017 principle
-    class python_018 principle
-    class python_019 principle
-    class python_020 principle
-    class det_BareExceptDetector detector
-    class det_CircularDependencyDetector detector
-    class det_ClassSizeDetector detector
-    class det_ComplexOneLinersDetector detector
-    class det_ConsistencyDetector detector
-    class det_ContextManagerDetector detector
-    class det_CyclomaticComplexityDetector detector
-    class det_DeepInheritanceDetector detector
-    class det_DocstringDetector detector
-    class det_DuplicateImplementationDetector detector
-    class det_ExplicitnessDetector detector
-    class det_FeatureEnvyDetector detector
-    class det_GodClassDetector detector
-    class det_LineLengthDetector detector
-    class det_LongFunctionDetector detector
-    class det_MagicMethodDetector detector
-    class det_MagicNumberDetector detector
-    class det_NameStyleDetector detector
-    class det_NamespaceUsageDetector detector
-    class det_NestingDepthDetector detector
-    class det_PythonComplexUndocumentedDetector detector
-    class det_PythonExplicitSilenceDetector detector
-    class det_PythonIdiomDetector detector
-    class det_PythonPracticalityDetector detector
-    class det_PythonPrematureImplDetector detector
-    class det_PythonSimpleDocumentedDetector detector
-    class det_PythonTodoStubDetector detector
-    class det_ShortVariableNamesDetector detector
-    class det_SparseCodeDetector detector
-    class det_StarImportDetector detector
     ```
 
 ??? example "Detector Class Hierarchy"
     ```mermaid
-%%{init: {"theme": "base"}}%%
+    %%{init: {"theme": "base"}}%%
     classDiagram
         direction TB
         class ViolationDetector {
             <<abstract>>
-            +detect(context, config) list~Violation~
+            +detect(context, config)
         }
-        class BareExceptDetector {
-            +rules "python-009"
-        }
-        ViolationDetector <|-- BareExceptDetector
-        class CircularDependencyDetector {
-            +rules "python-004"
-        }
-        ViolationDetector <|-- CircularDependencyDetector
-        class ClassSizeDetector {
-            +rules "python-007"
-        }
-        ViolationDetector <|-- ClassSizeDetector
-        class ComplexOneLinersDetector {
-            +rules "python-003"
-        }
-        ViolationDetector <|-- ComplexOneLinersDetector
-        class ConsistencyDetector {
-            +rules "python-008"
-        }
-        ViolationDetector <|-- ConsistencyDetector
-        class ContextManagerDetector {
-            +rules "python-011"
-        }
-        ViolationDetector <|-- ContextManagerDetector
-        class CyclomaticComplexityDetector {
-            +rules "python-003"
-        }
-        ViolationDetector <|-- CyclomaticComplexityDetector
-        class DeepInheritanceDetector {
-            +rules "python-004"
-        }
-        ViolationDetector <|-- DeepInheritanceDetector
-        class DocstringDetector {
-            +rules "python-007"
-        }
-        ViolationDetector <|-- DocstringDetector
-        class DuplicateImplementationDetector {
-            +rules "python-011"
-        }
-        ViolationDetector <|-- DuplicateImplementationDetector
-        class ExplicitnessDetector {
-            +rules "python-010"
-        }
-        ViolationDetector <|-- ExplicitnessDetector
-        class FeatureEnvyDetector {
-            +rules "python-011"
-        }
-        ViolationDetector <|-- FeatureEnvyDetector
-        class GodClassDetector {
-            +rules "python-004"
-        }
-        ViolationDetector <|-- GodClassDetector
-        class LineLengthDetector {
-            +rules "python-001"
-        }
-        ViolationDetector <|-- LineLengthDetector
-        class LongFunctionDetector {
-            +rules "python-007"
-        }
-        ViolationDetector <|-- LongFunctionDetector
-        class MagicMethodDetector {
-            +rules "python-002"
-        }
-        ViolationDetector <|-- MagicMethodDetector
-        class MagicNumberDetector {
-            +rules "python-002"
-        }
-        ViolationDetector <|-- MagicNumberDetector
-        class NameStyleDetector {
-            +rules "python-001"
-        }
-        ViolationDetector <|-- NameStyleDetector
-        class NamespaceUsageDetector {
-            +rules "python-012, python-020"
-        }
-        ViolationDetector <|-- NamespaceUsageDetector
-        class NestingDepthDetector {
-            +rules "python-005"
-        }
-        ViolationDetector <|-- NestingDepthDetector
-        class PythonComplexUndocumentedDetector {
-            +rules "python-017"
-        }
-        ViolationDetector <|-- PythonComplexUndocumentedDetector
-        class PythonExplicitSilenceDetector {
-            +rules "python-014"
-        }
-        ViolationDetector <|-- PythonExplicitSilenceDetector
-        class PythonIdiomDetector {
-            +rules "python-019"
-        }
-        ViolationDetector <|-- PythonIdiomDetector
-        class PythonPracticalityDetector {
-            +rules "python-013"
-        }
-        ViolationDetector <|-- PythonPracticalityDetector
-        class PythonPrematureImplDetector {
-            +rules "python-016"
-        }
-        ViolationDetector <|-- PythonPrematureImplDetector
-        class PythonSimpleDocumentedDetector {
-            +rules "python-018"
-        }
-        ViolationDetector <|-- PythonSimpleDocumentedDetector
-        class PythonTodoStubDetector {
-            +rules "python-015"
-        }
-        ViolationDetector <|-- PythonTodoStubDetector
-        class ShortVariableNamesDetector {
-            +rules "python-007"
-        }
-        ViolationDetector <|-- ShortVariableNamesDetector
-        class SparseCodeDetector {
-            +rules "python-006"
-        }
-        ViolationDetector <|-- SparseCodeDetector
-        class StarImportDetector {
-            +rules "python-002"
-        }
-        ViolationDetector <|-- StarImportDetector
-        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-        class ViolationDetector abstract
-        class BareExceptDetector,CircularDependencyDetector,ClassSizeDetector,ComplexOneLinersDetector,ConsistencyDetector,ContextManagerDetector,CyclomaticComplexityDetector,DeepInheritanceDetector,DocstringDetector,DuplicateImplementationDetector,ExplicitnessDetector,FeatureEnvyDetector,GodClassDetector,LineLengthDetector,LongFunctionDetector,MagicMethodDetector,MagicNumberDetector,NameStyleDetector,NamespaceUsageDetector,NestingDepthDetector,PythonComplexUndocumentedDetector,PythonExplicitSilenceDetector,PythonIdiomDetector,PythonPracticalityDetector,PythonPrematureImplDetector,PythonSimpleDocumentedDetector,PythonTodoStubDetector,ShortVariableNamesDetector,SparseCodeDetector,StarImportDetector detector
+        class det_01["Bare Except"]
+        ViolationDetector <|-- det_01
+        class det_02["Circular Dependency"]
+        ViolationDetector <|-- det_02
+        class det_03["Class Size"]
+        ViolationDetector <|-- det_03
+        class det_04["Complex One Liners"]
+        ViolationDetector <|-- det_04
+        class det_05["Consistency"]
+        ViolationDetector <|-- det_05
+        class det_06["Context Manager"]
+        ViolationDetector <|-- det_06
+        class det_07["Cyclomatic Complexity"]
+        ViolationDetector <|-- det_07
+        class det_08["Deep Inheritance"]
+        ViolationDetector <|-- det_08
+        class det_09["Docstring"]
+        ViolationDetector <|-- det_09
+        class det_10["Duplicate Implementation"]
+        ViolationDetector <|-- det_10
+        class det_11["Explicitness"]
+        ViolationDetector <|-- det_11
+        class det_12["Feature Envy"]
+        ViolationDetector <|-- det_12
+        class det_13["God Class"]
+        ViolationDetector <|-- det_13
+        class det_14["Line Length"]
+        ViolationDetector <|-- det_14
+        class det_15["Long Function"]
+        ViolationDetector <|-- det_15
+        class det_16["Magic Method"]
+        ViolationDetector <|-- det_16
+        class det_17["Magic Number"]
+        ViolationDetector <|-- det_17
+        class det_18["Name Style"]
+        ViolationDetector <|-- det_18
+        class det_19["Namespace Usage"]
+        ViolationDetector <|-- det_19
+        class det_20["Nesting Depth"]
+        ViolationDetector <|-- det_20
+        class det_21["Python Complex Undocumented"]
+        ViolationDetector <|-- det_21
+        class det_22["Python Explicit Silence"]
+        ViolationDetector <|-- det_22
+        class det_23["Python Idiom"]
+        ViolationDetector <|-- det_23
+        class det_24["Python Practicality"]
+        ViolationDetector <|-- det_24
+        class det_25["Python Premature Impl"]
+        ViolationDetector <|-- det_25
+        class det_26["Python Simple Documented"]
+        ViolationDetector <|-- det_26
+        class det_27["Python Todo Stub"]
+        ViolationDetector <|-- det_27
+        class det_28["Short Variable Names"]
+        ViolationDetector <|-- det_28
+        class det_29["Sparse Code"]
+        ViolationDetector <|-- det_29
+        class det_30["Star Import"]
+        ViolationDetector <|-- det_30
     ```
 
 ??? example "Analysis Pipeline"
     ```mermaid
-%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
     flowchart TD
-    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]
+    Source(["Source Code"]) --> Parse["Parse & Tokenize"]
     Parse --> Metrics["Compute Metrics"]
     Metrics --> Pipeline{"30 Detectors"}
     Pipeline --> Collect["Aggregate Violations"]
-    Collect --> Result(["✅ AnalysisResult · 20 principles"])
-
-    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px
-    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px
-    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px
-    class Source,Result io
-    class Parse,Metrics,Collect process
-    class Pipeline decision
+    Collect --> Result(["AnalysisResult<br/>20 principles"])
     ```
 
 ??? example "Analysis States"
     ```mermaid
-%%{init: {"theme": "base"}}%%
+    %%{init: {"theme": "base"}}%%
     stateDiagram-v2
         [*] --> Ready
         Ready --> Parsing : analyze(code)

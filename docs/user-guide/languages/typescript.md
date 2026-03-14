@@ -453,120 +453,161 @@ TypeScript's power lies in its type system — but that power is easily undermin
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-    graph LR
-    ts_001["ts-001<br/>Avoid 'any' type"]
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    graph TD
+    ts_001["ts-001<br/>Avoid &#x27;any&#x27; type"]
     ts_002["ts-002<br/>Use strict mode"]
-    ts_003["ts-003<br/>Prefer interfaces over type aliases for ..."]
-    ts_004["ts-004<br/>Always specify return types"]
-    ts_005["ts-005<br/>Use readonly when appropriate"]
+    ts_003["ts-003<br/>Prefer interfaces over ty..."]
+    ts_004["ts-004<br/>Always specify return typ..."]
+    ts_005["ts-005<br/>Use readonly when appropr..."]
     ts_006["ts-006<br/>Leverage type guards"]
     ts_007["ts-007<br/>Use utility types"]
     ts_008["ts-008<br/>Avoid non-null assertions"]
-    ts_009["ts-009<br/>Use enums or const assertions appropriat..."]
-    ts_010["ts-010<br/>Prefer unknown over any for uncertain ty..."]
-    ts_011["ts-011<br/>Use optional chaining instead of manual ..."]
-    ts_012["ts-012<br/>Prefer for-of and array methods over ind..."]
-    ts_013["ts-013<br/>Prefer async/await over raw promise chai..."]
-    ts_014["ts-014<br/>Prefer named exports over default export..."]
-    ts_015["ts-015<br/>Avoid catch-all types like Object or {}"]
-    ts_016["ts-016<br/>Avoid console usage in production code"]
-    ts_017["ts-017<br/>Use ES module imports instead of require..."]
-    ts_018["ts-018<br/>Use template literals instead of string ..."]
-    det_TsAnyUsageDetector["TsAnyUsageDetector"]
+    ts_009["ts-009<br/>Use enums or const assert..."]
+    ts_010["ts-010<br/>Prefer unknown over any f..."]
+    ts_011["ts-011<br/>Use optional chaining ins..."]
+    ts_012["ts-012<br/>Prefer for-of and array m..."]
+    ts_013["ts-013<br/>Prefer async/await over r..."]
+    ts_014["ts-014<br/>Prefer named exports over..."]
+    ts_015["ts-015<br/>Avoid catch-all types lik..."]
+    ts_016["ts-016<br/>Avoid console usage in pr..."]
+    ts_017["ts-017<br/>Use ES module imports ins..."]
+    ts_018["ts-018<br/>Use template literals ins..."]
+    det_TsAnyUsageDetector["Ts Any<br/>Usage"]
     ts_001 --> det_TsAnyUsageDetector
-    det_TsAsyncAwaitDetector["TsAsyncAwaitDetector"]
+    det_TsAsyncAwaitDetector["Ts Async<br/>Await"]
     ts_013 --> det_TsAsyncAwaitDetector
-    det_TsCatchAllTypeDetector["TsCatchAllTypeDetector"]
+    det_TsCatchAllTypeDetector["Ts Catch<br/>All Type"]
     ts_015 --> det_TsCatchAllTypeDetector
-    det_TsConsoleUsageDetector["TsConsoleUsageDetector"]
+    det_TsConsoleUsageDetector["Ts Console<br/>Usage"]
     ts_016 --> det_TsConsoleUsageDetector
-    det_TsDefaultExportDetector["TsDefaultExportDetector"]
+    det_TsDefaultExportDetector["Ts Default<br/>Export"]
     ts_014 --> det_TsDefaultExportDetector
-    det_TsEnumConstDetector["TsEnumConstDetector"]
+    det_TsEnumConstDetector["Ts Enum<br/>Const"]
     ts_009 --> det_TsEnumConstDetector
-    det_TsForOfDetector["TsForOfDetector"]
+    det_TsForOfDetector["Ts For<br/>Of"]
     ts_012 --> det_TsForOfDetector
-    det_TsImportOrderDetector["TsImportOrderDetector"]
+    det_TsImportOrderDetector["Ts Import<br/>Order"]
     ts_017 --> det_TsImportOrderDetector
-    det_TsIndexLoopDetector["TsIndexLoopDetector"]
+    det_TsIndexLoopDetector["Ts Index<br/>Loop"]
     ts_012 --> det_TsIndexLoopDetector
-    det_TsInterfacePreferenceDetector["TsInterfacePreferenceDetector"]
+    det_TsInterfacePreferenceDetector["Ts Interface<br/>Preference"]
     ts_003 --> det_TsInterfacePreferenceDetector
-    det_TsNamedExportDetector["TsNamedExportDetector"]
+    det_TsNamedExportDetector["Ts Named<br/>Export"]
     ts_014 --> det_TsNamedExportDetector
-    det_TsNoConsoleDetector["TsNoConsoleDetector"]
+    det_TsNoConsoleDetector["Ts No<br/>Console"]
     ts_016 --> det_TsNoConsoleDetector
-    det_TsNonNullAssertionDetector["TsNonNullAssertionDetector"]
+    det_TsNonNullAssertionDetector["Ts Non<br/>Null Assertion"]
     ts_008 --> det_TsNonNullAssertionDetector
-    det_TsObjectTypeDetector["TsObjectTypeDetector"]
+    det_TsObjectTypeDetector["Ts Object<br/>Type"]
     ts_015 --> det_TsObjectTypeDetector
-    det_TsOptionalChainingDetector["TsOptionalChainingDetector"]
+    det_TsOptionalChainingDetector["Ts Optional<br/>Chaining"]
     ts_011 --> det_TsOptionalChainingDetector
-    det_TsPromiseChainDetector["TsPromiseChainDetector"]
+    det_TsPromiseChainDetector["Ts Promise<br/>Chain"]
     ts_013 --> det_TsPromiseChainDetector
-    det_TsReadonlyDetector["TsReadonlyDetector"]
+    det_TsReadonlyDetector["Ts Readonly"]
     ts_005 --> det_TsReadonlyDetector
-    det_TsRequireImportDetector["TsRequireImportDetector"]
+    det_TsRequireImportDetector["Ts Require<br/>Import"]
     ts_017 --> det_TsRequireImportDetector
-    det_TsReturnTypeDetector["TsReturnTypeDetector"]
+    det_TsReturnTypeDetector["Ts Return<br/>Type"]
     ts_004 --> det_TsReturnTypeDetector
-    det_TsStrictModeDetector["TsStrictModeDetector"]
+    det_TsStrictModeDetector["Ts Strict<br/>Mode"]
     ts_002 --> det_TsStrictModeDetector
-    det_TsStringConcatDetector["TsStringConcatDetector"]
+    det_TsStringConcatDetector["Ts String<br/>Concat"]
     ts_018 --> det_TsStringConcatDetector
-    det_TsTemplateLiteralDetector["TsTemplateLiteralDetector"]
+    det_TsTemplateLiteralDetector["Ts Template<br/>Literal"]
     ts_018 --> det_TsTemplateLiteralDetector
-    det_TsTypeGuardDetector["TsTypeGuardDetector"]
+    det_TsTypeGuardDetector["Ts Type<br/>Guard"]
     ts_006 --> det_TsTypeGuardDetector
-    det_TsUnknownOverAnyDetector["TsUnknownOverAnyDetector"]
+    det_TsUnknownOverAnyDetector["Ts Unknown<br/>Over Any"]
     ts_010 --> det_TsUnknownOverAnyDetector
-    det_TsUtilityTypesDetector["TsUtilityTypesDetector"]
+    det_TsUtilityTypesDetector["Ts Utility<br/>Types"]
     ts_007 --> det_TsUtilityTypesDetector
-    classDef principle fill:#4051b5,color:#fff,stroke:none
-    classDef detector fill:#26a269,color:#fff,stroke:none
-    class ts_001 principle
-    class ts_002 principle
-    class ts_003 principle
-    class ts_004 principle
-    class ts_005 principle
-    class ts_006 principle
-    class ts_007 principle
-    class ts_008 principle
-    class ts_009 principle
-    class ts_010 principle
-    class ts_011 principle
-    class ts_012 principle
-    class ts_013 principle
-    class ts_014 principle
-    class ts_015 principle
-    class ts_016 principle
-    class ts_017 principle
-    class ts_018 principle
-    class det_TsAnyUsageDetector detector
-    class det_TsAsyncAwaitDetector detector
-    class det_TsCatchAllTypeDetector detector
-    class det_TsConsoleUsageDetector detector
-    class det_TsDefaultExportDetector detector
-    class det_TsEnumConstDetector detector
-    class det_TsForOfDetector detector
-    class det_TsImportOrderDetector detector
-    class det_TsIndexLoopDetector detector
-    class det_TsInterfacePreferenceDetector detector
-    class det_TsNamedExportDetector detector
-    class det_TsNoConsoleDetector detector
-    class det_TsNonNullAssertionDetector detector
-    class det_TsObjectTypeDetector detector
-    class det_TsOptionalChainingDetector detector
-    class det_TsPromiseChainDetector detector
-    class det_TsReadonlyDetector detector
-    class det_TsRequireImportDetector detector
-    class det_TsReturnTypeDetector detector
-    class det_TsStrictModeDetector detector
-    class det_TsStringConcatDetector detector
-    class det_TsTemplateLiteralDetector detector
-    class det_TsTypeGuardDetector detector
-    class det_TsUnknownOverAnyDetector detector
-    class det_TsUtilityTypesDetector detector
+    ```
+
+??? example "Detector Class Hierarchy"
+    ```mermaid
+    %%{init: {"theme": "base"}}%%
+    classDiagram
+        direction TB
+        class ViolationDetector {
+            <<abstract>>
+            +detect(context, config)
+        }
+        class det_01["Ts Any Usage"]
+        ViolationDetector <|-- det_01
+        class det_02["Ts Async Await"]
+        ViolationDetector <|-- det_02
+        class det_03["Ts Catch All Type"]
+        ViolationDetector <|-- det_03
+        class det_04["Ts Console Usage"]
+        ViolationDetector <|-- det_04
+        class det_05["Ts Default Export"]
+        ViolationDetector <|-- det_05
+        class det_06["Ts Enum Const"]
+        ViolationDetector <|-- det_06
+        class det_07["Ts For Of"]
+        ViolationDetector <|-- det_07
+        class det_08["Ts Import Order"]
+        ViolationDetector <|-- det_08
+        class det_09["Ts Index Loop"]
+        ViolationDetector <|-- det_09
+        class det_10["Ts Interface Preference"]
+        ViolationDetector <|-- det_10
+        class det_11["Ts Named Export"]
+        ViolationDetector <|-- det_11
+        class det_12["Ts No Console"]
+        ViolationDetector <|-- det_12
+        class det_13["Ts Non Null Assertion"]
+        ViolationDetector <|-- det_13
+        class det_14["Ts Object Type"]
+        ViolationDetector <|-- det_14
+        class det_15["Ts Optional Chaining"]
+        ViolationDetector <|-- det_15
+        class det_16["Ts Promise Chain"]
+        ViolationDetector <|-- det_16
+        class det_17["Ts Readonly"]
+        ViolationDetector <|-- det_17
+        class det_18["Ts Require Import"]
+        ViolationDetector <|-- det_18
+        class det_19["Ts Return Type"]
+        ViolationDetector <|-- det_19
+        class det_20["Ts Strict Mode"]
+        ViolationDetector <|-- det_20
+        class det_21["Ts String Concat"]
+        ViolationDetector <|-- det_21
+        class det_22["Ts Template Literal"]
+        ViolationDetector <|-- det_22
+        class det_23["Ts Type Guard"]
+        ViolationDetector <|-- det_23
+        class det_24["Ts Unknown Over Any"]
+        ViolationDetector <|-- det_24
+        class det_25["Ts Utility Types"]
+        ViolationDetector <|-- det_25
+    ```
+
+??? example "Analysis Pipeline"
+    ```mermaid
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TD
+    Source(["Source Code"]) --> Parse["Parse & Tokenize"]
+    Parse --> Metrics["Compute Metrics"]
+    Metrics --> Pipeline{"25 Detectors"}
+    Pipeline --> Collect["Aggregate Violations"]
+    Collect --> Result(["AnalysisResult<br/>18 principles"])
+    ```
+
+??? example "Analysis States"
+    ```mermaid
+    %%{init: {"theme": "base"}}%%
+    stateDiagram-v2
+        [*] --> Ready
+        Ready --> Parsing : analyze(code)
+        Parsing --> Computing : AST ready
+        Computing --> Detecting : metrics ready
+        Detecting --> Reporting : 25 detectors run
+        Reporting --> [*] : AnalysisResult
+        Parsing --> Reporting : parse error (best-effort)
     ```
 
 ## Configuration

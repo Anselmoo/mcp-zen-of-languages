@@ -276,64 +276,98 @@ Ruby is designed for programmer happiness — expressive, elegant, optimized for
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-    graph LR
-    ruby_001["ruby-001<br/>Convention over configuration"]
-    ruby_002["ruby-002<br/>DRY (Don't Repeat Yourself)"]
-    ruby_003["ruby-003<br/>Prefer blocks over lambdas/procs"]
-    ruby_004["ruby-004<br/>Avoid monkey-patching core classes"]
-    ruby_005["ruby-005<br/>Use meaningful method names with ?/! con..."]
-    ruby_006["ruby-006<br/>Keep method chains readable"]
-    ruby_007["ruby-007<br/>Prefer symbols over strings for keys"]
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    graph TD
+    ruby_001["ruby-001<br/>Convention over configura..."]
+    ruby_002["ruby-002<br/>DRY (Don&#x27;t Repeat Yoursel..."]
+    ruby_003["ruby-003<br/>Prefer blocks over lambda..."]
+    ruby_004["ruby-004<br/>Avoid monkey-patching cor..."]
+    ruby_005["ruby-005<br/>Use meaningful method nam..."]
+    ruby_006["ruby-006<br/>Keep method chains readab..."]
+    ruby_007["ruby-007<br/>Prefer symbols over strin..."]
     ruby_008["ruby-008<br/>Use guard clauses"]
-    ruby_009["ruby-009<br/>Avoid needless metaprogramming"]
-    ruby_010["ruby-010<br/>Use Ruby's expressive syntax"]
-    ruby_011["ruby-011<br/>Prefer fail over raise for exceptions"]
-    det_RubyBlockPreferenceDetector["RubyBlockPreferenceDetector"]
+    ruby_009["ruby-009<br/>Avoid needless metaprogra..."]
+    ruby_010["ruby-010<br/>Use Ruby&#x27;s expressive syn..."]
+    ruby_011["ruby-011<br/>Prefer fail over raise fo..."]
+    det_RubyBlockPreferenceDetector["Ruby Block<br/>Preference"]
     ruby_003 --> det_RubyBlockPreferenceDetector
-    det_RubyDryDetector["RubyDryDetector"]
+    det_RubyDryDetector["Ruby Dry"]
     ruby_002 --> det_RubyDryDetector
-    det_RubyExpressiveSyntaxDetector["RubyExpressiveSyntaxDetector"]
+    det_RubyExpressiveSyntaxDetector["Ruby Expressive<br/>Syntax"]
     ruby_010 --> det_RubyExpressiveSyntaxDetector
-    det_RubyGuardClauseDetector["RubyGuardClauseDetector"]
+    det_RubyGuardClauseDetector["Ruby Guard<br/>Clause"]
     ruby_008 --> det_RubyGuardClauseDetector
-    det_RubyMetaprogrammingDetector["RubyMetaprogrammingDetector"]
+    det_RubyMetaprogrammingDetector["Ruby Metaprogramming"]
     ruby_009 --> det_RubyMetaprogrammingDetector
-    det_RubyMethodChainDetector["RubyMethodChainDetector"]
+    det_RubyMethodChainDetector["Ruby Method<br/>Chain"]
     ruby_006 --> det_RubyMethodChainDetector
-    det_RubyMethodNamingDetector["RubyMethodNamingDetector"]
+    det_RubyMethodNamingDetector["Ruby Method<br/>Naming"]
     ruby_005 --> det_RubyMethodNamingDetector
-    det_RubyMonkeyPatchDetector["RubyMonkeyPatchDetector"]
+    det_RubyMonkeyPatchDetector["Ruby Monkey<br/>Patch"]
     ruby_004 --> det_RubyMonkeyPatchDetector
-    det_RubyNamingConventionDetector["RubyNamingConventionDetector"]
+    det_RubyNamingConventionDetector["Ruby Naming<br/>Convention"]
     ruby_001 --> det_RubyNamingConventionDetector
-    det_RubyPreferFailDetector["RubyPreferFailDetector"]
+    det_RubyPreferFailDetector["Ruby Prefer<br/>Fail"]
     ruby_011 --> det_RubyPreferFailDetector
-    det_RubySymbolKeysDetector["RubySymbolKeysDetector"]
+    det_RubySymbolKeysDetector["Ruby Symbol<br/>Keys"]
     ruby_007 --> det_RubySymbolKeysDetector
-    classDef principle fill:#4051b5,color:#fff,stroke:none
-    classDef detector fill:#26a269,color:#fff,stroke:none
-    class ruby_001 principle
-    class ruby_002 principle
-    class ruby_003 principle
-    class ruby_004 principle
-    class ruby_005 principle
-    class ruby_006 principle
-    class ruby_007 principle
-    class ruby_008 principle
-    class ruby_009 principle
-    class ruby_010 principle
-    class ruby_011 principle
-    class det_RubyBlockPreferenceDetector detector
-    class det_RubyDryDetector detector
-    class det_RubyExpressiveSyntaxDetector detector
-    class det_RubyGuardClauseDetector detector
-    class det_RubyMetaprogrammingDetector detector
-    class det_RubyMethodChainDetector detector
-    class det_RubyMethodNamingDetector detector
-    class det_RubyMonkeyPatchDetector detector
-    class det_RubyNamingConventionDetector detector
-    class det_RubyPreferFailDetector detector
-    class det_RubySymbolKeysDetector detector
+    ```
+
+??? example "Detector Class Hierarchy"
+    ```mermaid
+    %%{init: {"theme": "base"}}%%
+    classDiagram
+        direction TB
+        class ViolationDetector {
+            <<abstract>>
+            +detect(context, config)
+        }
+        class det_01["Ruby Block Preference"]
+        ViolationDetector <|-- det_01
+        class det_02["Ruby Dry"]
+        ViolationDetector <|-- det_02
+        class det_03["Ruby Expressive Syntax"]
+        ViolationDetector <|-- det_03
+        class det_04["Ruby Guard Clause"]
+        ViolationDetector <|-- det_04
+        class det_05["Ruby Metaprogramming"]
+        ViolationDetector <|-- det_05
+        class det_06["Ruby Method Chain"]
+        ViolationDetector <|-- det_06
+        class det_07["Ruby Method Naming"]
+        ViolationDetector <|-- det_07
+        class det_08["Ruby Monkey Patch"]
+        ViolationDetector <|-- det_08
+        class det_09["Ruby Naming Convention"]
+        ViolationDetector <|-- det_09
+        class det_10["Ruby Prefer Fail"]
+        ViolationDetector <|-- det_10
+        class det_11["Ruby Symbol Keys"]
+        ViolationDetector <|-- det_11
+    ```
+
+??? example "Analysis Pipeline"
+    ```mermaid
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TD
+    Source(["Source Code"]) --> Parse["Parse & Tokenize"]
+    Parse --> Metrics["Compute Metrics"]
+    Metrics --> Pipeline{"11 Detectors"}
+    Pipeline --> Collect["Aggregate Violations"]
+    Collect --> Result(["AnalysisResult<br/>11 principles"])
+    ```
+
+??? example "Analysis States"
+    ```mermaid
+    %%{init: {"theme": "base"}}%%
+    stateDiagram-v2
+        [*] --> Ready
+        Ready --> Parsing : analyze(code)
+        Parsing --> Computing : AST ready
+        Computing --> Detecting : metrics ready
+        Detecting --> Reporting : 11 detectors run
+        Reporting --> [*] : AnalysisResult
+        Parsing --> Reporting : parse error (best-effort)
     ```
 
 ## Configuration

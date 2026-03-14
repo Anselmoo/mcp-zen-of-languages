@@ -403,99 +403,133 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-    graph LR
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    graph TD
     js_001["js-001<br/>Avoid callback hell"]
-    js_002["js-002<br/>Prefer const over let, never var"]
+    js_002["js-002<br/>Prefer const over let, ne..."]
     js_003["js-003<br/>Use strict equality"]
     js_004["js-004<br/>Avoid global state"]
-    js_005["js-005<br/>Functions should do one thing"]
+    js_005["js-005<br/>Functions should do one t..."]
     js_006["js-006<br/>Use modern ES6+ features"]
     js_007["js-007<br/>Handle errors explicitly"]
-    js_008["js-008<br/>Avoid magic numbers and strings"]
-    js_009["js-009<br/>Prefer composition over inheritance"]
-    js_010["js-010<br/>Keep functions pure when possible"]
+    js_008["js-008<br/>Avoid magic numbers and s..."]
+    js_009["js-009<br/>Prefer composition over i..."]
+    js_010["js-010<br/>Keep functions pure when ..."]
     js_011["js-011<br/>Use meaningful names"]
-    js_012["js-012<br/>Use destructuring for assignment"]
-    js_013["js-013<br/>Use object spread over Object.assign"]
+    js_012["js-012<br/>Use destructuring for ass..."]
+    js_013["js-013<br/>Use object spread over Ob..."]
     js_014["js-014<br/>Avoid with statement"]
-    js_015["js-015<br/>Limit function parameter count"]
+    js_015["js-015<br/>Limit function parameter ..."]
     js_016["js-016<br/>No eval()"]
-    js_017["js-017<br/>Prefer Array.from/spread over arguments"]
-    js_018["js-018<br/>No prototype mutation on built-in object..."]
-    det_JsAsyncErrorHandlingDetector["JsAsyncErrorHandlingDetector"]
+    js_017["js-017<br/>Prefer Array.from/spread ..."]
+    js_018["js-018<br/>No prototype mutation on ..."]
+    det_JsAsyncErrorHandlingDetector["Js Async<br/>Error Handling"]
     js_007 --> det_JsAsyncErrorHandlingDetector
-    det_JsCallbackNestingDetector["JsCallbackNestingDetector"]
+    det_JsCallbackNestingDetector["Js Callback<br/>Nesting"]
     js_001 --> det_JsCallbackNestingDetector
-    det_JsDestructuringDetector["JsDestructuringDetector"]
+    det_JsDestructuringDetector["Js Destructuring"]
     js_012 --> det_JsDestructuringDetector
-    det_JsFunctionLengthDetector["JsFunctionLengthDetector"]
+    det_JsFunctionLengthDetector["Js Function<br/>Length"]
     js_005 --> det_JsFunctionLengthDetector
-    det_JsGlobalStateDetector["JsGlobalStateDetector"]
+    det_JsGlobalStateDetector["Js Global<br/>State"]
     js_004 --> det_JsGlobalStateDetector
-    det_JsInheritanceDepthDetector["JsInheritanceDepthDetector"]
+    det_JsInheritanceDepthDetector["Js Inheritance<br/>Depth"]
     js_009 --> det_JsInheritanceDepthDetector
-    det_JsMagicNumbersDetector["JsMagicNumbersDetector"]
+    det_JsMagicNumbersDetector["Js Magic<br/>Numbers"]
     js_008 --> det_JsMagicNumbersDetector
-    det_JsMeaningfulNamesDetector["JsMeaningfulNamesDetector"]
+    det_JsMeaningfulNamesDetector["Js Meaningful<br/>Names"]
     js_011 --> det_JsMeaningfulNamesDetector
-    det_JsModernFeaturesDetector["JsModernFeaturesDetector"]
+    det_JsModernFeaturesDetector["Js Modern<br/>Features"]
     js_006 --> det_JsModernFeaturesDetector
-    det_JsNoArgumentsDetector["JsNoArgumentsDetector"]
+    det_JsNoArgumentsDetector["Js No<br/>Arguments"]
     js_017 --> det_JsNoArgumentsDetector
-    det_JsNoEvalDetector["JsNoEvalDetector"]
+    det_JsNoEvalDetector["Js No<br/>Eval"]
     js_016 --> det_JsNoEvalDetector
-    det_JsNoPrototypeMutationDetector["JsNoPrototypeMutationDetector"]
+    det_JsNoPrototypeMutationDetector["Js No<br/>Prototype Mutation"]
     js_018 --> det_JsNoPrototypeMutationDetector
-    det_JsNoVarDetector["JsNoVarDetector"]
+    det_JsNoVarDetector["Js No<br/>Var"]
     js_002 --> det_JsNoVarDetector
-    det_JsNoWithDetector["JsNoWithDetector"]
+    det_JsNoWithDetector["Js No<br/>With"]
     js_014 --> det_JsNoWithDetector
-    det_JsObjectSpreadDetector["JsObjectSpreadDetector"]
+    det_JsObjectSpreadDetector["Js Object<br/>Spread"]
     js_013 --> det_JsObjectSpreadDetector
-    det_JsParamCountDetector["JsParamCountDetector"]
+    det_JsParamCountDetector["Js Param<br/>Count"]
     js_015 --> det_JsParamCountDetector
-    det_JsPureFunctionDetector["JsPureFunctionDetector"]
+    det_JsPureFunctionDetector["Js Pure<br/>Function"]
     js_010 --> det_JsPureFunctionDetector
-    det_JsStrictEqualityDetector["JsStrictEqualityDetector"]
+    det_JsStrictEqualityDetector["Js Strict<br/>Equality"]
     js_003 --> det_JsStrictEqualityDetector
-    classDef principle fill:#4051b5,color:#fff,stroke:none
-    classDef detector fill:#26a269,color:#fff,stroke:none
-    class js_001 principle
-    class js_002 principle
-    class js_003 principle
-    class js_004 principle
-    class js_005 principle
-    class js_006 principle
-    class js_007 principle
-    class js_008 principle
-    class js_009 principle
-    class js_010 principle
-    class js_011 principle
-    class js_012 principle
-    class js_013 principle
-    class js_014 principle
-    class js_015 principle
-    class js_016 principle
-    class js_017 principle
-    class js_018 principle
-    class det_JsAsyncErrorHandlingDetector detector
-    class det_JsCallbackNestingDetector detector
-    class det_JsDestructuringDetector detector
-    class det_JsFunctionLengthDetector detector
-    class det_JsGlobalStateDetector detector
-    class det_JsInheritanceDepthDetector detector
-    class det_JsMagicNumbersDetector detector
-    class det_JsMeaningfulNamesDetector detector
-    class det_JsModernFeaturesDetector detector
-    class det_JsNoArgumentsDetector detector
-    class det_JsNoEvalDetector detector
-    class det_JsNoPrototypeMutationDetector detector
-    class det_JsNoVarDetector detector
-    class det_JsNoWithDetector detector
-    class det_JsObjectSpreadDetector detector
-    class det_JsParamCountDetector detector
-    class det_JsPureFunctionDetector detector
-    class det_JsStrictEqualityDetector detector
+    ```
+
+??? example "Detector Class Hierarchy"
+    ```mermaid
+    %%{init: {"theme": "base"}}%%
+    classDiagram
+        direction TB
+        class ViolationDetector {
+            <<abstract>>
+            +detect(context, config)
+        }
+        class det_01["Js Async Error Handling"]
+        ViolationDetector <|-- det_01
+        class det_02["Js Callback Nesting"]
+        ViolationDetector <|-- det_02
+        class det_03["Js Destructuring"]
+        ViolationDetector <|-- det_03
+        class det_04["Js Function Length"]
+        ViolationDetector <|-- det_04
+        class det_05["Js Global State"]
+        ViolationDetector <|-- det_05
+        class det_06["Js Inheritance Depth"]
+        ViolationDetector <|-- det_06
+        class det_07["Js Magic Numbers"]
+        ViolationDetector <|-- det_07
+        class det_08["Js Meaningful Names"]
+        ViolationDetector <|-- det_08
+        class det_09["Js Modern Features"]
+        ViolationDetector <|-- det_09
+        class det_10["Js No Arguments"]
+        ViolationDetector <|-- det_10
+        class det_11["Js No Eval"]
+        ViolationDetector <|-- det_11
+        class det_12["Js No Prototype Mutation"]
+        ViolationDetector <|-- det_12
+        class det_13["Js No Var"]
+        ViolationDetector <|-- det_13
+        class det_14["Js No With"]
+        ViolationDetector <|-- det_14
+        class det_15["Js Object Spread"]
+        ViolationDetector <|-- det_15
+        class det_16["Js Param Count"]
+        ViolationDetector <|-- det_16
+        class det_17["Js Pure Function"]
+        ViolationDetector <|-- det_17
+        class det_18["Js Strict Equality"]
+        ViolationDetector <|-- det_18
+    ```
+
+??? example "Analysis Pipeline"
+    ```mermaid
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TD
+    Source(["Source Code"]) --> Parse["Parse & Tokenize"]
+    Parse --> Metrics["Compute Metrics"]
+    Metrics --> Pipeline{"18 Detectors"}
+    Pipeline --> Collect["Aggregate Violations"]
+    Collect --> Result(["AnalysisResult<br/>18 principles"])
+    ```
+
+??? example "Analysis States"
+    ```mermaid
+    %%{init: {"theme": "base"}}%%
+    stateDiagram-v2
+        [*] --> Ready
+        Ready --> Parsing : analyze(code)
+        Parsing --> Computing : AST ready
+        Computing --> Detecting : metrics ready
+        Detecting --> Reporting : 18 detectors run
+        Reporting --> [*] : AnalysisResult
+        Parsing --> Reporting : parse error (best-effort)
     ```
 
 ## Configuration

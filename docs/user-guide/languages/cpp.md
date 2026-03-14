@@ -314,74 +314,108 @@ Modern C++ (C++11 through C++20) is a fundamentally different language from the 
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-    graph LR
-    cpp_001["cpp-001<br/>Use RAII for resource management"]
-    cpp_002["cpp-002<br/>Prefer smart pointers over raw pointers"]
-    cpp_003["cpp-003<br/>Use auto for type deduction"]
-    cpp_004["cpp-004<br/>Prefer nullptr over NULL or 0"]
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    graph TD
+    cpp_001["cpp-001<br/>Use RAII for resource man..."]
+    cpp_002["cpp-002<br/>Prefer smart pointers ove..."]
+    cpp_003["cpp-003<br/>Use auto for type deducti..."]
+    cpp_004["cpp-004<br/>Prefer nullptr over NULL ..."]
     cpp_005["cpp-005<br/>Use range-based for loops"]
-    cpp_006["cpp-006<br/>Avoid manual memory allocation"]
+    cpp_006["cpp-006<br/>Avoid manual memory alloc..."]
     cpp_007["cpp-007<br/>Use const correctness"]
     cpp_008["cpp-008<br/>Avoid C-style casts"]
-    cpp_009["cpp-009<br/>Follow Rule of Zero/Three/Five"]
-    cpp_010["cpp-010<br/>Use std::move for rvalue references"]
+    cpp_009["cpp-009<br/>Follow Rule of Zero/Three..."]
+    cpp_010["cpp-010<br/>Use std::move for rvalue ..."]
     cpp_011["cpp-011<br/>Avoid global variables"]
-    cpp_012["cpp-012<br/>Use override and final keywords"]
-    cpp_013["cpp-013<br/>Prefer std::optional over null pointers"]
-    det_CppAutoDetector["CppAutoDetector"]
+    cpp_012["cpp-012<br/>Use override and final ke..."]
+    cpp_013["cpp-013<br/>Prefer std::optional over..."]
+    det_CppAutoDetector["Cpp Auto"]
     cpp_003 --> det_CppAutoDetector
-    det_CppAvoidGlobalsDetector["CppAvoidGlobalsDetector"]
+    det_CppAvoidGlobalsDetector["Cpp Avoid<br/>Globals"]
     cpp_011 --> det_CppAvoidGlobalsDetector
-    det_CppCStyleCastDetector["CppCStyleCastDetector"]
+    det_CppCStyleCastDetector["Cpp C<br/>Style Cast"]
     cpp_008 --> det_CppCStyleCastDetector
-    det_CppConstCorrectnessDetector["CppConstCorrectnessDetector"]
+    det_CppConstCorrectnessDetector["Cpp Const<br/>Correctness"]
     cpp_007 --> det_CppConstCorrectnessDetector
-    det_CppManualAllocationDetector["CppManualAllocationDetector"]
+    det_CppManualAllocationDetector["Cpp Manual<br/>Allocation"]
     cpp_006 --> det_CppManualAllocationDetector
-    det_CppMoveDetector["CppMoveDetector"]
+    det_CppMoveDetector["Cpp Move"]
     cpp_010 --> det_CppMoveDetector
-    det_CppNullptrDetector["CppNullptrDetector"]
+    det_CppNullptrDetector["Cpp Nullptr"]
     cpp_004 --> det_CppNullptrDetector
-    det_CppOptionalDetector["CppOptionalDetector"]
+    det_CppOptionalDetector["Cpp Optional"]
     cpp_013 --> det_CppOptionalDetector
-    det_CppOverrideFinalDetector["CppOverrideFinalDetector"]
+    det_CppOverrideFinalDetector["Cpp Override<br/>Final"]
     cpp_012 --> det_CppOverrideFinalDetector
-    det_CppRaiiDetector["CppRaiiDetector"]
+    det_CppRaiiDetector["Cpp Raii"]
     cpp_001 --> det_CppRaiiDetector
-    det_CppRangeForDetector["CppRangeForDetector"]
+    det_CppRangeForDetector["Cpp Range<br/>For"]
     cpp_005 --> det_CppRangeForDetector
-    det_CppRuleOfFiveDetector["CppRuleOfFiveDetector"]
+    det_CppRuleOfFiveDetector["Cpp Rule<br/>Of Five"]
     cpp_009 --> det_CppRuleOfFiveDetector
-    det_CppSmartPointerDetector["CppSmartPointerDetector"]
+    det_CppSmartPointerDetector["Cpp Smart<br/>Pointer"]
     cpp_002 --> det_CppSmartPointerDetector
-    classDef principle fill:#4051b5,color:#fff,stroke:none
-    classDef detector fill:#26a269,color:#fff,stroke:none
-    class cpp_001 principle
-    class cpp_002 principle
-    class cpp_003 principle
-    class cpp_004 principle
-    class cpp_005 principle
-    class cpp_006 principle
-    class cpp_007 principle
-    class cpp_008 principle
-    class cpp_009 principle
-    class cpp_010 principle
-    class cpp_011 principle
-    class cpp_012 principle
-    class cpp_013 principle
-    class det_CppAutoDetector detector
-    class det_CppAvoidGlobalsDetector detector
-    class det_CppCStyleCastDetector detector
-    class det_CppConstCorrectnessDetector detector
-    class det_CppManualAllocationDetector detector
-    class det_CppMoveDetector detector
-    class det_CppNullptrDetector detector
-    class det_CppOptionalDetector detector
-    class det_CppOverrideFinalDetector detector
-    class det_CppRaiiDetector detector
-    class det_CppRangeForDetector detector
-    class det_CppRuleOfFiveDetector detector
-    class det_CppSmartPointerDetector detector
+    ```
+
+??? example "Detector Class Hierarchy"
+    ```mermaid
+    %%{init: {"theme": "base"}}%%
+    classDiagram
+        direction TB
+        class ViolationDetector {
+            <<abstract>>
+            +detect(context, config)
+        }
+        class det_01["Cpp Auto"]
+        ViolationDetector <|-- det_01
+        class det_02["Cpp Avoid Globals"]
+        ViolationDetector <|-- det_02
+        class det_03["Cpp C Style Cast"]
+        ViolationDetector <|-- det_03
+        class det_04["Cpp Const Correctness"]
+        ViolationDetector <|-- det_04
+        class det_05["Cpp Manual Allocation"]
+        ViolationDetector <|-- det_05
+        class det_06["Cpp Move"]
+        ViolationDetector <|-- det_06
+        class det_07["Cpp Nullptr"]
+        ViolationDetector <|-- det_07
+        class det_08["Cpp Optional"]
+        ViolationDetector <|-- det_08
+        class det_09["Cpp Override Final"]
+        ViolationDetector <|-- det_09
+        class det_10["Cpp Raii"]
+        ViolationDetector <|-- det_10
+        class det_11["Cpp Range For"]
+        ViolationDetector <|-- det_11
+        class det_12["Cpp Rule Of Five"]
+        ViolationDetector <|-- det_12
+        class det_13["Cpp Smart Pointer"]
+        ViolationDetector <|-- det_13
+    ```
+
+??? example "Analysis Pipeline"
+    ```mermaid
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TD
+    Source(["Source Code"]) --> Parse["Parse & Tokenize"]
+    Parse --> Metrics["Compute Metrics"]
+    Metrics --> Pipeline{"13 Detectors"}
+    Pipeline --> Collect["Aggregate Violations"]
+    Collect --> Result(["AnalysisResult<br/>13 principles"])
+    ```
+
+??? example "Analysis States"
+    ```mermaid
+    %%{init: {"theme": "base"}}%%
+    stateDiagram-v2
+        [*] --> Ready
+        Ready --> Parsing : analyze(code)
+        Parsing --> Computing : AST ready
+        Computing --> Detecting : metrics ready
+        Detecting --> Reporting : 13 detectors run
+        Reporting --> [*] : AnalysisResult
+        Parsing --> Reporting : parse error (best-effort)
     ```
 
 ## Configuration

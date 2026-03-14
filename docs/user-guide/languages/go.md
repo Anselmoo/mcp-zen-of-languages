@@ -430,111 +430,146 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-    graph LR
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    graph TD
     go_001["go-001<br/>Errors are values"]
-    go_002["go-002<br/>Accept interfaces, return structs"]
-    go_003["go-003<br/>Make the zero value useful"]
+    go_002["go-002<br/>Accept interfaces, return..."]
+    go_003["go-003<br/>Make the zero value usefu..."]
     go_004["go-004<br/>Use short variable names"]
-    go_005["go-005<br/>Don't use pointer to interface"]
+    go_005["go-005<br/>Don&#x27;t use pointer to inte..."]
     go_006["go-006<br/>Avoid goroutine leaks"]
     go_007["go-007<br/>Use defer for cleanup"]
-    go_008["go-008<br/>Package names are singular"]
+    go_008["go-008<br/>Package names are singula..."]
     go_009["go-009<br/>Avoid package-level state"]
     go_010["go-010<br/>Keep interfaces small"]
-    go_011["go-011<br/>Use context for cancellation"]
-    go_012["go-012<br/>Avoid init() when possible"]
-    go_013["go-013<br/>Organize by responsibility"]
-    go_014["go-014<br/>Embed for composition, not inheritance"]
-    go_015["go-015<br/>Communicate by sharing memory through ch..."]
-    go_016["go-016<br/>Avoid unnecessary complexity"]
+    go_011["go-011<br/>Use context for cancellat..."]
+    go_012["go-012<br/>Avoid init() when possibl..."]
+    go_013["go-013<br/>Organize by responsibilit..."]
+    go_014["go-014<br/>Embed for composition, no..."]
+    go_015["go-015<br/>Communicate by sharing me..."]
+    go_016["go-016<br/>Avoid unnecessary complex..."]
     go_017["go-017<br/>Handle every error path"]
-    go_018["go-018<br/>Avoid premature optimization"]
+    go_018["go-018<br/>Avoid premature optimizat..."]
     go_019["go-019<br/>Design for testability"]
-    go_020["go-020<br/>Write self-documenting code"]
-    det_GoBenchmarkDetector["GoBenchmarkDetector"]
+    go_020["go-020<br/>Write self-documenting co..."]
+    det_GoBenchmarkDetector["Go Benchmark"]
     go_018 --> det_GoBenchmarkDetector
-    det_GoConcurrencyCallerDetector["GoConcurrencyCallerDetector"]
+    det_GoConcurrencyCallerDetector["Go Concurrency<br/>Caller"]
     go_015 --> det_GoConcurrencyCallerDetector
-    det_GoContextUsageDetector["GoContextUsageDetector"]
+    det_GoContextUsageDetector["Go Context<br/>Usage"]
     go_011 --> det_GoContextUsageDetector
-    det_GoDeferUsageDetector["GoDeferUsageDetector"]
+    det_GoDeferUsageDetector["Go Defer<br/>Usage"]
     go_007 --> det_GoDeferUsageDetector
-    det_GoEarlyReturnDetector["GoEarlyReturnDetector"]
+    det_GoEarlyReturnDetector["Go Early<br/>Return"]
     go_017 --> det_GoEarlyReturnDetector
-    det_GoEmbeddingDepthDetector["GoEmbeddingDepthDetector"]
+    det_GoEmbeddingDepthDetector["Go Embedding<br/>Depth"]
     go_014 --> det_GoEmbeddingDepthDetector
-    det_GoErrorHandlingDetector["GoErrorHandlingDetector"]
+    det_GoErrorHandlingDetector["Go Error<br/>Handling"]
     go_001 --> det_GoErrorHandlingDetector
-    det_GoGoroutineLeakDetector["GoGoroutineLeakDetector"]
+    det_GoGoroutineLeakDetector["Go Goroutine<br/>Leak"]
     go_006 --> det_GoGoroutineLeakDetector
-    det_GoInitUsageDetector["GoInitUsageDetector"]
+    det_GoInitUsageDetector["Go Init<br/>Usage"]
     go_012 --> det_GoInitUsageDetector
-    det_GoInterfacePointerDetector["GoInterfacePointerDetector"]
+    det_GoInterfacePointerDetector["Go Interface<br/>Pointer"]
     go_005 --> det_GoInterfacePointerDetector
-    det_GoInterfaceReturnDetector["GoInterfaceReturnDetector"]
+    det_GoInterfaceReturnDetector["Go Interface<br/>Return"]
     go_002 --> det_GoInterfaceReturnDetector
-    det_GoInterfaceSizeDetector["GoInterfaceSizeDetector"]
+    det_GoInterfaceSizeDetector["Go Interface<br/>Size"]
     go_010 --> det_GoInterfaceSizeDetector
-    det_GoMaintainabilityDetector["GoMaintainabilityDetector"]
+    det_GoMaintainabilityDetector["Go Maintainability"]
     go_020 --> det_GoMaintainabilityDetector
-    det_GoModerationDetector["GoModerationDetector"]
-    det_GoNamingConventionDetector["GoNamingConventionDetector"]
+    det_GoModerationDetector["Go Moderation"]
+    det_GoNamingConventionDetector["Go Naming<br/>Convention"]
     go_004 --> det_GoNamingConventionDetector
-    det_GoOrganizeResponsibilityDetector["GoOrganizeResponsibilityDetector"]
+    det_GoOrganizeResponsibilityDetector["Go Organize<br/>Responsibility"]
     go_013 --> det_GoOrganizeResponsibilityDetector
-    det_GoPackageNamingDetector["GoPackageNamingDetector"]
+    det_GoPackageNamingDetector["Go Package<br/>Naming"]
     go_008 --> det_GoPackageNamingDetector
-    det_GoPackageStateDetector["GoPackageStateDetector"]
+    det_GoPackageStateDetector["Go Package<br/>State"]
     go_009 --> det_GoPackageStateDetector
-    det_GoSimplicityDetector["GoSimplicityDetector"]
+    det_GoSimplicityDetector["Go Simplicity"]
     go_016 --> det_GoSimplicityDetector
-    det_GoTestPresenceDetector["GoTestPresenceDetector"]
+    det_GoTestPresenceDetector["Go Test<br/>Presence"]
     go_019 --> det_GoTestPresenceDetector
-    det_GoZeroValueDetector["GoZeroValueDetector"]
+    det_GoZeroValueDetector["Go Zero<br/>Value"]
     go_003 --> det_GoZeroValueDetector
-    classDef principle fill:#4051b5,color:#fff,stroke:none
-    classDef detector fill:#26a269,color:#fff,stroke:none
-    class go_001 principle
-    class go_002 principle
-    class go_003 principle
-    class go_004 principle
-    class go_005 principle
-    class go_006 principle
-    class go_007 principle
-    class go_008 principle
-    class go_009 principle
-    class go_010 principle
-    class go_011 principle
-    class go_012 principle
-    class go_013 principle
-    class go_014 principle
-    class go_015 principle
-    class go_016 principle
-    class go_017 principle
-    class go_018 principle
-    class go_019 principle
-    class go_020 principle
-    class det_GoBenchmarkDetector detector
-    class det_GoConcurrencyCallerDetector detector
-    class det_GoContextUsageDetector detector
-    class det_GoDeferUsageDetector detector
-    class det_GoEarlyReturnDetector detector
-    class det_GoEmbeddingDepthDetector detector
-    class det_GoErrorHandlingDetector detector
-    class det_GoGoroutineLeakDetector detector
-    class det_GoInitUsageDetector detector
-    class det_GoInterfacePointerDetector detector
-    class det_GoInterfaceReturnDetector detector
-    class det_GoInterfaceSizeDetector detector
-    class det_GoMaintainabilityDetector detector
-    class det_GoModerationDetector detector
-    class det_GoNamingConventionDetector detector
-    class det_GoOrganizeResponsibilityDetector detector
-    class det_GoPackageNamingDetector detector
-    class det_GoPackageStateDetector detector
-    class det_GoSimplicityDetector detector
-    class det_GoTestPresenceDetector detector
-    class det_GoZeroValueDetector detector
+    ```
+
+??? example "Detector Class Hierarchy"
+    ```mermaid
+    %%{init: {"theme": "base"}}%%
+    classDiagram
+        direction TB
+        class ViolationDetector {
+            <<abstract>>
+            +detect(context, config)
+        }
+        class det_01["Go Benchmark"]
+        ViolationDetector <|-- det_01
+        class det_02["Go Concurrency Caller"]
+        ViolationDetector <|-- det_02
+        class det_03["Go Context Usage"]
+        ViolationDetector <|-- det_03
+        class det_04["Go Defer Usage"]
+        ViolationDetector <|-- det_04
+        class det_05["Go Early Return"]
+        ViolationDetector <|-- det_05
+        class det_06["Go Embedding Depth"]
+        ViolationDetector <|-- det_06
+        class det_07["Go Error Handling"]
+        ViolationDetector <|-- det_07
+        class det_08["Go Goroutine Leak"]
+        ViolationDetector <|-- det_08
+        class det_09["Go Init Usage"]
+        ViolationDetector <|-- det_09
+        class det_10["Go Interface Pointer"]
+        ViolationDetector <|-- det_10
+        class det_11["Go Interface Return"]
+        ViolationDetector <|-- det_11
+        class det_12["Go Interface Size"]
+        ViolationDetector <|-- det_12
+        class det_13["Go Maintainability"]
+        ViolationDetector <|-- det_13
+        class det_14["Go Moderation"]
+        ViolationDetector <|-- det_14
+        class det_15["Go Naming Convention"]
+        ViolationDetector <|-- det_15
+        class det_16["Go Organize Responsibility"]
+        ViolationDetector <|-- det_16
+        class det_17["Go Package Naming"]
+        ViolationDetector <|-- det_17
+        class det_18["Go Package State"]
+        ViolationDetector <|-- det_18
+        class det_19["Go Simplicity"]
+        ViolationDetector <|-- det_19
+        class det_20["Go Test Presence"]
+        ViolationDetector <|-- det_20
+        class det_21["Go Zero Value"]
+        ViolationDetector <|-- det_21
+    ```
+
+??? example "Analysis Pipeline"
+    ```mermaid
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TD
+    Source(["Source Code"]) --> Parse["Parse & Tokenize"]
+    Parse --> Metrics["Compute Metrics"]
+    Metrics --> Pipeline{"21 Detectors"}
+    Pipeline --> Collect["Aggregate Violations"]
+    Collect --> Result(["AnalysisResult<br/>20 principles"])
+    ```
+
+??? example "Analysis States"
+    ```mermaid
+    %%{init: {"theme": "base"}}%%
+    stateDiagram-v2
+        [*] --> Ready
+        Ready --> Parsing : analyze(code)
+        Parsing --> Computing : AST ready
+        Computing --> Detecting : metrics ready
+        Detecting --> Reporting : 21 detectors run
+        Reporting --> [*] : AnalysisResult
+        Parsing --> Reporting : parse error (best-effort)
     ```
 
 ## Configuration

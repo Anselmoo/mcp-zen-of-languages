@@ -207,49 +207,83 @@ Stylesheets can accumulate hidden complexity quickly — deeply nested selectors
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-    graph LR
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    graph TD
     css_001["css-001<br/>Avoid specificity creep"]
     css_002["css-002<br/>Avoid magic pixel values"]
-    css_003["css-003<br/>Limit inline color literals"]
+    css_003["css-003<br/>Limit inline color litera..."]
     css_004["css-004<br/>Keep stylesheets modular"]
-    css_005["css-005<br/>Prefer modern import strategy"]
+    css_005["css-005<br/>Prefer modern import stra..."]
     css_006["css-006<br/>Use a z-index scale"]
-    css_007["css-007<br/>Avoid manual vendor prefixes"]
-    css_008["css-008<br/>Use a consistent breakpoint scale"]
-    det_CssColorLiteralDetector["CssColorLiteralDetector"]
+    css_007["css-007<br/>Avoid manual vendor prefi..."]
+    css_008["css-008<br/>Use a consistent breakpoi..."]
+    det_CssColorLiteralDetector["Css Color<br/>Literal"]
     css_003 --> det_CssColorLiteralDetector
-    det_CssGodStylesheetDetector["CssGodStylesheetDetector"]
+    det_CssGodStylesheetDetector["Css God<br/>Stylesheet"]
     css_004 --> det_CssGodStylesheetDetector
-    det_CssImportChainDetector["CssImportChainDetector"]
+    det_CssImportChainDetector["Css Import<br/>Chain"]
     css_005 --> det_CssImportChainDetector
-    det_CssMagicPixelsDetector["CssMagicPixelsDetector"]
+    det_CssMagicPixelsDetector["Css Magic<br/>Pixels"]
     css_002 --> det_CssMagicPixelsDetector
-    det_CssMediaQueryScaleDetector["CssMediaQueryScaleDetector"]
+    det_CssMediaQueryScaleDetector["Css Media<br/>Query Scale"]
     css_008 --> det_CssMediaQueryScaleDetector
-    det_CssSpecificityDetector["CssSpecificityDetector"]
+    det_CssSpecificityDetector["Css Specificity"]
     css_001 --> det_CssSpecificityDetector
-    det_CssVendorPrefixDetector["CssVendorPrefixDetector"]
+    det_CssVendorPrefixDetector["Css Vendor<br/>Prefix"]
     css_007 --> det_CssVendorPrefixDetector
-    det_CssZIndexScaleDetector["CssZIndexScaleDetector"]
+    det_CssZIndexScaleDetector["Css Z<br/>Index Scale"]
     css_006 --> det_CssZIndexScaleDetector
-    classDef principle fill:#4051b5,color:#fff,stroke:none
-    classDef detector fill:#26a269,color:#fff,stroke:none
-    class css_001 principle
-    class css_002 principle
-    class css_003 principle
-    class css_004 principle
-    class css_005 principle
-    class css_006 principle
-    class css_007 principle
-    class css_008 principle
-    class det_CssColorLiteralDetector detector
-    class det_CssGodStylesheetDetector detector
-    class det_CssImportChainDetector detector
-    class det_CssMagicPixelsDetector detector
-    class det_CssMediaQueryScaleDetector detector
-    class det_CssSpecificityDetector detector
-    class det_CssVendorPrefixDetector detector
-    class det_CssZIndexScaleDetector detector
+    ```
+
+??? example "Detector Class Hierarchy"
+    ```mermaid
+    %%{init: {"theme": "base"}}%%
+    classDiagram
+        direction TB
+        class ViolationDetector {
+            <<abstract>>
+            +detect(context, config)
+        }
+        class det_01["Css Color Literal"]
+        ViolationDetector <|-- det_01
+        class det_02["Css God Stylesheet"]
+        ViolationDetector <|-- det_02
+        class det_03["Css Import Chain"]
+        ViolationDetector <|-- det_03
+        class det_04["Css Magic Pixels"]
+        ViolationDetector <|-- det_04
+        class det_05["Css Media Query Scale"]
+        ViolationDetector <|-- det_05
+        class det_06["Css Specificity"]
+        ViolationDetector <|-- det_06
+        class det_07["Css Vendor Prefix"]
+        ViolationDetector <|-- det_07
+        class det_08["Css Z Index Scale"]
+        ViolationDetector <|-- det_08
+    ```
+
+??? example "Analysis Pipeline"
+    ```mermaid
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TD
+    Source(["Source Code"]) --> Parse["Parse & Tokenize"]
+    Parse --> Metrics["Compute Metrics"]
+    Metrics --> Pipeline{"8 Detectors"}
+    Pipeline --> Collect["Aggregate Violations"]
+    Collect --> Result(["AnalysisResult<br/>8 principles"])
+    ```
+
+??? example "Analysis States"
+    ```mermaid
+    %%{init: {"theme": "base"}}%%
+    stateDiagram-v2
+        [*] --> Ready
+        Ready --> Parsing : analyze(code)
+        Parsing --> Computing : AST ready
+        Computing --> Detecting : metrics ready
+        Detecting --> Reporting : 8 detectors run
+        Reporting --> [*] : AnalysisResult
+        Parsing --> Reporting : parse error (best-effort)
     ```
 
 ## Configuration

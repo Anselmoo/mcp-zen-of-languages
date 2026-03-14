@@ -168,54 +168,88 @@ tags:
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-    graph LR
-    latex_001["latex-001<br/>Prefer \newcommand over \def"]
-    latex_002["latex-002<br/>Keep labels and references consistent"]
-    latex_003["latex-003<br/>Require captions in figures and tables"]
-    latex_004["latex-004<br/>Maintain bibliography hygiene"]
-    latex_005["latex-005<br/>Avoid hardcoded absolute lengths"]
-    latex_006["latex-006<br/>Prefer semantic emphasis commands"]
-    latex_007["latex-007<br/>Prevent circular \input and \include cha..."]
-    latex_008["latex-008<br/>Declare UTF-8 encoding intent"]
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    graph TD
+    latex_001["latex-001<br/>Prefer \newcommand over \..."]
+    latex_002["latex-002<br/>Keep labels and reference..."]
+    latex_003["latex-003<br/>Require captions in figur..."]
+    latex_004["latex-004<br/>Maintain bibliography hyg..."]
+    latex_005["latex-005<br/>Avoid hardcoded absolute ..."]
+    latex_006["latex-006<br/>Prefer semantic emphasis ..."]
+    latex_007["latex-007<br/>Prevent circular \input a..."]
+    latex_008["latex-008<br/>Declare UTF-8 encoding in..."]
     latex_009["latex-009<br/>Remove unused packages"]
-    det_LatexBibliographyHygieneDetector["LatexBibliographyHygieneDetector"]
+    det_LatexBibliographyHygieneDetector["Latex Bibliography<br/>Hygiene"]
     latex_004 --> det_LatexBibliographyHygieneDetector
-    det_LatexCaptionCompletenessDetector["LatexCaptionCompletenessDetector"]
+    det_LatexCaptionCompletenessDetector["Latex Caption<br/>Completeness"]
     latex_003 --> det_LatexCaptionCompletenessDetector
-    det_LatexEncodingDeclarationDetector["LatexEncodingDeclarationDetector"]
+    det_LatexEncodingDeclarationDetector["Latex Encoding<br/>Declaration"]
     latex_008 --> det_LatexEncodingDeclarationDetector
-    det_LatexIncludeLoopDetector["LatexIncludeLoopDetector"]
+    det_LatexIncludeLoopDetector["Latex Include<br/>Loop"]
     latex_007 --> det_LatexIncludeLoopDetector
-    det_LatexLabelRefDisciplineDetector["LatexLabelRefDisciplineDetector"]
+    det_LatexLabelRefDisciplineDetector["Latex Label<br/>Ref Discipline"]
     latex_002 --> det_LatexLabelRefDisciplineDetector
-    det_LatexMacroDefinitionDetector["LatexMacroDefinitionDetector"]
+    det_LatexMacroDefinitionDetector["Latex Macro<br/>Definition"]
     latex_001 --> det_LatexMacroDefinitionDetector
-    det_LatexSemanticMarkupDetector["LatexSemanticMarkupDetector"]
+    det_LatexSemanticMarkupDetector["Latex Semantic<br/>Markup"]
     latex_006 --> det_LatexSemanticMarkupDetector
-    det_LatexUnusedPackagesDetector["LatexUnusedPackagesDetector"]
+    det_LatexUnusedPackagesDetector["Latex Unused<br/>Packages"]
     latex_009 --> det_LatexUnusedPackagesDetector
-    det_LatexWidthAbstractionDetector["LatexWidthAbstractionDetector"]
+    det_LatexWidthAbstractionDetector["Latex Width<br/>Abstraction"]
     latex_005 --> det_LatexWidthAbstractionDetector
-    classDef principle fill:#4051b5,color:#fff,stroke:none
-    classDef detector fill:#26a269,color:#fff,stroke:none
-    class latex_001 principle
-    class latex_002 principle
-    class latex_003 principle
-    class latex_004 principle
-    class latex_005 principle
-    class latex_006 principle
-    class latex_007 principle
-    class latex_008 principle
-    class latex_009 principle
-    class det_LatexBibliographyHygieneDetector detector
-    class det_LatexCaptionCompletenessDetector detector
-    class det_LatexEncodingDeclarationDetector detector
-    class det_LatexIncludeLoopDetector detector
-    class det_LatexLabelRefDisciplineDetector detector
-    class det_LatexMacroDefinitionDetector detector
-    class det_LatexSemanticMarkupDetector detector
-    class det_LatexUnusedPackagesDetector detector
-    class det_LatexWidthAbstractionDetector detector
+    ```
+
+??? example "Detector Class Hierarchy"
+    ```mermaid
+    %%{init: {"theme": "base"}}%%
+    classDiagram
+        direction TB
+        class ViolationDetector {
+            <<abstract>>
+            +detect(context, config)
+        }
+        class det_01["Latex Bibliography Hygiene"]
+        ViolationDetector <|-- det_01
+        class det_02["Latex Caption Completeness"]
+        ViolationDetector <|-- det_02
+        class det_03["Latex Encoding Declaration"]
+        ViolationDetector <|-- det_03
+        class det_04["Latex Include Loop"]
+        ViolationDetector <|-- det_04
+        class det_05["Latex Label Ref Discipline"]
+        ViolationDetector <|-- det_05
+        class det_06["Latex Macro Definition"]
+        ViolationDetector <|-- det_06
+        class det_07["Latex Semantic Markup"]
+        ViolationDetector <|-- det_07
+        class det_08["Latex Unused Packages"]
+        ViolationDetector <|-- det_08
+        class det_09["Latex Width Abstraction"]
+        ViolationDetector <|-- det_09
+    ```
+
+??? example "Analysis Pipeline"
+    ```mermaid
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TD
+    Source(["Source Code"]) --> Parse["Parse & Tokenize"]
+    Parse --> Metrics["Compute Metrics"]
+    Metrics --> Pipeline{"9 Detectors"}
+    Pipeline --> Collect["Aggregate Violations"]
+    Collect --> Result(["AnalysisResult<br/>9 principles"])
+    ```
+
+??? example "Analysis States"
+    ```mermaid
+    %%{init: {"theme": "base"}}%%
+    stateDiagram-v2
+        [*] --> Ready
+        Ready --> Parsing : analyze(code)
+        Parsing --> Computing : AST ready
+        Computing --> Detecting : metrics ready
+        Detecting --> Reporting : 9 detectors run
+        Reporting --> [*] : AnalysisResult
+        Parsing --> Reporting : parse error (best-effort)
     ```
 
 ## Configuration

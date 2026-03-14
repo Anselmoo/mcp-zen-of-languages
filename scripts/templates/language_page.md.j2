@@ -114,6 +114,27 @@ tags:
     ```
 {% endif %}
 
+{% if class_diagram %}
+??? example "Detector Class Hierarchy"
+    ```mermaid
+{{ class_diagram }}
+    ```
+{% endif %}
+
+{% if flow_diagram %}
+??? example "Analysis Pipeline"
+    ```mermaid
+{{ flow_diagram }}
+    ```
+{% endif %}
+
+{% if state_diagram %}
+??? example "Analysis States"
+    ```mermaid
+{{ state_diagram }}
+    ```
+{% endif %}
+
 ## Configuration
 
 ```yaml

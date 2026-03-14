@@ -358,79 +358,113 @@ Shell scripts are the glue of infrastructure — and the source of some of the m
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-    graph LR
-    bash_001["bash-001<br/>Always use set -euo pipefail"]
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    graph TD
+    bash_001["bash-001<br/>Always use set -euo pipef..."]
     bash_002["bash-002<br/>Quote all variables"]
     bash_003["bash-003<br/>Use [[ ]] over [ ]"]
     bash_004["bash-004<br/>Use $() over backticks"]
     bash_005["bash-005<br/>Check command exit codes"]
-    bash_006["bash-006<br/>Use functions for reusable code"]
-    bash_007["bash-007<br/>Use local variables in functions"]
+    bash_006["bash-006<br/>Use functions for reusabl..."]
+    bash_007["bash-007<br/>Use local variables in fu..."]
     bash_008["bash-008<br/>Avoid eval"]
-    bash_009["bash-009<br/>Use readonly for constants"]
-    bash_010["bash-010<br/>Validate input and arguments"]
-    bash_011["bash-011<br/>Use meaningful variable names"]
+    bash_009["bash-009<br/>Use readonly for constant..."]
+    bash_010["bash-010<br/>Validate input and argume..."]
+    bash_011["bash-011<br/>Use meaningful variable n..."]
     bash_012["bash-012<br/>Handle signals properly"]
-    bash_013["bash-013<br/>Use arrays instead of string splitting"]
+    bash_013["bash-013<br/>Use arrays instead of str..."]
     bash_014["bash-014<br/>Include usage information"]
-    det_BashArgumentValidationDetector["BashArgumentValidationDetector"]
+    det_BashArgumentValidationDetector["Bash Argument<br/>Validation"]
     bash_010 --> det_BashArgumentValidationDetector
-    det_BashArrayUsageDetector["BashArrayUsageDetector"]
+    det_BashArrayUsageDetector["Bash Array<br/>Usage"]
     bash_013 --> det_BashArrayUsageDetector
-    det_BashCommandSubstitutionDetector["BashCommandSubstitutionDetector"]
+    det_BashCommandSubstitutionDetector["Bash Command<br/>Substitution"]
     bash_004 --> det_BashCommandSubstitutionDetector
-    det_BashDoubleBracketsDetector["BashDoubleBracketsDetector"]
+    det_BashDoubleBracketsDetector["Bash Double<br/>Brackets"]
     bash_003 --> det_BashDoubleBracketsDetector
-    det_BashEvalUsageDetector["BashEvalUsageDetector"]
+    det_BashEvalUsageDetector["Bash Eval<br/>Usage"]
     bash_008 --> det_BashEvalUsageDetector
-    det_BashExitCodeChecksDetector["BashExitCodeChecksDetector"]
+    det_BashExitCodeChecksDetector["Bash Exit<br/>Code Checks"]
     bash_005 --> det_BashExitCodeChecksDetector
-    det_BashFunctionUsageDetector["BashFunctionUsageDetector"]
+    det_BashFunctionUsageDetector["Bash Function<br/>Usage"]
     bash_006 --> det_BashFunctionUsageDetector
-    det_BashLocalVariablesDetector["BashLocalVariablesDetector"]
+    det_BashLocalVariablesDetector["Bash Local<br/>Variables"]
     bash_007 --> det_BashLocalVariablesDetector
-    det_BashMeaningfulNamesDetector["BashMeaningfulNamesDetector"]
+    det_BashMeaningfulNamesDetector["Bash Meaningful<br/>Names"]
     bash_011 --> det_BashMeaningfulNamesDetector
-    det_BashQuoteVariablesDetector["BashQuoteVariablesDetector"]
+    det_BashQuoteVariablesDetector["Bash Quote<br/>Variables"]
     bash_002 --> det_BashQuoteVariablesDetector
-    det_BashReadonlyConstantsDetector["BashReadonlyConstantsDetector"]
+    det_BashReadonlyConstantsDetector["Bash Readonly<br/>Constants"]
     bash_009 --> det_BashReadonlyConstantsDetector
-    det_BashSignalHandlingDetector["BashSignalHandlingDetector"]
+    det_BashSignalHandlingDetector["Bash Signal<br/>Handling"]
     bash_012 --> det_BashSignalHandlingDetector
-    det_BashStrictModeDetector["BashStrictModeDetector"]
+    det_BashStrictModeDetector["Bash Strict<br/>Mode"]
     bash_001 --> det_BashStrictModeDetector
-    det_BashUsageInfoDetector["BashUsageInfoDetector"]
+    det_BashUsageInfoDetector["Bash Usage<br/>Info"]
     bash_014 --> det_BashUsageInfoDetector
-    classDef principle fill:#4051b5,color:#fff,stroke:none
-    classDef detector fill:#26a269,color:#fff,stroke:none
-    class bash_001 principle
-    class bash_002 principle
-    class bash_003 principle
-    class bash_004 principle
-    class bash_005 principle
-    class bash_006 principle
-    class bash_007 principle
-    class bash_008 principle
-    class bash_009 principle
-    class bash_010 principle
-    class bash_011 principle
-    class bash_012 principle
-    class bash_013 principle
-    class bash_014 principle
-    class det_BashArgumentValidationDetector detector
-    class det_BashArrayUsageDetector detector
-    class det_BashCommandSubstitutionDetector detector
-    class det_BashDoubleBracketsDetector detector
-    class det_BashEvalUsageDetector detector
-    class det_BashExitCodeChecksDetector detector
-    class det_BashFunctionUsageDetector detector
-    class det_BashLocalVariablesDetector detector
-    class det_BashMeaningfulNamesDetector detector
-    class det_BashQuoteVariablesDetector detector
-    class det_BashReadonlyConstantsDetector detector
-    class det_BashSignalHandlingDetector detector
-    class det_BashStrictModeDetector detector
-    class det_BashUsageInfoDetector detector
+    ```
+
+??? example "Detector Class Hierarchy"
+    ```mermaid
+    %%{init: {"theme": "base"}}%%
+    classDiagram
+        direction TB
+        class ViolationDetector {
+            <<abstract>>
+            +detect(context, config)
+        }
+        class det_01["Bash Argument Validation"]
+        ViolationDetector <|-- det_01
+        class det_02["Bash Array Usage"]
+        ViolationDetector <|-- det_02
+        class det_03["Bash Command Substitution"]
+        ViolationDetector <|-- det_03
+        class det_04["Bash Double Brackets"]
+        ViolationDetector <|-- det_04
+        class det_05["Bash Eval Usage"]
+        ViolationDetector <|-- det_05
+        class det_06["Bash Exit Code Checks"]
+        ViolationDetector <|-- det_06
+        class det_07["Bash Function Usage"]
+        ViolationDetector <|-- det_07
+        class det_08["Bash Local Variables"]
+        ViolationDetector <|-- det_08
+        class det_09["Bash Meaningful Names"]
+        ViolationDetector <|-- det_09
+        class det_10["Bash Quote Variables"]
+        ViolationDetector <|-- det_10
+        class det_11["Bash Readonly Constants"]
+        ViolationDetector <|-- det_11
+        class det_12["Bash Signal Handling"]
+        ViolationDetector <|-- det_12
+        class det_13["Bash Strict Mode"]
+        ViolationDetector <|-- det_13
+        class det_14["Bash Usage Info"]
+        ViolationDetector <|-- det_14
+    ```
+
+??? example "Analysis Pipeline"
+    ```mermaid
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TD
+    Source(["Source Code"]) --> Parse["Parse & Tokenize"]
+    Parse --> Metrics["Compute Metrics"]
+    Metrics --> Pipeline{"14 Detectors"}
+    Pipeline --> Collect["Aggregate Violations"]
+    Collect --> Result(["AnalysisResult<br/>14 principles"])
+    ```
+
+??? example "Analysis States"
+    ```mermaid
+    %%{init: {"theme": "base"}}%%
+    stateDiagram-v2
+        [*] --> Ready
+        Ready --> Parsing : analyze(code)
+        Parsing --> Computing : AST ready
+        Computing --> Detecting : metrics ready
+        Detecting --> Reporting : 14 detectors run
+        Reporting --> [*] : AnalysisResult
+        Parsing --> Reporting : parse error (best-effort)
     ```
 
 ## Configuration

@@ -109,29 +109,63 @@ tags:
 
 ??? example "Principle → Detector Wiring"
     ```mermaid
-    graph LR
-    docker_compose_001["docker-compose-001<br/>Avoid latest tags in image definitions"]
-    docker_compose_002["docker-compose-002<br/>Run services as non-root user"]
-    docker_compose_003["docker-compose-003<br/>Declare service healthchecks"]
-    docker_compose_004["docker-compose-004<br/>Keep secrets out of environment literals"]
-    det_DockerComposeHealthcheckDetector["DockerComposeHealthcheckDetector"]
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%
+    graph TD
+    docker_compose_001["docker-compose-001<br/>Avoid latest tags in imag..."]
+    docker_compose_002["docker-compose-002<br/>Run services as non-root ..."]
+    docker_compose_003["docker-compose-003<br/>Declare service healthche..."]
+    docker_compose_004["docker-compose-004<br/>Keep secrets out of envir..."]
+    det_DockerComposeHealthcheckDetector["Docker Compose<br/>Healthcheck"]
     docker_compose_003 --> det_DockerComposeHealthcheckDetector
-    det_DockerComposeLatestTagDetector["DockerComposeLatestTagDetector"]
+    det_DockerComposeLatestTagDetector["Docker Compose<br/>Latest Tag"]
     docker_compose_001 --> det_DockerComposeLatestTagDetector
-    det_DockerComposeNonRootUserDetector["DockerComposeNonRootUserDetector"]
+    det_DockerComposeNonRootUserDetector["Docker Compose<br/>Non Root<br/>User"]
     docker_compose_002 --> det_DockerComposeNonRootUserDetector
-    det_DockerComposeSecretHygieneDetector["DockerComposeSecretHygieneDetector"]
+    det_DockerComposeSecretHygieneDetector["Docker Compose<br/>Secret Hygiene"]
     docker_compose_004 --> det_DockerComposeSecretHygieneDetector
-    classDef principle fill:#4051b5,color:#fff,stroke:none
-    classDef detector fill:#26a269,color:#fff,stroke:none
-    class docker_compose_001 principle
-    class docker_compose_002 principle
-    class docker_compose_003 principle
-    class docker_compose_004 principle
-    class det_DockerComposeHealthcheckDetector detector
-    class det_DockerComposeLatestTagDetector detector
-    class det_DockerComposeNonRootUserDetector detector
-    class det_DockerComposeSecretHygieneDetector detector
+    ```
+
+??? example "Detector Class Hierarchy"
+    ```mermaid
+    %%{init: {"theme": "base"}}%%
+    classDiagram
+        direction TB
+        class ViolationDetector {
+            <<abstract>>
+            +detect(context, config)
+        }
+        class det_01["Docker Compose Healthcheck"]
+        ViolationDetector <|-- det_01
+        class det_02["Docker Compose Latest Tag"]
+        ViolationDetector <|-- det_02
+        class det_03["Docker Compose Non Root User"]
+        ViolationDetector <|-- det_03
+        class det_04["Docker Compose Secret Hygiene"]
+        ViolationDetector <|-- det_04
+    ```
+
+??? example "Analysis Pipeline"
+    ```mermaid
+    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TD
+    Source(["Source Code"]) --> Parse["Parse & Tokenize"]
+    Parse --> Metrics["Compute Metrics"]
+    Metrics --> Pipeline{"4 Detectors"}
+    Pipeline --> Collect["Aggregate Violations"]
+    Collect --> Result(["AnalysisResult<br/>4 principles"])
+    ```
+
+??? example "Analysis States"
+    ```mermaid
+    %%{init: {"theme": "base"}}%%
+    stateDiagram-v2
+        [*] --> Ready
+        Ready --> Parsing : analyze(code)
+        Parsing --> Computing : AST ready
+        Computing --> Detecting : metrics ready
+        Detecting --> Reporting : 4 detectors run
+        Reporting --> [*] : AnalysisResult
+        Parsing --> Reporting : parse error (best-effort)
     ```
 
 ## Configuration

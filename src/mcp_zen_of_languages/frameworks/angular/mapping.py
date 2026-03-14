@@ -6,8 +6,8 @@ from typing import Literal
 
 from pydantic import create_model
 
-from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
+from mcp_zen_of_languages.analyzers.mapping_models import RuleDetectorBinding
 from mcp_zen_of_languages.frameworks.angular.detectors import AngularLazyRouteDetector
 from mcp_zen_of_languages.frameworks.angular.detectors import AngularNoAnyDetector
 from mcp_zen_of_languages.frameworks.angular.detectors import AngularOnPushDetector
@@ -17,7 +17,6 @@ from mcp_zen_of_languages.frameworks.angular.detectors import (
 from mcp_zen_of_languages.frameworks.angular.detectors import (
     AngularSubscriptionLifecycleDetector,
 )
-from mcp_zen_of_languages.frameworks.dogmas import framework_rule_dogmas
 from mcp_zen_of_languages.languages.configs import DetectorConfig
 
 
@@ -30,47 +29,52 @@ def _rule_config(rule_id: str) -> type[DetectorConfig]:
     )
 
 
+def _dogmas(*dogma_ids: str) -> list[str]:
+    """Return explicit universal dogma ids for the binding."""
+    return list(dogma_ids)
+
+
 DETECTOR_MAP = LanguageDetectorMap(
     language="angular",
     bindings=[
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="angular-005",
             detector_class=AngularLazyRouteDetector,
             config_model=_rule_config("angular-005"),
             rule_ids=["angular-005"],
-            universal_dogma_ids=list(framework_rule_dogmas("angular-005")),
+            universal_dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
             default_order=10,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="angular-002",
             detector_class=AngularNoAnyDetector,
             config_model=_rule_config("angular-002"),
             rule_ids=["angular-002"],
-            universal_dogma_ids=list(framework_rule_dogmas("angular-002")),
+            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
             default_order=20,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="angular-001",
             detector_class=AngularOnPushDetector,
             config_model=_rule_config("angular-001"),
             rule_ids=["angular-001"],
-            universal_dogma_ids=list(framework_rule_dogmas("angular-001")),
+            universal_dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
             default_order=30,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="angular-004",
             detector_class=AngularSelectorPrefixDetector,
             config_model=_rule_config("angular-004"),
             rule_ids=["angular-004"],
-            universal_dogma_ids=list(framework_rule_dogmas("angular-004")),
+            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
             default_order=40,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="angular-003",
             detector_class=AngularSubscriptionLifecycleDetector,
             config_model=_rule_config("angular-003"),
             rule_ids=["angular-003"],
-            universal_dogma_ids=list(framework_rule_dogmas("angular-003")),
+            universal_dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-EXPLICIT-INTENT"),
             default_order=50,
         ),
     ],

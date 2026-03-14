@@ -26,17 +26,17 @@ tags:
 
 | Rule ID | Principle | Category | Severity | Dogma |
 |---------|-----------|----------|:--------:|-------|
-| `django-001` | Raw SQL must not interpolate user-controlled strings directly | Security | 10 | `ZEN-STRICT-FENCES` |
+| `django-001` | Raw SQL must not interpolate user-controlled strings directly | Security | 10 | `ZEN-STRICT-FENCES`, `ZEN-FAIL-FAST` |
 | `django-002` | Settings files should not hardcode secrets | Security | 10 | `ZEN-STRICT-FENCES` |
 | `django-003` | Production-facing settings should not leave DEBUG enabled | Security | 9 | `ZEN-STRICT-FENCES`, `ZEN-FAIL-FAST` |
-| `django-004` | Redirects and URL construction should avoid hardcoded internal paths | Organization | 7 | `ZEN-STRICT-FENCES` |
+| `django-004` | Redirects and URL construction should avoid hardcoded internal paths | Organization | 7 | `ZEN-STRICT-FENCES`, `ZEN-RIGHT-ABSTRACTION` |
 | `django-005` | Signal hookups should be reviewed carefully | Architecture | 6 | `ZEN-RIGHT-ABSTRACTION` |
 | `django-006` | Looping over querysets without related loading hints should be reviewed | Performance | 8 | `ZEN-PROPORTIONATE-COMPLEXITY` |
 
 ??? info "`django-001` — Raw SQL must not interpolate user-controlled strings directly"
     **String-built SQL in Django bypasses ORM protections and opens injection risk.**
 
-    **Universal Dogmas:** `ZEN-STRICT-FENCES`
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`, `ZEN-FAIL-FAST`
     **Common Violations:**
 
     - Raw SQL must not interpolate user-controlled strings directly
@@ -81,7 +81,7 @@ tags:
 ??? info "`django-004` — Redirects and URL construction should avoid hardcoded internal paths"
     **Hardcoded paths drift when route definitions change and bypass Django's URL reversing tools.**
 
-    **Universal Dogmas:** `ZEN-STRICT-FENCES`
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`, `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Redirects and URL construction should avoid hardcoded internal paths

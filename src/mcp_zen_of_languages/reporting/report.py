@@ -31,6 +31,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import TYPE_CHECKING
+from typing import TypedDict
 
 from mcp_zen_of_languages.orchestration import (
     analyze_targets as _shared_analyze_targets,
@@ -60,6 +61,17 @@ SEVERITY_MEDIUM = 4
 
 # Maximum violations shown inline in the Markdown table before truncation
 MAX_VIOLATIONS_IN_TABLE = 10
+
+
+class DogmaSummaryEntry(TypedDict):
+    """Aggregated reporting payload for a universal dogma."""
+
+    dogma_id: str
+    label: str
+    severity: int
+    violation_count: int
+    rule_ids: list[str]
+    files: list[str]
 
 
 def _collect_targets(
@@ -153,6 +165,34 @@ def _summarize_results(results: list[AnalysisResult]) -> AnalysisSummary:
     )
 
 
+def _summarize_dogmas(results: list[AnalysisResult]) -> list[DogmaSummaryEntry]:
+    """Aggregate universal dogma findings across all analysis results."""
+    summary: dict[str, DogmaSummaryEntry] = {}
+    for result in results:
+        if not result.dogma_analysis:
+            continue
+        for finding in result.dogma_analysis.findings:
+            entry = summary.setdefault(
+                finding.dogma_id,
+                {
+                    "dogma_id": finding.dogma_id,
+                    "label": finding.label,
+                    "severity": finding.severity,
+                    "violation_count": 0,
+                    "rule_ids": [],
+                    "files": [],
+                },
+            )
+            entry["severity"] = max(entry["severity"], finding.severity)
+            entry["violation_count"] += finding.violation_count
+            entry["rule_ids"] = sorted({*entry["rule_ids"], *finding.rule_ids})
+            entry["files"] = sorted({*entry["files"], *finding.files})
+    return sorted(
+        summary.values(),
+        key=lambda entry: (-entry["severity"], entry["dogma_id"]),
+    )
+
+
 def _markdown_table(headers: list[str], rows: list[list[str]]) -> list[str]:
     """Render a pipe-delimited Markdown table from headers and row data.
 
@@ -230,6 +270,33 @@ def _format_gap_markdown(gaps: GapAnalysis) -> list[str]:
         rows.append(["None", "No gaps reported."])
     lines = ["## Gap Analysis"]
     lines.extend(_markdown_table(["Area", "Detail"], rows))
+    return lines
+
+
+def _format_dogma_markdown(results: list[AnalysisResult]) -> list[str]:
+    """Format aggregated universal dogma findings as a Markdown table."""
+    dogmas = _summarize_dogmas(results)
+    lines = ["## Universal Dogmas"]
+    if not dogmas:
+        lines.append("No universal dogma findings detected.")
+        return lines
+
+    rows = [
+        [
+            str(dogma["label"]),
+            str(dogma["violation_count"]),
+            str(dogma["severity"]),
+            ", ".join(str(rule_id) for rule_id in dogma["rule_ids"]) or "-",
+            str(len(dogma["files"])),
+        ]
+        for dogma in dogmas
+    ]
+    lines.extend(
+        _markdown_table(
+            ["Dogma", "Violations", "Max severity", "Rules", "Files"],
+            rows,
+        ),
+    )
     return lines
 
 
@@ -366,6 +433,7 @@ def generate_report(  # noqa: PLR0913
         markdown_sections.extend(_format_summary_markdown(summary))
     if include_analysis:
         markdown_sections.extend(_format_analysis_markdown(results))
+        markdown_sections.extend(_format_dogma_markdown(results))
     if include_gaps:
         markdown_sections.extend(_format_gap_markdown(gaps))
     markdown_sections.extend(_format_prompts_markdown(context))
@@ -375,6 +443,7 @@ def generate_report(  # noqa: PLR0913
         "languages": context.languages,
         "summary": summary.model_dump() if summary else None,
         "analysis": [result.model_dump() for result in results],
+        "dogmas": _summarize_dogmas(results),
         "gaps": gaps.model_dump(),
         "prompts": prompts.model_dump() if prompts else None,
     }

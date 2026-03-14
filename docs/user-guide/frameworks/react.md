@@ -25,16 +25,16 @@ tags:
 
 | Rule ID | Principle | Category | Severity | Dogma |
 |---------|-----------|----------|:--------:|-------|
-| `react-001` | List keys must be stable and not derived from array indexes | Correctness | 9 | `ZEN-EXPLICIT-INTENT` |
+| `react-001` | List keys must be stable and not derived from array indexes | Correctness | 9 | `ZEN-EXPLICIT-INTENT`, `ZEN-VISIBLE-STATE` |
 | `react-002` | JSX event handlers should avoid inline callbacks in hot paths | Performance | 5 | `ZEN-PROPORTIONATE-COMPLEXITY` |
-| `react-003` | Component logic should not manipulate the DOM directly | Architecture | 7 | `ZEN-RIGHT-ABSTRACTION` |
+| `react-003` | Component logic should not manipulate the DOM directly | Architecture | 7 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-STRICT-FENCES` |
 | `react-004` | Hooks must not be called conditionally | Correctness | 10 | `ZEN-EXPLICIT-INTENT` |
-| `react-005` | Effects that register timers or listeners need an explicit cleanup review | Correctness | 7 | `ZEN-EXPLICIT-INTENT` |
+| `react-005` | Effects that register timers or listeners need an explicit cleanup review | Correctness | 7 | `ZEN-FAIL-FAST`, `ZEN-STRICT-FENCES` |
 
 ??? info "`react-001` — List keys must be stable and not derived from array indexes"
     **React list rendering depends on stable keys to preserve component identity across renders.**
 
-    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`, `ZEN-VISIBLE-STATE`
     **Common Violations:**
 
     - List keys must be stable and not derived from array indexes
@@ -64,7 +64,7 @@ tags:
 ??? info "`react-003` — Component logic should not manipulate the DOM directly"
     **React should remain the source of truth for UI updates instead of ad-hoc DOM queries and mutations.**
 
-    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-STRICT-FENCES`
     **Common Violations:**
 
     - Component logic should not manipulate the DOM directly
@@ -94,7 +94,7 @@ tags:
 ??? info "`react-005` — Effects that register timers or listeners need an explicit cleanup review"
     **Effects that add listeners or timers are a common source of leaks when cleanup is omitted.**
 
-    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
+    **Universal Dogmas:** `ZEN-FAIL-FAST`, `ZEN-STRICT-FENCES`
     **Common Violations:**
 
     - Effects that register timers or listeners need an explicit cleanup review

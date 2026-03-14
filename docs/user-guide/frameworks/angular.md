@@ -27,7 +27,7 @@ tags:
 |---------|-----------|----------|:--------:|-------|
 | `angular-001` | Components should opt into OnPush change detection | Performance | 7 | `ZEN-PROPORTIONATE-COMPLEXITY` |
 | `angular-002` | Type annotations should avoid any | Correctness | 8 | `ZEN-EXPLICIT-INTENT` |
-| `angular-003` | Manual subscriptions need an explicit lifecycle strategy | Correctness | 9 | `ZEN-EXPLICIT-INTENT` |
+| `angular-003` | Manual subscriptions need an explicit lifecycle strategy | Correctness | 9 | `ZEN-STRICT-FENCES`, `ZEN-EXPLICIT-INTENT` |
 | `angular-004` | Component selectors should follow project naming conventions | Readability | 5 | `ZEN-UNAMBIGUOUS-NAME` |
 | `angular-005` | Feature routes should prefer lazy loading over eager component wiring | Performance | 6 | `ZEN-PROPORTIONATE-COMPLEXITY` |
 
@@ -64,7 +64,7 @@ tags:
 ??? info "`angular-003` — Manual subscriptions need an explicit lifecycle strategy"
     **Bare subscribe() calls often leak when they are not paired with takeUntil, async pipe, or cleanup logic.**
 
-    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Manual subscriptions need an explicit lifecycle strategy

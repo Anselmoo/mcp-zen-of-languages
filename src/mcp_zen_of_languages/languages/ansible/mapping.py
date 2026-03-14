@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
 from mcp_zen_of_languages.analyzers.mapping_models import DetectorGearbox
+from mcp_zen_of_languages.analyzers.mapping_models import RuleDetectorBinding
 from mcp_zen_of_languages.languages.ansible.detectors import (
     AnsibleAutomationJourneyDetector,
 )
@@ -72,191 +72,182 @@ from mcp_zen_of_languages.languages.configs import AnsibleUserExperienceConfig
 from mcp_zen_of_languages.languages.configs import AnsibleUserOutcomeConfig
 
 
-ANSIBLE_RULE_DOGMAS = {
-    "ansible-001": ["ZEN-EXPLICIT-INTENT"],
-    "ansible-002": ["ZEN-UNAMBIGUOUS-NAME"],
-    "ansible-003": ["ZEN-RIGHT-ABSTRACTION"],
-    "ansible-004": ["ZEN-UNAMBIGUOUS-NAME"],
-    "ansible-005": ["ZEN-EXPLICIT-INTENT", "ZEN-VISIBLE-STATE"],
-    "ansible-006": ["ZEN-UNAMBIGUOUS-NAME"],
-    "ansible-007": ["ZEN-PROPORTIONATE-COMPLEXITY"],
-    "ansible-008": ["ZEN-UNAMBIGUOUS-NAME"],
-    "ansible-009": ["ZEN-UNAMBIGUOUS-NAME", "ZEN-EXPLICIT-INTENT", "ZEN-FAIL-FAST"],
-    "ansible-010": ["ZEN-UNAMBIGUOUS-NAME"],
-    "ansible-011": ["ZEN-RIGHT-ABSTRACTION", "ZEN-EXPLICIT-INTENT"],
-    "ansible-012": ["ZEN-EXPLICIT-INTENT"],
-    "ansible-013": ["ZEN-EXPLICIT-INTENT", "ZEN-VISIBLE-STATE"],
-    "ansible-014": ["ZEN-STRICT-FENCES", "ZEN-PROPORTIONATE-COMPLEXITY"],
-    "ansible-015": ["ZEN-PROPORTIONATE-COMPLEXITY", "ZEN-RETURN-EARLY"],
-    "ansible-016": ["ZEN-EXPLICIT-INTENT"],
-    "ansible-017": ["ZEN-RIGHT-ABSTRACTION"],
-    "ansible-018": ["ZEN-RIGHT-ABSTRACTION"],
-    "ansible-019": ["ZEN-UNAMBIGUOUS-NAME"],
-    "ansible-020": ["ZEN-FAIL-FAST"],
-}
+def _dogmas(*dogma_ids: str) -> list[str]:
+    """Return explicit universal dogma ids for the binding."""
+    return list(dogma_ids)
+
+
 GEARBOX = DetectorGearbox(language="ansible")
 GEARBOX.extend(
     [
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="ansible-001",
             detector_class=AnsibleNamingDetector,
             config_model=AnsibleNamingConfig,
             rule_ids=["ansible-001"],
-            universal_dogma_ids=ANSIBLE_RULE_DOGMAS["ansible-001"],
+            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
             default_order=10,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="ansible-002",
             detector_class=AnsibleFqcnDetector,
             config_model=AnsibleFqcnConfig,
             rule_ids=["ansible-002"],
-            universal_dogma_ids=ANSIBLE_RULE_DOGMAS["ansible-002"],
+            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
             default_order=20,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="ansible-003",
             detector_class=AnsibleIdempotencyDetector,
             config_model=AnsibleIdempotencyConfig,
             rule_ids=["ansible-003"],
-            universal_dogma_ids=ANSIBLE_RULE_DOGMAS["ansible-003"],
+            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
             default_order=30,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="ansible-004",
             detector_class=AnsibleBecomeDetector,
             config_model=AnsibleBecomeConfig,
             rule_ids=["ansible-004"],
-            universal_dogma_ids=ANSIBLE_RULE_DOGMAS["ansible-004"],
+            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
             default_order=40,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="ansible-005",
             detector_class=AnsibleStateExplicitDetector,
             config_model=AnsibleStateExplicitConfig,
             rule_ids=["ansible-005"],
-            universal_dogma_ids=ANSIBLE_RULE_DOGMAS["ansible-005"],
+            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT", "ZEN-VISIBLE-STATE"),
             default_order=50,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="ansible-006",
             detector_class=AnsibleNoCleartextPasswordDetector,
             config_model=AnsibleNoCleartextPasswordConfig,
             rule_ids=["ansible-006"],
-            universal_dogma_ids=ANSIBLE_RULE_DOGMAS["ansible-006"],
+            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
             default_order=60,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="ansible-007",
             detector_class=AnsibleJinjaSpacingDetector,
             config_model=AnsibleJinjaSpacingConfig,
             rule_ids=["ansible-007"],
-            universal_dogma_ids=ANSIBLE_RULE_DOGMAS["ansible-007"],
+            universal_dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
             default_order=70,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="ansible-008",
             detector_class=AnsibleReadabilityCountsDetector,
             config_model=AnsibleReadabilityCountsConfig,
             rule_ids=["ansible-008"],
-            universal_dogma_ids=ANSIBLE_RULE_DOGMAS["ansible-008"],
+            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
             default_order=80,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="ansible-009",
             detector_class=AnsibleUserOutcomeDetector,
             config_model=AnsibleUserOutcomeConfig,
             rule_ids=["ansible-009"],
-            universal_dogma_ids=ANSIBLE_RULE_DOGMAS["ansible-009"],
+            universal_dogma_ids=_dogmas(
+                "ZEN-UNAMBIGUOUS-NAME", "ZEN-EXPLICIT-INTENT", "ZEN-FAIL-FAST"
+            ),
             default_order=90,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="ansible-010",
             detector_class=AnsibleUserExperienceDetector,
             config_model=AnsibleUserExperienceConfig,
             rule_ids=["ansible-010"],
-            universal_dogma_ids=ANSIBLE_RULE_DOGMAS["ansible-010"],
+            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
             default_order=100,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="ansible-011",
             detector_class=AnsibleMagicAutomationDetector,
             config_model=AnsibleMagicAutomationConfig,
             rule_ids=["ansible-011"],
-            universal_dogma_ids=ANSIBLE_RULE_DOGMAS["ansible-011"],
+            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-EXPLICIT-INTENT"),
             default_order=110,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="ansible-012",
             detector_class=AnsibleConventionOverConfigDetector,
             config_model=AnsibleConventionOverConfigConfig,
             rule_ids=["ansible-012"],
-            universal_dogma_ids=ANSIBLE_RULE_DOGMAS["ansible-012"],
+            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
             default_order=120,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="ansible-013",
             detector_class=AnsibleDeclarativeBiasDetector,
             config_model=AnsibleDeclarativeBiasConfig,
             rule_ids=["ansible-013"],
-            universal_dogma_ids=ANSIBLE_RULE_DOGMAS["ansible-013"],
+            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT", "ZEN-VISIBLE-STATE"),
             default_order=130,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="ansible-014",
             detector_class=AnsibleFocusDetector,
             config_model=AnsibleFocusConfig,
             rule_ids=["ansible-014"],
-            universal_dogma_ids=ANSIBLE_RULE_DOGMAS["ansible-014"],
+            universal_dogma_ids=_dogmas(
+                "ZEN-STRICT-FENCES", "ZEN-PROPORTIONATE-COMPLEXITY"
+            ),
             default_order=140,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="ansible-015",
             detector_class=AnsibleComplexityProductivityDetector,
             config_model=AnsibleComplexityKillsProductivityConfig,
             rule_ids=["ansible-015"],
-            universal_dogma_ids=ANSIBLE_RULE_DOGMAS["ansible-015"],
+            universal_dogma_ids=_dogmas(
+                "ZEN-PROPORTIONATE-COMPLEXITY", "ZEN-RETURN-EARLY"
+            ),
             default_order=150,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="ansible-016",
             detector_class=AnsibleExplainabilityDetector,
             config_model=AnsibleExplainabilityConfig,
             rule_ids=["ansible-016"],
-            universal_dogma_ids=ANSIBLE_RULE_DOGMAS["ansible-016"],
+            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
             default_order=160,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="ansible-017",
             detector_class=AnsibleAutomationOpportunityDetector,
             config_model=AnsibleAutomationOpportunityConfig,
             rule_ids=["ansible-017"],
-            universal_dogma_ids=ANSIBLE_RULE_DOGMAS["ansible-017"],
+            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
             default_order=170,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="ansible-018",
             detector_class=AnsibleContinuousImprovementDetector,
             config_model=AnsibleContinuousImprovementConfig,
             rule_ids=["ansible-018"],
-            universal_dogma_ids=ANSIBLE_RULE_DOGMAS["ansible-018"],
+            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
             default_order=180,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="ansible-019",
             detector_class=AnsibleFrictionDetector,
             config_model=AnsibleFrictionConfig,
             rule_ids=["ansible-019"],
-            universal_dogma_ids=ANSIBLE_RULE_DOGMAS["ansible-019"],
+            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
             default_order=190,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="ansible-020",
             detector_class=AnsibleAutomationJourneyDetector,
             config_model=AnsibleAutomationJourneyConfig,
             rule_ids=["ansible-020"],
-            universal_dogma_ids=ANSIBLE_RULE_DOGMAS["ansible-020"],
+            universal_dogma_ids=_dogmas("ZEN-FAIL-FAST"),
             default_order=200,
         ),
     ]
 )
+
+
 DETECTOR_MAP = GEARBOX.build_map()

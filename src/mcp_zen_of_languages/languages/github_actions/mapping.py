@@ -2,20 +2,23 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
-from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
+from mcp_zen_of_languages.analyzers.mapping_models import RuleDetectorBinding
 from mcp_zen_of_languages.languages.configs import GitHubActionsWorkflowConfig
 from mcp_zen_of_languages.languages.github_actions.detectors import (
     GitHubActionsWorkflowDetector,
 )
 
 
-FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
+def _dogmas(*dogma_ids: str) -> list[str]:
+    """Return explicit universal dogma ids for the binding."""
+    return list(dogma_ids)
+
+
 DETECTOR_MAP = LanguageDetectorMap(
     language="github-actions",
     bindings=[
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="gha-workflow",
             detector_class=GitHubActionsWorkflowDetector,
             config_model=GitHubActionsWorkflowConfig,
@@ -36,7 +39,14 @@ DETECTOR_MAP = LanguageDetectorMap(
                 "gha-014",
                 "gha-015",
             ],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas(
+                "ZEN-STRICT-FENCES",
+                "ZEN-EXPLICIT-INTENT",
+                "ZEN-FAIL-FAST",
+                "ZEN-PROPORTIONATE-COMPLEXITY",
+                "ZEN-RIGHT-ABSTRACTION",
+                "ZEN-VISIBLE-STATE",
+            ),
             default_order=10,
         ),
     ],

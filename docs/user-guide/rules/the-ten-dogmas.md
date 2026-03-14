@@ -175,7 +175,7 @@ every detector ultimately traces back to one of them.
 ## Cross-Language Rule Mapping
 
 Each dogma is implemented by language-specific rules across the supported languages.
-The tables below are **auto-generated** from the codebase's `infer_dogmas_for_principle()` mapping.
+The tables below are **auto-generated** from the codebase's explicit rule-to-dogma catalog.
 
 --8<-- "docs/includes/generated/dogma-mapping.md"
 

@@ -27,7 +27,7 @@ from generate_implementation_counts import validate_documented_languages
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
 
-from mcp_zen_of_languages.core.universal_dogmas import infer_dogmas_for_principle
+from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule
 from mcp_zen_of_languages.frameworks import FRAMEWORK_KEYS
 from mcp_zen_of_languages.utils.subprocess_runner import KNOWN_TOOLS
 
@@ -593,7 +593,21 @@ def _group_detectors(principles, detector_map) -> list[tuple[str, list[dict]]]:
 # ---------------------------------------------------------------------------
 # Principle data preparation
 # ---------------------------------------------------------------------------
-def _prepare_principle(p) -> dict:
+def _principle_dogmas(principle, detector_map) -> list[str]:
+    """Resolve dogmas from explicit detector bindings before catalog fallback."""
+    explicit: list[str] = []
+    for binding in detector_map.bindings:
+        if principle.id not in binding.rule_ids:
+            continue
+        for dogma in binding.universal_dogma_ids:
+            if dogma not in explicit:
+                explicit.append(dogma)
+    if explicit:
+        return explicit
+    return list(dogmas_for_rule(detector_map.language, principle.id))
+
+
+def _prepare_principle(p, detector_map) -> dict:
     """Convert a ZenPrinciple to a template-friendly dict."""
     violations = []
     for v in p.violations:
@@ -602,7 +616,7 @@ def _prepare_principle(p) -> dict:
         else:
             violations.append(str(v))
 
-    dogmas = infer_dogmas_for_principle(p)
+    dogmas = _principle_dogmas(p, detector_map)
 
     return {
         "id": p.id,
@@ -632,7 +646,7 @@ def render_language_page(
     zen = _load_zen(module_key)
     detector_map = _load_detector_map(module_key)
 
-    principles = [_prepare_principle(p) for p in zen.principles]
+    principles = [_prepare_principle(p, detector_map) for p in zen.principles]
     detector_groups = _group_detectors(zen.principles, detector_map)
     config_entries = _build_config_entries(zen.principles, detector_map)
     mermaid = _build_mermaid(zen.principles, detector_map)
@@ -718,7 +732,7 @@ def render_config_formats_page(_env: Environment) -> str:  # noqa: C901, PLR0912
         zen = _load_zen(module_key)
         detector_map = _load_detector_map(module_key)
 
-        principles = [_prepare_principle(p) for p in zen.principles]
+        principles = [_prepare_principle(p, detector_map) for p in zen.principles]
         num_detectors = len(
             {
                 b.detector_class.__name__

@@ -99,6 +99,9 @@ class Violation(BaseModel):
     suggestion: str | None = None
     location: Location | None = None
     files: list[str] | None = None
+    rule_id: str | None = None
+    detector_id: str | None = None
+    universal_dogma_ids: list[str] = Field(default_factory=list)
 
     def get(self, key: str, default: object | None = None) -> object | None:
         """Retrieve a field value by name, falling back to *default*.
@@ -397,6 +400,25 @@ class ExternalAnalysisResult(BaseModel):
     tools: list[ExternalToolResult] = Field(default_factory=list)
 
 
+class DogmaFinding(BaseModel):
+    """Aggregated universal-dogma signal derived from one or more violations."""
+
+    dogma_id: str
+    label: str
+    severity: int = Field(..., ge=1, le=10)
+    violation_count: int = Field(default=0, ge=0)
+    rule_ids: list[str] = Field(default_factory=list)
+    detector_ids: list[str] = Field(default_factory=list)
+    messages: list[str] = Field(default_factory=list)
+    files: list[str] = Field(default_factory=list)
+
+
+class DogmaAnalysis(BaseModel):
+    """Universal-dogma findings attached to a single ``AnalysisResult``."""
+
+    findings: list[DogmaFinding] = Field(default_factory=list)
+
+
 class AnalysisResult(BaseModel):
     """Primary output produced by every language analyser.
 
@@ -446,6 +468,7 @@ class AnalysisResult(BaseModel):
     overall_score: float
     rules_summary: RulesSummary | None = None
     external_analysis: ExternalAnalysisResult | None = None
+    dogma_analysis: DogmaAnalysis | None = None
 
     def __getitem__(self, item: str) -> object:
         """Support bracket-style access (``result["field"]``).

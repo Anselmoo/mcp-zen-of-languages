@@ -2,9 +2,8 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
-from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
+from mcp_zen_of_languages.analyzers.mapping_models import RuleDetectorBinding
 from mcp_zen_of_languages.languages.configs import LatexBibliographyHygieneConfig
 from mcp_zen_of_languages.languages.configs import LatexCaptionCompletenessConfig
 from mcp_zen_of_languages.languages.configs import LatexEncodingDeclarationConfig
@@ -33,80 +32,84 @@ from mcp_zen_of_languages.languages.latex.detectors import LatexUnusedPackagesDe
 from mcp_zen_of_languages.languages.latex.detectors import LatexWidthAbstractionDetector
 
 
-FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
+def _dogmas(*dogma_ids: str) -> list[str]:
+    """Return explicit universal dogma ids for the binding."""
+    return list(dogma_ids)
+
+
 DETECTOR_MAP = LanguageDetectorMap(
     language="latex",
     bindings=[
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="latex-001",
             detector_class=LatexMacroDefinitionDetector,
             config_model=LatexMacroDefinitionConfig,
             rule_ids=["latex-001"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
             default_order=10,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="latex-002",
             detector_class=LatexLabelRefDisciplineDetector,
             config_model=LatexLabelRefDisciplineConfig,
             rule_ids=["latex-002"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
             default_order=20,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="latex-003",
             detector_class=LatexCaptionCompletenessDetector,
             config_model=LatexCaptionCompletenessConfig,
             rule_ids=["latex-003"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
             default_order=30,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="latex-004",
             detector_class=LatexBibliographyHygieneDetector,
             config_model=LatexBibliographyHygieneConfig,
             rule_ids=["latex-004"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas("ZEN-STRICT-FENCES"),
             default_order=40,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="latex-005",
             detector_class=LatexWidthAbstractionDetector,
             config_model=LatexWidthAbstractionConfig,
             rule_ids=["latex-005"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
             default_order=50,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="latex-006",
             detector_class=LatexSemanticMarkupDetector,
             config_model=LatexSemanticMarkupConfig,
             rule_ids=["latex-006"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
             default_order=60,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="latex-007",
             detector_class=LatexIncludeLoopDetector,
             config_model=LatexIncludeLoopConfig,
             rule_ids=["latex-007"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
             default_order=70,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="latex-008",
             detector_class=LatexEncodingDeclarationDetector,
             config_model=LatexEncodingDeclarationConfig,
             rule_ids=["latex-008"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
             default_order=80,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="latex-009",
             detector_class=LatexUnusedPackagesDetector,
             config_model=LatexUnusedPackagesConfig,
             rule_ids=["latex-009"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-RUTHLESS-DELETION"),
             default_order=90,
         ),
     ],

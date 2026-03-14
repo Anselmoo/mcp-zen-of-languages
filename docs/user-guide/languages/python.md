@@ -66,8 +66,8 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 | `python-012` | Namespaces are one honking great idea | Organization | 7 | `ZEN-STRICT-FENCES`, `ZEN-UNAMBIGUOUS-NAME` |
 | `python-013` | Practicality beats purity | Design | 5 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-PROPORTIONATE-COMPLEXITY` |
 | `python-014` | Unless explicitly silenced | Correctness | 8 | `ZEN-EXPLICIT-INTENT`, `ZEN-FAIL-FAST` |
-| `python-015` | Now is better than never | Structure | 4 | `ZEN-RETURN-EARLY` |
-| `python-016` | Although never is often better than *right* now | Design | 5 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-FAIL-FAST` |
+| `python-015` | Now is better than never | Structure | 4 | `ZEN-RETURN-EARLY`, `ZEN-RUTHLESS-DELETION` |
+| `python-016` | Although never is often better than *right* now | Design | 5 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-FAIL-FAST`, `ZEN-RUTHLESS-DELETION` |
 | `python-017` | If the implementation is hard to explain, it's a bad idea | Readability | 6 | `ZEN-UNAMBIGUOUS-NAME` |
 | `python-018` | If the implementation is easy to explain, it may be a good idea | Readability | 3 | `ZEN-UNAMBIGUOUS-NAME`, `ZEN-PROPORTIONATE-COMPLEXITY` |
 | `python-019` | Although that way may not be obvious at first unless you're Dutch | Idioms | 5 | `ZEN-RIGHT-ABSTRACTION` |
@@ -290,7 +290,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 ??? info "`python-015` — Now is better than never"
     **Address TODOs and stubs promptly**
 
-    **Universal Dogmas:** `ZEN-RETURN-EARLY`
+    **Universal Dogmas:** `ZEN-RETURN-EARLY`, `ZEN-RUTHLESS-DELETION`
     **Common Violations:**
 
     - TODO/FIXME/HACK/XXX comments left unresolved
@@ -298,7 +298,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 ??? info "`python-016` — Although never is often better than *right* now"
     **Document why functionality is deferred rather than raising bare NotImplementedError**
 
-    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-FAIL-FAST`
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-FAIL-FAST`, `ZEN-RUTHLESS-DELETION`
     **Common Violations:**
 
     - Undocumented NotImplementedError stubs

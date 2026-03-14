@@ -28,8 +28,8 @@ tags:
 |---------|-----------|----------|:--------:|-------|
 | `fastapi-001` | Route decorators should declare response_model explicitly | Clarity | 7 | `ZEN-EXPLICIT-INTENT` |
 | `fastapi-002` | POST routes should declare an explicit status_code | Clarity | 5 | `ZEN-EXPLICIT-INTENT` |
-| `fastapi-003` | Route handlers should not raise bare Exception | Correctness | 7 | `ZEN-EXPLICIT-INTENT`, `ZEN-FAIL-FAST` |
-| `fastapi-004` | Background work should use BackgroundTasks instead of raw threads | Correctness | 7 | `ZEN-EXPLICIT-INTENT` |
+| `fastapi-003` | Route handlers should not raise bare Exception | Correctness | 7 | `ZEN-FAIL-FAST`, `ZEN-EXPLICIT-INTENT` |
+| `fastapi-004` | Background work should use BackgroundTasks instead of raw threads | Correctness | 7 | `ZEN-RIGHT-ABSTRACTION` |
 | `fastapi-005` | Async routes should avoid blocking I/O helpers | Performance | 9 | `ZEN-PROPORTIONATE-COMPLEXITY` |
 | `fastapi-006` | Prefer explicit HTTP verb decorators over app.route | Idioms | 6 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-EXPLICIT-INTENT` |
 
@@ -66,7 +66,7 @@ tags:
 ??? info "`fastapi-003` — Route handlers should not raise bare Exception"
     **Bare exceptions bypass FastAPI's explicit HTTP contract and usually leak implementation details.**
 
-    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`, `ZEN-FAIL-FAST`
+    **Universal Dogmas:** `ZEN-FAIL-FAST`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Route handlers should not raise bare Exception
@@ -81,7 +81,7 @@ tags:
 ??? info "`fastapi-004` — Background work should use BackgroundTasks instead of raw threads"
     **FastAPI provides BackgroundTasks for request-scoped background work without manual thread management.**
 
-    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
     **Common Violations:**
 
     - Background work should use BackgroundTasks instead of raw threads

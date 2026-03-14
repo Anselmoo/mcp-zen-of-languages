@@ -478,6 +478,8 @@ class ViolationDetector[ConfigT: "DetectorConfig"](ABC):
             location=location,
             suggestion=suggestion,
             files=files,
+            rule_id=getattr(config, "principle_id", None),
+            detector_id=getattr(config, "type", None),
         )
 
 
@@ -528,6 +530,80 @@ class DetectionPipeline:
             return detector_name_attr
         return detector.__class__.__name__
 
+    @staticmethod
+    def _resolve_rule_id(
+        detector: ViolationDetector,
+        detector_config: AnalyzerConfig | DetectorConfig,
+        violation: Violation,
+    ) -> str | None:
+        """Resolve the canonical rule id for a violation."""
+        if violation.rule_id:
+            return violation.rule_id
+        principle_id = getattr(detector_config, "principle_id", None)
+        if isinstance(principle_id, str) and principle_id:
+            return principle_id
+        if (
+            isinstance(violation.principle, str)
+            and violation.principle in detector.rule_ids
+        ):
+            return violation.principle
+        if len(detector.rule_ids) == 1:
+            return detector.rule_ids[0]
+        return None
+
+    @staticmethod
+    def _resolve_dogma_ids(
+        context: AnalysisContext,
+        detector_config: AnalyzerConfig | DetectorConfig,
+        rule_id: str | None,
+        violation: Violation,
+    ) -> list[str]:
+        """Resolve universal dogma ids for a violation."""
+        if violation.universal_dogma_ids:
+            return list(violation.universal_dogma_ids)
+
+        detector_type = getattr(detector_config, "type", None)
+        if isinstance(detector_type, str):
+            from mcp_zen_of_languages.analyzers.registry import REGISTRY
+
+            try:
+                return list(REGISTRY.get(detector_type).universal_dogma_ids)
+            except KeyError:
+                pass
+
+        del context
+        del rule_id
+        return []
+
+    def _enrich_violation(
+        self,
+        context: AnalysisContext,
+        detector: ViolationDetector,
+        detector_config: AnalyzerConfig | DetectorConfig,
+        detector_name: str,
+        violation: Violation,
+    ) -> Violation:
+        """Attach stable detector/rule/dogma metadata to pipeline violations."""
+        rule_id = self._resolve_rule_id(detector, detector_config, violation)
+        files = violation.files
+        if files is None and context.path:
+            files = [context.path]
+        return violation.model_copy(
+            update={
+                "rule_id": rule_id,
+                "detector_id": violation.detector_id
+                or getattr(detector_config, "type", None)
+                or detector_name,
+                "universal_dogma_ids": self._resolve_dogma_ids(
+                    context,
+                    detector_config,
+                    rule_id,
+                    violation,
+                ),
+                "files": files,
+            },
+        )
+
     def run(
         self,
         context: AnalysisContext,
@@ -566,7 +642,18 @@ class DetectionPipeline:
                     {"language": context.language, "detector": detector_name},
                 ):
                     violations = detector.detect(context, detector_config)
-                all_violations.extend(violations)
+                all_violations.extend(
+                    [
+                        self._enrich_violation(
+                            context,
+                            detector,
+                            detector_config,
+                            detector_name,
+                            violation,
+                        )
+                        for violation in violations
+                    ],
+                )
             except Exception:
                 # Log error but continue with other detectors
                 detector_name = self._detector_name(detector)
@@ -1202,7 +1289,9 @@ class BaseAnalyzer(ABC):
             except (TypeError, ValueError):
                 external_analysis = None
 
-        return AnalysisResult(
+        from mcp_zen_of_languages.dogmas.interface import attach_dogma_analysis
+
+        result = AnalysisResult(
             language=self.language(),
             path=context.path,
             metrics=metrics,
@@ -1210,6 +1299,7 @@ class BaseAnalyzer(ABC):
             overall_score=overall_score,
             external_analysis=external_analysis,
         )
+        return attach_dogma_analysis(result)
 
     def _calculate_overall_score(self, violations: list[Violation]) -> float:
         """Derive a 0-10 quality score from accumulated violation severities.

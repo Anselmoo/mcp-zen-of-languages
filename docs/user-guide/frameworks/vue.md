@@ -28,7 +28,7 @@ tags:
 | `vue-002` | Props should declare explicit types | Correctness | 8 | `ZEN-EXPLICIT-INTENT` |
 | `vue-003` | v-for directives need a :key binding on the same element | Correctness | 9 | `ZEN-EXPLICIT-INTENT`, `ZEN-VISIBLE-STATE` |
 | `vue-004` | Avoid using v-if and v-for on the same element | Correctness | 9 | `ZEN-EXPLICIT-INTENT` |
-| `vue-005` | Props should not be mutated directly | Correctness | 10 | `ZEN-EXPLICIT-INTENT`, `ZEN-VISIBLE-STATE` |
+| `vue-005` | Props should not be mutated directly | Correctness | 10 | `ZEN-VISIBLE-STATE`, `ZEN-EXPLICIT-INTENT` |
 
 ??? info "`vue-001` — Components should use multi-word names"
     **Multi-word component names reduce collisions with native HTML elements and improve readability.**
@@ -93,7 +93,7 @@ tags:
 ??? info "`vue-005` — Props should not be mutated directly"
     **Direct prop mutation breaks one-way data flow and can desynchronize parent and child state.**
 
-    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`, `ZEN-VISIBLE-STATE`
+    **Universal Dogmas:** `ZEN-VISIBLE-STATE`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Props should not be mutated directly

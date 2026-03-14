@@ -67,7 +67,7 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 | `js-014` | Avoid with statement | Correctness | 9 | `ZEN-EXPLICIT-INTENT`, `ZEN-VISIBLE-STATE` |
 | `js-015` | Limit function parameter count | Design | 7 | `ZEN-RIGHT-ABSTRACTION` |
 | `js-016` | No eval() | Security | 9 | `ZEN-STRICT-FENCES` |
-| `js-017` | Prefer Array.from/spread over arguments | Idioms | 6 | `ZEN-RIGHT-ABSTRACTION` |
+| `js-017` | Prefer Array.from/spread over arguments | Idioms | 6 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-UTILIZE-ARGUMENTS` |
 | `js-018` | No prototype mutation on built-in objects | Architecture | 9 | `ZEN-RIGHT-ABSTRACTION` |
 
 ??? info "`js-001` — Avoid callback hell"
@@ -303,7 +303,7 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 ??? info "`js-017` — Prefer Array.from/spread over arguments"
     **The arguments object is a legacy non-array; use rest parameters (...args) instead**
 
-    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-UTILIZE-ARGUMENTS`
     **Common Violations:**
 
     - Direct use of arguments keyword

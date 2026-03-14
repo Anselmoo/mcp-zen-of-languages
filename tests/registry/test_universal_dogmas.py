@@ -10,7 +10,7 @@ from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule
 from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule_ids
 from mcp_zen_of_languages.frameworks import FRAMEWORK_KEYS
 from mcp_zen_of_languages.frameworks import FRAMEWORK_RULE_DOGMAS
-from mcp_zen_of_languages.languages.ansible.mapping import ANSIBLE_RULE_DOGMAS
+from mcp_zen_of_languages.languages.ansible.dogmas import ANSIBLE_RULE_DOGMAS
 from mcp_zen_of_languages.languages.ansible.mapping import (
     DETECTOR_MAP as ANSIBLE_DETECTOR_MAP,
 )
@@ -97,6 +97,8 @@ def test_all_supported_language_mappings_have_dogma_coverage() -> None:
             f"mcp_zen_of_languages.{package_name}.{module_name}.mapping"
         ).DETECTOR_MAP
         for binding in mapping.bindings:
+            if not binding.rule_ids:
+                continue
             dogmas = binding.universal_dogma_ids or list(
                 dogmas_for_rule_ids(language, binding.rule_ids),
             )
@@ -111,7 +113,11 @@ def test_all_supported_language_mappings_define_explicit_universal_dogmas() -> N
         mapping = importlib.import_module(
             f"mcp_zen_of_languages.{package_name}.{module_name}.mapping"
         ).DETECTOR_MAP
-        assert all(binding.universal_dogma_ids for binding in mapping.bindings)
+        assert all(
+            binding.universal_dogma_ids
+            for binding in mapping.bindings
+            if binding.rule_ids
+        )
 
 
 def test_framework_mappings_use_targeted_dogmas() -> None:
@@ -141,7 +147,9 @@ def test_registry_all_supported_languages_have_full_dogma_metadata() -> None:
         language_metas = [
             meta
             for meta in REGISTRY.items()
-            if meta.language == language and meta.detector_id != "analyzer_defaults"
+            if meta.language == language
+            and meta.detector_id != "analyzer_defaults"
+            and meta.rule_ids
         ]
         assert language_metas
         assert all(meta.universal_dogma_ids for meta in language_metas)

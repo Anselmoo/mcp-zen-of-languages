@@ -26,16 +26,16 @@ tags:
 
 | Rule ID | Principle | Category | Severity | Dogma |
 |---------|-----------|----------|:--------:|-------|
-| `nextjs-001` | Internal navigation should use next/link instead of raw anchors | Idioms | 6 | `ZEN-RIGHT-ABSTRACTION` |
+| `nextjs-001` | Internal navigation should use next/link instead of raw anchors | Idioms | 6 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-EXPLICIT-INTENT` |
 | `nextjs-002` | Images should use next/image when optimization matters | Performance | 7 | `ZEN-PROPORTIONATE-COMPLEXITY` |
-| `nextjs-003` | App Router files should not rely on getServerSideProps | Correctness | 8 | `ZEN-EXPLICIT-INTENT` |
+| `nextjs-003` | App Router files should not rely on getServerSideProps | Correctness | 8 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-EXPLICIT-INTENT` |
 | `nextjs-004` | Route handlers should not serialize raw error objects | Security | 9 | `ZEN-STRICT-FENCES`, `ZEN-FAIL-FAST` |
 | `nextjs-005` | Client-side fetching inside effects should be reviewed against server-first defaults | Performance | 6 | `ZEN-PROPORTIONATE-COMPLEXITY` |
 
 ??? info "`nextjs-001` — Internal navigation should use next/link instead of raw anchors"
     **next/link preserves client-side navigation behavior and framework optimizations.**
 
-    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Internal navigation should use next/link instead of raw anchors
@@ -65,7 +65,7 @@ tags:
 ??? info "`nextjs-003` — App Router files should not rely on getServerSideProps"
     **getServerSideProps belongs to the Pages Router and is not the idiomatic App Router data-loading model.**
 
-    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - App Router files should not rely on getServerSideProps

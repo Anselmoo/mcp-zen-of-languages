@@ -2,9 +2,8 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
-from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
+from mcp_zen_of_languages.analyzers.mapping_models import RuleDetectorBinding
 from mcp_zen_of_languages.languages.bash.detectors import BashArgumentValidationDetector
 from mcp_zen_of_languages.languages.bash.detectors import BashArrayUsageDetector
 from mcp_zen_of_languages.languages.bash.detectors import (
@@ -37,120 +36,124 @@ from mcp_zen_of_languages.languages.configs import BashStrictModeConfig
 from mcp_zen_of_languages.languages.configs import BashUsageInfoConfig
 
 
-FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
+def _dogmas(*dogma_ids: str) -> list[str]:
+    """Return explicit universal dogma ids for the binding."""
+    return list(dogma_ids)
+
+
 DETECTOR_MAP = LanguageDetectorMap(
     language="bash",
     bindings=[
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="bash_strict_mode",
             detector_class=BashStrictModeDetector,
             config_model=BashStrictModeConfig,
             rule_ids=["bash-001"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas("ZEN-FAIL-FAST"),
             default_order=10,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="bash_quote_variables",
             detector_class=BashQuoteVariablesDetector,
             config_model=BashQuoteVariablesConfig,
             rule_ids=["bash-002"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
             default_order=20,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="bash-005",
             detector_class=BashExitCodeChecksDetector,
             config_model=BashExitCodeConfig,
             rule_ids=["bash-005"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas("ZEN-FAIL-FAST"),
             default_order=25,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="bash-006",
             detector_class=BashFunctionUsageDetector,
             config_model=Bash006Config,
             rule_ids=["bash-006"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas("ZEN-STRICT-FENCES"),
             default_order=27,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="bash-007",
             detector_class=BashLocalVariablesDetector,
             config_model=BashLocalVariablesConfig,
             rule_ids=["bash-007"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas("ZEN-STRICT-FENCES"),
             default_order=28,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="bash_eval_usage",
             detector_class=BashEvalUsageDetector,
             config_model=BashEvalUsageConfig,
             rule_ids=["bash-008"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas("ZEN-STRICT-FENCES"),
             default_order=30,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="bash_double_brackets",
             detector_class=BashDoubleBracketsDetector,
             config_model=BashDoubleBracketsConfig,
             rule_ids=["bash-003"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
             default_order=40,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="bash_command_substitution",
             detector_class=BashCommandSubstitutionDetector,
             config_model=BashCommandSubstitutionConfig,
             rule_ids=["bash-004"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME", "ZEN-RETURN-EARLY"),
             default_order=50,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="bash_readonly_constants",
             detector_class=BashReadonlyConstantsDetector,
             config_model=BashReadonlyConstantsConfig,
             rule_ids=["bash-009"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas("ZEN-VISIBLE-STATE", "ZEN-EXPLICIT-INTENT"),
             default_order=60,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="bash-010",
             detector_class=BashArgumentValidationDetector,
             config_model=BashArgumentValidationConfig,
             rule_ids=["bash-010"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas("ZEN-FAIL-FAST"),
             default_order=70,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="bash-011",
             detector_class=BashMeaningfulNamesDetector,
             config_model=Bash011Config,
             rule_ids=["bash-011"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
             default_order=80,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="bash-012",
             detector_class=BashSignalHandlingDetector,
             config_model=BashSignalHandlingConfig,
             rule_ids=["bash-012"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas("ZEN-FAIL-FAST"),
             default_order=90,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="bash-013",
             detector_class=BashArrayUsageDetector,
             config_model=BashArrayUsageConfig,
             rule_ids=["bash-013"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
             default_order=100,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="bash-014",
             detector_class=BashUsageInfoDetector,
             config_model=BashUsageInfoConfig,
             rule_ids=["bash-014"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
             default_order=110,
         ),
     ],

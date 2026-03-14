@@ -45,7 +45,6 @@ from mcp_zen_of_languages.languages.configs import DetectorConfig
 
 
 if TYPE_CHECKING:
-    from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
     from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
     from mcp_zen_of_languages.rules.base_models import ZenPrinciple
 
@@ -86,39 +85,6 @@ class DetectorMetadata(BaseModel):
     enabled_by_default: bool = True
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
-
-    @classmethod
-    def from_binding(cls, binding: DetectorBinding, language: str) -> DetectorMetadata:
-        """Construct metadata from a [`DetectorBinding`][mcp_zen_of_languages.analyzers.mapping_models.DetectorBinding].
-
-        Copies all binding fields into a ``DetectorMetadata`` instance,
-        tagging it with the owning *language* so the registry can resolve
-        detectors by ``(language, rule_id)`` pair.
-
-        Args:
-            binding (DetectorBinding): A detector binding declared in a language's
-                ``mapping.py`` module.
-            language (str): Language that owns this binding (e.g. ``"rust"``).
-
-        Returns:
-            DetectorMetadata: Registry-ready metadata for [`DetectorRegistry.register`][DetectorRegistry.register].
-        """
-        from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule_ids
-
-        universal_dogma_ids = binding.universal_dogma_ids or list(
-            dogmas_for_rule_ids(language, binding.rule_ids)
-        )
-        return cls(
-            detector_id=binding.detector_id,
-            detector_class=binding.detector_class,
-            config_model=binding.config_model,
-            language=language,
-            rule_ids=list(binding.rule_ids),
-            rule_map=dict(binding.rule_map),
-            universal_dogma_ids=universal_dogma_ids,
-            default_order=binding.default_order,
-            enabled_by_default=binding.enabled_by_default,
-        )
 
     def model_post_init(self, __context: object, /) -> None:
         """Ensure ``rule_ids`` and ``rule_map`` are mutually consistent.
@@ -183,7 +149,7 @@ class DetectorRegistry:
         ``frameworks/``, imports its ``mapping`` module, reads the ``DETECTOR_MAP``
         [`LanguageDetectorMap`][mcp_zen_of_languages.analyzers.mapping_models.LanguageDetectorMap],
         and registers each
-        [`DetectorBinding`][mcp_zen_of_languages.analyzers.mapping_models.DetectorBinding]
+        binding entries
         as a [`DetectorMetadata`][DetectorMetadata].  Already-populated registries are
         skipped (idempotent guard).
 
@@ -221,9 +187,7 @@ class DetectorRegistry:
                     msg = f"Missing DETECTOR_MAP in {module_name}"
                     raise ValueError(msg)
                 for binding in lang_map.bindings:
-                    self.register(
-                        DetectorMetadata.from_binding(binding, lang_map.language),
-                    )
+                    self.register(binding.to_metadata(lang_map.language))
 
     def items(self) -> list[DetectorMetadata]:
         """Return a snapshot of every registered detector's metadata.

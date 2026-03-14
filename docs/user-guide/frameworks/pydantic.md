@@ -24,19 +24,19 @@ tags:
 
 | Rule ID | Principle | Category | Severity | Dogma |
 |---------|-----------|----------|:--------:|-------|
-| `pydantic-001` | Use model_dump and model_dump_json instead of v1 serialization APIs | Idioms | 8 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-EXPLICIT-INTENT`, `ZEN-UNAMBIGUOUS-NAME` |
+| `pydantic-001` | Use model_dump and model_dump_json instead of v1 serialization APIs | Idioms | 8 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-EXPLICIT-INTENT` |
 | `pydantic-002` | Use model_validate instead of parse_obj or parse_raw | Idioms | 8 | `ZEN-RIGHT-ABSTRACTION` |
-| `pydantic-003` | Mutable defaults should use Field(default_factory=...) | Correctness | 9 | `ZEN-EXPLICIT-INTENT`, `ZEN-VISIBLE-STATE` |
-| `pydantic-004` | Prefer model_config over nested Config classes | Idioms | 7 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-RETURN-EARLY` |
+| `pydantic-003` | Mutable defaults should use Field(default_factory=...) | Correctness | 9 | `ZEN-VISIBLE-STATE`, `ZEN-EXPLICIT-INTENT` |
+| `pydantic-004` | Prefer model_config over nested Config classes | Idioms | 7 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-EXPLICIT-INTENT` |
 | `pydantic-005` | Use field_validator instead of validator | Idioms | 7 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-EXPLICIT-INTENT` |
 | `pydantic-006` | Avoid __fields__; use model_fields in v2 | Idioms | 7 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-UNAMBIGUOUS-NAME` |
-| `pydantic-007` | Prefer X | None over Optional[X] in modern Python code | Idioms | 4 | `ZEN-RIGHT-ABSTRACTION` |
-| `pydantic-008` | Use from_attributes instead of orm_mode | Idioms | 7 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-UNAMBIGUOUS-NAME` |
+| `pydantic-007` | Prefer X | None over Optional[X] in modern Python code | Idioms | 4 | `ZEN-EXPLICIT-INTENT` |
+| `pydantic-008` | Use from_attributes instead of orm_mode | Idioms | 7 | `ZEN-RIGHT-ABSTRACTION`, `ZEN-EXPLICIT-INTENT` |
 
 ??? info "`pydantic-001` — Use model_dump and model_dump_json instead of v1 serialization APIs"
     **Pydantic v2 renamed serialization APIs to make model boundaries more explicit.**
 
-    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-EXPLICIT-INTENT`, `ZEN-UNAMBIGUOUS-NAME`
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Use model_dump and model_dump_json instead of v1 serialization APIs
@@ -66,7 +66,7 @@ tags:
 ??? info "`pydantic-003` — Mutable defaults should use Field(default_factory=...)"
     **Plain list, dict, and set defaults are shared between instances and create state leaks.**
 
-    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`, `ZEN-VISIBLE-STATE`
+    **Universal Dogmas:** `ZEN-VISIBLE-STATE`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Mutable defaults should use Field(default_factory=...)
@@ -81,7 +81,7 @@ tags:
 ??? info "`pydantic-004` — Prefer model_config over nested Config classes"
     **Pydantic v2 consolidated model configuration into the model_config attribute.**
 
-    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-RETURN-EARLY`
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Prefer model_config over nested Config classes
@@ -126,7 +126,7 @@ tags:
 ??? info "`pydantic-007` — Prefer X | None over Optional[X] in modern Python code"
     **Modern union syntax is the project standard for Python 3.12+ and keeps annotations consistent.**
 
-    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`
+    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Prefer X | None over Optional[X] in modern Python code
@@ -141,7 +141,7 @@ tags:
 ??? info "`pydantic-008` — Use from_attributes instead of orm_mode"
     **Pydantic v2 renamed ORM compatibility settings to from_attributes.**
 
-    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-UNAMBIGUOUS-NAME`
+    **Universal Dogmas:** `ZEN-RIGHT-ABSTRACTION`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Use from_attributes instead of orm_mode

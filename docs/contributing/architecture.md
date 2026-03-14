@@ -136,7 +136,7 @@ dedicated detector, ensuring every principle is at least heuristically covered.
 ```
 
 - **Universal layer**: dogmas are language-agnostic intent encoded as `UniversalDogmaID` values.
-- **Adapter layer**: language analyzers map syntax/AST details into dogmas via `infer_dogmas_for_principle()`.
+- **Adapter layer**: language analyzers emit violations, and the explicit rule-to-dogma catalog plus universal dogma detectors classify them into the ten dogmas.
 - **Transport layer**: CLI and MCP reporters expose findings as structured `ViolationReport` objects.
 
 ## Identifier Mapping Reference

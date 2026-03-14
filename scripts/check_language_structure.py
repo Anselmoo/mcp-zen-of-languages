@@ -14,6 +14,7 @@ REQUIRED_FILES = {
     "mapping.py",
     "rules.py",
 }
+OPTIONAL_FILES = {"dogmas.py"}
 LEGACY_MARKERS = ("legacy", "deprecated")
 
 
@@ -46,7 +47,10 @@ def _unexpected_python_modules(language_dir: Path) -> list[str]:
     return sorted(
         path.name
         for path in language_dir.iterdir()
-        if path.is_file() and path.suffix == ".py" and path.name not in REQUIRED_FILES
+        if path.is_file()
+        and path.suffix == ".py"
+        and path.name not in REQUIRED_FILES
+        and path.name not in OPTIONAL_FILES
     )
 
 

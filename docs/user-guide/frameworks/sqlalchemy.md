@@ -26,8 +26,8 @@ tags:
 
 | Rule ID | Principle | Category | Severity | Dogma |
 |---------|-----------|----------|:--------:|-------|
-| `sqlalchemy-001` | text queries must not interpolate values directly | Security | 10 | `ZEN-STRICT-FENCES` |
-| `sqlalchemy-002` | Session lifecycles should be explicit | Correctness | 9 | `ZEN-EXPLICIT-INTENT` |
+| `sqlalchemy-001` | text queries must not interpolate values directly | Security | 10 | `ZEN-STRICT-FENCES`, `ZEN-FAIL-FAST` |
+| `sqlalchemy-002` | Session lifecycles should be explicit | Correctness | 9 | `ZEN-STRICT-FENCES`, `ZEN-EXPLICIT-INTENT` |
 | `sqlalchemy-003` | SQLAlchemy 2.x code should prefer mapped_column over Column in ORM models | Idioms | 6 | `ZEN-RIGHT-ABSTRACTION` |
 | `sqlalchemy-004` | DeclarativeBase should replace declarative_base in 2.x-style code | Idioms | 5 | `ZEN-RIGHT-ABSTRACTION` |
 | `sqlalchemy-005` | relationship loading should be an explicit choice | Performance | 7 | `ZEN-PROPORTIONATE-COMPLEXITY`, `ZEN-EXPLICIT-INTENT` |
@@ -36,7 +36,7 @@ tags:
 ??? info "`sqlalchemy-001` — text queries must not interpolate values directly"
     **Interpolated SQL text bypasses SQLAlchemy's parameter handling and increases injection risk.**
 
-    **Universal Dogmas:** `ZEN-STRICT-FENCES`
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`, `ZEN-FAIL-FAST`
     **Common Violations:**
 
     - text queries must not interpolate values directly
@@ -51,7 +51,7 @@ tags:
 ??? info "`sqlalchemy-002` — Session lifecycles should be explicit"
     **Ad-hoc Session() calls often hide connection management and teardown responsibilities.**
 
-    **Universal Dogmas:** `ZEN-EXPLICIT-INTENT`
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`, `ZEN-EXPLICIT-INTENT`
     **Common Violations:**
 
     - Session lifecycles should be explicit

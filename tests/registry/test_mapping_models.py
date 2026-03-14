@@ -9,6 +9,7 @@ from mcp_zen_of_languages.analyzers.base import ViolationDetector
 from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
 from mcp_zen_of_languages.analyzers.mapping_models import FullDetectorMap
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
+from mcp_zen_of_languages.analyzers.mapping_models import RuleDetectorBinding
 from mcp_zen_of_languages.analyzers.registry import DetectorMetadata
 from mcp_zen_of_languages.analyzers.registry import DetectorRegistry
 from mcp_zen_of_languages.core.universal_dogmas import UniversalDogmaID
@@ -32,7 +33,7 @@ class DummyDetector(ViolationDetector[DummyConfig]):
 
 
 def test_mapping_models_defaults():
-    binding = DetectorBinding(
+    binding = RuleDetectorBinding(
         detector_id="dummy",
         detector_class=DummyDetector,
         config_model=DummyConfig,
@@ -42,26 +43,30 @@ def test_mapping_models_defaults():
 
     assert binding.rule_ids == []
     assert binding.universal_dogma_ids == []
-    assert binding.coverage == "partial"
     assert full_map.languages["python"].bindings[0].detector_id == "dummy"
 
 
-def test_detector_metadata_from_binding():
-    binding = DetectorBinding(
+def test_rule_binding_to_metadata():
+    binding = RuleDetectorBinding(
         detector_id="dummy",
         detector_class=DummyDetector,
         config_model=DummyConfig,
         rule_ids=["python-001"],
+        universal_dogma_ids=[UniversalDogmaID.UNAMBIGUOUS_NAME.value],
         default_order=DEFAULT_DETECTOR_ORDER,
         enabled_by_default=False,
     )
-    metadata = DetectorMetadata.from_binding(binding, "python")
+    metadata = binding.to_metadata("python")
 
     assert metadata.language == "python"
     assert metadata.rule_ids == ["python-001"]
     assert UniversalDogmaID.UNAMBIGUOUS_NAME.value in metadata.universal_dogma_ids
     assert metadata.default_order == DEFAULT_DETECTOR_ORDER
     assert metadata.enabled_by_default is False
+
+
+def test_detector_binding_alias_points_to_rule_binding() -> None:
+    assert DetectorBinding is RuleDetectorBinding
 
 
 def test_registry_bootstrap_from_mappings():

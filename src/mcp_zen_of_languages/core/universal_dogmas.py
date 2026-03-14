@@ -3,10 +3,8 @@
 from __future__ import annotations
 
 from enum import StrEnum
-from functools import cache
 from typing import TYPE_CHECKING
 
-from mcp_zen_of_languages.rules import get_language_zen
 from mcp_zen_of_languages.rules.base_models import PrincipleCategory
 
 
@@ -97,16 +95,8 @@ _KEYWORD_TO_DOGMAS: tuple[tuple[str, UniversalDogmaID], ...] = (
 )
 
 
-@cache
-def _principles_by_id(language: str) -> dict[str, ZenPrinciple]:
-    lang_zen = get_language_zen(language)
-    if not lang_zen:
-        return {}
-    return {principle.id: principle for principle in lang_zen.principles}
-
-
 def infer_dogmas_for_principle(principle: ZenPrinciple) -> tuple[str, ...]:
-    """Infer universal dogmas for a language-specific rule."""
+    """Heuristically infer universal dogmas for a language-specific rule."""
     baseline = _CATEGORY_TO_DOGMAS.get(
         principle.category,
         (UniversalDogmaID.PROPORTIONATE_COMPLEXITY,),
@@ -131,21 +121,27 @@ def infer_dogmas_for_principle(principle: ZenPrinciple) -> tuple[str, ...]:
 
 
 def dogmas_for_rule(language: str, rule_id: str) -> tuple[str, ...]:
-    """Return inferred universal dogmas for one rule ID in one language."""
-    principle = _principles_by_id(language).get(rule_id)
-    if principle is None:
-        return ()
-    return infer_dogmas_for_principle(principle)
+    """Return explicit universal dogmas for one rule ID in one language."""
+    del language
+
+    from mcp_zen_of_languages.dogmas.catalog import dogmas_for_rule_id
+
+    return dogmas_for_rule_id(rule_id)
 
 
 def dogmas_for_rule_ids(language: str, rule_ids: Iterable[str]) -> tuple[str, ...]:
-    """Return deduplicated inferred universal dogmas for multiple rule IDs."""
-    ordered: list[str] = []
-    seen: set[str] = set()
-    for rule_id in rule_ids:
-        for dogma in dogmas_for_rule(language, rule_id):
-            if dogma in seen:
-                continue
-            seen.add(dogma)
-            ordered.append(dogma)
-    return tuple(ordered)
+    """Return deduplicated explicit universal dogmas for multiple rule IDs."""
+    del language
+
+    from mcp_zen_of_languages.dogmas.catalog import dogmas_for_rule_ids as resolve
+
+    return resolve(tuple(rule_ids))
+
+
+__all__ = [
+    "DOGMA_RULE_IDS",
+    "UniversalDogmaID",
+    "dogmas_for_rule",
+    "dogmas_for_rule_ids",
+    "infer_dogmas_for_principle",
+]

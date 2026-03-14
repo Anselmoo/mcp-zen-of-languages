@@ -18,18 +18,18 @@ Every language has its own philosophy — its own sense of what "good code" mean
 | Language | Principles | Detectors | Parser | Philosophy Origin |
 |----------|:----------:|:---------:|--------|-------------------|
 | [Python](python.md) | 20 | 30 | AST | [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/) |
-| [Pydantic](pydantic.md) | 8 | 1 | Regex | [Pydantic v2 documentation](https://docs.pydantic.dev/latest/) |
-| [FastAPI](fastapi.md) | 6 | 1 | Regex | [FastAPI documentation](https://fastapi.tiangolo.com/) |
-| [Django](django.md) | 6 | 1 | Regex | [Django documentation](https://docs.djangoproject.com/) |
-| [SQLAlchemy](sqlalchemy.md) | 6 | 1 | Regex | [SQLAlchemy 2.0 documentation](https://docs.sqlalchemy.org/en/20/) |
+| [Pydantic](../frameworks/pydantic.md) | 8 | 1 | Regex | [Pydantic v2 documentation](https://docs.pydantic.dev/latest/) |
+| [FastAPI](../frameworks/fastapi.md) | 6 | 1 | Regex | [FastAPI documentation](https://fastapi.tiangolo.com/) |
+| [Django](../frameworks/django.md) | 6 | 1 | Regex | [Django documentation](https://docs.djangoproject.com/) |
+| [SQLAlchemy](../frameworks/sqlalchemy.md) | 6 | 1 | Regex | [SQLAlchemy 2.0 documentation](https://docs.sqlalchemy.org/en/20/) |
 | [TypeScript](typescript.md) | 18 | 25 | Regex | [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html) |
-| [React](react.md) | 5 | 1 | Regex | [React documentation and Rules of React](https://react.dev/) |
-| [Angular](angular.md) | 5 | 1 | Regex | [Angular Style Guide](https://angular.dev/style-guide) |
-| [Next.js](nextjs.md) | 5 | 1 | Regex | [Next.js documentation](https://nextjs.org/docs) |
+| [React](../frameworks/react.md) | 5 | 1 | Regex | [React documentation and Rules of React](https://react.dev/) |
+| [Angular](../frameworks/angular.md) | 5 | 1 | Regex | [Angular Style Guide](https://angular.dev/style-guide) |
+| [Next.js](../frameworks/nextjs.md) | 5 | 1 | Regex | [Next.js documentation](https://nextjs.org/docs) |
 | [Rust](rust.md) | 17 | 18 | Regex | [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/) |
 | [Go](go.md) | 20 | 21 | Regex | [Effective Go & The Zen of Go](https://the-zen-of-go.netlify.app/) |
 | [JavaScript](javascript.md) | 18 | 18 | Regex | [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript) |
-| [Vue](vue.md) | 5 | 1 | Regex | [Vue Style Guide](https://vuejs.org/style-guide/) |
+| [Vue](../frameworks/vue.md) | 5 | 1 | Regex | [Vue Style Guide](https://vuejs.org/style-guide/) |
 | [CSS](css.md) | 8 | 8 | Regex | [CSSWG + common modular CSS practices](https://www.w3.org/TR/CSS/) |
 | [Ansible](ansible.md) | 20 | 20 | Regex | [The Zen of Ansible (Red Hat)](https://www.redhat.com/en/blog/the-zen-of-ansible) |
 | [Bash](bash.md) | 14 | 14 | Regex | [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html) |

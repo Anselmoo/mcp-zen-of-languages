@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
+from mcp_zen_of_languages.analyzers.mapping_models import RuleBinding
 from mcp_zen_of_languages.analyzers.mapping_models import RuleDetectorBinding
 from mcp_zen_of_languages.languages.configs import Js009Config
 from mcp_zen_of_languages.languages.configs import Js011Config
@@ -64,146 +65,197 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_id="js_callback_nesting",
             detector_class=JsCallbackNestingDetector,
             config_model=JsCallbackNestingConfig,
-            rule_ids=["js-001"],
-            universal_dogma_ids=_dogmas("ZEN-FAIL-FAST", "ZEN-RETURN-EARLY"),
+            rules=[
+                RuleBinding(
+                    rule_id="js-001",
+                    dogma_ids=_dogmas("ZEN-FAIL-FAST", "ZEN-RETURN-EARLY"),
+                )
+            ],
             default_order=10,
         ),
         RuleDetectorBinding(
             detector_id="js_no_var",
             detector_class=JsNoVarDetector,
             config_model=JsNoVarConfig,
-            rule_ids=["js-002"],
-            universal_dogma_ids=_dogmas("ZEN-VISIBLE-STATE"),
+            rules=[
+                RuleBinding(rule_id="js-002", dogma_ids=_dogmas("ZEN-VISIBLE-STATE"))
+            ],
             default_order=20,
         ),
         RuleDetectorBinding(
             detector_id="js_strict_equality",
             detector_class=JsStrictEqualityDetector,
             config_model=JsStrictEqualityConfig,
-            rule_ids=["js-003"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(rule_id="js-003", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
+            ],
             default_order=30,
         ),
         RuleDetectorBinding(
             detector_id="js_async_error_handling",
             detector_class=JsAsyncErrorHandlingDetector,
             config_model=JsAsyncErrorHandlingConfig,
-            rule_ids=["js-007"],
-            universal_dogma_ids=_dogmas("ZEN-FAIL-FAST", "ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(
+                    rule_id="js-007",
+                    dogma_ids=_dogmas("ZEN-FAIL-FAST", "ZEN-EXPLICIT-INTENT"),
+                )
+            ],
             default_order=40,
         ),
         RuleDetectorBinding(
             detector_id="js_function_length",
             detector_class=JsFunctionLengthDetector,
             config_model=JsFunctionLengthConfig,
-            rule_ids=["js-005"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+            rules=[
+                RuleBinding(
+                    rule_id="js-005", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
             default_order=50,
         ),
         RuleDetectorBinding(
             detector_id="js_global_state",
             detector_class=JsGlobalStateDetector,
             config_model=JsGlobalStateConfig,
-            rule_ids=["js-004"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-VISIBLE-STATE"),
+            rules=[
+                RuleBinding(
+                    rule_id="js-004",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-VISIBLE-STATE"),
+                )
+            ],
             default_order=60,
         ),
         RuleDetectorBinding(
             detector_id="js_modern_features",
             detector_class=JsModernFeaturesDetector,
             config_model=JsModernFeaturesConfig,
-            rule_ids=["js-006"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+            rules=[
+                RuleBinding(
+                    rule_id="js-006", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
             default_order=70,
         ),
         RuleDetectorBinding(
             detector_id="js_magic_numbers",
             detector_class=JsMagicNumbersDetector,
             config_model=JsMagicNumbersConfig,
-            rule_ids=["js-008"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT", "ZEN-UNAMBIGUOUS-NAME"),
+            rules=[
+                RuleBinding(
+                    rule_id="js-008",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT", "ZEN-UNAMBIGUOUS-NAME"),
+                )
+            ],
             default_order=80,
         ),
         RuleDetectorBinding(
             detector_id="js-009",
             detector_class=JsInheritanceDepthDetector,
             config_model=Js009Config,
-            rule_ids=["js-009"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+            rules=[
+                RuleBinding(
+                    rule_id="js-009", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
             default_order=90,
         ),
         RuleDetectorBinding(
             detector_id="js_pure_functions",
             detector_class=JsPureFunctionDetector,
             config_model=JsPureFunctionConfig,
-            rule_ids=["js-010"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-VISIBLE-STATE"),
+            rules=[
+                RuleBinding(
+                    rule_id="js-010",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-VISIBLE-STATE"),
+                )
+            ],
             default_order=100,
         ),
         RuleDetectorBinding(
             detector_id="js-011",
             detector_class=JsMeaningfulNamesDetector,
             config_model=Js011Config,
-            rule_ids=["js-011"],
-            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
+            rules=[
+                RuleBinding(rule_id="js-011", dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"))
+            ],
             default_order=110,
         ),
         RuleDetectorBinding(
             detector_id="js_destructuring",
             detector_class=JsDestructuringDetector,
             config_model=JsDestructuringConfig,
-            rule_ids=["js-012"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+            rules=[
+                RuleBinding(
+                    rule_id="js-012", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
             default_order=120,
         ),
         RuleDetectorBinding(
             detector_id="js_object_spread",
             detector_class=JsObjectSpreadDetector,
             config_model=JsObjectSpreadConfig,
-            rule_ids=["js-013"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+            rules=[
+                RuleBinding(
+                    rule_id="js-013", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
             default_order=130,
         ),
         RuleDetectorBinding(
             detector_id="js_no_with",
             detector_class=JsNoWithDetector,
             config_model=JsNoWithConfig,
-            rule_ids=["js-014"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT", "ZEN-VISIBLE-STATE"),
+            rules=[
+                RuleBinding(
+                    rule_id="js-014",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT", "ZEN-VISIBLE-STATE"),
+                )
+            ],
             default_order=140,
         ),
         RuleDetectorBinding(
             detector_id="js_param_count",
             detector_class=JsParamCountDetector,
             config_model=JsParamCountConfig,
-            rule_ids=["js-015"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+            rules=[
+                RuleBinding(
+                    rule_id="js-015", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
             default_order=150,
         ),
         RuleDetectorBinding(
             detector_id="js_no_eval",
             detector_class=JsNoEvalDetector,
             config_model=JsNoEvalConfig,
-            rule_ids=["js-016"],
-            universal_dogma_ids=_dogmas("ZEN-STRICT-FENCES"),
+            rules=[
+                RuleBinding(rule_id="js-016", dogma_ids=_dogmas("ZEN-STRICT-FENCES"))
+            ],
             default_order=160,
         ),
         RuleDetectorBinding(
             detector_id="js_no_arguments",
             detector_class=JsNoArgumentsDetector,
             config_model=JsNoArgumentsConfig,
-            rule_ids=["js-017"],
-            universal_dogma_ids=_dogmas(
-                "ZEN-RIGHT-ABSTRACTION", "ZEN-UTILIZE-ARGUMENTS"
-            ),
+            rules=[
+                RuleBinding(
+                    rule_id="js-017",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-UTILIZE-ARGUMENTS"),
+                )
+            ],
             default_order=170,
         ),
         RuleDetectorBinding(
             detector_id="js_no_prototype_mutation",
             detector_class=JsNoPrototypeMutationDetector,
             config_model=JsNoPrototypeMutationConfig,
-            rule_ids=["js-018"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+            rules=[
+                RuleBinding(
+                    rule_id="js-018", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
             default_order=180,
         ),
     ],

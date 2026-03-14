@@ -7,6 +7,7 @@ from typing import Literal
 from pydantic import create_model
 
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
+from mcp_zen_of_languages.analyzers.mapping_models import RuleBinding
 from mcp_zen_of_languages.analyzers.mapping_models import RuleDetectorBinding
 from mcp_zen_of_languages.frameworks.react.detectors import ReactConditionalHookDetector
 from mcp_zen_of_languages.frameworks.react.detectors import ReactDirectDomAccessDetector
@@ -37,40 +38,59 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_id="react-004",
             detector_class=ReactConditionalHookDetector,
             config_model=_rule_config("react-004"),
-            rule_ids=["react-004"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(
+                    rule_id="react-004", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                )
+            ],
             default_order=10,
         ),
         RuleDetectorBinding(
             detector_id="react-003",
             detector_class=ReactDirectDomAccessDetector,
             config_model=_rule_config("react-003"),
-            rule_ids=["react-003"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-STRICT-FENCES"),
+            rules=[
+                RuleBinding(
+                    rule_id="react-003",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-STRICT-FENCES"),
+                )
+            ],
             default_order=20,
         ),
         RuleDetectorBinding(
             detector_id="react-005",
             detector_class=ReactEffectCleanupDetector,
             config_model=_rule_config("react-005"),
-            rule_ids=["react-005"],
-            universal_dogma_ids=_dogmas("ZEN-FAIL-FAST", "ZEN-STRICT-FENCES"),
+            rules=[
+                RuleBinding(
+                    rule_id="react-005",
+                    dogma_ids=_dogmas("ZEN-FAIL-FAST", "ZEN-STRICT-FENCES"),
+                )
+            ],
             default_order=30,
         ),
         RuleDetectorBinding(
             detector_id="react-002",
             detector_class=ReactInlineHandlerDetector,
             config_model=_rule_config("react-002"),
-            rule_ids=["react-002"],
-            universal_dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
+            rules=[
+                RuleBinding(
+                    rule_id="react-002",
+                    dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
+                )
+            ],
             default_order=40,
         ),
         RuleDetectorBinding(
             detector_id="react-001",
             detector_class=ReactStableKeyDetector,
             config_model=_rule_config("react-001"),
-            rule_ids=["react-001"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT", "ZEN-VISIBLE-STATE"),
+            rules=[
+                RuleBinding(
+                    rule_id="react-001",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT", "ZEN-VISIBLE-STATE"),
+                )
+            ],
             default_order=50,
         ),
     ],

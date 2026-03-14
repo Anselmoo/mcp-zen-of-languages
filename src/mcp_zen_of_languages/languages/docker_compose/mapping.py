@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
+from mcp_zen_of_languages.analyzers.mapping_models import RuleBinding
 from mcp_zen_of_languages.analyzers.mapping_models import RuleDetectorBinding
 from mcp_zen_of_languages.languages.configs import DockerComposeHealthcheckConfig
 from mcp_zen_of_languages.languages.configs import DockerComposeLatestTagConfig
@@ -34,32 +35,45 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_id="docker-compose-001",
             detector_class=DockerComposeLatestTagDetector,
             config_model=DockerComposeLatestTagConfig,
-            rule_ids=["docker-compose-001"],
-            universal_dogma_ids=_dogmas("ZEN-STRICT-FENCES"),
+            rules=[
+                RuleBinding(
+                    rule_id="docker-compose-001", dogma_ids=_dogmas("ZEN-STRICT-FENCES")
+                )
+            ],
             default_order=10,
         ),
         RuleDetectorBinding(
             detector_id="docker-compose-002",
             detector_class=DockerComposeNonRootUserDetector,
             config_model=DockerComposeNonRootUserConfig,
-            rule_ids=["docker-compose-002"],
-            universal_dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(
+                    rule_id="docker-compose-002",
+                    dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-EXPLICIT-INTENT"),
+                )
+            ],
             default_order=20,
         ),
         RuleDetectorBinding(
             detector_id="docker-compose-003",
             detector_class=DockerComposeHealthcheckDetector,
             config_model=DockerComposeHealthcheckConfig,
-            rule_ids=["docker-compose-003"],
-            universal_dogma_ids=_dogmas("ZEN-FAIL-FAST"),
+            rules=[
+                RuleBinding(
+                    rule_id="docker-compose-003", dogma_ids=_dogmas("ZEN-FAIL-FAST")
+                )
+            ],
             default_order=30,
         ),
         RuleDetectorBinding(
             detector_id="docker-compose-004",
             detector_class=DockerComposeSecretHygieneDetector,
             config_model=DockerComposeSecretHygieneConfig,
-            rule_ids=["docker-compose-004"],
-            universal_dogma_ids=_dogmas("ZEN-STRICT-FENCES"),
+            rules=[
+                RuleBinding(
+                    rule_id="docker-compose-004", dogma_ids=_dogmas("ZEN-STRICT-FENCES")
+                )
+            ],
             default_order=40,
         ),
     ],

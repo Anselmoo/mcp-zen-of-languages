@@ -5,6 +5,8 @@ from __future__ import annotations
 from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
 from mcp_zen_of_languages.analyzers.mapping_models import DetectorGearbox
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
+from mcp_zen_of_languages.analyzers.mapping_models import NonRuleDetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import RuleBinding
 from mcp_zen_of_languages.analyzers.mapping_models import RuleDetectorBinding
 from mcp_zen_of_languages.languages.configs import BareExceptConfig
 from mcp_zen_of_languages.languages.configs import CircularDependencyConfig
@@ -84,12 +86,10 @@ def _dogmas(*dogma_ids: str) -> list[str]:
 DETECTOR_MAP = LanguageDetectorMap(
     language="python",
     bindings=[
-        RuleDetectorBinding(
+        NonRuleDetectorBinding(
             detector_id="analyzer_defaults",
             detector_class=NameStyleDetector,
             config_model=AnalyzerConfig,
-            rule_ids=[],
-            universal_dogma_ids=[],
             default_order=0,
             enabled_by_default=False,
         ),
@@ -97,260 +97,371 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_id="name_style",
             detector_class=NameStyleDetector,
             config_model=NameStyleConfig,
-            rule_ids=["python-001"],
-            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
+            rules=[
+                RuleBinding(
+                    rule_id="python-001", dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME")
+                )
+            ],
             default_order=10,
         ),
         RuleDetectorBinding(
             detector_id="cyclomatic_complexity",
             detector_class=CyclomaticComplexityDetector,
             config_model=CyclomaticComplexityConfig,
-            rule_ids=["python-003"],
-            universal_dogma_ids=_dogmas(
-                "ZEN-PROPORTIONATE-COMPLEXITY",
-                "ZEN-RETURN-EARLY",
-                "ZEN-RIGHT-ABSTRACTION",
-            ),
+            rules=[
+                RuleBinding(
+                    rule_id="python-003",
+                    dogma_ids=_dogmas(
+                        "ZEN-PROPORTIONATE-COMPLEXITY",
+                        "ZEN-RETURN-EARLY",
+                        "ZEN-RIGHT-ABSTRACTION",
+                    ),
+                )
+            ],
             default_order=20,
         ),
         RuleDetectorBinding(
             detector_id="complex_one_liners",
             detector_class=ComplexOneLinersDetector,
             config_model=ComplexOneLinersConfig,
-            rule_ids=["python-003"],
-            universal_dogma_ids=_dogmas(
-                "ZEN-PROPORTIONATE-COMPLEXITY",
-                "ZEN-RETURN-EARLY",
-                "ZEN-RIGHT-ABSTRACTION",
-            ),
+            rules=[
+                RuleBinding(
+                    rule_id="python-003",
+                    dogma_ids=_dogmas(
+                        "ZEN-PROPORTIONATE-COMPLEXITY",
+                        "ZEN-RETURN-EARLY",
+                        "ZEN-RIGHT-ABSTRACTION",
+                    ),
+                )
+            ],
             default_order=25,
         ),
         RuleDetectorBinding(
             detector_id="nesting_depth",
             detector_class=NestingDepthDetector,
             config_model=NestingDepthConfig,
-            rule_ids=["python-005"],
-            universal_dogma_ids=_dogmas("ZEN-RETURN-EARLY"),
+            rules=[
+                RuleBinding(rule_id="python-005", dogma_ids=_dogmas("ZEN-RETURN-EARLY"))
+            ],
             default_order=30,
         ),
         RuleDetectorBinding(
             detector_id="long_functions",
             detector_class=LongFunctionDetector,
             config_model=LongFunctionConfig,
-            rule_ids=["python-007"],
-            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
+            rules=[
+                RuleBinding(
+                    rule_id="python-007", dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME")
+                )
+            ],
             default_order=40,
         ),
         RuleDetectorBinding(
             detector_id="short_variable_names",
             detector_class=ShortVariableNamesDetector,
             config_model=ShortVariableNamesConfig,
-            rule_ids=["python-007"],
-            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
+            rules=[
+                RuleBinding(
+                    rule_id="python-007", dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME")
+                )
+            ],
             default_order=45,
         ),
         RuleDetectorBinding(
             detector_id="god_classes",
             detector_class=GodClassDetector,
             config_model=GodClassConfig,
-            rule_ids=["python-004"],
-            universal_dogma_ids=_dogmas(
-                "ZEN-RIGHT-ABSTRACTION", "ZEN-PROPORTIONATE-COMPLEXITY"
-            ),
+            rules=[
+                RuleBinding(
+                    rule_id="python-004",
+                    dogma_ids=_dogmas(
+                        "ZEN-RIGHT-ABSTRACTION", "ZEN-PROPORTIONATE-COMPLEXITY"
+                    ),
+                )
+            ],
             default_order=50,
         ),
         RuleDetectorBinding(
             detector_id="magic_methods",
             detector_class=MagicMethodDetector,
             config_model=MagicMethodConfig,
-            rule_ids=["python-002"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(
+                    rule_id="python-002", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                )
+            ],
             default_order=60,
         ),
         RuleDetectorBinding(
             detector_id="circular_dependencies",
             detector_class=CircularDependencyDetector,
             config_model=CircularDependencyConfig,
-            rule_ids=["python-004"],
-            universal_dogma_ids=_dogmas(
-                "ZEN-RIGHT-ABSTRACTION", "ZEN-PROPORTIONATE-COMPLEXITY"
-            ),
+            rules=[
+                RuleBinding(
+                    rule_id="python-004",
+                    dogma_ids=_dogmas(
+                        "ZEN-RIGHT-ABSTRACTION", "ZEN-PROPORTIONATE-COMPLEXITY"
+                    ),
+                )
+            ],
             default_order=70,
         ),
         RuleDetectorBinding(
             detector_id="deep_inheritance",
             detector_class=DeepInheritanceDetector,
             config_model=DeepInheritanceConfig,
-            rule_ids=["python-004"],
-            universal_dogma_ids=_dogmas(
-                "ZEN-RIGHT-ABSTRACTION", "ZEN-PROPORTIONATE-COMPLEXITY"
-            ),
+            rules=[
+                RuleBinding(
+                    rule_id="python-004",
+                    dogma_ids=_dogmas(
+                        "ZEN-RIGHT-ABSTRACTION", "ZEN-PROPORTIONATE-COMPLEXITY"
+                    ),
+                )
+            ],
             default_order=80,
         ),
         RuleDetectorBinding(
             detector_id="feature_envy",
             detector_class=FeatureEnvyDetector,
             config_model=FeatureEnvyConfig,
-            rule_ids=["python-011"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-VISIBLE-STATE"),
+            rules=[
+                RuleBinding(
+                    rule_id="python-011",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-VISIBLE-STATE"),
+                )
+            ],
             default_order=90,
         ),
         RuleDetectorBinding(
             detector_id="duplicate_implementations",
             detector_class=DuplicateImplementationDetector,
             config_model=DuplicateImplementationConfig,
-            rule_ids=["python-011"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-VISIBLE-STATE"),
+            rules=[
+                RuleBinding(
+                    rule_id="python-011",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-VISIBLE-STATE"),
+                )
+            ],
             default_order=100,
         ),
         RuleDetectorBinding(
             detector_id="class_size",
             detector_class=ClassSizeDetector,
             config_model=ClassSizeConfig,
-            rule_ids=["python-007"],
-            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
+            rules=[
+                RuleBinding(
+                    rule_id="python-007", dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME")
+                )
+            ],
             default_order=110,
         ),
         RuleDetectorBinding(
             detector_id="star_imports",
             detector_class=StarImportDetector,
             config_model=StarImportConfig,
-            rule_ids=["python-002"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(
+                    rule_id="python-002", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                )
+            ],
             default_order=120,
         ),
         RuleDetectorBinding(
             detector_id="magic_number",
             detector_class=MagicNumberDetector,
             config_model=MagicNumberConfig,
-            rule_ids=["python-002"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(
+                    rule_id="python-002", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                )
+            ],
             default_order=125,
         ),
         RuleDetectorBinding(
             detector_id="bare_except",
             detector_class=BareExceptDetector,
             config_model=BareExceptConfig,
-            rule_ids=["python-009"],
-            universal_dogma_ids=_dogmas("ZEN-FAIL-FAST", "ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(
+                    rule_id="python-009",
+                    dogma_ids=_dogmas("ZEN-FAIL-FAST", "ZEN-EXPLICIT-INTENT"),
+                )
+            ],
             default_order=130,
         ),
         RuleDetectorBinding(
             detector_id="line_length",
             detector_class=LineLengthDetector,
             config_model=LineLengthConfig,
-            rule_ids=["python-001"],
-            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
+            rules=[
+                RuleBinding(
+                    rule_id="python-001", dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME")
+                )
+            ],
             default_order=140,
         ),
         RuleDetectorBinding(
             detector_id="sparse_code",
             detector_class=SparseCodeDetector,
             config_model=SparseCodeConfig,
-            rule_ids=["python-006"],
-            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME", "ZEN-VISIBLE-STATE"),
+            rules=[
+                RuleBinding(
+                    rule_id="python-006",
+                    dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME", "ZEN-VISIBLE-STATE"),
+                )
+            ],
             default_order=145,
         ),
         RuleDetectorBinding(
             detector_id="docstrings",
             detector_class=DocstringDetector,
             config_model=DocstringConfig,
-            rule_ids=["python-007"],
-            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
+            rules=[
+                RuleBinding(
+                    rule_id="python-007", dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME")
+                )
+            ],
             default_order=150,
         ),
         RuleDetectorBinding(
             detector_id="consistency",
             detector_class=ConsistencyDetector,
             config_model=ConsistencyConfig,
-            rule_ids=["python-008"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT", "ZEN-FAIL-FAST"),
+            rules=[
+                RuleBinding(
+                    rule_id="python-008",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT", "ZEN-FAIL-FAST"),
+                )
+            ],
             default_order=155,
         ),
         RuleDetectorBinding(
             detector_id="context_manager",
             detector_class=ContextManagerDetector,
             config_model=ContextManagerConfig,
-            rule_ids=["python-011"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-VISIBLE-STATE"),
+            rules=[
+                RuleBinding(
+                    rule_id="python-011",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-VISIBLE-STATE"),
+                )
+            ],
             default_order=160,
         ),
         RuleDetectorBinding(
             detector_id="explicitness",
             detector_class=ExplicitnessDetector,
             config_model=ExplicitnessConfig,
-            rule_ids=["python-010"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(
+                    rule_id="python-010", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                )
+            ],
             default_order=165,
         ),
         RuleDetectorBinding(
             detector_id="namespace_usage",
             detector_class=NamespaceUsageDetector,
             config_model=NamespaceConfig,
-            rule_ids=["python-012", "python-020"],
-            universal_dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-UNAMBIGUOUS-NAME"),
+            rules=[
+                RuleBinding(
+                    rule_id="python-012",
+                    dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-UNAMBIGUOUS-NAME"),
+                ),
+                RuleBinding(
+                    rule_id="python-020",
+                    dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-UNAMBIGUOUS-NAME"),
+                ),
+            ],
             default_order=170,
         ),
         RuleDetectorBinding(
             detector_id="python_practicality",
             detector_class=PythonPracticalityDetector,
             config_model=PythonPracticalityConfig,
-            rule_ids=["python-013"],
-            universal_dogma_ids=_dogmas(
-                "ZEN-RIGHT-ABSTRACTION", "ZEN-PROPORTIONATE-COMPLEXITY"
-            ),
+            rules=[
+                RuleBinding(
+                    rule_id="python-013",
+                    dogma_ids=_dogmas(
+                        "ZEN-RIGHT-ABSTRACTION", "ZEN-PROPORTIONATE-COMPLEXITY"
+                    ),
+                )
+            ],
             default_order=180,
         ),
         RuleDetectorBinding(
             detector_id="python_explicit_silence",
             detector_class=PythonExplicitSilenceDetector,
             config_model=PythonExplicitSilenceConfig,
-            rule_ids=["python-014"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT", "ZEN-FAIL-FAST"),
+            rules=[
+                RuleBinding(
+                    rule_id="python-014",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT", "ZEN-FAIL-FAST"),
+                )
+            ],
             default_order=190,
         ),
         RuleDetectorBinding(
             detector_id="python_todo_stub",
             detector_class=PythonTodoStubDetector,
             config_model=PythonTodoStubConfig,
-            rule_ids=["python-015"],
-            universal_dogma_ids=_dogmas("ZEN-RETURN-EARLY", "ZEN-RUTHLESS-DELETION"),
+            rules=[
+                RuleBinding(
+                    rule_id="python-015",
+                    dogma_ids=_dogmas("ZEN-RETURN-EARLY", "ZEN-RUTHLESS-DELETION"),
+                )
+            ],
             default_order=200,
         ),
         RuleDetectorBinding(
             detector_id="python_premature_impl",
             detector_class=PythonPrematureImplDetector,
             config_model=PythonPrematureImplConfig,
-            rule_ids=["python-016"],
-            universal_dogma_ids=_dogmas(
-                "ZEN-RIGHT-ABSTRACTION", "ZEN-FAIL-FAST", "ZEN-RUTHLESS-DELETION"
-            ),
+            rules=[
+                RuleBinding(
+                    rule_id="python-016",
+                    dogma_ids=_dogmas(
+                        "ZEN-RIGHT-ABSTRACTION",
+                        "ZEN-FAIL-FAST",
+                        "ZEN-RUTHLESS-DELETION",
+                    ),
+                )
+            ],
             default_order=210,
         ),
         RuleDetectorBinding(
             detector_id="python_complex_undocumented",
             detector_class=PythonComplexUndocumentedDetector,
             config_model=PythonComplexUndocumentedConfig,
-            rule_ids=["python-017"],
-            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
+            rules=[
+                RuleBinding(
+                    rule_id="python-017", dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME")
+                )
+            ],
             default_order=220,
         ),
         RuleDetectorBinding(
             detector_id="python_simple_documented",
             detector_class=PythonSimpleDocumentedDetector,
             config_model=PythonSimpleDocumentedConfig,
-            rule_ids=["python-018"],
-            universal_dogma_ids=_dogmas(
-                "ZEN-UNAMBIGUOUS-NAME", "ZEN-PROPORTIONATE-COMPLEXITY"
-            ),
+            rules=[
+                RuleBinding(
+                    rule_id="python-018",
+                    dogma_ids=_dogmas(
+                        "ZEN-UNAMBIGUOUS-NAME", "ZEN-PROPORTIONATE-COMPLEXITY"
+                    ),
+                )
+            ],
             default_order=230,
         ),
         RuleDetectorBinding(
             detector_id="python_idiom",
             detector_class=PythonIdiomDetector,
             config_model=PythonIdiomConfig,
-            rule_ids=["python-019"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+            rules=[
+                RuleBinding(
+                    rule_id="python-019", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
             default_order=240,
         ),
     ],

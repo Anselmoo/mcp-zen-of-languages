@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
+from mcp_zen_of_languages.analyzers.mapping_models import RuleBinding
 from mcp_zen_of_languages.analyzers.mapping_models import RuleDetectorBinding
 from mcp_zen_of_languages.languages.configs import TerraformBackendConfig
 from mcp_zen_of_languages.languages.configs import TerraformHardcodedIdConfig
@@ -48,58 +49,71 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_id="tf-001",
             detector_class=TerraformProviderVersionPinningDetector,
             config_model=TerraformProviderVersionPinningConfig,
-            rule_ids=["tf-001"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(rule_id="tf-001", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
+            ],
             default_order=10,
         ),
         RuleDetectorBinding(
             detector_id="tf-002",
             detector_class=TerraformModuleVersionPinningDetector,
             config_model=TerraformModuleVersionPinningConfig,
-            rule_ids=["tf-002"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(rule_id="tf-002", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
+            ],
             default_order=20,
         ),
         RuleDetectorBinding(
             detector_id="tf-003",
             detector_class=TerraformVariableOutputDescriptionDetector,
             config_model=TerraformVariableOutputDescriptionConfig,
-            rule_ids=["tf-003"],
-            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
+            rules=[
+                RuleBinding(rule_id="tf-003", dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"))
+            ],
             default_order=30,
         ),
         RuleDetectorBinding(
             detector_id="tf-004",
             detector_class=TerraformHardcodedIdDetector,
             config_model=TerraformHardcodedIdConfig,
-            rule_ids=["tf-004"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT", "ZEN-UNAMBIGUOUS-NAME"),
+            rules=[
+                RuleBinding(
+                    rule_id="tf-004",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT", "ZEN-UNAMBIGUOUS-NAME"),
+                )
+            ],
             default_order=40,
         ),
         RuleDetectorBinding(
             detector_id="tf-005",
             detector_class=TerraformNoHardcodedSecretsDetector,
             config_model=TerraformNoHardcodedSecretsConfig,
-            rule_ids=["tf-005"],
-            universal_dogma_ids=_dogmas("ZEN-STRICT-FENCES"),
+            rules=[
+                RuleBinding(rule_id="tf-005", dogma_ids=_dogmas("ZEN-STRICT-FENCES"))
+            ],
             default_order=50,
         ),
         RuleDetectorBinding(
             detector_id="tf-006",
             detector_class=TerraformBackendConfigDetector,
             config_model=TerraformBackendConfig,
-            rule_ids=["tf-006"],
-            universal_dogma_ids=_dogmas(
-                "ZEN-FAIL-FAST", "ZEN-EXPLICIT-INTENT", "ZEN-VISIBLE-STATE"
-            ),
+            rules=[
+                RuleBinding(
+                    rule_id="tf-006",
+                    dogma_ids=_dogmas(
+                        "ZEN-FAIL-FAST", "ZEN-EXPLICIT-INTENT", "ZEN-VISIBLE-STATE"
+                    ),
+                )
+            ],
             default_order=60,
         ),
         RuleDetectorBinding(
             detector_id="tf-007",
             detector_class=TerraformNamingConventionDetector,
             config_model=TerraformNamingConventionConfig,
-            rule_ids=["tf-007"],
-            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
+            rules=[
+                RuleBinding(rule_id="tf-007", dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"))
+            ],
             default_order=70,
         ),
     ],

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
+from mcp_zen_of_languages.analyzers.mapping_models import RuleBinding
 from mcp_zen_of_languages.analyzers.mapping_models import RuleDetectorBinding
 from mcp_zen_of_languages.languages.configs import JsonArrayOrderConfig
 from mcp_zen_of_languages.languages.configs import JsonDateFormatConfig
@@ -36,72 +37,95 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_id="json-001",
             detector_class=JsonStrictnessDetector,
             config_model=JsonStrictnessConfig,
-            rule_ids=["json-001"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(
+                    rule_id="json-001", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                )
+            ],
             default_order=10,
         ),
         RuleDetectorBinding(
             detector_id="json-002",
             detector_class=JsonSchemaConsistencyDetector,
             config_model=JsonSchemaConsistencyConfig,
-            rule_ids=["json-002"],
-            universal_dogma_ids=_dogmas("ZEN-RETURN-EARLY"),
+            rules=[
+                RuleBinding(rule_id="json-002", dogma_ids=_dogmas("ZEN-RETURN-EARLY"))
+            ],
             default_order=20,
         ),
         RuleDetectorBinding(
             detector_id="json-003",
             detector_class=JsonDuplicateKeyDetector,
             config_model=JsonDuplicateKeyConfig,
-            rule_ids=["json-003"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(
+                    rule_id="json-003", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                )
+            ],
             default_order=30,
         ),
         RuleDetectorBinding(
             detector_id="json-004",
             detector_class=JsonMagicStringDetector,
             config_model=JsonMagicStringConfig,
-            rule_ids=["json-004"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(
+                    rule_id="json-004", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                )
+            ],
             default_order=40,
         ),
         RuleDetectorBinding(
             detector_id="json-005",
             detector_class=JsonKeyCasingDetector,
             config_model=JsonKeyCasingConfig,
-            rule_ids=["json-005"],
-            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
+            rules=[
+                RuleBinding(
+                    rule_id="json-005", dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME")
+                )
+            ],
             default_order=50,
         ),
         RuleDetectorBinding(
             detector_id="json-006",
             detector_class=JsonArrayOrderDetector,
             config_model=JsonArrayOrderConfig,
-            rule_ids=["json-006"],
-            universal_dogma_ids=_dogmas("ZEN-RETURN-EARLY"),
+            rules=[
+                RuleBinding(rule_id="json-006", dogma_ids=_dogmas("ZEN-RETURN-EARLY"))
+            ],
             default_order=60,
         ),
         RuleDetectorBinding(
             detector_id="json-007",
             detector_class=JsonNullSprawlDetector,
             config_model=JsonNullSprawlConfig,
-            rule_ids=["json-007"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(
+                    rule_id="json-007", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                )
+            ],
             default_order=70,
         ),
         RuleDetectorBinding(
             detector_id="json-008",
             detector_class=JsonDateFormatDetector,
             config_model=JsonDateFormatConfig,
-            rule_ids=["json-008"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(
+                    rule_id="json-008", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                )
+            ],
             default_order=80,
         ),
         RuleDetectorBinding(
             detector_id="json-009",
             detector_class=JsonNullHandlingDetector,
             config_model=JsonNullHandlingConfig,
-            rule_ids=["json-009"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(
+                    rule_id="json-009", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                )
+            ],
             default_order=90,
         ),
     ],

@@ -68,6 +68,8 @@ class DetectorMetadata(BaseModel):
             from [`rule_map`][rule_map] keys when not set explicitly.
         rule_map: Maps each rule ID to the list of violation-spec indices
             the detector can flag; ``["*"]`` means all specs.
+        rule_dogma_map: Maps each rule ID to the dogma ids bound to that
+            specific rule.
         default_order: Sort key controlling detector execution order inside
             a pipeline; lower values run first.
         enabled_by_default: Whether this detector is included when building
@@ -80,7 +82,7 @@ class DetectorMetadata(BaseModel):
     language: str
     rule_ids: list[str] = Field(default_factory=list)
     rule_map: dict[str, list[str]] = Field(default_factory=dict)
-    universal_dogma_ids: list[str] = Field(default_factory=list)
+    rule_dogma_map: dict[str, list[str]] = Field(default_factory=dict)
     default_order: int = 0
     enabled_by_default: bool = True
 
@@ -89,15 +91,34 @@ class DetectorMetadata(BaseModel):
     def model_post_init(self, __context: object, /) -> None:
         """Ensure ``rule_ids`` and ``rule_map`` are mutually consistent.
 
-        If only one of the two was provided at construction time, the other
-        is derived automatically: missing ``rule_map`` entries default to
-        ``["*"]`` (cover all violation specs), and missing ``rule_ids``
-        are extracted from ``rule_map`` keys.
+        Missing ``rule_map`` entries default to ``["*"]`` (cover all
+        violation specs). Rule ids are inferred from the union of
+        ``rule_ids``, ``rule_map`` keys, and ``rule_dogma_map`` keys.
         """
-        if not self.rule_map and self.rule_ids:
-            self.rule_map = {rule_id: ["*"] for rule_id in self.rule_ids}
-        if self.rule_map and not self.rule_ids:
-            self.rule_ids = list(self.rule_map.keys())
+        ordered_rule_ids = list(
+            dict.fromkeys(
+                [
+                    *self.rule_ids,
+                    *self.rule_map.keys(),
+                    *self.rule_dogma_map.keys(),
+                ],
+            ),
+        )
+        if not ordered_rule_ids:
+            return
+
+        self.rule_ids = ordered_rule_ids
+        for rule_id in ordered_rule_ids:
+            self.rule_map.setdefault(rule_id, ["*"])
+            self.rule_dogma_map.setdefault(rule_id, [])
+
+    def dogma_ids_for_rule(self, rule_id: str | None) -> list[str]:
+        """Return explicit dogma ids bound to one rule."""
+        if rule_id and rule_id in self.rule_dogma_map:
+            return list(self.rule_dogma_map[rule_id])
+        if len(self.rule_dogma_map) == 1:
+            return list(next(iter(self.rule_dogma_map.values())))
+        return []
 
 
 class DetectorRegistry:

@@ -171,7 +171,7 @@ if not REGISTRY.items():
                     config_model=rule_configs[rule_id],
                     language=language,
                     rule_ids=[rule_id],
-                    universal_dogma_ids=list(dogmas_for_rule(language, rule_id)),
+                    rule_dogma_map={rule_id: list(dogmas_for_rule(language, rule_id))},
                     default_order=900,
                 ),
             )

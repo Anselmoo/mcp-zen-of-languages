@@ -8,7 +8,7 @@ that tell the registry:
 
 * *which* ``ViolationDetector`` subclass enforces a set of rules,
 * *which* ``DetectorConfig`` model carries its thresholds, and
-* *which* rule ids and universal dogma ids travel with that detector binding.
+* *which* explicit rule bounds (violation selectors + dogma ids) belong to that detector.
 
 See Also:
     ``mcp_zen_of_languages.analyzers.registry`` — consumes these
@@ -53,9 +53,37 @@ class BaseBinding(BaseModel, ABC):
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
+    @property
+    def rule_ids(self) -> list[str]:
+        """Return the ordered rule ids covered by this binding, if any."""
+        return []
+
+    @property
+    def rule_map(self) -> dict[str, list[str]]:
+        """Return violation-selector coverage grouped by rule id, if any."""
+        return {}
+
+    @property
+    def rule_dogma_map(self) -> dict[str, list[str]]:
+        """Return explicit dogma ids grouped by rule id, if any."""
+        return {}
+
     @abstractmethod
     def to_metadata(self, language: str) -> DetectorMetadata:
         """Project this binding into registry metadata for one language."""
+
+
+class RuleBinding(BaseModel):
+    """Explicit binding between one rule id and its dogma/violation bounds."""
+
+    rule_id: str
+    violation_selectors: list[str] = Field(default_factory=lambda: ["*"])
+    dogma_ids: list[str] = Field(default_factory=list)
+
+    def model_post_init(self, __context: object, /) -> None:
+        """Default empty violation selectors to the wildcard selector."""
+        if not self.violation_selectors:
+            self.violation_selectors = ["*"]
 
 
 class RuleDetectorBinding(BaseBinding):
@@ -72,11 +100,8 @@ class RuleDetectorBinding(BaseBinding):
             subclass to instantiate in the pipeline.
         config_model: Pydantic model used to validate threshold values
             projected from zen principle metrics.
-        rule_ids: Zen rule identifiers this detector can evaluate.
-        rule_map: Per-rule mapping to violation-spec indices; ``["*"]``
-            means the detector covers all specs for that rule.
-        universal_dogma_ids: Explicit universal dogma ids associated with
-            the covered rules.
+        rules: Explicit per-rule bounds for this detector. Each bound rule
+            carries its own violation selectors and dogma ids.
         default_order: Pipeline execution order; lower values run first.
         enabled_by_default: If ``False``, the detector is excluded from
             the discriminated-union config adapter unless explicitly
@@ -84,16 +109,22 @@ class RuleDetectorBinding(BaseBinding):
     """
 
     binding_kind: Literal["rule"] = "rule"
-    rule_ids: list[str] = Field(default_factory=list)
-    rule_map: dict[str, list[str]] = Field(default_factory=dict)
-    universal_dogma_ids: list[str] = Field(default_factory=list)
+    rules: list[RuleBinding] = Field(min_length=1)
 
-    def model_post_init(self, __context: object, /) -> None:
-        """Normalize rule metadata so bindings can be authored tersely."""
-        if not self.rule_map and self.rule_ids:
-            self.rule_map = {rule_id: ["*"] for rule_id in self.rule_ids}
-        if self.rule_map and not self.rule_ids:
-            self.rule_ids = list(self.rule_map.keys())
+    @property
+    def rule_ids(self) -> list[str]:
+        """Return the ordered rule ids covered by this detector."""
+        return [rule.rule_id for rule in self.rules]
+
+    @property
+    def rule_map(self) -> dict[str, list[str]]:
+        """Return violation-selector coverage grouped by rule id."""
+        return {rule.rule_id: list(rule.violation_selectors) for rule in self.rules}
+
+    @property
+    def rule_dogma_map(self) -> dict[str, list[str]]:
+        """Return explicit dogma ids grouped by rule id."""
+        return {rule.rule_id: list(rule.dogma_ids) for rule in self.rules}
 
     def to_metadata(self, language: str) -> DetectorMetadata:
         """Build registry metadata for a rule detector binding."""
@@ -106,13 +137,32 @@ class RuleDetectorBinding(BaseBinding):
             language=language,
             rule_ids=list(self.rule_ids),
             rule_map=dict(self.rule_map),
-            universal_dogma_ids=list(self.universal_dogma_ids),
+            rule_dogma_map=dict(self.rule_dogma_map),
             default_order=self.default_order,
             enabled_by_default=self.enabled_by_default,
         )
 
 
-DetectorBinding = RuleDetectorBinding
+class NonRuleDetectorBinding(BaseBinding):
+    """Binding for generic detectors that do not map to explicit rules."""
+
+    binding_kind: Literal["generic"] = "generic"
+
+    def to_metadata(self, language: str) -> DetectorMetadata:
+        """Build registry metadata for a non-rule detector binding."""
+        from mcp_zen_of_languages.analyzers.registry import DetectorMetadata
+
+        return DetectorMetadata(
+            detector_id=self.detector_id,
+            detector_class=self.detector_class,
+            config_model=self.config_model,
+            language=language,
+            rule_ids=[],
+            rule_map={},
+            rule_dogma_map={},
+            default_order=self.default_order,
+            enabled_by_default=self.enabled_by_default,
+        )
 
 
 class LanguageDetectorMap(BaseModel):

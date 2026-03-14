@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
+from mcp_zen_of_languages.analyzers.mapping_models import RuleBinding
 from mcp_zen_of_languages.analyzers.mapping_models import RuleDetectorBinding
 from mcp_zen_of_languages.languages.configs import XmlAttributeUsageConfig
 from mcp_zen_of_languages.languages.configs import XmlClosingTagsConfig
@@ -30,50 +31,61 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_id="xml-001",
             detector_class=XmlSemanticMarkupDetector,
             config_model=XmlSemanticMarkupConfig,
-            rule_ids=["xml-001"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(rule_id="xml-001", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
+            ],
             default_order=10,
         ),
         RuleDetectorBinding(
             detector_id="xml-002",
             detector_class=XmlAttributeUsageDetector,
             config_model=XmlAttributeUsageConfig,
-            rule_ids=["xml-002"],
-            universal_dogma_ids=_dogmas("ZEN-RETURN-EARLY"),
+            rules=[
+                RuleBinding(rule_id="xml-002", dogma_ids=_dogmas("ZEN-RETURN-EARLY"))
+            ],
             default_order=20,
         ),
         RuleDetectorBinding(
             detector_id="xml-003",
             detector_class=XmlNamespaceDetector,
             config_model=XmlNamespaceConfig,
-            rule_ids=["xml-003"],
-            universal_dogma_ids=_dogmas(
-                "ZEN-EXPLICIT-INTENT", "ZEN-UNAMBIGUOUS-NAME", "ZEN-STRICT-FENCES"
-            ),
+            rules=[
+                RuleBinding(
+                    rule_id="xml-003",
+                    dogma_ids=_dogmas(
+                        "ZEN-EXPLICIT-INTENT",
+                        "ZEN-UNAMBIGUOUS-NAME",
+                        "ZEN-STRICT-FENCES",
+                    ),
+                )
+            ],
             default_order=30,
         ),
         RuleDetectorBinding(
             detector_id="xml-004",
             detector_class=XmlValidityDetector,
             config_model=XmlValidityConfig,
-            rule_ids=["xml-004"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(rule_id="xml-004", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
+            ],
             default_order=40,
         ),
         RuleDetectorBinding(
             detector_id="xml-005",
             detector_class=XmlHierarchyDetector,
             config_model=XmlHierarchyConfig,
-            rule_ids=["xml-005"],
-            universal_dogma_ids=_dogmas("ZEN-RETURN-EARLY"),
+            rules=[
+                RuleBinding(rule_id="xml-005", dogma_ids=_dogmas("ZEN-RETURN-EARLY"))
+            ],
             default_order=50,
         ),
         RuleDetectorBinding(
             detector_id="xml-006",
             detector_class=XmlClosingTagsDetector,
             config_model=XmlClosingTagsConfig,
-            rule_ids=["xml-006"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(rule_id="xml-006", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
+            ],
             default_order=60,
         ),
     ],

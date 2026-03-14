@@ -7,6 +7,7 @@ from typing import Literal
 from pydantic import create_model
 
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
+from mcp_zen_of_languages.analyzers.mapping_models import RuleBinding
 from mcp_zen_of_languages.analyzers.mapping_models import RuleDetectorBinding
 from mcp_zen_of_languages.frameworks.django.detectors import DjangoDebugConfigDetector
 from mcp_zen_of_languages.frameworks.django.detectors import (
@@ -44,48 +45,70 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_id="django-003",
             detector_class=DjangoDebugConfigDetector,
             config_model=_rule_config("django-003"),
-            rule_ids=["django-003"],
-            universal_dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-FAIL-FAST"),
+            rules=[
+                RuleBinding(
+                    rule_id="django-003",
+                    dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-FAIL-FAST"),
+                )
+            ],
             default_order=10,
         ),
         RuleDetectorBinding(
             detector_id="django-001",
             detector_class=DjangoParameterizedSqlDetector,
             config_model=_rule_config("django-001"),
-            rule_ids=["django-001"],
-            universal_dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-FAIL-FAST"),
+            rules=[
+                RuleBinding(
+                    rule_id="django-001",
+                    dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-FAIL-FAST"),
+                )
+            ],
             default_order=20,
         ),
         RuleDetectorBinding(
             detector_id="django-006",
             detector_class=DjangoQuerysetLoadingDetector,
             config_model=_rule_config("django-006"),
-            rule_ids=["django-006"],
-            universal_dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
+            rules=[
+                RuleBinding(
+                    rule_id="django-006",
+                    dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
+                )
+            ],
             default_order=30,
         ),
         RuleDetectorBinding(
             detector_id="django-004",
             detector_class=DjangoReverseUrlDetector,
             config_model=_rule_config("django-004"),
-            rule_ids=["django-004"],
-            universal_dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-RIGHT-ABSTRACTION"),
+            rules=[
+                RuleBinding(
+                    rule_id="django-004",
+                    dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-RIGHT-ABSTRACTION"),
+                )
+            ],
             default_order=40,
         ),
         RuleDetectorBinding(
             detector_id="django-002",
             detector_class=DjangoSecretSettingsDetector,
             config_model=_rule_config("django-002"),
-            rule_ids=["django-002"],
-            universal_dogma_ids=_dogmas("ZEN-STRICT-FENCES"),
+            rules=[
+                RuleBinding(
+                    rule_id="django-002", dogma_ids=_dogmas("ZEN-STRICT-FENCES")
+                )
+            ],
             default_order=50,
         ),
         RuleDetectorBinding(
             detector_id="django-005",
             detector_class=DjangoSignalHookDetector,
             config_model=_rule_config("django-005"),
-            rule_ids=["django-005"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+            rules=[
+                RuleBinding(
+                    rule_id="django-005", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
             default_order=60,
         ),
     ],

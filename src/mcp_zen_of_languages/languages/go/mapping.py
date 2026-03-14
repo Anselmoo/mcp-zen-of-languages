@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
+from mcp_zen_of_languages.analyzers.mapping_models import NonRuleDetectorBinding
+from mcp_zen_of_languages.analyzers.mapping_models import RuleBinding
 from mcp_zen_of_languages.analyzers.mapping_models import RuleDetectorBinding
 from mcp_zen_of_languages.languages.configs import GoBenchmarkConfig
 from mcp_zen_of_languages.languages.configs import GoConcurrencyCallerConfig
@@ -60,174 +62,234 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_id="go_error_handling",
             detector_class=GoErrorHandlingDetector,
             config_model=GoErrorHandlingConfig,
-            rule_ids=["go-001"],
-            universal_dogma_ids=_dogmas("ZEN-FAIL-FAST", "ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(
+                    rule_id="go-001",
+                    dogma_ids=_dogmas("ZEN-FAIL-FAST", "ZEN-EXPLICIT-INTENT"),
+                )
+            ],
             default_order=10,
         ),
         RuleDetectorBinding(
             detector_id="go_interface_size",
             detector_class=GoInterfaceSizeDetector,
             config_model=GoInterfaceSizeConfig,
-            rule_ids=["go-010"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+            rules=[
+                RuleBinding(
+                    rule_id="go-010", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
             default_order=20,
         ),
         RuleDetectorBinding(
             detector_id="go_context_usage",
             detector_class=GoContextUsageDetector,
             config_model=GoContextUsageConfig,
-            rule_ids=["go-011"],
-            universal_dogma_ids=_dogmas("ZEN-VISIBLE-STATE"),
+            rules=[
+                RuleBinding(rule_id="go-011", dogma_ids=_dogmas("ZEN-VISIBLE-STATE"))
+            ],
             default_order=30,
         ),
         RuleDetectorBinding(
             detector_id="go_defer_usage",
             detector_class=GoDeferUsageDetector,
             config_model=GoDeferUsageConfig,
-            rule_ids=["go-007"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+            rules=[
+                RuleBinding(
+                    rule_id="go-007", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
             default_order=40,
         ),
         RuleDetectorBinding(
             detector_id="go_naming_convention",
             detector_class=GoNamingConventionDetector,
             config_model=GoNamingConventionConfig,
-            rule_ids=["go-004"],
-            universal_dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
+            rules=[
+                RuleBinding(rule_id="go-004", dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"))
+            ],
             default_order=50,
         ),
         RuleDetectorBinding(
             detector_id="go_interface_return",
             detector_class=GoInterfaceReturnDetector,
             config_model=GoInterfaceReturnConfig,
-            rule_ids=["go-002"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+            rules=[
+                RuleBinding(
+                    rule_id="go-002", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
             default_order=60,
         ),
         RuleDetectorBinding(
             detector_id="go_zero_value",
             detector_class=GoZeroValueDetector,
             config_model=GoZeroValueConfig,
-            rule_ids=["go-003"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(
+                    rule_id="go-003",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-EXPLICIT-INTENT"),
+                )
+            ],
             default_order=70,
         ),
         RuleDetectorBinding(
             detector_id="go_interface_pointer",
             detector_class=GoInterfacePointerDetector,
             config_model=GoInterfacePointerConfig,
-            rule_ids=["go-005"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+            rules=[
+                RuleBinding(
+                    rule_id="go-005", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
             default_order=80,
         ),
         RuleDetectorBinding(
             detector_id="go_goroutine_leaks",
             detector_class=GoGoroutineLeakDetector,
             config_model=GoGoroutineLeakConfig,
-            rule_ids=["go-006"],
-            universal_dogma_ids=_dogmas("ZEN-VISIBLE-STATE"),
+            rules=[
+                RuleBinding(rule_id="go-006", dogma_ids=_dogmas("ZEN-VISIBLE-STATE"))
+            ],
             default_order=90,
         ),
         RuleDetectorBinding(
             detector_id="go_package_naming",
             detector_class=GoPackageNamingDetector,
             config_model=GoPackageNamingConfig,
-            rule_ids=["go-008"],
-            universal_dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-UNAMBIGUOUS-NAME"),
+            rules=[
+                RuleBinding(
+                    rule_id="go-008",
+                    dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-UNAMBIGUOUS-NAME"),
+                )
+            ],
             default_order=100,
         ),
         RuleDetectorBinding(
             detector_id="go_package_state",
             detector_class=GoPackageStateDetector,
             config_model=GoPackageStateConfig,
-            rule_ids=["go-009"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-VISIBLE-STATE"),
+            rules=[
+                RuleBinding(
+                    rule_id="go-009",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-VISIBLE-STATE"),
+                )
+            ],
             default_order=110,
         ),
         RuleDetectorBinding(
             detector_id="go_init_usage",
             detector_class=GoInitUsageDetector,
             config_model=GoInitUsageConfig,
-            rule_ids=["go-012"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(rule_id="go-012", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
+            ],
             default_order=120,
         ),
         RuleDetectorBinding(
             detector_id="go_single_purpose_package",
             detector_class=GoOrganizeResponsibilityDetector,
             config_model=GoSinglePurposePackageConfig,
-            rule_ids=["go-013"],
-            universal_dogma_ids=_dogmas(
-                "ZEN-STRICT-FENCES", "ZEN-RETURN-EARLY", "ZEN-UNAMBIGUOUS-NAME"
-            ),
+            rules=[
+                RuleBinding(
+                    rule_id="go-013",
+                    dogma_ids=_dogmas(
+                        "ZEN-STRICT-FENCES", "ZEN-RETURN-EARLY", "ZEN-UNAMBIGUOUS-NAME"
+                    ),
+                )
+            ],
             default_order=130,
         ),
         RuleDetectorBinding(
             detector_id="go_embedding_depth",
             detector_class=GoEmbeddingDepthDetector,
             config_model=GoEmbeddingDepthConfig,
-            rule_ids=["go-014"],
-            universal_dogma_ids=_dogmas("ZEN-RETURN-EARLY", "ZEN-UNAMBIGUOUS-NAME"),
+            rules=[
+                RuleBinding(
+                    rule_id="go-014",
+                    dogma_ids=_dogmas("ZEN-RETURN-EARLY", "ZEN-UNAMBIGUOUS-NAME"),
+                )
+            ],
             default_order=135,
         ),
         RuleDetectorBinding(
             detector_id="go_early_return",
             detector_class=GoEarlyReturnDetector,
             config_model=GoEarlyReturnConfig,
-            rule_ids=["go-017"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT", "ZEN-FAIL-FAST"),
+            rules=[
+                RuleBinding(
+                    rule_id="go-017",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT", "ZEN-FAIL-FAST"),
+                )
+            ],
             default_order=140,
         ),
         RuleDetectorBinding(
             detector_id="go_concurrency_caller",
             detector_class=GoConcurrencyCallerDetector,
             config_model=GoConcurrencyCallerConfig,
-            rule_ids=["go-015"],
-            universal_dogma_ids=_dogmas("ZEN-VISIBLE-STATE"),
+            rules=[
+                RuleBinding(rule_id="go-015", dogma_ids=_dogmas("ZEN-VISIBLE-STATE"))
+            ],
             default_order=150,
         ),
         RuleDetectorBinding(
             detector_id="go_simplicity",
             detector_class=GoSimplicityDetector,
             config_model=GoSimplicityConfig,
-            rule_ids=["go-016"],
-            universal_dogma_ids=_dogmas(
-                "ZEN-PROPORTIONATE-COMPLEXITY", "ZEN-RETURN-EARLY"
-            ),
+            rules=[
+                RuleBinding(
+                    rule_id="go-016",
+                    dogma_ids=_dogmas(
+                        "ZEN-PROPORTIONATE-COMPLEXITY", "ZEN-RETURN-EARLY"
+                    ),
+                )
+            ],
             default_order=160,
         ),
         RuleDetectorBinding(
             detector_id="go_test_presence",
             detector_class=GoTestPresenceDetector,
             config_model=GoTestPresenceConfig,
-            rule_ids=["go-019"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-VISIBLE-STATE"),
+            rules=[
+                RuleBinding(
+                    rule_id="go-019",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-VISIBLE-STATE"),
+                )
+            ],
             default_order=170,
         ),
         RuleDetectorBinding(
             detector_id="go_benchmark",
             detector_class=GoBenchmarkDetector,
             config_model=GoBenchmarkConfig,
-            rule_ids=["go-018"],
-            universal_dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
+            rules=[
+                RuleBinding(
+                    rule_id="go-018", dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY")
+                )
+            ],
             default_order=180,
         ),
-        RuleDetectorBinding(
+        NonRuleDetectorBinding(
             detector_id="go_moderation",
             detector_class=GoModerationDetector,
             config_model=GoModerationConfig,
-            rule_ids=[],
-            universal_dogma_ids=[],
             default_order=190,
         ),
         RuleDetectorBinding(
             detector_id="go_maintainability",
             detector_class=GoMaintainabilityDetector,
             config_model=GoMaintainabilityConfig,
-            rule_ids=["go-020"],
-            universal_dogma_ids=_dogmas(
-                "ZEN-UNAMBIGUOUS-NAME", "ZEN-EXPLICIT-INTENT", "ZEN-VISIBLE-STATE"
-            ),
+            rules=[
+                RuleBinding(
+                    rule_id="go-020",
+                    dogma_ids=_dogmas(
+                        "ZEN-UNAMBIGUOUS-NAME",
+                        "ZEN-EXPLICIT-INTENT",
+                        "ZEN-VISIBLE-STATE",
+                    ),
+                )
+            ],
             default_order=200,
         ),
     ],

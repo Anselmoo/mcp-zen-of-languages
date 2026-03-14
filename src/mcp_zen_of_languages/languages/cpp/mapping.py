@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
+from mcp_zen_of_languages.analyzers.mapping_models import RuleBinding
 from mcp_zen_of_languages.analyzers.mapping_models import RuleDetectorBinding
 from mcp_zen_of_languages.languages.configs import CppAutoConfig
 from mcp_zen_of_languages.languages.configs import CppAvoidGlobalsConfig
@@ -44,104 +45,130 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_id="cpp_smart_pointers",
             detector_class=CppSmartPointerDetector,
             config_model=CppSmartPointerConfig,
-            rule_ids=["cpp-002"],
-            universal_dogma_ids=_dogmas("ZEN-VISIBLE-STATE"),
+            rules=[
+                RuleBinding(rule_id="cpp-002", dogma_ids=_dogmas("ZEN-VISIBLE-STATE"))
+            ],
             default_order=10,
         ),
         RuleDetectorBinding(
             detector_id="cpp_nullptr",
             detector_class=CppNullptrDetector,
             config_model=CppNullptrConfig,
-            rule_ids=["cpp-004"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(rule_id="cpp-004", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
+            ],
             default_order=20,
         ),
         RuleDetectorBinding(
             detector_id="cpp-001",
             detector_class=CppRaiiDetector,
             config_model=CppRaiiConfig,
-            rule_ids=["cpp-001"],
-            universal_dogma_ids=_dogmas("ZEN-STRICT-FENCES"),
+            rules=[
+                RuleBinding(rule_id="cpp-001", dogma_ids=_dogmas("ZEN-STRICT-FENCES"))
+            ],
             default_order=5,
         ),
         RuleDetectorBinding(
             detector_id="cpp-003",
             detector_class=CppAutoDetector,
             config_model=CppAutoConfig,
-            rule_ids=["cpp-003"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+            rules=[
+                RuleBinding(
+                    rule_id="cpp-003", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
             default_order=15,
         ),
         RuleDetectorBinding(
             detector_id="cpp-005",
             detector_class=CppRangeForDetector,
             config_model=CppRangeForConfig,
-            rule_ids=["cpp-005"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+            rules=[
+                RuleBinding(
+                    rule_id="cpp-005", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
             default_order=25,
         ),
         RuleDetectorBinding(
             detector_id="cpp-006",
             detector_class=CppManualAllocationDetector,
             config_model=CppManualAllocationConfig,
-            rule_ids=["cpp-006"],
-            universal_dogma_ids=_dogmas("ZEN-VISIBLE-STATE"),
+            rules=[
+                RuleBinding(rule_id="cpp-006", dogma_ids=_dogmas("ZEN-VISIBLE-STATE"))
+            ],
             default_order=35,
         ),
         RuleDetectorBinding(
             detector_id="cpp-007",
             detector_class=CppConstCorrectnessDetector,
             config_model=CppConstCorrectnessConfig,
-            rule_ids=["cpp-007"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(rule_id="cpp-007", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
+            ],
             default_order=45,
         ),
         RuleDetectorBinding(
             detector_id="cpp-008",
             detector_class=CppCStyleCastDetector,
             config_model=CppCStyleCastConfig,
-            rule_ids=["cpp-008"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(rule_id="cpp-008", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
+            ],
             default_order=55,
         ),
         RuleDetectorBinding(
             detector_id="cpp-009",
             detector_class=CppRuleOfFiveDetector,
             config_model=CppRuleOfFiveConfig,
-            rule_ids=["cpp-009"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+            rules=[
+                RuleBinding(
+                    rule_id="cpp-009", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
             default_order=65,
         ),
         RuleDetectorBinding(
             detector_id="cpp-010",
             detector_class=CppMoveDetector,
             config_model=CppMoveConfig,
-            rule_ids=["cpp-010"],
-            universal_dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
+            rules=[
+                RuleBinding(
+                    rule_id="cpp-010", dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY")
+                )
+            ],
             default_order=75,
         ),
         RuleDetectorBinding(
             detector_id="cpp-011",
             detector_class=CppAvoidGlobalsDetector,
             config_model=CppAvoidGlobalsConfig,
-            rule_ids=["cpp-011"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-VISIBLE-STATE"),
+            rules=[
+                RuleBinding(
+                    rule_id="cpp-011",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-VISIBLE-STATE"),
+                )
+            ],
             default_order=85,
         ),
         RuleDetectorBinding(
             detector_id="cpp-012",
             detector_class=CppOverrideFinalDetector,
             config_model=CppOverrideFinalConfig,
-            rule_ids=["cpp-012"],
-            universal_dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+            rules=[
+                RuleBinding(rule_id="cpp-012", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
+            ],
             default_order=95,
         ),
         RuleDetectorBinding(
             detector_id="cpp-013",
             detector_class=CppOptionalDetector,
             config_model=CppOptionalConfig,
-            rule_ids=["cpp-013"],
-            universal_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+            rules=[
+                RuleBinding(
+                    rule_id="cpp-013", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
             default_order=105,
         ),
     ],

@@ -567,12 +567,11 @@ class DetectionPipeline:
             from mcp_zen_of_languages.analyzers.registry import REGISTRY
 
             try:
-                return list(REGISTRY.get(detector_type).universal_dogma_ids)
+                return REGISTRY.get(detector_type).dogma_ids_for_rule(rule_id)
             except KeyError:
                 pass
 
         del context
-        del rule_id
         return []
 
     def _enrich_violation(

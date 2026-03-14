@@ -28,8 +28,8 @@ An **MCP server for AI assistants** that brings multi-language idiomatic code an
 
 <!-- --8<-- [start:what-you-get] -->
 
-- **302 zen principles** across programming, markup, workflow, and config domains
-- **321 detector/check coverage points** with severity scoring
+- **348 zen principles** across programming, markup, workflow, and config domains
+- **329 detector/check coverage points** with severity scoring
 - **MCP server** for IDE and agent workflows (13 tools, 3 resources, 1 prompt)
 - **CLI reports** with remediation prompts and JSON / Markdown export
 - **Rule-driven pipelines** configurable per language and project
@@ -226,7 +226,7 @@ See the full [MCP Tools Reference](https://anselmoo.github.io/mcp-zen-of-languag
 | Tier             | Languages                        | Notes                                   |
 | ---------------- | -------------------------------- | --------------------------------------- |
 | **Stable**       | Python                           | Full parser + richest detector coverage |
-| **Beta**         | TypeScript, Go, Rust, JavaScript | Rule-driven pipelines, partial parsing  |
+| **Beta**         | Pydantic, FastAPI, Django, SQLAlchemy, TypeScript, React, Angular, Next.js, Go, Rust, JavaScript, Vue | Rule-driven pipelines and framework-aware heuristics |
 | **Experimental** | Bash, PowerShell, Ruby, C++, C#  | Heuristic detectors                     |
 | **Data/Config**  | YAML, TOML, JSON/JSON5, XML, GitHub Actions | Structure, schema, and workflow checks  |
 

@@ -130,3 +130,37 @@ def test_rule_pattern_detector_no_violation_return_paths():
     )
     violations = RulePatternDetector().detect(context, config)
     assert violations == []
+
+
+def test_rule_pattern_detector_matches_regex_patterns():
+    rule_config = _build_config("regex_rule")
+    config = rule_config(
+        detectable_patterns=[r"re:key=\{(?:index|itemIndex)\}"],
+        recommended_alternative="Use a stable key instead of an array index.",
+    )
+    context = AnalysisContext(
+        code="items.map((item, index) => <li key={index}>{item}</li>)",
+        language="react",
+    )
+
+    violations = RulePatternDetector().detect(context, config)
+
+    assert len(violations) == 1
+    assert violations[0].location.line == 1
+    assert violations[0].location.column > 0
+
+
+def test_rule_pattern_detector_required_regex_patterns():
+    rule_config = _build_config("required_regex_rule")
+    config = rule_config(
+        detectable_patterns=[r"!re:export const metadata"],
+        recommended_alternative="Define metadata for the route.",
+    )
+    context = AnalysisContext(
+        code="export default function Page() {}", language="nextjs"
+    )
+
+    violations = RulePatternDetector().detect(context, config)
+
+    assert len(violations) == 1
+    assert violations[0].principle == "required_regex_rule"

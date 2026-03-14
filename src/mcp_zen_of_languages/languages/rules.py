@@ -67,7 +67,7 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
         violations.extend(self._detect_naming_conventions(context, config))
         return violations
 
-    def _detect_patterns(
+    def _detect_patterns(  # noqa: C901
         self,
         context: AnalysisContext,
         config: DetectorConfig,
@@ -90,12 +90,43 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
             needle = pattern[1:] if is_required else pattern
             if not needle:
                 continue
+            is_regex = needle.startswith("re:")
+            regex_pattern = needle[3:] if is_regex else needle
             if is_required:
+                if is_regex:
+                    if not re.search(
+                        regex_pattern, context.code, re.MULTILINE | re.DOTALL
+                    ):
+                        violations.append(
+                            self.build_violation(
+                                config,
+                                contains=regex_pattern,
+                                suggestion=config.recommended_alternative,
+                            ),
+                        )
+                    continue
                 if needle not in context.code:
                     violations.append(
                         self.build_violation(
                             config,
                             contains=needle,
+                            suggestion=config.recommended_alternative,
+                        ),
+                    )
+                continue
+            if is_regex:
+                if match := re.search(
+                    regex_pattern, context.code, re.MULTILINE | re.DOTALL
+                ):
+                    line, column = self._line_and_column_for_offset(
+                        context.code,
+                        match.start(),
+                    )
+                    violations.append(
+                        self.build_violation(
+                            config,
+                            contains=regex_pattern,
+                            location=Location(line=line, column=column),
                             suggestion=config.recommended_alternative,
                         ),
                     )
@@ -112,6 +143,13 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
                     )
                     break
         return violations
+
+    def _line_and_column_for_offset(self, code: str, offset: int) -> tuple[int, int]:
+        """Convert a character offset into 1-based line and column numbers."""
+        line = code.count("\n", 0, offset) + 1
+        last_newline = code.rfind("\n", 0, offset)
+        column = offset + 1 if last_newline == -1 else offset - last_newline
+        return line, column
 
     def _detect_script_length(
         self,

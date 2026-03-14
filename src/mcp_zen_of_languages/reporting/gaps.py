@@ -36,6 +36,12 @@ from mcp_zen_of_languages.rules import get_language_zen
 _SERVER_ROUTED_LANGUAGES: tuple[str, ...] = supported_languages()
 
 
+def _ensure_registry_bootstrapped() -> None:
+    if REGISTRY.items():
+        return
+    from mcp_zen_of_languages.analyzers import registry_bootstrap  # noqa: F401
+
+
 def _project_root() -> Path:
     current = Path(__file__).resolve()
     for candidate in (current, *current.parents):
@@ -66,6 +72,7 @@ def _detectors_without_tests() -> list[str]:
 
 
 def _build_feature_gaps() -> list[FeatureGap]:
+    _ensure_registry_bootstrapped()
     registry_languages = {meta.language for meta in REGISTRY.items()}
     rules_languages = set(get_all_languages())
     factory_languages = set(supported_languages())
@@ -131,6 +138,7 @@ def build_gap_analysis(languages: list[str]) -> GapAnalysis:
     Returns:
         GapAnalysis: Combined detector and feature gap report.
     """
+    _ensure_registry_bootstrapped()
     detector_gaps: list[DetectorCoverageGap] = []
     for language in languages:
         lang_zen = get_language_zen(language)

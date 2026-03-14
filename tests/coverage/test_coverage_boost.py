@@ -187,6 +187,15 @@ def test_analyzer_factory_aliases():
     assert create_analyzer("rb").language() == "ruby"
     assert create_analyzer("cc").language() == "cpp"
     assert create_analyzer("cs").language() == "csharp"
+    assert create_analyzer("react").language() == "react"
+    assert create_analyzer("vue").language() == "vue"
+    assert create_analyzer("angular").language() == "angular"
+    assert create_analyzer("next").language() == "nextjs"
+    assert create_analyzer("next.js").language() == "nextjs"
+    assert create_analyzer("pydantic").language() == "pydantic"
+    assert create_analyzer("fastapi").language() == "fastapi"
+    assert create_analyzer("django").language() == "django"
+    assert create_analyzer("sqla").language() == "sqlalchemy"
 
 
 def test_config_load_discovery_breaks_on_pyproject(tmp_path, monkeypatch):
@@ -209,6 +218,87 @@ def test_language_detection_helpers():
     }
     result = DetectionResult(language="python")
     assert result.as_dict()["language"] == "python"
+
+
+def test_language_detection_framework_paths(tmp_path):
+    vue_file = tmp_path / "Component.vue"
+    vue_file.write_text("<template><div /></template>", encoding="utf-8")
+
+    next_root = tmp_path / "next-app"
+    next_root.mkdir()
+    (next_root / "next.config.mjs").write_text("export default {}", encoding="utf-8")
+    next_page = next_root / "app" / "page.tsx"
+    next_page.parent.mkdir(parents=True)
+    next_page.write_text(
+        "import Link from 'next/link'\nexport default function Page() { return <Link href='/' /> }\n",
+        encoding="utf-8",
+    )
+
+    angular_file = tmp_path / "hero.component.ts"
+    angular_file.write_text(
+        "import { Component } from '@angular/core'\n@Component({})\nexport class HeroComponent {}\n",
+        encoding="utf-8",
+    )
+
+    fastapi_file = tmp_path / "api.py"
+    fastapi_file.write_text(
+        "from fastapi import FastAPI\napp = FastAPI()\n",
+        encoding="utf-8",
+    )
+
+    assert detect_language_by_extension(str(vue_file)).language == "vue"
+    assert detect_language_by_extension(str(next_page)).language == "nextjs"
+    assert detect_language_by_extension(str(angular_file)).language == "angular"
+    assert detect_language_by_extension(str(fastapi_file)).language == "fastapi"
+
+
+def test_language_detection_framework_content():
+    assert (
+        detect_language_from_content(
+            "from pydantic import BaseModel\nclass User(BaseModel):\n    id: int\n"
+        ).language
+        == "pydantic"
+    )
+    assert (
+        detect_language_from_content(
+            "from fastapi import FastAPI\napp = FastAPI()\n"
+        ).language
+        == "fastapi"
+    )
+    assert (
+        detect_language_from_content(
+            "from sqlalchemy.orm import DeclarativeBase\n"
+        ).language
+        == "sqlalchemy"
+    )
+    assert (
+        detect_language_from_content("from django.http import HttpRequest\n").language
+        == "django"
+    )
+    assert (
+        detect_language_from_content(
+            "<template><li v-for='item in items'>{{ item }}</li></template>\n<script setup>\nconst props = defineProps<{ msg: string }>()\n</script>\n"
+        ).language
+        == "vue"
+    )
+    assert (
+        detect_language_from_content(
+            "import { cookies } from 'next/headers'\n"
+        ).language
+        == "nextjs"
+    )
+    assert (
+        detect_language_from_content(
+            "import { Component } from '@angular/core'\n@Component({})\n",
+        ).language
+        == "angular"
+    )
+    assert (
+        detect_language_from_content(
+            "function Counter() {\n  const [count, setCount] = useState(0)\n  return <button>{count}</button>\n}\n"
+        ).language
+        == "react"
+    )
 
 
 def test_parse_python_helpers_return_none_on_missing_treesitter():

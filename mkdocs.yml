@@ -247,13 +247,22 @@ nav:
       - MCP Tools Reference: user-guide/mcp-tools-reference.md
       - CLI Reference: user-guide/cli-reference.md
       - Configuration: user-guide/configuration.md
+      - Frameworks: user-guide/frameworks/index.md
       - Languages:
           - user-guide/languages/index.md
           - Python: user-guide/languages/python.md
+          - Pydantic: user-guide/languages/pydantic.md
+          - FastAPI: user-guide/languages/fastapi.md
+          - Django: user-guide/languages/django.md
+          - SQLAlchemy: user-guide/languages/sqlalchemy.md
           - TypeScript: user-guide/languages/typescript.md
+          - React: user-guide/languages/react.md
+          - Angular: user-guide/languages/angular.md
+          - Next.js: user-guide/languages/nextjs.md
           - Rust: user-guide/languages/rust.md
           - Go: user-guide/languages/go.md
           - JavaScript: user-guide/languages/javascript.md
+          - Vue: user-guide/languages/vue.md
           - CSS: user-guide/languages/css.md
           - Ansible: user-guide/languages/ansible.md
           - Bash: user-guide/languages/bash.md

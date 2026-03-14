@@ -28,6 +28,7 @@ from jinja2 import Environment
 from jinja2 import FileSystemLoader
 
 from mcp_zen_of_languages.core.universal_dogmas import infer_dogmas_for_principle
+from mcp_zen_of_languages.frameworks import FRAMEWORK_KEYS
 from mcp_zen_of_languages.utils.subprocess_runner import KNOWN_TOOLS
 
 
@@ -52,12 +53,31 @@ DOCS_DIR = ROOT / "docs" / "user-guide" / "languages"
 LANGUAGES: list[tuple[str, str, str, str, str]] = [
     ("python", "Python", "fontawesome/brands/python", "python.md", "python"),
     (
+        "pydantic",
+        "Pydantic",
+        "material/shield-check-outline",
+        "pydantic.md",
+        "pydantic",
+    ),
+    ("fastapi", "FastAPI", "material/api", "fastapi.md", "fastapi"),
+    ("django", "Django", "material/web-box", "django.md", "django"),
+    (
+        "sqlalchemy",
+        "SQLAlchemy",
+        "material/database",
+        "sqlalchemy.md",
+        "sqlalchemy",
+    ),
+    (
         "typescript",
         "TypeScript",
         "material/language-typescript",
         "typescript.md",
         "typescript",
     ),
+    ("react", "React", "fontawesome/brands/react", "react.md", "react"),
+    ("angular", "Angular", "fontawesome/brands/angular", "angular.md", "angular"),
+    ("nextjs", "Next.js", "material/web", "nextjs.md", "nextjs"),
     ("rust", "Rust", "material/language-rust", "rust.md", "rust"),
     ("go", "Go", "material/language-go", "go.md", "go"),
     (
@@ -67,6 +87,7 @@ LANGUAGES: list[tuple[str, str, str, str, str]] = [
         "javascript.md",
         "javascript",
     ),
+    ("vue", "Vue", "fontawesome/brands/vuejs", "vue.md", "vue"),
     ("css", "CSS", "material/language-css3", "css.md", "css"),
     ("ansible", "Ansible", "material/console", "ansible.md", "ansible"),
     ("bash", "Bash", "material/console", "bash.md", "bash"),
@@ -128,8 +149,43 @@ SEE_ALSO: dict[str, str] = {
         "- [Understanding Violations](../understanding-violations.md) — How to interpret severity scores\n"
         "- [Prompt Generation](../prompt-generation.md) — Generate AI remediation prompts from violations"
     ),
+    "pydantic": (
+        "- [Python](python.md) — Parent language analysis and shared Python architecture\n"
+        "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
+        "- [Understanding Violations](../understanding-violations.md) — Severity scale reference"
+    ),
+    "fastapi": (
+        "- [Python](python.md) — Parent language analysis and shared Python architecture\n"
+        "- [Pydantic](pydantic.md) — Schema conventions that commonly surface in FastAPI projects\n"
+        "- [Configuration](../configuration.md) — Per-language pipeline overrides"
+    ),
+    "django": (
+        "- [Python](python.md) — Parent language analysis and shared Python architecture\n"
+        "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
+        "- [Understanding Violations](../understanding-violations.md) — Severity scale reference"
+    ),
+    "sqlalchemy": (
+        "- [Python](python.md) — Parent language analysis and shared Python architecture\n"
+        "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
+        "- [Prompt Generation](../prompt-generation.md) — Generate remediation prompts for database access issues"
+    ),
     "typescript": (
         "- [JavaScript](javascript.md) — Related principles for JS codebases\n"
+        "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
+        "- [Understanding Violations](../understanding-violations.md) — Severity scale reference"
+    ),
+    "react": (
+        "- [TypeScript](typescript.md) — Shared frontend type-safety foundations\n"
+        "- [JavaScript](javascript.md) — Runtime patterns and browser-side idioms\n"
+        "- [Configuration](../configuration.md) — Per-language pipeline overrides"
+    ),
+    "angular": (
+        "- [TypeScript](typescript.md) — Shared frontend type-safety foundations\n"
+        "- [React](react.md) — Another component-centric UI framework with different trade-offs\n"
+        "- [Configuration](../configuration.md) — Per-language pipeline overrides"
+    ),
+    "nextjs": (
+        "- [React](react.md) — Shared component and hook patterns beneath Next.js\n"
         "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
         "- [Understanding Violations](../understanding-violations.md) — Severity scale reference"
     ),
@@ -147,6 +203,11 @@ SEE_ALSO: dict[str, str] = {
         "- [TypeScript](typescript.md) — Type-safe superset with additional principles\n"
         "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
         "- [Understanding Violations](../understanding-violations.md) — Severity scale reference"
+    ),
+    "vue": (
+        "- [TypeScript](typescript.md) — Shared frontend type-safety foundations\n"
+        "- [React](react.md) — Another component-centric UI model for web applications\n"
+        "- [Configuration](../configuration.md) — Per-language pipeline overrides"
     ),
     "css": (
         "- [JavaScript](javascript.md) — Common frontend codebase counterpart\n"
@@ -233,7 +294,10 @@ TEMP_RUNNER_LANGUAGES: set[str] = {
 # ---------------------------------------------------------------------------
 def _load_zen(module_key: str):
     """Import LanguageZenPrinciples for a language."""
-    mod = importlib.import_module(f"mcp_zen_of_languages.languages.{module_key}.rules")
+    package_name = "frameworks" if module_key in FRAMEWORK_KEYS else "languages"
+    mod = importlib.import_module(
+        f"mcp_zen_of_languages.{package_name}.{module_key}.rules",
+    )
     # Convention: the module-level constant is *_ZEN (e.g. PYTHON_ZEN)
     for attr in dir(mod):
         obj = getattr(mod, attr)
@@ -245,8 +309,9 @@ def _load_zen(module_key: str):
 
 def _load_detector_map(module_key: str):
     """Import DETECTOR_MAP for a language."""
+    package_name = "frameworks" if module_key in FRAMEWORK_KEYS else "languages"
     mod = importlib.import_module(
-        f"mcp_zen_of_languages.languages.{module_key}.mapping",
+        f"mcp_zen_of_languages.{package_name}.{module_key}.mapping",
     )
     return mod.DETECTOR_MAP
 
@@ -892,7 +957,7 @@ def render_index_page() -> str:
 
             Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
 
-            **TypeScript · Rust · Go · JavaScript · CSS · Ansible · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile · Terraform**
+            **Pydantic · FastAPI · Django · SQLAlchemy · TypeScript · React · Angular · Next.js · Rust · Go · JavaScript · Vue · CSS · Ansible · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile · Terraform**
 
         -   :material-language-markdown:{ .lg .middle } **Documentation & Markup**
 

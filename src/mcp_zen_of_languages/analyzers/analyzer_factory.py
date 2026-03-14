@@ -11,6 +11,14 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from mcp_zen_of_languages.frameworks.angular.analyzer import AngularAnalyzer
+from mcp_zen_of_languages.frameworks.django.analyzer import DjangoAnalyzer
+from mcp_zen_of_languages.frameworks.fastapi.analyzer import FastAPIAnalyzer
+from mcp_zen_of_languages.frameworks.nextjs.analyzer import NextjsAnalyzer
+from mcp_zen_of_languages.frameworks.pydantic.analyzer import PydanticAnalyzer
+from mcp_zen_of_languages.frameworks.react.analyzer import ReactAnalyzer
+from mcp_zen_of_languages.frameworks.sqlalchemy.analyzer import SQLAlchemyAnalyzer
+from mcp_zen_of_languages.frameworks.vue.analyzer import VueAnalyzer
 from mcp_zen_of_languages.languages.ansible.analyzer import AnsibleAnalyzer
 from mcp_zen_of_languages.languages.bash.analyzer import BashAnalyzer
 from mcp_zen_of_languages.languages.cpp.analyzer import CppAnalyzer
@@ -47,8 +55,16 @@ if TYPE_CHECKING:
 
 SUPPORTED_LANGUAGES: tuple[str, ...] = (
     "python",
+    "pydantic",
+    "fastapi",
+    "django",
+    "sqlalchemy",
     "typescript",
+    "react",
+    "angular",
+    "nextjs",
     "javascript",
+    "vue",
     "go",
     "rust",
     "svg",
@@ -76,12 +92,23 @@ SUPPORTED_LANGUAGES: tuple[str, ...] = (
 _ANALYZERS_BY_ALIAS: dict[str, AnalyzerClass] = {
     "python": PythonAnalyzer,
     "py": PythonAnalyzer,
+    "pydantic": PydanticAnalyzer,
+    "fastapi": FastAPIAnalyzer,
+    "django": DjangoAnalyzer,
+    "sqlalchemy": SQLAlchemyAnalyzer,
+    "sqla": SQLAlchemyAnalyzer,
     "typescript": TypeScriptAnalyzer,
     "ts": TypeScriptAnalyzer,
     "tsx": TypeScriptAnalyzer,
+    "react": ReactAnalyzer,
+    "angular": AngularAnalyzer,
+    "nextjs": NextjsAnalyzer,
+    "next.js": NextjsAnalyzer,
+    "next": NextjsAnalyzer,
     "javascript": JavaScriptAnalyzer,
     "js": JavaScriptAnalyzer,
     "jsx": JavaScriptAnalyzer,
+    "vue": VueAnalyzer,
     "go": GoAnalyzer,
     "rust": RustAnalyzer,
     "rs": RustAnalyzer,

@@ -6,7 +6,8 @@ it performs two passes:
 
 1. **Mapping scan** — calls
    ``bootstrap_from_mappings``
-   to discover hand-written detector bindings from ``languages/*/mapping.py``.
+   to discover hand-written detector bindings from ``languages/*/mapping.py``
+   and ``frameworks/*/mapping.py``.
 2. **Gap fill** — iterates every language's zen principles and registers a
    generic [`RulePatternDetector`][mcp_zen_of_languages.languages.rule_pattern.RulePatternDetector]
    for any rule that lacks a dedicated detector, dynamically generating a

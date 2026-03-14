@@ -15,7 +15,7 @@ provides three core capabilities:
 
 Bootstrap happens lazily: the first call to [`DetectorRegistry.adapter`][DetectorRegistry.adapter]
 triggers [`registry_bootstrap`][mcp_zen_of_languages.analyzers.registry_bootstrap], which
-scans ``languages/*/mapping.py`` modules and auto-generates config models
+scans ``languages/*/mapping.py`` and ``frameworks/*/mapping.py`` modules and auto-generates config models
 for rules that lack hand-written detectors.
 
 See Also:
@@ -177,10 +177,10 @@ class DetectorRegistry:
         self._rule_index = None
 
     def bootstrap_from_mappings(self) -> None:
-        """Scan ``languages/*/mapping.py`` modules and register their bindings.
+        """Scan support-module mappings and register their bindings.
 
-        Iterates every non-hidden subdirectory under ``languages/``, imports
-        its ``mapping`` module, reads the ``DETECTOR_MAP``
+        Iterates every non-hidden subdirectory under ``languages/`` and
+        ``frameworks/``, imports its ``mapping`` module, reads the ``DETECTOR_MAP``
         [`LanguageDetectorMap`][mcp_zen_of_languages.analyzers.mapping_models.LanguageDetectorMap],
         and registers each
         [`DetectorBinding`][mcp_zen_of_languages.analyzers.mapping_models.DetectorBinding]
@@ -197,23 +197,33 @@ class DetectorRegistry:
 
         from pathlib import Path
 
-        languages_dir = Path(__file__).parent.parent / "languages"
-        for subdir in sorted(languages_dir.iterdir()):
-            if not subdir.is_dir() or subdir.name.startswith("_"):
+        package_roots = (
+            ("languages", Path(__file__).parent.parent / "languages"),
+            ("frameworks", Path(__file__).parent.parent / "frameworks"),
+        )
+        for package_name, package_root in package_roots:
+            if not package_root.exists():
                 continue
-            module_name = f"mcp_zen_of_languages.languages.{subdir.name}.mapping"
-            try:
-                module = importlib.import_module(module_name)
-            except ModuleNotFoundError as exc:
-                if exc.name == module_name:
+            for subdir in sorted(package_root.iterdir()):
+                if not subdir.is_dir() or subdir.name.startswith("_"):
                     continue
-                raise
-            lang_map = getattr(module, "DETECTOR_MAP", None)
-            if lang_map is None:
-                msg = f"Missing DETECTOR_MAP in {module_name}"
-                raise ValueError(msg)
-            for binding in lang_map.bindings:
-                self.register(DetectorMetadata.from_binding(binding, lang_map.language))
+                module_name = (
+                    f"mcp_zen_of_languages.{package_name}.{subdir.name}.mapping"
+                )
+                try:
+                    module = importlib.import_module(module_name)
+                except ModuleNotFoundError as exc:
+                    if exc.name == module_name:
+                        continue
+                    raise
+                lang_map = getattr(module, "DETECTOR_MAP", None)
+                if lang_map is None:
+                    msg = f"Missing DETECTOR_MAP in {module_name}"
+                    raise ValueError(msg)
+                for binding in lang_map.bindings:
+                    self.register(
+                        DetectorMetadata.from_binding(binding, lang_map.language),
+                    )
 
     def items(self) -> list[DetectorMetadata]:
         """Return a snapshot of every registered detector's metadata.

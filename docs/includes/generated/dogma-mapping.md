@@ -2,6 +2,8 @@
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
+| angular | `angular-002` | Type annotations should avoid any | 8 |
+| angular | `angular-003` | Manual subscriptions need an explicit lifecycle strategy | 9 |
 | ansible | `ansible-001` | Ansible is not Python. | 7 |
 | ansible | `ansible-005` | Clear is better than cluttered. | 7 |
 | ansible | `ansible-009` | Helping users get things done matters most. | 7 |
@@ -27,6 +29,11 @@
 | Docker Compose | `docker-compose-002` | Run services as non-root user | 9 |
 | Dockerfile | `dockerfile-003` | Prefer COPY over ADD unless extra features are needed | 6 |
 | Dockerfile | `dockerfile-008` | Keep .dockerignore coherent with broad context copies | 4 |
+| fastapi | `fastapi-001` | Route decorators should declare response_model explicitly | 7 |
+| fastapi | `fastapi-002` | POST routes should declare an explicit status_code | 5 |
+| fastapi | `fastapi-003` | Route handlers should not raise bare Exception | 7 |
+| fastapi | `fastapi-004` | Background work should use BackgroundTasks instead of raw threads | 7 |
+| fastapi | `fastapi-006` | Prefer explicit HTTP verb decorators over app.route | 6 |
 | GitHub Actions | `gha-007` | Avoid duplicated step sequences across jobs | 5 |
 | GitHub Actions | `gha-010` | Avoid rigid, hardcoded matrix values | 4 |
 | GitHub Actions | `gha-013` | Set explicit shell for run steps | 4 |
@@ -58,15 +65,22 @@
 | Markdown | `md-004` | Fence code blocks with explicit language tags | 4 |
 | Markdown | `md-005` | Keep front-matter complete when present | 6 |
 | Markdown | `md-006` | Use named default exports in MDX | 6 |
+| nextjs | `nextjs-003` | App Router files should not rely on getServerSideProps | 8 |
 | PowerShell | `ps-005` | Use Write-Verbose and Write-Debug | 6 |
 | PowerShell | `ps-012` | Avoid aliases in scripts | 6 |
 | PowerShell | `ps-014` | Use script scope carefully | 7 |
 | PowerShell | `ps-015` | Handle null values explicitly | 7 |
+| pydantic | `pydantic-001` | Use model_dump and model_dump_json instead of v1 serialization APIs | 8 |
+| pydantic | `pydantic-003` | Mutable defaults should use Field(default_factory=...) | 9 |
+| pydantic | `pydantic-005` | Use field_validator instead of validator | 7 |
 | Python | `python-002` | Explicit is better than implicit | 7 |
 | Python | `python-008` | Special cases aren't special enough to break the rules | 6 |
 | Python | `python-009` | Errors should never pass silently | 9 |
 | Python | `python-010` | In the face of ambiguity, refuse the temptation to guess | 7 |
 | Python | `python-014` | Unless explicitly silenced | 8 |
+| react | `react-001` | List keys must be stable and not derived from array indexes | 9 |
+| react | `react-004` | Hooks must not be called conditionally | 10 |
+| react | `react-005` | Effects that register timers or listeners need an explicit cleanup review | 7 |
 | Rust | `rust-002` | Use the type system to prevent bugs | 8 |
 | Rust | `rust-005` | Use #[must_use] for important return types | 6 |
 | Rust | `rust-006` | Implement Debug for all public types | 6 |
@@ -79,6 +93,8 @@
 | SQL | `sql-007` | Use descriptive table aliases | 4 |
 | SQL | `sql-008` | Keep transaction boundaries balanced | 8 |
 | SQL | `sql-009` | Prefer explicit JOIN syntax over ANSI-89 comma joins | 6 |
+| sqlalchemy | `sqlalchemy-002` | Session lifecycles should be explicit | 9 |
+| sqlalchemy | `sqlalchemy-005` | relationship loading should be an explicit choice | 7 |
 | svg | `svg-005` | Prefer presentation attributes over inline styles | 5 |
 | svg | `svg-009` | Keep id attributes unique | 8 |
 | svg | `svg-012` | Declare the SVG XML namespace | 7 |
@@ -99,6 +115,10 @@
 | TypeScript | `ts-010` | Prefer unknown over any for uncertain types | 7 |
 | TypeScript | `ts-015` | Avoid catch-all types like Object or {} | 6 |
 | TypeScript | `ts-016` | Avoid console usage in production code | 4 |
+| vue | `vue-002` | Props should declare explicit types | 8 |
+| vue | `vue-003` | v-for directives need a :key binding on the same element | 9 |
+| vue | `vue-004` | Avoid using v-if and v-for on the same element | 9 |
+| vue | `vue-005` | Props should not be mutated directly | 10 |
 | XML | `xml-001` | Mark up meaning, not presentation | 5 |
 | XML | `xml-003` | Namespaces prevent local collisions | 6 |
 | XML | `xml-004` | Validity supersedes well-formedness | 6 |
@@ -123,6 +143,7 @@
 | JSON | `json-002` | Keep object depth understandable | 6 |
 | JSON | `json-006` | Keep inline arrays bounded | 4 |
 | Markdown | `md-001` | Preserve heading hierarchy | 6 |
+| pydantic | `pydantic-004` | Prefer model_config over nested Config classes | 7 |
 | Python | `python-003` | Simple is better than complex | 8 |
 | Python | `python-005` | Flat is better than nested | 8 |
 | Python | `python-015` | Now is better than never | 4 |
@@ -146,13 +167,16 @@
 | Bash | `bash-012` | Handle signals properly | 7 |
 | C# | `cs-004` | Use async/await properly | 9 |
 | C# | `cs-012` | Handle exceptions properly | 8 |
+| django | `django-003` | Production-facing settings should not leave DEBUG enabled | 9 |
 | Docker Compose | `docker-compose-003` | Declare service healthchecks | 7 |
 | Dockerfile | `dockerfile-004` | Declare HEALTHCHECK for production images | 7 |
+| fastapi | `fastapi-003` | Route handlers should not raise bare Exception | 7 |
 | GitHub Actions | `gha-008` | Set timeout-minutes on jobs | 6 |
 | Go | `go-001` | Errors are values | 9 |
 | Go | `go-017` | Handle every error path | 9 |
 | JavaScript | `js-001` | Avoid callback hell | 8 |
 | JavaScript | `js-007` | Handle errors explicitly | 9 |
+| nextjs | `nextjs-004` | Route handlers should not serialize raw error objects | 9 |
 | PowerShell | `ps-002` | Use proper error handling | 9 |
 | PowerShell | `ps-008` | Use -WhatIf and -Confirm support | 8 |
 | PowerShell | `ps-010` | Validate parameters properly | 8 |
@@ -194,6 +218,8 @@
 | C# | `cs-013` | Use records for DTOs | 6 |
 | CSS | `css-001` | Avoid specificity creep | 7 |
 | CSS | `css-002` | Avoid magic pixel values | 6 |
+| django | `django-005` | Signal hookups should be reviewed carefully | 6 |
+| fastapi | `fastapi-006` | Prefer explicit HTTP verb decorators over app.route | 6 |
 | GitHub Actions | `gha-011` | Use GITHUB_OUTPUT instead of deprecated set-output | 7 |
 | GitHub Actions | `gha-012` | Use GITHUB_STATE and GITHUB_ENV instead of deprecated commands | 7 |
 | GitLab CI | `gitlab-ci-008` | Prefer rules over only/except | 6 |
@@ -215,15 +241,24 @@
 | JavaScript | `js-017` | Prefer Array.from/spread over arguments | 6 |
 | JavaScript | `js-018` | No prototype mutation on built-in objects | 9 |
 | LaTeX | `latex-007` | Prevent circular \input and \include chains | 8 |
+| nextjs | `nextjs-001` | Internal navigation should use next/link instead of raw anchors | 6 |
 | PowerShell | `ps-003` | Use cmdlet binding and parameters | 8 |
 | PowerShell | `ps-007` | Use pipeline properly | 7 |
 | PowerShell | `ps-013` | Return objects, not formatted text | 8 |
+| pydantic | `pydantic-001` | Use model_dump and model_dump_json instead of v1 serialization APIs | 8 |
+| pydantic | `pydantic-002` | Use model_validate instead of parse_obj or parse_raw | 8 |
+| pydantic | `pydantic-004` | Prefer model_config over nested Config classes | 7 |
+| pydantic | `pydantic-005` | Use field_validator instead of validator | 7 |
+| pydantic | `pydantic-006` | Avoid __fields__; use model_fields in v2 | 7 |
+| pydantic | `pydantic-007` | Prefer X | None over Optional[X] in modern Python code | 4 |
+| pydantic | `pydantic-008` | Use from_attributes instead of orm_mode | 7 |
 | Python | `python-003` | Simple is better than complex | 8 |
 | Python | `python-004` | Complex is better than complicated | 7 |
 | Python | `python-011` | There should be one-- and preferably only one --obvious way to do it | 6 |
 | Python | `python-013` | Practicality beats purity | 5 |
 | Python | `python-016` | Although never is often better than *right* now | 5 |
 | Python | `python-019` | Although that way may not be obvious at first unless you're Dutch | 5 |
+| react | `react-003` | Component logic should not manipulate the DOM directly | 7 |
 | Ruby | `ruby-001` | Convention over configuration | 7 |
 | Ruby | `ruby-002` | DRY (Don't Repeat Yourself) | 8 |
 | Ruby | `ruby-003` | Prefer blocks over lambdas/procs | 6 |
@@ -237,6 +272,8 @@
 | Rust | `rust-012` | Avoid Rc<RefCell<T>> unless necessary | 7 |
 | Rust | `rust-016` | Implement Default when there is an obvious default value | 5 |
 | Rust | `rust-017` | Use From/Into for type conversions | 6 |
+| sqlalchemy | `sqlalchemy-003` | SQLAlchemy 2.x code should prefer mapped_column over Column in ORM models | 6 |
+| sqlalchemy | `sqlalchemy-004` | DeclarativeBase should replace declarative_base in 2.x-style code | 5 |
 | svg | `svg-010` | Prefer relative path commands when practical | 4 |
 | svg | `svg-013` | Use href instead of deprecated xlink:href | 4 |
 | TypeScript | `ts-003` | Prefer interfaces over type aliases for objects | 5 |
@@ -250,6 +287,7 @@
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
+| angular | `angular-004` | Component selectors should follow project naming conventions | 5 |
 | ansible | `ansible-002` | YAML sucks for coding. | 7 |
 | ansible | `ansible-004` | Ansible users are (most likely) not programmers. | 6 |
 | ansible | `ansible-006` | Concise is better than verbose. | 5 |
@@ -282,6 +320,9 @@
 | PowerShell | `ps-009` | Use splatting for readability | 6 |
 | PowerShell | `ps-011` | Use comment-based help | 7 |
 | PowerShell | `ps-012` | Avoid aliases in scripts | 6 |
+| pydantic | `pydantic-001` | Use model_dump and model_dump_json instead of v1 serialization APIs | 8 |
+| pydantic | `pydantic-006` | Avoid __fields__; use model_fields in v2 | 7 |
+| pydantic | `pydantic-008` | Use from_attributes instead of orm_mode | 7 |
 | Python | `python-001` | Beautiful is better than ugly | 4 |
 | Python | `python-006` | Sparse is better than dense | 5 |
 | Python | `python-007` | Readability counts | 9 |
@@ -309,6 +350,7 @@
 | TypeScript | `ts-003` | Prefer interfaces over type aliases for objects | 5 |
 | TypeScript | `ts-014` | Prefer named exports over default exports | 4 |
 | TypeScript | `ts-018` | Use template literals instead of string concatenation | 3 |
+| vue | `vue-001` | Components should use multi-word names | 7 |
 | XML | `xml-003` | Namespaces prevent local collisions | 6 |
 | YAML | `yaml-001` | Use consistent indentation | 6 |
 | YAML | `yaml-002` | Avoid tabs in indentation | 7 |
@@ -339,6 +381,7 @@
 | JavaScript | `js-004` | Avoid global state | 9 |
 | JavaScript | `js-010` | Keep functions pure when possible | 6 |
 | JavaScript | `js-014` | Avoid with statement | 9 |
+| pydantic | `pydantic-003` | Mutable defaults should use Field(default_factory=...) | 9 |
 | Python | `python-006` | Sparse is better than dense | 5 |
 | Python | `python-011` | There should be one-- and preferably only one --obvious way to do it | 6 |
 | Rust | `rust-002` | Use the type system to prevent bugs | 8 |
@@ -350,6 +393,8 @@
 | SQL | `sql-002` | Always include INSERT column lists | 7 |
 | Terraform | `tf-006` | Configure remote state backend | 7 |
 | TypeScript | `ts-005` | Use readonly when appropriate | 6 |
+| vue | `vue-003` | v-for directives need a :key binding on the same element | 9 |
+| vue | `vue-005` | Props should not be mutated directly | 10 |
 
 ### Strict Fences — `ZEN-STRICT-FENCES`
 
@@ -362,6 +407,10 @@
 | C++ | `cpp-001` | Use RAII for resource management | 9 |
 | C# | `cs-009` | Use IDisposable and using statements | 9 |
 | CSS | `css-004` | Keep stylesheets modular | 5 |
+| django | `django-001` | Raw SQL must not interpolate user-controlled strings directly | 10 |
+| django | `django-002` | Settings files should not hardcode secrets | 10 |
+| django | `django-003` | Production-facing settings should not leave DEBUG enabled | 9 |
+| django | `django-004` | Redirects and URL construction should avoid hardcoded internal paths | 7 |
 | Docker Compose | `docker-compose-001` | Avoid latest tags in image definitions | 8 |
 | Docker Compose | `docker-compose-002` | Run services as non-root user | 9 |
 | Docker Compose | `docker-compose-004` | Keep secrets out of environment literals | 9 |
@@ -384,10 +433,12 @@
 | LaTeX | `latex-004` | Maintain bibliography hygiene | 6 |
 | LaTeX | `latex-009` | Remove unused packages | 5 |
 | Markdown | `md-007` | Keep MDX imports hygienic | 5 |
+| nextjs | `nextjs-004` | Route handlers should not serialize raw error objects | 9 |
 | PowerShell | `ps-014` | Use script scope carefully | 7 |
 | Python | `python-012` | Namespaces are one honking great idea | 7 |
 | Python | `python-020` | Let's do more of those | 6 |
 | SQL | `sql-003` | Prefer parameterized SQL over dynamic concatenation | 9 |
+| sqlalchemy | `sqlalchemy-001` | text queries must not interpolate values directly | 10 |
 | svg | `svg-007` | Remove unused defs entries | 5 |
 | svg | `svg-012` | Declare the SVG XML namespace | 7 |
 | svg | `svg-015` | Remove production-bloat metadata and comments | 4 |
@@ -400,6 +451,8 @@
 
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
+| angular | `angular-001` | Components should opt into OnPush change detection | 7 |
+| angular | `angular-005` | Feature routes should prefer lazy loading over eager component wiring | 6 |
 | ansible | `ansible-007` | Simple is better than complex. | 8 |
 | ansible | `ansible-014` | Focus avoids complexity. | 7 |
 | ansible | `ansible-015` | Complexity kills productivity. | 8 |
@@ -408,8 +461,10 @@
 | C# | `cs-006` | Prefer string interpolation | 6 |
 | C# | `cs-013` | Use records for DTOs | 6 |
 | CSS | `css-005` | Prefer modern import strategy | 6 |
+| django | `django-006` | Looping over querysets without related loading hints should be reviewed | 8 |
 | Dockerfile | `dockerfile-005` | Use multi-stage builds for compiled workloads | 6 |
 | Dockerfile | `dockerfile-007` | Maintain layer discipline | 5 |
+| fastapi | `fastapi-005` | Async routes should avoid blocking I/O helpers | 9 |
 | GitHub Actions | `gha-009` | Use concurrency controls to cancel stale runs | 5 |
 | GitHub Actions | `gha-014` | Cache dependencies for installation-heavy steps | 4 |
 | GitLab CI | `gitlab-ci-006` | Use interruptible pipelines | 5 |
@@ -417,16 +472,21 @@
 | GitLab CI | `gitlab-ci-009` | Cache dependency installs | 5 |
 | Go | `go-016` | Avoid unnecessary complexity | 7 |
 | Go | `go-018` | Avoid premature optimization | 5 |
+| nextjs | `nextjs-002` | Images should use next/image when optimization matters | 7 |
+| nextjs | `nextjs-005` | Client-side fetching inside effects should be reviewed against server-first defaults | 6 |
 | Python | `python-003` | Simple is better than complex | 8 |
 | Python | `python-004` | Complex is better than complicated | 7 |
 | Python | `python-013` | Practicality beats purity | 5 |
 | Python | `python-018` | If the implementation is easy to explain, it may be a good idea | 3 |
+| react | `react-002` | JSX event handlers should avoid inline callbacks in hot paths | 5 |
 | Ruby | `ruby-003` | Prefer blocks over lambdas/procs | 6 |
 | Ruby | `ruby-009` | Avoid needless metaprogramming | 8 |
 | Rust | `rust-004` | Clone sparingly | 7 |
 | SQL | `sql-001` | Never use SELECT * | 6 |
 | SQL | `sql-005` | Avoid implicit type coercion in JOIN predicates | 6 |
 | SQL | `sql-006` | Bound result sets with WHERE/LIMIT/TOP | 5 |
+| sqlalchemy | `sqlalchemy-005` | relationship loading should be an explicit choice | 7 |
+| sqlalchemy | `sqlalchemy-006` | Bulk inserts should avoid session.add inside loops | 6 |
 | svg | `svg-007` | Remove unused defs entries | 5 |
 | svg | `svg-008` | Avoid excessive nested group depth | 5 |
 | svg | `svg-011` | Avoid embedded base64 raster payloads | 7 |

@@ -15,8 +15,16 @@ from mcp_zen_of_languages.transport.reporters import McpReporter
 
 UNIVERSAL_LANGUAGE_SNIPPETS = {
     "python": "def add(a, b):\n    return a + b\n",
+    "pydantic": "from pydantic import BaseModel\n\nclass Item(BaseModel):\n    id: int\n",
+    "fastapi": "from fastapi import FastAPI\n\napp = FastAPI()\n",
+    "django": "from django.urls import path\n\nurlpatterns = []\n",
+    "sqlalchemy": "from sqlalchemy.orm import DeclarativeBase\n\nclass Base(DeclarativeBase):\n    pass\n",
     "typescript": "const value: number = 1;\n",
+    "react": "function Counter() { const [count] = useState(0); return <button>{count}</button>; }\n",
+    "angular": "import { Component } from '@angular/core';\n@Component({ selector: 'app-root', template: '' })\nexport class AppComponent {}\n",
+    "nextjs": "import Link from 'next/link';\nexport default function Page() { return <Link href='/' />; }\n",
     "javascript": "const value = 1;\n",
+    "vue": "<template><div>{{ msg }}</div></template>\n<script setup>\nconst props = defineProps<{ msg: string }>()\n</script>\n",
     "go": "package main\n\nfunc add(a int, b int) int { return a + b }\n",
     "rust": "fn add(a: i32, b: i32) -> i32 { a + b }\n",
     "bash": "#!/usr/bin/env bash\necho 'hi'\n",

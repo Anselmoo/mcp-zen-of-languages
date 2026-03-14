@@ -8,6 +8,7 @@ from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
 from mcp_zen_of_languages.core.universal_dogmas import UniversalDogmaID
 from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule
 from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule_ids
+from mcp_zen_of_languages.frameworks import FRAMEWORK_KEYS
 from mcp_zen_of_languages.languages.python.mapping import (
     DETECTOR_MAP as PYTHON_DETECTOR_MAP,
 )
@@ -83,15 +84,32 @@ def test_registry_pilot_languages_have_universal_dogma_matrix_coverage() -> None
     assert all(meta.universal_dogma_ids for meta in pilot_metas)
 
 
-def test_all_supported_language_mappings_have_full_dogma_overlay() -> None:
+def test_all_supported_language_mappings_have_dogma_coverage() -> None:
     for language in supported_languages():
         module_name = "github_actions" if language == "github-actions" else language
+        package_name = "frameworks" if language in FRAMEWORK_KEYS else "languages"
         mapping = importlib.import_module(
-            f"mcp_zen_of_languages.languages.{module_name}.mapping"
+            f"mcp_zen_of_languages.{package_name}.{module_name}.mapping"
         ).DETECTOR_MAP
         for binding in mapping.bindings:
-            assert binding.universal_dogma_ids
-            assert set(binding.universal_dogma_ids).issubset(set(DOGMA_RULE_IDS))
+            dogmas = binding.universal_dogma_ids or list(
+                dogmas_for_rule_ids(language, binding.rule_ids),
+            )
+            assert dogmas
+            assert set(dogmas).issubset(set(DOGMA_RULE_IDS))
+
+
+def test_framework_mappings_use_targeted_dogmas() -> None:
+    for language in FRAMEWORK_KEYS:
+        mapping = importlib.import_module(
+            f"mcp_zen_of_languages.frameworks.{language}.mapping",
+        ).DETECTOR_MAP
+        for binding in mapping.bindings:
+            dogmas = binding.universal_dogma_ids or list(
+                dogmas_for_rule_ids(language, binding.rule_ids),
+            )
+            assert dogmas
+            assert len(dogmas) < len(DOGMA_RULE_IDS)
 
 
 def test_registry_all_supported_languages_have_full_dogma_metadata() -> None:

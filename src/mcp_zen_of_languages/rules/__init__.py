@@ -55,7 +55,14 @@ def _initialize_registry() -> None:
     if ZEN_REGISTRY:
         return  # Already initialized
 
-    # Language modules are canonical; use languages.* directly.
+    from mcp_zen_of_languages.frameworks.angular.rules import ANGULAR_ZEN
+    from mcp_zen_of_languages.frameworks.django.rules import DJANGO_ZEN
+    from mcp_zen_of_languages.frameworks.fastapi.rules import FASTAPI_ZEN
+    from mcp_zen_of_languages.frameworks.nextjs.rules import NEXTJS_ZEN
+    from mcp_zen_of_languages.frameworks.pydantic.rules import PYDANTIC_ZEN
+    from mcp_zen_of_languages.frameworks.react.rules import REACT_ZEN
+    from mcp_zen_of_languages.frameworks.sqlalchemy.rules import SQLALCHEMY_ZEN
+    from mcp_zen_of_languages.frameworks.vue.rules import VUE_ZEN
     from mcp_zen_of_languages.languages.ansible.rules import ANSIBLE_ZEN
     from mcp_zen_of_languages.languages.bash.rules import BASH_ZEN
     from mcp_zen_of_languages.languages.cpp.rules import CPP_ZEN
@@ -85,8 +92,16 @@ def _initialize_registry() -> None:
     ZEN_REGISTRY.update(
         {
             "python": PYTHON_ZEN,
+            "pydantic": PYDANTIC_ZEN,
+            "fastapi": FASTAPI_ZEN,
+            "django": DJANGO_ZEN,
+            "sqlalchemy": SQLALCHEMY_ZEN,
             "javascript": JAVASCRIPT_ZEN,
+            "react": REACT_ZEN,
+            "vue": VUE_ZEN,
             "typescript": TYPESCRIPT_ZEN,
+            "angular": ANGULAR_ZEN,
+            "nextjs": NEXTJS_ZEN,
             "ruby": RUBY_ZEN,
             "go": GO_ZEN,
             "json": JSON_ZEN,

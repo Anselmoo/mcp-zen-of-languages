@@ -590,8 +590,16 @@ def test_deprecated_cli_alias_entrypoints_absent():
 
 SAMPLES = {
     "python": "def foo():\n    pass\n",
+    "pydantic": "from pydantic import BaseModel\n\nclass Payload(BaseModel):\n    id: int\n",
+    "fastapi": "from fastapi import FastAPI\n\napp = FastAPI()\n",
+    "django": "from django.urls import path\n\nurlpatterns = []\n",
+    "sqlalchemy": "from sqlalchemy.orm import DeclarativeBase\n\nclass Base(DeclarativeBase):\n    pass\n",
     "javascript": "function foo() {}\n",
     "typescript": "interface Foo {}\n",
+    "react": "function Counter() { const [count] = useState(0); return <button>{count}</button>; }\n",
+    "vue": "<template><div>{{ msg }}</div></template>\n<script setup>\nconst props = defineProps<{ msg: string }>()\n</script>\n",
+    "angular": "import { Component } from '@angular/core';\n@Component({ selector: 'app-root', template: '' })\nexport class AppComponent {}\n",
+    "nextjs": "import Link from 'next/link';\nexport default function Page() { return <Link href='/' />; }\n",
     "ruby": "def foo\nend\n",
     "go": "package main\nfunc main() {}\n",
     "rust": "fn main() {}\n",

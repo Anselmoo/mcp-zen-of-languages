@@ -12,6 +12,7 @@ from dataclasses import asdict
 from dataclasses import dataclass
 from pathlib import Path
 
+from mcp_zen_of_languages.frameworks import FRAMEWORK_KEYS
 from mcp_zen_of_languages.rules import get_all_languages
 from mcp_zen_of_languages.rules import get_language_zen
 
@@ -32,10 +33,18 @@ README_BLOCK_RE = re.compile(
 
 PROGRAMMING_LANGUAGES: list[tuple[str, str]] = [
     ("python", "python"),
+    ("pydantic", "pydantic"),
+    ("fastapi", "fastapi"),
+    ("django", "django"),
+    ("sqlalchemy", "sqlalchemy"),
     ("typescript", "typescript"),
+    ("react", "react"),
+    ("angular", "angular"),
+    ("nextjs", "nextjs"),
     ("rust", "rust"),
     ("go", "go"),
     ("javascript", "javascript"),
+    ("vue", "vue"),
     ("css", "css"),
     ("ansible", "ansible"),
     ("bash", "bash"),
@@ -117,8 +126,9 @@ def _count_principles(language_key: str) -> int:
 
 
 def _count_detectors(module_key: str) -> int:
+    package_name = "frameworks" if module_key in FRAMEWORK_KEYS else "languages"
     mapping_module = importlib.import_module(
-        f"mcp_zen_of_languages.languages.{module_key}.mapping",
+        f"mcp_zen_of_languages.{package_name}.{module_key}.mapping",
     )
     return len(
         {

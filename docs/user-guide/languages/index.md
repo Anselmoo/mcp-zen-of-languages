@@ -18,10 +18,18 @@ Every language has its own philosophy — its own sense of what "good code" mean
 | Language | Principles | Detectors | Parser | Philosophy Origin |
 |----------|:----------:|:---------:|--------|-------------------|
 | [Python](python.md) | 20 | 30 | AST | [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/) |
+| [Pydantic](pydantic.md) | 8 | 1 | Regex | [Pydantic v2 documentation](https://docs.pydantic.dev/latest/) |
+| [FastAPI](fastapi.md) | 6 | 1 | Regex | [FastAPI documentation](https://fastapi.tiangolo.com/) |
+| [Django](django.md) | 6 | 1 | Regex | [Django documentation](https://docs.djangoproject.com/) |
+| [SQLAlchemy](sqlalchemy.md) | 6 | 1 | Regex | [SQLAlchemy 2.0 documentation](https://docs.sqlalchemy.org/en/20/) |
 | [TypeScript](typescript.md) | 18 | 25 | Regex | [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html) |
+| [React](react.md) | 5 | 1 | Regex | [React documentation and Rules of React](https://react.dev/) |
+| [Angular](angular.md) | 5 | 1 | Regex | [Angular Style Guide](https://angular.dev/style-guide) |
+| [Next.js](nextjs.md) | 5 | 1 | Regex | [Next.js documentation](https://nextjs.org/docs) |
 | [Rust](rust.md) | 17 | 18 | Regex | [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/) |
 | [Go](go.md) | 20 | 21 | Regex | [Effective Go & The Zen of Go](https://the-zen-of-go.netlify.app/) |
 | [JavaScript](javascript.md) | 18 | 18 | Regex | [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript) |
+| [Vue](vue.md) | 5 | 1 | Regex | [Vue Style Guide](https://vuejs.org/style-guide/) |
 | [CSS](css.md) | 8 | 8 | Regex | [CSSWG + common modular CSS practices](https://www.w3.org/TR/CSS/) |
 | [Ansible](ansible.md) | 20 | 20 | Regex | [The Zen of Ansible (Red Hat)](https://www.redhat.com/en/blog/the-zen-of-ansible) |
 | [Bash](bash.md) | 14 | 14 | Regex | [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html) |
@@ -35,7 +43,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 | [LaTeX](latex.md) | 9 | 9 | Regex | [LaTeX Project](https://www.latex-project.org/) |
 | [Markdown / MDX](markdown.md) | 7 | 7 | Regex | [CommonMark + MDX authoring best practices](https://commonmark.org/) |
 | [Terraform](terraform.md) | 7 | 7 | Regex | [Terraform language and module best-practice documentation](https://developer.hashicorp.com/terraform/language) |
-| **Programming & markup subtotal** | **231** | **250** | | |
+| **Programming & markup subtotal** | **277** | **258** | | |
 
 ### Workflows & Automation
 
@@ -54,8 +62,8 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 ### Coverage Totals
 
-- **Principles (all categories):** 302
-- **Detectors + workflow checks:** 321
+- **Principles (all categories):** 348
+- **Detectors + workflow checks:** 329
 
 ## Maturity Tiers
 
@@ -75,7 +83,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
     Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
 
-    **TypeScript · Rust · Go · JavaScript · CSS · Ansible · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile · Terraform**
+    **Pydantic · FastAPI · Django · SQLAlchemy · TypeScript · React · Angular · Next.js · Rust · Go · JavaScript · Vue · CSS · Ansible · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile · Terraform**
 
 -   :material-language-markdown:{ .lg .middle } **Documentation & Markup**
 

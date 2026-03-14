@@ -93,9 +93,17 @@ class ConfigModel(BaseModel):
     languages: list[str] = Field(
         default_factory=lambda: [
             "python",
+            "pydantic",
+            "fastapi",
+            "django",
+            "sqlalchemy",
             "ruby",
             "typescript",
+            "react",
+            "angular",
+            "nextjs",
             "javascript",
+            "vue",
             "go",
             "rust",
             "bash",

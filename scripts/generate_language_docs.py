@@ -13,7 +13,9 @@ the Jinja2 template at ``scripts/templates/language_page.md.j2``.
 from __future__ import annotations
 
 import argparse
+import html
 import importlib
+import re
 import sys
 import textwrap
 
@@ -32,6 +34,8 @@ from mcp_zen_of_languages.utils.subprocess_runner import KNOWN_TOOLS
 # Maximum characters shown from a principle description in diagram labels.
 # Kept short so text fits inside Mermaid node boxes without overflow.
 PRINCIPLE_PREVIEW_LENGTH = 25
+DETECTOR_LABEL_WORDS_PER_LINE = 2
+_CAMEL_CASE_WORD_RE = re.compile(r"[A-Z]+(?=[A-Z][a-z]|\b)|[A-Z]?[a-z]+|\d+")
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -302,10 +306,33 @@ def _build_external_tools(config_key: str) -> list[dict[str, str]]:
 # ---------------------------------------------------------------------------
 # Mermaid diagram generation
 # ---------------------------------------------------------------------------
+def _format_detector_node_label(detector_name: str) -> str:
+    """Return a compact Mermaid label for detector nodes in the wiring diagram."""
+    base_name = detector_name.removesuffix("Detector")
+    words = _CAMEL_CASE_WORD_RE.findall(base_name) or [base_name]
+    wrapped_words = [
+        " ".join(words[index : index + DETECTOR_LABEL_WORDS_PER_LINE])
+        for index in range(0, len(words), DETECTOR_LABEL_WORDS_PER_LINE)
+    ]
+    return "<br/>".join(wrapped_words)
+
+
+def _format_detector_class_label(detector_name: str) -> str:
+    """Return a compact single-line label for Mermaid class diagram nodes."""
+    base_name = detector_name.removesuffix("Detector")
+    words = _CAMEL_CASE_WORD_RE.findall(base_name) or [base_name]
+    return " ".join(words)
+
+
+def _escape_mermaid_label_text(text: str) -> str:
+    """Escape text used inside Mermaid quoted labels while preserving <br/> separators."""
+    return html.escape(text, quote=True).replace("&lt;br/&gt;", "<br/>")
+
+
 def _build_mermaid(principles, detector_map) -> str:
     """Build a mermaid flowchart (TD) showing principle→detector wiring."""
     lines = [
-        '%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%',
+        '    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 40, "rankSpacing": 60}}}%%',
         "    graph TD",
     ]
 
@@ -316,7 +343,8 @@ def _build_mermaid(principles, detector_map) -> str:
         short = p.principle[:PRINCIPLE_PREVIEW_LENGTH] + (
             "..." if len(p.principle) > PRINCIPLE_PREVIEW_LENGTH else ""
         )
-        lines.append(f'    {safe_id}["{p.id}<br/>{short}"]')
+        safe_short = _escape_mermaid_label_text(short)
+        lines.append(f'    {safe_id}["{p.id}<br/>{safe_short}"]')
         rule_labels[p.id] = safe_id
 
     # Build detector nodes and edges (sorted for deterministic output)
@@ -330,7 +358,8 @@ def _build_mermaid(principles, detector_map) -> str:
             continue
         seen_detectors.append(det_name)
         det_id = f"det_{det_name}"
-        lines.append(f'    {det_id}["{det_name}"]')
+        det_label = _escape_mermaid_label_text(_format_detector_node_label(det_name))
+        lines.append(f'    {det_id}["{det_label}"]')
         lines.extend(
             [
                 f"    {rule_labels[rid]} --> {det_id}"
@@ -339,36 +368,22 @@ def _build_mermaid(principles, detector_map) -> str:
             ],
         )
 
-    # Explicit palette colors ensure correct contrast in both light and dark themes.
-    # BRAND_PRIMARY (#4051b5) and BRAND_DETECTOR (#26a269) have 4.5:1+ contrast with #fff.
-    lines.extend(
-        (
-            "    classDef principle fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px",
-            "    classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px",
-        ),
-    )
-    for p in principles:
-        safe_id = p.id.replace("-", "_")
-        lines.append(f"    class {safe_id} principle")
-    lines.extend(f"    class det_{det_name} detector" for det_name in seen_detectors)
-
     return "\n".join(lines)
 
 
 def _build_class_diagram(_principles, detector_map) -> str:
-    """Build a Mermaid classDiagram showing the detector class hierarchy."""
+    """Build a compact Mermaid classDiagram showing the detector hierarchy."""
     lines = [
-        '%%{init: {"theme": "base"}}%%',
+        '    %%{init: {"theme": "base"}}%%',
         "    classDiagram",
         "        direction TB",
         "        class ViolationDetector {",
         "            <<abstract>>",
-        "            +detect(context, config) list~Violation~",
+        "            +detect(context, config)",
         "        }",
     ]
 
     seen: set[str] = set()
-    detector_names: list[str] = []
     for binding in sorted(
         detector_map.bindings,
         key=lambda b: b.detector_class.__name__,
@@ -377,26 +392,10 @@ def _build_class_diagram(_principles, detector_map) -> str:
         if det_name in seen or binding.detector_id == "analyzer_defaults":
             continue
         seen.add(det_name)
-        detector_names.append(det_name)
-
-        # Rule IDs as a compact annotation
-        rule_ids_str = ", ".join(sorted(binding.rule_ids)) if binding.rule_ids else ""
-        lines.append(f"        class {det_name} {{")
-        if rule_ids_str:
-            lines.append(f'            +rules "{rule_ids_str}"')
-        lines.append("        }")
-        lines.append(f"        ViolationDetector <|-- {det_name}")
-
-    # Apply palette colors
-    lines.append(
-        "        classDef abstract fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px",
-    )
-    lines.append(
-        "        classDef detector fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px",
-    )
-    lines.append("        class ViolationDetector abstract")
-    if detector_names:
-        lines.append(f"        class {','.join(detector_names)} detector")
+        det_id = f"det_{len(seen):02d}"
+        det_label = _escape_mermaid_label_text(_format_detector_class_label(det_name))
+        lines.append(f'        class {det_id}["{det_label}"]')
+        lines.append(f"        ViolationDetector <|-- {det_id}")
 
     return "\n".join(lines)
 
@@ -412,20 +411,13 @@ def _build_flow_diagram(principles, detector_map) -> str:
         },
     )
     lines = [
-        '%%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%',
+        '    %%{init: {"theme": "base", "flowchart": {"useMaxWidth": false, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 70}}}%%',
         "    flowchart TD",
-        '    Source(["📄 Source Code"]) --> Parse["Parse & Tokenize"]',
+        '    Source(["Source Code"]) --> Parse["Parse & Tokenize"]',
         '    Parse --> Metrics["Compute Metrics"]',
         f'    Metrics --> Pipeline{{"{num_detectors} Detectors"}}',
         '    Pipeline --> Collect["Aggregate Violations"]',
-        f'    Collect --> Result(["✅ AnalysisResult · {num_principles} principles"])',
-        "",
-        "    classDef io fill:#4051b5,color:#ffffff,stroke:#4051b5,stroke-width:2px",
-        "    classDef process fill:#26a269,color:#ffffff,stroke:#26a269,stroke-width:2px",
-        "    classDef decision fill:#b55400,color:#ffffff,stroke:#b55400,stroke-width:2px",
-        "    class Source,Result io",
-        "    class Parse,Metrics,Collect process",
-        "    class Pipeline decision",
+        f'    Collect --> Result(["AnalysisResult<br/>{num_principles} principles"])',
     ]
     return "\n".join(lines)
 
@@ -440,7 +432,7 @@ def _build_state_diagram(_principles, detector_map) -> str:
         },
     )
     lines = [
-        '%%{init: {"theme": "base"}}%%',
+        '    %%{init: {"theme": "base"}}%%',
         "    stateDiagram-v2",
         "        [*] --> Ready",
         "        Ready --> Parsing : analyze(code)",

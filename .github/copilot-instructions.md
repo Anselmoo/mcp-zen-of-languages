@@ -48,6 +48,7 @@ zen check myfile.py
 - Do not claim work is complete until `uvx pre-commit run --all-files` passes.
 - If pre-commit fails, fix issues and re-run until all hooks pass.
 - In final responses, explicitly confirm pre-commit status.
+- Use conventional commit messages for any code changes (e.g., `feat: add new detector for XYZ`), and ensure all tests pass before pushing.
 
 ## Key Patterns & Conventions
 

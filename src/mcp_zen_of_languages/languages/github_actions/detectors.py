@@ -4,32 +4,20 @@ from __future__ import annotations
 
 import re
 
+from typing import TYPE_CHECKING
+
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
 from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
 from mcp_zen_of_languages.analyzers.base import ViolationDetector
 from mcp_zen_of_languages.languages.ci_yaml_utils import job_steps
 from mcp_zen_of_languages.languages.ci_yaml_utils import workflow_jobs
 from mcp_zen_of_languages.languages.configs import GitHubActionsWorkflowConfig
-from mcp_zen_of_languages.models import Violation
 
 
-_SEVERITY: dict[str, int] = {
-    "gha-001": 9,
-    "gha-002": 10,
-    "gha-003": 10,
-    "gha-004": 8,
-    "gha-005": 7,
-    "gha-006": 5,
-    "gha-007": 5,
-    "gha-008": 6,
-    "gha-009": 5,
-    "gha-010": 4,
-    "gha-011": 7,
-    "gha-012": 7,
-    "gha-013": 4,
-    "gha-014": 4,
-    "gha-015": 4,
-}
+if TYPE_CHECKING:
+    from mcp_zen_of_languages.models import Violation
+
+
 _GOD_WORKFLOW_LINE_THRESHOLD = 300
 
 
@@ -45,11 +33,16 @@ class GitHubActionsWorkflowDetector(
         return "gha-workflow"
 
     def _violation(
-        self, context: AnalysisContext, principle: str, token: str, message: str
+        self,
+        context: AnalysisContext,
+        config: GitHubActionsWorkflowConfig,
+        rule_id: str,
+        token: str,
+        message: str,
     ) -> Violation:
-        return Violation(
-            principle=principle,
-            severity=_SEVERITY[principle],
+        return self.build_violation(
+            config,
+            rule_id=rule_id,
             message=message,
             location=self.find_location_by_substring(context.code, token),
         )
@@ -57,7 +50,7 @@ class GitHubActionsWorkflowDetector(
     def detect(  # noqa: C901, PLR0912, PLR0915
         self,
         context: AnalysisContext,
-        _config: GitHubActionsWorkflowConfig,
+        config: GitHubActionsWorkflowConfig,
     ) -> list[Violation]:
         """Detect security, maintainability, and idiomatic workflow issues."""
         document = (
@@ -75,6 +68,7 @@ class GitHubActionsWorkflowDetector(
                 violations.append(
                     self._violation(
                         context,
+                        config,
                         "gha-001",
                         match.group(0),
                         "Pin actions by full 40-char commit SHA.",
@@ -89,6 +83,7 @@ class GitHubActionsWorkflowDetector(
             violations.append(
                 self._violation(
                     context,
+                    config,
                     "gha-002",
                     "pull_request_target",
                     "Avoid checking out untrusted PR head SHA in pull_request_target workflows.",
@@ -98,6 +93,7 @@ class GitHubActionsWorkflowDetector(
             violations.append(
                 self._violation(
                     context,
+                    config,
                     "gha-003",
                     "${{ secrets.",
                     "Secrets referenced in run blocks may leak into logs.",
@@ -114,6 +110,7 @@ class GitHubActionsWorkflowDetector(
             violations.append(
                 self._violation(
                     context,
+                    config,
                     "gha-004",
                     token,
                     "Define minimal workflow-level permissions instead of write-all or implicit defaults.",
@@ -125,6 +122,7 @@ class GitHubActionsWorkflowDetector(
             violations.append(
                 self._violation(
                     context,
+                    config,
                     "gha-005",
                     "jobs:",
                     "Set explicit minimal permissions per job when workflow-level permissions are absent.",
@@ -135,6 +133,7 @@ class GitHubActionsWorkflowDetector(
             violations.append(
                 self._violation(
                     context,
+                    config,
                     "gha-006",
                     "name:",
                     "Workflow is large; split into reusable workflow_call units.",
@@ -152,6 +151,7 @@ class GitHubActionsWorkflowDetector(
             violations.append(
                 self._violation(
                     context,
+                    config,
                     "gha-007",
                     "steps:",
                     "Duplicate steps appear across jobs; extract a reusable action.",
@@ -161,13 +161,18 @@ class GitHubActionsWorkflowDetector(
         if any("timeout-minutes" not in job for job in jobs.values()):
             violations.append(
                 self._violation(
-                    context, "gha-008", "jobs:", "Set timeout-minutes for every job."
+                    context,
+                    config,
+                    "gha-008",
+                    "jobs:",
+                    "Set timeout-minutes for every job.",
                 ),
             )
         if "concurrency" not in document:
             violations.append(
                 self._violation(
                     context,
+                    config,
                     "gha-009",
                     "on:",
                     "Add workflow concurrency to cancel stale runs.",
@@ -192,6 +197,7 @@ class GitHubActionsWorkflowDetector(
                 violations.append(
                     self._violation(
                         context,
+                        config,
                         "gha-010",
                         "matrix:",
                         "Prefer include/exclude strategy when matrix values are hardcoded.",
@@ -203,6 +209,7 @@ class GitHubActionsWorkflowDetector(
             violations.append(
                 self._violation(
                     context,
+                    config,
                     "gha-011",
                     "::set-output",
                     "Replace deprecated ::set-output with GITHUB_OUTPUT.",
@@ -213,6 +220,7 @@ class GitHubActionsWorkflowDetector(
             violations.append(
                 self._violation(
                     context,
+                    config,
                     "gha-012",
                     token,
                     "Replace deprecated workflow commands with GITHUB_STATE / GITHUB_ENV.",
@@ -226,7 +234,11 @@ class GitHubActionsWorkflowDetector(
         ):
             violations.append(
                 self._violation(
-                    context, "gha-013", "run:", "Declare shell explicitly on run steps."
+                    context,
+                    config,
+                    "gha-013",
+                    "run:",
+                    "Declare shell explicitly on run steps.",
                 ),
             )
 
@@ -241,6 +253,7 @@ class GitHubActionsWorkflowDetector(
             violations.append(
                 self._violation(
                     context,
+                    config,
                     "gha-014",
                     "run:",
                     "Add dependency caching for install-heavy workflow steps.",
@@ -261,6 +274,7 @@ class GitHubActionsWorkflowDetector(
             violations.append(
                 self._violation(
                     context,
+                    config,
                     "gha-015",
                     "actions/upload-artifact@",
                     "Set retention-days for upload-artifact steps.",

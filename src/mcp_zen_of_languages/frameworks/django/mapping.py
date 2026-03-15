@@ -38,6 +38,16 @@ def _dogmas(*dogma_ids: str) -> list[str]:
     return list(dogma_ids)
 
 
+def _testing(*testing_ids: str) -> list[str]:
+    """Return explicit testing family ids for the binding."""
+    return list(testing_ids)
+
+
+def _projection(*projection_ids: str) -> list[str]:
+    """Return explicit projection family ids for the binding."""
+    return list(projection_ids)
+
+
 DETECTOR_MAP = LanguageDetectorMap(
     language="django",
     bindings=[
@@ -49,6 +59,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="django-003",
                     dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-FAIL-FAST"),
+                    testing_ids=_testing("pytest"),
                 )
             ],
             default_order=10,
@@ -61,6 +72,8 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="django-001",
                     dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-FAIL-FAST"),
+                    testing_ids=_testing("pytest"),
+                    projection_ids=_projection("sql"),
                 )
             ],
             default_order=20,
@@ -73,6 +86,9 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="django-006",
                     dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
+                    testing_ids=_testing("pytest"),
+                    projection_ids=_projection("sql"),
+                    verified_projection_ids=[],
                 )
             ],
             default_order=30,
@@ -85,6 +101,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="django-004",
                     dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-RIGHT-ABSTRACTION"),
+                    testing_ids=_testing("pytest"),
                 )
             ],
             default_order=40,
@@ -95,7 +112,9 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=_rule_config("django-002"),
             rules=[
                 RuleBinding(
-                    rule_id="django-002", dogma_ids=_dogmas("ZEN-STRICT-FENCES")
+                    rule_id="django-002",
+                    dogma_ids=_dogmas("ZEN-STRICT-FENCES"),
+                    testing_ids=_testing("pytest"),
                 )
             ],
             default_order=50,
@@ -106,7 +125,9 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=_rule_config("django-005"),
             rules=[
                 RuleBinding(
-                    rule_id="django-005", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                    rule_id="django-005",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+                    testing_ids=_testing("pytest"),
                 )
             ],
             default_order=60,

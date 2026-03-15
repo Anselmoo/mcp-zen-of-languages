@@ -29,6 +29,7 @@ from jinja2 import FileSystemLoader
 
 from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule
 from mcp_zen_of_languages.frameworks import FRAMEWORK_KEYS
+from mcp_zen_of_languages.languages.configs import DetectorConfig
 from mcp_zen_of_languages.utils.subprocess_runner import KNOWN_TOOLS
 
 
@@ -37,6 +38,19 @@ from mcp_zen_of_languages.utils.subprocess_runner import KNOWN_TOOLS
 PRINCIPLE_PREVIEW_LENGTH = 25
 DETECTOR_LABEL_WORDS_PER_LINE = 2
 _CAMEL_CASE_WORD_RE = re.compile(r"[A-Z]+(?=[A-Z][a-z]|\b)|[A-Z]?[a-z]+|\d+")
+_RUNTIME_ONLY_CONFIG_FIELDS = frozenset(
+    {
+        "type",
+        "enabled",
+        "principle_id",
+        "principle",
+        "severity",
+        "violation_messages",
+        "detectable_patterns",
+        "recommended_alternative",
+        "rule_contexts",
+    },
+)
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -534,9 +548,15 @@ def _build_config_entries(_principles, detector_map) -> list[dict]:
         comments: dict[str, str] = {}
 
         for field_name, field_info in config_cls.model_fields.items():
-            if field_name in ("type", "enabled"):
+            if (
+                field_name
+                in set(DetectorConfig.model_fields) | _RUNTIME_ONLY_CONFIG_FIELDS
+            ):
                 continue
-            default = field_info.default
+            if field_info.default_factory is not None:
+                default = field_info.default_factory()
+            else:
+                default = field_info.default
             if default is not None:
                 params[field_name] = default
                 if desc := field_info.description:
@@ -597,9 +617,7 @@ def _principle_dogmas(principle, detector_map) -> list[str]:
     """Resolve dogmas from explicit detector bindings before catalog fallback."""
     explicit: list[str] = []
     for binding in detector_map.bindings:
-        if principle.id not in binding.rule_ids:
-            continue
-        for dogma in binding.universal_dogma_ids:
+        for dogma in binding.rule_dogma_map.get(principle.id, []):
             if dogma not in explicit:
                 explicit.append(dogma)
     if explicit:

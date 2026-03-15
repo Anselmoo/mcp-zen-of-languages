@@ -31,6 +31,16 @@ def _dogmas(*dogma_ids: str) -> list[str]:
     return list(dogma_ids)
 
 
+def _testing(*testing_ids: str) -> list[str]:
+    """Return explicit testing family ids for the binding."""
+    return list(testing_ids)
+
+
+def _projection(*projection_ids: str) -> list[str]:
+    """Return explicit projection family ids for the binding."""
+    return list(projection_ids)
+
+
 DETECTOR_MAP = LanguageDetectorMap(
     language="react",
     bindings=[
@@ -40,7 +50,10 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=_rule_config("react-004"),
             rules=[
                 RuleBinding(
-                    rule_id="react-004", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                    rule_id="react-004",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("nextjs"),
                 )
             ],
             default_order=10,
@@ -53,6 +66,9 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="react-003",
                     dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-STRICT-FENCES"),
+                    verified_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("nextjs"),
                 )
             ],
             default_order=20,
@@ -65,6 +81,9 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="react-005",
                     dogma_ids=_dogmas("ZEN-FAIL-FAST", "ZEN-STRICT-FENCES"),
+                    verified_dogma_ids=_dogmas("ZEN-FAIL-FAST"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("nextjs"),
                 )
             ],
             default_order=30,
@@ -77,6 +96,9 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="react-002",
                     dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("nextjs"),
+                    verified_projection_ids=[],
                 )
             ],
             default_order=40,
@@ -89,6 +111,9 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="react-001",
                     dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT", "ZEN-VISIBLE-STATE"),
+                    verified_dogma_ids=_dogmas("ZEN-VISIBLE-STATE"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("nextjs"),
                 )
             ],
             default_order=50,

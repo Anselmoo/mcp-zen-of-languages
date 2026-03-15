@@ -17,13 +17,15 @@ jobs:
             with:
               ref: ${{ github.event.pull_request.head.sha }}
           - run: echo "${{ secrets.MY_SECRET }}"
-"""
+    """
     result = create_analyzer("github-actions").analyze(code)
+    rule_ids = {violation.rule_id for violation in result.violations}
     principles = {violation.principle for violation in result.violations}
-    assert "gha-001" in principles
-    assert "gha-002" in principles
-    assert "gha-003" in principles
-    assert "gha-008" in principles
+    assert {"gha-001", "gha-002", "gha-003", "gha-008"} <= rule_ids
+    assert "Pin third-party actions by full commit SHA" in principles
+    assert "Avoid pull_request_target checkout of untrusted head SHA" in principles
+    assert "Do not expose secrets in run blocks" in principles
+    assert "Set timeout-minutes on jobs" in principles
 
 
 def test_github_actions_detector_finds_deprecated_and_artifact_issues():
@@ -42,11 +44,13 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: build
-"""
+    """
     result = create_analyzer("github-actions").analyze(code)
+    rule_ids = {violation.rule_id for violation in result.violations}
     principles = {violation.principle for violation in result.violations}
-    assert "gha-011" in principles
-    assert "gha-015" in principles
+    assert {"gha-011", "gha-015"} <= rule_ids
+    assert "Use GITHUB_OUTPUT instead of deprecated set-output" in principles
+    assert "Set artifact retention explicitly" in principles
 
 
 def test_ci_yaml_utils_handle_invalid_or_unexpected_shapes():

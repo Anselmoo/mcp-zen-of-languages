@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import re
 
+from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 
@@ -138,6 +139,46 @@ class DetectionResult(BaseModel):
             dict: A dict with keys ``language``, ``confidence``, ``method``, and ``notes``.
         """
         return self.model_dump()
+
+
+@dataclass(frozen=True, slots=True)
+class TestingFamilyDescriptor:
+    """Describe one test-family overlay and how to match its file paths."""
+
+    language: str
+    family: str
+
+    def matches(self, path_obj: Path) -> bool:
+        """Return whether *path_obj* belongs to this testing family."""
+        file_name = path_obj.name.lower()
+        parts = {part.lower() for part in path_obj.parts}
+        if self.family == "pytest":
+            return (
+                file_name == "conftest.py"
+                or file_name.startswith("test_")
+                or file_name.endswith("_test.py")
+                or ("tests" in parts and path_obj.suffix.lower() == ".py")
+            )
+        if self.family == "gotest":
+            return file_name.endswith("_test.go")
+        if self.family == "jest":
+            return (
+                file_name.endswith(
+                    (".test.ts", ".test.tsx", ".spec.ts", ".spec.tsx"),
+                )
+                or "__tests__" in parts
+            )
+        if self.family == "rspec":
+            return file_name.endswith("_spec.rb") or "spec" in parts
+        return False
+
+
+TESTING_FAMILY_DESCRIPTORS: tuple[TestingFamilyDescriptor, ...] = (
+    TestingFamilyDescriptor(language="python", family="pytest"),
+    TestingFamilyDescriptor(language="go", family="gotest"),
+    TestingFamilyDescriptor(language="typescript", family="jest"),
+    TestingFamilyDescriptor(language="ruby", family="rspec"),
+)
 
 
 def _is_ansible_path(path_obj: Path) -> bool:
@@ -351,6 +392,20 @@ def _detect_python_framework(  # noqa: PLR0911
             method="extension",
             notes="Matched Pydantic imports",
         )
+    return None
+
+
+def detect_testing_family_overlay(language: str, path: str | None) -> str | None:
+    """Resolve the testing-family overlay for one file analysed as *language*."""
+    if path is None:
+        return None
+    normalized_language = language.lower()
+    path_obj = Path(path)
+    for descriptor in TESTING_FAMILY_DESCRIPTORS:
+        if descriptor.language != normalized_language:
+            continue
+        if descriptor.matches(path_obj):
+            return descriptor.family
     return None
 
 

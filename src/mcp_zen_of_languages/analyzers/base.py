@@ -65,6 +65,7 @@ from mcp_zen_of_languages.models import ParserResult
 from mcp_zen_of_languages.models import RulesSummary
 from mcp_zen_of_languages.models import Violation
 from mcp_zen_of_languages.telemetry import analysis_span
+from mcp_zen_of_languages.utils.language_detection import detect_testing_family_overlay
 
 
 logger = logging.getLogger(__name__)
@@ -290,6 +291,7 @@ class AnalysisContext(BaseModel):
     code: str
     path: str | None = None
     language: str
+    testing_family: str | None = None
 
     # Parsed artifacts
     ast_tree: ParserResult | None = None
@@ -411,6 +413,7 @@ class ViolationDetector[ConfigT: "DetectorConfig"](ABC):
         self,
         config: ConfigT,
         *,
+        rule_id: str | None = None,
         message: str | None = None,
         contains: str | None = None,
         index: int = 0,
@@ -437,6 +440,10 @@ class ViolationDetector[ConfigT: "DetectorConfig"](ABC):
         Args:
             config (DetectorConfig): Detector configuration carrying principle metadata,
                 severity, and violation-message templates.
+            rule_id (str | None, optional): Specific rule identifier for
+                composite detectors. When provided, principle text, severity,
+                and default message selection are resolved from that rule's
+                preserved context. Default to None.
             message (str | None, optional): Explicit violation message. When ``None``, the
                 message is auto-selected from the config's template list. Default to None.
             contains (str | None, optional): Substring filter passed to
@@ -457,20 +464,28 @@ class ViolationDetector[ConfigT: "DetectorConfig"](ABC):
             Violation: Fully populated ``Violation`` ready for collection by the
             [`DetectionPipeline`][mcp_zen_of_languages.analyzers.base.DetectionPipeline].
         """
-        principle = (
-            getattr(config, "principle", None)
-            or getattr(config, "principle_id", None)
-            or getattr(config, "type", "violation")
-        )
+        principle_resolver = getattr(config, "principle_for_rule", None)
+        if callable(principle_resolver):
+            principle = principle_resolver(rule_id)
+        else:
+            principle = (
+                getattr(config, "principle", None)
+                or getattr(config, "principle_id", None)
+                or getattr(config, "type", "violation")
+            )
         if message is None:
             selector = getattr(config, "select_violation_message", None)
             if callable(selector):
-                message = selector(contains=contains, index=index)
+                message = selector(contains=contains, index=index, rule_id=rule_id)
             else:
                 message = principle
         resolved_severity = severity
         if resolved_severity is None:
-            resolved_severity = getattr(config, "severity", None) or 5
+            severity_resolver = getattr(config, "severity_for_rule", None)
+            if callable(severity_resolver):
+                resolved_severity = severity_resolver(rule_id, 5)
+            else:
+                resolved_severity = getattr(config, "severity", None) or 5
         return Violation(
             principle=principle,
             severity=resolved_severity,
@@ -478,7 +493,7 @@ class ViolationDetector[ConfigT: "DetectorConfig"](ABC):
             location=location,
             suggestion=suggestion,
             files=files,
-            rule_id=getattr(config, "principle_id", None),
+            rule_id=rule_id or getattr(config, "principle_id", None),
             detector_id=getattr(config, "type", None),
         )
 
@@ -547,6 +562,11 @@ class DetectionPipeline:
             and violation.principle in detector.rule_ids
         ):
             return violation.principle
+        rule_contexts = getattr(detector_config, "rule_contexts", None)
+        if isinstance(rule_contexts, dict) and isinstance(violation.principle, str):
+            for rule_id, rule_context in rule_contexts.items():
+                if getattr(rule_context, "principle", None) == violation.principle:
+                    return rule_id
         if len(detector.rule_ids) == 1:
             return detector.rule_ids[0]
         return None
@@ -559,19 +579,58 @@ class DetectionPipeline:
         violation: Violation,
     ) -> list[str]:
         """Resolve universal dogma ids for a violation."""
+        if violation.linked_dogma_ids:
+            return list(violation.linked_dogma_ids)
         if violation.universal_dogma_ids:
             return list(violation.universal_dogma_ids)
+        if isinstance(detector_config, DetectorConfig):
+            linked_dogma_ids = detector_config.linked_dogma_ids_for_rule(rule_id)
+            if linked_dogma_ids:
+                return linked_dogma_ids
 
         detector_type = getattr(detector_config, "type", None)
         if isinstance(detector_type, str):
             from mcp_zen_of_languages.analyzers.registry import REGISTRY
 
             try:
-                return REGISTRY.get(detector_type).dogma_ids_for_rule(rule_id)
+                return REGISTRY.linked_dogma_ids_for(
+                    detector_type,
+                    context.language,
+                    rule_id,
+                )
             except KeyError:
                 pass
 
         del context
+        return []
+
+    @staticmethod
+    def _resolve_verified_dogma_ids(
+        language: str,
+        detector_config: AnalyzerConfig | DetectorConfig,
+        rule_id: str | None,
+        violation: Violation,
+    ) -> list[str]:
+        """Resolve authored verified dogma ids for a violation."""
+        if violation.verified_dogma_ids:
+            return list(violation.verified_dogma_ids)
+        if isinstance(detector_config, DetectorConfig):
+            verified_dogma_ids = detector_config.verified_dogma_ids_for_rule(rule_id)
+            if verified_dogma_ids:
+                return verified_dogma_ids
+
+        detector_type = getattr(detector_config, "type", None)
+        if isinstance(detector_type, str):
+            from mcp_zen_of_languages.analyzers.registry import REGISTRY
+
+            try:
+                return REGISTRY.verified_dogma_ids_for(
+                    detector_type,
+                    language,
+                    rule_id,
+                )
+            except KeyError:
+                pass
         return []
 
     def _enrich_violation(
@@ -587,18 +646,27 @@ class DetectionPipeline:
         files = violation.files
         if files is None and context.path:
             files = [context.path]
+        linked_dogma_ids = self._resolve_dogma_ids(
+            context,
+            detector_config,
+            rule_id,
+            violation,
+        )
+        verified_dogma_ids = self._resolve_verified_dogma_ids(
+            context.language,
+            detector_config,
+            rule_id,
+            violation,
+        )
         return violation.model_copy(
             update={
                 "rule_id": rule_id,
                 "detector_id": violation.detector_id
                 or getattr(detector_config, "type", None)
                 or detector_name,
-                "universal_dogma_ids": self._resolve_dogma_ids(
-                    context,
-                    detector_config,
-                    rule_id,
-                    violation,
-                ),
+                "universal_dogma_ids": linked_dogma_ids,
+                "linked_dogma_ids": linked_dogma_ids,
+                "verified_dogma_ids": verified_dogma_ids,
                 "files": files,
             },
         )
@@ -954,6 +1022,11 @@ class BaseAnalyzer(ABC):
                     **adapter.summarize_violations(all_violations),
                 )
                 result.violations = all_violations
+                from mcp_zen_of_languages.dogmas.interface import attach_dogma_analysis
+
+                result = attach_dogma_analysis(
+                    result.model_copy(update={"dogma_analysis": None})
+                )
             except Exception as exc:  # noqa: BLE001
                 logger.debug(
                     "RulesAdapter integration failed; continuing", exc_info=exc
@@ -1067,6 +1140,7 @@ class BaseAnalyzer(ABC):
             code=code,
             path=path,
             language=self.language(),
+            testing_family=detect_testing_family_overlay(self.language(), path),
             capabilities=capabilities,
             ast_status=(
                 AstStatus.parse_failed

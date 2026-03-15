@@ -33,6 +33,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 from typing import TypedDict
 
+from mcp_zen_of_languages.models import PerspectiveMode
 from mcp_zen_of_languages.orchestration import (
     analyze_targets as _shared_analyze_targets,
 )
@@ -42,6 +43,8 @@ from mcp_zen_of_languages.orchestration import (
 from mcp_zen_of_languages.orchestration import (
     collect_targets as _shared_collect_targets,
 )
+from mcp_zen_of_languages.perspectives import apply_perspective_to_result
+from mcp_zen_of_languages.perspectives import validate_perspective
 from mcp_zen_of_languages.reporting.gaps import build_gap_analysis
 from mcp_zen_of_languages.reporting.models import AnalysisSummary
 from mcp_zen_of_languages.reporting.models import GapAnalysis
@@ -70,7 +73,23 @@ class DogmaSummaryEntry(TypedDict):
     label: str
     severity: int
     violation_count: int
+    verified_violation_count: int
     rule_ids: list[str]
+    verified_rule_ids: list[str]
+    files: list[str]
+
+
+class DogmaDomainSummaryEntry(TypedDict):
+    """Aggregated reporting payload for a shared dogma domain."""
+
+    detector_id: str
+    label: str
+    severity: int
+    dogma_ids: list[str]
+    violation_count: int
+    verified_violation_count: int
+    rule_ids: list[str]
+    verified_rule_ids: list[str]
     files: list[str]
 
 
@@ -179,17 +198,61 @@ def _summarize_dogmas(results: list[AnalysisResult]) -> list[DogmaSummaryEntry]:
                     "label": finding.label,
                     "severity": finding.severity,
                     "violation_count": 0,
+                    "verified_violation_count": 0,
                     "rule_ids": [],
+                    "verified_rule_ids": [],
                     "files": [],
                 },
             )
             entry["severity"] = max(entry["severity"], finding.severity)
             entry["violation_count"] += finding.violation_count
+            entry["verified_violation_count"] += finding.verified_violation_count
             entry["rule_ids"] = sorted({*entry["rule_ids"], *finding.rule_ids})
+            entry["verified_rule_ids"] = sorted(
+                {*entry["verified_rule_ids"], *finding.verified_rule_ids}
+            )
             entry["files"] = sorted({*entry["files"], *finding.files})
     return sorted(
         summary.values(),
         key=lambda entry: (-entry["severity"], entry["dogma_id"]),
+    )
+
+
+def _summarize_dogma_domains(
+    results: list[AnalysisResult],
+) -> list[DogmaDomainSummaryEntry]:
+    """Aggregate shared dogma-domain findings across all analysis results."""
+    summary: dict[str, DogmaDomainSummaryEntry] = {}
+    for result in results:
+        if not result.dogma_analysis:
+            continue
+        for domain in result.dogma_analysis.domains:
+            entry = summary.setdefault(
+                domain.detector_id,
+                {
+                    "detector_id": domain.detector_id,
+                    "label": domain.label,
+                    "severity": domain.severity,
+                    "dogma_ids": [],
+                    "violation_count": 0,
+                    "verified_violation_count": 0,
+                    "rule_ids": [],
+                    "verified_rule_ids": [],
+                    "files": [],
+                },
+            )
+            entry["severity"] = max(entry["severity"], domain.severity)
+            entry["dogma_ids"] = sorted({*entry["dogma_ids"], *domain.dogma_ids})
+            entry["violation_count"] += domain.violation_count
+            entry["verified_violation_count"] += domain.verified_violation_count
+            entry["rule_ids"] = sorted({*entry["rule_ids"], *domain.rule_ids})
+            entry["verified_rule_ids"] = sorted(
+                {*entry["verified_rule_ids"], *domain.verified_rule_ids}
+            )
+            entry["files"] = sorted({*entry["files"], *domain.files})
+    return sorted(
+        summary.values(),
+        key=lambda entry: (-entry["severity"], entry["detector_id"]),
     )
 
 
@@ -284,7 +347,7 @@ def _format_dogma_markdown(results: list[AnalysisResult]) -> list[str]:
     rows = [
         [
             str(dogma["label"]),
-            str(dogma["violation_count"]),
+            f"{dogma['violation_count']}/{dogma['verified_violation_count']}",
             str(dogma["severity"]),
             ", ".join(str(rule_id) for rule_id in dogma["rule_ids"]) or "-",
             str(len(dogma["files"])),
@@ -293,7 +356,35 @@ def _format_dogma_markdown(results: list[AnalysisResult]) -> list[str]:
     ]
     lines.extend(
         _markdown_table(
-            ["Dogma", "Violations", "Max severity", "Rules", "Files"],
+            ["Dogma", "Linked/Verified", "Max severity", "Rules", "Files"],
+            rows,
+        ),
+    )
+    return lines
+
+
+def _format_dogma_domain_markdown(results: list[AnalysisResult]) -> list[str]:
+    """Format aggregated shared dogma domains as a Markdown table."""
+    domains = _summarize_dogma_domains(results)
+    lines = ["## Universal Dogma Domains"]
+    if not domains:
+        lines.append("No shared dogma domain findings detected.")
+        return lines
+
+    rows = [
+        [
+            str(domain["label"]),
+            ", ".join(str(dogma_id) for dogma_id in domain["dogma_ids"]) or "-",
+            f"{domain['violation_count']}/{domain['verified_violation_count']}",
+            str(domain["severity"]),
+            ", ".join(str(rule_id) for rule_id in domain["rule_ids"]) or "-",
+            str(len(domain["files"])),
+        ]
+        for domain in domains
+    ]
+    lines.extend(
+        _markdown_table(
+            ["Domain", "Dogmas", "Linked/Verified", "Max severity", "Rules", "Files"],
             rows,
         ),
     )
@@ -323,13 +414,26 @@ def _format_analysis_markdown(results: list[AnalysisResult]) -> list[str]:
             [
                 str(violation.severity),
                 violation.principle,
+                ", ".join(violation.linked_dogma_ids or violation.universal_dogma_ids)
+                or "-",
+                ", ".join(violation.verified_dogma_ids) or "-",
                 violation.message,
                 violation.suggestion or "-",
             ]
             for violation in result.violations[:MAX_VIOLATIONS_IN_TABLE]
         ]
         lines.extend(
-            _markdown_table(["Severity", "Principle", "Message", "Suggestion"], rows),
+            _markdown_table(
+                [
+                    "Severity",
+                    "Principle",
+                    "Linked dogmas",
+                    "Verified dogmas",
+                    "Message",
+                    "Suggestion",
+                ],
+                rows,
+            ),
         )
         if len(result.violations) > MAX_VIOLATIONS_IN_TABLE:
             lines.append(
@@ -388,6 +492,8 @@ def generate_report(  # noqa: PLR0913
     *,
     config_path: str | None = None,
     language: str | None = None,
+    perspective: PerspectiveMode = PerspectiveMode.ALL,
+    project_as: str | None = None,
     include_prompts: bool = False,
     include_analysis: bool = True,
     include_gaps: bool = True,
@@ -402,6 +508,8 @@ def generate_report(  # noqa: PLR0913
         target_path (str): File or directory to analyse.
         config_path (str | None, optional): Optional path to a ``zen-config.yaml`` override file. Default to None.
         language (str | None, optional): When set, restricts analysis to this single language. Default to None.
+        perspective (PerspectiveMode, optional): Requested report perspective. Default to ``PerspectiveMode.ALL``.
+        project_as (str | None, optional): Projection-family target when ``perspective`` is ``projection``.
         include_prompts (bool, optional): Attach per-file and generic remediation prompts. Default to False.
         include_analysis (bool, optional): Run analyzers and include a violation summary. Default to True.
         include_gaps (bool, optional): Perform detector coverage gap analysis. Default to True.
@@ -409,9 +517,21 @@ def generate_report(  # noqa: PLR0913
     Returns:
         ReportOutput: Markdown report text and equivalent machine-readable data dict.
     """
+    validate_perspective(perspective, project_as=project_as)
     path = Path(target_path)
     targets = _collect_targets(path, language)
-    results = _analyze_targets(targets, config_path) if include_analysis else []
+    results = (
+        [
+            apply_perspective_to_result(
+                result,
+                perspective,
+                project_as=project_as,
+            )
+            for result in _analyze_targets(targets, config_path)
+        ]
+        if include_analysis
+        else []
+    )
     languages = sorted({lang for _, lang in targets})
     gaps = build_gap_analysis(languages) if include_gaps else GapAnalysis()
     prompts = build_prompt_bundle(results) if include_prompts else None
@@ -433,7 +553,13 @@ def generate_report(  # noqa: PLR0913
         markdown_sections.extend(_format_summary_markdown(summary))
     if include_analysis:
         markdown_sections.extend(_format_analysis_markdown(results))
-        markdown_sections.extend(_format_dogma_markdown(results))
+        if perspective not in {
+            PerspectiveMode.ZEN,
+            PerspectiveMode.TESTING,
+            PerspectiveMode.PROJECTION,
+        }:
+            markdown_sections.extend(_format_dogma_markdown(results))
+            markdown_sections.extend(_format_dogma_domain_markdown(results))
     if include_gaps:
         markdown_sections.extend(_format_gap_markdown(gaps))
     markdown_sections.extend(_format_prompts_markdown(context))
@@ -443,7 +569,22 @@ def generate_report(  # noqa: PLR0913
         "languages": context.languages,
         "summary": summary.model_dump() if summary else None,
         "analysis": [result.model_dump() for result in results],
-        "dogmas": _summarize_dogmas(results),
+        "dogmas": []
+        if perspective
+        in {
+            PerspectiveMode.ZEN,
+            PerspectiveMode.TESTING,
+            PerspectiveMode.PROJECTION,
+        }
+        else _summarize_dogmas(results),
+        "dogma_domains": []
+        if perspective
+        in {
+            PerspectiveMode.ZEN,
+            PerspectiveMode.TESTING,
+            PerspectiveMode.PROJECTION,
+        }
+        else _summarize_dogma_domains(results),
         "gaps": gaps.model_dump(),
         "prompts": prompts.model_dump() if prompts else None,
     }

@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+from mcp_zen_of_languages.analyzers.analyzer_factory import create_analyzer
 from mcp_zen_of_languages.models import Violation
 from mcp_zen_of_languages.utils.language_detection import detect_language_by_extension
 from mcp_zen_of_languages.utils.language_detection import detect_language_from_content
+from mcp_zen_of_languages.utils.language_detection import detect_testing_family_overlay
 from mcp_zen_of_languages.utils.metric import calculate_code_quality_score
 
 
@@ -116,6 +118,34 @@ def test_detect_language_by_extension_ansible_content(tmp_path):
     )
     result = detect_language_by_extension(str(play))
     assert result.language == "ansible"
+
+
+def test_detect_testing_family_overlay_matches_known_test_conventions() -> None:
+    assert detect_testing_family_overlay("python", "tests/test_example.py") == "pytest"
+    assert detect_testing_family_overlay("python", "src/conftest.py") == "pytest"
+    assert detect_testing_family_overlay("go", "pkg/service_test.go") == "gotest"
+    assert detect_testing_family_overlay("python", "src/app.py") is None
+
+
+def test_analyzer_context_attaches_testing_family_metadata() -> None:
+    analyzer = create_analyzer("python")
+
+    test_context = analyzer._create_context(
+        "def test_example():\n    pass\n",
+        path="tests/test_example.py",
+        other_files=None,
+        repository_imports=None,
+    )
+    source_context = analyzer._create_context(
+        "def main():\n    pass\n",
+        path="src/app.py",
+        other_files=None,
+        repository_imports=None,
+    )
+
+    assert test_context.language == "python"
+    assert test_context.testing_family == "pytest"
+    assert source_context.testing_family is None
 
 
 def test_detect_language_by_extension_terraform_tf():

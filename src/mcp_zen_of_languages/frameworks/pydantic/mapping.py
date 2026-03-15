@@ -48,6 +48,16 @@ def _dogmas(*dogma_ids: str) -> list[str]:
     return list(dogma_ids)
 
 
+def _testing(*testing_ids: str) -> list[str]:
+    """Return explicit testing family ids for the binding."""
+    return list(testing_ids)
+
+
+def _projection(*projection_ids: str) -> list[str]:
+    """Return explicit projection family ids for the binding."""
+    return list(projection_ids)
+
+
 DETECTOR_MAP = LanguageDetectorMap(
     language="pydantic",
     bindings=[
@@ -59,6 +69,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="pydantic-003",
                     dogma_ids=_dogmas("ZEN-VISIBLE-STATE", "ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("pytest"),
                 )
             ],
             default_order=10,
@@ -71,6 +82,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="pydantic-005",
                     dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("pytest"),
                 )
             ],
             default_order=20,
@@ -83,6 +95,9 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="pydantic-008",
                     dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("pytest"),
+                    projection_ids=_projection("openapi"),
+                    verified_projection_ids=[],
                 )
             ],
             default_order=30,
@@ -95,6 +110,9 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="pydantic-004",
                     dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("pytest"),
+                    projection_ids=_projection("jsonschema", "openapi"),
+                    verified_projection_ids=_projection("jsonschema"),
                 )
             ],
             default_order=40,
@@ -107,6 +125,9 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="pydantic-001",
                     dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("pytest"),
+                    projection_ids=_projection("openapi"),
+                    verified_projection_ids=[],
                 )
             ],
             default_order=50,
@@ -119,6 +140,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="pydantic-006",
                     dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-UNAMBIGUOUS-NAME"),
+                    testing_ids=_testing("pytest"),
                 )
             ],
             default_order=60,
@@ -129,7 +151,11 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=_rule_config("pydantic-002"),
             rules=[
                 RuleBinding(
-                    rule_id="pydantic-002", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                    rule_id="pydantic-002",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+                    testing_ids=_testing("pytest"),
+                    projection_ids=_projection("openapi"),
+                    verified_projection_ids=[],
                 )
             ],
             default_order=70,
@@ -140,7 +166,10 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=_rule_config("pydantic-007"),
             rules=[
                 RuleBinding(
-                    rule_id="pydantic-007", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                    rule_id="pydantic-007",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("pytest"),
+                    projection_ids=_projection("jsonschema"),
                 )
             ],
             default_order=80,

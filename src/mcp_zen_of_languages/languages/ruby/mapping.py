@@ -80,6 +80,10 @@ DETECTOR_MAP = LanguageDetectorMap(
                     dogma_ids=_dogmas(
                         "ZEN-RIGHT-ABSTRACTION", "ZEN-PROPORTIONATE-COMPLEXITY"
                     ),
+                    verified_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+                    testing_ids=["rspec"],
+                    projection_ids=["python", "typescript"],
+                    verified_projection_ids=["python"],
                 )
             ],
             default_order=40,
@@ -114,6 +118,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="ruby-007",
                     dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-UNAMBIGUOUS-NAME"),
+                    verified_dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
                 )
             ],
             default_order=70,
@@ -123,7 +128,12 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=RubyGuardClauseDetector,
             config_model=RubyGuardClauseConfig,
             rules=[
-                RuleBinding(rule_id="ruby-008", dogma_ids=_dogmas("ZEN-RETURN-EARLY"))
+                RuleBinding(
+                    rule_id="ruby-008",
+                    dogma_ids=_dogmas("ZEN-RETURN-EARLY"),
+                    testing_ids=["rspec"],
+                    projection_ids=["python"],
+                )
             ],
             default_order=80,
         ),
@@ -145,7 +155,11 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=RubyExpressiveSyntaxConfig,
             rules=[
                 RuleBinding(
-                    rule_id="ruby-010", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                    rule_id="ruby-010",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+                    testing_ids=["rspec"],
+                    projection_ids=["python", "typescript"],
+                    verified_projection_ids=["python"],
                 )
             ],
             default_order=100,
@@ -154,7 +168,14 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_id="ruby_prefer_fail",
             detector_class=RubyPreferFailDetector,
             config_model=RubyPreferFailConfig,
-            rules=[RuleBinding(rule_id="ruby-011", dogma_ids=_dogmas("ZEN-FAIL-FAST"))],
+            rules=[
+                RuleBinding(
+                    rule_id="ruby-011",
+                    dogma_ids=_dogmas("ZEN-FAIL-FAST"),
+                    testing_ids=["rspec"],
+                    projection_ids=["python"],
+                )
+            ],
             default_order=110,
         ),
     ],

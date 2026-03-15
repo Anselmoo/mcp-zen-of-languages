@@ -50,16 +50,23 @@ class DogmaDetector(ABC):
 
     def detect(self, result: AnalysisResult) -> DogmaFinding | None:
         """Return a finding for this dogma when matching violations exist."""
-        relevant = [
+        linked = [
             violation
             for violation in result.violations
-            if self.matches_violation(violation)
+            if self.is_linked_violation(violation)
         ]
+        verified = [
+            violation
+            for violation in result.violations
+            if self.is_verified_violation(violation)
+        ]
+        relevant = _dedupe_violations([*linked, *verified])
         if not relevant:
             return None
 
         files = _dedupe(self._files_for(result, relevant))
         rule_ids = _dedupe([violation.rule_id or "" for violation in relevant])
+        verified_rule_ids = _dedupe([violation.rule_id or "" for violation in verified])
         detector_ids = _dedupe([violation.detector_id or "" for violation in relevant])
         messages = _dedupe([violation.message for violation in relevant])[:5]
         return DogmaFinding(
@@ -67,15 +74,23 @@ class DogmaDetector(ABC):
             label=_dogma_label(self.dogma_id),
             severity=max(violation.severity for violation in relevant),
             violation_count=len(relevant),
+            verified_violation_count=len(verified),
             rule_ids=rule_ids,
+            verified_rule_ids=verified_rule_ids,
             detector_ids=detector_ids,
             messages=messages,
             files=files,
         )
 
-    def matches_violation(self, violation: Violation) -> bool:
-        """Classify a violation for this dogma using universal heuristics."""
-        if self.dogma_id in violation.universal_dogma_ids:
+    def is_linked_violation(self, violation: Violation) -> bool:
+        """Return whether the violation is explicitly linked to this dogma."""
+        return self.dogma_id in (
+            violation.linked_dogma_ids or violation.universal_dogma_ids
+        )
+
+    def is_verified_violation(self, violation: Violation) -> bool:
+        """Return whether the violation is independently verified for this dogma."""
+        if self.dogma_id in violation.verified_dogma_ids:
             return True
         signature = _violation_signature(violation)
         return any(keyword in signature for keyword in self.keywords)
@@ -300,19 +315,31 @@ class ProportionateComplexityDogmaDetector(DogmaDetector):
 
 
 def build_dogma_detectors() -> list[DogmaDetector]:
-    """Return the default detector suite for universal dogma analysis."""
-    return [
-        UtilizeArgumentsDogmaDetector(),
-        ExplicitIntentDogmaDetector(),
-        ReturnEarlyDogmaDetector(),
-        FailFastDogmaDetector(),
-        RightAbstractionDogmaDetector(),
-        UnambiguousNameDogmaDetector(),
-        VisibleStateDogmaDetector(),
-        StrictFencesDogmaDetector(),
-        RuthlessDeletionDogmaDetector(),
-        ProportionateComplexityDogmaDetector(),
-    ]
+    """Return the default detector suite from the explicit dogma bindings."""
+    from mcp_zen_of_languages.dogmas.mapping import DOGMA_DETECTOR_MAP
+
+    return DOGMA_DETECTOR_MAP.build_detectors()
+
+
+def _dedupe_violations(violations: list[Violation]) -> list[Violation]:
+    """Return violations in first-seen order without duplicate identities."""
+    seen: set[tuple[str | None, str | None, str, int, int | None, int | None]] = set()
+    ordered: list[Violation] = []
+    for violation in violations:
+        location = violation.location
+        key = (
+            violation.rule_id,
+            violation.detector_id,
+            violation.message,
+            violation.severity,
+            location.line if location else None,
+            location.column if location else None,
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        ordered.append(violation)
+    return ordered
 
 
 __all__ = [

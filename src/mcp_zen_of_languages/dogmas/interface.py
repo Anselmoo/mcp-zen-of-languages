@@ -17,9 +17,7 @@ def attach_dogma_analysis(
 ) -> AnalysisResult:
     """Return a copy of ``result`` with universal dogma analysis attached."""
     dogma_analyzer = analyzer or UniversalDogmaAnalyzer()
-    return result.model_copy(
-        update={"dogma_analysis": dogma_analyzer.analyze(result)},
-    )
+    return dogma_analyzer.enrich_result(result)
 
 
 __all__ = ["attach_dogma_analysis"]

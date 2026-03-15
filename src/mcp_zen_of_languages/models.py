@@ -25,8 +25,20 @@ See Also:
 
 from __future__ import annotations
 
+from enum import StrEnum
+
 from pydantic import BaseModel
 from pydantic import Field
+
+
+class PerspectiveMode(StrEnum):
+    """High-level analysis perspective selector for CLI and MCP surfaces."""
+
+    ALL = "all"
+    ZEN = "zen"
+    DOGMA = "dogma"
+    TESTING = "testing"
+    PROJECTION = "projection"
 
 
 class Location(BaseModel):
@@ -102,6 +114,8 @@ class Violation(BaseModel):
     rule_id: str | None = None
     detector_id: str | None = None
     universal_dogma_ids: list[str] = Field(default_factory=list)
+    linked_dogma_ids: list[str] = Field(default_factory=list)
+    verified_dogma_ids: list[str] = Field(default_factory=list)
 
     def get(self, key: str, default: object | None = None) -> object | None:
         """Retrieve a field value by name, falling back to *default*.
@@ -407,8 +421,25 @@ class DogmaFinding(BaseModel):
     label: str
     severity: int = Field(..., ge=1, le=10)
     violation_count: int = Field(default=0, ge=0)
+    verified_violation_count: int = Field(default=0, ge=0)
     rule_ids: list[str] = Field(default_factory=list)
+    verified_rule_ids: list[str] = Field(default_factory=list)
     detector_ids: list[str] = Field(default_factory=list)
+    messages: list[str] = Field(default_factory=list)
+    files: list[str] = Field(default_factory=list)
+
+
+class DogmaDomainFinding(BaseModel):
+    """Shared cross-language dogma-domain signal aggregated from dogma findings."""
+
+    detector_id: str
+    label: str
+    severity: int = Field(..., ge=1, le=10)
+    dogma_ids: list[str] = Field(default_factory=list)
+    violation_count: int = Field(default=0, ge=0)
+    verified_violation_count: int = Field(default=0, ge=0)
+    rule_ids: list[str] = Field(default_factory=list)
+    verified_rule_ids: list[str] = Field(default_factory=list)
     messages: list[str] = Field(default_factory=list)
     files: list[str] = Field(default_factory=list)
 
@@ -417,6 +448,7 @@ class DogmaAnalysis(BaseModel):
     """Universal-dogma findings attached to a single ``AnalysisResult``."""
 
     findings: list[DogmaFinding] = Field(default_factory=list)
+    domains: list[DogmaDomainFinding] = Field(default_factory=list)
 
 
 class AnalysisResult(BaseModel):

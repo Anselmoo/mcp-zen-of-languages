@@ -19,6 +19,27 @@ from pydantic import ConfigDict
 from pydantic import Field
 
 
+class RuleContext(BaseModel):
+    """Rule-scoped metadata preserved for composite detectors.
+
+    Composite detectors may cover several rule ids while sharing one detector
+    implementation and one config type. This model keeps the original
+    principle-specific metadata so detectors can render the correct rule label,
+    severity, and default violation messages at emission time.
+    """
+
+    principle_id: str
+    principle: str
+    severity: int
+    violation_messages: list[str] | None = None
+    detectable_patterns: list[str] | None = None
+    recommended_alternative: str | None = None
+    linked_dogma_ids: list[str] = Field(default_factory=list)
+    verified_dogma_ids: list[str] = Field(default_factory=list)
+    linked_testing_ids: list[str] = Field(default_factory=list)
+    verified_testing_ids: list[str] = Field(default_factory=list)
+
+
 class DetectorConfig(BaseModel):
     """Base configuration shared by every violation detector.
 
@@ -38,6 +59,8 @@ class DetectorConfig(BaseModel):
             patterns that the rule-pattern detector scans for.
         recommended_alternative: Suggestion text appended to violation reports
             when a better practice exists.
+        rule_contexts: Rule-specific metadata map used by composite detectors to
+            emit precise principle labels and severities.
     """
 
     type: str = Field(..., description="Detector type discriminator")
@@ -47,6 +70,7 @@ class DetectorConfig(BaseModel):
     violation_messages: list[str] | None = None
     detectable_patterns: list[str] | None = None
     recommended_alternative: str | None = None
+    rule_contexts: dict[str, RuleContext] = Field(default_factory=dict)
 
     model_config = ConfigDict(extra="forbid")
 
@@ -55,6 +79,7 @@ class DetectorConfig(BaseModel):
         *,
         contains: str | None = None,
         index: int = 0,
+        rule_id: str | None = None,
     ) -> str:
         """Choose a violation message by substring match or positional index.
 
@@ -67,18 +92,70 @@ class DetectorConfig(BaseModel):
             contains (str | None, optional): Optional substring to match against available messages. Default to None.
             index (int, optional): Zero-based position selecting a message when no substring
                 match is requested. Default to 0.
+            rule_id (str | None, optional): Optional rule identifier for
+                composite detectors. When provided and available, message
+                selection uses that rule's preserved context. Default to None.
 
         Returns:
             str: The selected violation message text.
         """
-        messages = self.violation_messages or []
+        rule_context = self.rule_context(rule_id)
+        messages = (
+            rule_context.violation_messages
+            if rule_context and rule_context.violation_messages
+            else self.violation_messages or []
+        )
         if contains:
             for message in messages:
                 if contains in message:
                     return message
         if messages:
             return messages[index] if 0 <= index < len(messages) else messages[0]
+        return self.principle_for_rule(rule_id)
+
+    def rule_context(self, rule_id: str | None = None) -> RuleContext | None:
+        """Return preserved metadata for one rule when available."""
+        if rule_id and rule_id in self.rule_contexts:
+            return self.rule_contexts[rule_id]
+        if self.principle_id and self.principle_id in self.rule_contexts:
+            return self.rule_contexts[self.principle_id]
+        if len(self.rule_contexts) == 1:
+            return next(iter(self.rule_contexts.values()))
+        return None
+
+    def principle_for_rule(self, rule_id: str | None = None) -> str:
+        """Resolve the human-readable principle name for one rule."""
+        rule_context = self.rule_context(rule_id)
+        if rule_context is not None:
+            return rule_context.principle
         return self.principle or self.principle_id or self.type
+
+    def severity_for_rule(self, rule_id: str | None = None, fallback: int = 5) -> int:
+        """Resolve the severity for one rule with sensible fallback behavior."""
+        rule_context = self.rule_context(rule_id)
+        if rule_context is not None:
+            return rule_context.severity
+        return self.severity if self.severity is not None else fallback
+
+    def linked_dogma_ids_for_rule(self, rule_id: str | None = None) -> list[str]:
+        """Resolve authored linked dogma ids for one rule."""
+        rule_context = self.rule_context(rule_id)
+        return list(rule_context.linked_dogma_ids) if rule_context else []
+
+    def verified_dogma_ids_for_rule(self, rule_id: str | None = None) -> list[str]:
+        """Resolve authored verified dogma ids for one rule."""
+        rule_context = self.rule_context(rule_id)
+        return list(rule_context.verified_dogma_ids) if rule_context else []
+
+    def linked_testing_ids_for_rule(self, rule_id: str | None = None) -> list[str]:
+        """Resolve authored linked testing-family ids for one rule."""
+        rule_context = self.rule_context(rule_id)
+        return list(rule_context.linked_testing_ids) if rule_context else []
+
+    def verified_testing_ids_for_rule(self, rule_id: str | None = None) -> list[str]:
+        """Resolve authored verified testing-family ids for one rule."""
+        rule_context = self.rule_context(rule_id)
+        return list(rule_context.verified_testing_ids) if rule_context else []
 
 
 class NameStyleConfig(DetectorConfig):
@@ -1711,6 +1788,20 @@ class MarkdownMdxImportHygieneConfig(DetectorConfig):
     """MDX import-hygiene detector settings."""
 
     type: Literal["md-007"] = "md-007"
+    mdx_only: bool = True
+
+
+class MarkdownDocumentConfig(DetectorConfig):
+    """Composite Markdown document-quality detector settings."""
+
+    type: Literal["markdown_document"] = "markdown_document"
+    required_frontmatter_keys: list[str] = ["title", "description"]
+
+
+class MarkdownMdxConfig(DetectorConfig):
+    """Composite MDX hygiene detector settings."""
+
+    type: Literal["markdown_mdx"] = "markdown_mdx"
     mdx_only: bool = True
 
 

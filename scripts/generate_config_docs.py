@@ -3,6 +3,21 @@ from __future__ import annotations
 from pathlib import Path
 
 from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
+from mcp_zen_of_languages.languages.configs import DetectorConfig
+
+
+_RUNTIME_ONLY_CONFIG_FIELDS = frozenset(
+    {
+        "type",
+        "principle_id",
+        "principle",
+        "severity",
+        "violation_messages",
+        "detectable_patterns",
+        "recommended_alternative",
+        "rule_contexts",
+    },
+)
 
 
 HEADER = """---
@@ -27,7 +42,10 @@ directory or the first parent directory that contains `pyproject.toml`.
 
 def _format_field(name: str, field) -> str:
     annotation = repr(field.annotation).replace("<class '", "").replace("'>", "")
-    default = field.default if field.default is not None else "None"
+    if field.default_factory is not None:
+        default = field.default_factory()
+    else:
+        default = field.default if field.default is not None else "None"
     if isinstance(default, type):
         default = default.__name__
     description = field.description or ""
@@ -40,6 +58,7 @@ def main() -> None:
     output.extend(
         _format_field(name, field)
         for name, field in AnalyzerConfig.model_fields.items()
+        if name not in set(DetectorConfig.model_fields) | _RUNTIME_ONLY_CONFIG_FIELDS
     )
     output.extend(
         (

@@ -116,6 +116,9 @@ DETECTOR_MAP = LanguageDetectorMap(
                         "ZEN-RETURN-EARLY",
                         "ZEN-RIGHT-ABSTRACTION",
                     ),
+                    testing_ids=["pytest"],
+                    projection_ids=["go", "typescript"],
+                    verified_projection_ids=["go"],
                 )
             ],
             default_order=20,
@@ -141,7 +144,13 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=NestingDepthDetector,
             config_model=NestingDepthConfig,
             rules=[
-                RuleBinding(rule_id="python-005", dogma_ids=_dogmas("ZEN-RETURN-EARLY"))
+                RuleBinding(
+                    rule_id="python-005",
+                    dogma_ids=_dogmas("ZEN-RETURN-EARLY"),
+                    testing_ids=["pytest"],
+                    projection_ids=["go", "typescript"],
+                    verified_projection_ids=["go"],
+                )
             ],
             default_order=30,
         ),
@@ -285,6 +294,8 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="python-009",
                     dogma_ids=_dogmas("ZEN-FAIL-FAST", "ZEN-EXPLICIT-INTENT"),
+                    testing_ids=["pytest"],
+                    projection_ids=["go"],
                 )
             ],
             default_order=130,
@@ -295,7 +306,11 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=LineLengthConfig,
             rules=[
                 RuleBinding(
-                    rule_id="python-001", dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME")
+                    rule_id="python-001",
+                    dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
+                    testing_ids=["pytest"],
+                    projection_ids=["go", "typescript"],
+                    verified_projection_ids=["go"],
                 )
             ],
             default_order=140,

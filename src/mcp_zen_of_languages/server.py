@@ -63,6 +63,7 @@ from mcp_zen_of_languages.models import BatchSummary
 from mcp_zen_of_languages.models import BatchViolation
 from mcp_zen_of_languages.models import LanguagesResult
 from mcp_zen_of_languages.models import PatternsResult
+from mcp_zen_of_languages.models import PerspectiveMode
 from mcp_zen_of_languages.models import RepositoryAnalysis
 from mcp_zen_of_languages.orchestration import (
     analyze_targets as _shared_analyze_targets,
@@ -70,6 +71,8 @@ from mcp_zen_of_languages.orchestration import (
 from mcp_zen_of_languages.orchestration import (
     collect_targets as _shared_collect_targets,
 )
+from mcp_zen_of_languages.perspectives import apply_perspective_to_result
+from mcp_zen_of_languages.perspectives import validate_perspective
 from mcp_zen_of_languages.reporting.agent_tasks import AgentTaskList
 from mcp_zen_of_languages.reporting.agent_tasks import build_agent_tasks
 from mcp_zen_of_languages.reporting.models import PromptBundle
@@ -447,10 +450,12 @@ async def detect_languages(repo_path: str) -> LanguagesResult:
     annotations=READONLY_ANNOTATIONS,
     output_schema=_output_schema(AnalysisResult),
 )
-async def analyze_zen_violations(
+async def analyze_zen_violations(  # noqa: PLR0913
     code: str,
     language: str,
     severity_threshold: int | None = None,
+    perspective: PerspectiveMode = PerspectiveMode.ALL,
+    project_as: str | None = None,
     *,
     enable_external_tools: bool = False,
     allow_temporary_runners: bool = False,
@@ -461,6 +466,8 @@ async def analyze_zen_violations(
         code (str): Source code to analyse.
         language (str): Programming language identifier.
         severity_threshold (int | None, optional): Minimum severity to include. Default to None.
+        perspective (PerspectiveMode, optional): Requested analysis perspective. Default to ``PerspectiveMode.ALL``.
+        project_as (str | None, optional): Projection-family target when ``perspective`` is ``projection``.
         enable_external_tools (bool, optional): Opt-in execution of external linters. Default to False.
         allow_temporary_runners (bool, optional): Allow temporary tool runners (e.g. npx/uvx). Default to False.
     """
@@ -469,6 +476,8 @@ async def analyze_zen_violations(
         language=language,
         tool_version=ANALYZE_ZEN_VIOLATIONS_VERSION,
         severity_threshold=severity_threshold,
+        perspective=perspective,
+        project_as=project_as,
         enable_external_tools=enable_external_tools,
         allow_temporary_runners=allow_temporary_runners,
         reject_empty_code=False,
@@ -488,10 +497,12 @@ async def analyze_zen_violations(
     annotations=READONLY_ANNOTATIONS,
     output_schema=_output_schema(AnalysisResult),
 )
-async def analyze_zen_violations_v2(
+async def analyze_zen_violations_v2(  # noqa: PLR0913
     code: str,
     language: str,
     severity_threshold: int | None = None,
+    perspective: PerspectiveMode = PerspectiveMode.ALL,
+    project_as: str | None = None,
     *,
     enable_external_tools: bool = False,
     allow_temporary_runners: bool = False,
@@ -502,6 +513,8 @@ async def analyze_zen_violations_v2(
         code (str): Source code to analyse.
         language (str): Programming language identifier.
         severity_threshold (int | None, optional): Severity threshold. Default to None.
+        perspective (PerspectiveMode, optional): Requested analysis perspective. Default to ``PerspectiveMode.ALL``.
+        project_as (str | None, optional): Projection-family target when ``perspective`` is ``projection``.
         enable_external_tools (bool, optional): Enable external tools. Default to False.
         allow_temporary_runners (bool, optional): Allow temporary runners. Default to False.
     """
@@ -510,6 +523,8 @@ async def analyze_zen_violations_v2(
         language=language,
         tool_version=ANALYZE_ZEN_VIOLATIONS_V2_VERSION,
         severity_threshold=severity_threshold,
+        perspective=perspective,
+        project_as=project_as,
         enable_external_tools=enable_external_tools,
         allow_temporary_runners=allow_temporary_runners,
         reject_empty_code=True,
@@ -522,11 +537,14 @@ def _analyze_snippet_internal(  # noqa: PLR0913
     language: str,
     tool_version: str,
     severity_threshold: int | None,
+    perspective: PerspectiveMode,
+    project_as: str | None,
     enable_external_tools: bool,
     allow_temporary_runners: bool,
     reject_empty_code: bool,
 ) -> AnalysisResult:
     """Shared analyzer implementation for versioned snippet tools."""
+    validate_perspective(perspective, project_as=project_as)
     canonical_language = _canonical_language(language)
     if reject_empty_code and not code.strip():
         msg = (
@@ -569,7 +587,11 @@ def _analyze_snippet_internal(  # noqa: PLR0913
             for violation in result.violations
             if violation.severity >= effective_threshold
         ]
-        return result
+        return apply_perspective_to_result(
+            result,
+            perspective,
+            project_as=project_as,
+        )
 
 
 @mcp.tool(
@@ -582,9 +604,11 @@ def _analyze_snippet_internal(  # noqa: PLR0913
     annotations=READONLY_ANNOTATIONS,
     output_schema=_output_schema(PromptBundle),
 )
-async def generate_prompts_tool(
+async def generate_prompts_tool(  # noqa: PLR0913
     code: str,
     language: str,
+    perspective: PerspectiveMode = PerspectiveMode.ALL,
+    project_as: str | None = None,
     *,
     enable_external_tools: bool = False,
     allow_temporary_runners: bool = False,
@@ -594,6 +618,8 @@ async def generate_prompts_tool(
     Args:
         code (str): Source code to analyse.
         language (str): Programming language identifier.
+        perspective (PerspectiveMode, optional): Requested analysis perspective. Default to ``PerspectiveMode.ALL``.
+        project_as (str | None, optional): Projection-family target when ``perspective`` is ``projection``.
         enable_external_tools (bool, optional): Enable external tools. Default to False.
         allow_temporary_runners (bool, optional): Allow temporary runners. Default to False.
     """
@@ -601,6 +627,8 @@ async def generate_prompts_tool(
         code=code,
         language=language,
         tool_version=GENERATE_PROMPTS_VERSION,
+        perspective=perspective,
+        project_as=project_as,
         enable_external_tools=enable_external_tools,
         allow_temporary_runners=allow_temporary_runners,
     )
@@ -619,9 +647,11 @@ async def generate_prompts_tool(
     annotations=READONLY_ANNOTATIONS,
     output_schema=_output_schema(PromptBundle),
 )
-async def generate_prompts_tool_v2(
+async def generate_prompts_tool_v2(  # noqa: PLR0913
     code: str,
     language: str,
+    perspective: PerspectiveMode = PerspectiveMode.ALL,
+    project_as: str | None = None,
     *,
     enable_external_tools: bool = False,
     allow_temporary_runners: bool = False,
@@ -631,6 +661,8 @@ async def generate_prompts_tool_v2(
     Args:
         code (str): Source code to analyse.
         language (str): Programming language identifier.
+        perspective (PerspectiveMode, optional): Requested analysis perspective. Default to ``PerspectiveMode.ALL``.
+        project_as (str | None, optional): Projection-family target when ``perspective`` is ``projection``.
         enable_external_tools (bool, optional): Enable external tools. Default to False.
         allow_temporary_runners (bool, optional): Allow temporary runners. Default to False.
     """
@@ -638,20 +670,25 @@ async def generate_prompts_tool_v2(
         code=code,
         language=language,
         tool_version=GENERATE_PROMPTS_V2_VERSION,
+        perspective=perspective,
+        project_as=project_as,
         enable_external_tools=enable_external_tools,
         allow_temporary_runners=allow_temporary_runners,
     )
 
 
-def _generate_prompts_internal(
+def _generate_prompts_internal(  # noqa: PLR0913
     *,
     code: str,
     language: str,
     tool_version: str,
+    perspective: PerspectiveMode,
+    project_as: str | None,
     enable_external_tools: bool,
     allow_temporary_runners: bool,
 ) -> PromptBundle:
     """Shared prompt-generation implementation for versioned prompt tools."""
+    validate_perspective(perspective, project_as=project_as)
     canonical_language = _canonical_language(language)
     with analysis_span(
         "generate_prompts",
@@ -672,7 +709,15 @@ def _generate_prompts_internal(
         if allow_temporary_runners:
             analyze_kwargs["allow_temporary_tools"] = True
         result = analyzer.analyze(code, **analyze_kwargs)
-        return build_prompt_bundle([result])
+        return build_prompt_bundle(
+            [
+                apply_perspective_to_result(
+                    result,
+                    perspective,
+                    project_as=project_as,
+                )
+            ],
+        )
 
 
 async def _analyze_repository_internal(  # noqa: C901, PLR0913
@@ -1462,6 +1507,8 @@ async def check_architectural_patterns(code: str, language: str) -> PatternsResu
 async def generate_report_tool(  # noqa: PLR0913
     target_path: str,
     language: str | None = None,
+    perspective: PerspectiveMode = PerspectiveMode.ALL,
+    project_as: str | None = None,
     *,
     include_prompts: bool = False,
     include_analysis: bool = True,
@@ -1485,6 +1532,9 @@ async def generate_report_tool(  # noqa: PLR0913
             directory is given, all eligible files inside are analysed.
         language (str | None, optional): Explicit language override.  When omitted,
             the language is inferred from file extensions. Default to None.
+        perspective (PerspectiveMode, optional): Requested report perspective.
+            Default to ``PerspectiveMode.ALL``.
+        project_as (str | None, optional): Projection-family target when ``perspective`` is ``projection``.
         include_prompts (bool, optional): Append remediation prompt sections derived
             from ``build_prompt_bundle``. Default to False.
         include_analysis (bool, optional): Include the violation-analysis body
@@ -1514,6 +1564,8 @@ async def generate_report_tool(  # noqa: PLR0913
     report = generate_report(
         target_path,
         language=language,
+        perspective=perspective,
+        project_as=project_as,
         include_prompts=include_prompts,
         include_analysis=include_analysis,
         include_gaps=include_gaps,

@@ -40,6 +40,16 @@ def _dogmas(*dogma_ids: str) -> list[str]:
     return list(dogma_ids)
 
 
+def _testing(*testing_ids: str) -> list[str]:
+    """Return explicit testing family ids for the binding."""
+    return list(testing_ids)
+
+
+def _projection(*projection_ids: str) -> list[str]:
+    """Return explicit projection family ids for the binding."""
+    return list(projection_ids)
+
+
 DETECTOR_MAP = LanguageDetectorMap(
     language="fastapi",
     bindings=[
@@ -51,6 +61,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="fastapi-005",
                     dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
+                    testing_ids=_testing("pytest"),
                 )
             ],
             default_order=10,
@@ -61,7 +72,9 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=_rule_config("fastapi-004"),
             rules=[
                 RuleBinding(
-                    rule_id="fastapi-004", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                    rule_id="fastapi-004",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+                    testing_ids=_testing("pytest"),
                 )
             ],
             default_order=20,
@@ -74,6 +87,9 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="fastapi-003",
                     dogma_ids=_dogmas("ZEN-FAIL-FAST", "ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("pytest"),
+                    projection_ids=_projection("openapi"),
+                    verified_projection_ids=[],
                 )
             ],
             default_order=30,
@@ -84,7 +100,10 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=_rule_config("fastapi-001"),
             rules=[
                 RuleBinding(
-                    rule_id="fastapi-001", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                    rule_id="fastapi-001",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("pytest"),
+                    projection_ids=_projection("openapi"),
                 )
             ],
             default_order=40,
@@ -95,7 +114,10 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=_rule_config("fastapi-002"),
             rules=[
                 RuleBinding(
-                    rule_id="fastapi-002", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                    rule_id="fastapi-002",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("pytest"),
+                    projection_ids=_projection("openapi"),
                 )
             ],
             default_order=50,
@@ -108,6 +130,8 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="fastapi-006",
                     dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("pytest"),
+                    projection_ids=_projection("openapi"),
                 )
             ],
             default_order=60,

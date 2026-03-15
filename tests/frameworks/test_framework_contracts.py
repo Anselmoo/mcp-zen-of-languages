@@ -57,7 +57,8 @@ def test_framework_mapping_modules_load_from_frameworks_package(framework: str) 
 
     assert mapping_module.DETECTOR_MAP.language == framework
     assert all(
-        binding.universal_dogma_ids for binding in mapping_module.DETECTOR_MAP.bindings
+        all(binding.rule_dogma_map.values())
+        for binding in mapping_module.DETECTOR_MAP.bindings
     )
 
 

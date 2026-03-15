@@ -633,7 +633,7 @@ languages:
         max_function_length: 50
       - type: short_variable_names
         min_identifier_length: 3
-        allowed_loop_names: PydanticUndefined
+        allowed_loop_names: ['i', 'j', 'k', 'x', 'y']
       - type: god_classes
         max_methods: 10
         max_class_length: 300

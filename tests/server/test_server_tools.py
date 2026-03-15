@@ -1,12 +1,58 @@
 from __future__ import annotations
 
+from typing import Literal
+
 import pytest
 
 from mcp_zen_of_languages import server
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.analyzers.mapping_models import BindingPerspectiveBundle
+from mcp_zen_of_languages.analyzers.mapping_models import ProjectionPerspectiveModel
+from mcp_zen_of_languages.analyzers.registry import DetectorMetadata
+from mcp_zen_of_languages.analyzers.registry import DetectorRegistry
+from mcp_zen_of_languages.languages.configs import DetectorConfig
 from mcp_zen_of_languages.models import AnalysisResult
 from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import DogmaAnalysis
+from mcp_zen_of_languages.models import DogmaFinding
 from mcp_zen_of_languages.models import Metrics
+from mcp_zen_of_languages.models import PerspectiveMode
 from mcp_zen_of_languages.models import Violation
+
+
+class DummyConfig(DetectorConfig):
+    type: Literal["dummy"] = "dummy"
+
+
+class DummyDetector(ViolationDetector[DummyConfig]):
+    @property
+    def name(self) -> str:
+        return "dummy"
+
+    def detect(self, context, config):
+        return []
+
+
+def _projection_registry() -> DetectorRegistry:
+    registry = DetectorRegistry()
+    metadata = DetectorMetadata(
+        detector_id="line_length",
+        detector_class=DummyDetector,
+        config_model=DummyConfig,
+        language="python",
+        rule_ids=["python-001"],
+    )
+    bundle = BindingPerspectiveBundle(
+        rule_model=metadata,
+        projection_model=ProjectionPerspectiveModel(
+            detector_id="line_length",
+            language="python",
+            projection_rule_map={"go": ["python-001"]},
+            projection_verified_rule_map={"go": ["python-001"]},
+        ),
+    )
+    registry.register(metadata, bundle=bundle)
+    return registry
 
 
 @pytest.mark.asyncio
@@ -53,6 +99,119 @@ async def test_analyze_zen_violations_applies_severity_threshold(monkeypatch):
     result = await server.analyze_zen_violations.fn("def foo(): pass", "python", 7)
     assert len(result.violations) == 1
     assert result.violations[0].principle == "high"
+
+
+@pytest.mark.asyncio
+async def test_analyze_zen_violations_zen_perspective_omits_dogma_analysis(monkeypatch):
+    class _FakeAnalyzer:
+        def analyze(self, _code: str) -> AnalysisResult:
+            return AnalysisResult(
+                language="python",
+                metrics=Metrics(
+                    cyclomatic=CyclomaticSummary(blocks=[], average=0.0),
+                    maintainability_index=100.0,
+                    lines_of_code=1,
+                ),
+                violations=[Violation(principle="high", severity=8, message="high")],
+                dogma_analysis=DogmaAnalysis(
+                    findings=[
+                        DogmaFinding(
+                            dogma_id="ZEN-FAIL-FAST",
+                            label="Fail fast",
+                            severity=8,
+                        )
+                    ]
+                ),
+                overall_score=90.0,
+            )
+
+    monkeypatch.setattr(
+        server,
+        "create_analyzer",
+        lambda *_args, **_kwargs: _FakeAnalyzer(),
+    )
+    result = await server.analyze_zen_violations.fn(
+        "def foo(): pass",
+        "python",
+        perspective=PerspectiveMode.ZEN,
+    )
+    assert result.dogma_analysis is None
+
+
+@pytest.mark.asyncio
+async def test_analyze_zen_violations_testing_perspective_requires_test_path():
+    with pytest.raises(ValueError, match="requires a file path"):
+        await server.analyze_zen_violations.fn(
+            "def test_example():\n    pass\n",
+            "python",
+            perspective=PerspectiveMode.TESTING,
+        )
+
+
+@pytest.mark.asyncio
+async def test_analyze_zen_violations_projection_perspective_filters_requested_family(
+    monkeypatch,
+):
+    from mcp_zen_of_languages.analyzers import registry as registry_module
+
+    class _FakeAnalyzer:
+        def analyze(self, _code: str) -> AnalysisResult:
+            return AnalysisResult(
+                language="python",
+                metrics=Metrics(
+                    cyclomatic=CyclomaticSummary(blocks=[], average=0.0),
+                    maintainability_index=100.0,
+                    lines_of_code=1,
+                ),
+                violations=[
+                    Violation(
+                        principle="line length",
+                        severity=8,
+                        message="long line",
+                        detector_id="line_length",
+                        rule_id="python-001",
+                    ),
+                    Violation(
+                        principle="docstrings",
+                        severity=3,
+                        message="missing docstring",
+                        detector_id="docstrings",
+                        rule_id="python-007",
+                    ),
+                ],
+                dogma_analysis=DogmaAnalysis(
+                    findings=[
+                        DogmaFinding(
+                            dogma_id="ZEN-UNAMBIGUOUS-NAME",
+                            label="Unambiguous name",
+                            severity=3,
+                        )
+                    ]
+                ),
+                overall_score=90.0,
+            )
+
+    monkeypatch.setattr(registry_module, "REGISTRY", _projection_registry())
+    monkeypatch.setattr(
+        server,
+        "create_analyzer",
+        lambda *_args, **_kwargs: _FakeAnalyzer(),
+    )
+    monkeypatch.setattr(
+        server,
+        "_pipeline_with_runtime_overrides",
+        lambda _language: object(),
+    )
+
+    result = await server.analyze_zen_violations.fn(
+        "def foo():\n    pass\n",
+        "python",
+        perspective=PerspectiveMode.PROJECTION,
+        project_as="go",
+    )
+
+    assert [violation.rule_id for violation in result.violations] == ["python-001"]
+    assert result.dogma_analysis is None
 
 
 @pytest.mark.asyncio
@@ -165,6 +324,29 @@ async def test_generate_report_tool(tmp_path):
     report = await server.generate_report_tool.fn(str(sample), include_prompts=True)
     assert report.markdown.startswith("# Zen of Languages Report")
     assert "prompts" in report.data
+
+
+@pytest.mark.asyncio
+async def test_generate_report_tool_zen_perspective_omits_dogma_sections(tmp_path):
+    sample = tmp_path / "sample.py"
+    sample.write_text("def foo():\n    pass\n", encoding="utf-8")
+    report = await server.generate_report_tool.fn(
+        str(sample),
+        perspective=PerspectiveMode.ZEN,
+    )
+    assert "Universal Dogmas" not in report.markdown
+    assert report.data["dogmas"] == []
+
+
+@pytest.mark.asyncio
+async def test_generate_report_tool_rejects_unimplemented_dogma_perspective(tmp_path):
+    sample = tmp_path / "sample.py"
+    sample.write_text("def foo():\n    pass\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="Perspective 'dogma'"):
+        await server.generate_report_tool.fn(
+            str(sample),
+            perspective=PerspectiveMode.DOGMA,
+        )
 
 
 @pytest.mark.asyncio

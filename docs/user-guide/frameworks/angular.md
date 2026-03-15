@@ -120,8 +120,8 @@ tags:
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **AngularLazyRouteDetector** | Concrete detector binding for AngularLazyRouteDetector | `angular-005` |
 | **AngularOnPushDetector** | Concrete detector binding for AngularOnPushDetector | `angular-001` |
+| **AngularLazyRouteDetector** | Concrete detector binding for AngularLazyRouteDetector | `angular-005` |
 
 ### Readability
 

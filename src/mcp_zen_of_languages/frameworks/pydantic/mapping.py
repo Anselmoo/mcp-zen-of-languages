@@ -62,6 +62,36 @@ DETECTOR_MAP = LanguageDetectorMap(
     language="pydantic",
     bindings=[
         RuleDetectorBinding(
+            detector_id="pydantic-001",
+            detector_class=PydanticModelDumpDetector,
+            config_model=_rule_config("pydantic-001"),
+            rules=[
+                RuleBinding(
+                    rule_id="pydantic-001",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("pytest"),
+                    projection_ids=_projection("openapi"),
+                    verified_projection_ids=[],
+                )
+            ],
+            default_order=10,
+        ),
+        RuleDetectorBinding(
+            detector_id="pydantic-002",
+            detector_class=PydanticModelValidateDetector,
+            config_model=_rule_config("pydantic-002"),
+            rules=[
+                RuleBinding(
+                    rule_id="pydantic-002",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+                    testing_ids=_testing("pytest"),
+                    projection_ids=_projection("openapi"),
+                    verified_projection_ids=[],
+                )
+            ],
+            default_order=20,
+        ),
+        RuleDetectorBinding(
             detector_id="pydantic-003",
             detector_class=PydanticDefaultFactoryDetector,
             config_model=_rule_config("pydantic-003"),
@@ -70,34 +100,6 @@ DETECTOR_MAP = LanguageDetectorMap(
                     rule_id="pydantic-003",
                     dogma_ids=_dogmas("ZEN-VISIBLE-STATE", "ZEN-EXPLICIT-INTENT"),
                     testing_ids=_testing("pytest"),
-                )
-            ],
-            default_order=10,
-        ),
-        RuleDetectorBinding(
-            detector_id="pydantic-005",
-            detector_class=PydanticFieldValidatorDetector,
-            config_model=_rule_config("pydantic-005"),
-            rules=[
-                RuleBinding(
-                    rule_id="pydantic-005",
-                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-EXPLICIT-INTENT"),
-                    testing_ids=_testing("pytest"),
-                )
-            ],
-            default_order=20,
-        ),
-        RuleDetectorBinding(
-            detector_id="pydantic-008",
-            detector_class=PydanticFromAttributesDetector,
-            config_model=_rule_config("pydantic-008"),
-            rules=[
-                RuleBinding(
-                    rule_id="pydantic-008",
-                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-EXPLICIT-INTENT"),
-                    testing_ids=_testing("pytest"),
-                    projection_ids=_projection("openapi"),
-                    verified_projection_ids=[],
                 )
             ],
             default_order=30,
@@ -118,16 +120,14 @@ DETECTOR_MAP = LanguageDetectorMap(
             default_order=40,
         ),
         RuleDetectorBinding(
-            detector_id="pydantic-001",
-            detector_class=PydanticModelDumpDetector,
-            config_model=_rule_config("pydantic-001"),
+            detector_id="pydantic-005",
+            detector_class=PydanticFieldValidatorDetector,
+            config_model=_rule_config("pydantic-005"),
             rules=[
                 RuleBinding(
-                    rule_id="pydantic-001",
+                    rule_id="pydantic-005",
                     dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-EXPLICIT-INTENT"),
                     testing_ids=_testing("pytest"),
-                    projection_ids=_projection("openapi"),
-                    verified_projection_ids=[],
                 )
             ],
             default_order=50,
@@ -146,21 +146,6 @@ DETECTOR_MAP = LanguageDetectorMap(
             default_order=60,
         ),
         RuleDetectorBinding(
-            detector_id="pydantic-002",
-            detector_class=PydanticModelValidateDetector,
-            config_model=_rule_config("pydantic-002"),
-            rules=[
-                RuleBinding(
-                    rule_id="pydantic-002",
-                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
-                    testing_ids=_testing("pytest"),
-                    projection_ids=_projection("openapi"),
-                    verified_projection_ids=[],
-                )
-            ],
-            default_order=70,
-        ),
-        RuleDetectorBinding(
             detector_id="pydantic-007",
             detector_class=PydanticModernTypingDetector,
             config_model=_rule_config("pydantic-007"),
@@ -170,6 +155,21 @@ DETECTOR_MAP = LanguageDetectorMap(
                     dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
                     testing_ids=_testing("pytest"),
                     projection_ids=_projection("jsonschema"),
+                )
+            ],
+            default_order=70,
+        ),
+        RuleDetectorBinding(
+            detector_id="pydantic-008",
+            detector_class=PydanticFromAttributesDetector,
+            config_model=_rule_config("pydantic-008"),
+            rules=[
+                RuleBinding(
+                    rule_id="pydantic-008",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("pytest"),
+                    projection_ids=_projection("openapi"),
+                    verified_projection_ids=[],
                 )
             ],
             default_order=80,

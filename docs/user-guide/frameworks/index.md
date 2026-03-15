@@ -47,6 +47,22 @@ Framework routing is intentionally conservative:
 - import-based heuristics can elevate Python files into framework analyzers
 - ambiguous files can still be analyzed by choosing `--language <framework>` explicitly
 
+## Family-authored bindings
+
+Framework analyzers now participate directly in the authored family rollout.
+Each framework mapping keeps its **rule binding** as the source of truth, then
+attaches any testing and projection-family metadata to those same bindings.
+
+- testing-family bindings are authored as `testing_ids` on individual rules
+- projection-family bindings are authored as `projection_ids` on individual rules
+- verified variants preserve which relationships were explicitly confirmed
+- CLI and MCP surfaces expose those bindings through `--perspective testing`,
+  `--perspective projection`, and the MCP `perspective` / `project_as` fields
+
+Across the current worktree, **all 8 framework mapping modules** author both
+testing and projection-family metadata. That means the rollout now covers every
+documented framework analyzer, not just the base languages.
+
 ## Why this split helps
 
 Framework analyzers now document and load as their own family, which makes a few things clearer:

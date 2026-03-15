@@ -44,6 +44,16 @@ def _dogmas(*dogma_ids: str) -> list[str]:
     return list(dogma_ids)
 
 
+def _testing(*testing_ids: str) -> list[str]:
+    """Return explicit testing family ids for the binding."""
+    return list(testing_ids)
+
+
+def _projection(*projection_ids: str) -> list[str]:
+    """Return explicit projection family ids for the binding."""
+    return list(projection_ids)
+
+
 DETECTOR_MAP = LanguageDetectorMap(
     language="dockerfile",
     bindings=[
@@ -53,7 +63,12 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=DockerfileLatestTagConfig,
             rules=[
                 RuleBinding(
-                    rule_id="dockerfile-001", dogma_ids=_dogmas("ZEN-STRICT-FENCES")
+                    rule_id="dockerfile-001",
+                    dogma_ids=_dogmas("ZEN-STRICT-FENCES"),
+                    testing_ids=_testing("hadolint"),
+                    verified_testing_ids=_testing("hadolint"),
+                    projection_ids=_projection("dockerfile", "docker_compose"),
+                    verified_projection_ids=_projection("dockerfile"),
                 )
             ],
             default_order=10,
@@ -64,7 +79,12 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=DockerfileNonRootUserConfig,
             rules=[
                 RuleBinding(
-                    rule_id="dockerfile-002", dogma_ids=_dogmas("ZEN-STRICT-FENCES")
+                    rule_id="dockerfile-002",
+                    dogma_ids=_dogmas("ZEN-STRICT-FENCES"),
+                    testing_ids=_testing("hadolint"),
+                    verified_testing_ids=_testing("hadolint"),
+                    projection_ids=_projection("dockerfile", "docker_compose"),
+                    verified_projection_ids=_projection("dockerfile"),
                 )
             ],
             default_order=20,
@@ -86,7 +106,12 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=DockerfileHealthcheckConfig,
             rules=[
                 RuleBinding(
-                    rule_id="dockerfile-004", dogma_ids=_dogmas("ZEN-FAIL-FAST")
+                    rule_id="dockerfile-004",
+                    dogma_ids=_dogmas("ZEN-FAIL-FAST"),
+                    testing_ids=_testing("hadolint"),
+                    verified_testing_ids=_testing("hadolint"),
+                    projection_ids=_projection("dockerfile", "docker_compose"),
+                    verified_projection_ids=_projection("dockerfile"),
                 )
             ],
             default_order=40,
@@ -109,7 +134,12 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=DockerfileSecretHygieneConfig,
             rules=[
                 RuleBinding(
-                    rule_id="dockerfile-006", dogma_ids=_dogmas("ZEN-STRICT-FENCES")
+                    rule_id="dockerfile-006",
+                    dogma_ids=_dogmas("ZEN-STRICT-FENCES"),
+                    testing_ids=_testing("hadolint"),
+                    verified_testing_ids=_testing("hadolint"),
+                    projection_ids=_projection("dockerfile", "docker_compose"),
+                    verified_projection_ids=_projection("dockerfile"),
                 )
             ],
             default_order=60,

@@ -440,6 +440,7 @@ def test_reports_command_outputs_markdown(tmp_path, capsys):
     [
         ("check", []),
         ("prompts", ["--mode", "agent"]),
+        ("report", []),
         ("reports", []),
     ],
 )
@@ -457,6 +458,31 @@ def test_cli_commands_reject_unimplemented_dogma_perspective(
     assert exit_code == 2
     captured = capsys.readouterr()
     assert "Perspective 'dogma'" in captured.err
+
+
+@pytest.mark.parametrize(
+    ("command", "extra_args"),
+    [
+        ("check", []),
+        ("prompts", ["--mode", "agent"]),
+        ("report", []),
+        ("reports", []),
+    ],
+)
+def test_cli_commands_reject_projection_perspective_without_target(
+    tmp_path,
+    capsys,
+    command,
+    extra_args,
+):
+    sample = tmp_path / "sample.py"
+    sample.write_text("def foo():\n    pass\n", encoding="utf-8")
+    exit_code = cli.main(
+        [command, str(sample), "--perspective", "projection", *extra_args],
+    )
+    assert exit_code == 2
+    captured = capsys.readouterr()
+    assert "requires a non-empty 'project_as'" in captured.err
 
 
 def test_report_command_outputs_json(tmp_path):
@@ -562,6 +588,66 @@ def test_check_command_outputs_projection_perspective_json_for_requested_family(
     assert [violation["rule_id"] for violation in payload[0]["violations"]] == [
         "python-001",
     ]
+
+
+def test_report_command_outputs_testing_perspective_markdown_for_pytest_file(
+    tmp_path,
+    capsys,
+):
+    tests_dir = tmp_path / "tests"
+    tests_dir.mkdir()
+    sample = tests_dir / "test_sample.py"
+    sample.write_text(
+        "def test_example():\n"
+        '    payload = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"\n',
+        encoding="utf-8",
+    )
+
+    exit_code = cli.main(
+        ["report", str(sample), "--perspective", PerspectiveMode.TESTING.value],
+    )
+
+    assert exit_code == 0
+    output = capsys.readouterr().out
+    assert "Zen Report" in output
+    assert "Total violations" in output
+    assert "Universal Dogmas" not in output
+
+
+def test_report_command_outputs_projection_perspective_markdown_for_requested_family(
+    tmp_path,
+    monkeypatch,
+    capsys,
+):
+    from mcp_zen_of_languages.analyzers import registry as registry_module
+    from mcp_zen_of_languages.reporting import report as report_module
+
+    sample = tmp_path / "sample.py"
+    sample.write_text("def foo():\n    pass\n", encoding="utf-8")
+    monkeypatch.setattr(registry_module, "REGISTRY", _projection_registry())
+    monkeypatch.setattr(
+        report_module,
+        "_analyze_targets",
+        lambda targets, config_path=None: [_projection_result(str(sample))],
+    )
+
+    exit_code = cli.main(
+        [
+            "report",
+            str(sample),
+            "--perspective",
+            PerspectiveMode.PROJECTION.value,
+            "--as",
+            "go",
+        ],
+    )
+
+    assert exit_code == 0
+    output = capsys.readouterr().out
+    assert "Zen Report" in output
+    assert "long line" in output
+    assert "missing docstring" not in output
+    assert "Universal Dogmas" not in output
 
 
 def test_report_command_writes_out_file(tmp_path):

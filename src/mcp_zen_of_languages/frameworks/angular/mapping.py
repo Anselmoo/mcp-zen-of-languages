@@ -35,17 +35,29 @@ def _dogmas(*dogma_ids: str) -> list[str]:
     return list(dogma_ids)
 
 
+def _testing(*testing_ids: str) -> list[str]:
+    """Return explicit testing family ids for the binding."""
+    return list(testing_ids)
+
+
+def _projection(*projection_ids: str) -> list[str]:
+    """Return explicit projection family ids for the binding."""
+    return list(projection_ids)
+
+
 DETECTOR_MAP = LanguageDetectorMap(
     language="angular",
     bindings=[
         RuleDetectorBinding(
-            detector_id="angular-005",
-            detector_class=AngularLazyRouteDetector,
-            config_model=_rule_config("angular-005"),
+            detector_id="angular-001",
+            detector_class=AngularOnPushDetector,
+            config_model=_rule_config("angular-001"),
             rules=[
                 RuleBinding(
-                    rule_id="angular-005",
+                    rule_id="angular-001",
                     dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("angular"),
                 )
             ],
             default_order=10,
@@ -56,19 +68,24 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=_rule_config("angular-002"),
             rules=[
                 RuleBinding(
-                    rule_id="angular-002", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                    rule_id="angular-002",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("angular"),
                 )
             ],
             default_order=20,
         ),
         RuleDetectorBinding(
-            detector_id="angular-001",
-            detector_class=AngularOnPushDetector,
-            config_model=_rule_config("angular-001"),
+            detector_id="angular-003",
+            detector_class=AngularSubscriptionLifecycleDetector,
+            config_model=_rule_config("angular-003"),
             rules=[
                 RuleBinding(
-                    rule_id="angular-001",
-                    dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
+                    rule_id="angular-003",
+                    dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("angular"),
                 )
             ],
             default_order=30,
@@ -79,19 +96,24 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=_rule_config("angular-004"),
             rules=[
                 RuleBinding(
-                    rule_id="angular-004", dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME")
+                    rule_id="angular-004",
+                    dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("angular"),
                 )
             ],
             default_order=40,
         ),
         RuleDetectorBinding(
-            detector_id="angular-003",
-            detector_class=AngularSubscriptionLifecycleDetector,
-            config_model=_rule_config("angular-003"),
+            detector_id="angular-005",
+            detector_class=AngularLazyRouteDetector,
+            config_model=_rule_config("angular-005"),
             rules=[
                 RuleBinding(
-                    rule_id="angular-003",
-                    dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-EXPLICIT-INTENT"),
+                    rule_id="angular-005",
+                    dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("angular"),
                 )
             ],
             default_order=50,

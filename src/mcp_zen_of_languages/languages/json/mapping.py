@@ -49,7 +49,14 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=JsonSchemaConsistencyDetector,
             config_model=JsonSchemaConsistencyConfig,
             rules=[
-                RuleBinding(rule_id="json-002", dogma_ids=_dogmas("ZEN-RETURN-EARLY"))
+                RuleBinding(
+                    rule_id="json-002",
+                    dogma_ids=_dogmas("ZEN-RETURN-EARLY"),
+                    testing_ids=["jsonschema"],
+                    verified_testing_ids=["jsonschema"],
+                    projection_ids=["jsonschema", "openapi"],
+                    verified_projection_ids=["jsonschema"],
+                )
             ],
             default_order=20,
         ),
@@ -112,7 +119,12 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=JsonDateFormatConfig,
             rules=[
                 RuleBinding(
-                    rule_id="json-008", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                    rule_id="json-008",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+                    testing_ids=["jsonschema"],
+                    verified_testing_ids=["jsonschema"],
+                    projection_ids=["jsonschema", "openapi"],
+                    verified_projection_ids=["jsonschema"],
                 )
             ],
             default_order=80,
@@ -123,7 +135,12 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=JsonNullHandlingConfig,
             rules=[
                 RuleBinding(
-                    rule_id="json-009", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                    rule_id="json-009",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+                    testing_ids=["jsonschema"],
+                    verified_testing_ids=["jsonschema"],
+                    projection_ids=["jsonschema", "openapi"],
+                    verified_projection_ids=["jsonschema"],
                 )
             ],
             default_order=90,

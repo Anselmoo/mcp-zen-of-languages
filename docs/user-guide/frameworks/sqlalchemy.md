@@ -136,15 +136,15 @@ tags:
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **SqlalchemyDeclarativeBaseDetector** | Concrete detector binding for SqlalchemyDeclarativeBaseDetector | `sqlalchemy-004` |
 | **SqlalchemyMappedColumnDetector** | Concrete detector binding for SqlalchemyMappedColumnDetector | `sqlalchemy-003` |
+| **SqlalchemyDeclarativeBaseDetector** | Concrete detector binding for SqlalchemyDeclarativeBaseDetector | `sqlalchemy-004` |
 
 ### Performance
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **SqlalchemyBulkInsertDetector** | Concrete detector binding for SqlalchemyBulkInsertDetector | `sqlalchemy-006` |
 | **SqlalchemyRelationshipLoadingDetector** | Concrete detector binding for SqlalchemyRelationshipLoadingDetector | `sqlalchemy-005` |
+| **SqlalchemyBulkInsertDetector** | Concrete detector binding for SqlalchemyBulkInsertDetector | `sqlalchemy-006` |
 
 ### Security
 

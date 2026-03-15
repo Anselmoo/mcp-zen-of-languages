@@ -16,6 +16,16 @@ def _dogmas(*dogma_ids: str) -> list[str]:
     return list(dogma_ids)
 
 
+def _testing(*testing_ids: str) -> list[str]:
+    """Return explicit testing family ids for the binding."""
+    return list(testing_ids)
+
+
+def _projection(*projection_ids: str) -> list[str]:
+    """Return explicit projection family ids for the binding."""
+    return list(projection_ids)
+
+
 _WORKFLOW_RULES = [
     RuleBinding(rule_id="gha-001", dogma_ids=_dogmas("ZEN-STRICT-FENCES")),
     RuleBinding(rule_id="gha-002", dogma_ids=_dogmas("ZEN-STRICT-FENCES")),
@@ -23,7 +33,14 @@ _WORKFLOW_RULES = [
     RuleBinding(rule_id="gha-004", dogma_ids=_dogmas("ZEN-STRICT-FENCES")),
     RuleBinding(rule_id="gha-005", dogma_ids=_dogmas("ZEN-STRICT-FENCES")),
     RuleBinding(rule_id="gha-006", dogma_ids=_dogmas("ZEN-STRICT-FENCES")),
-    RuleBinding(rule_id="gha-007", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")),
+    RuleBinding(
+        rule_id="gha-007",
+        dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+        testing_ids=_testing("actionlint"),
+        verified_testing_ids=_testing("actionlint"),
+        projection_ids=_projection("github-actions", "gitlab_ci"),
+        verified_projection_ids=_projection("github-actions"),
+    ),
     RuleBinding(rule_id="gha-008", dogma_ids=_dogmas("ZEN-FAIL-FAST")),
     RuleBinding(rule_id="gha-009", dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY")),
     RuleBinding(rule_id="gha-010", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")),

@@ -58,7 +58,12 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=LatexLabelRefDisciplineConfig,
             rules=[
                 RuleBinding(
-                    rule_id="latex-002", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                    rule_id="latex-002",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+                    testing_ids=["chktex"],
+                    verified_testing_ids=["chktex"],
+                    projection_ids=["pdf"],
+                    verified_projection_ids=["pdf"],
                 )
             ],
             default_order=20,
@@ -79,7 +84,14 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=LatexBibliographyHygieneDetector,
             config_model=LatexBibliographyHygieneConfig,
             rules=[
-                RuleBinding(rule_id="latex-004", dogma_ids=_dogmas("ZEN-STRICT-FENCES"))
+                RuleBinding(
+                    rule_id="latex-004",
+                    dogma_ids=_dogmas("ZEN-STRICT-FENCES"),
+                    testing_ids=["chktex"],
+                    verified_testing_ids=["chktex"],
+                    projection_ids=["pdf"],
+                    verified_projection_ids=["pdf"],
+                )
             ],
             default_order=40,
         ),
@@ -122,7 +134,12 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=LatexEncodingDeclarationConfig,
             rules=[
                 RuleBinding(
-                    rule_id="latex-008", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                    rule_id="latex-008",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+                    testing_ids=["chktex"],
+                    verified_testing_ids=["chktex"],
+                    projection_ids=["pdf"],
+                    verified_projection_ids=["pdf"],
                 )
             ],
             default_order=80,

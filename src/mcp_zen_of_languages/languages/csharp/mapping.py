@@ -54,34 +54,13 @@ DETECTOR_MAP = LanguageDetectorMap(
     language="csharp",
     bindings=[
         RuleDetectorBinding(
-            detector_id="csharp_async_await",
-            detector_class=CSharpAsyncAwaitDetector,
-            config_model=CSharpAsyncAwaitConfig,
-            rules=[RuleBinding(rule_id="cs-004", dogma_ids=_dogmas("ZEN-FAIL-FAST"))],
-            default_order=10,
-        ),
-        RuleDetectorBinding(
-            detector_id="csharp_string_interpolation",
-            detector_class=CSharpStringInterpolationDetector,
-            config_model=CSharpStringInterpolationConfig,
-            rules=[
-                RuleBinding(
-                    rule_id="cs-006",
-                    dogma_ids=_dogmas(
-                        "ZEN-UNAMBIGUOUS-NAME", "ZEN-PROPORTIONATE-COMPLEXITY"
-                    ),
-                )
-            ],
-            default_order=20,
-        ),
-        RuleDetectorBinding(
             detector_id="cs-001",
             detector_class=CSharpNullableDetector,
             config_model=CSharpNullableConfig,
             rules=[
                 RuleBinding(rule_id="cs-001", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
             ],
-            default_order=5,
+            default_order=10,
         ),
         RuleDetectorBinding(
             detector_id="cs-002",
@@ -97,7 +76,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                     ),
                 )
             ],
-            default_order=15,
+            default_order=20,
         ),
         RuleDetectorBinding(
             detector_id="cs-003",
@@ -109,7 +88,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                     dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME", "ZEN-EXPLICIT-INTENT"),
                 )
             ],
-            default_order=25,
+            default_order=30,
         ),
         RuleDetectorBinding(
             detector_id="cs-005",
@@ -120,7 +99,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                     rule_id="cs-005", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
                 )
             ],
-            default_order=35,
+            default_order=40,
         ),
         RuleDetectorBinding(
             detector_id="cs-007",
@@ -131,7 +110,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                     rule_id="cs-007", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
                 )
             ],
-            default_order=45,
+            default_order=50,
         ),
         RuleDetectorBinding(
             detector_id="cs-008",
@@ -140,7 +119,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             rules=[
                 RuleBinding(rule_id="cs-008", dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"))
             ],
-            default_order=55,
+            default_order=60,
         ),
         RuleDetectorBinding(
             detector_id="cs-009",
@@ -152,7 +131,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                     dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-VISIBLE-STATE"),
                 )
             ],
-            default_order=65,
+            default_order=70,
         ),
         RuleDetectorBinding(
             detector_id="cs-010",
@@ -168,7 +147,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                     ),
                 )
             ],
-            default_order=75,
+            default_order=80,
         ),
         RuleDetectorBinding(
             detector_id="cs-011",
@@ -179,14 +158,23 @@ DETECTOR_MAP = LanguageDetectorMap(
                     rule_id="cs-011", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
                 )
             ],
-            default_order=85,
+            default_order=90,
         ),
         RuleDetectorBinding(
             detector_id="cs-012",
             detector_class=CSharpExceptionHandlingDetector,
             config_model=CSharpExceptionHandlingConfig,
-            rules=[RuleBinding(rule_id="cs-012", dogma_ids=_dogmas("ZEN-FAIL-FAST"))],
-            default_order=95,
+            rules=[
+                RuleBinding(
+                    rule_id="cs-012",
+                    dogma_ids=_dogmas("ZEN-FAIL-FAST"),
+                    testing_ids=["xunit"],
+                    verified_testing_ids=["xunit"],
+                    projection_ids=["csharp"],
+                    verified_projection_ids=["csharp"],
+                )
+            ],
+            default_order=100,
         ),
         RuleDetectorBinding(
             detector_id="cs-013",
@@ -200,7 +188,37 @@ DETECTOR_MAP = LanguageDetectorMap(
                     ),
                 )
             ],
-            default_order=105,
+            default_order=110,
+        ),
+        RuleDetectorBinding(
+            detector_id="csharp_async_await",
+            detector_class=CSharpAsyncAwaitDetector,
+            config_model=CSharpAsyncAwaitConfig,
+            rules=[
+                RuleBinding(
+                    rule_id="cs-004",
+                    dogma_ids=_dogmas("ZEN-FAIL-FAST"),
+                    testing_ids=["xunit"],
+                    verified_testing_ids=["xunit"],
+                    projection_ids=["csharp"],
+                    verified_projection_ids=["csharp"],
+                )
+            ],
+            default_order=120,
+        ),
+        RuleDetectorBinding(
+            detector_id="csharp_string_interpolation",
+            detector_class=CSharpStringInterpolationDetector,
+            config_model=CSharpStringInterpolationConfig,
+            rules=[
+                RuleBinding(
+                    rule_id="cs-006",
+                    dogma_ids=_dogmas(
+                        "ZEN-UNAMBIGUOUS-NAME", "ZEN-PROPORTIONATE-COMPLEXITY"
+                    ),
+                )
+            ],
+            default_order=130,
         ),
     ],
 )

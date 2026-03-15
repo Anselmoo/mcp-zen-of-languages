@@ -16,6 +16,7 @@ from mcp_zen_of_languages.models import DogmaAnalysis
 from mcp_zen_of_languages.models import DogmaFinding
 from mcp_zen_of_languages.models import Metrics
 from mcp_zen_of_languages.models import PerspectiveMode
+from mcp_zen_of_languages.models import RulesSummary
 from mcp_zen_of_languages.models import Violation
 from mcp_zen_of_languages.reporting.gaps import build_gap_analysis
 from mcp_zen_of_languages.reporting.prompts import GENERIC_PROMPTS_BY_LANGUAGE
@@ -113,6 +114,7 @@ def _build_projection_result(path: str) -> AnalysisResult:
                 ),
             ],
         ),
+        rules_summary=RulesSummary(high=1, low=1),
         overall_score=95.0,
     )
 
@@ -197,6 +199,45 @@ def test_generate_report_testing_perspective_filters_to_testing_rules(tmp_path):
     assert report.data["dogma_domains"] == []
 
 
+def test_generate_report_testing_perspective_recomputes_filtered_summary(
+    tmp_path,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    from mcp_zen_of_languages.reporting import report as report_module
+
+    tests_dir = tmp_path / "tests"
+    tests_dir.mkdir()
+    sample = tests_dir / "test_sample.py"
+    sample.write_text("def test_example():\n    assert True\n", encoding="utf-8")
+    monkeypatch.setattr(
+        report_module,
+        "_analyze_targets",
+        lambda targets, config_path=None: [_build_projection_result(str(sample))],
+    )
+
+    report = generate_report(str(sample), perspective=PerspectiveMode.TESTING)
+
+    assert report.data["summary"] == {
+        "total_files": 1,
+        "total_violations": 1,
+        "severity_counts": {
+            "critical": 0,
+            "high": 1,
+            "medium": 0,
+            "low": 0,
+        },
+    }
+    assert report.data["analysis"][0]["rules_summary"] == {
+        "critical": 0,
+        "high": 1,
+        "medium": 0,
+        "low": 0,
+    }
+    assert "long line" in report.markdown
+    assert "missing docstring" not in report.markdown
+    assert "Universal Dogmas" not in report.markdown
+
+
 def test_generate_report_projection_perspective_filters_to_requested_family(
     tmp_path,
     monkeypatch: pytest.MonkeyPatch,
@@ -227,3 +268,46 @@ def test_generate_report_projection_perspective_filters_to_requested_family(
     assert "Universal Dogmas" not in report.markdown
     assert report.data["dogmas"] == []
     assert report.data["dogma_domains"] == []
+
+
+def test_generate_report_projection_perspective_recomputes_filtered_summary(
+    tmp_path,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    from mcp_zen_of_languages.analyzers import registry as registry_module
+    from mcp_zen_of_languages.reporting import report as report_module
+
+    sample = tmp_path / "sample.py"
+    sample.write_text("def foo():\n    pass\n", encoding="utf-8")
+    monkeypatch.setattr(registry_module, "REGISTRY", _projection_registry())
+    monkeypatch.setattr(
+        report_module,
+        "_analyze_targets",
+        lambda targets, config_path=None: [_build_projection_result(str(sample))],
+    )
+
+    report = generate_report(
+        str(sample),
+        perspective=PerspectiveMode.PROJECTION,
+        project_as="go",
+    )
+
+    assert report.data["summary"] == {
+        "total_files": 1,
+        "total_violations": 1,
+        "severity_counts": {
+            "critical": 0,
+            "high": 1,
+            "medium": 0,
+            "low": 0,
+        },
+    }
+    assert report.data["analysis"][0]["rules_summary"] == {
+        "critical": 0,
+        "high": 1,
+        "medium": 0,
+        "low": 0,
+    }
+    assert "long line" in report.markdown
+    assert "missing docstring" not in report.markdown
+    assert "Universal Dogmas" not in report.markdown

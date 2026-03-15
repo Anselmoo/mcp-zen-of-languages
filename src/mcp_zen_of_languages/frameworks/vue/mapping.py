@@ -31,17 +31,46 @@ def _dogmas(*dogma_ids: str) -> list[str]:
     return list(dogma_ids)
 
 
+def _testing(*testing_ids: str) -> list[str]:
+    """Return explicit testing family ids for the binding."""
+    return list(testing_ids)
+
+
+def _projection(*projection_ids: str) -> list[str]:
+    """Return explicit projection family ids for the binding."""
+    return list(projection_ids)
+
+
 DETECTOR_MAP = LanguageDetectorMap(
     language="vue",
     bindings=[
         RuleDetectorBinding(
-            detector_id="vue-004",
-            detector_class=VueConditionalLoopDetector,
-            config_model=_rule_config("vue-004"),
+            detector_id="vue-001",
+            detector_class=VueMultiWordNameDetector,
+            config_model=_rule_config("vue-001"),
             rules=[
-                RuleBinding(rule_id="vue-004", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
+                RuleBinding(
+                    rule_id="vue-001",
+                    dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("vue"),
+                )
             ],
             default_order=10,
+        ),
+        RuleDetectorBinding(
+            detector_id="vue-002",
+            detector_class=VueTypedPropsDetector,
+            config_model=_rule_config("vue-002"),
+            rules=[
+                RuleBinding(
+                    rule_id="vue-002",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("vue"),
+                )
+            ],
+            default_order=20,
         ),
         RuleDetectorBinding(
             detector_id="vue-003",
@@ -51,20 +80,25 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="vue-003",
                     dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT", "ZEN-VISIBLE-STATE"),
-                )
-            ],
-            default_order=20,
-        ),
-        RuleDetectorBinding(
-            detector_id="vue-001",
-            detector_class=VueMultiWordNameDetector,
-            config_model=_rule_config("vue-001"),
-            rules=[
-                RuleBinding(
-                    rule_id="vue-001", dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME")
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("vue"),
                 )
             ],
             default_order=30,
+        ),
+        RuleDetectorBinding(
+            detector_id="vue-004",
+            detector_class=VueConditionalLoopDetector,
+            config_model=_rule_config("vue-004"),
+            rules=[
+                RuleBinding(
+                    rule_id="vue-004",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("vue"),
+                )
+            ],
+            default_order=40,
         ),
         RuleDetectorBinding(
             detector_id="vue-005",
@@ -74,16 +108,9 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="vue-005",
                     dogma_ids=_dogmas("ZEN-VISIBLE-STATE", "ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("vue"),
                 )
-            ],
-            default_order=40,
-        ),
-        RuleDetectorBinding(
-            detector_id="vue-002",
-            detector_class=VueTypedPropsDetector,
-            config_model=_rule_config("vue-002"),
-            rules=[
-                RuleBinding(rule_id="vue-002", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
             ],
             default_order=50,
         ),

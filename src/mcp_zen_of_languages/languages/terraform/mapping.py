@@ -42,6 +42,16 @@ def _dogmas(*dogma_ids: str) -> list[str]:
     return list(dogma_ids)
 
 
+def _testing(*testing_ids: str) -> list[str]:
+    """Return explicit testing family ids for the binding."""
+    return list(testing_ids)
+
+
+def _projection(*projection_ids: str) -> list[str]:
+    """Return explicit projection family ids for the binding."""
+    return list(projection_ids)
+
+
 DETECTOR_MAP = LanguageDetectorMap(
     language="terraform",
     bindings=[
@@ -50,7 +60,14 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TerraformProviderVersionPinningDetector,
             config_model=TerraformProviderVersionPinningConfig,
             rules=[
-                RuleBinding(rule_id="tf-001", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
+                RuleBinding(
+                    rule_id="tf-001",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("terraform-validate"),
+                    verified_testing_ids=_testing("terraform-validate"),
+                    projection_ids=_projection("terraform"),
+                    verified_projection_ids=_projection("terraform"),
+                )
             ],
             default_order=10,
         ),
@@ -59,7 +76,14 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=TerraformModuleVersionPinningDetector,
             config_model=TerraformModuleVersionPinningConfig,
             rules=[
-                RuleBinding(rule_id="tf-002", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
+                RuleBinding(
+                    rule_id="tf-002",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("terraform-validate"),
+                    verified_testing_ids=_testing("terraform-validate"),
+                    projection_ids=_projection("terraform"),
+                    verified_projection_ids=_projection("terraform"),
+                )
             ],
             default_order=20,
         ),
@@ -103,6 +127,10 @@ DETECTOR_MAP = LanguageDetectorMap(
                     dogma_ids=_dogmas(
                         "ZEN-FAIL-FAST", "ZEN-EXPLICIT-INTENT", "ZEN-VISIBLE-STATE"
                     ),
+                    testing_ids=_testing("terraform-validate"),
+                    verified_testing_ids=_testing("terraform-validate"),
+                    projection_ids=_projection("terraform"),
+                    verified_projection_ids=_projection("terraform"),
                 )
             ],
             default_order=60,

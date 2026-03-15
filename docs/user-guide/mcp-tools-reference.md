@@ -63,8 +63,13 @@ Run the full zen analysis pipeline on a single code snippet.
 | `code`               | Raw source code to analyse — typically the full contents of a single file read by the MCP client.                                          |
 | `language`           | Target language identifier such as `"python"` or `"tsx"`. Aliases like `"ts"` and `"rs"` are accepted.                                     |
 | `severity_threshold` | Floor severity that downstream consumers (reports, task generators) should honour. Falls back to `CONFIG.severity_threshold` when omitted. |
+| `perspective`        | Public result view to apply: `all`, `zen`, `testing`, or `projection`. The reserved `dogma` value is still rejected at runtime.            |
+| `project_as`         | Projection-family target used when `perspective` is `projection`.                                                                          |
 
 **Returns:** AnalysisResult carrying metrics, a scored violation list, and the computed `overall_score` (0–100 scale, higher is better).
+
+`testing` requires a real file path to resolve the test-family overlay, so
+snippet requests should generally use `all`, `zen`, or `projection`.
 
 ---
 
@@ -122,6 +127,8 @@ Analyse code and synthesise remediation prompts for each detected violation.
 | ---------- | -------------------------------------------------------------------------------------------------------- |
 | `code`     | Source code whose violations will drive prompt generation — should match the snippet passed to analysis. |
 | `language` | Language identifier used to select the correct analyzer and prompt templates (e.g. `"python"`).          |
+| `perspective` | Public result view to apply before prompts are generated: `all`, `zen`, `testing`, or `projection`. The reserved `dogma` value is still rejected at runtime. |
+| `project_as` | Projection-family target used when `perspective` is `projection`. |
 
 **Returns:** PromptBundle holding `file_prompts` with per-violation remediation text and `generic_prompts` for broader guidance.
 
@@ -161,6 +168,8 @@ Produce a structured markdown report combining analysis, gaps, and prompts.
 | ------------------ | -------------------------------------------------------------------------------------------------------- |
 | `target_path`      | Path to a single file or a directory. When a directory is given, all eligible files inside are analysed. |
 | `language`         | Explicit language override. When omitted, the language is inferred from file extensions.                 |
+| `perspective`      | Public report view to apply: `all`, `zen`, `testing`, or `projection`. The reserved `dogma` value is still rejected at runtime. |
+| `project_as`       | Projection-family target used when `perspective` is `projection`.                                        |
 | `include_prompts`  | Append remediation prompt sections derived from `build_prompt_bundle`.                                   |
 | `include_analysis` | Include the violation-analysis body showing per-rule findings.                                           |
 | `include_gaps`     | Include quality-gap and coverage-gap summaries highlighting areas that need attention.                   |

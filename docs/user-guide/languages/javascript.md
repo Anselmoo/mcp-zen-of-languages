@@ -331,8 +331,8 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **JsGlobalStateDetector** | Detect direct access to global mutable state via ``window``, ``globalThis``, or ``global`` | `js-004` |
 | **JsInheritanceDepthDetector** | Detect class hierarchies that exceed a maximum inheritance depth | `js-009` |
+| **JsGlobalStateDetector** | Detect direct access to global mutable state via ``window``, ``globalThis``, or ``global`` | `js-004` |
 | **JsNoPrototypeMutationDetector** | Detect mutations of built-in object prototypes | `js-018` |
 
 ### Async
@@ -351,8 +351,8 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **JsStrictEqualityDetector** | Detect loose equality operators (``==`` / ``!=``) in JavaScript | `js-003` |
 | **JsNoWithDetector** | Detect usage of the ``with`` statement in JavaScript | `js-014` |
+| **JsStrictEqualityDetector** | Detect loose equality operators (``==`` / ``!=``) in JavaScript | `js-003` |
 
 ### Design
 
@@ -377,10 +377,10 @@ JavaScript has evolved enormously since ES6, but codebases often carry legacy pa
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **JsModernFeaturesDetector** | Detect opportunities to adopt modern ES6+ language features | `js-006` |
 | **JsDestructuringDetector** | Detect repeated property access on the same object without destructuring | `js-012` |
-| **JsObjectSpreadDetector** | Detect usage of ``Object.assign`` where object spread is preferred | `js-013` |
+| **JsModernFeaturesDetector** | Detect opportunities to adopt modern ES6+ language features | `js-006` |
 | **JsNoArgumentsDetector** | Detect usage of the legacy ``arguments`` object in JavaScript | `js-017` |
+| **JsObjectSpreadDetector** | Detect usage of ``Object.assign`` where object spread is preferred | `js-013` |
 
 ### Immutability
 
@@ -541,10 +541,10 @@ languages:
     pipeline:
       - type: js_callback_nesting
         max_callback_nesting: 2
-      - type: js_no_var
-        detect_var_usage: True
       - type: js_function_length
         max_function_length: 50
+      - type: js_no_var
+        detect_var_usage: True
       - type: js_param_count
         max_params: 3
 ```

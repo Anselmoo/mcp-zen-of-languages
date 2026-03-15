@@ -112,10 +112,10 @@ tags:
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **VueConditionalLoopDetector** | Concrete detector binding for VueConditionalLoopDetector | `vue-004` |
-| **VueListKeyDetector** | Concrete detector binding for VueListKeyDetector | `vue-003` |
-| **VuePropMutationDetector** | Concrete detector binding for VuePropMutationDetector | `vue-005` |
 | **VueTypedPropsDetector** | Concrete detector binding for VueTypedPropsDetector | `vue-002` |
+| **VueListKeyDetector** | Concrete detector binding for VueListKeyDetector | `vue-003` |
+| **VueConditionalLoopDetector** | Concrete detector binding for VueConditionalLoopDetector | `vue-004` |
+| **VuePropMutationDetector** | Concrete detector binding for VuePropMutationDetector | `vue-005` |
 
 ### Readability
 

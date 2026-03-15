@@ -110,7 +110,7 @@ The CLI is a powerful tool for **first code anamnesis** — an initial diagnosti
 # Run the CLI directly
 uvx --from mcp-zen-of-languages zen --help
 uvx --from mcp-zen-of-languages zen init
-uvx --from mcp-zen-of-languages zen report path/to/project
+uvx --from mcp-zen-of-languages zen reports path/to/project
 
 # Start the MCP server
 uvx --from mcp-zen-of-languages zen-mcp-server

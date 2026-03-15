@@ -48,7 +48,10 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=TomlDuplicateKeysConfig,
             rules=[
                 RuleBinding(
-                    rule_id="toml-002", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                    rule_id="toml-002",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+                    projection_ids=["python"],
+                    verified_projection_ids=["python"],
                 )
             ],
             default_order=20,
@@ -101,7 +104,10 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=TomlIsoDatetimeConfig,
             rules=[
                 RuleBinding(
-                    rule_id="toml-007", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                    rule_id="toml-007",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+                    projection_ids=["python"],
+                    verified_projection_ids=["python"],
                 )
             ],
             default_order=70,
@@ -112,7 +118,10 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=TomlFloatIntegerConfig,
             rules=[
                 RuleBinding(
-                    rule_id="toml-008", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                    rule_id="toml-008",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+                    projection_ids=["python"],
+                    verified_projection_ids=["python"],
                 )
             ],
             default_order=80,

@@ -38,6 +38,16 @@ def _dogmas(*dogma_ids: str) -> list[str]:
     return list(dogma_ids)
 
 
+def _testing(*testing_ids: str) -> list[str]:
+    """Return explicit testing family ids for the binding."""
+    return list(testing_ids)
+
+
+def _projection(*projection_ids: str) -> list[str]:
+    """Return explicit projection family ids for the binding."""
+    return list(projection_ids)
+
+
 DETECTOR_MAP = LanguageDetectorMap(
     language="gitlab_ci",
     bindings=[
@@ -127,7 +137,12 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=GitLabCIOnlyExceptConfig,
             rules=[
                 RuleBinding(
-                    rule_id="gitlab-ci-008", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                    rule_id="gitlab-ci-008",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+                    testing_ids=_testing("gitlab-ci-lint"),
+                    verified_testing_ids=_testing("gitlab-ci-lint"),
+                    projection_ids=_projection("gitlab_ci", "github-actions"),
+                    verified_projection_ids=_projection("gitlab_ci"),
                 )
             ],
             default_order=80,

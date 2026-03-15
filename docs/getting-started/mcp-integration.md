@@ -192,6 +192,56 @@ The server exposes **13 MCP tools**, plus **3 resources** and **1 prompt**.
 For full parameter and return schemas, see the
 [MCP Tools Reference](../user-guide/mcp-tools-reference.md).
 
+## Perspective-aware MCP requests
+
+The current runtime supports four usable public perspectives:
+
+- `all` — full rule-first result
+- `zen` — rule-level result without dogma-analysis payloads
+- `testing` — test-family view resolved from real file paths
+- `projection` — explicit family projection driven by `project_as`
+
+`dogma` remains reserved but is **not** a runnable standalone perspective yet.
+
+### Repository or report target
+
+Use `generate_report` when you want a perspective-aware result over files that
+already exist on disk:
+
+```json
+{
+  "tool": "generate_report",
+  "arguments": {
+    "target_path": "tests",
+    "perspective": "testing",
+    "include_prompts": true
+  }
+}
+```
+
+### Explicit projection target
+
+Projection requests must include `project_as`:
+
+```json
+{
+  "tool": "generate_report",
+  "arguments": {
+    "target_path": "src/frontend",
+    "language": "react",
+    "perspective": "projection",
+    "project_as": "nextjs"
+  }
+}
+```
+
+### Snippet-tool caveat
+
+`analyze_zen_violations` and `generate_prompts` accept `perspective`, but
+`testing` is only meaningful when the runtime can inspect a real file path.
+For test-family filtering, use a file- or directory-based surface such as
+`generate_report` or the CLI.
+
 ## Workflow example
 
 1. Open a Python file in VS Code

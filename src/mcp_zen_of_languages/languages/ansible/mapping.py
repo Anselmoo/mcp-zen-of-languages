@@ -78,6 +78,16 @@ def _dogmas(*dogma_ids: str) -> list[str]:
     return list(dogma_ids)
 
 
+def _testing(*testing_ids: str) -> list[str]:
+    """Return explicit testing family ids for the binding."""
+    return list(testing_ids)
+
+
+def _projection(*projection_ids: str) -> list[str]:
+    """Return explicit projection family ids for the binding."""
+    return list(projection_ids)
+
+
 GEARBOX = DetectorGearbox(language="ansible")
 GEARBOX.extend(
     [
@@ -109,7 +119,12 @@ GEARBOX.extend(
             config_model=AnsibleIdempotencyConfig,
             rules=[
                 RuleBinding(
-                    rule_id="ansible-003", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                    rule_id="ansible-003",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+                    testing_ids=_testing("molecule"),
+                    verified_testing_ids=_testing("molecule"),
+                    projection_ids=_projection("ansible"),
+                    verified_projection_ids=_projection("ansible"),
                 )
             ],
             default_order=30,
@@ -133,6 +148,10 @@ GEARBOX.extend(
                 RuleBinding(
                     rule_id="ansible-005",
                     dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT", "ZEN-VISIBLE-STATE"),
+                    testing_ids=_testing("molecule"),
+                    verified_testing_ids=_testing("molecule"),
+                    projection_ids=_projection("ansible"),
+                    verified_projection_ids=_projection("ansible"),
                 )
             ],
             default_order=50,

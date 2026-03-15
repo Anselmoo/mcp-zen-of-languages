@@ -43,6 +43,10 @@ DETECTOR_MAP = LanguageDetectorMap(
                     dogma_ids=_dogmas(
                         "ZEN-PROPORTIONATE-COMPLEXITY", "ZEN-EXPLICIT-INTENT"
                     ),
+                    testing_ids=["sqllogictest"],
+                    verified_testing_ids=["sqllogictest"],
+                    projection_ids=["sql"],
+                    verified_projection_ids=["sql"],
                 )
             ],
             default_order=10,
@@ -55,6 +59,10 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="sql-002",
                     dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT", "ZEN-VISIBLE-STATE"),
+                    testing_ids=["sqllogictest"],
+                    verified_testing_ids=["sqllogictest"],
+                    projection_ids=["sql"],
+                    verified_projection_ids=["sql"],
                 )
             ],
             default_order=20,

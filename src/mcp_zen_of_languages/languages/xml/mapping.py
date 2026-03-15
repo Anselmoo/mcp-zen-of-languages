@@ -57,6 +57,10 @@ DETECTOR_MAP = LanguageDetectorMap(
                         "ZEN-UNAMBIGUOUS-NAME",
                         "ZEN-STRICT-FENCES",
                     ),
+                    testing_ids=["xmllint"],
+                    verified_testing_ids=["xmllint"],
+                    projection_ids=["svg"],
+                    verified_projection_ids=["svg"],
                 )
             ],
             default_order=30,
@@ -66,7 +70,14 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=XmlValidityDetector,
             config_model=XmlValidityConfig,
             rules=[
-                RuleBinding(rule_id="xml-004", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
+                RuleBinding(
+                    rule_id="xml-004",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+                    testing_ids=["xmllint"],
+                    verified_testing_ids=["xmllint"],
+                    projection_ids=["svg"],
+                    verified_projection_ids=["svg"],
+                )
             ],
             default_order=40,
         ),

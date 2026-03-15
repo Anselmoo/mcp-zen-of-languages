@@ -44,28 +44,42 @@ def _dogmas(*dogma_ids: str) -> list[str]:
     return list(dogma_ids)
 
 
+def _testing(*testing_ids: str) -> list[str]:
+    """Return explicit testing family ids for the binding."""
+    return list(testing_ids)
+
+
+def _projection(*projection_ids: str) -> list[str]:
+    """Return explicit projection family ids for the binding."""
+    return list(projection_ids)
+
+
 DETECTOR_MAP = LanguageDetectorMap(
     language="sqlalchemy",
     bindings=[
         RuleDetectorBinding(
-            detector_id="sqlalchemy-006",
-            detector_class=SqlalchemyBulkInsertDetector,
-            config_model=_rule_config("sqlalchemy-006"),
+            detector_id="sqlalchemy-001",
+            detector_class=SqlalchemyParameterizedTextDetector,
+            config_model=_rule_config("sqlalchemy-001"),
             rules=[
                 RuleBinding(
-                    rule_id="sqlalchemy-006",
-                    dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
+                    rule_id="sqlalchemy-001",
+                    dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-FAIL-FAST"),
+                    testing_ids=_testing("pytest"),
+                    projection_ids=_projection("sql"),
                 )
             ],
             default_order=10,
         ),
         RuleDetectorBinding(
-            detector_id="sqlalchemy-004",
-            detector_class=SqlalchemyDeclarativeBaseDetector,
-            config_model=_rule_config("sqlalchemy-004"),
+            detector_id="sqlalchemy-002",
+            detector_class=SqlalchemySessionScopeDetector,
+            config_model=_rule_config("sqlalchemy-002"),
             rules=[
                 RuleBinding(
-                    rule_id="sqlalchemy-004", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                    rule_id="sqlalchemy-002",
+                    dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("pytest"),
                 )
             ],
             default_order=20,
@@ -76,19 +90,22 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=_rule_config("sqlalchemy-003"),
             rules=[
                 RuleBinding(
-                    rule_id="sqlalchemy-003", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                    rule_id="sqlalchemy-003",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+                    testing_ids=_testing("pytest"),
                 )
             ],
             default_order=30,
         ),
         RuleDetectorBinding(
-            detector_id="sqlalchemy-001",
-            detector_class=SqlalchemyParameterizedTextDetector,
-            config_model=_rule_config("sqlalchemy-001"),
+            detector_id="sqlalchemy-004",
+            detector_class=SqlalchemyDeclarativeBaseDetector,
+            config_model=_rule_config("sqlalchemy-004"),
             rules=[
                 RuleBinding(
-                    rule_id="sqlalchemy-001",
-                    dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-FAIL-FAST"),
+                    rule_id="sqlalchemy-004",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION"),
+                    testing_ids=_testing("pytest"),
                 )
             ],
             default_order=40,
@@ -103,18 +120,22 @@ DETECTOR_MAP = LanguageDetectorMap(
                     dogma_ids=_dogmas(
                         "ZEN-PROPORTIONATE-COMPLEXITY", "ZEN-EXPLICIT-INTENT"
                     ),
+                    testing_ids=_testing("pytest"),
+                    projection_ids=_projection("sql"),
+                    verified_projection_ids=[],
                 )
             ],
             default_order=50,
         ),
         RuleDetectorBinding(
-            detector_id="sqlalchemy-002",
-            detector_class=SqlalchemySessionScopeDetector,
-            config_model=_rule_config("sqlalchemy-002"),
+            detector_id="sqlalchemy-006",
+            detector_class=SqlalchemyBulkInsertDetector,
+            config_model=_rule_config("sqlalchemy-006"),
             rules=[
                 RuleBinding(
-                    rule_id="sqlalchemy-002",
-                    dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-EXPLICIT-INTENT"),
+                    rule_id="sqlalchemy-006",
+                    dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
+                    testing_ids=_testing("pytest"),
                 )
             ],
             default_order=60,

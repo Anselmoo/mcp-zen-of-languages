@@ -295,15 +295,15 @@ Shell scripts are the glue of infrastructure — and the source of some of the m
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **BashQuoteVariablesDetector** | Detect unquoted variable expansions that cause word-splitting bugs | `bash-002` |
 | **BashArrayUsageDetector** | Detect IFS-based string splitting used instead of proper Bash arrays | `bash-013` |
+| **BashQuoteVariablesDetector** | Detect unquoted variable expansions that cause word-splitting bugs | `bash-002` |
 
 ### Error Handling
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **BashStrictModeDetector** | Detect scripts missing the unofficial Bash strict mode header | `bash-001` |
 | **BashExitCodeChecksDetector** | Detect external commands whose exit codes are silently ignored | `bash-005` |
+| **BashStrictModeDetector** | Detect scripts missing the unofficial Bash strict mode header | `bash-001` |
 
 ### Idioms
 
@@ -327,8 +327,8 @@ Shell scripts are the glue of infrastructure — and the source of some of the m
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **BashCommandSubstitutionDetector** | Detect legacy backtick command substitution syntax | `bash-004` |
 | **BashMeaningfulNamesDetector** | Detect overly short or cryptic variable names in shell scripts | `bash-011` |
+| **BashCommandSubstitutionDetector** | Detect legacy backtick command substitution syntax | `bash-004` |
 
 ### Robustness
 

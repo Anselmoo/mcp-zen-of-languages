@@ -39,6 +39,10 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="css-001",
                     dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-RETURN-EARLY"),
+                    testing_ids=["stylelint"],
+                    verified_testing_ids=["stylelint"],
+                    projection_ids=["react", "nextjs", "vue"],
+                    verified_projection_ids=["nextjs"],
                 )
             ],
             default_order=10,
@@ -79,7 +83,12 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=CssImportChainConfig,
             rules=[
                 RuleBinding(
-                    rule_id="css-005", dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY")
+                    rule_id="css-005",
+                    dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
+                    testing_ids=["stylelint"],
+                    verified_testing_ids=["stylelint"],
+                    projection_ids=["react", "nextjs", "vue"],
+                    verified_projection_ids=["nextjs"],
                 )
             ],
             default_order=50,

@@ -42,31 +42,20 @@ DETECTOR_MAP = LanguageDetectorMap(
     language="cpp",
     bindings=[
         RuleDetectorBinding(
-            detector_id="cpp_smart_pointers",
-            detector_class=CppSmartPointerDetector,
-            config_model=CppSmartPointerConfig,
-            rules=[
-                RuleBinding(rule_id="cpp-002", dogma_ids=_dogmas("ZEN-VISIBLE-STATE"))
-            ],
-            default_order=10,
-        ),
-        RuleDetectorBinding(
-            detector_id="cpp_nullptr",
-            detector_class=CppNullptrDetector,
-            config_model=CppNullptrConfig,
-            rules=[
-                RuleBinding(rule_id="cpp-004", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
-            ],
-            default_order=20,
-        ),
-        RuleDetectorBinding(
             detector_id="cpp-001",
             detector_class=CppRaiiDetector,
             config_model=CppRaiiConfig,
             rules=[
-                RuleBinding(rule_id="cpp-001", dogma_ids=_dogmas("ZEN-STRICT-FENCES"))
+                RuleBinding(
+                    rule_id="cpp-001",
+                    dogma_ids=_dogmas("ZEN-STRICT-FENCES"),
+                    testing_ids=["gtest"],
+                    verified_testing_ids=["gtest"],
+                    projection_ids=["cpp"],
+                    verified_projection_ids=["cpp"],
+                )
             ],
-            default_order=5,
+            default_order=10,
         ),
         RuleDetectorBinding(
             detector_id="cpp-003",
@@ -77,7 +66,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                     rule_id="cpp-003", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
                 )
             ],
-            default_order=15,
+            default_order=20,
         ),
         RuleDetectorBinding(
             detector_id="cpp-005",
@@ -88,7 +77,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                     rule_id="cpp-005", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
                 )
             ],
-            default_order=25,
+            default_order=30,
         ),
         RuleDetectorBinding(
             detector_id="cpp-006",
@@ -97,7 +86,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             rules=[
                 RuleBinding(rule_id="cpp-006", dogma_ids=_dogmas("ZEN-VISIBLE-STATE"))
             ],
-            default_order=35,
+            default_order=40,
         ),
         RuleDetectorBinding(
             detector_id="cpp-007",
@@ -106,7 +95,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             rules=[
                 RuleBinding(rule_id="cpp-007", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
             ],
-            default_order=45,
+            default_order=50,
         ),
         RuleDetectorBinding(
             detector_id="cpp-008",
@@ -115,7 +104,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             rules=[
                 RuleBinding(rule_id="cpp-008", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
             ],
-            default_order=55,
+            default_order=60,
         ),
         RuleDetectorBinding(
             detector_id="cpp-009",
@@ -126,7 +115,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                     rule_id="cpp-009", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
                 )
             ],
-            default_order=65,
+            default_order=70,
         ),
         RuleDetectorBinding(
             detector_id="cpp-010",
@@ -137,7 +126,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                     rule_id="cpp-010", dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY")
                 )
             ],
-            default_order=75,
+            default_order=80,
         ),
         RuleDetectorBinding(
             detector_id="cpp-011",
@@ -149,7 +138,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                     dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-VISIBLE-STATE"),
                 )
             ],
-            default_order=85,
+            default_order=90,
         ),
         RuleDetectorBinding(
             detector_id="cpp-012",
@@ -158,7 +147,7 @@ DETECTOR_MAP = LanguageDetectorMap(
             rules=[
                 RuleBinding(rule_id="cpp-012", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
             ],
-            default_order=95,
+            default_order=100,
         ),
         RuleDetectorBinding(
             detector_id="cpp-013",
@@ -169,7 +158,32 @@ DETECTOR_MAP = LanguageDetectorMap(
                     rule_id="cpp-013", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
                 )
             ],
-            default_order=105,
+            default_order=110,
+        ),
+        RuleDetectorBinding(
+            detector_id="cpp_nullptr",
+            detector_class=CppNullptrDetector,
+            config_model=CppNullptrConfig,
+            rules=[
+                RuleBinding(rule_id="cpp-004", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
+            ],
+            default_order=120,
+        ),
+        RuleDetectorBinding(
+            detector_id="cpp_smart_pointers",
+            detector_class=CppSmartPointerDetector,
+            config_model=CppSmartPointerConfig,
+            rules=[
+                RuleBinding(
+                    rule_id="cpp-002",
+                    dogma_ids=_dogmas("ZEN-VISIBLE-STATE"),
+                    testing_ids=["gtest"],
+                    verified_testing_ids=["gtest"],
+                    projection_ids=["cpp"],
+                    verified_projection_ids=["cpp"],
+                )
+            ],
+            default_order=130,
         ),
     ],
 )

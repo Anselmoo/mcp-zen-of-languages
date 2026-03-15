@@ -166,13 +166,13 @@ tags:
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **PydanticFieldValidatorDetector** | Concrete detector binding for PydanticFieldValidatorDetector | `pydantic-005` |
-| **PydanticFromAttributesDetector** | Concrete detector binding for PydanticFromAttributesDetector | `pydantic-008` |
-| **PydanticModelConfigDetector** | Concrete detector binding for PydanticModelConfigDetector | `pydantic-004` |
 | **PydanticModelDumpDetector** | Concrete detector binding for PydanticModelDumpDetector | `pydantic-001` |
-| **PydanticModelFieldsDetector** | Concrete detector binding for PydanticModelFieldsDetector | `pydantic-006` |
 | **PydanticModelValidateDetector** | Concrete detector binding for PydanticModelValidateDetector | `pydantic-002` |
+| **PydanticModelConfigDetector** | Concrete detector binding for PydanticModelConfigDetector | `pydantic-004` |
+| **PydanticFieldValidatorDetector** | Concrete detector binding for PydanticFieldValidatorDetector | `pydantic-005` |
+| **PydanticModelFieldsDetector** | Concrete detector binding for PydanticModelFieldsDetector | `pydantic-006` |
 | **PydanticModernTypingDetector** | Concrete detector binding for PydanticModernTypingDetector | `pydantic-007` |
+| **PydanticFromAttributesDetector** | Concrete detector binding for PydanticFromAttributesDetector | `pydantic-008` |
 
 
 ??? example "Principle → Detector Wiring"

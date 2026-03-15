@@ -79,12 +79,12 @@ uvx --from mcp-zen-of-languages zen-mcp-server
 
 # Run without installing (recommended)
 uvx --from mcp-zen-of-languages zen init
-uvx --from mcp-zen-of-languages zen report path/to/project
+uvx --from mcp-zen-of-languages zen reports path/to/project
 
 # Or install globally
 pip install mcp-zen-of-languages
 zen init
-zen report path/to/project
+zen reports path/to/project
 ```
 
 ## What You Get

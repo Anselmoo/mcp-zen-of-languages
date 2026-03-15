@@ -28,6 +28,16 @@ def _dogmas(*dogma_ids: str) -> list[str]:
     return list(dogma_ids)
 
 
+def _testing(*testing_ids: str) -> list[str]:
+    """Return explicit testing family ids for the binding."""
+    return list(testing_ids)
+
+
+def _projection(*projection_ids: str) -> list[str]:
+    """Return explicit projection family ids for the binding."""
+    return list(projection_ids)
+
+
 DETECTOR_MAP = LanguageDetectorMap(
     language="yaml",
     bindings=[
@@ -37,7 +47,14 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=YamlIndentationConfig,
             rules=[
                 RuleBinding(
-                    rule_id="yaml-001", dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME")
+                    rule_id="yaml-001",
+                    dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
+                    testing_ids=_testing("yamllint"),
+                    verified_testing_ids=_testing("yamllint"),
+                    projection_ids=_projection(
+                        "yaml", "ansible", "github-actions", "gitlab_ci"
+                    ),
+                    verified_projection_ids=_projection("yaml"),
                 )
             ],
             default_order=10,
@@ -48,7 +65,14 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=YamlNoTabsConfig,
             rules=[
                 RuleBinding(
-                    rule_id="yaml-002", dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME")
+                    rule_id="yaml-002",
+                    dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
+                    testing_ids=_testing("yamllint"),
+                    verified_testing_ids=_testing("yamllint"),
+                    projection_ids=_projection(
+                        "yaml", "ansible", "github-actions", "gitlab_ci"
+                    ),
+                    verified_projection_ids=_projection("yaml"),
                 )
             ],
             default_order=20,
@@ -59,7 +83,14 @@ DETECTOR_MAP = LanguageDetectorMap(
             config_model=YamlDuplicateKeysConfig,
             rules=[
                 RuleBinding(
-                    rule_id="yaml-003", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                    rule_id="yaml-003",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("yamllint"),
+                    verified_testing_ids=_testing("yamllint"),
+                    projection_ids=_projection(
+                        "yaml", "ansible", "github-actions", "gitlab_ci"
+                    ),
+                    verified_projection_ids=_projection("yaml"),
                 )
             ],
             default_order=30,

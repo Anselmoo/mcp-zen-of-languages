@@ -78,7 +78,7 @@ already exist.
 ## Choosing thresholds
 
 !!! tip "Start relaxed, tighten over time"
-Begin with default thresholds. Run `zen report .` to see your baseline. Then lower limits on the detectors that matter most to your team.
+Begin with default thresholds. Run `zen reports .` to see your baseline. Then lower limits on the detectors that matter most to your team.
 
 | Strictness   | Cyclomatic complexity | Nesting depth | Function length | Good for                           |
 | ------------ | :-------------------: | :-----------: | :-------------: | ---------------------------------- |
@@ -112,8 +112,8 @@ For monorepos with multiple languages or packages:
 
 ```bash
 # Per-package config
-zen report packages/frontend --config packages/frontend/zen-config.yaml
-zen report packages/backend --config packages/backend/zen-config.yaml
+zen reports packages/frontend --config packages/frontend/zen-config.yaml
+zen reports packages/backend --config packages/backend/zen-config.yaml
 ```
 
 Each package can have its own thresholds — strict for new code, relaxed for legacy modules.

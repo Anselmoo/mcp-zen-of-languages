@@ -89,7 +89,7 @@ This guide starts with MCP workflows, then covers CLI usage, configuration, lang
     **Adding a language?** Go directly to [Languages](languages/index.md) to find your language's principles and detectors.
 
 === "Single repo"
-    Use one `zen-config.yaml` at the repository root and run `zen report .`.
+    Use one `zen-config.yaml` at the repository root and run `zen reports .`.
 
 === "Monorepo"
     Keep one config per package and pass `--config path/to/zen-config.yaml` from each CI job.

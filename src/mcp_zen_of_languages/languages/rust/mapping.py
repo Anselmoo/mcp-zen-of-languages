@@ -52,13 +52,6 @@ DETECTOR_MAP = LanguageDetectorMap(
     language="rust",
     bindings=[
         RuleDetectorBinding(
-            detector_id="rust_unwrap_usage",
-            detector_class=RustUnwrapUsageDetector,
-            config_model=RustUnwrapUsageConfig,
-            rules=[RuleBinding(rule_id="rust-001", dogma_ids=_dogmas("ZEN-FAIL-FAST"))],
-            default_order=10,
-        ),
-        RuleDetectorBinding(
             detector_id="rust-002",
             detector_class=RustTypeSafetyDetector,
             config_model=RustTypeSafetyConfig,
@@ -68,7 +61,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                     dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT", "ZEN-VISIBLE-STATE"),
                 )
             ],
-            default_order=15,
+            default_order=10,
         ),
         RuleDetectorBinding(
             detector_id="rust-003",
@@ -79,33 +72,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                     rule_id="rust-003", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
                 )
             ],
-            default_order=18,
-        ),
-        RuleDetectorBinding(
-            detector_id="rust_unsafe_blocks",
-            detector_class=RustUnsafeBlocksDetector,
-            config_model=RustUnsafeBlocksConfig,
-            rules=[RuleBinding(rule_id="rust-008", dogma_ids=_dogmas("ZEN-FAIL-FAST"))],
             default_order=20,
-        ),
-        RuleDetectorBinding(
-            detector_id="rust_clone_overhead",
-            detector_class=RustCloneOverheadDetector,
-            config_model=RustCloneOverheadConfig,
-            rules=[
-                RuleBinding(
-                    rule_id="rust-004",
-                    dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
-                )
-            ],
-            default_order=30,
-        ),
-        RuleDetectorBinding(
-            detector_id="rust_error_handling",
-            detector_class=RustErrorHandlingDetector,
-            config_model=RustErrorHandlingConfig,
-            rules=[RuleBinding(rule_id="rust-001", dogma_ids=_dogmas("ZEN-FAIL-FAST"))],
-            default_order=40,
         ),
         RuleDetectorBinding(
             detector_id="rust-005",
@@ -116,7 +83,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                     rule_id="rust-005", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
                 )
             ],
-            default_order=50,
+            default_order=30,
         ),
         RuleDetectorBinding(
             detector_id="rust-006",
@@ -127,7 +94,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                     rule_id="rust-006", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
                 )
             ],
-            default_order=60,
+            default_order=40,
         ),
         RuleDetectorBinding(
             detector_id="rust-007",
@@ -138,7 +105,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                     rule_id="rust-007", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
                 )
             ],
-            default_order=70,
+            default_order=50,
         ),
         RuleDetectorBinding(
             detector_id="rust-009",
@@ -149,7 +116,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                     rule_id="rust-009", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
                 )
             ],
-            default_order=80,
+            default_order=60,
         ),
         RuleDetectorBinding(
             detector_id="rust-010",
@@ -165,7 +132,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                     ),
                 )
             ],
-            default_order=90,
+            default_order=70,
         ),
         RuleDetectorBinding(
             detector_id="rust-011",
@@ -177,7 +144,7 @@ DETECTOR_MAP = LanguageDetectorMap(
                     dogma_ids=_dogmas("ZEN-VISIBLE-STATE", "ZEN-EXPLICIT-INTENT"),
                 )
             ],
-            default_order=100,
+            default_order=80,
         ),
         RuleDetectorBinding(
             detector_id="rust-012",
@@ -189,34 +156,19 @@ DETECTOR_MAP = LanguageDetectorMap(
                     dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-VISIBLE-STATE"),
                 )
             ],
-            default_order=110,
+            default_order=90,
         ),
         RuleDetectorBinding(
-            detector_id="rust_send_sync",
-            detector_class=RustSendSyncDetector,
-            config_model=RustSendSyncConfig,
-            rules=[
-                RuleBinding(rule_id="rust-013", dogma_ids=_dogmas("ZEN-VISIBLE-STATE"))
-            ],
-            default_order=120,
-        ),
-        RuleDetectorBinding(
-            detector_id="rust_error_traits",
-            detector_class=RustErrorTraitsDetector,
-            config_model=RustErrorTraitsConfig,
-            rules=[RuleBinding(rule_id="rust-014", dogma_ids=_dogmas("ZEN-FAIL-FAST"))],
-            default_order=130,
-        ),
-        RuleDetectorBinding(
-            detector_id="rust_naming",
-            detector_class=RustNamingDetector,
-            config_model=RustNamingConfig,
+            detector_id="rust_clone_overhead",
+            detector_class=RustCloneOverheadDetector,
+            config_model=RustCloneOverheadConfig,
             rules=[
                 RuleBinding(
-                    rule_id="rust-015", dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME")
+                    rule_id="rust-004",
+                    dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
                 )
             ],
-            default_order=140,
+            default_order=100,
         ),
         RuleDetectorBinding(
             detector_id="rust_default_impl",
@@ -228,7 +180,21 @@ DETECTOR_MAP = LanguageDetectorMap(
                     dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-VISIBLE-STATE"),
                 )
             ],
-            default_order=150,
+            default_order=110,
+        ),
+        RuleDetectorBinding(
+            detector_id="rust_error_handling",
+            detector_class=RustErrorHandlingDetector,
+            config_model=RustErrorHandlingConfig,
+            rules=[RuleBinding(rule_id="rust-001", dogma_ids=_dogmas("ZEN-FAIL-FAST"))],
+            default_order=120,
+        ),
+        RuleDetectorBinding(
+            detector_id="rust_error_traits",
+            detector_class=RustErrorTraitsDetector,
+            config_model=RustErrorTraitsConfig,
+            rules=[RuleBinding(rule_id="rust-014", dogma_ids=_dogmas("ZEN-FAIL-FAST"))],
+            default_order=130,
         ),
         RuleDetectorBinding(
             detector_id="rust_from_into",
@@ -239,7 +205,59 @@ DETECTOR_MAP = LanguageDetectorMap(
                     rule_id="rust-017", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
                 )
             ],
+            default_order=140,
+        ),
+        RuleDetectorBinding(
+            detector_id="rust_naming",
+            detector_class=RustNamingDetector,
+            config_model=RustNamingConfig,
+            rules=[
+                RuleBinding(
+                    rule_id="rust-015", dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME")
+                )
+            ],
+            default_order=150,
+        ),
+        RuleDetectorBinding(
+            detector_id="rust_send_sync",
+            detector_class=RustSendSyncDetector,
+            config_model=RustSendSyncConfig,
+            rules=[
+                RuleBinding(rule_id="rust-013", dogma_ids=_dogmas("ZEN-VISIBLE-STATE"))
+            ],
             default_order=160,
+        ),
+        RuleDetectorBinding(
+            detector_id="rust_unsafe_blocks",
+            detector_class=RustUnsafeBlocksDetector,
+            config_model=RustUnsafeBlocksConfig,
+            rules=[
+                RuleBinding(
+                    rule_id="rust-008",
+                    dogma_ids=_dogmas("ZEN-FAIL-FAST"),
+                    testing_ids=["cargo-test"],
+                    verified_testing_ids=["cargo-test"],
+                    projection_ids=["rust"],
+                    verified_projection_ids=["rust"],
+                )
+            ],
+            default_order=170,
+        ),
+        RuleDetectorBinding(
+            detector_id="rust_unwrap_usage",
+            detector_class=RustUnwrapUsageDetector,
+            config_model=RustUnwrapUsageConfig,
+            rules=[
+                RuleBinding(
+                    rule_id="rust-001",
+                    dogma_ids=_dogmas("ZEN-FAIL-FAST"),
+                    testing_ids=["cargo-test"],
+                    verified_testing_ids=["cargo-test"],
+                    projection_ids=["rust"],
+                    verified_projection_ids=["rust"],
+                )
+            ],
+            default_order=180,
         ),
     ],
 )

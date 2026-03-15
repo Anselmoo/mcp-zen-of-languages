@@ -66,13 +66,13 @@ Repository scans honor both `.gitignore` and `.zen-of-languages.ignore`.
 
 === "Markdown report"
     ```bash
-    zen report path/to/project --out report.md  # (1)!
+    zen reports path/to/project --out report.md  # (1)!
     ```
     1. Scans all supported files, groups violations by language and severity, and outputs a human-readable report.
 
 === "JSON export"
     ```bash
-    zen report path/to/project --export-json out/report.json
+    zen reports path/to/project --export-json out/report.json
     ```
     Structured output for CI artifacts, dashboards, or downstream automation.
 

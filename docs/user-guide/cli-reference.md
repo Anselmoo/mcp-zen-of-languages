@@ -26,7 +26,7 @@ The CLI executable is `zen`. It is the local/CI interface for the same analysis 
 |---------|--------|
 | `zen check` | Run zen analysis for a path with optional CI gating and machine output. |
 | `zen export-mapping` | Export rule-to-detector mappings as a Rich table or JSON payload. |
-| `zen init` | Interactively scaffold `zen-config.yaml`, ignore config, and VS Code integration. |
+| `zen init` | Interactively scaffold ``zen-config.yaml``, ignore config, and VS Code integration. |
 | `zen list-rules` | Display a table of zen rule IDs, severities, and principle texts. |
 | `zen prompts` | Turn analysis violations into actionable remediation prompts or agent tasks. |
 | `zen reports` | Generate a comprehensive analysis report for a file or directory. |
@@ -36,7 +36,7 @@ The CLI executable is `zen`. It is the local/CI interface for the same analysis 
 ### zen check {{ #check }}
 
 ```bash
-zen check <PATH> [--language <TEXT>] [--config <TEXT>] [--format terminal|json|sarif] [--out <TEXT>] [--fail-on-severity <INTEGER RANGE>] [--show-files] [--enable-external-tools] [--allow-temporary-runners]
+zen check <PATH> [--language <TEXT>] [--config <TEXT>] [--perspective all|zen|dogma|testing|projection] [--as <TEXT>] [--format terminal|json|sarif] [--out <TEXT>] [--fail-on-severity <INTEGER RANGE>] [--show-files] [--enable-external-tools] [--allow-temporary-runners]
 ```
 
 Run zen analysis for a path with optional CI gating and machine output.
@@ -47,6 +47,8 @@ Run zen analysis for a path with optional CI gating and machine output.
 |--------|---------|-------------|
 | `--language <TEXT>` | — | Override language detection |
 | `--config <TEXT>` | — | Path to zen-config.yaml |
+| `--perspective all|zen|dogma|testing|projection` | `all` | Perspective to render: all, zen, dogma, testing, or projection (projection requires --as) |
+| `--as <TEXT>` | — | Projection-family target used with --perspective projection |
 | `--format terminal|json|sarif` | `terminal` | Output format |
 | `--out <TEXT>` | — | Write output to file |
 | `--fail-on-severity <INTEGER RANGE>` | — | Exit with code 1 when any violation has severity >= this threshold |
@@ -54,14 +56,12 @@ Run zen analysis for a path with optional CI gating and machine output.
 | `--enable-external-tools` | — | Opt-in to run available external language tools (no auto-install; missing tools emit recommendations). |
 | `--allow-temporary-runners` | — | Allow temporary runner fallback (for example npx/uvx) when external tools are enabled. |
 
-**Returns:** int: Exit code ``0`` on success, ``1`` for severity-gated failure, and ``2`` for input/target errors.
-
 ---
 
 ### zen prompts {{ #prompts }}
 
 ```bash
-zen prompts <PATH> [--language <TEXT>] [--config <TEXT>] [--mode remediation|agent|both] [--export-prompts <TEXT>] [--export-agent <TEXT>] [--severity <INTEGER>] [--enable-external-tools] [--allow-temporary-runners]
+zen prompts <PATH> [--language <TEXT>] [--config <TEXT>] [--perspective all|zen|dogma|testing|projection] [--as <TEXT>] [--mode remediation|agent|both] [--export-prompts <TEXT>] [--export-agent <TEXT>] [--severity <INTEGER>] [--enable-external-tools] [--allow-temporary-runners]
 ```
 
 Turn analysis violations into actionable remediation prompts or agent tasks.
@@ -72,6 +72,8 @@ Turn analysis violations into actionable remediation prompts or agent tasks.
 |--------|---------|-------------|
 | `--language <TEXT>` | — | Override language detection |
 | `--config <TEXT>` | — | Path to zen-config.yaml |
+| `--perspective all|zen|dogma|testing|projection` | `all` | Perspective to render: all, zen, dogma, testing, or projection (projection requires --as) |
+| `--as <TEXT>` | — | Projection-family target used with --perspective projection |
 | `--mode remediation|agent|both` | `remediation` | Prompt generation mode |
 | `--export-prompts <TEXT>` | — | Write prompts markdown to file |
 | `--export-agent <TEXT>` | — | Write agent JSON to file |
@@ -79,14 +81,12 @@ Turn analysis violations into actionable remediation prompts or agent tasks.
 | `--enable-external-tools` | — | Opt-in to run available external language tools (no auto-install; missing tools emit recommendations). |
 | `--allow-temporary-runners` | — | Allow temporary runner fallback (for example npx/uvx) when external tools are enabled. |
 
-**Returns:** int: Process exit code — ``0`` on success, ``2`` on input errors.
-
 ---
 
 ### zen reports {{ #reports }}
 
 ```bash
-zen reports <PATH> [--language <TEXT>] [--config <TEXT>] [--format markdown|json|both|sarif] [--out <TEXT>] [--export-json <TEXT>] [--export-markdown <TEXT>] [--export-log <TEXT>] [--include-prompts] [--skip-analysis] [--skip-gaps]
+zen reports <PATH> [--language <TEXT>] [--config <TEXT>] [--perspective all|zen|dogma|testing|projection] [--as <TEXT>] [--format markdown|json|both|sarif] [--out <TEXT>] [--export-json <TEXT>] [--export-markdown <TEXT>] [--export-log <TEXT>] [--include-prompts] [--skip-analysis] [--skip-gaps]
 ```
 
 Generate a comprehensive analysis report for a file or directory.
@@ -97,6 +97,8 @@ Generate a comprehensive analysis report for a file or directory.
 |--------|---------|-------------|
 | `--language <TEXT>` | — | Override language detection |
 | `--config <TEXT>` | — | Path to zen-config.yaml |
+| `--perspective all|zen|dogma|testing|projection` | `all` | Perspective to render: all, zen, dogma, testing, or projection (projection requires --as) |
+| `--as <TEXT>` | — | Projection-family target used with --perspective projection |
 | `--format markdown|json|both|sarif` | `markdown` | Output format |
 | `--out <TEXT>` | — | Write output to file |
 | `--export-json <TEXT>` | — | Write report JSON to file |
@@ -105,8 +107,6 @@ Generate a comprehensive analysis report for a file or directory.
 | `--include-prompts` | — | Include remediation prompts |
 | `--skip-analysis` | — | Skip analysis details in report |
 | `--skip-gaps` | — | Skip gap analysis |
-
-**Returns:** int: Process exit code — ``0`` on success, ``2`` on input errors.
 
 ---
 
@@ -128,8 +128,6 @@ Export rule-to-detector mappings as a Rich table or JSON payload.
 | `--languages <TEXT>` | — | Filter by languages |
 | `--format terminal|json` | `terminal` | Output format |
 
-**Returns:** int: Process exit code — always ``0``.
-
 ---
 
 ### zen init {{ #init }}
@@ -138,7 +136,7 @@ Export rule-to-detector mappings as a Rich table or JSON payload.
 zen init [--force] [--yes] [--languages <TEXT>] [--strictness relaxed|moderate|strict]
 ```
 
-Interactively scaffold `zen-config.yaml`, ignore config, and VS Code integration.
+Interactively scaffold ``zen-config.yaml``, ignore config, and VS Code integration.
 
 **Options:**
 
@@ -149,8 +147,6 @@ Interactively scaffold `zen-config.yaml`, ignore config, and VS Code integration
 | `--languages <TEXT>` | — | Languages to include (repeatable) |
 | `--strictness relaxed|moderate|strict` | `moderate` | Strictness: relaxed|moderate|strict |
 
-**Returns:** int: Process exit code — ``0`` on success, ``2`` if the file exists without ``--force``.
-
 ---
 
 ### zen list-rules {{ #list-rules }}
@@ -160,8 +156,6 @@ zen list-rules <LANGUAGE>
 ```
 
 Display a table of zen rule IDs, severities, and principle texts.
-
-**Returns:** int: Process exit code — ``0`` on success, ``2`` if the language is unknown.
 
 ---
 

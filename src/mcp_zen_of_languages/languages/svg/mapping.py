@@ -96,7 +96,12 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=SvgInlineStyleDetector,
             config_model=SvgInlineStyleConfig,
             rules=[
-                RuleBinding(rule_id="svg-005", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
+                RuleBinding(
+                    rule_id="svg-005",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+                    projection_ids=["react", "nextjs", "vue"],
+                    verified_projection_ids=["react"],
+                )
             ],
             default_order=50,
         ),
@@ -182,6 +187,10 @@ DETECTOR_MAP = LanguageDetectorMap(
                         "ZEN-UNAMBIGUOUS-NAME",
                         "ZEN-STRICT-FENCES",
                     ),
+                    testing_ids=["xmllint"],
+                    verified_testing_ids=["xmllint"],
+                    projection_ids=["react", "nextjs", "vue"],
+                    verified_projection_ids=["react", "nextjs"],
                 )
             ],
             default_order=120,

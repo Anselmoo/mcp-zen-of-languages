@@ -16,6 +16,7 @@ from mcp_zen_of_languages.models import DogmaAnalysis
 from mcp_zen_of_languages.models import DogmaFinding
 from mcp_zen_of_languages.models import Metrics
 from mcp_zen_of_languages.models import PerspectiveMode
+from mcp_zen_of_languages.models import RulesSummary
 from mcp_zen_of_languages.models import Violation
 from mcp_zen_of_languages.perspectives import apply_perspective_to_result
 from mcp_zen_of_languages.perspectives import validate_perspective
@@ -107,12 +108,75 @@ def test_validate_perspective_rejects_projection_without_target() -> None:
         validate_perspective(PerspectiveMode.PROJECTION)
 
 
-def test_apply_testing_perspective_filters_to_pytest_rules() -> None:
+def test_apply_testing_perspective_filters_to_pytest_rules(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from mcp_zen_of_languages.analyzers import registry as registry_module
+
+    registry = DetectorRegistry()
+    registry.bootstrap_from_mappings()
+    monkeypatch.setattr(registry_module, "REGISTRY", registry)
     result = _build_result(path="tests/test_sample.py", language="python")
 
     filtered = apply_perspective_to_result(result, PerspectiveMode.TESTING)
 
     assert [violation.rule_id for violation in filtered.violations] == ["python-001"]
+    assert filtered.dogma_analysis is None
+
+
+def test_apply_testing_perspective_recomputes_summary_for_jest_overlay(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from mcp_zen_of_languages.analyzers import registry as registry_module
+
+    registry = DetectorRegistry()
+    registry.bootstrap_from_mappings()
+    monkeypatch.setattr(registry_module, "REGISTRY", registry)
+    result = AnalysisResult(
+        language="typescript",
+        path="ui/__tests__/button.test.ts",
+        metrics=Metrics(
+            cyclomatic=CyclomaticSummary(blocks=[], average=0.0),
+            maintainability_index=100.0,
+            lines_of_code=1,
+        ),
+        violations=[
+            Violation(
+                principle="Interface preference",
+                severity=7,
+                message="prefer interfaces",
+                detector_id="ts_interface_preference",
+                rule_id="ts-003",
+            ),
+            Violation(
+                principle="Legacy null checks",
+                severity=3,
+                message="manual null checks left in place",
+                detector_id="manual_null_checks",
+                rule_id="ts-999",
+            ),
+        ],
+        rules_summary=RulesSummary(high=1, low=1),
+        dogma_analysis=DogmaAnalysis(
+            findings=[
+                DogmaFinding(
+                    dogma_id="ZEN-EXPLICIT-INTENT",
+                    label="Explicit intent",
+                    severity=7,
+                ),
+            ],
+        ),
+        overall_score=95.0,
+    )
+
+    filtered = apply_perspective_to_result(result, PerspectiveMode.TESTING)
+
+    assert [violation.rule_id for violation in filtered.violations] == ["ts-003"]
+    assert filtered.rules_summary is not None
+    assert filtered.rules_summary.critical == 0
+    assert filtered.rules_summary.high == 1
+    assert filtered.rules_summary.medium == 0
+    assert filtered.rules_summary.low == 0
     assert filtered.dogma_analysis is None
 
 
@@ -123,7 +187,20 @@ def test_apply_testing_perspective_rejects_non_test_file() -> None:
         apply_perspective_to_result(result, PerspectiveMode.TESTING)
 
 
-def test_apply_testing_perspective_rejects_unconfigured_family() -> None:
+def test_apply_testing_perspective_rejects_unconfigured_family(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from mcp_zen_of_languages import perspectives as perspectives_module
+    from mcp_zen_of_languages.analyzers import registry as registry_module
+
+    registry = DetectorRegistry()
+    registry.bootstrap_from_mappings()
+    monkeypatch.setattr(registry_module, "REGISTRY", registry)
+    monkeypatch.setattr(
+        perspectives_module,
+        "detect_testing_family_overlay",
+        lambda language, path: "unconfigured-family",
+    )
     result = _build_result(path="foo_test.go", language="go")
 
     with pytest.raises(ValueError, match="not configured for language='go'"):
@@ -145,6 +222,66 @@ def test_apply_projection_perspective_filters_to_requested_family(
     )
 
     assert [violation.rule_id for violation in filtered.violations] == ["python-001"]
+    assert filtered.dogma_analysis is None
+
+
+def test_apply_projection_perspective_recomputes_summary_for_content_family(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from mcp_zen_of_languages.analyzers import registry as registry_module
+
+    registry = DetectorRegistry()
+    registry.bootstrap_from_mappings()
+    monkeypatch.setattr(registry_module, "REGISTRY", registry)
+    result = AnalysisResult(
+        language="css",
+        path="styles/button.css",
+        metrics=Metrics(
+            cyclomatic=CyclomaticSummary(blocks=[], average=0.0),
+            maintainability_index=100.0,
+            lines_of_code=1,
+        ),
+        violations=[
+            Violation(
+                principle="Logical properties",
+                severity=4,
+                message="prefer logical properties for component styles",
+                detector_id="css-001",
+                rule_id="css-001",
+            ),
+            Violation(
+                principle="Legacy naming",
+                severity=2,
+                message="keep a legacy BEM alias temporarily",
+                detector_id="legacy_css_rule",
+                rule_id="css-999",
+            ),
+        ],
+        rules_summary=RulesSummary(medium=1, low=1),
+        dogma_analysis=DogmaAnalysis(
+            findings=[
+                DogmaFinding(
+                    dogma_id="ZEN-RIGHT-ABSTRACTION",
+                    label="Right abstraction",
+                    severity=4,
+                ),
+            ],
+        ),
+        overall_score=95.0,
+    )
+
+    filtered = apply_perspective_to_result(
+        result,
+        PerspectiveMode.PROJECTION,
+        project_as="react",
+    )
+
+    assert [violation.rule_id for violation in filtered.violations] == ["css-001"]
+    assert filtered.rules_summary is not None
+    assert filtered.rules_summary.critical == 0
+    assert filtered.rules_summary.high == 0
+    assert filtered.rules_summary.medium == 1
+    assert filtered.rules_summary.low == 0
     assert filtered.dogma_analysis is None
 
 

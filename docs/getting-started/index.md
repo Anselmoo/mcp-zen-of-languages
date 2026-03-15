@@ -27,7 +27,7 @@ You'll go from zero to your first analysis in under two minutes. The path is sim
 
     ---
 
-    Run `zen init` and `zen report` to see your first violations, severities, and remediation prompts.
+    Run `zen init` and `zen reports` to see your first violations, severities, and remediation prompts.
 
     [Quickstart](quickstart.md)
 

@@ -33,32 +33,32 @@ def _dogmas(*dogma_ids: str) -> list[str]:
     return list(dogma_ids)
 
 
+def _testing(*testing_ids: str) -> list[str]:
+    """Return explicit testing family ids for the binding."""
+    return list(testing_ids)
+
+
+def _projection(*projection_ids: str) -> list[str]:
+    """Return explicit projection family ids for the binding."""
+    return list(projection_ids)
+
+
 DETECTOR_MAP = LanguageDetectorMap(
     language="nextjs",
     bindings=[
         RuleDetectorBinding(
-            detector_id="nextjs-003",
-            detector_class=NextjsAppRouterDetector,
-            config_model=_rule_config("nextjs-003"),
+            detector_id="nextjs-001",
+            detector_class=NextjsLinkDetector,
+            config_model=_rule_config("nextjs-001"),
             rules=[
                 RuleBinding(
-                    rule_id="nextjs-003",
+                    rule_id="nextjs-001",
                     dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("nextjs"),
                 )
             ],
             default_order=10,
-        ),
-        RuleDetectorBinding(
-            detector_id="nextjs-004",
-            detector_class=NextjsErrorResponseDetector,
-            config_model=_rule_config("nextjs-004"),
-            rules=[
-                RuleBinding(
-                    rule_id="nextjs-004",
-                    dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-FAIL-FAST"),
-                )
-            ],
-            default_order=20,
         ),
         RuleDetectorBinding(
             detector_id="nextjs-002",
@@ -68,18 +68,36 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="nextjs-002",
                     dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("nextjs"),
+                )
+            ],
+            default_order=20,
+        ),
+        RuleDetectorBinding(
+            detector_id="nextjs-003",
+            detector_class=NextjsAppRouterDetector,
+            config_model=_rule_config("nextjs-003"),
+            rules=[
+                RuleBinding(
+                    rule_id="nextjs-003",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("nextjs"),
                 )
             ],
             default_order=30,
         ),
         RuleDetectorBinding(
-            detector_id="nextjs-001",
-            detector_class=NextjsLinkDetector,
-            config_model=_rule_config("nextjs-001"),
+            detector_id="nextjs-004",
+            detector_class=NextjsErrorResponseDetector,
+            config_model=_rule_config("nextjs-004"),
             rules=[
                 RuleBinding(
-                    rule_id="nextjs-001",
-                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-EXPLICIT-INTENT"),
+                    rule_id="nextjs-004",
+                    dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-FAIL-FAST"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("nextjs"),
                 )
             ],
             default_order=40,
@@ -92,6 +110,8 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="nextjs-005",
                     dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("nextjs"),
                 )
             ],
             default_order=50,

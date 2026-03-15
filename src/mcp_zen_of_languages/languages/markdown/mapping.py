@@ -44,7 +44,12 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=MarkdownHeadingHierarchyDetector,
             config_model=MarkdownHeadingHierarchyConfig,
             rules=[
-                RuleBinding(rule_id="md-001", dogma_ids=_dogmas("ZEN-RETURN-EARLY"))
+                RuleBinding(
+                    rule_id="md-001",
+                    dogma_ids=_dogmas("ZEN-RETURN-EARLY"),
+                    testing_ids=["markdownlint"],
+                    verified_testing_ids=["markdownlint"],
+                )
             ],
             default_order=10,
         ),
@@ -53,7 +58,12 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=MarkdownAltTextDetector,
             config_model=MarkdownAltTextConfig,
             rules=[
-                RuleBinding(rule_id="md-002", dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"))
+                RuleBinding(
+                    rule_id="md-002",
+                    dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
+                    testing_ids=["markdownlint"],
+                    verified_testing_ids=["markdownlint"],
+                )
             ],
             default_order=20,
         ),
@@ -62,7 +72,12 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=MarkdownBareUrlDetector,
             config_model=MarkdownBareUrlConfig,
             rules=[
-                RuleBinding(rule_id="md-003", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
+                RuleBinding(
+                    rule_id="md-003",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+                    testing_ids=["markdownlint"],
+                    verified_testing_ids=["markdownlint"],
+                )
             ],
             default_order=30,
         ),
@@ -74,6 +89,8 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="md-004",
                     dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME", "ZEN-EXPLICIT-INTENT"),
+                    testing_ids=["markdownlint"],
+                    verified_testing_ids=["markdownlint"],
                 )
             ],
             default_order=40,
@@ -83,7 +100,12 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=MarkdownFrontMatterDetector,
             config_model=MarkdownFrontMatterConfig,
             rules=[
-                RuleBinding(rule_id="md-005", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
+                RuleBinding(
+                    rule_id="md-005",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+                    projection_ids=["react", "nextjs"],
+                    verified_projection_ids=["nextjs"],
+                )
             ],
             default_order=50,
         ),
@@ -95,6 +117,8 @@ DETECTOR_MAP = LanguageDetectorMap(
                 RuleBinding(
                     rule_id="md-006",
                     dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT", "ZEN-UNAMBIGUOUS-NAME"),
+                    projection_ids=["react", "nextjs"],
+                    verified_projection_ids=["nextjs"],
                 )
             ],
             default_order=60,
@@ -104,7 +128,12 @@ DETECTOR_MAP = LanguageDetectorMap(
             detector_class=MarkdownMdxImportHygieneDetector,
             config_model=MarkdownMdxImportHygieneConfig,
             rules=[
-                RuleBinding(rule_id="md-007", dogma_ids=_dogmas("ZEN-STRICT-FENCES"))
+                RuleBinding(
+                    rule_id="md-007",
+                    dogma_ids=_dogmas("ZEN-STRICT-FENCES"),
+                    projection_ids=["react", "nextjs"],
+                    verified_projection_ids=["nextjs"],
+                )
             ],
             default_order=70,
         ),

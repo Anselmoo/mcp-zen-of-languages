@@ -15,7 +15,7 @@ python.
 │ 📄 Target: tests/fixtures/cli_docs/tests/test_perspective_example.py │
 │ Languages: python                                                    │
 ╰──────────────────────────────────────────────────────────────────────╯
-                                        Summary  
+                                        Summary
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ Total files                                         ┃ 1                              ┃
 ┃ Total violations                                    ┃ 1                              ┃

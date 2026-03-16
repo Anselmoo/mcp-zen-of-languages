@@ -444,7 +444,7 @@ def test_reports_command_outputs_markdown(tmp_path, capsys):
         ("reports", []),
     ],
 )
-def test_cli_commands_reject_unimplemented_dogma_perspective(
+def test_cli_commands_accept_dogma_perspective(
     tmp_path,
     capsys,
     command,
@@ -455,9 +455,9 @@ def test_cli_commands_reject_unimplemented_dogma_perspective(
     exit_code = cli.main(
         [command, str(sample), "--perspective", "dogma", *extra_args],
     )
-    assert exit_code == 2
+    assert exit_code == 0
     captured = capsys.readouterr()
-    assert "Perspective 'dogma'" in captured.err
+    assert "Perspective 'dogma'" not in captured.err
 
 
 @pytest.mark.parametrize(

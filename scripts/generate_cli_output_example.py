@@ -67,7 +67,7 @@ def _run_cli_example() -> str:
             f"stdout:\n{result.stdout}\n\nstderr:\n{result.stderr}"
         )
         raise RuntimeError(msg)
-    return result.stdout.rstrip()
+    return "\n".join(line.rstrip() for line in result.stdout.rstrip().splitlines())
 
 
 def generate() -> str:

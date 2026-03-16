@@ -339,14 +339,18 @@ async def test_generate_report_tool_zen_perspective_omits_dogma_sections(tmp_pat
 
 
 @pytest.mark.asyncio
-async def test_generate_report_tool_rejects_unimplemented_dogma_perspective(tmp_path):
+async def test_generate_report_tool_dogma_perspective_includes_dogma_sections(
+    tmp_path,
+):
     sample = tmp_path / "sample.py"
-    sample.write_text("def foo():\n    pass\n", encoding="utf-8")
-    with pytest.raises(ValueError, match="Perspective 'dogma'"):
-        await server.generate_report_tool.fn(
-            str(sample),
-            perspective=PerspectiveMode.DOGMA,
-        )
+    sample.write_text("from math import *\n", encoding="utf-8")
+    report = await server.generate_report_tool.fn(
+        str(sample),
+        perspective=PerspectiveMode.DOGMA,
+    )
+    assert "Universal Dogmas" in report.markdown
+    assert report.data["dogmas"]
+    assert report.data["dogma_domains"]
 
 
 @pytest.mark.asyncio

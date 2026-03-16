@@ -1,8 +1,7 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 from typing import Literal
-
-import pytest
 
 from mcp_zen_of_languages.analyzers.base import ViolationDetector
 from mcp_zen_of_languages.analyzers.mapping_models import BindingPerspectiveBundle
@@ -23,6 +22,10 @@ from mcp_zen_of_languages.reporting.prompts import GENERIC_PROMPTS_BY_LANGUAGE
 from mcp_zen_of_languages.reporting.prompts import build_prompt_bundle
 from mcp_zen_of_languages.reporting.report import generate_report
 from mcp_zen_of_languages.rules import get_all_languages
+
+
+if TYPE_CHECKING:
+    import pytest
 
 
 class DummyConfig(DetectorConfig):
@@ -170,11 +173,17 @@ def test_generate_report_zen_perspective_omits_dogma_sections(tmp_path):
     assert report.data["dogma_domains"] == []
 
 
-def test_generate_report_rejects_unimplemented_dogma_perspective(tmp_path):
+def test_generate_report_dogma_perspective_includes_dogma_sections(tmp_path):
     sample = tmp_path / "sample.py"
-    sample.write_text("def foo():\n    pass\n", encoding="utf-8")
-    with pytest.raises(ValueError, match="Perspective 'dogma'"):
-        generate_report(str(sample), perspective=PerspectiveMode.DOGMA)
+    sample.write_text("from math import *\n", encoding="utf-8")
+
+    report = generate_report(str(sample), perspective=PerspectiveMode.DOGMA)
+
+    assert "Universal Dogmas" in report.markdown
+    assert "Universal Dogma Domains" in report.markdown
+    assert report.data["dogmas"]
+    assert report.data["dogma_domains"]
+    assert report.data["analysis"][0]["violations"]
 
 
 def test_generate_report_testing_perspective_filters_to_testing_rules(tmp_path):

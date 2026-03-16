@@ -81,6 +81,7 @@ runtime:
 
 - `all` — full rule-first result with every surfaced violation
 - `zen` — rule-level result without dogma-analysis payloads
+- `dogma` — dogma-focused result with universal dogma analysis preserved
 - `testing` — violations linked to the detected testing family for matching test files
 - `projection` — violations linked to an explicit projection-family target supplied with `--as`
 
@@ -89,10 +90,10 @@ zen reports tests --perspective testing --out testing-only.md
 zen reports src/frontend --language react --perspective projection --as nextjs
 ```
 
-!!! warning "Current limitation"
-    `--perspective dogma` is intentionally rejected today. The standalone
-    dogma-only runtime has not been implemented yet, even though `dogma`
-    remains a reserved perspective name.
+!!! info "Dogma perspective is available"
+    `--perspective dogma` is now runnable. It keeps universal dogma analysis
+    attached and filters the projected result down to dogma-relevant
+    violations.
 
 ## What project analysis reveals
 

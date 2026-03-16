@@ -99,6 +99,10 @@ def test_validate_perspective_accepts_testing() -> None:
     validate_perspective(PerspectiveMode.TESTING)
 
 
+def test_validate_perspective_accepts_dogma() -> None:
+    validate_perspective(PerspectiveMode.DOGMA)
+
+
 def test_validate_perspective_accepts_projection_with_target() -> None:
     validate_perspective(PerspectiveMode.PROJECTION, project_as="go")
 
@@ -205,6 +209,49 @@ def test_apply_testing_perspective_rejects_unconfigured_family(
 
     with pytest.raises(ValueError, match="not configured for language='go'"):
         apply_perspective_to_result(result, PerspectiveMode.TESTING)
+
+
+def test_apply_dogma_perspective_filters_to_dogma_relevant_violations() -> None:
+    result = AnalysisResult(
+        language="python",
+        path="sample.py",
+        metrics=Metrics(
+            cyclomatic=CyclomaticSummary(blocks=[], average=0.0),
+            maintainability_index=100.0,
+            lines_of_code=1,
+        ),
+        violations=[
+            Violation(
+                principle="Errors should never pass silently.",
+                severity=9,
+                message="Bare except swallows exception handling.",
+                detector_id="bare_except",
+                rule_id="python-009",
+            ),
+            Violation(
+                principle="Blorb",
+                severity=2,
+                message="snorf wobble",
+                rule_id="python-999",
+            ),
+        ],
+        rules_summary=RulesSummary(critical=1, low=1),
+        overall_score=95.0,
+    )
+
+    filtered = apply_perspective_to_result(result, PerspectiveMode.DOGMA)
+
+    assert [violation.rule_id for violation in filtered.violations] == ["python-009"]
+    assert filtered.rules_summary is not None
+    assert filtered.rules_summary.critical == 1
+    assert filtered.rules_summary.high == 0
+    assert filtered.rules_summary.medium == 0
+    assert filtered.rules_summary.low == 0
+    assert filtered.dogma_analysis is not None
+    assert {finding.dogma_id for finding in filtered.dogma_analysis.findings} >= {
+        "ZEN-FAIL-FAST",
+        "ZEN-EXPLICIT-INTENT",
+    }
 
 
 def test_apply_projection_perspective_filters_to_requested_family(

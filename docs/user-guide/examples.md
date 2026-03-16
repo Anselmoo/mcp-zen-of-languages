@@ -96,9 +96,10 @@ Use `projection` when you want to view the subset of rule bindings that were
 authored for another family target. The `--as` value is required because
 projection is driven by explicit family bindings, not by file-path detection.
 
-!!! warning "Standalone dogma is not runnable yet"
-    `dogma` remains a reserved perspective name, but the dedicated dogma-only
-    runtime is not implemented. Use `all` or `zen` today.
+!!! info "Standalone dogma is runnable"
+    `dogma` is now a first-class perspective. Use it when you want a
+    dogma-focused result that keeps universal dogma analysis and filters out
+    non-dogma violations.
 
 ## Prompt generation
 

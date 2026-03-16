@@ -24,12 +24,6 @@ def validate_perspective(
     project_as: str | None = None,
 ) -> None:
     """Reject perspective values that do not have explicit behavior yet."""
-    if perspective == PerspectiveMode.DOGMA:
-        msg = (
-            "Perspective 'dogma' requires a dedicated dogma-only analysis "
-            "pipeline and is not implemented yet."
-        )
-        raise ValueError(msg)
     if perspective == PerspectiveMode.PROJECTION and (
         project_as is None or not project_as.strip()
     ):
@@ -162,6 +156,29 @@ def _matches_projection_family(
     return matched
 
 
+def _apply_dogma_perspective(result: AnalysisResult) -> AnalysisResult:
+    """Project one result into the dogma-focused view."""
+    from mcp_zen_of_languages.dogmas.interface import attach_dogma_analysis
+
+    enriched = attach_dogma_analysis(result.model_copy(update={"dogma_analysis": None}))
+    filtered = enriched.model_copy(
+        update={
+            "violations": [
+                violation
+                for violation in enriched.violations
+                if violation.linked_dogma_ids
+                or violation.verified_dogma_ids
+                or violation.universal_dogma_ids
+            ],
+            "dogma_analysis": None,
+        }
+    )
+    projected = attach_dogma_analysis(filtered)
+    return projected.model_copy(
+        update={"rules_summary": _summarize_violations(projected)}
+    )
+
+
 def apply_perspective_to_result(
     result: AnalysisResult,
     perspective: PerspectiveMode,
@@ -169,6 +186,8 @@ def apply_perspective_to_result(
     project_as: str | None = None,
 ) -> AnalysisResult:
     """Return the analysis result filtered for the selected perspective."""
+    if perspective == PerspectiveMode.DOGMA:
+        return _apply_dogma_perspective(result)
     if perspective == PerspectiveMode.ZEN:
         return result.model_copy(update={"dogma_analysis": None})
     if perspective == PerspectiveMode.TESTING:

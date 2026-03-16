@@ -194,14 +194,13 @@ For full parameter and return schemas, see the
 
 ## Perspective-aware MCP requests
 
-The current runtime supports four usable public perspectives:
+The current runtime supports five public perspectives:
 
 - `all` — full rule-first result
 - `zen` — rule-level result without dogma-analysis payloads
+- `dogma` — dogma-focused result with universal dogma analysis preserved
 - `testing` — test-family view resolved from real file paths
 - `projection` — explicit family projection driven by `project_as`
-
-`dogma` remains reserved but is **not** a runnable standalone perspective yet.
 
 ### Repository or report target
 

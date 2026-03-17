@@ -373,7 +373,7 @@ def render_dogma_spec() -> str:
         " — how dogmas drive detector and pipeline design"
     )
     lines.append(
-        "- [Languages](../languages/index.md)"
+        "- [Languages](../languages/_index.md)"
         " — per-language principles derived from these dogmas"
     )
     lines.append(

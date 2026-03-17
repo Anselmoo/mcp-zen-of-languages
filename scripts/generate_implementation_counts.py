@@ -18,8 +18,8 @@ from mcp_zen_of_languages.rules import get_language_zen
 
 
 README_PATH = Path("README.md")
-DOCS_INDEX_PATH = Path("docs/index.md")
-LANGUAGES_INDEX_PATH = Path("docs/user-guide/languages/index.md")
+DOCS_INDEX_PATH = Path("docs/_index.md")
+LANGUAGES_INDEX_PATH = Path("docs/user-guide/languages/_index.md")
 HOME_TEMPLATE_PATH = Path("docs/overrides/main.html")
 COUNTS_MD_PATH = Path("docs/includes/generated/implementation-counts.md")
 COUNTS_JSON_PATH = Path("docs/includes/generated/implementation-counts.json")

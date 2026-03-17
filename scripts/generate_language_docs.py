@@ -823,7 +823,7 @@ def render_config_formats_page(_env: Environment) -> str:  # noqa: C901, PLR0912
 
 
 def render_index_page() -> str:
-    """Render the index.md 'At a Glance' page from live data."""
+    """Render the _index.md 'At a Glance' page from live data."""
     programming_rows: list[tuple[str, str, int, int, str, str, str]] = []
     workflow_rows: list[tuple[str, str, int, int, str, str, str]] = []
 
@@ -1142,7 +1142,7 @@ def main() -> int:  # noqa: C901, PLR0912, PLR0915
     # Render index page
     if not args.lang:
         output = render_index_page()
-        out_path = LANGUAGE_DOCS_DIR / "index.md"
+        out_path = LANGUAGE_DOCS_DIR / "_index.md"
         if args.check:
             if not out_path.exists() or out_path.read_text() != output:
                 changed.append(str(out_path))

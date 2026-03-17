@@ -32,7 +32,7 @@ tags:
     Per-language zen principles derived from official style guides and
     community best practices — each one mapping to a universal dogma.
 
-    [Languages](../languages/index.md)
+    [Languages](../languages/_index.md)
 
 </div>
 
@@ -45,7 +45,7 @@ Universal Dogma  (cross-language, 10 total)
                     └── Violation  (reported in analysis results)
 ```
 
-Each [language principle](../languages/index.md) carries a `dogma` field that
+Each [language principle](../languages/_index.md) carries a `dogma` field that
 links it back to one or more of the [10 universal dogmas](the-ten-dogmas.md).
 This lets MCP clients and AI agents trace every violation back to a fundamental
 quality contract.
@@ -68,6 +68,6 @@ quality contract.
 ## See Also
 
 - [The 10 Dogmas](the-ten-dogmas.md) — full reference with rationale and anti-patterns
-- [Languages](../languages/index.md) — per-language principles and detector counts
+- [Languages](../languages/_index.md) — per-language principles and detector counts
 - [Philosophy](../../getting-started/philosophy.md) — the motivation behind the rules system
 - [Architecture](../../contributing/architecture.md) — how dogmas drive detector design

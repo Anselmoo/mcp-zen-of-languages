@@ -90,4 +90,4 @@ If your detector changes what users see in terminal output:
 
 - [Architecture](architecture.md) — How detectors fit into the pipeline
 - [Adding a Language](adding-language.md) — Full language module setup
-- [Languages](../user-guide/languages/index.md) — See existing detectors for reference
+- [Languages](../user-guide/languages/_index.md) — See existing detectors for reference

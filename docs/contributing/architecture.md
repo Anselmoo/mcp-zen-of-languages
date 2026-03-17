@@ -185,4 +185,4 @@ at inference time by keyword scanning of violation and pattern descriptions.
 - [Adding a Detector](adding-detector.md) — Create a Strategy class and register it
 - [Philosophy](../getting-started/philosophy.md) — The architectural-coaching approach and motivation
 - [The 10 Dogmas](../user-guide/rules/the-ten-dogmas.md) — Full dogma reference with rationale and anti-patterns
-- [Languages](../user-guide/languages/index.md) — See programming, workflow, and config coverage at a glance
+- [Languages](../user-guide/languages/_index.md) — See programming, workflow, and config coverage at a glance

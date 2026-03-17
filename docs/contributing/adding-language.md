@@ -146,4 +146,4 @@ uv run pytest                                        # All tests
 
 - [Architecture](architecture.md) — How the patterns connect
 - [Adding a Detector](adding-detector.md) — Focused guide for single detectors
-- [Languages](../user-guide/languages/index.md) — Existing language implementations for reference
+- [Languages](../user-guide/languages/_index.md) — Existing language implementations for reference

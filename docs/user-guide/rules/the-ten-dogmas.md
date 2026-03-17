@@ -183,5 +183,5 @@ The tables below are **auto-generated** from the codebase's explicit rule-to-dog
 
 - [Philosophy](../../getting-started/philosophy.md) — motivation and the architectural-coaching approach
 - [Architecture](../../contributing/architecture.md) — how dogmas drive detector and pipeline design
-- [Languages](../languages/index.md) — per-language principles derived from these dogmas
+- [Languages](../languages/_index.md) — per-language principles derived from these dogmas
 - [Understanding Violations](../understanding-violations.md) — severity scores, worked examples, and the MCP workflow

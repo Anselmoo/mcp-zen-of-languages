@@ -10,6 +10,7 @@ from __future__ import annotations
 from mcp_zen_of_languages.models import AnalysisResult
 from mcp_zen_of_languages.models import PerspectiveMode
 from mcp_zen_of_languages.models import RulesSummary
+from mcp_zen_of_languages.models import Violation
 from mcp_zen_of_languages.utils.language_detection import detect_testing_family_overlay
 
 
@@ -55,6 +56,50 @@ def _summarize_violations(result: AnalysisResult) -> RulesSummary | None:
         else:
             summary["low"] += 1
     return RulesSummary(**summary)
+
+
+def _dedupe_ids(values: list[str]) -> list[str]:
+    """Preserve first-seen order while removing duplicate ids."""
+    return list(dict.fromkeys(values))
+
+
+def _registry_dogma_ids_for_violation(
+    result: AnalysisResult,
+    violation: Violation,
+) -> tuple[list[str], list[str]]:
+    """Resolve dogma ids for one violation directly from the authored registry seam."""
+    from mcp_zen_of_languages.analyzers.registry import REGISTRY
+
+    if violation.rule_id is None:
+        return [], []
+
+    linked_ids: list[str] = []
+    verified_ids: list[str] = []
+    for dogma_model in REGISTRY.dogma_models_for_rule(
+        violation.rule_id, result.language
+    ):
+        linked_ids.extend(dogma_model.dogma_ids_for_rule(violation.rule_id))
+        verified_ids.extend(dogma_model.verified_dogma_ids_for_rule(violation.rule_id))
+    return _dedupe_ids(linked_ids), _dedupe_ids(verified_ids)
+
+
+def resolve_linked_dogma_ids(
+    result: AnalysisResult,
+    violation: Violation,
+) -> list[str]:
+    """Return linked dogma ids using enriched fields first and registry metadata as a seam."""
+    registry_linked_ids, _ = _registry_dogma_ids_for_violation(result, violation)
+    linked_ids = list(violation.linked_dogma_ids or violation.universal_dogma_ids)
+    return _dedupe_ids([*linked_ids, *registry_linked_ids])
+
+
+def resolve_verified_dogma_ids(
+    result: AnalysisResult,
+    violation: Violation,
+) -> list[str]:
+    """Return verified dogma ids using enriched fields first and registry metadata as a seam."""
+    _, registry_verified_ids = _registry_dogma_ids_for_violation(result, violation)
+    return _dedupe_ids([*violation.verified_dogma_ids, *registry_verified_ids])
 
 
 def _resolve_testing_family(result: AnalysisResult) -> str:
@@ -166,9 +211,8 @@ def _apply_dogma_perspective(result: AnalysisResult) -> AnalysisResult:
             "violations": [
                 violation
                 for violation in enriched.violations
-                if violation.linked_dogma_ids
-                or violation.verified_dogma_ids
-                or violation.universal_dogma_ids
+                if resolve_linked_dogma_ids(enriched, violation)
+                or resolve_verified_dogma_ids(enriched, violation)
             ],
             "dogma_analysis": None,
         }

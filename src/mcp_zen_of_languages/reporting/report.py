@@ -44,6 +44,8 @@ from mcp_zen_of_languages.orchestration import (
     collect_targets as _shared_collect_targets,
 )
 from mcp_zen_of_languages.perspectives import apply_perspective_to_result
+from mcp_zen_of_languages.perspectives import resolve_linked_dogma_ids
+from mcp_zen_of_languages.perspectives import resolve_verified_dogma_ids
 from mcp_zen_of_languages.perspectives import validate_perspective
 from mcp_zen_of_languages.reporting.gaps import build_gap_analysis
 from mcp_zen_of_languages.reporting.models import AnalysisSummary
@@ -414,9 +416,8 @@ def _format_analysis_markdown(results: list[AnalysisResult]) -> list[str]:
             [
                 str(violation.severity),
                 violation.principle,
-                ", ".join(violation.linked_dogma_ids or violation.universal_dogma_ids)
-                or "-",
-                ", ".join(violation.verified_dogma_ids) or "-",
+                ", ".join(resolve_linked_dogma_ids(result, violation)) or "-",
+                ", ".join(resolve_verified_dogma_ids(result, violation)) or "-",
                 violation.message,
                 violation.suggestion or "-",
             ]

@@ -169,6 +169,12 @@ class DetectorRegistry:
         self._bundle_rule_index: (
             dict[tuple[str, str], list[BindingPerspectiveBundle]] | None
         ) = None
+        self._dogma_rule_index: (
+            dict[tuple[str, str], list[DogmaPerspectiveModel]] | None
+        ) = None
+        self._dogma_family_index: (
+            dict[tuple[str, str], list[DogmaPerspectiveModel]] | None
+        ) = None
         self._testing_rule_index: (
             dict[tuple[str, str], list[TestingPerspectiveModel]] | None
         ) = None
@@ -215,6 +221,8 @@ class DetectorRegistry:
         self._config_adapter = None
         self._rule_index = None
         self._bundle_rule_index = None
+        self._dogma_rule_index = None
+        self._dogma_family_index = None
         self._testing_rule_index = None
         self._projection_rule_index = None
         self._testing_family_index = None
@@ -470,21 +478,45 @@ class DetectorRegistry:
                 self._rule_index.setdefault(key, []).append(meta)
                 self._bundle_rule_index.setdefault(key, []).append(bundle)
 
+    def _index_dogma_model(
+        self,
+        *,
+        language: str,
+        model: DogmaPerspectiveModel,
+    ) -> None:
+        """Index one dogma perspective model by rule id and dogma family id."""
+        merged_rule_map = self._merge_named_rule_maps(
+            model.dogma_rule_map,
+            model.dogma_verified_rule_map,
+        )
+        for dogma_id, rule_ids in merged_rule_map.items():
+            family_key = (language, dogma_id)
+            self._dogma_family_index.setdefault(family_key, []).append(model)
+            for rule_id in rule_ids:
+                rule_key = (language, rule_id)
+                self._dogma_rule_index.setdefault(rule_key, []).append(model)
+
     def _ensure_family_indexes(self) -> None:
         """Build lazy family indexes from preserved bundle metadata only."""
         if (
-            self._testing_rule_index is not None
+            self._dogma_rule_index is not None
+            and self._dogma_family_index is not None
+            and self._testing_rule_index is not None
             and self._projection_rule_index is not None
             and self._testing_family_index is not None
             and self._projection_family_index is not None
         ):
             return
 
+        self._dogma_rule_index = {}
+        self._dogma_family_index = {}
         self._testing_rule_index = {}
         self._projection_rule_index = {}
         self._testing_family_index = {}
         self._projection_family_index = {}
         for (language, _detector_id), bundle in self._bundles.items():
+            if bundle.dogma_model is not None:
+                self._index_dogma_model(language=language, model=bundle.dogma_model)
             if bundle.testing_model is not None:
                 for (
                     testing_id,
@@ -645,11 +677,17 @@ class DetectorRegistry:
         language: str,
     ) -> list[DogmaPerspectiveModel]:
         """Return preserved dogma-family models for one rule in one language."""
-        return [
-            bundle.dogma_model
-            for bundle in self.bundles_for_rule(rule_id, language)
-            if bundle.dogma_model is not None
-        ]
+        self._ensure_family_indexes()
+        return list(self._dogma_rule_index.get((language, rule_id), []))
+
+    def dogma_models_for_family(
+        self,
+        dogma_id: str,
+        language: str,
+    ) -> list[DogmaPerspectiveModel]:
+        """Return preserved dogma-family models for one dogma id."""
+        self._ensure_family_indexes()
+        return list(self._dogma_family_index.get((language, dogma_id), []))
 
     def testing_models_for_rule(
         self,

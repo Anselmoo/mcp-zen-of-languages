@@ -114,6 +114,18 @@ ONBOARDING_TOOL_ICONS = [
         mimeType="image/svg+xml",
     ),
 ]
+
+
+def main() -> None:
+    """Start the FastMCP server with stdio transport.
+
+    This mirrors ``mcp_zen_of_languages.__main__.main`` so packaging can expose
+    a dedicated ``mcp-zen-of-languages-server`` console script without adding a
+    separate runtime path.
+    """
+    mcp.run()
+
+
 RESOURCE_ICONS = [
     Icon(
         src="https://anselmoo.github.io/mcp-zen-of-languages/assets/icons/resource.svg",

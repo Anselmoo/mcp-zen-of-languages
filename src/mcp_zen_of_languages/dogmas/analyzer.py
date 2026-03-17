@@ -52,6 +52,56 @@ def _verified_dogma_ids(violation: object) -> list[str]:
     return list(verified) if isinstance(verified, list) else []
 
 
+def _dogma_ids_from_registry_models(
+    *,
+    language: str,
+    rule_id: str | None,
+    verified: bool = False,
+) -> list[str]:
+    """Resolve dogma ids directly from preserved dogma-perspective indexes."""
+    if not isinstance(rule_id, str) or not rule_id:
+        return []
+
+    from mcp_zen_of_languages.analyzers.registry import REGISTRY
+
+    REGISTRY.bootstrap_from_mappings()
+    dogma_models = REGISTRY.dogma_models_for_rule(rule_id, language)
+    if verified:
+        return _dedupe(
+            dogma_id
+            for model in dogma_models
+            for dogma_id in model.verified_dogma_ids_for_rule(rule_id)
+        )
+    return _dedupe(
+        dogma_id
+        for model in dogma_models
+        for dogma_id in model.dogma_ids_for_rule(rule_id)
+    )
+
+
+def _verified_dogma_ids_from_family_indexes(
+    *,
+    language: str,
+    rule_id: str | None,
+    linked_dogma_ids: list[str],
+) -> list[str]:
+    """Resolve verified dogma ids by checking linked families against family indexes."""
+    if not isinstance(rule_id, str) or not rule_id:
+        return []
+
+    from mcp_zen_of_languages.analyzers.registry import REGISTRY
+
+    REGISTRY.bootstrap_from_mappings()
+    return [
+        dogma_id
+        for dogma_id in linked_dogma_ids
+        if any(
+            rule_id in model.verified_rule_ids_for_dogma(dogma_id)
+            for model in REGISTRY.dogma_models_for_family(dogma_id, language)
+        )
+    ]
+
+
 def _bundle_dogma_ids(
     *,
     language: str,
@@ -109,49 +159,68 @@ class UniversalDogmaAnalyzer:
 
     def enrich_result(self, result: AnalysisResult) -> AnalysisResult:
         """Attach linked and verified dogma ids to violations before analysis."""
-        enriched_violations = [
-            violation.model_copy(
-                update={
-                    "linked_dogma_ids": _dedupe(
-                        [
-                            *_linked_dogma_ids(violation),
-                            *_bundle_dogma_ids(
-                                language=result.language,
-                                violation=violation,
-                            ),
-                        ]
+        enriched_violations = []
+        for violation in result.violations:
+            rule_id = getattr(violation, "rule_id", None)
+            linked_dogma_ids = _dedupe(
+                [
+                    *_linked_dogma_ids(violation),
+                    *_dogma_ids_from_registry_models(
+                        language=result.language,
+                        rule_id=rule_id,
                     ),
-                    "verified_dogma_ids": (
-                        _dedupe(
-                            [
-                                *_verified_dogma_ids(violation),
-                                *_bundle_dogma_ids(
-                                    language=result.language,
-                                    violation=violation,
-                                    verified=True,
-                                ),
-                            ]
-                        )
-                        if _verified_dogma_ids(violation)
-                        else _dedupe(
-                            [
-                                *_bundle_dogma_ids(
-                                    language=result.language,
-                                    violation=violation,
-                                    verified=True,
-                                ),
-                                *[
-                                    detector.dogma_id
-                                    for detector in self._detectors
-                                    if detector.is_verified_violation(violation)
-                                ],
-                            ]
-                        )
+                    *_bundle_dogma_ids(
+                        language=result.language,
+                        violation=violation,
                     ),
-                },
+                ]
             )
-            for violation in result.violations
-        ]
+            authored_verified_dogma_ids = _dedupe(
+                [
+                    *_dogma_ids_from_registry_models(
+                        language=result.language,
+                        rule_id=rule_id,
+                        verified=True,
+                    ),
+                    *_verified_dogma_ids_from_family_indexes(
+                        language=result.language,
+                        rule_id=rule_id,
+                        linked_dogma_ids=linked_dogma_ids,
+                    ),
+                    *_bundle_dogma_ids(
+                        language=result.language,
+                        violation=violation,
+                        verified=True,
+                    ),
+                ]
+            )
+            verified_dogma_ids = _verified_dogma_ids(violation)
+            if verified_dogma_ids:
+                verified_dogma_ids = _dedupe(
+                    [
+                        *verified_dogma_ids,
+                        *authored_verified_dogma_ids,
+                    ]
+                )
+            else:
+                verified_dogma_ids = _dedupe(
+                    [
+                        *authored_verified_dogma_ids,
+                        *[
+                            detector.dogma_id
+                            for detector in self._detectors
+                            if detector.is_verified_violation(violation)
+                        ],
+                    ]
+                )
+            enriched_violations.append(
+                violation.model_copy(
+                    update={
+                        "linked_dogma_ids": linked_dogma_ids,
+                        "verified_dogma_ids": verified_dogma_ids,
+                    },
+                )
+            )
         enriched_result = result.model_copy(update={"violations": enriched_violations})
         return enriched_result.model_copy(
             update={"dogma_analysis": self.analyze(enriched_result)}

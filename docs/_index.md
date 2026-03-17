@@ -75,17 +75,20 @@ Every programming language has a philosophy — a sense of what "good code" look
 
 ```bash
 # MCP server (IDE/agent workflows)
-uvx --from mcp-zen-of-languages zen-mcp-server
+uvx --from mcp-zen-of-languages mcp-zen-of-languages-server
 
 # Run without installing (recommended)
-uvx --from mcp-zen-of-languages zen init
-uvx --from mcp-zen-of-languages zen reports path/to/project
+uvx --from mcp-zen-of-languages mcp-zen-of-languages-cli init
+uvx --from mcp-zen-of-languages mcp-zen-of-languages-cli reports path/to/project
 
 # Or install globally
 pip install mcp-zen-of-languages
-zen init
-zen reports path/to/project
+mcp-zen-of-languages-cli init
+mcp-zen-of-languages-cli reports path/to/project
 ```
+
+Legacy aliases remain available: `zen` for the CLI and `zen-mcp-server` for the
+MCP server.
 
 ## What You Get
 

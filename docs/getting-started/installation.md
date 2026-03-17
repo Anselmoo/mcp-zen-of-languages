@@ -30,7 +30,7 @@ Add to `claude_desktop_config.json` (usually `~/Library/Application Support/Clau
   "mcpServers": {
     "zen-of-languages": {
       "command": "uvx",
-      "args": ["--from", "mcp-zen-of-languages", "zen-mcp-server"]
+      "args": ["--from", "mcp-zen-of-languages", "mcp-zen-of-languages-server"]
     }
   }
 }
@@ -45,7 +45,7 @@ Add to `.vscode/mcp.json` in your workspace, or use one of the one-click install
   "servers": {
     "zen-of-languages": {
       "command": "uvx",
-      "args": ["--from", "mcp-zen-of-languages", "zen-mcp-server"]
+      "args": ["--from", "mcp-zen-of-languages", "mcp-zen-of-languages-server"]
     }
   }
 }
@@ -53,7 +53,7 @@ Add to `.vscode/mcp.json` in your workspace, or use one of the one-click install
 
 | Method                | VS Code                                                                                                                                                                                                                                                                                                                                 | VS Code Insiders                                                                                                                                                                                                                                                                                                                                         |
 | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **UVX** (native)      | [![Install](https://img.shields.io/badge/Install-007ACC?style=flat-square&logo=python&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=zen-of-languages&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22--from%22%2C%22mcp-zen-of-languages%22%2C%22zen-mcp-server%22%5D%7D)                            | [![Install](https://img.shields.io/badge/Install-24bfa5?style=flat-square&logo=python&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=zen-of-languages&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22--from%22%2C%22mcp-zen-of-languages%22%2C%22zen-mcp-server%22%5D%7D&quality=insiders)                            |
+| **UVX** (native)      | [![Install](https://img.shields.io/badge/Install-007ACC?style=flat-square&logo=python&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=zen-of-languages&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22--from%22%2C%22mcp-zen-of-languages%22%2C%22mcp-zen-of-languages-server%22%5D%7D)                            | [![Install](https://img.shields.io/badge/Install-24bfa5?style=flat-square&logo=python&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=zen-of-languages&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22--from%22%2C%22mcp-zen-of-languages%22%2C%22mcp-zen-of-languages-server%22%5D%7D&quality=insiders)                            |
 | **Docker** (isolated) | [![Install](https://img.shields.io/badge/Install-007ACC?style=flat-square&logo=docker&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=zen-of-languages&config=%7B%22command%22%3A%22docker%22%2C%22args%22%3A%5B%22run%22%2C%22--rm%22%2C%22-i%22%2C%22ghcr.io/anselmoo/mcp-zen-of-languages%3Alatest%22%5D%7D) | [![Install](https://img.shields.io/badge/Install-24bfa5?style=flat-square&logo=docker&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=zen-of-languages&config=%7B%22command%22%3A%22docker%22%2C%22args%22%3A%5B%22run%22%2C%22--rm%22%2C%22-i%22%2C%22ghcr.io/anselmoo/mcp-zen-of-languages%3Alatest%22%5D%7D&quality=insiders) |
 
 ### Cursor / Windsurf
@@ -65,7 +65,7 @@ Add to `.cursor/mcp.json` or `.windsurf/mcp.json` in your project root:
   "mcpServers": {
     "zen-of-languages": {
       "command": "uvx",
-      "args": ["--from", "mcp-zen-of-languages", "zen-mcp-server"]
+      "args": ["--from", "mcp-zen-of-languages", "mcp-zen-of-languages-server"]
     }
   }
 }
@@ -76,7 +76,7 @@ Add to `.cursor/mcp.json` or `.windsurf/mcp.json` in your project root:
 Install via the CLI:
 
 ```bash
-claude mcp add zen-of-languages -- uvx --from mcp-zen-of-languages zen-mcp-server
+claude mcp add zen-of-languages -- uvx --from mcp-zen-of-languages mcp-zen-of-languages-server
 ```
 
 For the full integration guide — including environment variables, debugging, and troubleshooting — see [MCP Integration](mcp-integration.md).
@@ -88,10 +88,10 @@ For the full integration guide — including environment variables, debugging, a
 docker run --rm -i ghcr.io/anselmoo/mcp-zen-of-languages:latest
 
 # CLI via Docker
-docker run --rm ghcr.io/anselmoo/mcp-zen-of-languages:latest zen --help
+docker run --rm ghcr.io/anselmoo/mcp-zen-of-languages:latest mcp-zen-of-languages-cli --help
 ```
 
-This image defaults to `zen-mcp-server`.
+This image defaults to `mcp-zen-of-languages-server`.
 
 ## Official Docker image policy
 
@@ -108,12 +108,12 @@ The CLI is a powerful tool for **first code anamnesis** — an initial diagnosti
 
 ```bash
 # Run the CLI directly
-uvx --from mcp-zen-of-languages zen --help
-uvx --from mcp-zen-of-languages zen init
-uvx --from mcp-zen-of-languages zen reports path/to/project
+uvx --from mcp-zen-of-languages mcp-zen-of-languages-cli --help
+uvx --from mcp-zen-of-languages mcp-zen-of-languages-cli init
+uvx --from mcp-zen-of-languages mcp-zen-of-languages-cli reports path/to/project
 
 # Start the MCP server
-uvx --from mcp-zen-of-languages zen-mcp-server
+uvx --from mcp-zen-of-languages mcp-zen-of-languages-server
 ```
 
 This is the standard approach for MCP tools and requires no setup beyond having `uv` installed.
@@ -126,10 +126,12 @@ For persistent installation:
 pip install mcp-zen-of-languages
 ```
 
-After install, two commands are available:
+After install, the package-style commands are:
 
-- `zen` — CLI for analysis, reports, and prompt generation
-- `zen-mcp-server` — MCP server for AI agent integration
+- `mcp-zen-of-languages-cli` — CLI for analysis, reports, and prompt generation
+- `mcp-zen-of-languages` / `mcp-zen-of-languages-server` — MCP server entry points for AI agent integration
+
+Legacy aliases remain available: `zen` and `zen-mcp-server`.
 
 ### Install from source (development)
 
@@ -144,8 +146,8 @@ This installs all development dependencies (pytest, ruff, ty) and documentation 
 ## Verify installation
 
 ```bash
-zen --version
-zen --help
+mcp-zen-of-languages-cli --version
+mcp-zen-of-languages-cli --help
 ```
 
 You should see the CLI help output listing `init`, `check`, `report`, and `prompts` subcommands.

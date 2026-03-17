@@ -13,8 +13,9 @@ Two minutes to your first analysis — whether you're working through an AI assi
 
 !!! info "Command naming cheat sheet"
     - Package for install/uvx: `mcp-zen-of-languages`
-    - CLI command: `zen`
-    - MCP server command: `zen-mcp-server`
+    - Package-style CLI command: `mcp-zen-of-languages-cli`
+    - Package-style server commands: `mcp-zen-of-languages` / `mcp-zen-of-languages-server`
+    - Legacy aliases: `zen` / `zen-mcp-server`
     - MCP config server key: `zen-of-languages`
 
 ## MCP path (editor + AI agent)
@@ -53,7 +54,7 @@ The CLI is the ideal tool for **first code anamnesis**: an initial diagnostic sw
 ### 1. Initialize configuration
 
 ```bash
-zen init  # (1)!
+mcp-zen-of-languages-cli init  # (1)!
 ```
 
 1. Creates `zen-config.yaml`, bootstraps `.zen-of-languages.ignore`, and can also bootstrap `.vscode/mcp.json` for MCP integration.
@@ -66,13 +67,13 @@ Repository scans honor both `.gitignore` and `.zen-of-languages.ignore`.
 
 === "Markdown report"
     ```bash
-    zen reports path/to/project --out report.md  # (1)!
+    mcp-zen-of-languages-cli reports path/to/project --out report.md  # (1)!
     ```
     1. Scans all supported files, groups violations by language and severity, and outputs a human-readable report.
 
 === "JSON export"
     ```bash
-    zen reports path/to/project --export-json out/report.json
+    mcp-zen-of-languages-cli reports path/to/project --export-json out/report.json
     ```
     Structured output for CI artifacts, dashboards, or downstream automation.
 
@@ -81,7 +82,7 @@ The report tells you **what's wrong**, **how severe it is** (1–10), and **whic
 ### 3. Generate remediation prompts
 
 ```bash
-zen prompts path/to/project --mode both \
+mcp-zen-of-languages-cli prompts path/to/project --mode both \
   --export-prompts out/prompts.md \
   --export-agent out/prompts.json
 ```

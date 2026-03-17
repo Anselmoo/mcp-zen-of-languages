@@ -14,8 +14,10 @@ MCP Zen of Languages is designed as an **MCP server first**. The server exposes 
 ## Start the server
 
 ```bash
-zen-mcp-server
+mcp-zen-of-languages-server
 ```
+
+Legacy alias: `zen-mcp-server`
 
 The server communicates via stdin/stdout using the MCP protocol. It doesn't serve HTTP — MCP clients connect to it as a subprocess.
 
@@ -27,16 +29,17 @@ When your client supports version targeting, use `analyze_zen_violations` and `g
 
 | Concept | Value | Where it is used |
 | ------- | ----- | ---------------- |
-| Package name | `mcp-zen-of-languages` | `pip install`, `uvx --from ...` |
-| CLI command | `zen` | Local terminal analysis commands |
-| MCP server command | `zen-mcp-server` | MCP subprocess command |
+| Package name | `mcp-zen-of-languages` | `pip install`, `uvx --from ...`, and the package-style server shortcut |
+| Package-style CLI command | `mcp-zen-of-languages-cli` | Explicit local terminal / CI command |
+| Package-style server commands | `mcp-zen-of-languages` or `mcp-zen-of-languages-server` | MCP subprocess command |
+| Legacy aliases | `zen` and `zen-mcp-server` | Backward-compatible shell commands |
 | MCP server key | `zen-of-languages` | JSON config key (`servers`/`mcpServers`) and one-click install `name=` |
 
 ## VS Code configuration
 
 Use one-click install or add config manually.
 
-[![Install with UVX in VS Code](https://img.shields.io/badge/VS_Code-UVX-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=zen-of-languages&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22--from%22%2C%22mcp-zen-of-languages%22%2C%22zen-mcp-server%22%5D%7D) [![Install with UVX in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-UVX-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=zen-of-languages&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22--from%22%2C%22mcp-zen-of-languages%22%2C%22zen-mcp-server%22%5D%7D&quality=insiders)
+[![Install with UVX in VS Code](https://img.shields.io/badge/VS_Code-UVX-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=zen-of-languages&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22--from%22%2C%22mcp-zen-of-languages%22%2C%22mcp-zen-of-languages-server%22%5D%7D) [![Install with UVX in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-UVX-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=zen-of-languages&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22--from%22%2C%22mcp-zen-of-languages%22%2C%22mcp-zen-of-languages-server%22%5D%7D&quality=insiders)
 
 `zen init` can generate `.vscode/mcp.json` for you; keep the server key as `zen-of-languages`.
 
@@ -46,7 +49,7 @@ Use one-click install or add config manually.
       "servers": {
         "zen-of-languages": {
           "command": "uvx",
-          "args": ["--from", "mcp-zen-of-languages", "zen-mcp-server"]
+          "args": ["--from", "mcp-zen-of-languages", "mcp-zen-of-languages-server"]
         }
       }
     }
@@ -58,7 +61,7 @@ Use one-click install or add config manually.
       "servers": {
         "zen-of-languages": {
           "command": "uvx",
-          "args": ["--from", "mcp-zen-of-languages", "zen-mcp-server"]
+          "args": ["--from", "mcp-zen-of-languages", "mcp-zen-of-languages-server"]
         }
       }
     }
@@ -72,7 +75,7 @@ Use one-click install or add config manually.
       "servers": {
         "zen-of-languages": {
           "command": "uvx",
-          "args": ["--from", "mcp-zen-of-languages", "zen-mcp-server"],
+          "args": ["--from", "mcp-zen-of-languages", "mcp-zen-of-languages-server"],
           "env": {
             "ZEN_CONFIG_PATH": "${input:zenConfigPath}"
           }
@@ -95,7 +98,7 @@ Use one-click install or add config manually.
       "servers": {
         "zen-of-languages": {
           "command": "uvx",
-          "args": ["--from", "mcp-zen-of-languages", "zen-mcp-server"]
+          "args": ["--from", "mcp-zen-of-languages", "mcp-zen-of-languages-server"]
         }
       }
     }
@@ -105,8 +108,8 @@ Once configured, MCP-compatible clients (VS Code with Copilot, Claude Desktop, e
 
 ### Quick verification checklist
 
-1. Run `zen --help` to confirm the CLI is installed.
-2. Run `uvx --from mcp-zen-of-languages zen-mcp-server` (or your configured command) to confirm server startup.
+1. Run `mcp-zen-of-languages-cli --help` to confirm the CLI is installed.
+2. Run `uvx --from mcp-zen-of-languages mcp-zen-of-languages-server` (or your configured command) to confirm server startup.
 3. In VS Code, run **MCP: List Servers** and confirm `zen-of-languages` appears.
 
 ## Claude Desktop configuration
@@ -118,7 +121,7 @@ Add to your `claude_desktop_config.json` (usually in `~/Library/Application Supp
   "mcpServers": {
     "zen-of-languages": {
       "command": "uvx",
-      "args": ["--from", "mcp-zen-of-languages", "zen-mcp-server"],
+      "args": ["--from", "mcp-zen-of-languages", "mcp-zen-of-languages-server"],
       "env": {
         "ZEN_CONFIG_PATH": "/path/to/your/zen-config.yaml"
       }
@@ -134,7 +137,7 @@ Replace `/path/to/your/zen-config.yaml` with the absolute path to your config fi
 Install the server using the Claude Code CLI:
 
 ```bash
-claude mcp add zen-of-languages -- uvx --from mcp-zen-of-languages zen-mcp-server
+claude mcp add zen-of-languages -- uvx --from mcp-zen-of-languages mcp-zen-of-languages-server
 ```
 
 This automatically adds the server to Claude Code's MCP configuration.
@@ -151,7 +154,7 @@ Edit `.cursor/mcp.json` in your project root:
       "mcpServers": {
         "zen-of-languages": {
           "command": "uvx",
-          "args": ["--from", "mcp-zen-of-languages", "zen-mcp-server"],
+          "args": ["--from", "mcp-zen-of-languages", "mcp-zen-of-languages-server"],
           "env": {
             "ZEN_CONFIG_PATH": "${workspaceFolder}/zen-config.yaml"
           }
@@ -168,7 +171,7 @@ Edit `.windsurf/mcp.json` in your project root:
       "mcpServers": {
         "zen-of-languages": {
           "command": "uvx",
-          "args": ["--from", "mcp-zen-of-languages", "zen-mcp-server"],
+          "args": ["--from", "mcp-zen-of-languages", "mcp-zen-of-languages-server"],
           "env": {
             "ZEN_CONFIG_PATH": "${workspaceFolder}/zen-config.yaml"
           }
@@ -269,7 +272,7 @@ For test-family filtering, use a file- or directory-based surface such as
 3. **Test server manually:**
 
    ```bash
-   uvx --from mcp-zen-of-languages zen-mcp-server
+   uvx --from mcp-zen-of-languages mcp-zen-of-languages-server
    ```
 
    You should see JSON output indicating the server is ready.
@@ -287,7 +290,7 @@ If you see errors about Python 3.12+ requirement:
 python --version
 
 # Use a specific Python version with uvx
-uvx --python 3.12 --from mcp-zen-of-languages zen-mcp-server
+uvx --python 3.12 --from mcp-zen-of-languages mcp-zen-of-languages-server
 ```
 
 ### Config file not discovered

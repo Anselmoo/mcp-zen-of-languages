@@ -27,7 +27,7 @@ You'll go from zero to your first analysis in under two minutes. The path is sim
 
     ---
 
-    Run `zen init` and `zen reports` to see your first violations, severities, and remediation prompts.
+    Run `mcp-zen-of-languages-cli init` and `mcp-zen-of-languages-cli reports` to see your first violations, severities, and remediation prompts.
 
     [Quickstart](quickstart.md)
 
@@ -49,11 +49,14 @@ You'll go from zero to your first analysis in under two minutes. The path is sim
 
 ## MCP-first 5-minute workflow
 
-1. Start the server: `uvx --from mcp-zen-of-languages zen-mcp-server`
+1. Start the server: `uvx --from mcp-zen-of-languages mcp-zen-of-languages-server`
 2. Connect your editor/client using the `zen-of-languages` server key.
 3. Run `analyze_zen_violations` on one active file.
 4. Generate remediation with `generate_prompts` for the highest-severity findings.
 5. Re-run analysis to confirm the score improves.
+
+Legacy aliases `zen` and `zen-mcp-server` still work if you already have them in
+shell history or existing local scripts.
 
 ## See Also
 

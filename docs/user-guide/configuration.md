@@ -128,7 +128,7 @@ Each package can have its own thresholds — strict for new code, relaxed for le
 
 ### MCP Server (FastMCP)
 
-When running `zen-mcp-server`, these FastMCP environment variables control server behavior:
+When running `mcp-zen-of-languages-server` (legacy alias: `zen-mcp-server`), these FastMCP environment variables control server behavior:
 
 | Variable              | Purpose                                                | Default            |
 | --------------------- | ------------------------------------------------------ | ------------------ |

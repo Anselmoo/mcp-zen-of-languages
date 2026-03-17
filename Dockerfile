@@ -15,4 +15,4 @@ COPY . /app
 RUN pip install .
 
 ENTRYPOINT ["tini", "--"]
-CMD ["zen-mcp-server"]
+CMD ["mcp-zen-of-languages"]

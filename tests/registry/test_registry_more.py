@@ -6,6 +6,7 @@ import pytest
 
 from mcp_zen_of_languages.analyzers.base import ViolationDetector
 from mcp_zen_of_languages.analyzers.mapping_models import BindingPerspectiveBundle
+from mcp_zen_of_languages.analyzers.mapping_models import DogmaPerspectiveModel
 from mcp_zen_of_languages.analyzers.mapping_models import ProjectionPerspectiveModel
 from mcp_zen_of_languages.analyzers.mapping_models import TestingPerspectiveModel
 from mcp_zen_of_languages.analyzers.registry import DetectorMetadata
@@ -101,6 +102,11 @@ def test_registry_exposes_family_models_without_collapsing_to_rule_metadata() ->
         language="python",
         testing_rule_map={"micro": ["python-001"]},
     )
+    dogma_model = DogmaPerspectiveModel(
+        detector_id="dummy",
+        language="python",
+        dogma_rule_map={"ZEN-EXPLICIT-INTENT": ["python-001"]},
+    )
     projection_model = ProjectionPerspectiveModel(
         detector_id="dummy",
         language="python",
@@ -108,6 +114,7 @@ def test_registry_exposes_family_models_without_collapsing_to_rule_metadata() ->
     )
     bundle = BindingPerspectiveBundle(
         rule_model=metadata,
+        dogma_model=dogma_model,
         testing_model=testing_model,
         projection_model=projection_model,
     )
@@ -116,8 +123,13 @@ def test_registry_exposes_family_models_without_collapsing_to_rule_metadata() ->
 
     assert registry.get_testing_model("dummy", "python") == testing_model
     assert registry.get_projection_model("dummy", "python") == projection_model
+    assert registry.get_dogma_model("dummy", "python") == dogma_model
     assert registry.testing_ids_for("dummy", "python", "python-001") == ["micro"]
     assert registry.projection_ids_for("dummy", "python", "python-001") == ["go"]
+    assert registry.dogma_models_for_rule("python-001", "python") == [dogma_model]
+    assert registry.dogma_models_for_family("ZEN-EXPLICIT-INTENT", "python") == [
+        dogma_model
+    ]
     assert registry.testing_models_for_rule("python-001", "python") == [testing_model]
     assert registry.projection_models_for_rule("python-001", "python") == [
         projection_model,
@@ -141,8 +153,11 @@ def test_registry_family_accessors_ignore_missing_family_metadata() -> None:
 
     assert registry.get_testing_model("dummy", "python") is None
     assert registry.get_projection_model("dummy", "python") is None
+    assert registry.get_dogma_model("dummy", "python") is None
     assert registry.testing_ids_for("dummy", "python", "python-001") == []
     assert registry.projection_ids_for("dummy", "python", "python-001") == []
+    assert registry.dogma_models_for_rule("python-001", "python") == []
+    assert registry.dogma_models_for_family("ZEN-EXPLICIT-INTENT", "python") == []
     assert registry.testing_models_for_rule("python-001", "python") == []
     assert registry.projection_models_for_rule("python-001", "python") == []
     assert registry.testing_models_for_family("micro", "python") == []
@@ -164,6 +179,12 @@ def test_registry_family_indexes_use_preserved_bundle_metadata() -> None:
         testing_rule_map={"micro": ["python-201"]},
         testing_verified_rule_map={"micro": ["python-201"]},
     )
+    dogma_model = DogmaPerspectiveModel(
+        detector_id="dummy",
+        language="python",
+        dogma_rule_map={"ZEN-FAIL-FAST": ["python-101"]},
+        dogma_verified_rule_map={"ZEN-FAIL-FAST": ["python-101"]},
+    )
     projection_model = ProjectionPerspectiveModel(
         detector_id="dummy",
         language="python",
@@ -172,12 +193,15 @@ def test_registry_family_indexes_use_preserved_bundle_metadata() -> None:
     )
     bundle = BindingPerspectiveBundle(
         rule_model=metadata,
+        dogma_model=dogma_model,
         testing_model=testing_model,
         projection_model=projection_model,
     )
 
     registry.register(metadata, bundle=bundle)
 
+    assert registry.dogma_models_for_rule("python-101", "python") == [dogma_model]
+    assert registry.dogma_models_for_family("ZEN-FAIL-FAST", "python") == [dogma_model]
     assert registry.testing_models_for_rule("python-201", "python") == [testing_model]
     assert registry.projection_models_for_rule("python-301", "python") == [
         projection_model,

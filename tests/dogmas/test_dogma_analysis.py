@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.analyzer_factory import create_analyzer
+from mcp_zen_of_languages.analyzers.registry import REGISTRY
 from mcp_zen_of_languages.core.universal_dogmas import UniversalDogmaID
 from mcp_zen_of_languages.dogmas.interface import attach_dogma_analysis
 from mcp_zen_of_languages.dogmas.mapping import DOGMA_DETECTOR_MAP
@@ -185,6 +186,95 @@ def test_attach_dogma_analysis_preserves_existing_verified_subset() -> None:
         "ZEN-RIGHT-ABSTRACTION",
         "ZEN-UNAMBIGUOUS-NAME",
     }
+
+
+def test_attach_dogma_analysis_enriches_detectorless_composite_violation_from_dogma_rule_indexes() -> (
+    None
+):
+    result = AnalysisResult(
+        language="ruby",
+        path="sample.rb",
+        metrics=Metrics(
+            cyclomatic=CyclomaticSummary(blocks=[], average=0.0),
+            maintainability_index=80.0,
+            lines_of_code=3,
+        ),
+        violations=[
+            Violation(
+                principle="Prefer symbols over strings for keys.",
+                severity=6,
+                message="Prefer symbols over strings for keys",
+                rule_id="ruby-007",
+                files=["sample.rb"],
+            ),
+        ],
+        overall_score=9.2,
+    )
+
+    enriched = attach_dogma_analysis(result)
+
+    assert enriched.violations[0].linked_dogma_ids == [
+        "ZEN-RIGHT-ABSTRACTION",
+        "ZEN-UNAMBIGUOUS-NAME",
+    ]
+    assert enriched.violations[0].verified_dogma_ids == ["ZEN-RIGHT-ABSTRACTION"]
+    assert enriched.dogma_analysis is not None
+    assert {finding.dogma_id for finding in enriched.dogma_analysis.findings} >= {
+        "ZEN-RIGHT-ABSTRACTION",
+        "ZEN-UNAMBIGUOUS-NAME",
+    }
+
+
+def test_attach_dogma_analysis_uses_dogma_rule_and_family_indexes(monkeypatch) -> None:
+    REGISTRY.bootstrap_from_mappings()
+    rule_calls: list[tuple[str, str]] = []
+    family_calls: list[tuple[str, str]] = []
+    original_dogma_models_for_rule = REGISTRY.dogma_models_for_rule
+    original_dogma_models_for_family = REGISTRY.dogma_models_for_family
+
+    def spy_dogma_models_for_rule(rule_id: str, language: str):
+        rule_calls.append((rule_id, language))
+        return original_dogma_models_for_rule(rule_id, language)
+
+    def spy_dogma_models_for_family(dogma_id: str, language: str):
+        family_calls.append((dogma_id, language))
+        return original_dogma_models_for_family(dogma_id, language)
+
+    monkeypatch.setattr(REGISTRY, "dogma_models_for_rule", spy_dogma_models_for_rule)
+    monkeypatch.setattr(
+        REGISTRY, "dogma_models_for_family", spy_dogma_models_for_family
+    )
+
+    result = AnalysisResult(
+        language="ruby",
+        path="sample.rb",
+        metrics=Metrics(
+            cyclomatic=CyclomaticSummary(blocks=[], average=0.0),
+            maintainability_index=80.0,
+            lines_of_code=3,
+        ),
+        violations=[
+            Violation(
+                principle="Prefer symbols over strings for keys.",
+                severity=6,
+                message="Prefer symbols over strings for keys",
+                rule_id="ruby-007",
+                linked_dogma_ids=[
+                    "ZEN-RIGHT-ABSTRACTION",
+                    "ZEN-UNAMBIGUOUS-NAME",
+                ],
+                files=["sample.rb"],
+            ),
+        ],
+        overall_score=9.2,
+    )
+
+    enriched = attach_dogma_analysis(result)
+
+    assert ("ruby-007", "ruby") in rule_calls
+    assert ("ZEN-RIGHT-ABSTRACTION", "ruby") in family_calls
+    assert ("ZEN-UNAMBIGUOUS-NAME", "ruby") in family_calls
+    assert enriched.violations[0].verified_dogma_ids == ["ZEN-RIGHT-ABSTRACTION"]
 
 
 def test_ruby_multi_dogma_rule_flows_to_mcp_cli_and_report(tmp_path) -> None:

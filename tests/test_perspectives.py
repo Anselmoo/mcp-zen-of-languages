@@ -6,6 +6,7 @@ import pytest
 
 from mcp_zen_of_languages.analyzers.base import ViolationDetector
 from mcp_zen_of_languages.analyzers.mapping_models import BindingPerspectiveBundle
+from mcp_zen_of_languages.analyzers.mapping_models import DogmaPerspectiveModel
 from mcp_zen_of_languages.analyzers.mapping_models import ProjectionPerspectiveModel
 from mcp_zen_of_languages.analyzers.registry import DetectorMetadata
 from mcp_zen_of_languages.analyzers.registry import DetectorRegistry
@@ -89,6 +90,28 @@ def _projection_registry() -> DetectorRegistry:
             language="python",
             projection_rule_map={"go": ["python-001"]},
             projection_verified_rule_map={"go": ["python-001"]},
+        ),
+    )
+    registry.register(metadata, bundle=bundle)
+    return registry
+
+
+def _dogma_registry() -> DetectorRegistry:
+    registry = DetectorRegistry()
+    metadata = DetectorMetadata(
+        detector_id="line_length",
+        detector_class=DummyDetector,
+        config_model=DummyConfig,
+        language="python",
+        rule_ids=["python-001"],
+    )
+    bundle = BindingPerspectiveBundle(
+        rule_model=metadata,
+        dogma_model=DogmaPerspectiveModel(
+            detector_id="line_length",
+            language="python",
+            dogma_rule_map={"ZEN-EXPLICIT-INTENT": ["python-001"]},
+            dogma_verified_rule_map={"ZEN-FAIL-FAST": ["python-001"]},
         ),
     )
     registry.register(metadata, bundle=bundle)
@@ -252,6 +275,54 @@ def test_apply_dogma_perspective_filters_to_dogma_relevant_violations() -> None:
         "ZEN-FAIL-FAST",
         "ZEN-EXPLICIT-INTENT",
     }
+
+
+def test_apply_dogma_perspective_uses_registry_bindings_when_enrichment_is_sparse(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from mcp_zen_of_languages.analyzers import registry as registry_module
+    from mcp_zen_of_languages.dogmas import interface as dogma_interface_module
+
+    monkeypatch.setattr(registry_module, "REGISTRY", _dogma_registry())
+    monkeypatch.setattr(
+        dogma_interface_module,
+        "attach_dogma_analysis",
+        lambda result: result,
+    )
+    result = AnalysisResult(
+        language="python",
+        path="sample.py",
+        metrics=Metrics(
+            cyclomatic=CyclomaticSummary(blocks=[], average=0.0),
+            maintainability_index=100.0,
+            lines_of_code=1,
+        ),
+        violations=[
+            Violation(
+                principle="Line length",
+                severity=5,
+                message="line too long",
+                detector_id="line_length",
+                rule_id="python-001",
+            ),
+            Violation(
+                principle="Docstrings",
+                severity=3,
+                message="missing docstring",
+                detector_id="docstrings",
+                rule_id="python-007",
+            ),
+        ],
+        rules_summary=RulesSummary(medium=1, low=1),
+        overall_score=95.0,
+    )
+
+    filtered = apply_perspective_to_result(result, PerspectiveMode.DOGMA)
+
+    assert [violation.rule_id for violation in filtered.violations] == ["python-001"]
+    assert filtered.rules_summary is not None
+    assert filtered.rules_summary.medium == 1
+    assert filtered.rules_summary.low == 0
 
 
 def test_apply_projection_perspective_filters_to_requested_family(

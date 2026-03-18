@@ -15,7 +15,7 @@ Single-file analysis is useful for quick checks, but real insights come from ana
 ## Running a project report
 
 ```bash
-zen report path/to/project
+zen reports path/to/project
 ```
 
 This scans all supported files in the directory (recursively), runs the detection pipeline for each language, and produces:
@@ -28,19 +28,19 @@ This scans all supported files in the directory (recursively), runs the detectio
 
 === "Markdown report"
     ```bash
-    zen report path/to/project --out report.md
+    zen reports path/to/project --out report.md
     ```
     Human-readable report with Rich formatting preserved.
 
 === "JSON export"
     ```bash
-    zen report path/to/project --export-json out/report.json
+    zen reports path/to/project --export-json out/report.json
     ```
     Structured output for CI artifacts, dashboards, or custom tooling.
 
 === "Full artifact set"
     ```bash
-    zen report path/to/project \
+    zen reports path/to/project \
       --out report.md \
       --export-json report.json \
       --export-markdown report-export.md \
@@ -51,7 +51,7 @@ This scans all supported files in the directory (recursively), runs the detectio
 ## CI integration
 
 ```bash
-zen report . --export-json report.json --quiet
+zen reports . --export-json report.json --quiet
 ```
 
 - `--quiet` suppresses Rich panels and banners — clean output for CI logs
@@ -61,7 +61,7 @@ zen report . --export-json report.json --quiet
 ## Including prompts in reports
 
 ```bash
-zen report path/to/project --include-prompts --out full-report.md
+zen reports path/to/project --include-prompts --out full-report.md
 ```
 
 Adds remediation prompts inline with each violation — useful for review-ready documents.
@@ -69,10 +69,31 @@ Adds remediation prompts inline with each violation — useful for review-ready 
 ## Language filtering
 
 ```bash
-zen report path/to/project --language python
+zen reports path/to/project --language python
 ```
 
 Analyze only files matching a specific language. Useful for focused reviews or when only one language is configured.
+
+## Perspective-filtered reports
+
+The report command supports the same public perspectives as the rest of the
+runtime:
+
+- `all` — full rule-first result with every surfaced violation
+- `zen` — rule-level result without dogma-analysis payloads
+- `dogma` — dogma-focused result with universal dogma analysis preserved
+- `testing` — violations linked to the detected testing family for matching test files
+- `projection` — violations linked to an explicit projection-family target supplied with `--as`
+
+```bash
+zen reports tests --perspective testing --out testing-only.md
+zen reports src/frontend --language react --perspective projection --as nextjs
+```
+
+!!! info "Dogma perspective is available"
+    `--perspective dogma` is now runnable. It keeps universal dogma analysis
+    attached and filters the projected result down to dogma-relevant
+    violations.
 
 ## What project analysis reveals
 
@@ -83,15 +104,20 @@ Unlike single-file linting, project-level analysis can detect:
 - **Systemic issues** — patterns that repeat across many files
 - **Coverage gaps** — files or directories with no analysis results
 
+Perspective filtering is especially useful once a repository spans many
+languages and framework analyzers: you can keep one broad baseline report for
+the whole worktree, then generate narrower testing or projection views for the
+subsets that matter to a given rollout.
+
 ## MCP + CLI remediation loop
 
-1. Run `zen report path/to/project --export-json report.json` to create a baseline artifact.
+1. Run `zen reports path/to/project --export-json report.json` to create a baseline artifact.
 2. In your MCP client, call `generate_agent_tasks` for the project path (optionally with a `min_severity` filter) so the agent can focus on top offenders.
-3. Apply fixes in focused batches (high severity first), then re-run `zen report`.
+3. Apply fixes in focused batches (high severity first), then re-run `zen reports`.
 4. Track score movement over time using the exported JSON in CI artifacts.
 
 ## See Also
 
-- [CLI Reference](cli-reference.md) — Full `zen report` flag reference
+- [CLI Reference](cli-reference.md) — Full `zen reports` flag reference
 - [Configuration](configuration.md) — Set `severity_threshold` for CI gates
 - [Prompt Generation](prompt-generation.md) — Generate fix instructions from reports

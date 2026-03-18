@@ -357,9 +357,9 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
+| **GoConcurrencyCallerDetector** | Flags functions that spawn goroutines internally | `go-015` |
 | **GoContextUsageDetector** | Flags code that lacks ``context.Context`` for cancellation and deadline propagation | `go-011` |
 | **GoGoroutineLeakDetector** | Flags goroutines launched without cancellation support and unclosed channels | `go-006` |
-| **GoConcurrencyCallerDetector** | Flags functions that spawn goroutines internally | `go-015` |
 
 ### Correctness
 
@@ -371,11 +371,11 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **GoInterfaceSizeDetector** | Detects oversized interfaces that violate Go's preference for small, composable contracts | `go-010` |
-| **GoInterfaceReturnDetector** | Flags functions that return interface types instead of concrete structs | `go-002` |
-| **GoZeroValueDetector** | Flags ``New*`` constructor functions where making the zero value usable would be simpler | `go-003` |
 | **GoInterfacePointerDetector** | Detects pointers to interfaces, which are almost always a mistake in Go | `go-005` |
+| **GoInterfaceReturnDetector** | Flags functions that return interface types instead of concrete structs | `go-002` |
+| **GoInterfaceSizeDetector** | Detects oversized interfaces that violate Go's preference for small, composable contracts | `go-010` |
 | **GoTestPresenceDetector** | Flags exported functions without accompanying test functions | `go-019` |
+| **GoZeroValueDetector** | Flags ``New*`` constructor functions where making the zero value usable would be simpler | `go-003` |
 
 ### Error Handling
 
@@ -418,8 +418,8 @@ Go's philosophy is radical simplicity: small interfaces, explicit errors, flat h
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **GoNamingConventionDetector** | Flags overly long variable names that violate Go's brevity conventions | `go-004` |
 | **GoMaintainabilityDetector** | Flags exported functions missing godoc comments | `go-020` |
+| **GoNamingConventionDetector** | Flags overly long variable names that violate Go's brevity conventions | `go-004` |
 
 ### Structure
 
@@ -579,24 +579,24 @@ languages:
   go:
     enabled: true
     pipeline:
-      - type: go_error_handling
-        max_ignored_errors: 0
-      - type: go_interface_size
-        max_interface_methods: 3
       - type: go_context_usage
         require_context: True
       - type: go_defer_usage
         detect_defer_in_loop: True
         detect_missing_defer: True
-      - type: go_naming_convention
-        detect_long_names: True
       - type: go_embedding_depth
         max_embedding_depth: 2
+      - type: go_error_handling
+        max_ignored_errors: 0
+      - type: go_interface_size
+        max_interface_methods: 3
+      - type: go_moderation
+        max_goroutine_spawns: 5
+      - type: go_naming_convention
+        detect_long_names: True
       - type: go_simplicity
         max_nesting_depth: 3
         max_function_lines: 50
-      - type: go_moderation
-        max_goroutine_spawns: 5
 ```
 
 

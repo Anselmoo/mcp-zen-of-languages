@@ -361,9 +361,9 @@ Rust's zen is the compiler's bargain: fight with the borrow checker at compile t
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **RustUnwrapUsageDetector** | Flags excessive ``unwrap()`` and ``expect()`` calls that bypass Rust's error model | `rust-001` |
 | **RustErrorHandlingDetector** | Flags functions that use ``Result`` without propagating errors and detects ``panic!`` abuse | `rust-001` |
 | **RustErrorTraitsDetector** | Flags error types that do not implement ``std::error::Error`` | `rust-014` |
+| **RustUnwrapUsageDetector** | Flags excessive ``unwrap()`` and ``expect()`` calls that bypass Rust's error model | `rust-001` |
 
 ### Idioms
 
@@ -542,25 +542,25 @@ languages:
   rust:
     enabled: true
     pipeline:
-      - type: rust_unwrap_usage
-        max_unwraps: 0
       - type: rust-002
         primitive_types: ['String', 'i32', 'u32', 'i64', 'u64', 'bool']
       - type: rust-003
         max_loops: 0
-      - type: rust_unsafe_blocks
-        detect_unsafe_blocks: True
-      - type: rust_clone_overhead
-        max_clone_calls: 0
-      - type: rust_error_handling
-        detect_unhandled_results: True
-        max_panics: 0
       - type: rust-007
         primitive_types: ['String', 'i32', 'u32', 'i64', 'u64', 'bool']
       - type: rust-010
         max_bool_fields: 0
       - type: rust-011
         max_explicit_lifetimes: 0
+      - type: rust_clone_overhead
+        max_clone_calls: 0
+      - type: rust_error_handling
+        detect_unhandled_results: True
+        max_panics: 0
+      - type: rust_unsafe_blocks
+        detect_unsafe_blocks: True
+      - type: rust_unwrap_usage
+        max_unwraps: 0
 ```
 
 

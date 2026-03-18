@@ -139,7 +139,7 @@ If you discover a security vulnerability:
 
 ### For CI/CD Pipelines
 
-1. **Use the CLI** — `zen report` instead of the MCP server
+1. **Use the CLI** — `zen reports` instead of the MCP server
 2. **Read-only file system** — mount code as read-only in containers
 3. **Restrict network access** — no outbound network required
 4. **Run in isolated containers** — use Docker for additional sandboxing
@@ -197,7 +197,7 @@ For regulated environments needing audit logs:
 
 ```bash
 # Generate reports with metadata
-zen report . --export-json audit.json --export-log audit.log
+zen reports . --export-json audit.json --export-log audit.log
 
 # audit.log contains:
 # - Timestamp

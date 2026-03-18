@@ -27,7 +27,7 @@ You'll go from zero to your first analysis in under two minutes. The path is sim
 
     ---
 
-    Run `zen init` and `zen report` to see your first violations, severities, and remediation prompts.
+    Run `mcp-zen-of-languages-cli init` and `mcp-zen-of-languages-cli reports` to see your first violations, severities, and remediation prompts.
 
     [Quickstart](quickstart.md)
 
@@ -45,18 +45,21 @@ You'll go from zero to your first analysis in under two minutes. The path is sim
     Start with [MCP Integration](mcp-integration.md) to connect your editor, then use [Quickstart](quickstart.md) to see your first analysis results. The [CLI](../user-guide/cli-reference.md) is available for local and CI workflows.
 
 !!! info "Supported languages"
-    MCP Zen of Languages currently supports :material-language-python: **Python**, :material-language-typescript: **TypeScript**, and :material-language-rust: **Rust**. See the [Language Guides](../user-guide/languages/index.md) for idiomatic rules and configuration per language.
+    MCP Zen of Languages currently supports :material-language-python: **Python**, :material-language-typescript: **TypeScript**, and :material-language-rust: **Rust**. See the [Language Guides](../user-guide/languages/_index.md) for idiomatic rules and configuration per language.
 
 ## MCP-first 5-minute workflow
 
-1. Start the server: `uvx --from mcp-zen-of-languages zen-mcp-server`
+1. Start the server: `uvx --from mcp-zen-of-languages mcp-zen-of-languages-server`
 2. Connect your editor/client using the `zen-of-languages` server key.
 3. Run `analyze_zen_violations` on one active file.
 4. Generate remediation with `generate_prompts` for the highest-severity findings.
 5. Re-run analysis to confirm the score improves.
 
+Legacy aliases `zen` and `zen-mcp-server` still work if you already have them in
+shell history or existing local scripts.
+
 ## See Also
 
-- [User Guide](../user-guide/index.md) — Deep-dive on configuration, languages, and remediation workflows.
+- [User Guide](../user-guide/_index.md) — Deep-dive on configuration, languages, and remediation workflows.
 - [Security](security.md) — Security posture, data handling expectations, and operational safety.
-- [API Reference](../api/index.md) — Programmatic integration points for analyzers and server tools.
+- [API Reference](../api/_index.md) — Programmatic integration points for analyzers and server tools.

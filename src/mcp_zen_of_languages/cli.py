@@ -45,6 +45,7 @@ from mcp_zen_of_languages import __version__
 from mcp_zen_of_languages.models import AnalysisResult
 from mcp_zen_of_languages.models import CyclomaticSummary
 from mcp_zen_of_languages.models import Metrics
+from mcp_zen_of_languages.models import PerspectiveMode
 from mcp_zen_of_languages.models import ProjectSummary
 from mcp_zen_of_languages.models import RulesSummary
 from mcp_zen_of_languages.models import SeverityCounts
@@ -58,6 +59,8 @@ from mcp_zen_of_languages.orchestration import (
 from mcp_zen_of_languages.orchestration import (
     collect_targets as _shared_collect_targets,
 )
+from mcp_zen_of_languages.perspectives import apply_perspective_to_result
+from mcp_zen_of_languages.perspectives import validate_perspective
 from mcp_zen_of_languages.rendering import analysis_progress
 from mcp_zen_of_languages.rendering import console
 from mcp_zen_of_languages.rendering import file_glyph
@@ -119,6 +122,20 @@ SEVERITY_HIGH = 7
 SEVERITY_MEDIUM = 4
 EXTERNAL_TOOLS_DEFAULT = False
 TEMPORARY_RUNNERS_DEFAULT = False
+PERSPECTIVE_OPTION = typer.Option(
+    PerspectiveMode.ALL,
+    "--perspective",
+    help=(
+        "Perspective to render: all, zen, dogma, testing, or projection "
+        "(projection requires --as)"
+    ),
+    case_sensitive=False,
+)
+PROJECT_AS_OPTION = typer.Option(
+    None,
+    "--as",
+    help="Projection-family target used with --perspective projection",
+)
 
 # Keep Typer's rich help panels aligned with the CLI rendering width contract.
 if typer_rich_utils.MAX_WIDTH is None or typer_rich_utils.MAX_WIDTH > MAX_OUTPUT_WIDTH:
@@ -430,6 +447,7 @@ class ReportArgs(Protocol):
         export_json: Sidecar JSON export path, independent of *out*.
         export_markdown: Sidecar markdown export path.
         export_log: Compact log summary export path.
+        perspective: Requested analysis perspective.
         include_prompts: Append remediation prompts to the report body.
         skip_analysis: Omit the per-file analysis details chapter.
         skip_gaps: Omit the gap-analysis chapter.
@@ -443,6 +461,8 @@ class ReportArgs(Protocol):
     export_json: str | None
     export_markdown: str | None
     export_log: str | None
+    perspective: PerspectiveMode
+    project_as: str | None
     include_prompts: bool
     skip_analysis: bool
     skip_gaps: bool
@@ -525,6 +545,7 @@ class PromptsArgs(Protocol):
         export_prompts: Markdown export path for remediation prompts.
         export_agent: JSON export path for agent task payloads.
         severity: Minimum severity threshold; violations below are excluded.
+        perspective: Requested analysis perspective.
     """
 
     path: str
@@ -534,6 +555,8 @@ class PromptsArgs(Protocol):
     export_prompts: str | None
     export_agent: str | None
     severity: int | None
+    perspective: PerspectiveMode
+    project_as: str | None
     enable_external_tools: bool
     allow_temporary_tools: bool
 
@@ -547,6 +570,8 @@ class CheckArgs(Protocol):
     format: Literal["terminal", "json", "sarif"]
     out: str | None
     fail_on_severity: int | None
+    perspective: PerspectiveMode
+    project_as: str | None
     show_files: bool
     enable_external_tools: bool
     allow_temporary_tools: bool
@@ -1095,7 +1120,7 @@ def _resolve_prompt_export_path(export: str | None) -> Path | None:
     return Path(export) if export else None
 
 
-def _run_prompts(args: PromptsArgs) -> int:
+def _run_prompts(args: PromptsArgs) -> int:  # noqa: C901
     """Orchestrate prompt generation from file discovery through export.
 
     Validates the target path, collects analysable files, runs the analysis
@@ -1123,6 +1148,11 @@ def _run_prompts(args: PromptsArgs) -> int:
     if not targets:
         print_error("No analyzable files found.")
         return 2
+    try:
+        validate_perspective(args.perspective, project_as=args.project_as)
+    except ValueError as exc:
+        print_error(str(exc))
+        return 2
     enable_external_tools = getattr(args, "enable_external_tools", False)
     allow_temporary_tools = getattr(args, "allow_temporary_tools", False)
     results = _analyze_targets(
@@ -1136,6 +1166,18 @@ def _run_prompts(args: PromptsArgs) -> int:
         enable_external_tools=enable_external_tools,
         allow_temporary_tools=allow_temporary_tools,
     )
+    try:
+        results = [
+            apply_perspective_to_result(
+                result,
+                args.perspective,
+                project_as=args.project_as,
+            )
+            for result in results
+        ]
+    except ValueError as exc:
+        print_error(str(exc))
+        return 2
     if args.severity is not None:
         results = [_filter_result(result, args.severity) for result in results]
 
@@ -1363,6 +1405,11 @@ def _run_check(args: CheckArgs) -> int:
     if not targets:
         print_error("No analyzable files found.")
         return 2
+    try:
+        validate_perspective(args.perspective, project_as=args.project_as)
+    except ValueError as exc:
+        print_error(str(exc))
+        return 2
 
     enable_external_tools = getattr(args, "enable_external_tools", False)
     allow_temporary_tools = getattr(args, "allow_temporary_tools", False)
@@ -1377,6 +1424,18 @@ def _run_check(args: CheckArgs) -> int:
         enable_external_tools=enable_external_tools,
         allow_temporary_tools=allow_temporary_tools,
     )
+    try:
+        results = [
+            apply_perspective_to_result(
+                result,
+                args.perspective,
+                project_as=args.project_as,
+            )
+            for result in results
+        ]
+    except ValueError as exc:
+        print_error(str(exc))
+        return 2
     rendered, terminal_summary = _render_check_payload(args.format, target, results)
     _emit_check_output(
         out=args.out,
@@ -1436,14 +1495,20 @@ def _run_report(args: ReportArgs) -> int:
         print_error("No analyzable files found.")
         return 2
 
-    report = generate_report(
-        str(target),
-        config_path=args.config,
-        language=args.language,
-        include_prompts=args.include_prompts,
-        include_analysis=not args.skip_analysis,
-        include_gaps=not args.skip_gaps,
-    )
+    try:
+        report = generate_report(
+            str(target),
+            config_path=args.config,
+            language=args.language,
+            perspective=args.perspective,
+            project_as=args.project_as,
+            include_prompts=args.include_prompts,
+            include_analysis=not args.skip_analysis,
+            include_gaps=not args.skip_gaps,
+        )
+    except ValueError as exc:
+        print_error(str(exc))
+        return 2
 
     export_json = getattr(args, "export_json", None)
     export_markdown = getattr(args, "export_markdown", None)
@@ -1562,6 +1627,8 @@ def reports(  # noqa: PLR0913
     path: str = typer.Argument(..., help="File or directory to analyze"),
     language: str | None = typer.Option(None, help="Override language detection"),
     config: str | None = typer.Option(None, help="Path to zen-config.yaml"),
+    perspective: PerspectiveMode = PERSPECTIVE_OPTION,
+    project_as: str | None = PROJECT_AS_OPTION,
     output_format: Literal["markdown", "json", "both", "sarif"] = typer.Option(
         "markdown",
         "--format",
@@ -1616,6 +1683,8 @@ def reports(  # noqa: PLR0913
         export_json=export_json,
         export_markdown=export_markdown,
         export_log=export_log,
+        perspective=perspective,
+        project_as=project_as,
         include_prompts=include_prompts,
         skip_analysis=skip_analysis,
         skip_gaps=skip_gaps,
@@ -1631,6 +1700,8 @@ def check(  # noqa: PLR0913
     path: str = typer.Argument(..., help="File or directory to analyze"),
     language: str | None = typer.Option(None, help="Override language detection"),
     config: str | None = typer.Option(None, help="Path to zen-config.yaml"),
+    perspective: PerspectiveMode = PERSPECTIVE_OPTION,
+    project_as: str | None = PROJECT_AS_OPTION,
     output_format: Literal["terminal", "json", "sarif"] = typer.Option(
         "terminal",
         "--format",
@@ -1683,6 +1754,8 @@ def check(  # noqa: PLR0913
         format=output_format,
         out=out,
         fail_on_severity=fail_on_severity,
+        perspective=perspective,
+        project_as=project_as,
         show_files=show_files,
         enable_external_tools=enable_external_tools,
         allow_temporary_tools=allow_temporary_runners,
@@ -1695,6 +1768,8 @@ def prompts(  # noqa: PLR0913
     path: str = typer.Argument(..., help="File or directory to analyze"),
     language: str | None = typer.Option(None, help="Override language detection"),
     config: str | None = typer.Option(None, help="Path to zen-config.yaml"),
+    perspective: PerspectiveMode = PERSPECTIVE_OPTION,
+    project_as: str | None = PROJECT_AS_OPTION,
     mode: Literal["remediation", "agent", "both"] = typer.Option(
         "remediation",
         help="Prompt generation mode",
@@ -1744,6 +1819,8 @@ def prompts(  # noqa: PLR0913
         export_prompts=export_prompts,
         export_agent=export_agent,
         severity=severity,
+        perspective=perspective,
+        project_as=project_as,
         enable_external_tools=enable_external_tools,
         allow_temporary_tools=allow_temporary_runners,
     )

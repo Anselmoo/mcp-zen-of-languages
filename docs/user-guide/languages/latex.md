@@ -49,7 +49,7 @@ tags:
 | `latex-006` | Prefer semantic emphasis commands | Clarity | 4 | `ZEN-EXPLICIT-INTENT` |
 | `latex-007` | Prevent circular \input and \include chains | Architecture | 8 | `ZEN-RIGHT-ABSTRACTION` |
 | `latex-008` | Declare UTF-8 encoding intent | Correctness | 5 | `ZEN-EXPLICIT-INTENT` |
-| `latex-009` | Remove unused packages | Organization | 5 | `ZEN-STRICT-FENCES` |
+| `latex-009` | Remove unused packages | Organization | 5 | `ZEN-STRICT-FENCES`, `ZEN-RUTHLESS-DELETION` |
 
 ??? info "`latex-001` — Prefer \newcommand over \def"
     **Use checked macro definitions to avoid accidental redefinitions.**
@@ -118,7 +118,7 @@ tags:
 ??? info "`latex-009` — Remove unused packages"
     **Declared packages should have commands used in the document.**
 
-    **Universal Dogmas:** `ZEN-STRICT-FENCES`
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`, `ZEN-RUTHLESS-DELETION`
     **Common Violations:**
 
     - \usepackage declarations with no usage

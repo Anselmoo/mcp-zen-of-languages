@@ -53,6 +53,7 @@ zen check myfile.py
 ## Key Patterns & Conventions
 
 - **Pydantic v2 everywhere**: Use models with `ConfigDict`, avoid raw dict/list returns
+- **Shared runtime models**: Prefer Pydantic `BaseModel`/`ConfigDict` for shared runtime and authored mapping models; if dataclass semantics are truly needed, prefer Pydantic dataclasses, and do not add stdlib `dataclasses.dataclass` at new shared architecture seams without a strong documented reason. For validation or immutability in architecture models, choose Pydantic-native patterns first.
 - **Modern typing**: `str | None` not `Optional[str]`, `list[str]` not `List[str]` (Python 3.12+)
 - **Config access**: Direct attribute `config.max_nesting_depth`, never `.get()`
 - **Rule projection is strict**: rule `metrics` keys must match detector config fields exactly

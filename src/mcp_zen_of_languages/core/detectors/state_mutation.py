@@ -1,38 +1,21 @@
-"""State mutation dogma detector stubs (Dogmas 7 and 8)."""
+"""State-mutation dogma detector built on the shared rule-pattern engine."""
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
-from mcp_zen_of_languages.analyzers.base import ViolationDetector
-from mcp_zen_of_languages.languages.configs import DetectorConfig
+from mcp_zen_of_languages.languages.rule_pattern import RulePatternDetector
 
 
-if TYPE_CHECKING:
-    from mcp_zen_of_languages.analyzers.base import AnalysisContext
-    from mcp_zen_of_languages.models import Violation
-
-
-class StateMutationDetector(ViolationDetector[DetectorConfig]):
-    """Stub detector for visible-state and strict-fences dogmas."""
+class StateMutationDetector(RulePatternDetector):
+    """Cross-language detector for visible-state and strict-fences rules."""
 
     UNIVERSAL_RULE_IDS = ("ZEN-VISIBLE-STATE", "ZEN-STRICT-FENCES")
 
     def __init__(self) -> None:
-        """Initialize with the universal rule IDs for this stub domain."""
+        """Initialize with the universal rule IDs for the state domain."""
         super().__init__()
         self.rule_ids = list(self.UNIVERSAL_RULE_IDS)
 
     @property
     def name(self) -> str:
         """Return stable detector name for future pipeline wiring."""
-        return "universal_state_mutation_stub"
-
-    def detect(
-        self,
-        context: AnalysisContext,
-        config: DetectorConfig,
-    ) -> list[Violation]:
-        """Return no violations until state-mutation detectors are implemented."""
-        _ = (context, config)
-        return []
+        return "universal_state_mutation"

@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
-from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
+from mcp_zen_of_languages.analyzers.mapping_models import RuleBinding
+from mcp_zen_of_languages.analyzers.mapping_models import RuleDetectorBinding
 from mcp_zen_of_languages.languages.configs import RustCloneOverheadConfig
 from mcp_zen_of_languages.languages.configs import RustDebugDeriveConfig
 from mcp_zen_of_languages.languages.configs import RustDefaultImplConfig
@@ -43,153 +43,221 @@ from mcp_zen_of_languages.languages.rust.detectors import RustUnsafeBlocksDetect
 from mcp_zen_of_languages.languages.rust.detectors import RustUnwrapUsageDetector
 
 
-FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
+def _dogmas(*dogma_ids: str) -> list[str]:
+    """Return explicit universal dogma ids for the binding."""
+    return list(dogma_ids)
+
+
 DETECTOR_MAP = LanguageDetectorMap(
     language="rust",
     bindings=[
-        DetectorBinding(
-            detector_id="rust_unwrap_usage",
-            detector_class=RustUnwrapUsageDetector,
-            config_model=RustUnwrapUsageConfig,
-            rule_ids=["rust-001"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=10,
-        ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="rust-002",
             detector_class=RustTypeSafetyDetector,
             config_model=RustTypeSafetyConfig,
-            rule_ids=["rust-002"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=15,
+            rules=[
+                RuleBinding(
+                    rule_id="rust-002",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT", "ZEN-VISIBLE-STATE"),
+                )
+            ],
+            default_order=10,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="rust-003",
             detector_class=RustIteratorPreferenceDetector,
             config_model=RustIteratorPreferenceConfig,
-            rule_ids=["rust-003"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=18,
-        ),
-        DetectorBinding(
-            detector_id="rust_unsafe_blocks",
-            detector_class=RustUnsafeBlocksDetector,
-            config_model=RustUnsafeBlocksConfig,
-            rule_ids=["rust-008"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            rules=[
+                RuleBinding(
+                    rule_id="rust-003", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
             default_order=20,
         ),
-        DetectorBinding(
-            detector_id="rust_clone_overhead",
-            detector_class=RustCloneOverheadDetector,
-            config_model=RustCloneOverheadConfig,
-            rule_ids=["rust-004"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=30,
-        ),
-        DetectorBinding(
-            detector_id="rust_error_handling",
-            detector_class=RustErrorHandlingDetector,
-            config_model=RustErrorHandlingConfig,
-            rule_ids=["rust-001"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=40,
-        ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="rust-005",
             detector_class=RustMustUseDetector,
             config_model=RustMustUseConfig,
-            rule_ids=["rust-005"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=50,
+            rules=[
+                RuleBinding(
+                    rule_id="rust-005", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                )
+            ],
+            default_order=30,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="rust-006",
             detector_class=RustDebugDeriveDetector,
             config_model=RustDebugDeriveConfig,
-            rule_ids=["rust-006"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=60,
+            rules=[
+                RuleBinding(
+                    rule_id="rust-006", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT")
+                )
+            ],
+            default_order=40,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="rust-007",
             detector_class=RustNewtypePatternDetector,
             config_model=RustNewtypePatternConfig,
-            rule_ids=["rust-007"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=70,
+            rules=[
+                RuleBinding(
+                    rule_id="rust-007", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
+            default_order=50,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="rust-009",
             detector_class=RustStdTraitsDetector,
             config_model=RustStdTraitsConfig,
-            rule_ids=["rust-009"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=80,
+            rules=[
+                RuleBinding(
+                    rule_id="rust-009", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
+            default_order=60,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="rust-010",
             detector_class=RustEnumOverBoolDetector,
             config_model=RustEnumOverBoolConfig,
-            rule_ids=["rust-010"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=90,
+            rules=[
+                RuleBinding(
+                    rule_id="rust-010",
+                    dogma_ids=_dogmas(
+                        "ZEN-RIGHT-ABSTRACTION",
+                        "ZEN-EXPLICIT-INTENT",
+                        "ZEN-VISIBLE-STATE",
+                    ),
+                )
+            ],
+            default_order=70,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="rust-011",
             detector_class=RustLifetimeUsageDetector,
             config_model=RustLifetimeUsageConfig,
-            rule_ids=["rust-011"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=100,
+            rules=[
+                RuleBinding(
+                    rule_id="rust-011",
+                    dogma_ids=_dogmas("ZEN-VISIBLE-STATE", "ZEN-EXPLICIT-INTENT"),
+                )
+            ],
+            default_order=80,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="rust-012",
             detector_class=RustInteriorMutabilityDetector,
             config_model=RustInteriorMutabilityConfig,
-            rule_ids=["rust-012"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=110,
+            rules=[
+                RuleBinding(
+                    rule_id="rust-012",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-VISIBLE-STATE"),
+                )
+            ],
+            default_order=90,
         ),
-        DetectorBinding(
-            detector_id="rust_send_sync",
-            detector_class=RustSendSyncDetector,
-            config_model=RustSendSyncConfig,
-            rule_ids=["rust-013"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=120,
+        RuleDetectorBinding(
+            detector_id="rust_clone_overhead",
+            detector_class=RustCloneOverheadDetector,
+            config_model=RustCloneOverheadConfig,
+            rules=[
+                RuleBinding(
+                    rule_id="rust-004",
+                    dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
+                )
+            ],
+            default_order=100,
         ),
-        DetectorBinding(
-            detector_id="rust_error_traits",
-            detector_class=RustErrorTraitsDetector,
-            config_model=RustErrorTraitsConfig,
-            rule_ids=["rust-014"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=130,
-        ),
-        DetectorBinding(
-            detector_id="rust_naming",
-            detector_class=RustNamingDetector,
-            config_model=RustNamingConfig,
-            rule_ids=["rust-015"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=140,
-        ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="rust_default_impl",
             detector_class=RustDefaultImplDetector,
             config_model=RustDefaultImplConfig,
-            rule_ids=["rust-016"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=150,
+            rules=[
+                RuleBinding(
+                    rule_id="rust-016",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-VISIBLE-STATE"),
+                )
+            ],
+            default_order=110,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
+            detector_id="rust_error_handling",
+            detector_class=RustErrorHandlingDetector,
+            config_model=RustErrorHandlingConfig,
+            rules=[RuleBinding(rule_id="rust-001", dogma_ids=_dogmas("ZEN-FAIL-FAST"))],
+            default_order=120,
+        ),
+        RuleDetectorBinding(
+            detector_id="rust_error_traits",
+            detector_class=RustErrorTraitsDetector,
+            config_model=RustErrorTraitsConfig,
+            rules=[RuleBinding(rule_id="rust-014", dogma_ids=_dogmas("ZEN-FAIL-FAST"))],
+            default_order=130,
+        ),
+        RuleDetectorBinding(
             detector_id="rust_from_into",
             detector_class=RustFromIntoDetector,
             config_model=RustFromIntoConfig,
-            rule_ids=["rust-017"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
+            rules=[
+                RuleBinding(
+                    rule_id="rust-017", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
+            default_order=140,
+        ),
+        RuleDetectorBinding(
+            detector_id="rust_naming",
+            detector_class=RustNamingDetector,
+            config_model=RustNamingConfig,
+            rules=[
+                RuleBinding(
+                    rule_id="rust-015", dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME")
+                )
+            ],
+            default_order=150,
+        ),
+        RuleDetectorBinding(
+            detector_id="rust_send_sync",
+            detector_class=RustSendSyncDetector,
+            config_model=RustSendSyncConfig,
+            rules=[
+                RuleBinding(rule_id="rust-013", dogma_ids=_dogmas("ZEN-VISIBLE-STATE"))
+            ],
             default_order=160,
+        ),
+        RuleDetectorBinding(
+            detector_id="rust_unsafe_blocks",
+            detector_class=RustUnsafeBlocksDetector,
+            config_model=RustUnsafeBlocksConfig,
+            rules=[
+                RuleBinding(
+                    rule_id="rust-008",
+                    dogma_ids=_dogmas("ZEN-FAIL-FAST"),
+                    testing_ids=["cargo-test"],
+                    verified_testing_ids=["cargo-test"],
+                    projection_ids=["rust"],
+                    verified_projection_ids=["rust"],
+                )
+            ],
+            default_order=170,
+        ),
+        RuleDetectorBinding(
+            detector_id="rust_unwrap_usage",
+            detector_class=RustUnwrapUsageDetector,
+            config_model=RustUnwrapUsageConfig,
+            rules=[
+                RuleBinding(
+                    rule_id="rust-001",
+                    dogma_ids=_dogmas("ZEN-FAIL-FAST"),
+                    testing_ids=["cargo-test"],
+                    verified_testing_ids=["cargo-test"],
+                    projection_ids=["rust"],
+                    verified_projection_ids=["rust"],
+                )
+            ],
+            default_order=180,
         ),
     ],
 )

@@ -2,9 +2,9 @@
 
 Checks:
 1. Key README/docs pages include required strategic headings.
-2. docs/index.md uses shared README snippets for MCP/philosophy parity.
+2. docs/_index.md uses shared README snippets for MCP/philosophy parity.
 3. Generated technical-reference pages retain auto-generated markers.
-4. docs/index.md grid-card blocks keep expected opening/closing structure.
+4. docs/_index.md grid-card blocks keep expected opening/closing structure.
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ REQUIRED_HEADINGS: dict[Path, tuple[str, ...]] = {
         "## Why MCP for Zen Analysis",
         "## Zen Philosophy",
     ),
-    Path("docs/index.md"): (
+    Path("docs/_index.md"): (
         "## Why MCP",
         "## Zen Philosophy",
         "## Choose Your Path",
@@ -33,7 +33,7 @@ REQUIRED_HEADINGS: dict[Path, tuple[str, ...]] = {
 }
 
 REQUIRED_SNIPPETS: dict[Path, tuple[str, ...]] = {
-    Path("docs/index.md"): (
+    Path("docs/_index.md"): (
         '--8<-- "README.md:why-mcp"',
         '--8<-- "README.md:zen-philosophy"',
         '--8<-- "README.md:what-you-get"',
@@ -47,7 +47,7 @@ GENERATED_REFERENCE_MARKERS: dict[Path, tuple[str, ...]] = {
 }
 
 INDEX_GRID_CARD_BLOCK_COUNTS: dict[Path, int] = {
-    Path("docs/index.md"): 3,
+    Path("docs/_index.md"): 3,
 }
 
 GRID_CARD_BLOCK_OPENING = '<div class="grid cards" markdown>'
@@ -62,11 +62,11 @@ FORBIDDEN_STALE_CLAIMS: dict[Path, tuple[str, ...]] = {
         "163 focused detectors",
         "for 14 languages into machine-readable rules",
     ),
-    Path("docs/index.md"): (
+    Path("docs/_index.md"): (
         "151 zen principles across 14 languages",
         "Explore 14 languages",
     ),
-    Path("docs/user-guide/index.md"): ("14 languages, 151 principles, 163 detectors",),
+    Path("docs/user-guide/_index.md"): ("14 languages, 151 principles, 163 detectors",),
     Path("docs/contributing/architecture.md"): ("163 detectors across 14 languages",),
     Path("docs/overrides/main.html"): ("14+ languages",),
 }

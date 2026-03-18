@@ -5,10 +5,9 @@ Run::
     uv run python scripts/generate_dogma_mapping.py          # write files
     uv run python scripts/generate_dogma_mapping.py --check  # CI dry-run
 
-The script imports all language zen principles and uses
-``infer_dogmas_for_principle()`` to build a reverse mapping from each
-of the 10 universal dogmas to the language-specific rules that implement
-them.
+The script imports all language zen principles and uses the explicit
+dogma catalog to build a reverse mapping from each of the 10 universal
+dogmas to the language-specific rules that implement them.
 """
 
 from __future__ import annotations
@@ -21,7 +20,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from mcp_zen_of_languages.core.universal_dogmas import UniversalDogmaID
-from mcp_zen_of_languages.core.universal_dogmas import infer_dogmas_for_principle
+from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule
 from mcp_zen_of_languages.rules import get_all_languages
 from mcp_zen_of_languages.rules import get_language_zen
 
@@ -263,7 +262,7 @@ def build_reverse_mapping() -> dict[str, list[tuple[str, str, str, int]]]:
             continue
         display_name = _LANGUAGE_NAMES.get(lang_key, lang_key)
         for principle in zen.principles:
-            dogmas = infer_dogmas_for_principle(principle)
+            dogmas = dogmas_for_rule(lang_key, principle.id)
             for dogma_id in dogmas:
                 mapping[dogma_id].append(
                     (
@@ -358,7 +357,7 @@ def render_dogma_spec() -> str:
     )
     lines.append(
         "The tables below are **auto-generated** from the codebase's"
-        " `infer_dogmas_for_principle()` mapping."
+        " explicit rule-to-dogma catalog."
     )
     lines.append("")
     lines.append('--8<-- "docs/includes/generated/dogma-mapping.md"')
@@ -374,7 +373,7 @@ def render_dogma_spec() -> str:
         " — how dogmas drive detector and pipeline design"
     )
     lines.append(
-        "- [Languages](../languages/index.md)"
+        "- [Languages](../languages/_index.md)"
         " — per-language principles derived from these dogmas"
     )
     lines.append(

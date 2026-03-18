@@ -136,7 +136,7 @@ dedicated detector, ensuring every principle is at least heuristically covered.
 ```
 
 - **Universal layer**: dogmas are language-agnostic intent encoded as `UniversalDogmaID` values.
-- **Adapter layer**: language analyzers map syntax/AST details into dogmas via `infer_dogmas_for_principle()`.
+- **Adapter layer**: language analyzers emit violations, and the explicit rule-to-dogma catalog plus universal dogma detectors classify them into the ten dogmas.
 - **Transport layer**: CLI and MCP reporters expose findings as structured `ViolationReport` objects.
 
 ## Identifier Mapping Reference
@@ -185,4 +185,4 @@ at inference time by keyword scanning of violation and pattern descriptions.
 - [Adding a Detector](adding-detector.md) — Create a Strategy class and register it
 - [Philosophy](../getting-started/philosophy.md) — The architectural-coaching approach and motivation
 - [The 10 Dogmas](../user-guide/rules/the-ten-dogmas.md) — Full dogma reference with rationale and anti-patterns
-- [Languages](../user-guide/languages/index.md) — See programming, workflow, and config coverage at a glance
+- [Languages](../user-guide/languages/_index.md) — See programming, workflow, and config coverage at a glance

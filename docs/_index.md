@@ -45,7 +45,7 @@ Every programming language has a philosophy — a sense of what "good code" look
 
     From Python's PEP 20 to Rust's ownership idioms — each language has its own zen.
 
-    [Languages](user-guide/languages/index.md)
+    [Languages](user-guide/languages/_index.md)
 
 -   :material-wrench-cog:{ .lg .middle } **Solution workflow**
 
@@ -75,17 +75,20 @@ Every programming language has a philosophy — a sense of what "good code" look
 
 ```bash
 # MCP server (IDE/agent workflows)
-uvx --from mcp-zen-of-languages zen-mcp-server
+uvx --from mcp-zen-of-languages mcp-zen-of-languages-server
 
 # Run without installing (recommended)
-uvx --from mcp-zen-of-languages zen init
-uvx --from mcp-zen-of-languages zen report path/to/project
+uvx --from mcp-zen-of-languages mcp-zen-of-languages-cli init
+uvx --from mcp-zen-of-languages mcp-zen-of-languages-cli reports path/to/project
 
 # Or install globally
 pip install mcp-zen-of-languages
-zen init
-zen report path/to/project
+mcp-zen-of-languages-cli init
+mcp-zen-of-languages-cli reports path/to/project
 ```
+
+Legacy aliases remain available: `zen` for the CLI and `zen-mcp-server` for the
+MCP server.
 
 ## What You Get
 
@@ -183,13 +186,13 @@ The MCP server exposes **15 tools** (including versioned v1/v2 variants) across 
 
 - **New user**: [Quickstart](getting-started/quickstart.md) → [Configuration](user-guide/configuration.md) → [Understanding Violations](user-guide/understanding-violations.md)
 - **Maintainer**: [Project Analysis](user-guide/project-analysis.md) → [Prompt Generation](user-guide/prompt-generation.md) → [CLI Reference](user-guide/cli-reference.md)
-- **Contributor**: [Contributing](contributing/index.md) → [Development](contributing/development.md) → [Architecture](contributing/architecture.md)
+- **Contributor**: [Contributing](contributing/_index.md) → [Development](contributing/development.md) → [Architecture](contributing/architecture.md)
 - **AI-agent workflow**: [MCP Integration](getting-started/mcp-integration.md) → [MCP Tools Reference](user-guide/mcp-tools-reference.md) → [Examples](user-guide/examples.md)
 
 ## Next Steps
 
 - [Installation](getting-started/installation.md) — Setup options and requirements
 - [Configuration](user-guide/configuration.md) — Tune thresholds for your codebase
-- [Languages](user-guide/languages/index.md) — See every principle and detector by language
+- [Languages](user-guide/languages/_index.md) — See every principle and detector by language
 - [Understanding Violations](user-guide/understanding-violations.md) — How to read severity scores
 - [Prompt Generation](user-guide/prompt-generation.md) — Generate AI-ready remediation guidance

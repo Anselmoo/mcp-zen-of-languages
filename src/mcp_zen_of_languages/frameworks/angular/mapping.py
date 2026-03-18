@@ -1,0 +1,101 @@
+"""Mapping module."""
+
+from __future__ import annotations
+
+from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
+from mcp_zen_of_languages.analyzers.mapping_models import RuleBinding
+from mcp_zen_of_languages.analyzers.mapping_models import RuleDetectorBinding
+from mcp_zen_of_languages.frameworks.angular.detectors import AngularLazyRouteDetector
+from mcp_zen_of_languages.frameworks.angular.detectors import AngularNoAnyDetector
+from mcp_zen_of_languages.frameworks.angular.detectors import AngularOnPushDetector
+from mcp_zen_of_languages.frameworks.angular.detectors import (
+    AngularSelectorPrefixDetector,
+)
+from mcp_zen_of_languages.frameworks.angular.detectors import (
+    AngularSubscriptionLifecycleDetector,
+)
+from mcp_zen_of_languages.frameworks.mapping_helpers import dogma_ids as _dogmas
+from mcp_zen_of_languages.frameworks.mapping_helpers import (
+    make_rule_config as _rule_config,
+)
+from mcp_zen_of_languages.frameworks.mapping_helpers import (
+    projection_ids as _projection,
+)
+from mcp_zen_of_languages.frameworks.mapping_helpers import testing_ids as _testing
+
+
+DETECTOR_MAP = LanguageDetectorMap(
+    language="angular",
+    bindings=[
+        RuleDetectorBinding(
+            detector_id="angular-001",
+            detector_class=AngularOnPushDetector,
+            config_model=_rule_config("angular-001"),
+            rules=[
+                RuleBinding(
+                    rule_id="angular-001",
+                    dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("angular"),
+                )
+            ],
+            default_order=10,
+        ),
+        RuleDetectorBinding(
+            detector_id="angular-002",
+            detector_class=AngularNoAnyDetector,
+            config_model=_rule_config("angular-002"),
+            rules=[
+                RuleBinding(
+                    rule_id="angular-002",
+                    dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("angular"),
+                )
+            ],
+            default_order=20,
+        ),
+        RuleDetectorBinding(
+            detector_id="angular-003",
+            detector_class=AngularSubscriptionLifecycleDetector,
+            config_model=_rule_config("angular-003"),
+            rules=[
+                RuleBinding(
+                    rule_id="angular-003",
+                    dogma_ids=_dogmas("ZEN-STRICT-FENCES", "ZEN-EXPLICIT-INTENT"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("angular"),
+                )
+            ],
+            default_order=30,
+        ),
+        RuleDetectorBinding(
+            detector_id="angular-004",
+            detector_class=AngularSelectorPrefixDetector,
+            config_model=_rule_config("angular-004"),
+            rules=[
+                RuleBinding(
+                    rule_id="angular-004",
+                    dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("angular"),
+                )
+            ],
+            default_order=40,
+        ),
+        RuleDetectorBinding(
+            detector_id="angular-005",
+            detector_class=AngularLazyRouteDetector,
+            config_model=_rule_config("angular-005"),
+            rules=[
+                RuleBinding(
+                    rule_id="angular-005",
+                    dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY"),
+                    testing_ids=_testing("jest"),
+                    projection_ids=_projection("angular"),
+                )
+            ],
+            default_order=50,
+        ),
+    ],
+)

@@ -103,5 +103,5 @@ Thanks for improving MCP Zen of Languages. Whether you're fixing a bug, adding a
 ## See Also
 
 - [Zensical Migration](zensical-migration.md) — Theme migration and docs build workflow updates.
-- [User Guide](../user-guide/index.md) — End-user documentation surfaces impacted by contributor changes.
-- [API Reference](../api/index.md) — Generated API docs from docstrings.
+- [User Guide](../user-guide/_index.md) — End-user documentation surfaces impacted by contributor changes.
+- [API Reference](../api/_index.md) — Generated API docs from docstrings.

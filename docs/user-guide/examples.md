@@ -37,23 +37,69 @@ Quick check on one file — useful during development before committing.
 
 === "Terminal output"
     ```bash
-    zen report src
+    zen reports src
     ```
     Rich-formatted terminal output with severity badges and grouped violations.
 
 === "Markdown export"
     ```bash
-    zen report src --out report.md
+    zen reports src --out report.md
     ```
 
 === "Full artifact set"
     ```bash
-    zen report src \
+    zen reports src \
       --out report.md \
       --export-json report.json \
       --export-markdown report-export.md \
       --export-log report.log
     ```
+
+## Perspective-aware workflows
+
+### Rule-first default (`all`)
+
+```bash
+zen check src/orders.py --perspective all
+```
+
+This is the full runtime view: standard rule analysis, summaries, and any
+additional perspective metadata the selected surface includes.
+
+### Zen-only report
+
+```bash
+zen reports src --perspective zen --out zen-report.md
+```
+
+Use `zen` when you want the rule-level findings only. This keeps the report
+focused on the current language or framework rules and omits dogma-analysis
+payloads from the rendered result.
+
+### Testing-family report
+
+```bash
+zen reports tests --perspective testing --out testing-report.md
+```
+
+The `testing` perspective works on recognised test-file paths and surfaces only
+violations explicitly bound to the detected testing family, such as `pytest`,
+`gotest`, `jest`, or `rspec`.
+
+### Projection-family report
+
+```bash
+zen reports src/frontend --language react --perspective projection --as nextjs
+```
+
+Use `projection` when you want to view the subset of rule bindings that were
+authored for another family target. The `--as` value is required because
+projection is driven by explicit family bindings, not by file-path detection.
+
+!!! info "Standalone dogma is runnable"
+    `dogma` is now a first-class perspective. Use it when you want a
+    dogma-focused result that keeps universal dogma analysis and filters out
+    non-dogma violations.
 
 ## Prompt generation
 
@@ -93,6 +139,23 @@ When running as an MCP server, tools accept JSON requests:
 
 The response includes violations, severity scores, and remediation context.
 
+For perspective-aware MCP workflows, prefer a file or directory target:
+
+```json
+{
+  "tool": "generate_report",
+  "arguments": {
+    "target_path": "tests",
+    "perspective": "testing",
+    "include_prompts": true
+  }
+}
+```
+
+Snippet tools like `analyze_zen_violations` can use `all`, `zen`, or
+`projection`, but `testing` requires a real file path so the runtime can detect
+the test-family overlay.
+
 ## CI pipeline example
 
 ```bash
@@ -103,7 +166,7 @@ set -e
 zen init --yes --strictness strict
 
 # Run report — exits 1 if violations exceed threshold
-zen report . --export-json report.json --quiet
+zen reports . --export-json report.json --quiet
 
 # Generate remediation prompts for the team
 zen prompts . --mode remediation --export-prompts remediation.md --severity 6
@@ -114,4 +177,3 @@ zen prompts . --mode remediation --export-prompts remediation.md --severity 6
 - [Quickstart](../getting-started/quickstart.md) — First-time setup
 - [CLI Reference](cli-reference.md) — Full command reference
 - [Configuration](configuration.md) — Tune thresholds and pipelines
-```

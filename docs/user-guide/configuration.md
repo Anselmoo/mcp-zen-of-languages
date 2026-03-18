@@ -78,7 +78,7 @@ already exist.
 ## Choosing thresholds
 
 !!! tip "Start relaxed, tighten over time"
-Begin with default thresholds. Run `zen report .` to see your baseline. Then lower limits on the detectors that matter most to your team.
+Begin with default thresholds. Run `zen reports .` to see your baseline. Then lower limits on the detectors that matter most to your team.
 
 | Strictness   | Cyclomatic complexity | Nesting depth | Function length | Good for                           |
 | ------------ | :-------------------: | :-----------: | :-------------: | ---------------------------------- |
@@ -104,7 +104,7 @@ Each language has its own set of detector config fields. See the [config referen
 - [Python detectors](languages/python.md) — 23 detectors with AST-based analysis
 - [TypeScript detectors](languages/typescript.md) — 10 type-safety focused detectors
 - [Rust detectors](languages/rust.md) — 13 safety and idiom detectors
-- [All languages](languages/index.md) — Full comparison table
+- [All languages](languages/_index.md) — Full comparison table
 
 ## Monorepo strategy
 
@@ -112,8 +112,8 @@ For monorepos with multiple languages or packages:
 
 ```bash
 # Per-package config
-zen report packages/frontend --config packages/frontend/zen-config.yaml
-zen report packages/backend --config packages/backend/zen-config.yaml
+zen reports packages/frontend --config packages/frontend/zen-config.yaml
+zen reports packages/backend --config packages/backend/zen-config.yaml
 ```
 
 Each package can have its own thresholds — strict for new code, relaxed for legacy modules.
@@ -128,7 +128,7 @@ Each package can have its own thresholds — strict for new code, relaxed for le
 
 ### MCP Server (FastMCP)
 
-When running `zen-mcp-server`, these FastMCP environment variables control server behavior:
+When running `mcp-zen-of-languages-server` (legacy alias: `zen-mcp-server`), these FastMCP environment variables control server behavior:
 
 | Variable              | Purpose                                                | Default            |
 | --------------------- | ------------------------------------------------------ | ------------------ |

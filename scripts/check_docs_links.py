@@ -12,10 +12,10 @@ DOCS_ROOT = Path("docs")
 MKDOCS_CONFIG = Path("mkdocs.yml")
 LANGUAGE_DOCS = DOCS_ROOT / "user-guide" / "languages"
 KEY_DOC_PAGES = [
-    DOCS_ROOT / "getting-started" / "index.md",
-    DOCS_ROOT / "user-guide" / "index.md",
-    DOCS_ROOT / "api" / "index.md",
-    DOCS_ROOT / "contributing" / "index.md",
+    DOCS_ROOT / "getting-started" / "_index.md",
+    DOCS_ROOT / "user-guide" / "_index.md",
+    DOCS_ROOT / "api" / "_index.md",
+    DOCS_ROOT / "contributing" / "_index.md",
 ]
 
 MARKDOWN_LINK_RE = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
@@ -52,7 +52,7 @@ def _check_key_pages(errors: list[str]) -> None:
 
 def _check_language_pages(errors: list[str]) -> None:
     for page in sorted(LANGUAGE_DOCS.glob("*.md")):
-        if page.name in {"index.md", "config-formats.md"}:
+        if page.name in {"_index.md", "config-formats.md"}:
             continue
         text = page.read_text(encoding="utf-8")
         has_legacy_pattern = "drawn from [" in text

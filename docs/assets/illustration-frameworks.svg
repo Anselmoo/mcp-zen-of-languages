@@ -1,0 +1,223 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 320" role="img" aria-labelledby="frameworks-title">
+  <title id="frameworks-title">Framework analyzers — frontend and Python ecosystems connected through a shared zen registry bridge</title>
+  <defs>
+    <linearGradient id="fw-bg" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f2effb"/>
+      <stop offset="100%" stop-color="#e9e4f7"/>
+    </linearGradient>
+    <linearGradient id="fw-water" x1="0" x2="1" y1="0.5" y2="0.5">
+      <stop offset="0%" stop-color="#c9b3ff" stop-opacity="0.25"/>
+      <stop offset="50%" stop-color="#63c8ff" stop-opacity="0.42"/>
+      <stop offset="100%" stop-color="#c9b3ff" stop-opacity="0.25"/>
+    </linearGradient>
+    <linearGradient id="fw-path" x1="0" x2="1" y1="0.5" y2="0.5">
+      <stop offset="0%" stop-color="#b8bcff" stop-opacity="0.3"/>
+      <stop offset="50%" stop-color="#989cff"/>
+      <stop offset="100%" stop-color="#c9b3ff" stop-opacity="0.4"/>
+    </linearGradient>
+    <linearGradient id="fw-ground" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#e9e4f7"/>
+      <stop offset="100%" stop-color="#dfd8f2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sky background -->
+  <rect width="960" height="320" fill="url(#fw-bg)"/>
+
+  <!-- Distant mountain silhouettes — layered depth -->
+  <path d="M0 220 Q160 158, 320 188 Q440 210, 480 168 Q520 128, 640 178 Q800 228, 960 200 L960 320 L0 320Z" fill="#dfd8f2" opacity="0.35"/>
+  <path d="M0 238 Q180 202, 360 222 Q480 236, 600 212 Q720 186, 960 228 L960 320 L0 320Z" fill="#dfd8f2" opacity="0.5"/>
+
+  <!-- Central waterway / stream between the two shores -->
+  <path d="M334 248 Q390 228, 480 226 Q570 224, 626 246 Q646 258, 630 274 Q572 290, 480 288 Q388 286, 338 270 Q322 260, 334 248Z" fill="url(#fw-water)"/>
+  <!-- Water ripple lines -->
+  <path d="M368 242 Q422 230, 480 228 Q538 226, 594 242" fill="none" stroke="#63c8ff" stroke-width="1.5" stroke-linecap="round" opacity="0.44"/>
+  <path d="M363 254 Q422 242, 480 240 Q538 238, 598 256" fill="none" stroke="#63c8ff" stroke-width="1.2" stroke-linecap="round" opacity="0.3"/>
+  <path d="M368 266 Q424 256, 480 254 Q536 252, 594 268" fill="none" stroke="#b8bcff" stroke-width="1" stroke-linecap="round" opacity="0.26"/>
+
+  <!-- Ground plane — left shore -->
+  <path d="M0 266 Q130 250, 280 258 Q310 262, 334 268 L334 320 L0 320Z" fill="url(#fw-ground)" opacity="0.65"/>
+  <!-- Ground plane — right shore -->
+  <path d="M630 268 Q700 258, 840 252 Q900 248, 960 264 L960 320 L630 320Z" fill="url(#fw-ground)" opacity="0.65"/>
+  <!-- Foreground gravel band -->
+  <path d="M0 286 Q240 274, 480 278 Q720 282, 960 274 L960 320 L0 320Z" fill="#dfd8f2" opacity="0.48"/>
+
+  <!-- ===== LEFT SHORE : Frontend / JS ecosystem ===== -->
+
+  <!-- Bamboo grove — left edge -->
+  <g stroke="#767bd8" fill="none" stroke-linecap="round" opacity="0.48">
+    <line x1="26" y1="94" x2="26" y2="282" stroke-width="3"/>
+    <line x1="12" y1="124" x2="12" y2="282" stroke-width="2.5"/>
+    <line x1="44" y1="112" x2="44" y2="282" stroke-width="2.2"/>
+    <line x1="58" y1="134" x2="58" y2="282" stroke-width="2"/>
+    <!-- joints -->
+    <line x1="23" y1="172" x2="29" y2="172" stroke-width="1.5"/>
+    <line x1="23" y1="218" x2="29" y2="218" stroke-width="1.5"/>
+    <line x1="9" y1="188" x2="15" y2="188" stroke-width="1.5"/>
+    <line x1="41" y1="200" x2="47" y2="200" stroke-width="1.5"/>
+    <!-- leaf branches -->
+    <path d="M24 160 Q8 144, 0 130"/>
+    <path d="M28 160 Q44 144, 52 128"/>
+    <path d="M10 176 Q-6 160, -14 148"/>
+    <path d="M42 188 Q58 172, 66 158"/>
+  </g>
+
+  <!-- Torii gate — left shore marker (Frontend entrance) -->
+  <g transform="translate(102, 150)" opacity="0.83">
+    <!-- Posts -->
+    <rect x="0" y="0" width="8" height="98" rx="2" fill="#c9b3ff"/>
+    <rect x="68" y="0" width="8" height="98" rx="2" fill="#c9b3ff"/>
+    <!-- Kasagi (top curved beam) -->
+    <path d="M-8 4 Q38 -12, 84 4" fill="none" stroke="#989cff" stroke-width="7" stroke-linecap="round"/>
+    <!-- Nuki (middle horizontal beam) -->
+    <rect x="5" y="22" width="66" height="5" rx="1.5" fill="#b8bcff"/>
+    <!-- Post ground shadows -->
+    <ellipse cx="4" cy="252" rx="10" ry="4" fill="#989cff" opacity="0.28"/>
+    <ellipse cx="72" cy="252" rx="10" ry="4" fill="#989cff" opacity="0.28"/>
+  </g>
+
+  <!-- Frontend label — small carved-ink style, near torii -->
+  <text x="140" y="136" font-family="serif" font-size="10" fill="#2b2044" text-anchor="middle" letter-spacing="2" opacity="0.7">FRONTEND</text>
+
+  <!-- Framework names — subtle, small, at shore base -->
+  <g fill="#2b2044" font-family="serif" font-size="9" opacity="0.4" letter-spacing="0.4">
+    <text x="100" y="296" text-anchor="middle">React</text>
+    <text x="152" y="302" text-anchor="middle">Vue</text>
+    <text x="200" y="297" text-anchor="middle">Angular</text>
+    <text x="252" y="303" text-anchor="middle">Next.js</text>
+  </g>
+
+  <!-- Cool accent circle — frontend shore -->
+  <circle cx="228" cy="246" r="15" fill="none" stroke="#63c8ff" stroke-width="1.2" opacity="0.32"/>
+  <circle cx="228" cy="246" r="4" fill="#63c8ff" opacity="0.22"/>
+
+  <!-- Code bracket pair — tech cue at left shore -->
+  <path d="M192 234 L180 246 L192 258" fill="none" stroke="#2b2044" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.44"/>
+  <path d="M262 234 L274 246 L262 258" fill="none" stroke="#2b2044" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.44"/>
+
+  <!-- Grass tufts — left bank near water -->
+  <g stroke="#b8bcff" fill="none" stroke-width="1.5" stroke-linecap="round" opacity="0.3">
+    <path d="M306 268 Q302 256, 296 246"/>
+    <path d="M310 269 Q314 257, 320 249"/>
+    <path d="M278 274 Q274 262, 268 252"/>
+    <path d="M282 275 Q286 263, 292 255"/>
+  </g>
+
+  <!-- ===== CENTER : Registry bridge across the waterway ===== -->
+
+  <!-- Bridge arch — gradient stroke path over the water -->
+  <path d="M322 254 C360 214, 422 200, 480 198 C538 196, 600 212, 638 252" fill="none" stroke="url(#fw-path)" stroke-width="8" stroke-linecap="round"/>
+  <!-- Bridge deck secondary line -->
+  <path d="M332 258 C368 222, 426 206, 480 204 C534 202, 592 218, 628 258" fill="none" stroke="#dfd8f2" stroke-width="3" stroke-linecap="round" opacity="0.48"/>
+
+  <!-- Stepping stones across the water -->
+  <ellipse cx="378" cy="252" rx="20" ry="10" fill="#989cff" opacity="0.72"/>
+  <ellipse cx="428" cy="242" rx="17" ry="8.5" fill="#b8bcff" opacity="0.68"/>
+  <ellipse cx="480" cy="236" rx="22" ry="11" fill="#989cff" opacity="0.75"/>
+  <ellipse cx="532" cy="242" rx="17" ry="8.5" fill="#b8bcff" opacity="0.68"/>
+  <ellipse cx="582" cy="252" rx="20" ry="10" fill="#989cff" opacity="0.72"/>
+  <!-- Stone shadows -->
+  <g fill="#221938" opacity="0.09">
+    <ellipse cx="380" cy="262" rx="18" ry="3.5"/>
+    <ellipse cx="430" cy="251" rx="15" ry="3"/>
+    <ellipse cx="482" cy="247" rx="20" ry="3.5"/>
+    <ellipse cx="534" cy="251" rx="15" ry="3"/>
+    <ellipse cx="584" cy="262" rx="18" ry="3.5"/>
+  </g>
+
+  <!-- Registry stone — carved oval tablet in the stream center -->
+  <g transform="translate(452, 156)" opacity="0.88">
+    <ellipse cx="28" cy="30" rx="44" ry="26" fill="#e9e4f7" stroke="#b8bcff" stroke-width="1.4"/>
+    <ellipse cx="28" cy="28" rx="36" ry="18" fill="#f8f6ff" stroke="#989cff" stroke-width="1.2"/>
+    <text x="28" y="24" font-family="serif" font-size="9.5" fill="#2b2044" text-anchor="middle" letter-spacing="1" opacity="0.82">registry</text>
+    <text x="28" y="38" font-family="serif" font-size="7.5" fill="#4e557a" text-anchor="middle" opacity="0.64">rules · mappings</text>
+  </g>
+
+  <!-- Stone lantern — guardian at bridge midpoint -->
+  <g transform="translate(476, 126)" opacity="0.68">
+    <rect x="-2" y="0" width="4" height="26" rx="1" fill="#2b2044"/>
+    <rect x="-7" y="-10" width="14" height="10" rx="2" fill="#2b2044"/>
+    <path d="M-10 -10 L0 -18 L10 -10" fill="#2b2044"/>
+    <rect x="-4" y="-7" width="3" height="5" rx="0.5" fill="#f1b0ff" opacity="0.52"/>
+    <rect x="1" y="-7" width="3" height="5" rx="0.5" fill="#f1b0ff" opacity="0.52"/>
+    <rect x="-6" y="26" width="12" height="3" rx="1" fill="#2b2044"/>
+  </g>
+
+  <!-- ===== RIGHT SHORE : Python ecosystem ===== -->
+
+  <!-- Bamboo grove — right edge -->
+  <g stroke="#767bd8" fill="none" stroke-linecap="round" opacity="0.48">
+    <line x1="928" y1="100" x2="928" y2="282" stroke-width="3"/>
+    <line x1="914" y1="126" x2="914" y2="282" stroke-width="2.5"/>
+    <line x1="942" y1="118" x2="942" y2="282" stroke-width="2.2"/>
+    <!-- joints -->
+    <line x1="925" y1="178" x2="931" y2="178" stroke-width="1.5"/>
+    <line x1="925" y1="222" x2="931" y2="222" stroke-width="1.5"/>
+    <line x1="911" y1="196" x2="917" y2="196" stroke-width="1.5"/>
+    <!-- leaf branches -->
+    <path d="M926 166 Q910 150, 902 136"/>
+    <path d="M930 166 Q946 150, 954 136"/>
+    <path d="M912 184 Q896 168, 888 156"/>
+  </g>
+
+  <!-- Pagoda — right shore destination / Python marker -->
+  <g transform="translate(790, 134)" opacity="0.78">
+    <!-- Tower column -->
+    <rect x="-6" y="14" width="12" height="86" rx="2" fill="#2b2044" opacity="0.52"/>
+    <!-- Tiered roofs -->
+    <path d="M-20 18 L0 2 L20 18" fill="#2b2044" opacity="0.56"/>
+    <path d="M-16 38 L0 26 L16 38" fill="#2b2044" opacity="0.5"/>
+    <path d="M-12 56 L0 46 L12 56" fill="#2b2044" opacity="0.44"/>
+    <!-- Ground shadow -->
+    <ellipse cx="0" cy="254" rx="14" ry="5" fill="#221938" opacity="0.08"/>
+  </g>
+
+  <!-- Python label — small, near pagoda -->
+  <text x="790" y="120" font-family="serif" font-size="10" fill="#2b2044" text-anchor="middle" letter-spacing="2" opacity="0.7">PYTHON</text>
+
+  <!-- Python framework names — subtle shore base labels -->
+  <g fill="#2b2044" font-family="serif" font-size="9" opacity="0.4" letter-spacing="0.4">
+    <text x="656" y="296" text-anchor="middle">Pydantic</text>
+    <text x="710" y="302" text-anchor="middle">FastAPI</text>
+    <text x="760" y="297" text-anchor="middle">Django</text>
+    <text x="836" y="303" text-anchor="middle">SQLAlchemy</text>
+  </g>
+
+  <!-- Warm accent circle — Python shore -->
+  <circle cx="722" cy="246" r="15" fill="none" stroke="#f1b0ff" stroke-width="1.2" opacity="0.35"/>
+  <circle cx="722" cy="246" r="4" fill="#f1b0ff" opacity="0.42"/>
+
+  <!-- Grass tufts — right bank near water -->
+  <g stroke="#b8bcff" fill="none" stroke-width="1.5" stroke-linecap="round" opacity="0.3">
+    <path d="M648 268 Q644 256, 638 246"/>
+    <path d="M652 269 Q656 257, 662 249"/>
+    <path d="M678 274 Q674 262, 668 252"/>
+    <path d="M682 275 Q686 263, 692 255"/>
+  </g>
+
+  <!-- ===== ENSŌ RING — background zen symbol ===== -->
+  <circle cx="480" cy="156" r="116" fill="none" stroke="#c9b3ff" stroke-width="5" stroke-dasharray="510 210" transform="rotate(-22 480 156)" opacity="0.15"/>
+
+  <!-- ===== DECORATIVE ACCENTS ===== -->
+
+  <!-- Cherry blossom petals — warmth, drift -->
+  <g fill="#f1b0ff" opacity="0.36">
+    <ellipse cx="294" cy="76" rx="2.8" ry="1.6" transform="rotate(28 294 76)"/>
+    <ellipse cx="358" cy="50" rx="2.4" ry="1.4" transform="rotate(-18 358 50)"/>
+    <ellipse cx="604" cy="58" rx="2.4" ry="1.4" transform="rotate(38 604 58)"/>
+    <ellipse cx="672" cy="44" rx="2.2" ry="1.3" transform="rotate(-27 672 44)"/>
+  </g>
+
+  <!-- Accent motes — floating warmth and cool -->
+  <circle cx="252" cy="126" r="2.5" fill="#63c8ff" opacity="0.38"/>
+  <circle cx="734" cy="118" r="2.5" fill="#f1b0ff" opacity="0.38"/>
+  <circle cx="480" cy="82" r="2" fill="#c9b3ff" opacity="0.32"/>
+  <circle cx="392" cy="170" r="1.8" fill="#63c8ff" opacity="0.28"/>
+  <circle cx="568" cy="176" r="1.8" fill="#f1b0ff" opacity="0.28"/>
+
+  <!-- Hanko seal (禅) — bottom right -->
+  <g transform="translate(916, 270)" opacity="0.35">
+    <rect x="0" y="0" width="18" height="18" rx="2" fill="none" stroke="#989cff" stroke-width="1.2"/>
+    <text x="9" y="14" font-family="serif" font-size="11" fill="#989cff" text-anchor="middle" opacity="0.7">禅</text>
+  </g>
+</svg>

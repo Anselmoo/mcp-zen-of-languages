@@ -121,4 +121,4 @@ This turns static findings into a closed feedback loop: analyze in your IDE, gen
 - [Prompt Generation](prompt-generation.md) — Generate AI remediation from violations
 - [Philosophy](../getting-started/philosophy.md) — The architectural-coaching motivation
 - [The 10 Dogmas](rules/the-ten-dogmas.md) — Full dogma reference that classifies every violation
-- [Languages](languages/index.md) — See every principle and detector per language
+- [Languages](languages/_index.md) — See every principle and detector per language

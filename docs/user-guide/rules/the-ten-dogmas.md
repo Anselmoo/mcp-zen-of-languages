@@ -175,7 +175,7 @@ every detector ultimately traces back to one of them.
 ## Cross-Language Rule Mapping
 
 Each dogma is implemented by language-specific rules across the supported languages.
-The tables below are **auto-generated** from the codebase's `infer_dogmas_for_principle()` mapping.
+The tables below are **auto-generated** from the codebase's explicit rule-to-dogma catalog.
 
 --8<-- "docs/includes/generated/dogma-mapping.md"
 
@@ -183,5 +183,5 @@ The tables below are **auto-generated** from the codebase's `infer_dogmas_for_pr
 
 - [Philosophy](../../getting-started/philosophy.md) — motivation and the architectural-coaching approach
 - [Architecture](../../contributing/architecture.md) — how dogmas drive detector and pipeline design
-- [Languages](../languages/index.md) — per-language principles derived from these dogmas
+- [Languages](../languages/_index.md) — per-language principles derived from these dogmas
 - [Understanding Violations](../understanding-violations.md) — severity scores, worked examples, and the MCP workflow

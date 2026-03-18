@@ -143,7 +143,7 @@ Configuration files are code too — they're read by humans, versioned in git, a
 | `svg-004` | Provide a long description for complex graphics | Documentation | 6 | `ZEN-UNAMBIGUOUS-NAME` |
 | `svg-005` | Prefer presentation attributes over inline styles | Consistency | 5 | `ZEN-EXPLICIT-INTENT` |
 | `svg-006` | Use viewBox with fixed dimensions | Structure | 6 | `ZEN-RETURN-EARLY` |
-| `svg-007` | Remove unused defs entries | Organization | 5 | `ZEN-STRICT-FENCES`, `ZEN-PROPORTIONATE-COMPLEXITY` |
+| `svg-007` | Remove unused defs entries | Organization | 5 | `ZEN-STRICT-FENCES`, `ZEN-PROPORTIONATE-COMPLEXITY`, `ZEN-RUTHLESS-DELETION` |
 | `svg-008` | Avoid excessive nested group depth | Complexity | 5 | `ZEN-PROPORTIONATE-COMPLEXITY`, `ZEN-RETURN-EARLY` |
 | `svg-009` | Keep id attributes unique | Correctness | 8 | `ZEN-EXPLICIT-INTENT` |
 | `svg-010` | Prefer relative path commands when practical | Idioms | 4 | `ZEN-RIGHT-ABSTRACTION` |
@@ -210,7 +210,7 @@ Configuration files are code too — they're read by humans, versioned in git, a
 ??? info "`svg-007` — Remove unused defs entries"
     **Unused gradients, symbols, or patterns in <defs> increase file complexity.**
 
-    **Universal Dogmas:** `ZEN-STRICT-FENCES`, `ZEN-PROPORTIONATE-COMPLEXITY`
+    **Universal Dogmas:** `ZEN-STRICT-FENCES`, `ZEN-PROPORTIONATE-COMPLEXITY`, `ZEN-RUTHLESS-DELETION`
 
     **Common Violations:**
 

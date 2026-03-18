@@ -297,9 +297,9 @@ Modern C# (C# 10–12) has evolved rapidly — records, pattern matching, nullab
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **CSharpStringInterpolationDetector** | Flags ``String.Format`` usage where string interpolation is cleaner | `cs-006` |
 | **CSharpVarDetector** | Flags explicit primitive type declarations where ``var`` improves readability | `cs-003` |
 | **CSharpNamingConventionDetector** | Enforces .NET naming conventions for public and private members | `cs-008` |
+| **CSharpStringInterpolationDetector** | Flags ``String.Format`` usage where string interpolation is cleaner | `cs-006` |
 
 ### Resource Management
 

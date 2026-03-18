@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
+import warnings
+
 from enum import StrEnum
-from functools import cache
 from typing import TYPE_CHECKING
 
-from mcp_zen_of_languages.rules import get_language_zen
 from mcp_zen_of_languages.rules.base_models import PrincipleCategory
 
 
@@ -97,16 +97,8 @@ _KEYWORD_TO_DOGMAS: tuple[tuple[str, UniversalDogmaID], ...] = (
 )
 
 
-@cache
-def _principles_by_id(language: str) -> dict[str, ZenPrinciple]:
-    lang_zen = get_language_zen(language)
-    if not lang_zen:
-        return {}
-    return {principle.id: principle for principle in lang_zen.principles}
-
-
 def infer_dogmas_for_principle(principle: ZenPrinciple) -> tuple[str, ...]:
-    """Infer universal dogmas for a language-specific rule."""
+    """Heuristically infer universal dogmas for a language-specific rule."""
     baseline = _CATEGORY_TO_DOGMAS.get(
         principle.category,
         (UniversalDogmaID.PROPORTIONATE_COMPLEXITY,),
@@ -130,22 +122,90 @@ def infer_dogmas_for_principle(principle: ZenPrinciple) -> tuple[str, ...]:
     return tuple(dogmas)
 
 
+def dogmas_for_rule_id(rule_id: str) -> tuple[str, ...]:
+    """Return explicit universal dogmas for one rule ID.
+
+    Args:
+        rule_id: Rule identifier to look up (e.g. ``"python-001"``).
+
+    Returns:
+        Tuple of universal dogma IDs assigned to the rule.
+    """
+    from mcp_zen_of_languages.dogmas.catalog import dogmas_for_rule_id as resolve
+
+    return resolve(rule_id)
+
+
+def resolve_dogmas_for_rule_ids(rule_ids: Iterable[str]) -> tuple[str, ...]:
+    """Return deduplicated explicit universal dogmas for multiple rule IDs.
+
+    Args:
+        rule_ids: Iterable of rule identifiers to look up.
+
+    Returns:
+        Ordered unique tuple of universal dogma IDs for all supplied rules.
+    """
+    from mcp_zen_of_languages.dogmas.catalog import dogmas_for_rule_ids as resolve
+
+    return resolve(tuple(rule_ids))
+
+
 def dogmas_for_rule(language: str, rule_id: str) -> tuple[str, ...]:
-    """Return inferred universal dogmas for one rule ID in one language."""
-    principle = _principles_by_id(language).get(rule_id)
-    if principle is None:
-        return ()
-    return infer_dogmas_for_principle(principle)
+    """Return explicit universal dogmas for one rule ID in one language.
+
+    This function is deprecated; the ``language`` parameter is ignored.
+    Use [`dogmas_for_rule_id`][mcp_zen_of_languages.core.universal_dogmas.dogmas_for_rule_id]
+    instead.
+
+    Args:
+        language: Language or framework key (e.g. ``"python"``, ``"django"``).
+            Deprecated and ignored.
+        rule_id: Rule identifier to look up (e.g. ``"python-001"``).
+
+    Returns:
+        Tuple of universal dogma IDs assigned to the rule.
+    """
+    warnings.warn(
+        "dogmas_for_rule(language, rule_id) is deprecated; the 'language' "
+        "parameter is ignored. Use dogmas_for_rule_id(rule_id) instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    del language
+    return dogmas_for_rule_id(rule_id)
 
 
 def dogmas_for_rule_ids(language: str, rule_ids: Iterable[str]) -> tuple[str, ...]:
-    """Return deduplicated inferred universal dogmas for multiple rule IDs."""
-    ordered: list[str] = []
-    seen: set[str] = set()
-    for rule_id in rule_ids:
-        for dogma in dogmas_for_rule(language, rule_id):
-            if dogma in seen:
-                continue
-            seen.add(dogma)
-            ordered.append(dogma)
-    return tuple(ordered)
+    """Return deduplicated explicit universal dogmas for multiple rule IDs.
+
+    This function is deprecated; the ``language`` parameter is ignored.
+    Use [`resolve_dogmas_for_rule_ids`][mcp_zen_of_languages.core.universal_dogmas.resolve_dogmas_for_rule_ids]
+    instead.
+
+    Args:
+        language: Language or framework key. Deprecated and ignored.
+        rule_ids: Iterable of rule identifiers to look up.
+
+    Returns:
+        Ordered unique tuple of universal dogma IDs for all supplied rules.
+    """
+    warnings.warn(
+        "dogmas_for_rule_ids(language, rule_ids) is deprecated; the "
+        "'language' parameter is ignored. Use "
+        "resolve_dogmas_for_rule_ids(rule_ids) instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    del language
+    return resolve_dogmas_for_rule_ids(rule_ids)
+
+
+__all__ = [
+    "DOGMA_RULE_IDS",
+    "UniversalDogmaID",
+    "dogmas_for_rule",
+    "dogmas_for_rule_id",
+    "dogmas_for_rule_ids",
+    "infer_dogmas_for_principle",
+    "resolve_dogmas_for_rule_ids",
+]

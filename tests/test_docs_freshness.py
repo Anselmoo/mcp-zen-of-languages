@@ -1,7 +1,8 @@
-"""Verify generated language docs are not stale.
+"""Verify generated language and framework docs are not stale.
 
 Runs the generator in ``--check`` mode and asserts that every
-``docs/user-guide/languages/*.md`` page matches the output produced
+generated guide page under ``docs/user-guide/languages/`` or
+``docs/user-guide/frameworks/`` matches the output produced
 from the current ``rules.py`` and ``DETECTOR_MAP`` data.
 """
 
@@ -14,7 +15,10 @@ import sys
 from pathlib import Path
 
 
-LANGUAGE_DOCS_DIR = Path("docs/user-guide/languages")
+GENERATED_DOCS_DIRS = (
+    Path("docs/user-guide/languages"),
+    Path("docs/user-guide/frameworks"),
+)
 BROKEN_INDENTED_MERMAID_PATTERN = re.compile(r"(?m)^ {4}```mermaid\n(?! {4})")
 INLINE_MERMAID_CLASSDEF_PATTERN = re.compile(r"(?m)^ {4}classDef ")
 BROKEN_MERMAID_LABEL_QUOTES_PATTERN = re.compile(
@@ -47,7 +51,8 @@ def test_language_docs_indented_mermaid_blocks_are_well_formed() -> None:
     """Fail if an indented Mermaid fence is followed by an unindented body line."""
     malformed_files = [
         path.as_posix()
-        for path in sorted(LANGUAGE_DOCS_DIR.glob("*.md"))
+        for docs_dir in GENERATED_DOCS_DIRS
+        for path in sorted(docs_dir.glob("*.md"))
         if BROKEN_INDENTED_MERMAID_PATTERN.search(path.read_text(encoding="utf-8"))
     ]
 
@@ -65,7 +70,8 @@ def test_language_docs_do_not_inline_mermaid_palette_overrides() -> None:
     """Keep generated Mermaid styling in shared CSS instead of inline classDefs."""
     inline_palette_files = [
         path.as_posix()
-        for path in sorted(LANGUAGE_DOCS_DIR.glob("*.md"))
+        for docs_dir in GENERATED_DOCS_DIRS
+        for path in sorted(docs_dir.glob("*.md"))
         if INLINE_MERMAID_CLASSDEF_PATTERN.search(path.read_text(encoding="utf-8"))
     ]
 
@@ -83,7 +89,8 @@ def test_language_docs_escape_embedded_mermaid_quotes() -> None:
     """Fail if Mermaid node labels contain raw embedded double quotes."""
     malformed_label_files = [
         path.as_posix()
-        for path in sorted(LANGUAGE_DOCS_DIR.glob("*.md"))
+        for docs_dir in GENERATED_DOCS_DIRS
+        for path in sorted(docs_dir.glob("*.md"))
         if BROKEN_MERMAID_LABEL_QUOTES_PATTERN.search(path.read_text(encoding="utf-8"))
     ]
 

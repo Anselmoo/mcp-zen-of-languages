@@ -389,8 +389,8 @@ TypeScript's power lies in its type system — but that power is easily undermin
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **TsPromiseChainDetector** | Detects raw ``.then()`` promise chains replaceable by async/await | `ts-013` |
 | **TsAsyncAwaitDetector** | Detects raw ``.then()`` promise chains encouraging async/await usage | `ts-013` |
+| **TsPromiseChainDetector** | Detects raw ``.then()`` promise chains replaceable by async/await | `ts-013` |
 
 ### Clarity
 
@@ -409,14 +409,14 @@ TypeScript's power lies in its type system — but that power is easily undermin
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **TsInterfacePreferenceDetector** | Flags object-shaped type aliases that should be interfaces instead | `ts-003` |
-| **TsUtilityTypesDetector** | Detects missed opportunities to use built-in utility types like ``Partial`` or ``Pick`` | `ts-007` |
 | **TsEnumConstDetector** | Detects plain object literals used as constants instead of enums or ``as const`` | `ts-009` |
-| **TsOptionalChainingDetector** | Detects manual null-check chains replaceable by optional chaining (``?.``) | `ts-011` |
-| **TsIndexLoopDetector** | Detects C-style index-based ``for`` loops replaceable by ``for-of`` or array methods | `ts-012` |
-| **TsRequireImportDetector** | Detects ``require()`` calls encouraging ES module imports instead | `ts-017` |
 | **TsForOfDetector** | Detects C-style index-based ``for`` loops encouraging ``for...of`` iteration | `ts-012` |
 | **TsImportOrderDetector** | Detects CommonJS ``require()`` calls mixed with ES module imports | `ts-017` |
+| **TsIndexLoopDetector** | Detects C-style index-based ``for`` loops replaceable by ``for-of`` or array methods | `ts-012` |
+| **TsInterfacePreferenceDetector** | Flags object-shaped type aliases that should be interfaces instead | `ts-003` |
+| **TsOptionalChainingDetector** | Detects manual null-check chains replaceable by optional chaining (``?.``) | `ts-011` |
+| **TsRequireImportDetector** | Detects ``require()`` calls encouraging ES module imports instead | `ts-017` |
+| **TsUtilityTypesDetector** | Detects missed opportunities to use built-in utility types like ``Partial`` or ``Pick`` | `ts-007` |
 
 ### Immutability
 
@@ -443,12 +443,12 @@ TypeScript's power lies in its type system — but that power is easily undermin
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
 | **TsAnyUsageDetector** | Detects excessive use of the ``any`` type that undermines TypeScript's value | `ts-001` |
+| **TsCatchAllTypeDetector** | Detects catch-all type annotations (``Object``, ``object``, ``{}``) | `ts-015` |
+| **TsNonNullAssertionDetector** | Flags excessive non-null assertion operators (``!``) that silence null safety | `ts-008` |
+| **TsObjectTypeDetector** | Detects generic ``Object``/``object``/``{}`` type annotations | `ts-015` |
 | **TsReturnTypeDetector** | Flags exported functions that lack explicit return type annotations | `ts-004` |
 | **TsTypeGuardDetector** | Flags overuse of type assertions (``as T``) instead of user-defined type guards | `ts-006` |
-| **TsNonNullAssertionDetector** | Flags excessive non-null assertion operators (``!``) that silence null safety | `ts-008` |
 | **TsUnknownOverAnyDetector** | Flags codebases that use ``any`` without ever using the safer ``unknown`` alternative | `ts-010` |
-| **TsCatchAllTypeDetector** | Detects catch-all type annotations (``Object``, ``object``, ``{}``) | `ts-015` |
-| **TsObjectTypeDetector** | Detects generic ``Object``/``object``/``{}`` type annotations | `ts-015` |
 
 
 ??? example "Principle → Detector Wiring"
@@ -622,65 +622,65 @@ languages:
         detect_explicit_any: True
         detect_assertions_any: True
         detect_any_arrays: True
-      - type: ts_strict_mode
-        require_strict: True
-        require_no_implicit_any: True
-        require_strict_null_checks: True
-      - type: ts_interface_preference
-        max_object_type_aliases: 0
-      - type: ts_return_types
-        require_return_types: True
-      - type: ts_readonly
-        require_readonly_properties: True
-        min_readonly_occurrences: 1
-      - type: ts_type_guards
-        max_type_assertions: 0
-      - type: ts_utility_types
-        min_utility_type_usage: 1
-        min_object_type_aliases: 2
-      - type: ts_non_null_assertions
-        max_non_null_assertions: 0
-      - type: ts_enum_const
-        max_plain_enum_objects: 0
-      - type: ts_unknown_over_any
-        max_any_for_unknown: 0
-      - type: ts_optional_chaining
-        max_manual_null_checks: 0
-      - type: ts_index_loops
-        max_index_loops: 0
-      - type: ts_promise_chains
-        max_promise_chains: 0
-      - type: ts_default_exports
-        max_default_exports: 0
+      - type: ts_async_await
+        max_promise_chains: 2
+        max_then_chains: 0
       - type: ts_catch_all_types
         max_catch_all_types: 0
       - type: ts_console_usage
         max_console_usages: 0
-      - type: ts_require_imports
-        max_require_calls: 0
-      - type: ts_string_concats
-        max_string_concats: 0
+      - type: ts_default_exports
+        max_default_exports: 0
+      - type: ts_enum_const
+        max_plain_enum_objects: 0
       - type: ts_for_of
         max_index_loops: 0
         max_index_based_loops: 0
-      - type: ts_async_await
-        max_promise_chains: 2
-        max_then_chains: 0
-      - type: ts_named_export
-        max_default_exports: 0
-        max_default_export_usages: 0
-      - type: ts_object_type
-        max_catch_all_types: 0
-        max_object_types: 0
-      - type: ts_no_console
-        max_console_usages: 0
-        max_console_statements: 0
       - type: ts_import_order
         max_require_calls: 0
         max_require_usages: 0
+      - type: ts_index_loops
+        max_index_loops: 0
+      - type: ts_interface_preference
+        max_object_type_aliases: 0
+      - type: ts_named_export
+        max_default_exports: 0
+        max_default_export_usages: 0
+      - type: ts_no_console
+        max_console_usages: 0
+        max_console_statements: 0
+      - type: ts_non_null_assertions
+        max_non_null_assertions: 0
+      - type: ts_object_type
+        max_catch_all_types: 0
+        max_object_types: 0
+      - type: ts_optional_chaining
+        max_manual_null_checks: 0
+      - type: ts_promise_chains
+        max_promise_chains: 0
+      - type: ts_readonly
+        require_readonly_properties: True
+        min_readonly_occurrences: 1
+      - type: ts_require_imports
+        max_require_calls: 0
+      - type: ts_return_types
+        require_return_types: True
+      - type: ts_strict_mode
+        require_strict: True
+        require_no_implicit_any: True
+        require_strict_null_checks: True
+      - type: ts_string_concats
+        max_string_concats: 0
       - type: ts_template_literal
         max_string_concats: 3
         max_string_concatenations: 0
+      - type: ts_type_guards
+        max_type_assertions: 0
+      - type: ts_unknown_over_any
+        max_any_for_unknown: 0
+      - type: ts_utility_types
+        min_utility_type_usage: 1
+        min_object_type_aliases: 2
 ```
 
 ???+ tip "Migrating from JavaScript?"

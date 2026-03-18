@@ -45,14 +45,15 @@ High-impact gaps this guide addresses:
 ### Terminology consistency
 
 - Package: `mcp-zen-of-languages`
-- CLI command: `zen`
-- MCP server command: `zen-mcp-server`
+- Package-style CLI command: `mcp-zen-of-languages-cli`
+- Package-style server commands: `mcp-zen-of-languages` / `mcp-zen-of-languages-server`
+- Legacy aliases: `zen` / `zen-mcp-server`
 - MCP server key: `zen-of-languages`
 
 ### Required strategic sections
 
 - `README.md`: `## Why MCP for Zen Analysis` and `## Zen Philosophy`
-- `docs/index.md`: `## Why MCP`, `## Zen Philosophy`, and `## Choose Your Path`
+- `docs/_index.md`: `## Why MCP`, `## Zen Philosophy`, and `## Choose Your Path`
 
 ## Release checklist
 

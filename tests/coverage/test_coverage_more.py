@@ -2,11 +2,14 @@ from __future__ import annotations
 
 import pytest
 
+from pydantic import HttpUrl
+
 from mcp_zen_of_languages import cli
 from mcp_zen_of_languages.adapters.rules_adapter import RulesAdapter
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
 from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
 from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
+from mcp_zen_of_languages.analyzers.base import DetectionPipeline
 from mcp_zen_of_languages.analyzers.base import LocationHelperMixin
 from mcp_zen_of_languages.analyzers.base import ViolationDetector
 from mcp_zen_of_languages.analyzers.pipeline import merge_pipeline_overrides
@@ -16,11 +19,14 @@ from mcp_zen_of_languages.config import ConfigModel
 from mcp_zen_of_languages.config import load_config
 from mcp_zen_of_languages.languages.configs import DetectorConfig
 from mcp_zen_of_languages.languages.configs import ExplicitnessConfig
+from mcp_zen_of_languages.languages.configs import NamespaceConfig
+from mcp_zen_of_languages.languages.configs import RuleContext
 from mcp_zen_of_languages.models import CyclomaticSummary
 from mcp_zen_of_languages.models import DependencyAnalysis
 from mcp_zen_of_languages.models import DependencyCycle
 from mcp_zen_of_languages.models import ParserResult
 from mcp_zen_of_languages.models import RulesSummary
+from mcp_zen_of_languages.models import Violation
 from mcp_zen_of_languages.rules.base_models import LanguageZenPrinciples
 from mcp_zen_of_languages.rules.base_models import PrincipleCategory
 from mcp_zen_of_languages.rules.base_models import ZenPrinciple
@@ -38,6 +44,15 @@ class _DummyDetector(ViolationDetector[ExplicitnessConfig]):
         return "dummy"
 
     def detect(self, context: AnalysisContext, config: ExplicitnessConfig) -> list:
+        return []
+
+
+class _DummyNamespaceDetector(ViolationDetector[NamespaceConfig]):
+    @property
+    def name(self) -> str:
+        return "dummy_namespace"
+
+    def detect(self, context: AnalysisContext, config: NamespaceConfig) -> list:
         return []
 
 
@@ -997,6 +1012,128 @@ def test_registry_configs_merge_updates():
     overrides = [ExplicitnessConfig(type="explicitness", require_type_hints=True)]
     merged = registry.merge_configs(base, overrides)
     assert merged[0].require_type_hints is True
+
+
+def test_registry_configs_from_rules_preserve_composite_rule_contexts():
+    registry = DetectorRegistry()
+    registry.register(
+        DetectorMetadata(
+            detector_id="explicitness",
+            detector_class=_DummyDetector,
+            config_model=ExplicitnessConfig,
+            language="python",
+            rule_ids=["python-001", "python-010"],
+        ),
+    )
+    registry.register(
+        DetectorMetadata(
+            detector_id="namespace_usage",
+            detector_class=_DummyNamespaceDetector,
+            config_model=NamespaceConfig,
+            language="python",
+            rule_ids=["python-012"],
+        ),
+    )
+    lang_zen = LanguageZenPrinciples(
+        language="python",
+        name="Python",
+        philosophy="Explicit composite config coverage",
+        source_text="The Zen of Python",
+        source_url=HttpUrl("https://example.com/python-zen"),
+        principles=[
+            ZenPrinciple(
+                id="python-001",
+                principle="Explicit is better than implicit",
+                category=PrincipleCategory.CLARITY,
+                severity=5,
+                description="",
+                violations=["Missing type hints"],
+                metrics={"require_type_hints": True},
+            ),
+            ZenPrinciple(
+                id="python-010",
+                principle="In the face of ambiguity, refuse the temptation to guess",
+                category=PrincipleCategory.CORRECTNESS,
+                severity=7,
+                description="",
+                violations=["Missing input validation"],
+                metrics={"require_type_hints": False},
+            ),
+        ],
+    )
+
+    configs = registry.configs_from_rules(lang_zen)
+    explicitness = next(config for config in configs if config.type == "explicitness")
+
+    assert explicitness.rule_contexts.keys() == {"python-001", "python-010"}
+    assert explicitness.principle_for_rule("python-001") == (
+        "Explicit is better than implicit"
+    )
+    assert explicitness.principle_for_rule("python-010") == (
+        "In the face of ambiguity, refuse the temptation to guess"
+    )
+    assert explicitness.severity_for_rule("python-010") == 7
+    assert (
+        explicitness.select_violation_message(rule_id="python-001")
+        == "Missing type hints"
+    )
+
+
+def test_build_violation_uses_composite_rule_context():
+    detector = _DummyDetector()
+    config = ExplicitnessConfig(
+        type="explicitness",
+        principle_id="python-001",
+        principle="Explicit is better than implicit",
+        severity=5,
+        violation_messages=["Fallback"],
+        rule_contexts={
+            "python-010": RuleContext(
+                principle_id="python-010",
+                principle="In the face of ambiguity, refuse the temptation to guess",
+                severity=7,
+                violation_messages=["Missing input validation"],
+            ),
+        },
+    )
+
+    violation = detector.build_violation(config, rule_id="python-010")
+
+    assert violation.rule_id == "python-010"
+    assert violation.principle == (
+        "In the face of ambiguity, refuse the temptation to guess"
+    )
+    assert violation.severity == 7
+    assert violation.message == "Missing input validation"
+
+
+def test_resolve_rule_id_matches_composite_principle_text():
+    detector = _DummyDetector()
+    detector.rule_ids = ["python-001", "python-010"]
+    config = ExplicitnessConfig(
+        type="explicitness",
+        rule_contexts={
+            "python-001": RuleContext(
+                principle_id="python-001",
+                principle="Explicit is better than implicit",
+                severity=5,
+            ),
+            "python-010": RuleContext(
+                principle_id="python-010",
+                principle="In the face of ambiguity, refuse the temptation to guess",
+                severity=7,
+            ),
+        },
+    )
+    violation = Violation(
+        principle="In the face of ambiguity, refuse the temptation to guess",
+        severity=7,
+        message="Missing input validation",
+    )
+
+    assert (
+        DetectionPipeline._resolve_rule_id(detector, config, violation) == "python-010"
+    )
 
 
 def test_registry_create_pipeline_from_rules_error():

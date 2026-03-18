@@ -1,4 +1,4 @@
-"""Generate docs/user-guide/languages/*.md from rules.py + DETECTOR_MAP.
+"""Generate docs/user-guide/languages/*.md and frameworks/*.md from rules + DETECTOR_MAP.
 
 Run::
 
@@ -27,7 +27,9 @@ from generate_implementation_counts import validate_documented_languages
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
 
-from mcp_zen_of_languages.core.universal_dogmas import infer_dogmas_for_principle
+from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule
+from mcp_zen_of_languages.frameworks import FRAMEWORK_KEYS
+from mcp_zen_of_languages.languages.configs import DetectorConfig
 from mcp_zen_of_languages.utils.subprocess_runner import KNOWN_TOOLS
 
 
@@ -36,6 +38,19 @@ from mcp_zen_of_languages.utils.subprocess_runner import KNOWN_TOOLS
 PRINCIPLE_PREVIEW_LENGTH = 25
 DETECTOR_LABEL_WORDS_PER_LINE = 2
 _CAMEL_CASE_WORD_RE = re.compile(r"[A-Z]+(?=[A-Z][a-z]|\b)|[A-Z]?[a-z]+|\d+")
+_RUNTIME_ONLY_CONFIG_FIELDS = frozenset(
+    {
+        "type",
+        "enabled",
+        "principle_id",
+        "principle",
+        "severity",
+        "violation_messages",
+        "detectable_patterns",
+        "recommended_alternative",
+        "rule_contexts",
+    },
+)
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -43,7 +58,8 @@ _CAMEL_CASE_WORD_RE = re.compile(r"[A-Z]+(?=[A-Z][a-z]|\b)|[A-Z]?[a-z]+|\d+")
 ROOT = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = ROOT / "scripts" / "templates"
 INTROS_DIR = TEMPLATES_DIR / "intros"
-DOCS_DIR = ROOT / "docs" / "user-guide" / "languages"
+LANGUAGE_DOCS_DIR = ROOT / "docs" / "user-guide" / "languages"
+FRAMEWORK_DOCS_DIR = ROOT / "docs" / "user-guide" / "frameworks"
 
 # ---------------------------------------------------------------------------
 # Language metadata
@@ -52,12 +68,31 @@ DOCS_DIR = ROOT / "docs" / "user-guide" / "languages"
 LANGUAGES: list[tuple[str, str, str, str, str]] = [
     ("python", "Python", "fontawesome/brands/python", "python.md", "python"),
     (
+        "pydantic",
+        "Pydantic",
+        "material/shield-check-outline",
+        "pydantic.md",
+        "pydantic",
+    ),
+    ("fastapi", "FastAPI", "material/api", "fastapi.md", "fastapi"),
+    ("django", "Django", "material/web-box", "django.md", "django"),
+    (
+        "sqlalchemy",
+        "SQLAlchemy",
+        "material/database",
+        "sqlalchemy.md",
+        "sqlalchemy",
+    ),
+    (
         "typescript",
         "TypeScript",
         "material/language-typescript",
         "typescript.md",
         "typescript",
     ),
+    ("react", "React", "fontawesome/brands/react", "react.md", "react"),
+    ("angular", "Angular", "fontawesome/brands/angular", "angular.md", "angular"),
+    ("nextjs", "Next.js", "material/web", "nextjs.md", "nextjs"),
     ("rust", "Rust", "material/language-rust", "rust.md", "rust"),
     ("go", "Go", "material/language-go", "go.md", "go"),
     (
@@ -67,6 +102,7 @@ LANGUAGES: list[tuple[str, str, str, str, str]] = [
         "javascript.md",
         "javascript",
     ),
+    ("vue", "Vue", "fontawesome/brands/vuejs", "vue.md", "vue"),
     ("css", "CSS", "material/language-css3", "css.md", "css"),
     ("ansible", "Ansible", "material/console", "ansible.md", "ansible"),
     ("bash", "Bash", "material/console", "bash.md", "bash"),
@@ -128,8 +164,43 @@ SEE_ALSO: dict[str, str] = {
         "- [Understanding Violations](../understanding-violations.md) — How to interpret severity scores\n"
         "- [Prompt Generation](../prompt-generation.md) — Generate AI remediation prompts from violations"
     ),
+    "pydantic": (
+        "- [Python](python.md) — Parent language analysis and shared Python architecture\n"
+        "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
+        "- [Understanding Violations](../understanding-violations.md) — Severity scale reference"
+    ),
+    "fastapi": (
+        "- [Python](python.md) — Parent language analysis and shared Python architecture\n"
+        "- [Pydantic](pydantic.md) — Schema conventions that commonly surface in FastAPI projects\n"
+        "- [Configuration](../configuration.md) — Per-language pipeline overrides"
+    ),
+    "django": (
+        "- [Python](python.md) — Parent language analysis and shared Python architecture\n"
+        "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
+        "- [Understanding Violations](../understanding-violations.md) — Severity scale reference"
+    ),
+    "sqlalchemy": (
+        "- [Python](python.md) — Parent language analysis and shared Python architecture\n"
+        "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
+        "- [Prompt Generation](../prompt-generation.md) — Generate remediation prompts for database access issues"
+    ),
     "typescript": (
         "- [JavaScript](javascript.md) — Related principles for JS codebases\n"
+        "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
+        "- [Understanding Violations](../understanding-violations.md) — Severity scale reference"
+    ),
+    "react": (
+        "- [TypeScript](typescript.md) — Shared frontend type-safety foundations\n"
+        "- [JavaScript](javascript.md) — Runtime patterns and browser-side idioms\n"
+        "- [Configuration](../configuration.md) — Per-language pipeline overrides"
+    ),
+    "angular": (
+        "- [TypeScript](typescript.md) — Shared frontend type-safety foundations\n"
+        "- [React](react.md) — Another component-centric UI framework with different trade-offs\n"
+        "- [Configuration](../configuration.md) — Per-language pipeline overrides"
+    ),
+    "nextjs": (
+        "- [React](react.md) — Shared component and hook patterns beneath Next.js\n"
         "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
         "- [Understanding Violations](../understanding-violations.md) — Severity scale reference"
     ),
@@ -147,6 +218,11 @@ SEE_ALSO: dict[str, str] = {
         "- [TypeScript](typescript.md) — Type-safe superset with additional principles\n"
         "- [Configuration](../configuration.md) — Per-language pipeline overrides\n"
         "- [Understanding Violations](../understanding-violations.md) — Severity scale reference"
+    ),
+    "vue": (
+        "- [TypeScript](typescript.md) — Shared frontend type-safety foundations\n"
+        "- [React](react.md) — Another component-centric UI model for web applications\n"
+        "- [Configuration](../configuration.md) — Per-language pipeline overrides"
     ),
     "css": (
         "- [JavaScript](javascript.md) — Common frontend codebase counterpart\n"
@@ -233,7 +309,10 @@ TEMP_RUNNER_LANGUAGES: set[str] = {
 # ---------------------------------------------------------------------------
 def _load_zen(module_key: str):
     """Import LanguageZenPrinciples for a language."""
-    mod = importlib.import_module(f"mcp_zen_of_languages.languages.{module_key}.rules")
+    package_name = "frameworks" if module_key in FRAMEWORK_KEYS else "languages"
+    mod = importlib.import_module(
+        f"mcp_zen_of_languages.{package_name}.{module_key}.rules",
+    )
     # Convention: the module-level constant is *_ZEN (e.g. PYTHON_ZEN)
     for attr in dir(mod):
         obj = getattr(mod, attr)
@@ -245,8 +324,9 @@ def _load_zen(module_key: str):
 
 def _load_detector_map(module_key: str):
     """Import DETECTOR_MAP for a language."""
+    package_name = "frameworks" if module_key in FRAMEWORK_KEYS else "languages"
     mod = importlib.import_module(
-        f"mcp_zen_of_languages.languages.{module_key}.mapping",
+        f"mcp_zen_of_languages.{package_name}.{module_key}.mapping",
     )
     return mod.DETECTOR_MAP
 
@@ -255,6 +335,12 @@ def _load_intro(module_key: str) -> str:
     """Load editorial intro from intros/{lang}.md or generate a fallback."""
     intro_path = INTROS_DIR / f"{module_key}.md"
     return intro_path.read_text().strip() if intro_path.exists() else ""
+
+
+def _docs_output_path(module_key: str, filename: str) -> Path:
+    """Return the generated docs path for a language or framework page."""
+    docs_dir = FRAMEWORK_DOCS_DIR if module_key in FRAMEWORK_KEYS else LANGUAGE_DOCS_DIR
+    return docs_dir / filename
 
 
 def _validate_language_inventory() -> None:
@@ -462,9 +548,15 @@ def _build_config_entries(_principles, detector_map) -> list[dict]:
         comments: dict[str, str] = {}
 
         for field_name, field_info in config_cls.model_fields.items():
-            if field_name in ("type", "enabled"):
+            if (
+                field_name
+                in set(DetectorConfig.model_fields) | _RUNTIME_ONLY_CONFIG_FIELDS
+            ):
                 continue
-            default = field_info.default
+            if field_info.default_factory is not None:
+                default = field_info.default_factory()
+            else:
+                default = field_info.default
             if default is not None:
                 params[field_name] = default
                 if desc := field_info.description:
@@ -521,7 +613,19 @@ def _group_detectors(principles, detector_map) -> list[tuple[str, list[dict]]]:
 # ---------------------------------------------------------------------------
 # Principle data preparation
 # ---------------------------------------------------------------------------
-def _prepare_principle(p) -> dict:
+def _principle_dogmas(principle, detector_map) -> list[str]:
+    """Resolve dogmas from explicit detector bindings before catalog fallback."""
+    explicit: list[str] = []
+    for binding in detector_map.bindings:
+        for dogma in binding.rule_dogma_map.get(principle.id, []):
+            if dogma not in explicit:
+                explicit.append(dogma)
+    if explicit:
+        return explicit
+    return list(dogmas_for_rule(detector_map.language, principle.id))
+
+
+def _prepare_principle(p, detector_map) -> dict:
     """Convert a ZenPrinciple to a template-friendly dict."""
     violations = []
     for v in p.violations:
@@ -530,7 +634,7 @@ def _prepare_principle(p) -> dict:
         else:
             violations.append(str(v))
 
-    dogmas = infer_dogmas_for_principle(p)
+    dogmas = _principle_dogmas(p, detector_map)
 
     return {
         "id": p.id,
@@ -560,7 +664,7 @@ def render_language_page(
     zen = _load_zen(module_key)
     detector_map = _load_detector_map(module_key)
 
-    principles = [_prepare_principle(p) for p in zen.principles]
+    principles = [_prepare_principle(p, detector_map) for p in zen.principles]
     detector_groups = _group_detectors(zen.principles, detector_map)
     config_entries = _build_config_entries(zen.principles, detector_map)
     mermaid = _build_mermaid(zen.principles, detector_map)
@@ -646,7 +750,7 @@ def render_config_formats_page(_env: Environment) -> str:  # noqa: C901, PLR0912
         zen = _load_zen(module_key)
         detector_map = _load_detector_map(module_key)
 
-        principles = [_prepare_principle(p) for p in zen.principles]
+        principles = [_prepare_principle(p, detector_map) for p in zen.principles]
         num_detectors = len(
             {
                 b.detector_class.__name__
@@ -719,7 +823,7 @@ def render_config_formats_page(_env: Environment) -> str:  # noqa: C901, PLR0912
 
 
 def render_index_page() -> str:
-    """Render the index.md 'At a Glance' page from live data."""
+    """Render the _index.md 'At a Glance' page from live data."""
     programming_rows: list[tuple[str, str, int, int, str, str, str]] = []
     workflow_rows: list[tuple[str, str, int, int, str, str, str]] = []
 
@@ -742,10 +846,13 @@ def render_index_page() -> str:
         )
         philosophy = zen.source_text if hasattr(zen, "source_text") else ""
         source_url = str(zen.source_url) if hasattr(zen, "source_url") else ""
+        docs_href = (
+            f"../frameworks/{filename}" if module_key in FRAMEWORK_KEYS else filename
+        )
         programming_rows.append(
             (
                 lang_name,
-                filename,
+                docs_href,
                 len(zen.principles),
                 num_detectors,
                 parser,
@@ -892,7 +999,7 @@ def render_index_page() -> str:
 
             Dedicated detectors with regex-based pattern matching. Each rule has its own detector class with configurable thresholds.
 
-            **TypeScript · Rust · Go · JavaScript · CSS · Ansible · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile · Terraform**
+            **Pydantic · FastAPI · Django · SQLAlchemy · TypeScript · React · Angular · Next.js · Rust · Go · JavaScript · Vue · CSS · Ansible · Bash · PowerShell · Ruby · SQL · C++ · C# · Docker Compose · Dockerfile · Terraform**
 
         -   :material-language-markdown:{ .lg .middle } **Documentation & Markup**
 
@@ -992,6 +1099,9 @@ def main() -> int:  # noqa: C901, PLR0912, PLR0915
         lstrip_blocks=True,
     )
 
+    LANGUAGE_DOCS_DIR.mkdir(parents=True, exist_ok=True)
+    FRAMEWORK_DOCS_DIR.mkdir(parents=True, exist_ok=True)
+
     changed: list[str] = []
 
     # Determine which languages to process
@@ -1007,7 +1117,7 @@ def main() -> int:  # noqa: C901, PLR0912, PLR0915
     # Render language pages
     for module_key, lang_name, icon, filename, config_key in langs_to_process:
         output = render_language_page(module_key, lang_name, icon, config_key, env)
-        out_path = DOCS_DIR / filename
+        out_path = _docs_output_path(module_key, filename)
 
         if args.check:
             if not out_path.exists() or out_path.read_text() != output:
@@ -1020,7 +1130,7 @@ def main() -> int:  # noqa: C901, PLR0912, PLR0915
     # Render config-formats page
     if not args.lang or args.lang in dict(CONFIG_LANGUAGES):
         output = render_config_formats_page(env)
-        out_path = DOCS_DIR / "config-formats.md"
+        out_path = LANGUAGE_DOCS_DIR / "config-formats.md"
         if args.check:
             if not out_path.exists() or out_path.read_text() != output:
                 changed.append(str(out_path))
@@ -1032,7 +1142,7 @@ def main() -> int:  # noqa: C901, PLR0912, PLR0915
     # Render index page
     if not args.lang:
         output = render_index_page()
-        out_path = DOCS_DIR / "index.md"
+        out_path = LANGUAGE_DOCS_DIR / "_index.md"
         if args.check:
             if not out_path.exists() or out_path.read_text() != output:
                 changed.append(str(out_path))

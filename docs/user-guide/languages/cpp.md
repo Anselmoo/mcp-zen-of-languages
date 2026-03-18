@@ -267,9 +267,9 @@ Modern C++ (C++11 through C++20) is a fundamentally different language from the 
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **CppNullptrDetector** | Flags legacy ``NULL`` macro usage instead of the type-safe ``nullptr`` literal | `cpp-004` |
 | **CppConstCorrectnessDetector** | Flags non-const references where ``const`` qualification is appropriate | `cpp-007` |
 | **CppOverrideFinalDetector** | Flags ``virtual`` overrides missing the ``override`` or ``final`` specifier | `cpp-012` |
+| **CppNullptrDetector** | Flags legacy ``NULL`` macro usage instead of the type-safe ``nullptr`` literal | `cpp-004` |
 
 ### Design
 
@@ -290,8 +290,8 @@ Modern C++ (C++11 through C++20) is a fundamentally different language from the 
 
 | Detector | What It Catches | Rule IDs |
 |----------|----------------|----------|
-| **CppSmartPointerDetector** | Flags raw ``new``/``delete`` usage where smart pointers should be used | `cpp-002` |
 | **CppManualAllocationDetector** | Detects C-style heap allocation (``malloc``/``free``, ``new[]``/``delete[]``) | `cpp-006` |
+| **CppSmartPointerDetector** | Flags raw ``new``/``delete`` usage where smart pointers should be used | `cpp-002` |
 
 ### Performance
 

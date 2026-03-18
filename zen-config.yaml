@@ -1,8 +1,16 @@
 languages:
   - python
+  - pydantic
+  - fastapi
+  - django
+  - sqlalchemy
   - ruby
   - typescript
+  - react
+  - angular
+  - nextjs
   - javascript
+  - vue
   - go
   - rust
   - bash

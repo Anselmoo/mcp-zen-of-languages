@@ -5,20 +5,103 @@ import re
 import sys
 
 from importlib import metadata
+from typing import Literal
 
 import pytest
 
 from mcp_zen_of_languages import cli
+from mcp_zen_of_languages.analyzers.base import ViolationDetector
+from mcp_zen_of_languages.analyzers.mapping_models import BindingPerspectiveBundle
+from mcp_zen_of_languages.analyzers.mapping_models import ProjectionPerspectiveModel
+from mcp_zen_of_languages.analyzers.registry import DetectorMetadata
+from mcp_zen_of_languages.analyzers.registry import DetectorRegistry
+from mcp_zen_of_languages.languages.configs import DetectorConfig
 from mcp_zen_of_languages.models import AnalysisResult
 from mcp_zen_of_languages.models import CyclomaticSummary
+from mcp_zen_of_languages.models import DogmaAnalysis
+from mcp_zen_of_languages.models import DogmaFinding
 from mcp_zen_of_languages.models import Location
 from mcp_zen_of_languages.models import Metrics
+from mcp_zen_of_languages.models import PerspectiveMode
 from mcp_zen_of_languages.models import Violation
 from mcp_zen_of_languages.rules import get_all_languages
 
 
 CONFIG_ALREADY_EXISTS_EXIT_CODE = 2
 SARIF_RESULT_LINE = 2
+
+
+class DummyConfig(DetectorConfig):
+    type: Literal["dummy"] = "dummy"
+
+
+class DummyDetector(ViolationDetector[DummyConfig]):
+    @property
+    def name(self) -> str:
+        return "dummy"
+
+    def detect(self, context, config):
+        return []
+
+
+def _projection_registry() -> DetectorRegistry:
+    registry = DetectorRegistry()
+    metadata = DetectorMetadata(
+        detector_id="line_length",
+        detector_class=DummyDetector,
+        config_model=DummyConfig,
+        language="python",
+        rule_ids=["python-001"],
+    )
+    bundle = BindingPerspectiveBundle(
+        rule_model=metadata,
+        projection_model=ProjectionPerspectiveModel(
+            detector_id="line_length",
+            language="python",
+            projection_rule_map={"go": ["python-001"]},
+            projection_verified_rule_map={"go": ["python-001"]},
+        ),
+    )
+    registry.register(metadata, bundle=bundle)
+    return registry
+
+
+def _projection_result(path: str) -> AnalysisResult:
+    return AnalysisResult(
+        language="python",
+        path=path,
+        metrics=Metrics(
+            cyclomatic=CyclomaticSummary(blocks=[], average=0.0),
+            maintainability_index=100.0,
+            lines_of_code=1,
+        ),
+        violations=[
+            Violation(
+                principle="line length",
+                severity=8,
+                message="long line",
+                detector_id="line_length",
+                rule_id="python-001",
+            ),
+            Violation(
+                principle="docstrings",
+                severity=3,
+                message="missing docstring",
+                detector_id="docstrings",
+                rule_id="python-007",
+            ),
+        ],
+        dogma_analysis=DogmaAnalysis(
+            findings=[
+                DogmaFinding(
+                    dogma_id="ZEN-UNAMBIGUOUS-NAME",
+                    label="Unambiguous name",
+                    severity=3,
+                ),
+            ],
+        ),
+        overall_score=95.0,
+    )
 
 
 def _assert_max_width(output: str, expected: int = 88) -> None:
@@ -352,6 +435,56 @@ def test_reports_command_outputs_markdown(tmp_path, capsys):
     assert "Zen Report" in captured.out
 
 
+@pytest.mark.parametrize(
+    ("command", "extra_args"),
+    [
+        ("check", []),
+        ("prompts", ["--mode", "agent"]),
+        ("report", []),
+        ("reports", []),
+    ],
+)
+def test_cli_commands_accept_dogma_perspective(
+    tmp_path,
+    capsys,
+    command,
+    extra_args,
+):
+    sample = tmp_path / "sample.py"
+    sample.write_text("def foo():\n    pass\n", encoding="utf-8")
+    exit_code = cli.main(
+        [command, str(sample), "--perspective", "dogma", *extra_args],
+    )
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert "Perspective 'dogma'" not in captured.err
+
+
+@pytest.mark.parametrize(
+    ("command", "extra_args"),
+    [
+        ("check", []),
+        ("prompts", ["--mode", "agent"]),
+        ("report", []),
+        ("reports", []),
+    ],
+)
+def test_cli_commands_reject_projection_perspective_without_target(
+    tmp_path,
+    capsys,
+    command,
+    extra_args,
+):
+    sample = tmp_path / "sample.py"
+    sample.write_text("def foo():\n    pass\n", encoding="utf-8")
+    exit_code = cli.main(
+        [command, str(sample), "--perspective", "projection", *extra_args],
+    )
+    assert exit_code == 2
+    captured = capsys.readouterr()
+    assert "requires a non-empty 'project_as'" in captured.err
+
+
 def test_report_command_outputs_json(tmp_path):
     sample = tmp_path / "sample.py"
     sample.write_text("def foo():\n    pass\n", encoding="utf-8")
@@ -362,6 +495,159 @@ def test_report_command_outputs_json(tmp_path):
     assert exit_code == 0
     payload = json.loads(output.read_text(encoding="utf-8"))
     assert payload["target"].endswith("sample.py")
+
+
+def test_check_command_rejects_testing_perspective_for_non_test_file(
+    tmp_path,
+    capsys,
+):
+    sample = tmp_path / "sample.py"
+    sample.write_text("def foo():\n    pass\n", encoding="utf-8")
+    exit_code = cli.main(["check", str(sample), "--perspective", "testing"])
+    assert exit_code == 2
+    captured = capsys.readouterr()
+    assert "recognized test-file path" in captured.err
+
+
+def test_check_command_outputs_testing_perspective_json_for_pytest_file(tmp_path):
+    tests_dir = tmp_path / "tests"
+    tests_dir.mkdir()
+    sample = tests_dir / "test_sample.py"
+    sample.write_text(
+        "def test_example():\n"
+        '    payload = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"\n',
+        encoding="utf-8",
+    )
+    output = tmp_path / "check.json"
+    exit_code = cli.main(
+        [
+            "check",
+            str(sample),
+            "--perspective",
+            PerspectiveMode.TESTING.value,
+            "--format",
+            "json",
+            "--out",
+            str(output),
+        ],
+    )
+    assert exit_code == 0
+    payload = json.loads(output.read_text(encoding="utf-8"))
+    assert len(payload) == 1
+    assert [violation["rule_id"] for violation in payload[0]["violations"]] == [
+        "python-001",
+    ]
+
+
+def test_check_command_rejects_projection_perspective_without_target(
+    tmp_path,
+    capsys,
+):
+    sample = tmp_path / "sample.py"
+    sample.write_text("def foo():\n    pass\n", encoding="utf-8")
+    exit_code = cli.main(["check", str(sample), "--perspective", "projection"])
+    assert exit_code == 2
+    captured = capsys.readouterr()
+    assert "requires a non-empty 'project_as'" in captured.err
+
+
+def test_check_command_outputs_projection_perspective_json_for_requested_family(
+    tmp_path,
+    monkeypatch,
+):
+    from mcp_zen_of_languages.analyzers import registry as registry_module
+
+    sample = tmp_path / "sample.py"
+    sample.write_text("def foo():\n    pass\n", encoding="utf-8")
+    output = tmp_path / "check.json"
+    monkeypatch.setattr(
+        cli,
+        "_analyze_targets",
+        lambda *args, **kwargs: [_projection_result(str(sample))],
+    )
+    monkeypatch.setattr(registry_module, "REGISTRY", _projection_registry())
+
+    exit_code = cli.main(
+        [
+            "check",
+            str(sample),
+            "--perspective",
+            PerspectiveMode.PROJECTION.value,
+            "--as",
+            "go",
+            "--format",
+            "json",
+            "--out",
+            str(output),
+        ],
+    )
+
+    assert exit_code == 0
+    payload = json.loads(output.read_text(encoding="utf-8"))
+    assert len(payload) == 1
+    assert [violation["rule_id"] for violation in payload[0]["violations"]] == [
+        "python-001",
+    ]
+
+
+def test_report_command_outputs_testing_perspective_markdown_for_pytest_file(
+    tmp_path,
+    capsys,
+):
+    tests_dir = tmp_path / "tests"
+    tests_dir.mkdir()
+    sample = tests_dir / "test_sample.py"
+    sample.write_text(
+        "def test_example():\n"
+        '    payload = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"\n',
+        encoding="utf-8",
+    )
+
+    exit_code = cli.main(
+        ["report", str(sample), "--perspective", PerspectiveMode.TESTING.value],
+    )
+
+    assert exit_code == 0
+    output = capsys.readouterr().out
+    assert "Zen Report" in output
+    assert "Total violations" in output
+    assert "Universal Dogmas" not in output
+
+
+def test_report_command_outputs_projection_perspective_markdown_for_requested_family(
+    tmp_path,
+    monkeypatch,
+    capsys,
+):
+    from mcp_zen_of_languages.analyzers import registry as registry_module
+    from mcp_zen_of_languages.reporting import report as report_module
+
+    sample = tmp_path / "sample.py"
+    sample.write_text("def foo():\n    pass\n", encoding="utf-8")
+    monkeypatch.setattr(registry_module, "REGISTRY", _projection_registry())
+    monkeypatch.setattr(
+        report_module,
+        "_analyze_targets",
+        lambda targets, config_path=None: [_projection_result(str(sample))],
+    )
+
+    exit_code = cli.main(
+        [
+            "report",
+            str(sample),
+            "--perspective",
+            PerspectiveMode.PROJECTION.value,
+            "--as",
+            "go",
+        ],
+    )
+
+    assert exit_code == 0
+    output = capsys.readouterr().out
+    assert "Zen Report" in output
+    assert "long line" in output
+    assert "missing docstring" not in output
+    assert "Universal Dogmas" not in output
 
 
 def test_report_command_writes_out_file(tmp_path):
@@ -582,16 +868,33 @@ def test_zen_alias_entrypoint_present():
     )
 
 
+def test_server_alias_entrypoint_present():
+    entry_points = metadata.entry_points(group="console_scripts")
+    assert any(
+        ep.name == "mcp-zen-of-languages"
+        and ep.value == "mcp_zen_of_languages.__main__:main"
+        for ep in entry_points
+    )
+
+
 def test_deprecated_cli_alias_entrypoints_absent():
     entry_points = metadata.entry_points(group="console_scripts")
-    deprecated = {"mcp-zen-of-languages", "zen-of-languages", "zen-cli"}
+    deprecated = {"zen-of-languages", "zen-cli"}
     assert all(ep.name not in deprecated for ep in entry_points)
 
 
 SAMPLES = {
     "python": "def foo():\n    pass\n",
+    "pydantic": "from pydantic import BaseModel\n\nclass Payload(BaseModel):\n    id: int\n",
+    "fastapi": "from fastapi import FastAPI\n\napp = FastAPI()\n",
+    "django": "from django.urls import path\n\nurlpatterns = []\n",
+    "sqlalchemy": "from sqlalchemy.orm import DeclarativeBase\n\nclass Base(DeclarativeBase):\n    pass\n",
     "javascript": "function foo() {}\n",
     "typescript": "interface Foo {}\n",
+    "react": "function Counter() { const [count] = useState(0); return <button>{count}</button>; }\n",
+    "vue": "<template><div>{{ msg }}</div></template>\n<script setup>\nconst props = defineProps<{ msg: string }>()\n</script>\n",
+    "angular": "import { Component } from '@angular/core';\n@Component({ selector: 'app-root', template: '' })\nexport class AppComponent {}\n",
+    "nextjs": "import Link from 'next/link';\nexport default function Page() { return <Link href='/' />; }\n",
     "ruby": "def foo\nend\n",
     "go": "package main\nfunc main() {}\n",
     "rust": "fn main() {}\n",

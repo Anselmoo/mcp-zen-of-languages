@@ -14,6 +14,7 @@ REQUIRED_FILES = {
     "mapping.py",
     "rules.py",
 }
+OPTIONAL_FILES = {"dogmas.py"}
 LEGACY_MARKERS = ("legacy", "deprecated")
 
 
@@ -46,7 +47,10 @@ def _unexpected_python_modules(language_dir: Path) -> list[str]:
     return sorted(
         path.name
         for path in language_dir.iterdir()
-        if path.is_file() and path.suffix == ".py" and path.name not in REQUIRED_FILES
+        if path.is_file()
+        and path.suffix == ".py"
+        and path.name not in REQUIRED_FILES
+        and path.name not in OPTIONAL_FILES
     )
 
 
@@ -65,12 +69,16 @@ def main() -> int:  # noqa: C901, PLR0912, PLR0915
 
     errors: list[str] = []
     languages_root = repo_root / "src" / "mcp_zen_of_languages" / "languages"
+    frameworks_root = repo_root / "src" / "mcp_zen_of_languages" / "frameworks"
     detectors_root = repo_root / "src" / "mcp_zen_of_languages" / "detectors"
     metrics_root = repo_root / "src" / "mcp_zen_of_languages" / "metrics"
     analyzers_root = repo_root / "src" / "mcp_zen_of_languages" / "analyzers"
 
     if not languages_root.exists():
         print(f"Languages directory not found: {languages_root}")
+        return 1
+    if not frameworks_root.exists():
+        print(f"Frameworks directory not found: {frameworks_root}")
         return 1
 
     if detectors_root.exists():
@@ -81,6 +89,7 @@ def main() -> int:  # noqa: C901, PLR0912, PLR0915
 
     from mcp_zen_of_languages.analyzers import registry_bootstrap  # noqa: F401
     from mcp_zen_of_languages.analyzers.registry import REGISTRY
+    from mcp_zen_of_languages.frameworks import FRAMEWORK_KEYS
     from mcp_zen_of_languages.languages.rule_pattern import RulePatternDetector
     from mcp_zen_of_languages.rules import get_all_languages
     from mcp_zen_of_languages.rules import get_language_zen
@@ -94,113 +103,129 @@ def main() -> int:  # noqa: C901, PLR0912, PLR0915
         if lang not in languages:
             errors.append(f"extension mapping references unknown language: {lang}")
 
-    for entry in sorted(languages_root.iterdir()):
-        if not entry.is_dir():
-            continue
-        if entry.name.startswith("__"):
-            continue
-        if entry.name != entry.name.lower():
-            errors.append(f"{entry.name}: folder name must be lowercase")
-        language_key = _language_key(entry.name, languages)
-        if language_key not in languages:
-            errors.append(f"{entry.name}: no rules registry entry")
-            continue
-        if missing := sorted(REQUIRED_FILES - {p.name for p in entry.iterdir()}):
-            errors.append(f"{entry.name}: missing {', '.join(missing)}")
-            continue
-        if unexpected_modules := _unexpected_python_modules(entry):
-            errors.append(
-                f"{entry.name}: unexpected python modules {unexpected_modules}",
-            )
-            continue
-        mapping_module_name = f"mcp_zen_of_languages.languages.{entry.name}.mapping"
-        try:
-            mapping_module = importlib.import_module(mapping_module_name)
-        except ModuleNotFoundError as exc:
-            if exc.name == mapping_module_name:
-                errors.append(f"{entry.name}: mapping.py module not found")
+    for package_name, package_root in (
+        ("languages", languages_root),
+        ("frameworks", frameworks_root),
+    ):
+        for entry in sorted(package_root.iterdir()):
+            if not entry.is_dir():
                 continue
-            raise
-        detector_map = getattr(mapping_module, "DETECTOR_MAP", None)
-        if detector_map is None:
-            errors.append(f"{entry.name}: DETECTOR_MAP missing from mapping.py")
-            continue
-        if detector_map.language != language_key:
-            errors.append(
-                f"{entry.name}: DETECTOR_MAP language mismatch {detector_map.language}",
-            )
-            continue
-        detectors_path = entry / "detectors.py"
-        exported = _parse_all(detectors_path)
-        if exported is None:
-            errors.append(f"{entry.name}: __all__ must be a list of strings")
-            continue
-        registry_detectors = {
-            meta.detector_class.__name__
-            for meta in REGISTRY.items()
-            if meta.language == language_key
-            and meta.detector_class is not RulePatternDetector
-        }
-        missing_exports = sorted(registry_detectors - set(exported))
-        extra_exports = sorted(set(exported) - registry_detectors)
-        if missing_exports or extra_exports:
-            errors.append(
-                f"{entry.name}: __all__ mismatch missing={missing_exports} extra={extra_exports}",
-            )
-        lang_zen = get_language_zen(language_key)
-        if lang_zen is None:
-            errors.append(f"{entry.name}: missing rules definition")
-            continue
-        missing_rule_ids, unknown_rule_ids = get_rule_id_coverage(
-            lang_zen, explicit_only=False
-        )
-        if missing_rule_ids or unknown_rule_ids:
-            errors.append(
-                f"{entry.name}: rule_id gaps missing={missing_rule_ids} unknown={unknown_rule_ids}",
-            )
-        rule_ids = {principle.id for principle in lang_zen.principles}
-        rule_map_keys: set[str] = set()
-        for meta in REGISTRY.items():
-            if meta.language != language_key:
+            if entry.name.startswith("__"):
                 continue
-            rule_map_keys.update(meta.rule_map.keys())
-        if unknown_rule_keys := sorted(rule_map_keys - rule_ids):
-            errors.append(
-                f"{entry.name}: rule_map references unknown rules {unknown_rule_keys}",
+            if entry.name != entry.name.lower():
+                errors.append(f"{entry.name}: folder name must be lowercase")
+            if package_name == "languages" and entry.name in FRAMEWORK_KEYS:
+                errors.append(
+                    f"{entry.name}: framework packages must live under frameworks/"
+                )
+                continue
+            if package_name == "frameworks" and entry.name not in FRAMEWORK_KEYS:
+                errors.append(
+                    f"{entry.name}: framework folder has no registered framework key"
+                )
+                continue
+            language_key = _language_key(entry.name, languages)
+            if language_key not in languages:
+                errors.append(f"{entry.name}: no rules registry entry")
+                continue
+            if missing := sorted(REQUIRED_FILES - {p.name for p in entry.iterdir()}):
+                errors.append(f"{entry.name}: missing {', '.join(missing)}")
+                continue
+            if unexpected_modules := _unexpected_python_modules(entry):
+                errors.append(
+                    f"{entry.name}: unexpected python modules {unexpected_modules}",
+                )
+                continue
+            mapping_module_name = (
+                f"mcp_zen_of_languages.{package_name}.{entry.name}.mapping"
             )
-        for principle in lang_zen.principles:
-            specs = principle.violation_specs
-            all_violation_ids = {spec.id for spec in specs}
-            required_ids = {
-                spec.id
-                for spec in specs
-                if not spec.id.startswith(("manual-", "todo-"))
+            try:
+                mapping_module = importlib.import_module(mapping_module_name)
+            except ModuleNotFoundError as exc:
+                if exc.name == mapping_module_name:
+                    errors.append(f"{entry.name}: mapping.py module not found")
+                    continue
+                raise
+            detector_map = getattr(mapping_module, "DETECTOR_MAP", None)
+            if detector_map is None:
+                errors.append(f"{entry.name}: DETECTOR_MAP missing from mapping.py")
+                continue
+            if detector_map.language != language_key:
+                errors.append(
+                    f"{entry.name}: DETECTOR_MAP language mismatch {detector_map.language}",
+                )
+                continue
+            detectors_path = entry / "detectors.py"
+            exported = _parse_all(detectors_path)
+            if exported is None:
+                errors.append(f"{entry.name}: __all__ must be a list of strings")
+                continue
+            registry_detectors = {
+                meta.detector_class.__name__
+                for meta in REGISTRY.items()
+                if meta.language == language_key
+                and meta.detector_class is not RulePatternDetector
             }
-            if not required_ids:
+            missing_exports = sorted(registry_detectors - set(exported))
+            extra_exports = sorted(set(exported) - registry_detectors)
+            if missing_exports or extra_exports:
+                errors.append(
+                    f"{entry.name}: __all__ mismatch missing={missing_exports} extra={extra_exports}",
+                )
+            lang_zen = get_language_zen(language_key)
+            if lang_zen is None:
+                errors.append(f"{entry.name}: missing rules definition")
                 continue
-            covered: set[str] = set()
-            full_coverage = False
-            unknown_specs: set[str] = set()
+            missing_rule_ids, unknown_rule_ids = get_rule_id_coverage(
+                lang_zen, explicit_only=False
+            )
+            if missing_rule_ids or unknown_rule_ids:
+                errors.append(
+                    f"{entry.name}: rule_id gaps missing={missing_rule_ids} unknown={unknown_rule_ids}",
+                )
+            rule_ids = {principle.id for principle in lang_zen.principles}
+            rule_map_keys: set[str] = set()
             for meta in REGISTRY.items():
                 if meta.language != language_key:
                     continue
-                coverage = meta.rule_map.get(principle.id, [])
-                if "*" in coverage:
-                    full_coverage = True
-                    break
-                coverage_set = set(coverage)
-                covered.update(coverage_set)
-                unknown_specs.update(coverage_set - all_violation_ids)
-            if unknown_specs:
+                rule_map_keys.update(meta.rule_map.keys())
+            if unknown_rule_keys := sorted(rule_map_keys - rule_ids):
                 errors.append(
-                    f"{entry.name}: {principle.id} unknown violation ids {sorted(unknown_specs)}",
+                    f"{entry.name}: rule_map references unknown rules {unknown_rule_keys}",
                 )
-            if full_coverage:
-                continue
-            if missing_specs := sorted(required_ids - covered):
-                errors.append(
-                    f"{entry.name}: {principle.id} missing violations {missing_specs}",
-                )
+            for principle in lang_zen.principles:
+                specs = principle.violation_specs
+                all_violation_ids = {spec.id for spec in specs}
+                required_ids = {
+                    spec.id
+                    for spec in specs
+                    if not spec.id.startswith(("manual-", "todo-"))
+                }
+                if not required_ids:
+                    continue
+                covered: set[str] = set()
+                full_coverage = False
+                unknown_specs: set[str] = set()
+                for meta in REGISTRY.items():
+                    if meta.language != language_key:
+                        continue
+                    coverage = meta.rule_map.get(principle.id, [])
+                    if "*" in coverage:
+                        full_coverage = True
+                        break
+                    coverage_set = set(coverage)
+                    covered.update(coverage_set)
+                    unknown_specs.update(coverage_set - all_violation_ids)
+                if unknown_specs:
+                    errors.append(
+                        f"{entry.name}: {principle.id} unknown violation ids {sorted(unknown_specs)}",
+                    )
+                if full_coverage:
+                    continue
+                if missing_specs := sorted(required_ids - covered):
+                    errors.append(
+                        f"{entry.name}: {principle.id} missing violations {missing_specs}",
+                    )
 
     if errors:
         print("Language module validation failures found:")

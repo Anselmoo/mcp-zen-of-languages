@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from mcp_zen_of_languages.analyzers.mapping_models import DetectorBinding
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
-from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
+from mcp_zen_of_languages.analyzers.mapping_models import RuleBinding
+from mcp_zen_of_languages.analyzers.mapping_models import RuleDetectorBinding
 from mcp_zen_of_languages.languages.configs import CppAutoConfig
 from mcp_zen_of_languages.languages.configs import CppAvoidGlobalsConfig
 from mcp_zen_of_languages.languages.configs import CppCStyleCastConfig
@@ -33,113 +33,157 @@ from mcp_zen_of_languages.languages.cpp.detectors import CppRuleOfFiveDetector
 from mcp_zen_of_languages.languages.cpp.detectors import CppSmartPointerDetector
 
 
-FULL_DOGMA_IDS = list(DOGMA_RULE_IDS)
+def _dogmas(*dogma_ids: str) -> list[str]:
+    """Return explicit universal dogma ids for the binding."""
+    return list(dogma_ids)
+
+
 DETECTOR_MAP = LanguageDetectorMap(
     language="cpp",
     bindings=[
-        DetectorBinding(
-            detector_id="cpp_smart_pointers",
-            detector_class=CppSmartPointerDetector,
-            config_model=CppSmartPointerConfig,
-            rule_ids=["cpp-002"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=10,
-        ),
-        DetectorBinding(
-            detector_id="cpp_nullptr",
-            detector_class=CppNullptrDetector,
-            config_model=CppNullptrConfig,
-            rule_ids=["cpp-004"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=20,
-        ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="cpp-001",
             detector_class=CppRaiiDetector,
             config_model=CppRaiiConfig,
-            rule_ids=["cpp-001"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=5,
+            rules=[
+                RuleBinding(
+                    rule_id="cpp-001",
+                    dogma_ids=_dogmas("ZEN-STRICT-FENCES"),
+                    testing_ids=["gtest"],
+                    verified_testing_ids=["gtest"],
+                    projection_ids=["cpp"],
+                    verified_projection_ids=["cpp"],
+                )
+            ],
+            default_order=10,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="cpp-003",
             detector_class=CppAutoDetector,
             config_model=CppAutoConfig,
-            rule_ids=["cpp-003"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=15,
+            rules=[
+                RuleBinding(
+                    rule_id="cpp-003", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
+            default_order=20,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="cpp-005",
             detector_class=CppRangeForDetector,
             config_model=CppRangeForConfig,
-            rule_ids=["cpp-005"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=25,
+            rules=[
+                RuleBinding(
+                    rule_id="cpp-005", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
+            default_order=30,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="cpp-006",
             detector_class=CppManualAllocationDetector,
             config_model=CppManualAllocationConfig,
-            rule_ids=["cpp-006"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=35,
+            rules=[
+                RuleBinding(rule_id="cpp-006", dogma_ids=_dogmas("ZEN-VISIBLE-STATE"))
+            ],
+            default_order=40,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="cpp-007",
             detector_class=CppConstCorrectnessDetector,
             config_model=CppConstCorrectnessConfig,
-            rule_ids=["cpp-007"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=45,
+            rules=[
+                RuleBinding(rule_id="cpp-007", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
+            ],
+            default_order=50,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="cpp-008",
             detector_class=CppCStyleCastDetector,
             config_model=CppCStyleCastConfig,
-            rule_ids=["cpp-008"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=55,
+            rules=[
+                RuleBinding(rule_id="cpp-008", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
+            ],
+            default_order=60,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="cpp-009",
             detector_class=CppRuleOfFiveDetector,
             config_model=CppRuleOfFiveConfig,
-            rule_ids=["cpp-009"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=65,
+            rules=[
+                RuleBinding(
+                    rule_id="cpp-009", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
+            default_order=70,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="cpp-010",
             detector_class=CppMoveDetector,
             config_model=CppMoveConfig,
-            rule_ids=["cpp-010"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=75,
+            rules=[
+                RuleBinding(
+                    rule_id="cpp-010", dogma_ids=_dogmas("ZEN-PROPORTIONATE-COMPLEXITY")
+                )
+            ],
+            default_order=80,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="cpp-011",
             detector_class=CppAvoidGlobalsDetector,
             config_model=CppAvoidGlobalsConfig,
-            rule_ids=["cpp-011"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=85,
+            rules=[
+                RuleBinding(
+                    rule_id="cpp-011",
+                    dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION", "ZEN-VISIBLE-STATE"),
+                )
+            ],
+            default_order=90,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="cpp-012",
             detector_class=CppOverrideFinalDetector,
             config_model=CppOverrideFinalConfig,
-            rule_ids=["cpp-012"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=95,
+            rules=[
+                RuleBinding(rule_id="cpp-012", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
+            ],
+            default_order=100,
         ),
-        DetectorBinding(
+        RuleDetectorBinding(
             detector_id="cpp-013",
             detector_class=CppOptionalDetector,
             config_model=CppOptionalConfig,
-            rule_ids=["cpp-013"],
-            universal_dogma_ids=FULL_DOGMA_IDS,
-            default_order=105,
+            rules=[
+                RuleBinding(
+                    rule_id="cpp-013", dogma_ids=_dogmas("ZEN-RIGHT-ABSTRACTION")
+                )
+            ],
+            default_order=110,
+        ),
+        RuleDetectorBinding(
+            detector_id="cpp_nullptr",
+            detector_class=CppNullptrDetector,
+            config_model=CppNullptrConfig,
+            rules=[
+                RuleBinding(rule_id="cpp-004", dogma_ids=_dogmas("ZEN-EXPLICIT-INTENT"))
+            ],
+            default_order=120,
+        ),
+        RuleDetectorBinding(
+            detector_id="cpp_smart_pointers",
+            detector_class=CppSmartPointerDetector,
+            config_model=CppSmartPointerConfig,
+            rules=[
+                RuleBinding(
+                    rule_id="cpp-002",
+                    dogma_ids=_dogmas("ZEN-VISIBLE-STATE"),
+                    testing_ids=["gtest"],
+                    verified_testing_ids=["gtest"],
+                    projection_ids=["cpp"],
+                    verified_projection_ids=["cpp"],
+                )
+            ],
+            default_order=130,
         ),
     ],
 )

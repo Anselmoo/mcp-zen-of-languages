@@ -110,6 +110,34 @@ GENERIC_PROMPTS_BY_LANGUAGE: dict[str, list[tuple[str, str]]] = {
             "into smaller units with clear docstrings.",
         ),
     ],
+    "pydantic": [
+        (
+            "Complete the Pydantic v2 migration",
+            "Replace v1 APIs such as dict/json/parse_obj/validator/Config with "
+            "model_dump/model_validate/field_validator/model_config and remove mutable defaults.",
+        ),
+    ],
+    "fastapi": [
+        (
+            "Harden FastAPI contracts",
+            "Add explicit response_model and status_code metadata, replace bare "
+            "exceptions with HTTPException, and remove blocking I/O from async routes.",
+        ),
+    ],
+    "django": [
+        (
+            "Harden Django settings and ORM usage",
+            "Move secrets out of settings, review DEBUG and raw SQL usage, and "
+            "replace hardcoded internal paths with reverse()/reverse_lazy().",
+        ),
+    ],
+    "sqlalchemy": [
+        (
+            "Modernize SQLAlchemy access patterns",
+            "Parameterize text queries, scope sessions explicitly, and migrate "
+            "declarative models toward SQLAlchemy 2.x idioms such as DeclarativeBase and mapped_column.",
+        ),
+    ],
     "ruby": [
         (
             "Simplify Ruby objects",
@@ -128,6 +156,34 @@ GENERIC_PROMPTS_BY_LANGUAGE: dict[str, list[tuple[str, str]]] = {
         (
             "Harden strictness",
             "Audit tsconfig settings and enable strict mode with null checks.",
+        ),
+    ],
+    "react": [
+        (
+            "Stabilize React rendering",
+            "Replace index-based keys, extract inline JSX callbacks, and review "
+            "conditional hooks or effects that need explicit cleanup.",
+        ),
+    ],
+    "vue": [
+        (
+            "Tighten Vue component contracts",
+            "Add prop types, key every v-for, separate v-if from v-for, and "
+            "eliminate direct prop mutation in component logic.",
+        ),
+    ],
+    "angular": [
+        (
+            "Harden Angular component boundaries",
+            "Adopt OnPush change detection, replace any with explicit types, and "
+            "review subscribe() calls for async-pipe or teardown strategies.",
+        ),
+    ],
+    "nextjs": [
+        (
+            "Lean into Next.js server-first patterns",
+            "Replace raw anchors and img tags with framework components, avoid "
+            "legacy router APIs, and sanitize route-handler error responses.",
         ),
     ],
     "go": [

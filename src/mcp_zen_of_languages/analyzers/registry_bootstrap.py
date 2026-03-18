@@ -6,7 +6,8 @@ it performs two passes:
 
 1. **Mapping scan** — calls
    ``bootstrap_from_mappings``
-   to discover hand-written detector bindings from ``languages/*/mapping.py``.
+   to discover hand-written detector bindings from ``languages/*/mapping.py``
+   and ``frameworks/*/mapping.py``.
 2. **Gap fill** — iterates every language's zen principles and registers a
    generic [`RulePatternDetector`][mcp_zen_of_languages.languages.rule_pattern.RulePatternDetector]
    for any rule that lacks a dedicated detector, dynamically generating a
@@ -26,7 +27,7 @@ from pydantic import create_model
 
 from mcp_zen_of_languages.analyzers.registry import REGISTRY
 from mcp_zen_of_languages.analyzers.registry import DetectorMetadata
-from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule
+from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule_id
 from mcp_zen_of_languages.languages.configs import RULE_CONFIGS
 from mcp_zen_of_languages.languages.configs import DetectorConfig
 from mcp_zen_of_languages.languages.rule_pattern import RulePatternDetector
@@ -170,7 +171,7 @@ if not REGISTRY.items():
                     config_model=rule_configs[rule_id],
                     language=language,
                     rule_ids=[rule_id],
-                    universal_dogma_ids=list(dogmas_for_rule(language, rule_id)),
+                    rule_dogma_map={rule_id: list(dogmas_for_rule_id(rule_id))},
                     default_order=900,
                 ),
             )

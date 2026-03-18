@@ -5,9 +5,15 @@ like ``"py"``, ``"ts"``, ``"rs"``) to their concrete
 [`BaseAnalyzer`][mcp_zen_of_languages.analyzers.base.BaseAnalyzer] subclass.
 Callers never need to import individual analyzer modules; they go through
 ``create_analyzer`` and receive a fully configured instance.
+
+Framework analyzers (React, Vue, Angular, Next.js, Pydantic, FastAPI, Django,
+SQLAlchemy) are loaded lazily on first use to keep import-time overhead low and
+to avoid surfacing circular-import issues during module initialisation.
 """
 
 from __future__ import annotations
+
+import importlib
 
 from typing import TYPE_CHECKING
 
@@ -47,8 +53,16 @@ if TYPE_CHECKING:
 
 SUPPORTED_LANGUAGES: tuple[str, ...] = (
     "python",
+    "pydantic",
+    "fastapi",
+    "django",
+    "sqlalchemy",
     "typescript",
+    "react",
+    "angular",
+    "nextjs",
     "javascript",
+    "vue",
     "go",
     "rust",
     "svg",
@@ -72,6 +86,55 @@ SUPPORTED_LANGUAGES: tuple[str, ...] = (
     "latex",
     "gitlab_ci",
 )
+
+# Framework analyzer aliases are resolved lazily via (module_path, class_name)
+# tuples to avoid importing every framework at module load time.
+_FRAMEWORK_ALIASES: dict[str, tuple[str, str]] = {
+    "pydantic": (
+        "mcp_zen_of_languages.frameworks.pydantic.analyzer",
+        "PydanticAnalyzer",
+    ),
+    "fastapi": (
+        "mcp_zen_of_languages.frameworks.fastapi.analyzer",
+        "FastAPIAnalyzer",
+    ),
+    "django": (
+        "mcp_zen_of_languages.frameworks.django.analyzer",
+        "DjangoAnalyzer",
+    ),
+    "sqlalchemy": (
+        "mcp_zen_of_languages.frameworks.sqlalchemy.analyzer",
+        "SQLAlchemyAnalyzer",
+    ),
+    "sqla": (
+        "mcp_zen_of_languages.frameworks.sqlalchemy.analyzer",
+        "SQLAlchemyAnalyzer",
+    ),
+    "react": (
+        "mcp_zen_of_languages.frameworks.react.analyzer",
+        "ReactAnalyzer",
+    ),
+    "angular": (
+        "mcp_zen_of_languages.frameworks.angular.analyzer",
+        "AngularAnalyzer",
+    ),
+    "nextjs": (
+        "mcp_zen_of_languages.frameworks.nextjs.analyzer",
+        "NextjsAnalyzer",
+    ),
+    "next.js": (
+        "mcp_zen_of_languages.frameworks.nextjs.analyzer",
+        "NextjsAnalyzer",
+    ),
+    "next": (
+        "mcp_zen_of_languages.frameworks.nextjs.analyzer",
+        "NextjsAnalyzer",
+    ),
+    "vue": (
+        "mcp_zen_of_languages.frameworks.vue.analyzer",
+        "VueAnalyzer",
+    ),
+}
 
 _ANALYZERS_BY_ALIAS: dict[str, AnalyzerClass] = {
     "python": PythonAnalyzer,
@@ -138,6 +201,13 @@ _ANALYZERS_BY_ALIAS: dict[str, AnalyzerClass] = {
 }
 
 
+def _resolve_framework_class(alias: str) -> AnalyzerClass:
+    """Lazily import and return a framework analyzer class by alias."""
+    module_path, class_name = _FRAMEWORK_ALIASES[alias]
+    module = importlib.import_module(module_path)
+    return getattr(module, class_name)
+
+
 def supported_languages() -> tuple[str, ...]:
     """Return canonical language identifiers accepted by ``create_analyzer``."""
     return SUPPORTED_LANGUAGES
@@ -154,6 +224,9 @@ def create_analyzer(
     identifiers and aliases.  The returned analyzer has its detection
     pipeline pre-built from zen rules, optionally overlaid with
     *pipeline_config* overrides from ``zen-config.yaml``.
+
+    Framework analyzers (React, Vue, Angular, etc.) are imported lazily on
+    first use; language analyzers are imported eagerly at module load.
 
     Args:
         language (str): Language name or alias (case-insensitive).  Common
@@ -203,7 +276,10 @@ def create_analyzer(
         =============================== ===================================
     """
     lang = language.lower()
-    analyzer_class = _ANALYZERS_BY_ALIAS.get(lang)
+    if lang in _FRAMEWORK_ALIASES:
+        analyzer_class = _resolve_framework_class(lang)
+    else:
+        analyzer_class = _ANALYZERS_BY_ALIAS.get(lang)
     if analyzer_class is None:
         msg = f"Unsupported language: {language}"
         raise ValueError(msg)

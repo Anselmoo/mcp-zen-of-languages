@@ -1,3 +1,11 @@
+## [0.6.0] – 2026-03-18
+
+### Added
+- Add SQLAlchemy framework support and enhance documentation (#138)
+
+### Fixed
+- **docs**: repair Mermaid contrast, text overflow, and expand diagram coverage (#137)
+
 ## [0.5.2] – 2026-03-09
 
 ### Changed

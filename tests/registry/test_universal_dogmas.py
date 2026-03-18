@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import importlib
+import warnings
 
 from mcp_zen_of_languages.analyzers.analyzer_factory import supported_languages
 from mcp_zen_of_languages.analyzers.registry import REGISTRY
 from mcp_zen_of_languages.core.universal_dogmas import DOGMA_RULE_IDS
 from mcp_zen_of_languages.core.universal_dogmas import UniversalDogmaID
 from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule
+from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule_id
 from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule_ids
 from mcp_zen_of_languages.frameworks import FRAMEWORK_KEYS
 from mcp_zen_of_languages.frameworks import FRAMEWORK_RULE_DOGMAS
@@ -57,13 +59,24 @@ PILOT_DETECTOR_EXPECTATIONS = [
 
 
 def test_dogmas_for_rule_maps_error_handling_to_fail_fast() -> None:
-    dogmas = dogmas_for_rule("python", "python-009")
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        dogmas = dogmas_for_rule("python", "python-009")
+    assert UniversalDogmaID.FAIL_FAST.value in dogmas
+    assert any(item.category is DeprecationWarning for item in caught)
+
+
+def test_dogmas_for_rule_id_maps_error_handling_to_fail_fast() -> None:
+    dogmas = dogmas_for_rule_id("python-009")
     assert UniversalDogmaID.FAIL_FAST.value in dogmas
 
 
 def test_dogmas_for_rule_ids_deduplicate_results() -> None:
-    dogmas = dogmas_for_rule_ids("typescript", ["ts-001", "ts-004", "ts-001"])
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        dogmas = dogmas_for_rule_ids("typescript", ["ts-001", "ts-004", "ts-001"])
     assert dogmas.count(UniversalDogmaID.EXPLICIT_INTENT.value) == 1
+    assert any(item.category is DeprecationWarning for item in caught)
 
 
 def test_registry_metadata_contains_inferred_universal_dogmas() -> None:

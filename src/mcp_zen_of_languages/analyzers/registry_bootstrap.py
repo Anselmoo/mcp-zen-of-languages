@@ -27,7 +27,7 @@ from pydantic import create_model
 
 from mcp_zen_of_languages.analyzers.registry import REGISTRY
 from mcp_zen_of_languages.analyzers.registry import DetectorMetadata
-from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule
+from mcp_zen_of_languages.core.universal_dogmas import dogmas_for_rule_id
 from mcp_zen_of_languages.languages.configs import RULE_CONFIGS
 from mcp_zen_of_languages.languages.configs import DetectorConfig
 from mcp_zen_of_languages.languages.rule_pattern import RulePatternDetector
@@ -171,7 +171,7 @@ if not REGISTRY.items():
                     config_model=rule_configs[rule_id],
                     language=language,
                     rule_ids=[rule_id],
-                    rule_dogma_map={rule_id: list(dogmas_for_rule(language, rule_id))},
+                    rule_dogma_map={rule_id: list(dogmas_for_rule_id(rule_id))},
                     default_order=900,
                 ),
             )

@@ -868,9 +868,18 @@ def test_zen_alias_entrypoint_present():
     )
 
 
+def test_server_alias_entrypoint_present():
+    entry_points = metadata.entry_points(group="console_scripts")
+    assert any(
+        ep.name == "mcp-zen-of-languages"
+        and ep.value == "mcp_zen_of_languages.__main__:main"
+        for ep in entry_points
+    )
+
+
 def test_deprecated_cli_alias_entrypoints_absent():
     entry_points = metadata.entry_points(group="console_scripts")
-    deprecated = {"mcp-zen-of-languages", "zen-of-languages", "zen-cli"}
+    deprecated = {"zen-of-languages", "zen-cli"}
     assert all(ep.name not in deprecated for ep in entry_points)
 
 

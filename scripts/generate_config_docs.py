@@ -40,10 +40,19 @@ directory or the first parent directory that contains `pyproject.toml`.
 """
 
 
+_SAFE_DEFAULT_FACTORIES: frozenset[type] = frozenset({list, dict, set, tuple})
+
+
 def _format_field(name: str, field) -> str:
     annotation = repr(field.annotation).replace("<class '", "").replace("'>", "")
     if field.default_factory is not None:
-        default = field.default_factory()
+        if field.default_factory in _SAFE_DEFAULT_FACTORIES:
+            default = field.default_factory()
+        else:
+            factory_name = getattr(
+                field.default_factory, "__name__", repr(field.default_factory)
+            )
+            default = f"<factory: {factory_name}>"
     else:
         default = field.default if field.default is not None else "None"
     if isinstance(default, type):

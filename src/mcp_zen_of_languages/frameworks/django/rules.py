@@ -44,7 +44,7 @@ DJANGO_ZEN = LanguageZenPrinciples(
             severity=10,
             description="String-built SQL in Django bypasses ORM protections and opens injection risk.",
             patterns=[
-                "re:cursor\\.execute\\(\\s*(?:f[\\\"\\']|[rbuf]*[\\\"\\'][^\\\"\\']*%s?[\\\"\\']\\s*%)"
+                "re:cursor\\.execute\\(\\s*(?:f[\\\"\\']|[rbuf]*[\\\"\\'][\\s\\S]*?[\\\"\\']\\s*(?:%|\\.format\\())"
             ],
             recommendation="Use parameterized queries or ORM expressions instead of interpolated SQL.",
         ),

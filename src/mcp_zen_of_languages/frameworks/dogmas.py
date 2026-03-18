@@ -125,8 +125,25 @@ FRAMEWORK_RULE_DOGMAS: dict[str, tuple[str, ...]] = {
 
 
 def framework_rule_dogmas(rule_id: str) -> tuple[str, ...]:
-    """Return the explicit dogma set assigned to a framework rule."""
-    return FRAMEWORK_RULE_DOGMAS[rule_id]
+    """Return the explicit dogma set assigned to a framework rule.
+
+    Args:
+        rule_id: Framework rule identifier (e.g. ``"react-001"``).
+
+    Returns:
+        Tuple of universal dogma IDs assigned to the rule.
+
+    Raises:
+        ValueError: If *rule_id* is not registered in the framework dogma catalog.
+            The error message includes the unknown rule id and the list of
+            available rule ids to aid diagnosis.
+    """
+    try:
+        return FRAMEWORK_RULE_DOGMAS[rule_id]
+    except KeyError as exc:
+        available = sorted(FRAMEWORK_RULE_DOGMAS)
+        msg = f"Unknown framework rule id {rule_id!r}. Available rule ids: {available}"
+        raise ValueError(msg) from exc
 
 
 __all__ = ["FRAMEWORK_RULE_DOGMAS", "framework_rule_dogmas"]

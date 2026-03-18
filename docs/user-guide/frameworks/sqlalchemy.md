@@ -43,7 +43,7 @@ tags:
 
     **Detectable Patterns:**
 
-    - `re:text\(\s*(?:f[\"\']|[rbuf]*[\"\'][^\"\']*%s?[\"\']\s*%)`
+    - `re:text\(\s*(?:f[\"\']|[rbuf]*[\"\'][\s\S]*?[\"\']\s*(?:%|\.format\())`
 
     !!! tip "Recommended Fix"
         Use bind parameters such as :name and pass values separately.

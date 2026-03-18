@@ -121,8 +121,26 @@ def infer_dogmas_for_principle(principle: ZenPrinciple) -> tuple[str, ...]:
 
 
 def dogmas_for_rule(language: str, rule_id: str) -> tuple[str, ...]:
-    """Return explicit universal dogmas for one rule ID in one language."""
-    del language
+    """Return explicit universal dogmas for one rule ID in one language.
+
+    Note:
+        The *language* parameter is accepted for API consistency and
+        forward-compatibility.  The current implementation looks up dogmas
+        by *rule_id* alone; consistency between *language* and *rule_id*
+        is not validated.  Passing a mismatched *language* will not raise
+        an error but may produce misleading output — callers should ensure
+        the *rule_id* belongs to the supplied *language*.  A future version
+        may enforce this invariant.
+
+    Args:
+        language: Language or framework key (e.g. ``"python"``, ``"django"``).
+            Accepted for API consistency; currently unused in the lookup.
+        rule_id: Rule identifier to look up (e.g. ``"python-001"``).
+
+    Returns:
+        Tuple of universal dogma IDs assigned to the rule.
+    """
+    _ = language  # reserved for future language/rule consistency validation
 
     from mcp_zen_of_languages.dogmas.catalog import dogmas_for_rule_id
 
@@ -130,8 +148,22 @@ def dogmas_for_rule(language: str, rule_id: str) -> tuple[str, ...]:
 
 
 def dogmas_for_rule_ids(language: str, rule_ids: Iterable[str]) -> tuple[str, ...]:
-    """Return deduplicated explicit universal dogmas for multiple rule IDs."""
-    del language
+    """Return deduplicated explicit universal dogmas for multiple rule IDs.
+
+    Note:
+        The *language* parameter is accepted for API consistency.  The
+        lookup is performed by rule IDs alone; see [`dogmas_for_rule`][mcp_zen_of_languages.core.universal_dogmas.dogmas_for_rule]
+        for details on the language/rule consistency caveat.
+
+    Args:
+        language: Language or framework key.  Accepted for API consistency;
+            currently unused in the lookup.
+        rule_ids: Iterable of rule identifiers to look up.
+
+    Returns:
+        Ordered unique tuple of universal dogma IDs for all supplied rules.
+    """
+    _ = language  # reserved for future language/rule consistency validation
 
     from mcp_zen_of_languages.dogmas.catalog import dogmas_for_rule_ids as resolve
 

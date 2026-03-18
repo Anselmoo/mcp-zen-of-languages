@@ -43,7 +43,7 @@ tags:
 
     **Detectable Patterns:**
 
-    - `re:cursor\.execute\(\s*(?:f[\"\']|[rbuf]*[\"\'][^\"\']*%s?[\"\']\s*%)`
+    - `re:cursor\.execute\(\s*(?:f[\"\']|[rbuf]*[\"\'][\s\S]*?[\"\']\s*(?:%|\.format\())`
 
     !!! tip "Recommended Fix"
         Use parameterized queries or ORM expressions instead of interpolated SQL.

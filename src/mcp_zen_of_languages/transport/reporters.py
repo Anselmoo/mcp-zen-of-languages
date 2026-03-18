@@ -19,7 +19,8 @@ class CliReporter:
             dogma_id
             for violation in result.violations
             for dogma_id in (
-                violation.linked_dogma_ids or violation.universal_dogma_ids
+                set(violation.linked_dogma_ids or [])
+                | set(violation.universal_dogma_ids or [])
             )
         }
         verified_dogmas = {

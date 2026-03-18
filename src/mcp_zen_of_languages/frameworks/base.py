@@ -2,13 +2,16 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import ClassVar
 
+from pydantic import BaseModel
+from pydantic import ConfigDict
 
-@dataclass(frozen=True, slots=True)
-class FrameworkDescriptor:
+
+class FrameworkDescriptor(BaseModel):
     """Describe one supported framework and its parent language."""
+
+    model_config = ConfigDict(frozen=True)
 
     key: str
     parent_language: str

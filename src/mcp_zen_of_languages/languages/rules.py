@@ -67,7 +67,7 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
         violations.extend(self._detect_naming_conventions(context, config))
         return violations
 
-    def _detect_patterns(  # noqa: C901
+    def _detect_patterns(
         self,
         context: AnalysisContext,
         config: DetectorConfig,
@@ -93,56 +93,122 @@ class RulePatternDetector(ViolationDetector[DetectorConfig], LocationHelperMixin
             is_regex = needle.startswith("re:")
             regex_pattern = needle[3:] if is_regex else needle
             if is_required:
-                if is_regex:
-                    if not re.search(
-                        regex_pattern, context.code, re.MULTILINE | re.DOTALL
-                    ):
-                        violations.append(
-                            self.build_violation(
-                                config,
-                                contains=regex_pattern,
-                                suggestion=config.recommended_alternative,
-                            ),
-                        )
-                    continue
-                if needle not in context.code:
-                    violations.append(
-                        self.build_violation(
-                            config,
-                            contains=needle,
-                            suggestion=config.recommended_alternative,
-                        ),
+                violations.extend(
+                    self._detect_required_pattern(
+                        context, config, needle, regex_pattern, is_regex=is_regex
                     )
-                continue
-            if is_regex:
-                if match := re.search(
-                    regex_pattern, context.code, re.MULTILINE | re.DOTALL
-                ):
-                    line, column = self._line_and_column_for_offset(
-                        context.code,
-                        match.start(),
-                    )
-                    violations.append(
-                        self.build_violation(
-                            config,
-                            contains=regex_pattern,
-                            location=Location(line=line, column=column),
-                            suggestion=config.recommended_alternative,
-                        ),
-                    )
-                continue
-            for idx, line in enumerate(context.code.splitlines(), start=1):
-                if needle in line:
-                    violations.append(
-                        self.build_violation(
-                            config,
-                            contains=needle,
-                            location=Location(line=idx, column=line.find(needle) + 1),
-                            suggestion=config.recommended_alternative,
-                        ),
-                    )
-                    break
+                )
+            elif is_regex:
+                violations.extend(
+                    self._detect_optional_regex(context, config, needle, regex_pattern)
+                )
+            else:
+                violations.extend(
+                    self._detect_optional_substring(context, config, needle)
+                )
         return violations
+
+    def _detect_required_pattern(
+        self,
+        context: AnalysisContext,
+        config: DetectorConfig,
+        needle: str,
+        regex_pattern: str,
+        *,
+        is_regex: bool,
+    ) -> list[Violation]:
+        """Emit a violation when a required pattern is absent from the source.
+
+        Args:
+            context (AnalysisContext): Analysis context holding the source text.
+            config (DetectorConfig): Detector config supplying message templates.
+            needle (str): Full needle string (may include ``re:`` prefix).
+            regex_pattern (str): Compiled regex pattern or plain substring.
+            is_regex (bool): Whether *regex_pattern* should be treated as a regex.
+
+        Returns:
+            list[Violation]: A single violation when the required pattern is missing.
+        """
+        if is_regex:
+            if not re.search(regex_pattern, context.code, re.MULTILINE | re.DOTALL):
+                return [
+                    self.build_violation(
+                        config,
+                        contains=needle,
+                        suggestion=config.recommended_alternative,
+                    )
+                ]
+            return []
+        if needle not in context.code:
+            return [
+                self.build_violation(
+                    config,
+                    contains=needle,
+                    suggestion=config.recommended_alternative,
+                )
+            ]
+        return []
+
+    def _detect_optional_regex(
+        self,
+        context: AnalysisContext,
+        config: DetectorConfig,
+        needle: str,
+        regex_pattern: str,
+    ) -> list[Violation]:
+        """Emit a violation when a forbidden regex pattern matches the source.
+
+        Args:
+            context (AnalysisContext): Analysis context holding the source text.
+            config (DetectorConfig): Detector config supplying message templates.
+            needle (str): Full needle string including the ``re:`` prefix.
+            regex_pattern (str): Compiled regex pattern string.
+
+        Returns:
+            list[Violation]: A single violation at the first match position.
+        """
+        if match := re.search(regex_pattern, context.code, re.MULTILINE | re.DOTALL):
+            line, column = self._line_and_column_for_offset(
+                context.code,
+                match.start(),
+            )
+            return [
+                self.build_violation(
+                    config,
+                    contains=needle,
+                    location=Location(line=line, column=column),
+                    suggestion=config.recommended_alternative,
+                )
+            ]
+        return []
+
+    def _detect_optional_substring(
+        self,
+        context: AnalysisContext,
+        config: DetectorConfig,
+        needle: str,
+    ) -> list[Violation]:
+        """Emit a violation when a forbidden substring is found in the source.
+
+        Args:
+            context (AnalysisContext): Analysis context holding the source text.
+            config (DetectorConfig): Detector config supplying message templates.
+            needle (str): Plain substring to search for.
+
+        Returns:
+            list[Violation]: A single violation at the first matching line.
+        """
+        for idx, line in enumerate(context.code.splitlines(), start=1):
+            if needle in line:
+                return [
+                    self.build_violation(
+                        config,
+                        contains=needle,
+                        location=Location(line=idx, column=line.find(needle) + 1),
+                        suggestion=config.recommended_alternative,
+                    )
+                ]
+        return []
 
     def _line_and_column_for_offset(self, code: str, offset: int) -> tuple[int, int]:
         """Convert a character offset into 1-based line and column numbers."""

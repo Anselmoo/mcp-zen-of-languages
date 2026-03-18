@@ -2,10 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Literal
-
-from pydantic import create_model
-
 from mcp_zen_of_languages.analyzers.mapping_models import LanguageDetectorMap
 from mcp_zen_of_languages.analyzers.mapping_models import RuleBinding
 from mcp_zen_of_languages.analyzers.mapping_models import RuleDetectorBinding
@@ -23,31 +19,14 @@ from mcp_zen_of_languages.frameworks.fastapi.detectors import FastapiStatusCodeD
 from mcp_zen_of_languages.frameworks.fastapi.detectors import (
     FastapiVerbDecoratorDetector,
 )
-from mcp_zen_of_languages.languages.configs import DetectorConfig
-
-
-def _rule_config(rule_id: str) -> type[DetectorConfig]:
-    class_name = "".join(part.capitalize() for part in rule_id.split("-")) + "Config"
-    return create_model(
-        class_name,
-        __base__=DetectorConfig,
-        type=(Literal[rule_id], rule_id),
-    )
-
-
-def _dogmas(*dogma_ids: str) -> list[str]:
-    """Return explicit universal dogma ids for the binding."""
-    return list(dogma_ids)
-
-
-def _testing(*testing_ids: str) -> list[str]:
-    """Return explicit testing family ids for the binding."""
-    return list(testing_ids)
-
-
-def _projection(*projection_ids: str) -> list[str]:
-    """Return explicit projection family ids for the binding."""
-    return list(projection_ids)
+from mcp_zen_of_languages.frameworks.mapping_helpers import dogma_ids as _dogmas
+from mcp_zen_of_languages.frameworks.mapping_helpers import (
+    make_rule_config as _rule_config,
+)
+from mcp_zen_of_languages.frameworks.mapping_helpers import (
+    projection_ids as _projection,
+)
+from mcp_zen_of_languages.frameworks.mapping_helpers import testing_ids as _testing
 
 
 DETECTOR_MAP = LanguageDetectorMap(

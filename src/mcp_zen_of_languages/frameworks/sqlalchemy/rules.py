@@ -44,7 +44,7 @@ SQLALCHEMY_ZEN = LanguageZenPrinciples(
             severity=10,
             description="Interpolated SQL text bypasses SQLAlchemy's parameter handling and increases injection risk.",
             patterns=[
-                "re:text\\(\\s*(?:f[\\\"\\']|[rbuf]*[\\\"\\'][^\\\"\\']*%s?[\\\"\\']\\s*%)"
+                "re:text\\(\\s*(?:f[\\\"\\']|[rbuf]*[\\\"\\'][\\s\\S]*?[\\\"\\']\\s*(?:%|\\.format\\())"
             ],
             recommendation="Use bind parameters such as :name and pass values separately.",
         ),

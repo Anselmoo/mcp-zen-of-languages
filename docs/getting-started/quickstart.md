@@ -113,4 +113,4 @@ Each violation links to a specific zen principle — not a generic lint rule, bu
 
 - [MCP Integration](mcp-integration.md) — Full setup guide for VS Code, Claude Desktop, Cursor, and more
 - [Configuration](../user-guide/configuration.md) — Tune thresholds for your codebase
-- [Languages](../user-guide/languages/_index.md) — See every principle and detector by language
+- [Languages](../user-guide/languages/index.md) — See every principle and detector by language

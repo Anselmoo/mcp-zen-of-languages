@@ -53,7 +53,7 @@ High-impact gaps this guide addresses:
 ### Required strategic sections
 
 - `README.md`: `## Why MCP for Zen Analysis` and `## Zen Philosophy`
-- `docs/_index.md`: `## Why MCP`, `## Zen Philosophy`, and `## Choose Your Path`
+- `docs/index.md`: `## Why MCP`, `## Zen Philosophy`, and `## Choose Your Path`
 
 ## Release checklist
 

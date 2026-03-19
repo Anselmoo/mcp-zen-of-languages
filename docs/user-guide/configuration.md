@@ -104,7 +104,7 @@ Each language has its own set of detector config fields. See the [config referen
 - [Python detectors](languages/python.md) — 23 detectors with AST-based analysis
 - [TypeScript detectors](languages/typescript.md) — 10 type-safety focused detectors
 - [Rust detectors](languages/rust.md) — 13 safety and idiom detectors
-- [All languages](languages/_index.md) — Full comparison table
+- [All languages](languages/index.md) — Full comparison table
 
 ## Monorepo strategy
 

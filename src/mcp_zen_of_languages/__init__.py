@@ -20,4 +20,4 @@ Attributes:
     __version__: Semantic version string for the installed package.
 """
 
-__version__ = "0.5.2"
+__version__ = "0.6.0"

@@ -37,19 +37,24 @@ def _domain_label(detector_name: str) -> str:
     return detector_name.removeprefix("universal_").replace("_", " ").title()
 
 
+def _string_list(value: object) -> list[str]:
+    """Return only string items from a dynamically sourced list value."""
+    if not isinstance(value, list):
+        return []
+    return [item for item in value if isinstance(item, str)]
+
+
 def _linked_dogma_ids(violation: object) -> list[str]:
     """Return explicitly linked dogma ids from a violation."""
-    linked = getattr(violation, "linked_dogma_ids", None)
-    if isinstance(linked, list) and linked:
+    linked = _string_list(getattr(violation, "linked_dogma_ids", None))
+    if linked:
         return linked
-    fallback = getattr(violation, "universal_dogma_ids", None)
-    return list(fallback) if isinstance(fallback, list) else []
+    return _string_list(getattr(violation, "universal_dogma_ids", None))
 
 
 def _verified_dogma_ids(violation: object) -> list[str]:
     """Return explicitly verified dogma ids from a violation."""
-    verified = getattr(violation, "verified_dogma_ids", None)
-    return list(verified) if isinstance(verified, list) else []
+    return _string_list(getattr(violation, "verified_dogma_ids", None))
 
 
 def _dogma_ids_from_registry_models(

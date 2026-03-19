@@ -23,7 +23,11 @@ The detection pipeline transforms rule definitions into detector configurations 
 
 ## Mapping models
 
-::: mcp_zen_of_languages.analyzers.mapping_models.DetectorBinding
+::: mcp_zen_of_languages.analyzers.mapping_models.RuleBinding
+
+::: mcp_zen_of_languages.analyzers.mapping_models.RuleDetectorBinding
+
+::: mcp_zen_of_languages.analyzers.mapping_models.NonRuleDetectorBinding
 
 ::: mcp_zen_of_languages.analyzers.mapping_models.LanguageDetectorMap
 

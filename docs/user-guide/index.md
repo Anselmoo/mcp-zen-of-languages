@@ -48,7 +48,7 @@ This guide starts with MCP workflows, then covers CLI usage, configuration, lang
 
     Programming, workflow, and config coverage — each with its own zen philosophy.
 
-    [Languages](languages/_index.md)
+    [Languages](languages/index.md)
 
 -   :material-gavel:{ .lg .middle } **Rules**
 
@@ -56,7 +56,7 @@ This guide starts with MCP workflows, then covers CLI usage, configuration, lang
 
     The 10 universal dogmas and per-language zen principles that drive every detector.
 
-    [Rules](rules/_index.md)
+    [Rules](rules/index.md)
 
 -   :material-alert-circle-check:{ .lg .middle } **Understanding Violations**
 
@@ -86,7 +86,7 @@ This guide starts with MCP workflows, then covers CLI usage, configuration, lang
 
 !!! tip "Recommended learning path"
     **New user?** Start with [MCP Tools Reference](mcp-tools-reference.md) → [CLI Reference](cli-reference.md) → [Configuration](configuration.md).
-    **Adding a language?** Go directly to [Languages](languages/_index.md) to find your language's principles and detectors.
+    **Adding a language?** Go directly to [Languages](languages/index.md) to find your language's principles and detectors.
 
 === "Single repo"
     Use one `zen-config.yaml` at the repository root and run `zen reports .`.
@@ -96,7 +96,7 @@ This guide starts with MCP workflows, then covers CLI usage, configuration, lang
 
 ## See Also
 
-- [Getting Started](../getting-started/_index.md) — Fast path from installation to first report.
-- [Languages](languages/_index.md) — Per-language principles, detectors, and style-guide provenance.
+- [Getting Started](../getting-started/index.md) — Fast path from installation to first report.
+- [Languages](languages/index.md) — Per-language principles, detectors, and style-guide provenance.
 - [MCP Tools Reference](mcp-tools-reference.md) — All MCP tools, resources, and prompts at a glance.
-- [API Reference](../api/_index.md) — Python and MCP integration examples.
+- [API Reference](../api/index.md) — Python and MCP integration examples.

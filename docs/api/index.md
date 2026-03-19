@@ -93,6 +93,6 @@ Programmatic access to analyzers, detectors, pipeline, and MCP server tools. All
 
 ## See Also
 
-- [User Guide](../user-guide/_index.md) — CLI-first workflows and interpretation guidance.
-- [Getting Started](../getting-started/_index.md) — Installation and first analysis path.
-- [Contributing](../contributing/_index.md) — Architecture and detector extension workflows.
+- [User Guide](../user-guide/index.md) — CLI-first workflows and interpretation guidance.
+- [Getting Started](../getting-started/index.md) — Installation and first analysis path.
+- [Contributing](../contributing/index.md) — Architecture and detector extension workflows.

@@ -234,21 +234,21 @@ extra_javascript:
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
 
 nav:
-  - Home: _index.md
+  - Home: index.md
   - Getting Started:
-      - getting-started/_index.md
+      - getting-started/index.md
       - Philosophy: getting-started/philosophy.md
       - Installation: getting-started/installation.md
       - MCP Integration: getting-started/mcp-integration.md
       - Quickstart: getting-started/quickstart.md
       - Security: getting-started/security.md
   - User Guide:
-      - user-guide/_index.md
+      - user-guide/index.md
       - MCP Tools Reference: user-guide/mcp-tools-reference.md
       - CLI Reference: user-guide/cli-reference.md
       - Configuration: user-guide/configuration.md
       - Frameworks:
-          - user-guide/frameworks/_index.md
+          - user-guide/frameworks/index.md
           - React: user-guide/frameworks/react.md
           - Vue: user-guide/frameworks/vue.md
           - Angular: user-guide/frameworks/angular.md
@@ -258,7 +258,7 @@ nav:
           - Django: user-guide/frameworks/django.md
           - SQLAlchemy: user-guide/frameworks/sqlalchemy.md
       - Languages:
-          - user-guide/languages/_index.md
+          - user-guide/languages/index.md
           - Python: user-guide/languages/python.md
           - TypeScript: user-guide/languages/typescript.md
           - Rust: user-guide/languages/rust.md
@@ -283,14 +283,14 @@ nav:
           - Config Formats: user-guide/languages/config-formats.md
       - Understanding Violations: user-guide/understanding-violations.md
       - Rules:
-          - user-guide/rules/_index.md
+          - user-guide/rules/index.md
           - The 10 Dogmas: user-guide/rules/the-ten-dogmas.md
       - Prompt Generation: user-guide/prompt-generation.md
       - Project Analysis: user-guide/project-analysis.md
       - Examples: user-guide/examples.md
       - Config Reference: config.md
   - API Reference:
-      - api/_index.md
+      - api/index.md
       - Analyzers: api/analyzers.md
       - Detectors: api/detectors.md
       - Models: api/models.md
@@ -300,7 +300,7 @@ nav:
       - Entry Points: api/entrypoints.md
       - Server Tools: api/server.md
   - Contributing:
-      - contributing/_index.md
+      - contributing/index.md
       - Development: contributing/development.md
       - Content Quality Guide: contributing/content-quality.md
       - Zensical Migration: contributing/zensical-migration.md

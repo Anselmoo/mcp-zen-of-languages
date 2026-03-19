@@ -98,4 +98,4 @@ explains *why* the change matters, not just *what* to change.
 - [The 10 Dogmas](../user-guide/rules/the-ten-dogmas.md) — full reference with rationale, anti-patterns, and cross-language mapping
 - [Understanding Violations](../user-guide/understanding-violations.md) — severity scores, worked examples, and the MCP workflow
 - [Architecture](../contributing/architecture.md) — how dogmas drive detector and pipeline design
-- [Languages](../user-guide/languages/_index.md) — per-language principles derived from these dogmas
+- [Languages](../user-guide/languages/index.md) — per-language principles derived from these dogmas

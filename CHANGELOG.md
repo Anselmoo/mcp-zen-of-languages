@@ -1,3 +1,8 @@
+## [0.7.0] – 2026-03-20
+
+### Fixed
+- update documentation links and structure (#141)
+
 ## [0.6.0] – 2026-03-18
 
 ### Added

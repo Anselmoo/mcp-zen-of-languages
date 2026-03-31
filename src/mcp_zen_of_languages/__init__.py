@@ -3,10 +3,11 @@
 This package evaluates source code for adherence to idiomatic best practices
 — the "zen" of each supported language. It ships three main entry points:
 
-*  **MCP server** (``__main__.py`` / ``zen-mcp-server`` /
-   ``mcp-zen-of-languages``): exposes analysis tools over the Model Context
-   Protocol for editor and agent integration.
-*  **CLI** (``zen check`` / ``mcp-zen-of-languages-cli``): runs analysis
+*  **MCP server** (preferred: ``mcp-zen-of-languages-server``; compatibility:
+   ``mcp-zen-of-languages`` / ``zen-mcp-server``): exposes analysis tools over
+   the Model Context Protocol for editor and agent integration.
+*  **CLI** (preferred: ``mcp-zen-of-languages-cli``; compatibility: ``zen``):
+   runs analysis
    locally from the terminal and prints a human-readable report.
 *  **Programmatic API**: import ``create_analyzer`` or language-specific
    analyzers directly for embedding in custom tooling.

@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+import json
+
+from pathlib import Path
+
 from mcp_zen_of_languages import cli
 from mcp_zen_of_languages.models import AnalysisResult
 from mcp_zen_of_languages.models import CyclomaticSummary
@@ -217,3 +221,146 @@ def test_emit_external_tool_guidance_shows_missing_tool_recommendation(capsys):
 
     output = capsys.readouterr().out
     assert "Install 'ruff'" in output
+
+
+def test_write_vscode_mcp_config(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    config_path = cli._write_vscode_mcp_config()
+
+    assert config_path == Path(".vscode") / "mcp.json"
+    assert config_path.exists()
+
+    payload = json.loads(config_path.read_text(encoding="utf-8"))
+    assert payload["servers"]["zen-of-languages"]["command"] == "uvx"
+    assert payload["servers"]["zen-of-languages"]["args"] == [
+        "--from",
+        "mcp-zen-of-languages",
+        "mcp-zen-of-languages-server",
+    ]
+
+
+def test_write_copilot_mcp_config_repository(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    config_path = cli._write_copilot_mcp_config(global_config=False)
+
+    assert config_path == Path(".github") / "mcp.json"
+    assert config_path.exists()
+
+    payload = json.loads(config_path.read_text(encoding="utf-8"))
+    assert payload["mcpServers"]["zen-of-languages"]["command"] == "uvx"
+
+
+def test_write_copilot_mcp_config_global(tmp_path, monkeypatch):
+    monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path))
+    config_path = cli._write_copilot_mcp_config(global_config=True)
+
+    assert config_path == tmp_path / ".copilot" / "mcp-config.json"
+    assert config_path.exists()
+
+    payload = json.loads(config_path.read_text(encoding="utf-8"))
+    assert payload["mcpServers"]["zen-of-languages"]["command"] == "uvx"
+
+
+def test_write_codex_mcp_config(tmp_path, monkeypatch):
+    monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path))
+
+    config_path = cli._write_codex_mcp_config()
+    assert config_path == tmp_path / ".codex" / "config.toml"
+    assert config_path.exists()
+
+    contents = config_path.read_text(encoding="utf-8")
+    assert '[mcp_servers."zen-of-languages"]' in contents
+
+    # calling again should not append duplicate block
+    second_path = cli._write_codex_mcp_config()
+    assert second_path == config_path
+    assert (
+        config_path.read_text(encoding="utf-8").count(
+            '[mcp_servers."zen-of-languages"]'
+        )
+        == 1
+    )
+
+
+def test_write_json_mcp_config_merges_existing_entry_headless(tmp_path, monkeypatch):
+    """In headless mode (confirm=False) an existing entry is merged, not overwritten."""
+    monkeypatch.chdir(tmp_path)
+    config_path = tmp_path / ".vscode" / "mcp.json"
+    config_path.parent.mkdir()
+    existing = {
+        "servers": {
+            "zen-of-languages": {
+                "command": "old-cmd",
+                "args": ["old-arg"],
+                "env": {"ZEN_CONFIG_PATH": "/my/path"},
+            }
+        }
+    }
+    config_path.write_text(json.dumps(existing), encoding="utf-8")
+
+    cli._write_vscode_mcp_config(confirm=False)
+
+    payload = json.loads(config_path.read_text(encoding="utf-8"))
+    entry = payload["servers"]["zen-of-languages"]
+    # canonical fields updated
+    assert entry["command"] == "uvx"
+    assert "mcp-zen-of-languages-server" in entry["args"]
+    # extra key preserved
+    assert entry["env"] == {"ZEN_CONFIG_PATH": "/my/path"}
+
+
+def test_write_json_mcp_config_confirm_merge_on_no(tmp_path, monkeypatch):
+    """When confirm=True and user declines overwrite, entry is merged."""
+    monkeypatch.chdir(tmp_path)
+    config_path = tmp_path / ".vscode" / "mcp.json"
+    config_path.parent.mkdir()
+    existing = {
+        "servers": {
+            "zen-of-languages": {
+                "command": "old-cmd",
+                "args": ["old-arg"],
+                "env": {"ZEN_CONFIG_PATH": "/custom"},
+            }
+        }
+    }
+    config_path.write_text(json.dumps(existing), encoding="utf-8")
+
+    import rich.prompt
+
+    monkeypatch.setattr(rich.prompt.Confirm, "ask", lambda *a, **kw: False)
+
+    cli._write_vscode_mcp_config(confirm=True)
+
+    payload = json.loads(config_path.read_text(encoding="utf-8"))
+    entry = payload["servers"]["zen-of-languages"]
+    assert entry["command"] == "uvx"
+    assert entry["env"] == {"ZEN_CONFIG_PATH": "/custom"}
+
+
+def test_write_json_mcp_config_confirm_overwrite_on_yes(tmp_path, monkeypatch):
+    """When confirm=True and user accepts overwrite, entry is replaced entirely."""
+    monkeypatch.chdir(tmp_path)
+    config_path = tmp_path / ".vscode" / "mcp.json"
+    config_path.parent.mkdir()
+    existing = {
+        "servers": {
+            "zen-of-languages": {
+                "command": "old-cmd",
+                "args": ["old-arg"],
+                "env": {"ZEN_CONFIG_PATH": "/custom"},
+            }
+        }
+    }
+    config_path.write_text(json.dumps(existing), encoding="utf-8")
+
+    import rich.prompt
+
+    monkeypatch.setattr(rich.prompt.Confirm, "ask", lambda *a, **kw: True)
+
+    cli._write_vscode_mcp_config(confirm=True)
+
+    payload = json.loads(config_path.read_text(encoding="utf-8"))
+    entry = payload["servers"]["zen-of-languages"]
+    assert entry["command"] == "uvx"
+    # env should be gone because user chose overwrite
+    assert "env" not in entry

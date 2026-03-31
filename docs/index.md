@@ -35,7 +35,7 @@ Every programming language has a philosophy — a sense of what "good code" look
 
     ---
 
-    Connect to VS Code, Copilot, and other MCP-compatible clients for AI-assisted analysis.
+    Connect to VS Code, Codex, Copilot, and other MCP-compatible clients for AI-assisted analysis.
 
     [MCP Integration](getting-started/mcp-integration.md)
 

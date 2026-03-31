@@ -58,13 +58,13 @@ mcp-zen-of-languages-cli init
 ```
 
 === "Generated files"
-    `zen init` creates `zen-config.yaml`, bootstraps `.zen-of-languages.ignore`, and can also generate MCP client config files when you opt into them interactively or pass `--mcp-target`.
+    `mcp-zen-of-languages-cli init` (alias: `zen init`) creates `zen-config.yaml`, bootstraps `.zen-of-languages.ignore`, and can also generate MCP client config files when you opt into them interactively or pass `--mcp-target`.
 
 === "VS Code MCP bootstrap"
-    If you opt into MCP setup during `zen init`, or run `zen init --mcp-target vscode`, the command writes `.vscode/mcp.json` for the `zen-of-languages` server automatically.
+    If you opt into MCP setup during `mcp-zen-of-languages-cli init`, or run `mcp-zen-of-languages-cli init --mcp-target vscode`, the command writes `.vscode/mcp.json` for the `zen-of-languages` server automatically.
 
 === "Codex MCP bootstrap"
-    Codex does not use a workspace `.json` MCP file. Run `zen init --mcp-target codex` to append the server entry to `~/.codex/config.toml`, or add it manually:
+    Codex does not use a workspace `.json` MCP file. Run `mcp-zen-of-languages-cli init --mcp-target codex` to append the server entry to `~/.codex/config.toml`, or add it manually:
 
     ```toml
     [mcp_servers."zen-of-languages"]
@@ -74,10 +74,10 @@ mcp-zen-of-languages-cli init
     ```
 
 === "Copilot MCP bootstrap"
-    `zen init` also supports GitHub Copilot-compatible JSON configs:
+    `mcp-zen-of-languages-cli init` also supports GitHub Copilot-compatible JSON configs:
 
-    - `zen init --mcp-target copilot-local` writes `.github/mcp.json`
-    - `zen init --mcp-target copilot-global` writes `~/.copilot/mcp-config.json`
+    - `mcp-zen-of-languages-cli init --mcp-target copilot-local` writes `.github/mcp.json`
+    - `mcp-zen-of-languages-cli init --mcp-target copilot-global` writes `~/.copilot/mcp-config.json`
 
 This creates a `zen-config.yaml` in your project root. It enables all languages and sets default thresholds — you can [tune these later](../user-guide/configuration.md).
 

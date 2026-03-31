@@ -1989,9 +1989,16 @@ async def onboard_project(
         ),
         OnboardingStep(
             step=3,
-            title="Set up VS Code integration",
-            description="Add the MCP server configuration to .vscode/mcp.json for VS Code integration.",
-            action="setup_vscode",
+            title="Set up MCP client integration",
+            description=(
+                "Add the MCP server configuration to your editor or agent. "
+                "For VS Code add `.vscode/mcp.json`, for Codex append to "
+                "`~/.codex/config.toml`, and for GitHub Copilot write "
+                "`.github/mcp.json` (repo) or `~/.copilot/mcp-config.json` "
+                "(global). Use `mcp-zen-of-languages-cli init --mcp-target <target>` "
+                "to scaffold any of these automatically."
+            ),
+            action="setup_mcp_client",
             example='{"servers":{"zen-of-languages":{"command":"uvx","args":["--from","mcp-zen-of-languages","mcp-zen-of-languages-server"]}}}',
         ),
         OnboardingStep(

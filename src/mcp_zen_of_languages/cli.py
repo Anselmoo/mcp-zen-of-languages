@@ -406,8 +406,18 @@ def _build_stdio_mcp_server_payload() -> dict[str, Any]:
     }
 
 
-def _write_json_mcp_config(*, config_path: Path, top_level_key: str) -> Path:
-    """Merge the Zen MCP server into a JSON config file."""
+def _write_json_mcp_config(
+    *, config_path: Path, top_level_key: str, confirm: bool = False
+) -> Path:
+    """Merge the Zen MCP server into a JSON config file.
+
+    When *confirm* is ``True`` and a ``zen-of-languages`` server entry already
+    exists, the user is prompted to choose between overwriting the entire entry
+    (discarding custom settings such as ``env``) or merging the canonical
+    ``command``/``args`` into the existing entry (preserving extra keys).  In
+    headless mode (``confirm=False``) the safe default — merge — is applied
+    automatically without prompting.
+    """
     payload: dict[str, Any]
     if config_path.exists():
         raw_payload = json.loads(config_path.read_text(encoding="utf-8"))
@@ -424,29 +434,54 @@ def _write_json_mcp_config(*, config_path: Path, top_level_key: str) -> Path:
     if not isinstance(servers, dict):
         msg = f"Invalid `{top_level_key}` object in {config_path}"
         raise TypeError(msg)
-    servers["zen-of-languages"] = _build_stdio_mcp_server_payload()
+
+    canonical = _build_stdio_mcp_server_payload()
+    existing = servers.get("zen-of-languages")
+    if isinstance(existing, dict):
+        # Entry already exists — ask user or apply the safe merge default.
+        overwrite = False
+        if confirm:
+            from rich.prompt import Confirm
+
+            overwrite = Confirm.ask(
+                f"[yellow]zen-of-languages[/yellow] entry already exists in "
+                f"{config_path}. Overwrite it (replacing any custom settings)?",
+                default=False,
+            )
+        if overwrite:
+            servers["zen-of-languages"] = canonical
+        else:
+            # Merge: enforce canonical command/args, preserve other keys like `env`.
+            for key in ("command", "args"):
+                existing[key] = canonical[key]
+    else:
+        servers["zen-of-languages"] = canonical
+
     payload[top_level_key] = servers
     config_path.parent.mkdir(parents=True, exist_ok=True)
     config_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     return config_path
 
 
-def _write_vscode_mcp_config() -> Path:
+def _write_vscode_mcp_config(*, confirm: bool = False) -> Path:
     """Create or update ``.vscode/mcp.json`` for VS Code."""
     return _write_json_mcp_config(
         config_path=Path(".vscode") / "mcp.json",
         top_level_key="servers",
+        confirm=confirm,
     )
 
 
-def _write_copilot_mcp_config(*, global_config: bool) -> Path:
+def _write_copilot_mcp_config(*, global_config: bool, confirm: bool = False) -> Path:
     """Create or update a GitHub Copilot-compatible MCP config file."""
     config_path = (
         Path.home() / ".copilot" / "mcp-config.json"
         if global_config
         else Path(".github") / "mcp.json"
     )
-    return _write_json_mcp_config(config_path=config_path, top_level_key="mcpServers")
+    return _write_json_mcp_config(
+        config_path=config_path, top_level_key="mcpServers", confirm=confirm
+    )
 
 
 def _write_codex_mcp_config() -> Path:
@@ -473,12 +508,14 @@ enabled = true
     return config_path
 
 
-def _write_requested_mcp_configs(targets: list[str]) -> list[str]:
+def _write_requested_mcp_configs(
+    targets: list[str], *, confirm: bool = False
+) -> list[str]:
     """Write requested MCP client configs and return summary strings."""
     created: list[str] = []
     for target in targets:
         if target == "vscode":
-            _write_vscode_mcp_config()
+            _write_vscode_mcp_config(confirm=confirm)
             created.append("VS Code MCP config: .vscode/mcp.json")
         elif target == "codex":
             _write_codex_mcp_config()
@@ -486,10 +523,10 @@ def _write_requested_mcp_configs(targets: list[str]) -> list[str]:
                 f"Codex MCP config: {Path.home() / '.codex' / 'config.toml'}"
             )
         elif target == "copilot-local":
-            _write_copilot_mcp_config(global_config=False)
+            _write_copilot_mcp_config(global_config=False, confirm=confirm)
             created.append("Copilot MCP config: .github/mcp.json")
         elif target == "copilot-global":
-            _write_copilot_mcp_config(global_config=True)
+            _write_copilot_mcp_config(global_config=True, confirm=confirm)
             created.append(
                 f"Copilot MCP config: {Path.home() / '.copilot' / 'mcp-config.json'}"
             )
@@ -1461,7 +1498,8 @@ def _run_init(args: InitArgs) -> int:
     config_text = _build_config_yaml(languages, _normalize_strictness(strictness))
     target.write_text(config_text, encoding="utf-8")
     ignore_file = _write_zen_ignore_file(force=False)
-    mcp_details = _write_requested_mcp_configs(mcp_targets)
+    interactive = not args.yes and sys.stdin.isatty()
+    mcp_details = _write_requested_mcp_configs(mcp_targets, confirm=interactive)
     if not is_quiet():
         details = [
             f"{file_glyph()} Config: {target}",
@@ -1472,11 +1510,12 @@ def _run_init(args: InitArgs) -> int:
             details.append("Ignore file: .zen-of-languages.ignore (created)")
         else:
             details.append("Ignore file: .zen-of-languages.ignore (kept existing)")
-        details.append(
-            "MCP locations: .vscode/mcp.json | ~/.codex/config.toml | "
-            ".github/mcp.json | ~/.copilot/mcp-config.json"
-        )
-        details.extend(mcp_details)
+        if mcp_details:
+            details.append(
+                "MCP locations: .vscode/mcp.json | ~/.codex/config.toml | "
+                ".github/mcp.json | ~/.copilot/mcp-config.json"
+            )
+            details.extend(mcp_details)
         console.print(zen_header_panel(*details, title="Zen Init"))
     return 0
 

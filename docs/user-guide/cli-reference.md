@@ -133,8 +133,10 @@ Export rule-to-detector mappings as a Rich table or JSON payload.
 ### zen init {{ #init }}
 
 ```bash
-zen init [--force] [--yes] [--languages <TEXT>] [--strictness relaxed|moderate|strict] [--mcp-target <TEXT>]
+mcp-zen-of-languages-cli init [--force] [--yes] [--languages <TEXT>] [--strictness relaxed|moderate|strict] [--mcp-target <TEXT>]
 ```
+
+The shorter `zen init` alias is also available for compatibility.
 
 Interactively scaffold ``zen-config.yaml``, ignore config, and MCP integration.
 

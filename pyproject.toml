@@ -165,24 +165,24 @@ warn_missing_rule_coverage = { cmd = "python scripts/warn_missing_rule_coverage.
 export_svg_assets = { cmd = "python scripts/export_svg_assets.py", help = "Export generated SVG assets used by the docs site" }
 run_server = { cmd = "zensical serve", help = "Start the local documentation development server" }
 build_docs = { cmd = "zensical build", help = "Build the documentation site" }
-bump_version = { cmd = "uvx repo-release-tools bump", help = "Bump the project version (specify patch/minor/major or explicit version)" }
-bump_patch = { cmd = "uvx repo-release-tools bump patch", help = "Create a patch release version bump" }
-bump_minor = { cmd = "uvx repo-release-tools bump minor", help = "Create a minor release version bump" }
-bump_major = { cmd = "uvx repo-release-tools bump major", help = "Create a major release version bump" }
-bump_no_changelog = { cmd = "uvx repo-release-tools bump patch --no-changelog", help = "Create a patch version bump without editing the changelog" }
-changelog_preview = { cmd = "uvx repo-release-tools bump patch --dry-run", help = "Preview the next patch changelog and version bump without writing files" }
-branch_new = { cmd = "uvx repo-release-tools branch new", help = "Create a new branch using the project naming workflow" }
-branch_feat = { cmd = "uvx repo-release-tools branch new feat", help = "Create a feature branch" }
-branch_fix = { cmd = "uvx repo-release-tools branch new fix", help = "Create a bugfix branch" }
-branch_chore = { cmd = "uvx repo-release-tools branch new chore", help = "Create a chore branch" }
-branch_docs = { cmd = "uvx repo-release-tools branch new docs", help = "Create a documentation branch" }
-branch_refactor = { cmd = "uvx repo-release-tools branch new refactor", help = "Create a refactor branch" }
-branch_test = { cmd = "uvx repo-release-tools branch new test", help = "Create a testing-focused branch" }
-branch_ci = { cmd = "uvx repo-release-tools branch new ci", help = "Create a CI branch" }
-branch_perf = { cmd = "uvx repo-release-tools branch new perf", help = "Create a performance branch" }
-branch_style = { cmd = "uvx repo-release-tools branch new style", help = "Create a style-only branch" }
-branch_build = { cmd = "uvx repo-release-tools branch new build", help = "Create a build-system branch" }
-branch_rescue = { cmd = "uvx repo-release-tools branch rescue", help = "Recover or realign the current branch using the rescue workflow" }
+bump_version = { cmd = "rrt bump", help = "Bump the project version (specify patch/minor/major or explicit version)" }
+bump_patch = { cmd = "rrt bump patch", help = "Create a patch release version bump" }
+bump_minor = { cmd = "rrt bump minor", help = "Create a minor release version bump" }
+bump_major = { cmd = "rrt bump major", help = "Create a major release version bump" }
+bump_no_changelog = { cmd = "rrt bump patch --no-changelog", help = "Create a patch version bump without editing the changelog" }
+changelog_preview = { cmd = "rrt bump patch --dry-run", help = "Preview the next patch changelog and version bump without writing files" }
+branch_new = { cmd = "rrt branch new", help = "Create a new branch using the project naming workflow" }
+branch_feat = { cmd = "rrt branch new feat", help = "Create a feature branch" }
+branch_fix = { cmd = "rrt branch new fix", help = "Create a bugfix branch" }
+branch_chore = { cmd = "rrt branch new chore", help = "Create a chore branch" }
+branch_docs = { cmd = "rrt branch new docs", help = "Create a documentation branch" }
+branch_refactor = { cmd = "rrt branch new refactor", help = "Create a refactor branch" }
+branch_test = { cmd = "rrt branch new test", help = "Create a testing-focused branch" }
+branch_ci = { cmd = "rrt branch new ci", help = "Create a CI branch" }
+branch_perf = { cmd = "rrt branch new perf", help = "Create a performance branch" }
+branch_style = { cmd = "rrt branch new style", help = "Create a style-only branch" }
+branch_build = { cmd = "rrt branch new build", help = "Create a build-system branch" }
+branch_rescue = { cmd = "rrt branch rescue", help = "Recover or realign the current branch using the rescue workflow" }
 
 
 [tool.pytest.ini_options]

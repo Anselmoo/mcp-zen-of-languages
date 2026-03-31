@@ -46,7 +46,7 @@ def test_cli_output_example_generation_includes_perspective_surface() -> None:
 
 def test_cli_output_example_check_mode() -> None:
     """Fail when the committed generated artifact drifts from runtime output."""
-    result = subprocess.run(  # noqa: S603
+    result = subprocess.run(
         [sys.executable, "scripts/generate_cli_output_example.py", "--check"],
         capture_output=True,
         text=True,

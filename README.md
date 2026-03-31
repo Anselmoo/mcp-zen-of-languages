@@ -24,7 +24,7 @@
 
 ---
 
-An **MCP server for AI assistants** that brings multi-language idiomatic code analysis into your editor. Zen of Languages codifies best practices ("zen principles") into machine-readable rules across programming languages, CI automation, and configuration formats — so AI agents and developers get actionable, language-aware feedback in every review. Connect it to [Claude Desktop, VS Code, Cursor, or any MCP-compatible client](https://anselmoo.github.io/mcp-zen-of-languages/getting-started/mcp-integration/) and start analyzing code in seconds.
+An **MCP server for AI assistants** that brings multi-language idiomatic code analysis into your editor. Zen of Languages codifies best practices ("zen principles") into machine-readable rules across programming languages, CI automation, and configuration formats — so AI agents and developers get actionable, language-aware feedback in every review. Connect it to [Codex, Claude Desktop, VS Code, Cursor, or any MCP-compatible client](https://anselmoo.github.io/mcp-zen-of-languages/getting-started/mcp-integration/) and start analyzing code in seconds.
 
 <!-- --8<-- [start:what-you-get] -->
 
@@ -105,10 +105,10 @@ Directory scans in both CLI and MCP repository analysis honor:
 Keep these names distinct to avoid setup confusion:
 
 - **Package name**: `mcp-zen-of-languages` (for `pip install` and `uvx --from`)
-- **Package-style CLI command**: `mcp-zen-of-languages-cli`
-- **Package-style server commands**: `mcp-zen-of-languages` or `mcp-zen-of-languages-server`
-- **Legacy aliases**: `zen` and `zen-mcp-server`
-- **MCP client server key**: `zen-of-languages` (JSON config label in VS Code/Claude/Cursor)
+- **Preferred CLI command**: `mcp-zen-of-languages-cli`
+- **Preferred server command**: `mcp-zen-of-languages-server`
+- **Compatibility aliases**: `mcp-zen-of-languages`, `zen`, and `zen-mcp-server`
+- **MCP client server key**: `zen-of-languages` (JSON config label in VS Code/Claude/Cursor; use the same label as a quoted TOML table name in Codex)
 
 ## Installation
 
@@ -154,6 +154,17 @@ Add the server to your MCP client configuration. For the full setup guide, see [
   }
 }
 ```
+
+**Codex** — add to `~/.codex/config.toml`:
+
+```toml
+[mcp_servers."zen-of-languages"]
+command = "uvx"
+args = ["--from", "mcp-zen-of-languages", "mcp-zen-of-languages-server"]
+enabled = true
+```
+
+Codex loads MCP servers from the global `~/.codex/config.toml` file rather than a repo-local workspace config.
 
 ### One-Click (VS Code)
 

@@ -1992,7 +1992,7 @@ async def onboard_project(
             title="Set up VS Code integration",
             description="Add the MCP server configuration to .vscode/mcp.json for VS Code integration.",
             action="setup_vscode",
-            example='{"servers":{"zen-of-languages":{"command":"uvx","args":["--from","mcp-zen-of-languages","zen-mcp-server"]}}}',
+            example='{"servers":{"zen-of-languages":{"command":"uvx","args":["--from","mcp-zen-of-languages","mcp-zen-of-languages-server"]}}}',
         ),
         OnboardingStep(
             step=4,

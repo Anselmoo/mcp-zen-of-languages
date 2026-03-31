@@ -71,6 +71,19 @@ Add to `.cursor/mcp.json` or `.windsurf/mcp.json` in your project root:
 }
 ```
 
+### Codex
+
+Add to `~/.codex/config.toml`:
+
+```toml
+[mcp_servers."zen-of-languages"]
+command = "uvx"
+args = ["--from", "mcp-zen-of-languages", "mcp-zen-of-languages-server"]
+enabled = true
+```
+
+Codex reads MCP servers from the global `~/.codex/config.toml` file rather than a workspace `.json` file. If you want to pin a config file, add `env = { ZEN_CONFIG_PATH = "/absolute/path/to/zen-config.yaml" }` under the same table.
+
 ### Claude Code
 
 Install via the CLI:

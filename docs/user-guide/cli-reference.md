@@ -26,7 +26,7 @@ The CLI executable is `zen`. It is the local/CI interface for the same analysis 
 |---------|--------|
 | `zen check` | Run zen analysis for a path with optional CI gating and machine output. |
 | `zen export-mapping` | Export rule-to-detector mappings as a Rich table or JSON payload. |
-| `zen init` | Interactively scaffold ``zen-config.yaml``, ignore config, and VS Code integration. |
+| `zen init` | Interactively scaffold ``zen-config.yaml``, ignore config, and MCP integration. |
 | `zen list-rules` | Display a table of zen rule IDs, severities, and principle texts. |
 | `zen prompts` | Turn analysis violations into actionable remediation prompts or agent tasks. |
 | `zen reports` | Generate a comprehensive analysis report for a file or directory. |
@@ -133,10 +133,10 @@ Export rule-to-detector mappings as a Rich table or JSON payload.
 ### zen init {{ #init }}
 
 ```bash
-zen init [--force] [--yes] [--languages <TEXT>] [--strictness relaxed|moderate|strict]
+zen init [--force] [--yes] [--languages <TEXT>] [--strictness relaxed|moderate|strict] [--mcp-target <TEXT>]
 ```
 
-Interactively scaffold ``zen-config.yaml``, ignore config, and VS Code integration.
+Interactively scaffold ``zen-config.yaml``, ignore config, and MCP integration.
 
 **Options:**
 
@@ -146,6 +146,7 @@ Interactively scaffold ``zen-config.yaml``, ignore config, and VS Code integrati
 | `--yes` | — | Skip prompts and use defaults |
 | `--languages <TEXT>` | — | Languages to include (repeatable) |
 | `--strictness relaxed|moderate|strict` | `moderate` | Strictness: relaxed|moderate|strict |
+| `--mcp-target <TEXT>` | — | Write MCP client config for target(s): vscode, codex, copilot-local, copilot-global |
 
 ---
 

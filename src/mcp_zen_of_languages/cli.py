@@ -108,6 +108,13 @@ logger.setLevel(
 )
 
 _THRESHOLDS = {"relaxed": 5, "moderate": 6, "strict": 7}
+_MCP_TARGET_ALIASES = {
+    "vscode": "vscode",
+    "codex": "codex",
+    "copilot": "copilot-local",
+    "copilot-local": "copilot-local",
+    "copilot-global": "copilot-global",
+}
 ZEN_IGNORE_TEMPLATE = """# Additional files/folders for Zen analysis to skip
 # One glob-style pattern per line
 .venv/
@@ -287,6 +294,12 @@ def _parse_languages(value: str) -> list[str]:
     return [token for token in tokens if token]
 
 
+def _parse_mcp_targets(value: str) -> list[str]:
+    """Split comma-or-space-separated MCP target names into individual tokens."""
+    tokens = [token.strip().lower() for token in value.replace(",", " ").split()]
+    return [token for token in tokens if token]
+
+
 def _detect_languages(target: Path) -> list[str]:
     """Scan a file or directory tree and return the set of languages found.
 
@@ -326,6 +339,30 @@ def _normalize_strictness(strictness: str) -> str:
     return normalized if normalized in _THRESHOLDS else "moderate"
 
 
+def _normalize_mcp_targets(targets: list[str] | None) -> list[str]:
+    """Normalize MCP target aliases and reject unsupported target names."""
+    if not targets:
+        return []
+    normalized: list[str] = []
+    invalid: list[str] = []
+    for target in targets:
+        key = target.strip().lower()
+        resolved = _MCP_TARGET_ALIASES.get(key)
+        if resolved is None:
+            invalid.append(target)
+            continue
+        if resolved not in normalized:
+            normalized.append(resolved)
+    if invalid:
+        msg = (
+            "Unsupported MCP targets: "
+            + ", ".join(invalid)
+            + ". Choose from: vscode, codex, copilot-local, copilot-global."
+        )
+        raise ValueError(msg)
+    return normalized
+
+
 def _build_config_yaml(languages: list[str], strictness: str) -> str:
     """Render a minimal ``zen-config.yaml`` body from language and strictness choices.
 
@@ -345,39 +382,118 @@ def _build_config_yaml(languages: list[str], strictness: str) -> str:
     """
     unique_languages = list(dict.fromkeys(languages))
     threshold = _THRESHOLDS.get(strictness, _THRESHOLDS["moderate"])
-    lines = ["languages:"]
+    lines = [
+        "# Zen project configuration",
+        "# MCP client config locations:",
+        "#   VS Code: .vscode/mcp.json",
+        "#   Codex: ~/.codex/config.toml",
+        "#   Copilot (repo): .github/mcp.json",
+        "#   Copilot (global): ~/.copilot/mcp-config.json",
+        "# See docs/getting-started/mcp-integration.md for setup examples.",
+        "",
+        "languages:",
+    ]
     lines.extend(f"  - {language}" for language in unique_languages)
     lines.extend(["", f"severity_threshold: {threshold}", ""])
     return "\n".join(lines)
 
 
-def _write_vscode_mcp_config() -> Path:
-    """Create ``.vscode/mcp.json`` so VS Code discovers the Zen MCP server.
-
-    Writes a workspace MCP JSON config pointing at
-    ``uvx --from mcp-zen-of-languages zen-mcp-server`` using a single
-    top-level ``servers`` object.
-    The ``.vscode/`` directory is created if absent.
-
-    Returns:
-        Path: Absolute path to the written ``.vscode/mcp.json`` file.
-
-    See Also:
-        [`_run_init`][_run_init]: Optionally calls this helper when the user opts
-        into VS Code integration.
-    """
-    config_path = Path(".vscode") / "mcp.json"
-    config_path.parent.mkdir(parents=True, exist_ok=True)
-    payload = {
-        "servers": {
-            "zen-of-languages": {
-                "command": "uvx",
-                "args": ["--from", "mcp-zen-of-languages", "zen-mcp-server"],
-            },
-        },
+def _build_stdio_mcp_server_payload() -> dict[str, Any]:
+    """Return the canonical stdio MCP server payload used across client configs."""
+    return {
+        "command": "uvx",
+        "args": ["--from", "mcp-zen-of-languages", "mcp-zen-of-languages-server"],
     }
+
+
+def _write_json_mcp_config(*, config_path: Path, top_level_key: str) -> Path:
+    """Merge the Zen MCP server into a JSON config file."""
+    payload: dict[str, Any]
+    if config_path.exists():
+        raw_payload = json.loads(config_path.read_text(encoding="utf-8"))
+        if not isinstance(raw_payload, dict):
+            msg = f"Invalid MCP config structure in {config_path}"
+            raise TypeError(msg)
+        payload = raw_payload
+    else:
+        payload = {}
+
+    servers = payload.get(top_level_key)
+    if servers is None:
+        servers = {}
+    if not isinstance(servers, dict):
+        msg = f"Invalid `{top_level_key}` object in {config_path}"
+        raise TypeError(msg)
+    servers["zen-of-languages"] = _build_stdio_mcp_server_payload()
+    payload[top_level_key] = servers
+    config_path.parent.mkdir(parents=True, exist_ok=True)
     config_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     return config_path
+
+
+def _write_vscode_mcp_config() -> Path:
+    """Create or update ``.vscode/mcp.json`` for VS Code."""
+    return _write_json_mcp_config(
+        config_path=Path(".vscode") / "mcp.json",
+        top_level_key="servers",
+    )
+
+
+def _write_copilot_mcp_config(*, global_config: bool) -> Path:
+    """Create or update a GitHub Copilot-compatible MCP config file."""
+    config_path = (
+        Path.home() / ".copilot" / "mcp-config.json"
+        if global_config
+        else Path(".github") / "mcp.json"
+    )
+    return _write_json_mcp_config(config_path=config_path, top_level_key="mcpServers")
+
+
+def _write_codex_mcp_config() -> Path:
+    """Create or append the Zen MCP entry in ``~/.codex/config.toml``."""
+    config_path = Path.home() / ".codex" / "config.toml"
+    config_path.parent.mkdir(parents=True, exist_ok=True)
+    section_names = (
+        '[mcp_servers."zen-of-languages"]',
+        "[mcp_servers.zen_of_languages]",
+    )
+    block = """[mcp_servers."zen-of-languages"]
+command = "uvx"
+args = ["--from", "mcp-zen-of-languages", "mcp-zen-of-languages-server"]
+enabled = true
+"""
+    if config_path.exists():
+        contents = config_path.read_text(encoding="utf-8")
+        if any(section in contents for section in section_names):
+            return config_path
+        prefix = "\n" if contents.endswith("\n") else "\n\n"
+        config_path.write_text(contents + prefix + block, encoding="utf-8")
+        return config_path
+    config_path.write_text(block, encoding="utf-8")
+    return config_path
+
+
+def _write_requested_mcp_configs(targets: list[str]) -> list[str]:
+    """Write requested MCP client configs and return summary strings."""
+    created: list[str] = []
+    for target in targets:
+        if target == "vscode":
+            _write_vscode_mcp_config()
+            created.append("VS Code MCP config: .vscode/mcp.json")
+        elif target == "codex":
+            _write_codex_mcp_config()
+            created.append(
+                f"Codex MCP config: {Path.home() / '.codex' / 'config.toml'}"
+            )
+        elif target == "copilot-local":
+            _write_copilot_mcp_config(global_config=False)
+            created.append("Copilot MCP config: .github/mcp.json")
+        elif target == "copilot-global":
+            _write_copilot_mcp_config(global_config=True)
+            created.append(
+                f"Copilot MCP config: {Path.home() / '.copilot' / 'mcp-config.json'}"
+            )
+    return created
 
 
 def _write_zen_ignore_file(*, force: bool = False) -> Path | None:
@@ -489,7 +605,7 @@ class InitArgs(Protocol):
     scaffolds a ``zen-config.yaml``.  When running interactively the
     wizard auto-detects project languages, asks the user to confirm or
     override, selects a strictness preset that maps to a severity
-    threshold, and optionally writes a ``.vscode/mcp.json`` for editor
+    threshold, and optionally writes MCP client configs for editor or agent
     integration.
 
     Attributes:
@@ -498,12 +614,15 @@ class InitArgs(Protocol):
         languages: Pre-selected language list; ``None`` triggers auto-detection.
         strictness: Preset name (``"relaxed"``, ``"moderate"``, ``"strict"``)
             controlling the generated severity threshold.
+        mcp_targets: Optional MCP client configs to write. Supported values:
+            ``vscode``, ``codex``, ``copilot-local``, ``copilot-global``.
     """
 
     force: bool
     yes: bool
     languages: list[str] | None
     strictness: str
+    mcp_targets: list[str] | None
 
 
 class ExportMappingArgs(Protocol):
@@ -1255,18 +1374,18 @@ def _run_list_rules(args: ListRulesArgs) -> int:
     return 0
 
 
-def _run_init_interactive(args: InitArgs) -> tuple[list[str], str, bool]:
+def _run_init_interactive(args: InitArgs) -> tuple[list[str], str, list[str]]:
     """Drive the interactive Rich-prompt wizard for ``zen init``.
 
     Presents detected languages for confirmation, asks the user to pick a
-    strictness preset, and offers to generate a ``.vscode/mcp.json``.
+    strictness preset, and offers to generate MCP client configs.
     Pre-supplied ``args.languages`` short-circuit the detection question.
 
     Args:
         args (InitArgs): Parsed CLI options seeding the wizard defaults.
 
     Returns:
-        tuple[list[str], str, bool]: ``(languages, strictness, setup_vscode)``
+        tuple[list[str], str, list[str]]: ``(languages, strictness, mcp_targets)``
         triple consumed by [`_run_init`][_run_init].
 
     See Also:
@@ -1296,15 +1415,21 @@ def _run_init_interactive(args: InitArgs) -> tuple[list[str], str, bool]:
         choices=list(_THRESHOLDS.keys()),
         default=_normalize_strictness(args.strictness),
     )
-    setup_vscode = Confirm.ask(
-        "Create .vscode/mcp.json for VS Code integration?",
-        default=True,
-    )
-    return (languages or detected), strictness, setup_vscode
+    mcp_targets = _normalize_mcp_targets(args.mcp_targets)
+    if args.mcp_targets is None:
+        if Confirm.ask("Create MCP config for editor/agent integration?", default=True):
+            target_response = Prompt.ask(
+                "Select MCP targets (comma-separated)",
+                default="vscode",
+            )
+            mcp_targets = _normalize_mcp_targets(_parse_mcp_targets(target_response))
+        else:
+            mcp_targets = []
+    return (languages or detected), strictness, mcp_targets
 
 
 def _run_init(args: InitArgs) -> int:
-    """Scaffold a ``zen-config.yaml`` (and optional VS Code config) to disk.
+    """Scaffold a ``zen-config.yaml`` (and optional MCP client configs) to disk.
 
     Refuses to overwrite an existing config unless ``--force`` is set.
     In headless mode (``--yes`` or non-TTY stdin) detected defaults are
@@ -1329,15 +1454,14 @@ def _run_init(args: InitArgs) -> int:
     if args.yes or not sys.stdin.isatty():
         languages = args.languages or _detect_languages(Path.cwd())
         strictness = _normalize_strictness(args.strictness)
-        setup_vscode = False
+        mcp_targets = _normalize_mcp_targets(args.mcp_targets)
     else:
-        languages, strictness, setup_vscode = _run_init_interactive(args)
+        languages, strictness, mcp_targets = _run_init_interactive(args)
 
     config_text = _build_config_yaml(languages, _normalize_strictness(strictness))
     target.write_text(config_text, encoding="utf-8")
     ignore_file = _write_zen_ignore_file(force=False)
-    if setup_vscode:
-        _write_vscode_mcp_config()
+    mcp_details = _write_requested_mcp_configs(mcp_targets)
     if not is_quiet():
         details = [
             f"{file_glyph()} Config: {target}",
@@ -1348,8 +1472,11 @@ def _run_init(args: InitArgs) -> int:
             details.append("Ignore file: .zen-of-languages.ignore (created)")
         else:
             details.append("Ignore file: .zen-of-languages.ignore (kept existing)")
-        if setup_vscode:
-            details.append("VS Code MCP config: .vscode/mcp.json")
+        details.append(
+            "MCP locations: .vscode/mcp.json | ~/.codex/config.toml | "
+            ".github/mcp.json | ~/.copilot/mcp-config.json"
+        )
+        details.extend(mcp_details)
         console.print(zen_header_panel(*details, title="Zen Init"))
     return 0
 
@@ -1862,20 +1989,32 @@ def init(
         help="Strictness: relaxed|moderate|strict",
         show_choices=True,
     ),
+    mcp_targets: Annotated[
+        list[str] | None,
+        typer.Option(
+            "--mcp-target",
+            help=(
+                "Write MCP client config for target(s): vscode, codex, "
+                "copilot-local, copilot-global"
+            ),
+        ),
+    ] = None,
 ) -> int:
-    """Interactively scaffold ``zen-config.yaml``, ignore config, and VS Code integration.
+    """Interactively scaffold ``zen-config.yaml``, ignore config, and MCP integration.
 
     Walks the user through language selection, strictness presets, and
-    editor integration choices.  With ``--yes`` or in non-interactive
-    terminals the wizard is skipped and detected defaults are used.  Pass
-    ``--force`` to overwrite an existing config file.  When missing, a
-    starter ``.zen-of-languages.ignore`` file is created.
+    MCP client integration choices.  With ``--yes`` or in non-interactive
+    terminals the wizard is skipped and only explicitly requested
+    ``--mcp-target`` outputs are written.  Pass ``--force`` to overwrite
+    an existing config file.  When missing, a starter
+    ``.zen-of-languages.ignore`` file is created.
     """
     args = _ns(
         force=force,
         yes=yes,
         languages=languages,
         strictness=strictness,
+        mcp_targets=mcp_targets,
     )
     return _run_init(args)
 

@@ -13,14 +13,14 @@ Two minutes to your first analysis — whether you're working through an AI assi
 
 !!! info "Command naming cheat sheet"
     - Package for install/uvx: `mcp-zen-of-languages`
-    - Package-style CLI command: `mcp-zen-of-languages-cli`
-    - Package-style server commands: `mcp-zen-of-languages` / `mcp-zen-of-languages-server`
-    - Legacy aliases: `zen` / `zen-mcp-server`
+    - Preferred CLI command: `mcp-zen-of-languages-cli`
+    - Preferred server command: `mcp-zen-of-languages-server`
+    - Compatibility aliases: `mcp-zen-of-languages`, `zen`, `zen-mcp-server`
     - MCP config server key: `zen-of-languages`
 
 ## MCP path (editor + AI agent)
 
-The fastest way to use Zen of Languages is through an MCP-compatible client like VS Code with Copilot, Claude Desktop, or Cursor. Once the server is configured (see [Installation](installation.md)), ask your agent to analyze code directly.
+The fastest way to use Zen of Languages is through an MCP-compatible client like VS Code with Copilot, Codex, Claude Desktop, or Cursor. Once the server is configured (see [Installation](installation.md)), ask your agent to analyze code directly.
 
 ### Example conversation
 
@@ -54,10 +54,30 @@ The CLI is the ideal tool for **first code anamnesis**: an initial diagnostic sw
 ### 1. Initialize configuration
 
 ```bash
-mcp-zen-of-languages-cli init  # (1)!
+mcp-zen-of-languages-cli init
 ```
 
-1. Creates `zen-config.yaml`, bootstraps `.zen-of-languages.ignore`, and can also bootstrap `.vscode/mcp.json` for MCP integration.
+=== "Generated files"
+    `zen init` creates `zen-config.yaml`, bootstraps `.zen-of-languages.ignore`, and can also generate MCP client config files when you opt into them interactively or pass `--mcp-target`.
+
+=== "VS Code MCP bootstrap"
+    If you opt into MCP setup during `zen init`, or run `zen init --mcp-target vscode`, the command writes `.vscode/mcp.json` for the `zen-of-languages` server automatically.
+
+=== "Codex MCP bootstrap"
+    Codex does not use a workspace `.json` MCP file. Run `zen init --mcp-target codex` to append the server entry to `~/.codex/config.toml`, or add it manually:
+
+    ```toml
+    [mcp_servers."zen-of-languages"]
+    command = "uvx"
+    args = ["--from", "mcp-zen-of-languages", "mcp-zen-of-languages-server"]
+    enabled = true
+    ```
+
+=== "Copilot MCP bootstrap"
+    `zen init` also supports GitHub Copilot-compatible JSON configs:
+
+    - `zen init --mcp-target copilot-local` writes `.github/mcp.json`
+    - `zen init --mcp-target copilot-global` writes `~/.copilot/mcp-config.json`
 
 This creates a `zen-config.yaml` in your project root. It enables all languages and sets default thresholds — you can [tune these later](../user-guide/configuration.md).
 
@@ -111,6 +131,6 @@ Each violation links to a specific zen principle — not a generic lint rule, bu
 
 ## Next steps
 
-- [MCP Integration](mcp-integration.md) — Full setup guide for VS Code, Claude Desktop, Cursor, and more
+- [MCP Integration](mcp-integration.md) — Full setup guide for VS Code, Codex, Claude Desktop, Cursor, and more
 - [Configuration](../user-guide/configuration.md) — Tune thresholds for your codebase
 - [Languages](../user-guide/languages/index.md) — See every principle and detector by language

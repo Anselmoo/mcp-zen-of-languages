@@ -18,6 +18,14 @@ repos:
         args: ["--fix"]
       - id: ruff-format
         types_or: ["python", "pyi"]
+
+  - repo: https://github.com/Anselmoo/repo-release-tools
+    rev: v0.1.1
+    hooks:
+      - id: rrt-branch-name
+        name: Check branch name
+      - id: rrt-commit-subject
+        name: Check commit subject
   - repo: local
     hooks:
       - id: ty
@@ -115,16 +123,3 @@ repos:
         pass_filenames: false
         always_run: true
         stages: [pre-push]
-      - id: rrt-branch-name
-        name: repo-release-tools branch name
-        entry: python -m repo_release_tools.hooks pre-commit
-        language: python
-        pass_filenames: false
-        always_run: true
-        stages: [pre-commit]
-      - id: rrt-commit-subject
-        name: repo-release-tools commit subject
-        entry: python -m repo_release_tools.hooks commit-msg
-        language: python
-        always_run: true
-        stages: [commit-msg]

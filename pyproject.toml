@@ -199,4 +199,4 @@ pattern = '^(\\s*__version__\\s*=\\s*")([^\"]+)(\")'
 
 
 [tool.pytest.ini_options]
-addopts = "--cov=src/mcp_zen_of_languages --cov-report=term-missing --cov-fail-under=95"
+addopts = "--cov=src/mcp_zen_of_languages --cov-report=term-missing --cov-report=xml --cov-fail-under=95"

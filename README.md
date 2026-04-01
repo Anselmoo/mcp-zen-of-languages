@@ -14,6 +14,7 @@
   <a href="https://github.com/Anselmoo/mcp-zen-of-languages/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Anselmoo/mcp-zen-of-languages?style=flat-square" alt="License"></a>
   <a href="https://github.com/Anselmoo/mcp-zen-of-languages/actions"><img src="https://img.shields.io/github/actions/workflow/status/Anselmoo/mcp-zen-of-languages/cicd.yml?style=flat-square&label=CI" alt="CI"></a>
   <a href="https://anselmoo.github.io/mcp-zen-of-languages/"><img src="https://img.shields.io/badge/docs-mkdocs-c9b3ff?style=flat-square" alt="Docs"></a>
+  <a href="https://codecov.io/gh/Anselmoo/mcp-zen-of-languages"><img src="https://codecov.io/gh/Anselmoo/mcp-zen-of-languages/graph/badge.svg?token=CODECOV_TOKEN" alt="Coverage"></a>
 </p>
 
 <p align="center">

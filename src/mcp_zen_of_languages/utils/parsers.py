@@ -8,6 +8,8 @@ backend so downstream detectors can adapt their traversal logic accordingly.
 
 from __future__ import annotations
 
+import importlib
+
 from typing import TYPE_CHECKING
 
 
@@ -44,11 +46,12 @@ def parse_python_with_treesitter(code: str) -> object | None:
 
     parser = Parser()
     try:
-        from build.my_languages import PY_LANGUAGE  # type: ignore[import-not-found]
+        language_module = importlib.import_module("build.my_languages")
+        py_language = language_module.PY_LANGUAGE
 
         if not hasattr(parser, "set_language"):
             return None
-        parser.set_language(PY_LANGUAGE)
+        parser.set_language(py_language)
         return parser.parse(bytes(code, "utf8"))
     except Exception:  # noqa: BLE001
         return None

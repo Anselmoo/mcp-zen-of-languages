@@ -34,7 +34,7 @@ implementation_counts = _load_implementation_counts_module()
 
 def test_implementation_counts_checks() -> None:
     """Fail if generated implementation-count artifacts or surfaces are stale."""
-    result = subprocess.run(  # noqa: S603
+    result = subprocess.run(
         [sys.executable, "scripts/generate_implementation_counts.py", "--check"],
         capture_output=True,
         text=True,

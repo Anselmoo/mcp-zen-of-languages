@@ -28,7 +28,7 @@ BROKEN_MERMAID_LABEL_QUOTES_PATTERN = re.compile(
 
 def test_language_docs_freshness() -> None:
     """Fail if any language doc page is stale relative to rules.py data."""
-    result = subprocess.run(  # noqa: S603
+    result = subprocess.run(
         [sys.executable, "scripts/generate_language_docs.py", "--check"],
         capture_output=True,
         text=True,

@@ -136,12 +136,19 @@ def _build_rule_configs(rule_ids: list[str]) -> dict[str, type[DetectorConfig]]:
             "type": (_rule_literal(rule_id), rule_id),
             **fields,
         }
-        configs[rule_id] = create_model(
-            _rule_class_name(rule_id),
-            __base__=DetectorConfig,
-            **field_definitions,
-        )  # type: ignore[no-matching-overload]
+        configs[rule_id] = _create_detector_config_model(field_definitions, rule_id)
     return configs
+
+
+def _create_detector_config_model(
+    field_definitions: dict[str, Any], rule_id: str
+) -> type[DetectorConfig]:
+    """Create a dynamic DetectorConfig subclass for a rule ID."""
+    return create_model(
+        _rule_class_name(rule_id),
+        __base__=DetectorConfig,
+        **field_definitions,
+    )
 
 
 if not REGISTRY.items():

@@ -208,7 +208,10 @@ def generate() -> str:  # noqa: C901, PLR0912, PLR0915
     from mcp_zen_of_languages.cli import app
 
     # Collect click commands from the Typer app
-    click_app: click.Group = typer_main.get_command(app)  # type: ignore[attr-defined]
+    click_app = typer_main.get_command(app)
+    if not isinstance(click_app, click.Group):
+        msg = "Typer app did not resolve to a click.Group"
+        raise TypeError(msg)
 
     sections: list[str] = []
 

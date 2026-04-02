@@ -1,3 +1,9 @@
+## [0.7.1] - 2026-04-01
+
+### Added
+- **ci**: upload test coverage XML and artifact for codecov/upload (#156)
+- enhance MCP integration with Codex and Copilot support, update documentation and CLI commands (#149)
+
 ## [0.7.0] – 2026-03-20
 
 ### Fixed

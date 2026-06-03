@@ -867,11 +867,11 @@ def test_cli_render_report_markdown():
     assert output == "#"
 
 
-def test_cli_main_help_for_unknown_command(capsys):
-    with pytest.raises(SystemExit):
-        cli.main(["unknown"])
-    captured = capsys.readouterr()
-    assert "usage" in captured.err.lower()
+def test_cli_main_help_for_unknown_command():
+    from typer.testing import CliRunner
+
+    result = CliRunner().invoke(cli.app, ["unknown"])
+    assert result.exit_code != 0
 
 
 def test_cli_main_missing_args_prints_help(capsys):

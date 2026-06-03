@@ -599,7 +599,7 @@ def test_base_analyzer_invalid_config():
 
 def test_rules_adapter_get_critical_violations():
     adapter = RulesAdapter(language="python", config=None)
-    adapter.config = type("Config", (), {"severity_threshold": 5})()
+    adapter.config = type("RulesAdapterConfig", (), {"severity_threshold": 5})()
     violation = _DummyDetector().build_violation(
         ExplicitnessConfig(type="explicitness", severity=6),
     )

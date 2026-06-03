@@ -6,6 +6,7 @@ from pydantic import HttpUrl
 
 from mcp_zen_of_languages import cli
 from mcp_zen_of_languages.adapters.rules_adapter import RulesAdapter
+from mcp_zen_of_languages.adapters.rules_adapter import RulesAdapterConfig
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
 from mcp_zen_of_languages.analyzers.base import AnalyzerConfig
 from mcp_zen_of_languages.analyzers.base import BaseAnalyzer
@@ -599,7 +600,7 @@ def test_base_analyzer_invalid_config():
 
 def test_rules_adapter_get_critical_violations():
     adapter = RulesAdapter(language="python", config=None)
-    adapter.config = type("RulesAdapterConfig", (), {"severity_threshold": 5})()
+    adapter.config = RulesAdapterConfig(severity_threshold=5)
     violation = _DummyDetector().build_violation(
         ExplicitnessConfig(type="explicitness", severity=6),
     )

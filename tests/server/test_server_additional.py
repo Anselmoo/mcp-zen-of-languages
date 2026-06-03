@@ -29,6 +29,27 @@ async def test_analyze_repository_limits_files(tmp_path):
 
 
 @pytest.mark.asyncio
-async def test_check_architectural_patterns():
-    with pytest.raises(NotImplementedError, match="not implemented"):
-        await server.check_architectural_patterns.fn("data", "python")
+async def test_check_architectural_patterns_empty():
+    result = await server.check_architectural_patterns.fn("", "python")
+    assert result.patterns == []
+
+
+@pytest.mark.asyncio
+async def test_check_architectural_patterns_singleton():
+    code = (
+        "class Config:\n"
+        "    _instance = None\n"
+        "    @classmethod\n"
+        "    def get_instance(cls): return cls._instance\n"
+    )
+    result = await server.check_architectural_patterns.fn(code, "python")
+    names = [f.name for f in result.patterns]
+    assert "singleton" in names
+
+
+@pytest.mark.asyncio
+async def test_check_architectural_patterns_observer_js():
+    code = "element.addEventListener('click', fn);\nelement.removeEventListener('click', fn);\n"
+    result = await server.check_architectural_patterns.fn(code, "javascript")
+    names = [f.name for f in result.patterns]
+    assert "observer" in names

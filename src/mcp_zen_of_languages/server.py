@@ -62,6 +62,7 @@ from mcp_zen_of_languages.models import BatchPage
 from mcp_zen_of_languages.models import BatchSummary
 from mcp_zen_of_languages.models import BatchViolation
 from mcp_zen_of_languages.models import LanguagesResult
+from mcp_zen_of_languages.models import PatternFinding
 from mcp_zen_of_languages.models import PatternsResult
 from mcp_zen_of_languages.models import PerspectiveMode
 from mcp_zen_of_languages.models import RepositoryAnalysis
@@ -1488,23 +1489,26 @@ async def generate_agent_tasks_tool(
 async def check_architectural_patterns(code: str, language: str) -> PatternsResult:
     """Scan a code snippet for recognised architectural patterns.
 
-    Architectural pattern detection is not implemented yet.
+    Applies all registered pattern detectors to *code* and returns every
+    match as a ``PatternFinding``.  An empty ``patterns`` list means no
+    known patterns were found — it is not an error condition.
 
     Args:
         code (str): Source fragment to inspect for structural patterns.
         language (str): Language identifier guiding which pattern
             recognisers to apply (e.g. ``"python"``, ``"go"``).
 
-    Raises:
-        NotImplementedError: Always raised until pattern detection support
-            is implemented.
+    Returns:
+        PatternsResult with every detected architectural pattern.
 
     """
-    msg = (
-        "check_architectural_patterns is not implemented yet. "
-        "Pattern detection is planned but not available in this release."
-    )
-    raise NotImplementedError(msg)
+    from mcp_zen_of_languages.patterns.detectors import ALL_DETECTORS
+
+    canonical = _canonical_language(language)
+    findings: list[PatternFinding] = []
+    for detector in ALL_DETECTORS:
+        findings.extend(detector.detect(code, canonical))
+    return PatternsResult(patterns=findings)
 
 
 @mcp.tool(

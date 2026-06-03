@@ -1,6 +1,7 @@
 ## [Unreleased]
 
 ### Added
+- **feat**: implement `check_architectural_patterns` MCP tool — replace `NotImplementedError` stub with 16 language-agnostic pattern detectors (singleton, factory, observer, repository, builder, command, mvc, middleware, prototype, decorator, facade, proxy, strategy, composite, chain-of-responsibility, iterator) covering GoF and architectural patterns across Python, Go, Rust, JavaScript, Java, and TypeScript via compiled regex without requiring a parse tree
 - **ci**: add `rrt-checks` job using `repo-release-tools@v1.8.1` for branch name, commit subject, changelog, and release-health policy validation
 - **ci**: add `build-mcpb` job that produces a DXT v0.4 `.mcpb` bundle and attaches it to every GitHub Release alongside wheel, sdist, and SBOM
 - **release**: add `scripts/build_mcpb.py` and `poe build_mcpb` task to build the `.mcpb` bundle locally (`dist/` is gitignored)

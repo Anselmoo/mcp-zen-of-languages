@@ -11,6 +11,7 @@
 - **release**: `.mcpb` manifest schema corrected to DXT spec v0.4 (`manifest_version`, `repository` as object, `server.entry_point` added)
 - **release**: replace `pyproject.toml` entry-point with a stdlib-only `server/main.py` shim — bundling `pyproject.toml` triggered `uv_build.build_editable`, which failed without the full source tree
 - **release**: use `uv tool run` instead of `uvx` in `mcp_config` so the command is valid regardless of how Claude Desktop resolves the binary path
+- **fix**: update `CHANGELOG.md` with recent edits and ensure formatting consistency
 
 ### Changed
 - **ci**: bump pre-commit `repo-release-tools` hook from `v0.1.1` to `v1.8.1`

@@ -995,8 +995,8 @@ def test_registry_adapter_caches_union():
     registry.register(meta)
     union = registry.get_config_union()
     assert registry.get_config_union() is union
-    with pytest.raises(TypeError):
-        registry.adapter()
+    adapter = registry.adapter()
+    assert adapter is registry.adapter()
 
 
 def test_registry_configs_merge_updates():
@@ -1377,8 +1377,9 @@ def test_registry_configs_from_rules_updates_existing():
         source_url="https://example.com/src",
         principles=principles,
     )
-    with pytest.raises(TypeError):
-        registry.configs_from_rules(lang)
+    configs = registry.configs_from_rules(lang)
+    explicitness_cfg = next(c for c in configs if c.type == "explicitness")
+    assert explicitness_cfg.require_type_hints is True
 
 
 def test_registry_create_pipeline_from_rules_with_detector():
@@ -1407,5 +1408,6 @@ def test_registry_create_pipeline_from_rules_with_detector():
         source_url="https://example.com/src",
         principles=[principle],
     )
-    with pytest.raises(TypeError):
-        registry.create_pipeline_from_rules(lang)
+    pipeline = registry.create_pipeline_from_rules(lang)
+    assert len(pipeline.detectors) == 1
+    assert pipeline.detectors[0].rule_ids == ["python-001"]

@@ -156,6 +156,19 @@ uv sync --group dev --group docs
 
 This installs all development dependencies (pytest, ruff, ty) and documentation tooling (Zensical).
 
+## Install from GitHub Release (.mcpb)
+
+Each release ships a `.mcpb` bundle — a single-file MCP package for Claude Desktop and
+other MCPB-compatible clients. Download
+`mcp-zen-of-languages-{version}.mcpb` from the
+[GitHub Releases page](https://github.com/Anselmoo/mcp-zen-of-languages/releases)
+and open or import it in your MCP client. The bundle instructs the client to fetch and
+run the server automatically via `uvx` — no separate Python or pip setup required.
+
+!!! note "Claude Desktop"
+    Claude Desktop supports `.mcpb` bundles natively. Open the file from the releases
+    page and Claude Desktop will configure the server entry for you.
+
 ## Verify installation
 
 ```bash

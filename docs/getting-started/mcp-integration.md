@@ -114,23 +114,32 @@ Once configured, MCP-compatible clients (VS Code with Copilot, Codex, Claude Des
 
 ## Claude Desktop configuration
 
-Add to your `claude_desktop_config.json` (usually in `~/Library/Application Support/Claude/` on macOS or `%APPDATA%\Claude\` on Windows):
+=== ".mcpb bundle (recommended)"
+    Download `mcp-zen-of-languages-{version}.mcpb` from the
+    [GitHub Releases page](https://github.com/Anselmoo/mcp-zen-of-languages/releases)
+    and open it in Claude Desktop. The bundle registers the server automatically — no
+    manual config editing required.
 
-```json
-{
-  "mcpServers": {
-    "zen-of-languages": {
-      "command": "uvx",
-      "args": ["--from", "mcp-zen-of-languages", "mcp-zen-of-languages-server"],
-      "env": {
-        "ZEN_CONFIG_PATH": "/path/to/your/zen-config.yaml"
+=== "Manual JSON config"
+    Add to your `claude_desktop_config.json` (usually in
+    `~/Library/Application Support/Claude/` on macOS or `%APPDATA%\Claude\` on Windows):
+
+    ```json
+    {
+      "mcpServers": {
+        "zen-of-languages": {
+          "command": "uvx",
+          "args": ["--from", "mcp-zen-of-languages", "mcp-zen-of-languages-server"],
+          "env": {
+            "ZEN_CONFIG_PATH": "/path/to/your/zen-config.yaml"
+          }
+        }
       }
     }
-  }
-}
-```
+    ```
 
-Replace `/path/to/your/zen-config.yaml` with the absolute path to your config file, or omit the `env` section to use default auto-discovery.
+    Replace `/path/to/your/zen-config.yaml` with the absolute path to your config file,
+    or omit the `env` section to use default auto-discovery.
 
 ## Claude Code integration
 

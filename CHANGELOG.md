@@ -1,3 +1,21 @@
+## [Unreleased]
+
+### Added
+- **ci**: add `rrt-checks` job using `repo-release-tools@v1.8.1` for branch name, commit subject, changelog, and release-health policy validation
+- **ci**: add `build-mcpb` job that produces a DXT v0.4 `.mcpb` bundle and attaches it to every GitHub Release alongside wheel, sdist, and SBOM
+- **release**: add `scripts/build_mcpb.py` and `poe build_mcpb` task to build the `.mcpb` bundle locally (`dist/` is gitignored)
+- **docs**: document `.mcpb` one-click install for Claude Desktop in installation and MCP-integration pages
+- **dev**: add `CLAUDE.md` with project conventions for Claude Code sessions
+
+### Fixed
+- **release**: `.mcpb` manifest schema corrected to DXT spec v0.4 (`manifest_version`, `repository` as object, `server.entry_point` added)
+- **release**: replace `pyproject.toml` entry-point with a stdlib-only `server/main.py` shim — bundling `pyproject.toml` triggered `uv_build.build_editable`, which failed without the full source tree
+- **release**: use `uv tool run` instead of `uvx` in `mcp_config` so the command is valid regardless of how Claude Desktop resolves the binary path
+- **fix**: update `CHANGELOG.md` with recent edits and ensure formatting consistency
+
+### Changed
+- **ci**: bump pre-commit `repo-release-tools` hook from `v0.1.1` to `v1.8.1`
+
 ## [0.7.1] - 2026-04-01
 
 ### Added

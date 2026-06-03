@@ -79,7 +79,7 @@ dev = [
     "interrogate[png]>=1.7.0",
     "ruff>=0.14.14",
     "ty>=0.0.16",
-    "repo-release-tools>=0.1.1",
+    "repo-release-tools>=1.8.1",
 ]
 
 [tool.ruff]
@@ -165,6 +165,7 @@ warn_missing_rule_coverage = { cmd = "python scripts/warn_missing_rule_coverage.
 export_svg_assets = { cmd = "python scripts/export_svg_assets.py", help = "Export generated SVG assets used by the docs site" }
 run_server = { cmd = "zensical serve", help = "Start the local documentation development server" }
 build_docs = { cmd = "zensical build", help = "Build the documentation site" }
+build_mcpb = { cmd = "python scripts/build_mcpb.py", help = "Build the .mcpb release bundle into dist/ (gitignored)" }
 bump_version = { cmd = "rrt bump", help = "Bump the project version (specify patch/minor/major or explicit version)" }
 bump_patch = { cmd = "rrt bump patch", help = "Create a patch release version bump" }
 bump_minor = { cmd = "rrt bump minor", help = "Create a minor release version bump" }

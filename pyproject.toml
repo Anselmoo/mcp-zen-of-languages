@@ -79,7 +79,7 @@ dev = [
     "interrogate[png]>=1.7.0",
     "ruff>=0.14.14",
     "ty>=0.0.16",
-    "repo-release-tools>=0.1.1",
+    "repo-release-tools>=1.8.1",
 ]
 
 [tool.ruff]

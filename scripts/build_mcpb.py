@@ -61,8 +61,10 @@ def _build_manifest(version: str) -> dict:
             "type": "uv",
             "entry_point": "server/main.py",
             "mcp_config": {
-                "command": "uvx",
+                "command": "uv",
                 "args": [
+                    "tool",
+                    "run",
                     "--from",
                     f"mcp-zen-of-languages=={version}",
                     "mcp-zen-of-languages-server",
@@ -99,8 +101,8 @@ def _build_shim(version: str) -> str:
 
         def main() -> None:
             os.execvp(
-                "uvx",
-                ["uvx", "--from", f"{{_PACKAGE}}=={{_VERSION}}", _ENTRYPOINT],
+                "uv",
+                ["uv", "tool", "run", "--from", f"{{_PACKAGE}}=={{_VERSION}}", _ENTRYPOINT],
             )
 
 

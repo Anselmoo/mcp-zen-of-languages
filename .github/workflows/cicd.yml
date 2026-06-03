@@ -65,9 +65,30 @@ jobs:
       - name: Run pre-commit hooks via uvx
         run: uvx pre-commit run --all-files --show-diff-on-failure
 
+  rrt-checks:
+    name: repo-release-tools policy checks
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Run rrt policy checks
+        uses: Anselmoo/repo-release-tools@v1.8.1
+        with:
+          check-branch-name: ${{ !startsWith(github.ref, 'refs/tags/') }}
+          check-commit-subject: "true"
+          check-changelog: ${{ !startsWith(github.ref, 'refs/tags/') }}
+          changelog-strategy: auto
+          check-doctor: "true"
+          check-release-health: ${{ startsWith(github.ref, 'refs/tags/') }}
+          verbose: "1"
+
   test:
     name: Tests (${{ matrix.python-version }})
-    needs: lint
+    needs: [lint, rrt-checks]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -111,7 +132,7 @@ jobs:
 
   language-tests:
     name: Language tests (${{ matrix.language }})
-    needs: lint
+    needs: [lint, rrt-checks]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -212,7 +233,7 @@ jobs:
 
   visual-regression:
     name: Visual regression
-    needs: lint
+    needs: [lint, rrt-checks]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -345,6 +366,29 @@ jobs:
         with:
           name: python-package-distributions
           path: dist/
+
+  build-mcpb:
+    name: Build .mcpb package
+    needs: build
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Build .mcpb bundle
+        run: python scripts/build_mcpb.py
+
+      - name: Upload .mcpb artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: mcpb-package
+          path: dist/*.mcpb
 
   sbom:
     name: Generate SBOM
@@ -526,7 +570,7 @@ jobs:
 
   github-release:
     name: Create GitHub release
-    needs: [publish-pypi, sbom, docker-publish]
+    needs: [publish-pypi, sbom, docker-publish, build-mcpb]
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     permissions:
@@ -543,6 +587,12 @@ jobs:
         with:
           name: sbom
           path: .
+
+      - name: Download .mcpb artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: mcpb-package
+          path: dist/
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2

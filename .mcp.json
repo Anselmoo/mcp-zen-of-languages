@@ -1,0 +1,19 @@
+{
+    "mcpServers": {
+        "rrt": {
+            "type": "stdio",
+            "command": "uvx",
+            "args": [
+                "--from",
+                "repo-release-tools[mcp]",
+                "rrt-mcp"
+            ]
+        },
+        "analyzer": {
+            "command": "uvx",
+            "args": [
+                "mcp-server-analyzer"
+            ]
+        }
+    }
+}

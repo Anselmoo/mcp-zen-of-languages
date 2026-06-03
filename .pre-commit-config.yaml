@@ -20,7 +20,7 @@ repos:
         types_or: ["python", "pyi"]
 
   - repo: https://github.com/Anselmoo/repo-release-tools
-    rev: v0.1.1
+    rev: v1.8.1
     hooks:
       - id: rrt-branch-name
         name: Check branch name

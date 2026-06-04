@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+## [0.8.0] - 2026-06-04
 ### Added
 - **ci**: add `rrt-checks` job using `repo-release-tools@v1.8.1` for branch name, commit subject, changelog, and release-health policy validation
 - **ci**: add `build-mcpb` job that produces a DXT v0.4 `.mcpb` bundle and attaches it to every GitHub Release alongside wheel, sdist, and SBOM

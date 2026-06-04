@@ -355,3 +355,56 @@ def test_framework_multi_dogma_rule_tracks_linked_and_verified_dogmas() -> None:
         "universal_signature",
         "universal_state_mutation",
     }
+
+
+# ---------------------------------------------------------------------------
+# dogmas/rules.py — compatibility wrappers
+# ---------------------------------------------------------------------------
+
+
+def test_resolved_rule_dogmas_returns_dogma_tuple() -> None:
+    from mcp_zen_of_languages.dogmas.rules import resolved_rule_dogmas
+
+    result = resolved_rule_dogmas("python", "python-009")
+    assert isinstance(result, tuple)
+    assert len(result) >= 1
+
+
+def test_resolved_rule_dogmas_ignores_language_arg() -> None:
+    from mcp_zen_of_languages.dogmas.rules import resolved_rule_dogmas
+
+    result_a = resolved_rule_dogmas("python", "python-009")
+    result_b = resolved_rule_dogmas("rust", "python-009")
+    assert result_a == result_b
+
+
+def test_resolved_rule_dogmas_for_rule_ids_aggregates() -> None:
+    from mcp_zen_of_languages.dogmas.rules import resolved_rule_dogmas_for_rule_ids
+
+    result = resolved_rule_dogmas_for_rule_ids("python", ["python-009", "python-001"])
+    assert isinstance(result, tuple)
+
+
+# ---------------------------------------------------------------------------
+# dogmas/mapping_models.py — ValueError on dogma_id mismatch
+# ---------------------------------------------------------------------------
+
+
+def test_dogma_detector_binding_raises_on_mismatched_dogma_id() -> None:
+    import pytest
+
+    from mcp_zen_of_languages.dogmas.detectors import DogmaDetector
+    from mcp_zen_of_languages.dogmas.mapping_models import DogmaDetectorBinding
+
+    class _WrongDogma(DogmaDetector):
+        dogma_id = "ZEN-WRONG"
+
+        def analyze(self, context):  # type: ignore[override]
+            return []
+
+    binding = DogmaDetectorBinding(
+        dogma_id="ZEN-EXPLICIT-INTENT",
+        detector_class=_WrongDogma,
+    )
+    with pytest.raises(ValueError, match="binding mismatch"):
+        binding.build_detector()

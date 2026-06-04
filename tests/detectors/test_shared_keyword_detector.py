@@ -33,3 +33,17 @@ def test_shared_keyword_detector_returns_empty_without_matches() -> None:
     context = AnalysisContext(code="print('clean')\n", language="python")
 
     assert detector.detect(context, config) == []
+
+
+def test_shared_keyword_detector_name() -> None:
+    assert SharedDogmaKeywordDetector().name == "shared_dogma_keyword"
+
+
+def test_shared_keyword_detector_skips_empty_patterns() -> None:
+    detector = SharedDogmaKeywordDetector()
+    config = DetectorConfig(type="shared-test", detectable_patterns=["", "TODO"])
+    context = AnalysisContext(code="# TODO: fix\n", language="python")
+
+    violations = detector.detect(context, config)
+
+    assert len(violations) == 1

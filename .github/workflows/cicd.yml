@@ -76,7 +76,7 @@ jobs:
           fetch-depth: 0
 
       - name: Run rrt policy checks
-        uses: Anselmoo/repo-release-tools@v1.8.1
+        uses: Anselmoo/repo-release-tools@v1.9.0
         with:
           check-branch-name: ${{ !startsWith(github.ref, 'refs/tags/') }}
           check-commit-subject: "true"

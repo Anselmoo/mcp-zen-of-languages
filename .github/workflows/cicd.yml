@@ -382,7 +382,7 @@ jobs:
         with:
           package: mcp-zen-of-languages
           registry: pypi
-          mode: complete
+          mode: reference
           entry-script: mcp-zen-of-languages-server
           no-probe: "true"
           attach-to-release: "false"

@@ -117,7 +117,7 @@ jobs:
         run: uv run pytest -xvs
       - name: Upload coverage artifact
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report-${{ matrix.python-version }}
           path: coverage.xml
@@ -362,7 +362,7 @@ jobs:
         run: uvx twine check dist/*
 
       - name: Upload distribution artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: python-package-distributions
           path: dist/
@@ -388,7 +388,7 @@ jobs:
           attach-to-release: "false"
 
       - name: Upload .mcpb artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: mcpb-package
           path: dist/*.mcpb
@@ -413,7 +413,7 @@ jobs:
           path: .
 
       - name: Upload SBOM artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: sbom
           path: sbom.spdx.json
@@ -429,7 +429,7 @@ jobs:
       attestations: write
     steps:
       - name: Download distribution artifacts
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@v4
         with:
           name: python-package-distributions
           path: dist/
@@ -507,7 +507,7 @@ jobs:
       url: https://test.pypi.org/p/mcp-zen-of-languages
     steps:
       - name: Download distribution artifacts
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@v4
         with:
           name: python-package-distributions
           path: dist/
@@ -564,7 +564,7 @@ jobs:
       url: https://pypi.org/p/mcp-zen-of-languages
     steps:
       - name: Download distribution artifacts
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@v4
         with:
           name: python-package-distributions
           path: dist/
@@ -581,19 +581,19 @@ jobs:
       contents: write
     steps:
       - name: Download distribution artifacts
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@v4
         with:
           name: python-package-distributions
           path: dist/
 
       - name: Download SBOM artifact
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@v4
         with:
           name: sbom
           path: .
 
       - name: Download .mcpb artifact
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@v4
         with:
           name: mcpb-package
           path: dist/

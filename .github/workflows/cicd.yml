@@ -378,7 +378,7 @@ jobs:
 
       - name: Build .mcpb bundle
         id: mcp2mcpb
-        uses: Anselmoo/mcp2mcpb@v1
+        uses: Anselmoo/mcp2mcpb@5e2f399464203530cd84f3e8325fb648de3a6f05 # v0.4.0
         with:
           package: mcp-zen-of-languages
           registry: pypi

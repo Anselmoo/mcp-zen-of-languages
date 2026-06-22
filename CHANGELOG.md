@@ -1,4 +1,6 @@
 ## [Unreleased]
+
+## [0.8.1] - 2026-06-22
 ### Changed
 - CI/CD: switch `build-mcpb` job to `Anselmoo/mcp2mcpb` composite action with `--from-dist` to build bundles from locally-built wheel (pinned to SHA `b040bab` — pre-release v0.5)
 

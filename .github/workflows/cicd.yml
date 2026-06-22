@@ -369,57 +369,25 @@ jobs:
 
   build-mcpb:
     name: Build .mcpb package
-    needs: build
+    needs: [build]
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - name: Download wheel
+        uses: actions/download-artifact@v7
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
+          name: python-package-distributions
+          path: dist/
       - name: Build .mcpb bundle
-        run: python scripts/build_mcpb.py
-
-      - name: Validate .mcpb archive
-        run: |
-          python - <<'PY'
-          import glob, json, sys, zipfile
-
-          paths = glob.glob("dist/*.mcpb")
-          if not paths:
-              sys.exit("No .mcpb file found in dist/")
-
-          path = paths[0]
-          with zipfile.ZipFile(path) as zf:
-              names = zf.namelist()
-              for required in ("manifest.json", "server/main.py"):
-                  if required not in names:
-                      sys.exit(f"Missing required archive member: {required}")
-              manifest = json.loads(zf.read("manifest.json"))
-
-          for field in ("manifest_version", "name", "version", "description", "author", "server"):
-              if field not in manifest:
-                  sys.exit(f"Missing required manifest field: {field}")
-
-          server = manifest["server"]
-          if server.get("type") not in ("uv", "python", "node", "binary"):
-              sys.exit(f"Invalid server.type: {server.get('type')}")
-          if "entry_point" not in server:
-              sys.exit("Missing server.entry_point")
-          if "repository" in manifest and isinstance(manifest["repository"], str):
-              sys.exit("repository must be an object, not a string")
-
-          print(f"OK: {path}")
-          print(f"  manifest_version: {manifest['manifest_version']}")
-          print(f"  version:          {manifest['version']}")
-          print(f"  server.type:      {server['type']}")
-          print(f"  files:            {names}")
-          PY
-
+        uses: Anselmoo/mcp2mcpb@b040babc466902b721e2367d2e5611908c3603d8
+        with:
+          package: mcp-zen-of-languages
+          registry: pypi
+          mode: reference
+          from-dist: dist/
+          attach-to-release: 'false'
       - name: Upload .mcpb artifact
         uses: actions/upload-artifact@v7
         with:

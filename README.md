@@ -1,3 +1,5 @@
+<!-- mcp-name: io.github.anselmoo/mcp-zen-of-languages -->
+
 <p align="center">
   <img src="https://github.com/Anselmoo/mcp-zen-of-languages/blob/main/docs/assets/logo.svg?raw=true" alt="MCP Zen of Languages" width="460" />
 </p>

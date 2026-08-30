@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+## [0.9.0] - 2026-08-30
 ### Added
 - `server.json` manifest for the official MCP Registry, with PyPI and OCI/GHCR package entries
 - `mcp-name` README marker and `io.modelcontextprotocol.server.name` Dockerfile label for MCP Registry ownership verification

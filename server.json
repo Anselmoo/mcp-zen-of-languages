@@ -1,8 +1,8 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.anselmoo/mcp-zen-of-languages",
+  "name": "io.github.Anselmoo/mcp-zen-of-languages",
   "description": "Multi-language architectural and idiomatic code analysis via CLI and MCP server.",
-  "version": "0.8.1",
+  "version": "0.9.1",
   "repository": {
     "url": "https://github.com/Anselmoo/mcp-zen-of-languages",
     "source": "github",
@@ -13,7 +13,7 @@
       "registryType": "pypi",
       "registryBaseUrl": "https://pypi.org",
       "identifier": "mcp-zen-of-languages",
-      "version": "0.8.1",
+      "version": "0.9.1",
       "runtimeHint": "uvx",
       "transport": { "type": "stdio" },
       "runtimeArguments": [
@@ -23,7 +23,7 @@
     },
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/anselmoo/mcp-zen-of-languages:0.8.1",
+      "identifier": "ghcr.io/anselmoo/mcp-zen-of-languages:0.9.1",
       "runtimeHint": "docker",
       "transport": { "type": "stdio" }
     }

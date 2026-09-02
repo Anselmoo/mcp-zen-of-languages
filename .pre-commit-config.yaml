@@ -11,7 +11,7 @@ repos:
         args: ["--unsafe"]
       - id: check-added-large-files
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.15
+    rev: v0.16.5
     hooks:
       - id: ruff-check
         types_or: ["python", "pyi"]
@@ -20,7 +20,7 @@ repos:
         types_or: ["python", "pyi"]
 
   - repo: https://github.com/Anselmoo/repo-release-tools
-    rev: v1.16.0
+    rev: v1.17.1
     hooks:
       - id: rrt-branch-name
         name: Check branch name

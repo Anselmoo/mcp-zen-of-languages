@@ -30,7 +30,7 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "fastmcp[tasks, code-mode, apps]>=3.0.2",
+    "fastmcp[tasks, code-mode, apps]>=4.0.1",
     "networkx>=3.6.1",
     "pydantic>=2.12.5",
     "pygments>=2.19.2",

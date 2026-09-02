@@ -42,7 +42,7 @@ from typing import cast
 
 import fastmcp
 
-from fastmcp.server.tasks import TaskConfig
+from fastmcp.utilities.tasks import TaskConfig
 from mcp.types import Icon
 from mcp.types import ToolAnnotations
 from pydantic import BaseModel

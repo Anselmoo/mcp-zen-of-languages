@@ -43,6 +43,7 @@ from typing import cast
 import fastmcp
 
 from fastmcp.utilities.tasks import TaskConfig
+from fastmcp_tasks import TasksExtension
 from mcp.types import Icon
 from mcp.types import ToolAnnotations
 from pydantic import BaseModel
@@ -155,6 +156,20 @@ mcp = fastmcp.FastMCP(
     list_page_size=100,
 )
 mcp.zen_cache_backend = _CACHE_BACKEND
+
+# Tools declaring `task=BACKGROUND_TASK` are task-enabled, and fastmcp 4 validates at
+# LIFESPAN START that an extension advertising 'io.modelcontextprotocol/tasks' is
+# registered -- refusing to serve otherwise. Declaring the `tasks` extra in
+# pyproject.toml only makes the package importable; it does not register anything.
+#
+# MEASURED 2026-09-02: without this line the server raises at startup --
+#   RuntimeError: Task-enabled tools (analyze_batch, analyze_batch_auto,
+#   analyze_batch_summary, analyze_repository, generate_agent_tasks,
+#   generate_report) require the tasks extension, but no extension with identifier
+#   'io.modelcontextprotocol/tasks' is registered.
+# -- which is a startup failure, not a per-tool one: the whole server refuses to
+# start, so every tool is unreachable, not just the six task-enabled ones.
+mcp.add_extension(TasksExtension())
 
 CONFIG = load_config(path=os.environ.get("ZEN_CONFIG_PATH"))
 logger = logging.getLogger(__name__)

@@ -1,5 +1,20 @@
 ## [Unreleased]
 
+### Fixed
+
+- **The server could not start.** Six tools declare `task=BACKGROUND_TASK`, and
+  fastmcp 4 validates at lifespan start that an extension advertising
+  `io.modelcontextprotocol/tasks` is registered — raising `RuntimeError` and
+  refusing to serve when it is not. Declaring the `tasks` extra in `pyproject.toml`
+  makes the package importable but registers nothing, so `mcp.add_extension(
+  TasksExtension())` was still required and missing. Every tool was unreachable,
+  not just the six task-enabled ones.
+- Added `tests/server/test_server_lifespan_startup.py`, which enters the real
+  lifespan rather than only importing the module. Two fastmcp 4 breakages reached
+  `main` because nothing in the suite started the server — the `TaskConfig` import
+  move and this registration — leaving `docker-image-check` as the only detector,
+  and it runs after `test`.
+
 ## [0.9.1] - 2026-08-30
 ### Fixed
 - MCP Registry publish 403: `server.json` name, the README `mcp-name` marker, and the Dockerfile `io.modelcontextprotocol.server.name` label used the wrong namespace casing (`io.github.anselmoo`); corrected to the registry-required `io.github.Anselmoo` to match the GitHub OIDC repository-owner claim exactly

@@ -36,7 +36,7 @@ dependencies = [
     "radon>=6.0.1",
     "typer>=0.26.7",
     "tree-sitter>=0.25.2",
-    "sqlglot==29.0.1",
+    "sqlglot==30.17.0",
 ]
 
 [project.urls]

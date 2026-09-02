@@ -157,26 +157,35 @@ Mechanical realignment. No behaviour change.
   `Anselmoo/repo-release-tools` to `v1.17.1`. This supersedes PR #207.
 - Remove `pygments` from `[project] dependencies` and update the two prose
   references that name it.
+- Resolve the 4 `RUF100` findings, which are auto-fixable and must clear for
+  this PR to stay green.
 - Run `uv lock -U`, then the full CI pipeline.
 
-The ruff rev lands here while the ruff *findings* land in PR-2. To keep PR-1
-green, `CPY001`, `ISC004`, and `PLR0917` are added to `extend-ignore` in this PR
-as a temporary measure, each marked with a `# handled in PR-2` comment, and
-removed in PR-2 when the real dispositions land.
+The ruff rev lands here while the remaining ruff *findings* land in PR-2. To
+keep PR-1 green, `CPY001`, `ISC004`, and `PLR0917` are added to `extend-ignore`
+in this PR as a temporary measure, each marked as handled in PR-2, and removed
+in PR-2 when the real dispositions land.
+
+Note on counting `RUF100`: it must be measured with the project config, never a
+bare `--select RUF100`. The rule judges each `noqa` against *currently enabled*
+rules, so narrowing the selection reports 10+ sites instead of the real 4 and
+would delete legitimate suppressions.
 
 ### PR-2 — `chore/deps-tooling`
 
 The tier that touches source code.
 
-Ruff 0.16.5:
+Ruff 0.16.5 (`RUF100` already cleared in PR-1):
 
-- `RUF100` (4) — apply `ruff check --fix`.
 - `ISC004` (45) — apply `--unsafe-fixes`, then review each hunk; these are
   implicit concatenations inside collection literals, where a missing comma and
   an intentional concatenation look identical.
-- `PLR0917` (13) — review each site. Convert to keyword-only parameters where
-  the call sites read better; where the positional signature is correct, add a
-  targeted `# noqa: PLR0917` with a reason.
+- `PLR0917` (13) — every site already carries `# noqa: PLR0913`, and every one
+  is a function whose arguments are supplied by name: eight are the private
+  `_principle` helper in `frameworks/*/rules.py`, three are Typer commands, one
+  is an MCP tool, one is an internal script helper. None is callable
+  positionally in practice, so each directive is extended to
+  `# noqa: PLR0913, PLR0917`.
 - `CPY001` (446) — configure `[tool.ruff.lint.flake8-copyright]` with `author`,
   `min-file-size`, and `notice-rgx` so only substantial files require a header,
   then add the header to the files that remain flagged. Threshold selection uses
@@ -207,17 +216,24 @@ The majors, each with a probed blast radius.
 - tree-sitter `>=0.25.2` → `>=0.26.0`; pydantic, networkx, and radon to current.
 - `uv lock -U`, full CI including the Docker image check and `.mcpb` build.
 
-## Open Decision
+## Decision: `ZenPrinciple.source_url`
 
-`ZenPrinciple` needs `source_url` resolved one of two ways, and the choice
-changes what the model means:
+Two resolutions were available, and the choice changes what the model means:
 
 - **Add the field.** Per-principle deep links start working as the JavaScript
   rules clearly intended, and the other 21 languages gain the capability.
 - **Delete the seven kwargs.** Treats the feature as never having existed;
   `source_url` stays a language-level attribute only.
 
-The implementation plan records whichever is chosen before PR-2 begins.
+**Resolved: add the field**, as an optional
+`source_url: HttpUrl | None = Field(default=None, ...)` mirroring the existing
+`LanguageSummary.source_url` pattern at `base_models.py:641`. This is
+backward-compatible and unblocks the seven dead links. The consequence to accept
+is that a URL can now live in two places, so `LanguageZenPrinciples.source_url`
+becomes the fallback and the per-principle value takes precedence — the
+docstring records that resolution order.
+
+Implemented by Task 8 of the plan.
 
 ## Out of scope
 

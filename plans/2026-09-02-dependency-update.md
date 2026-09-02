@@ -4,7 +4,9 @@
 
 **Goal:** Refresh every dependency in `.pre-commit-config.yaml` and `pyproject.toml` across three tiered pull requests, absorbing the source-code changes that upgraded tooling forces.
 
-**Architecture:** Three sequential PRs ordered by blast radius. PR-1 is mechanical realignment that closes the drift between declared floors, `uv.lock`, and pre-commit revs. PR-2 absorbs the source-code churn from ruff 0.16 and ty 0.0.77, including one latent bug the type checker exposed. PR-3 lands the two runtime majors, each with a pre-probed blast radius. Each PR is independently revertable so a red CI run isolates its own cause.
+**Architecture:** Three **independent** PRs, each branched from `main`, reviewable and mergeable in any order. PR-1 is mechanical realignment that closes the drift between declared floors and `uv.lock`. PR-2 owns the ruff 0.16.5 and ty 0.0.77 upgrades together with all the source-code churn they produce. PR-3 lands the remaining runtime bumps. Each tool bump ships in the same PR as the findings it causes, so no PR depends on another's suppressions.
+
+They overlap textually in `pyproject.toml` and `uv.lock`; resolve any merge conflict by taking both dependency edits and re-running plain `uv lock`.
 
 **Tech Stack:** Python 3.12+, uv (package manager, exclusively — never `pip`), ruff (lint + format), ty (type checking), pytest, pre-commit, repo-release-tools (`rrt`) for branches and versioning, zensical for docs.
 
@@ -13,7 +15,8 @@
 ## Global Constraints
 
 - **Package manager is `uv`, exclusively.** Never run `pip` or `pip install`. Use `uv sync --all-groups --all-extras`, `uv run <cmd>`, `uvx <tool>`.
-- **Branches are created with `rrt`, never manually.** Use `uv run poe branch_chore` for all three PRs in this plan.
+- **Branches are created with `rrt`, never manually.** Use `uv run poe branch_chore` for all three PRs in this plan. **Each branches from `main`** — no stacking.
+- **Never run `uv lock -U`.** It upgrades every package to the newest version its *constraint* allows; measured on this tree it moves 67 packages and collapses all three tiers into one. Raise the specific floor, then run plain `uv lock`. (`[tool.rrt] lock_command` uses `-U` because it is the *release* lock command.)
 - **Commit subjects must follow Conventional Commits.** The `rrt-commit-subject` pre-commit hook enforces this on every commit.
 - **Never bypass hooks with `--no-verify`.** If a hook auto-fixes files, stage the fixes and re-run `git commit`.
 - **Coverage gate: 95%**, measured over `src/mcp_zen_of_languages/` only (`--cov-fail-under=95` in `[tool.pytest.ini_options]`).
@@ -31,11 +34,9 @@
 
 | File | Responsibility |
 | --- | --- |
-| `pyproject.toml` | Raise stale floors to locked versions; widen `uv_build` bound; drop `pygments`; add three temporary `extend-ignore` entries |
-| `.pre-commit-config.yaml` | Bump `ruff-pre-commit` and `repo-release-tools` revs |
+| `pyproject.toml` | Raise stale floors to locked versions; widen `uv_build` bound; drop `pygments` |
+| `.pre-commit-config.yaml` | Bump the `repo-release-tools` rev only |
 | `tests/test_declared_dependencies.py` | **New.** Guard that every declared runtime dependency is actually imported by `src/` |
-| `src/mcp_zen_of_languages/adapters/rules_adapter.py` | Remove 3 unused `# noqa: BLE001` |
-| `src/mcp_zen_of_languages/analyzers/base.py` | Remove 1 unused `# noqa: BLE001` |
 | `docs/getting-started/security.md`, `.github/copilot-instructions.md` | Drop `pygments` from prose dependency lists |
 | `uv.lock` | Regenerated |
 
@@ -43,7 +44,10 @@
 
 | File | Responsibility |
 | --- | --- |
-| `pyproject.toml` | Remove the three temporary suppressions; add `[tool.ruff.lint.flake8-copyright]` |
+| `pyproject.toml` | Raise `ruff` to `>=0.16.5` and `ty` to `>=0.0.77`; add `[tool.ruff.lint.flake8-copyright]` |
+| `.pre-commit-config.yaml` | Bump the `ruff-pre-commit` rev to `v0.16.5` |
+| `src/mcp_zen_of_languages/adapters/rules_adapter.py` | Remove 3 unused `# noqa: BLE001` |
+| `src/mcp_zen_of_languages/analyzers/base.py` | Remove 1 unused `# noqa: BLE001` |
 | `src/mcp_zen_of_languages/reporting/prompts.py` | 31 `ISC004` fixes |
 | `scripts/generate_dogma_mapping.py`, `scripts/generate_config_docs.py` | 13 `ISC004` fixes |
 | `src/mcp_zen_of_languages/languages/go/rules.py` | 1 `ISC004` fix |
@@ -57,9 +61,10 @@
 
 | File | Responsibility |
 | --- | --- |
-| `pyproject.toml` | fastmcp, sqlglot, tree-sitter, pydantic floors |
-| `src/mcp_zen_of_languages/server.py:45` | `TaskConfig` import path |
+| `pyproject.toml` | sqlglot, tree-sitter, pydantic floors |
 | `uv.lock` | Regenerated |
+
+*(fastmcp shipped ahead of this plan as hotfix PR #209 — see Task 10.)*
 
 ---
 
@@ -271,70 +276,32 @@ git commit -m "chore: align dependency floors with locked versions"
 
 ---
 
-### Task 3: Bump pre-commit revs and absorb `RUF100`
+### Task 3: Bump the `repo-release-tools` pre-commit rev
 
-Bumping `ruff-pre-commit` to `v0.16.5` enrolls four newly stabilized rules. `RUF100` (4 findings) is auto-fixable and lands here. `CPY001`, `ISC004`, and `PLR0917` are suppressed **temporarily** so PR-1 stays green; PR-2 removes the suppressions and handles them properly.
+Only the `rrt` rev moves here. The `ruff-pre-commit` rev stays at `v0.15.15` and moves to PR-2, alongside the findings its bump produces — a tool bump and its fallout belong in the same PR, or the two PRs become order-dependent.
 
 **Files:**
-- Modify: `.pre-commit-config.yaml:14` and `:23`, `pyproject.toml` (`extend-ignore`), `src/mcp_zen_of_languages/adapters/rules_adapter.py:405,470,512`, `src/mcp_zen_of_languages/analyzers/base.py:1030`
+- Modify: `.pre-commit-config.yaml:23`
 
 **Interfaces:**
 - Consumes: Task 2's branch
-- Produces: three temporary `extend-ignore` entries that Task 5, Task 6, and Task 7 each remove
+- Produces: nothing consumed by later tasks
 
-- [ ] **Step 1: Bump the two revs**
+- [ ] **Step 1: Bump the rev**
 
-In `.pre-commit-config.yaml`, change `rev: v0.15.15` to `rev: v0.16.5` under `https://github.com/astral-sh/ruff-pre-commit`, and `rev: v1.16.0` to `rev: v1.17.1` under `https://github.com/Anselmoo/repo-release-tools`.
+In `.pre-commit-config.yaml`, change `rev: v1.16.0` to `rev: v1.17.1` under `https://github.com/Anselmoo/repo-release-tools`. This supersedes PR #207.
 
-Leave `pre-commit/pre-commit-hooks` at `v6.0.0` — it is already current.
+Leave `pre-commit/pre-commit-hooks` at `v6.0.0` (already current) and `astral-sh/ruff-pre-commit` at `v0.15.15` (PR-2 owns it).
 
-- [ ] **Step 2: Add the temporary suppressions**
-
-In `pyproject.toml`, `[tool.ruff.lint].extend-ignore`, append below the three permanent entries:
-
-```toml
-    # Temporary — newly stabilised in ruff 0.16, handled in PR-2 (chore/deps-tooling).
-    "CPY001",  # missing-copyright-notice (446) — flake8-copyright config pending
-    "ISC004",  # implicit-string-concatenation-in-collection-literal (45)
-    "PLR0917", # too-many-positional-arguments (13)
-```
-
-- [ ] **Step 3: Confirm only `RUF100` remains**
-
-```bash
-uvx ruff@0.16.5 check src tests scripts --output-format concise
-```
-
-Expected: exactly 4 errors, all `RUF100`, at
-`src/mcp_zen_of_languages/adapters/rules_adapter.py:405:43`, `:470:39`, `:512:39`, and
-`src/mcp_zen_of_languages/analyzers/base.py:1030:39` — each `Unused 'noqa' directive (unused: BLE001)`.
-
-- [ ] **Step 4: Auto-fix them**
-
-```bash
-uvx ruff@0.16.5 check src tests scripts --fix
-```
-
-This strips the four `# noqa: BLE001` comments. Read each hunk in `git diff` and confirm only a trailing `# noqa: BLE001` was removed — no code change.
-
-- [ ] **Step 5: Verify the tree is clean under 0.16.5**
-
-```bash
-uvx ruff@0.16.5 check src tests scripts
-uvx ruff@0.16.5 format --check src tests scripts
-```
-
-Expected: `All checks passed!` and no format diff.
-
-- [ ] **Step 6: Run all hooks**
+- [ ] **Step 2: Run all hooks**
 
 ```bash
 uvx pre-commit run --all-files
 ```
 
-Expected: all pass. The `ty` hook still runs the locked 0.0.51, which passes cleanly.
+Expected: all pass. `rrt-branch-name` and `rrt-commit-subject` are the two hooks this rev affects.
 
-- [ ] **Step 7: Run the full suite**
+- [ ] **Step 3: Run the full suite**
 
 ```bash
 uv run pytest -x -q
@@ -342,11 +309,11 @@ uv run pytest -x -q
 
 Expected: all tests pass.
 
-- [ ] **Step 8: Commit**
+- [ ] **Step 4: Commit**
 
 ```bash
-git add .pre-commit-config.yaml pyproject.toml src/mcp_zen_of_languages/adapters/rules_adapter.py src/mcp_zen_of_languages/analyzers/base.py
-git commit -m "chore: bump pre-commit revs to ruff 0.16.5 and rrt 1.17.1"
+git add .pre-commit-config.yaml
+git commit -m "chore: bump repo-release-tools pre-commit rev to v1.17.1"
 ```
 
 ---
@@ -360,20 +327,22 @@ git commit -m "chore: bump pre-commit revs to ruff 0.16.5 and rrt 1.17.1"
 - Consumes: Tasks 1-3
 - Produces: merged `chore/deps-align` branch that PR-2 builds on
 
-- [ ] **Step 1: Upgrade the lock**
+- [ ] **Step 1: Verify the lock is already consistent**
 
 ```bash
-uv lock -U
+uv lock --check
 uv sync --all-groups --all-extras
 ```
 
-- [ ] **Step 2: Review what moved**
+Expected: `--check` exits 0. Task 2 already re-locked; nothing further is needed. **Do not run `uv lock -U`** — see Global Constraints.
+
+- [ ] **Step 2: Confirm no tier-crossing moves are staged**
 
 ```bash
-git diff --stat uv.lock
+git diff main..HEAD -- uv.lock | grep -E '^[+-]version = '
 ```
 
-Any package jumping a major version here is unexpected in PR-1 — the runtime majors belong in PR-3. If `fastmcp` moves to 4.x or `sqlglot` moves to 30.x, stop and check that the floors from Task 2 were applied as written.
+Expected: **empty**. PR-1 raises floors only to versions already resolved, so no package version should move at all. If `fastmcp`, `sqlglot`, `tree-sitter`, `ruff`, or `ty` appear, a `-U` ran somewhere — reset `uv.lock` and re-run plain `uv lock`.
 
 - [ ] **Step 3: Full verification**
 
@@ -418,17 +387,40 @@ The tier that touches source code. Branch from `main` after PR-1 merges.
 uv run poe branch_chore
 ```
 
-Name it `deps-tooling`. Then in `pyproject.toml` `[dependency-groups] dev`, set `"ruff>=0.16.5"` and `"ty>=0.0.77"`, and run:
+Name it `deps-tooling`, **branched from `main`**. Then:
+
+In `pyproject.toml` `[dependency-groups] dev`, set `"ruff>=0.16.5"` and `"ty>=0.0.77"`. In `.pre-commit-config.yaml`, change `rev: v0.15.15` to `rev: v0.16.5` under `astral-sh/ruff-pre-commit`.
+
+**The floor and the rev must move together.** CI's `lint` job runs `uv run ruff check` (the *locked* ruff) **and** `uvx pre-commit run --all-files` (the *pinned rev*). If they disagree, `RUF100` in Step 1b is unfixable: ruff 0.16 narrowed `BLE001` so it no longer fires when the caught exception is logged, so 0.16.5 calls those four `# noqa: BLE001` unused while 0.15.18 still requires them.
 
 ```bash
-uv lock -U && uv sync --all-groups --all-extras
+uv lock && uv sync --all-groups --all-extras
+uv run ruff --version   # must print 0.16.5
 ```
 
-- [ ] **Step 2: Remove the `ISC004` suppression**
+- [ ] **Step 1b: Clear the 4 `RUF100` findings**
 
-Delete the `"ISC004",` line added in Task 3 Step 2 from `[tool.ruff.lint].extend-ignore`.
+```bash
+uv run ruff check src tests scripts --output-format concise | grep RUF100
+```
 
-- [ ] **Step 3: Confirm the 45 findings reappear**
+Expected: exactly 4, at `src/mcp_zen_of_languages/adapters/rules_adapter.py:405,470,512` and `src/mcp_zen_of_languages/analyzers/base.py:1030`, each `Unused 'noqa' directive (unused: BLE001)`. Fix with:
+
+```bash
+uv run ruff check src tests scripts --fix
+```
+
+Read each hunk in `git diff` and confirm only a trailing `# noqa: BLE001` was removed — no code change.
+
+- [ ] **Step 2: Confirm the remaining rule counts**
+
+```bash
+uv run ruff check src tests scripts --output-format concise | grep -oE '(CPY001|ISC004|PLR0917)' | sort | uniq -c
+```
+
+Expected: `CPY001` 446, `ISC004` 45, `PLR0917` 13. No suppressions were ever added, so all three appear directly — Tasks 5, 6, and 7 dispose of them in turn.
+
+- [ ] **Step 3: Confirm the 45 `ISC004` findings**
 
 ```bash
 uv run ruff check src tests scripts --output-format concise | grep -c ISC004
@@ -847,100 +839,24 @@ Open the PR with `mcp__github__create_pull_request`. Title: `chore: upgrade ruff
 
 The two runtime majors. Branch from `main` after PR-2 merges.
 
-### Task 10: Upgrade fastmcp 3.4.2 → 4.0.1
+### Task 10: Upgrade fastmcp 3.4.2 → 4.0.1 — **SHIPPED AS HOTFIX #209**
 
-Probed against this repo's exact import list: 7 of 8 symbols resolve unchanged, `FastMCP.__init__` still accepts all 8 keywords `server.py:144` passes, `FastMCP.tool()` still accepts `task=`, and the `tasks` / `code-mode` / `apps` extras all still exist. The single break is that `fastmcp.server.tasks` was removed; `TaskConfig` now lives at `fastmcp.utilities.tasks`.
+This task was pulled out of PR-3 and shipped immediately, because it was not a pending upgrade — it was a **live production breakage on `main`**.
 
-**Files:**
-- Modify: `pyproject.toml` (`[project] dependencies`), `src/mcp_zen_of_languages/server.py:45`
+The declared floor `fastmcp[tasks, code-mode, apps]>=3.0.2` resolves to 4.0.1, which removed `fastmcp.server.tasks`. `uv.lock` pinned 3.4.2, so every developer machine and the whole `test` job passed while every *unlocked* install path crashed at import: the GHCR Docker image (`Dockerfile` runs `pip install .` with no lockfile), the `.mcpb` bundle (its shim installs from PyPI at runtime), and `uvx` / `pip install`. The `docker-image-check` CI job was the first thing to see it.
 
-**Interfaces:**
-- Consumes: PR-2 merged
-- Produces: nothing consumed by later tasks
+**The lesson to carry forward: `uv.lock` protects contributors, not consumers.** A `>=` floor is a promise to every unlocked installer that any newer version works, and nothing in CI tested that promise until a job that runs *after* `test`.
 
-- [ ] **Step 1: Create the branch**
+What shipped in #209:
 
-```bash
-uv run poe branch_chore
-```
+- `src/mcp_zen_of_languages/server.py:45` — `from fastmcp.utilities.tasks import TaskConfig`
+- `pyproject.toml` — floor raised to `>=4.0.1` so the declared constraint and the import path agree
 
-Name it `deps-runtime`.
+Nothing else changed: `FastMCP.__init__` still accepts all eight keywords `server.py:144` passes, `FastMCP.tool()` still accepts `task=`, and all six `task=BACKGROUND_TASK` sites are untouched. The `tasks` / `code-mode` / `apps` extras all still exist on fastmcp 4.
 
-- [ ] **Step 2: Raise the floor**
+- [x] Shipped in PR #209. **PR-3 starts at Task 11.**
 
-In `pyproject.toml`, change:
-
-```toml
-    "fastmcp[tasks, code-mode, apps]>=4.0.1",
-```
-
-The extras list is unchanged — all three still exist on fastmcp 4.
-
-- [ ] **Step 3: Sync and confirm the expected failure**
-
-```bash
-uv lock -U && uv sync --all-groups --all-extras
-uv run python -c "import mcp_zen_of_languages.server"
-```
-
-Expected: `ModuleNotFoundError: No module named 'fastmcp.server.tasks'`
-
-- [ ] **Step 4: Fix the import**
-
-In `src/mcp_zen_of_languages/server.py`, change line 45 from:
-
-```python
-from fastmcp.server.tasks import TaskConfig
-```
-
-to:
-
-```python
-from fastmcp.utilities.tasks import TaskConfig
-```
-
-Change nothing else. `BACKGROUND_TASK = TaskConfig(mode="optional", poll_interval=timedelta(seconds=5))` at line 186 and all six `task=BACKGROUND_TASK` sites (lines 878, 1050, 1180, 1283, 1423, 1521) are unaffected.
-
-- [ ] **Step 5: Confirm the import resolves**
-
-```bash
-uv run python -c "import mcp_zen_of_languages.server; print('ok')"
-```
-
-Expected: `ok`
-
-- [ ] **Step 6: Run the server-facing suites**
-
-```bash
-uv run pytest tests/server tests/entrypoint tests/e2e -q --no-cov
-```
-
-These cover `FastMCP` construction, the middleware chain (`CallNext`, `Middleware`, `MiddlewareContext`), the lifespan hook, and the guardrails. Expected: all pass.
-
-- [ ] **Step 7: Run the full suite**
-
-```bash
-uv run pytest -x -q
-```
-
-Expected: all tests pass, coverage ≥ 95%.
-
-- [ ] **Step 8: Regenerate the MCP tools reference**
-
-```bash
-uv run poe generate_mcp_tools_docs
-uv run poe check_orphan_docs
-git status --short
-```
-
-Stage any regenerated output.
-
-- [ ] **Step 9: Commit**
-
-```bash
-git add pyproject.toml src/mcp_zen_of_languages/server.py uv.lock docs
-git commit -m "feat: upgrade fastmcp to 4.0.1"
-```
+**Follow-up worth doing (not in this plan):** add a CI step that installs the built wheel *without* the lockfile and imports the entrypoint. That single check would have caught this the day fastmcp 4.0.1 shipped, instead of leaving it to `docker-image-check`.
 
 ---
 
@@ -972,7 +888,7 @@ Keep the `==`. The exact-pin policy is deliberate; this task bumps the pin, it d
 - [ ] **Step 3: Sync**
 
 ```bash
-uv lock -U && uv sync --all-groups --all-extras
+uv lock && uv sync --all-groups --all-extras
 ```
 
 - [ ] **Step 4: Run the SQL suites**
@@ -1027,7 +943,7 @@ In `[project] dependencies`:
 - [ ] **Step 2: Sync and verify the parser path**
 
 ```bash
-uv lock -U && uv sync --all-groups --all-extras
+uv lock && uv sync --all-groups --all-extras
 uv run pytest tests/utils -q --no-cov
 ```
 

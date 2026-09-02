@@ -140,8 +140,17 @@ that does not exist.
 
 ## Design
 
-Three tiered pull requests, ordered by blast radius. Each is independently
-revertable, so a red CI run isolates its own cause.
+Three **independent** pull requests, each branched from `main` and mergeable in
+any order. Each tool bump ships in the same PR as the findings it causes, so no
+PR depends on another's temporary suppressions.
+
+They overlap textually in `pyproject.toml` and `uv.lock`; a merge conflict is
+resolved by taking both dependency edits and re-running plain `uv lock`.
+
+**Never run `uv lock -U` in these PRs.** It upgrades every package to the newest
+version its constraint allows — measured on this tree, 67 packages, collapsing
+all three tiers into one. Raise the specific floor and run plain `uv lock`.
+`[tool.rrt] lock_command` uses `-U` because it is the *release* lock command.
 
 ### PR-1 — `chore/deps-align`
 
@@ -153,29 +162,35 @@ Mechanical realignment. No behaviour change.
   declaration/lock drift that keeps Dependabot silent.
 - Widen the `uv_build` bound from `<0.12.0` to `<0.13.0`, adopting PR #198. The
   current uv 0.12.6 emits a build warning on every invocation today.
-- Bump pre-commit revs: `astral-sh/ruff-pre-commit` to `v0.16.5` and
-  `Anselmoo/repo-release-tools` to `v1.17.1`. This supersedes PR #207.
+- Bump the `Anselmoo/repo-release-tools` pre-commit rev to `v1.17.1`, superseding
+  PR #207. The `astral-sh/ruff-pre-commit` rev stays put; PR-2 owns it.
 - Remove `pygments` from `[project] dependencies` and update the two prose
   references that name it.
-- Resolve the 4 `RUF100` findings, which are auto-fixable and must clear for
-  this PR to stay green.
-- Run `uv lock -U`, then the full CI pipeline.
+- Run plain `uv lock`, then the full CI pipeline.
 
-The ruff rev lands here while the remaining ruff *findings* land in PR-2. To
-keep PR-1 green, `CPY001`, `ISC004`, and `PLR0917` are added to `extend-ignore`
-in this PR as a temporary measure, each marked as handled in PR-2, and removed
-in PR-2 when the real dispositions land.
-
-Note on counting `RUF100`: it must be measured with the project config, never a
-bare `--select RUF100`. The rule judges each `noqa` against *currently enabled*
-rules, so narrowing the selection reports 10+ sites instead of the real 4 and
-would delete legitimate suppressions.
+No ruff change lands here at all, so no temporary suppressions are needed. An
+earlier draft split the ruff rev bump from its findings and had to suppress
+`CPY001`, `ISC004`, and `PLR0917` in PR-1 to stay green; keeping a tool bump
+together with its fallout removes that round-trip and makes the PRs order-
+independent.
 
 ### PR-2 — `chore/deps-tooling`
 
 The tier that touches source code.
 
-Ruff 0.16.5 (`RUF100` already cleared in PR-1):
+Ruff 0.15.18 → 0.16.5, bumping the dev-group floor **and** the
+`astral-sh/ruff-pre-commit` rev together. CI's `lint` job runs `uv run ruff
+check` (the locked ruff) *and* `uvx pre-commit run --all-files` (the pinned
+rev); if the two disagree, `RUF100` is unfixable, because ruff 0.16 narrowed
+`BLE001` to skip logged exceptions and so calls four `# noqa: BLE001` unused
+while 0.15.18 still requires them.
+
+Dispositions:
+
+- `RUF100` (4) — `ruff check --fix`. Count it with the project config, never a
+  bare `--select RUF100`: the rule judges each `noqa` against *currently
+  enabled* rules, so narrowing the selection reports 10+ sites instead of 4 and
+  would delete legitimate suppressions.
 
 - `ISC004` (45) — apply `--unsafe-fixes`, then review each hunk; these are
   implicit concatenations inside collection literals, where a missing comma and
@@ -208,9 +223,11 @@ and confirm both the 95% coverage gate and the 90% interrogate gate still pass.
 
 The majors, each with a probed blast radius.
 
-- fastmcp `>=3.0.2` → `>=4.0.1`. Change `server.py:45` to
-  `from fastmcp.utilities.tasks import TaskConfig`. Gate on the server,
-  middleware, and guardrail test suites.
+- fastmcp — **shipped ahead of this plan as hotfix PR #209.** The `>=3.0.2` floor
+  resolved to 4.0.1 on every unlocked install, so `main` was already broken for
+  consumers (Docker image, `.mcpb` bundle, `uvx`/`pip`) while `uv.lock`'s pin to
+  3.4.2 kept CI's `test` job green. `uv.lock` protects contributors, not
+  consumers.
 - sqlglot `==29.0.1` → `==30.17.0`, retaining the exact-pin policy. Supersedes
   PR #201. The SQL analyzer tests are the behavioural gate.
 - tree-sitter `>=0.25.2` → `>=0.26.0`; pydantic, networkx, and radon to current.

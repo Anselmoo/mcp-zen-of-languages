@@ -238,10 +238,19 @@ In `[dependency-groups] dev`:
 ```toml
     "poethepoet>=0.46.0",       # was >=0.33.1
     "playwright>=1.60.0",       # was >=1.54.0
-    "ruff>=0.15.18",            # was >=0.14.14 — PR-2 raises this to 0.16.5
+    "ruff>=0.16.5",             # was >=0.14.14 — must match the pre-commit rev, see Task 3
     "ty>=0.0.51",               # was >=0.0.16 — PR-2 raises this to 0.0.77
     "repo-release-tools>=1.9.0",# was >=1.8.1
 ```
+
+**The ruff floor must equal the pre-commit rev Task 3 sets.** CI's `lint` job runs
+`uv run ruff check` (the *locked* ruff) **and** `uvx pre-commit run --all-files`
+(the *pinned rev*). Leaving the lock behind the rev makes the two disagree —
+which is the same three-way drift PR-1 exists to eliminate. Task 3's `RUF100`
+fix is the concrete case: ruff 0.16 narrowed `BLE001` so it no longer fires when
+the caught exception is logged, so 0.16.5 calls those four `# noqa: BLE001`
+unused while 0.15.18 still requires them. Mutually exclusive; only matching
+versions resolves it.
 
 Leave `mkdocs-minify-plugin`, `cairosvg`, `jinja2`, `pytest`, `pytest-asyncio`, `pytest-cov`, `interrogate` unchanged — their floors already match the locked versions.
 
@@ -418,7 +427,7 @@ The tier that touches source code. Branch from `main` after PR-1 merges.
 uv run poe branch_chore
 ```
 
-Name it `deps-tooling`. Then in `pyproject.toml` `[dependency-groups] dev`, set `"ruff>=0.16.5"` and `"ty>=0.0.77"`, and run:
+Name it `deps-tooling`. Then in `pyproject.toml` `[dependency-groups] dev`, set `"ty>=0.0.77"` (the ruff floor already reached 0.16.5 in PR-1 Task 2), and run:
 
 ```bash
 uv lock -U && uv sync --all-groups --all-extras

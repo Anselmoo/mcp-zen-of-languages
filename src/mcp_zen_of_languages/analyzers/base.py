@@ -1027,7 +1027,7 @@ class BaseAnalyzer(ABC):
                 result = attach_dogma_analysis(
                     result.model_copy(update={"dogma_analysis": None})
                 )
-            except Exception as exc:  # noqa: BLE001
+            except Exception as exc:
                 logger.debug(
                     "RulesAdapter integration failed; continuing", exc_info=exc
                 )

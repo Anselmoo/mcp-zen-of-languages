@@ -369,20 +369,26 @@ git commit -m "chore: bump pre-commit revs to ruff 0.16.5 and rrt 1.17.1"
 - Consumes: Tasks 1-3
 - Produces: merged `chore/deps-align` branch that PR-2 builds on
 
-- [ ] **Step 1: Upgrade the lock**
+- [ ] **Step 1: Verify the lock is already consistent**
 
 ```bash
-uv lock -U
+uv lock --check
 uv sync --all-groups --all-extras
 ```
 
-- [ ] **Step 2: Review what moved**
+Expected: `--check` exits 0. Tasks 2 and 3 already re-locked; nothing further is needed.
+
+**Do not run `uv lock -U` here.** `-U` upgrades every package to the newest version its *constraint* allows, and PR-1 deliberately leaves those constraints as `>=`. Measured on this tree, `-U` moves **67 packages**, including `fastmcp 3.4.2 → 4.0.1` and `tree-sitter 0.25.2 → 0.26.0` (PR-3's work) and `ty 0.0.51 → 0.0.77` (PR-2's). It would collapse all three tiers into PR-1.
+
+`[tool.rrt] lock_command = ["uv", "lock", "-U"]` is the **release** lock command — correct when cutting a release, wrong for a tiered dependency PR where each tier must move only its own packages. Later tiers upgrade by raising a specific floor and running plain `uv lock`, which moves that package and its transitive requirements only.
+
+- [ ] **Step 2: Confirm no tier-crossing moves are staged**
 
 ```bash
-git diff --stat uv.lock
+git diff uv.lock | grep -E '^[+-]version = ' | sort | uniq -c
 ```
 
-Any package jumping a major version here is unexpected in PR-1 — the runtime majors belong in PR-3. If `fastmcp` moves to 4.x or `sqlglot` moves to 30.x, stop and check that the floors from Task 2 were applied as written.
+Expected: only `ruff` 0.15.18 → 0.16.5 from Task 3. If `fastmcp`, `sqlglot`, `tree-sitter`, or `ty` appear, a `-U` ran somewhere — reset `uv.lock` and re-run plain `uv lock`.
 
 - [ ] **Step 3: Full verification**
 

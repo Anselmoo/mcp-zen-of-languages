@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Detectors for YAML file quality, enforcing indentation, key conventions, and structural consistency."""
 
 from __future__ import annotations

@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Detectors for TOML file quality, enforcing table structure, key conventions, and value formatting."""
 
 from __future__ import annotations

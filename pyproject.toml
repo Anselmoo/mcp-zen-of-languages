@@ -92,8 +92,6 @@ extend-ignore = [
     "COM812",  # missing-trailing-comma (formatter handles)
     "E501",    # line-too-long (formatter handles)
     "PLC0415", #  top-level of a file
-    # Temporary — newly stabilised in ruff 0.16, handled in PR-2 (chore/deps-tooling).
-    "CPY001",  # missing-copyright-notice (446) — flake8-copyright config pending
 ]
 
 [tool.ruff.lint.per-file-ignores]
@@ -113,6 +111,12 @@ combine-as-imports = false
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+[tool.ruff.lint.flake8-copyright]
+# Headers are required only on substantial modules; the repo-level MIT LICENSE
+# covers the rest. 16384 bytes leaves 43 files in scope (446 at the default 0).
+author = "Anselm Hahn"
+min-file-size = 16384
 
 [tool.ruff.lint.pyflakes]
 allowed-unused-imports = []

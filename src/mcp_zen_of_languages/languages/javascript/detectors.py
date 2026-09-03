@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Rule detectors for JavaScript code quality and idiomatic best-practice checks.
 
 Each detector in this module targets a specific JavaScript anti-pattern —

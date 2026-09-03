@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Rule detectors for PowerShell code quality and automation best-practice checks.
 
 Each detector in this module targets a specific PowerShell anti-pattern — from

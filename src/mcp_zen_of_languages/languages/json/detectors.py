@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Detectors for JSON/JSON5 structural and semantic quality checks."""
 
 from __future__ import annotations

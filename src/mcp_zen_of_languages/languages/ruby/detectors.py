@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Zen-rule detectors for Ruby code quality, naming, and architecture checks.
 
 Each detector implements the Strategy pattern as a ``ViolationDetector``

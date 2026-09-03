@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Canonical Pydantic models that define the shape of every zen principle.
 
 This module is the single source of truth for the ``ZenPrinciple`` /

@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Pydantic models that bind zen rules to detector classes and their configs.
 
 These models form the declarative bridge between the canonical rule

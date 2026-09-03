@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Detectors for Ansible playbook, role, and task zen principles."""
 
 from __future__ import annotations

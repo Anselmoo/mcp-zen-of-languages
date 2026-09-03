@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Shared data-model layer for every analyser, detector, and MCP tool.
 
 Every struct that crosses a boundary — between an analyser and the MCP

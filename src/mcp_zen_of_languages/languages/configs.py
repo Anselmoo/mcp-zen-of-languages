@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Pydantic configuration models for violation detectors across all supported languages.
 
 Each model inherits from ``DetectorConfig`` and adds fields specific to a

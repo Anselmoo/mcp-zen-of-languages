@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Bump the project version, update uv.lock, and create a release branch.
 
 Usage::

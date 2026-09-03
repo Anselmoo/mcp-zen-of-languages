@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """MCP server exposing zen-of-languages analysis tools over the Model Context Protocol.
 
 This module is the public surface of the zen analysis server.  Every function

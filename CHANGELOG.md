@@ -1,4 +1,15 @@
 ## [Unreleased]
+
+### Fixed
+
+- **The Docker publish never produced a full-version tag**, so the MCP registry
+  publish failed with `400 "OCI image ...:0.9.1 does not exist in the registry"`
+  while the Docker job itself reported success. `docker/metadata-action` was
+  configured with `{{major}}.{{minor}}` and `latest` only, producing `:0.9` and
+  `:latest`, but `server.json` pins the OCI package to the full version. Added
+  `type=semver,pattern={{version}}`. Latent in every prior release — ghcr holds
+  `0.1` through `0.9` and no patch-level tag — and only surfaced on the first
+  release where the two differ.
 ### Fixed
 - fastmcp 4 server startup: `task=`-enabled tools now require an explicitly registered tasks extension, which fastmcp 3 wired implicitly. `mcp.add_extension(TasksExtension())` is registered on the server, fixing the `docker-image-check` failure `Task-enabled tools (...) require the tasks extension, but no extension with identifier 'io.modelcontextprotocol/tasks' is registered`
 

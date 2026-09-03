@@ -332,6 +332,23 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}
           tags: |
+            # {{version}} is load-bearing, not redundant with {{major}}.{{minor}}:
+            # server.json pins the OCI package to the FULL version
+            # (ghcr.io/anselmoo/mcp-zen-of-languages:0.9.1), and the MCP registry
+            # validates that exact reference exists before it will publish.
+            #
+            # MEASURED 2026-09-03 on tag v0.9.1 (Actions run 33720718151): only
+            # {{major}}.{{minor}} was configured, so the push produced :0.9 and
+            # :latest and never :0.9.1. "Publish Docker image" reported SUCCESS,
+            # and the next job failed with
+            #   400 "OCI image 'ghcr.io/anselmoo/mcp-zen-of-languages:0.9.1'
+            #        does not exist in the registry"
+            # -- after PyPI had already published irreversibly.
+            #
+            # This was latent in every prior release: ghcr holds 0.1 .. 0.9 and no
+            # patch-level tag at all. It only surfaced on the first release where
+            # {{major}}.{{minor}} diverges from the real version.
+            type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=raw,value=latest
 

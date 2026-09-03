@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 from __future__ import annotations
 
 from mcp_zen_of_languages.analyzers.base import AnalysisContext

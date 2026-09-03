@@ -77,7 +77,7 @@ dev = [
     "pytest-cov>=7.0.0",
     "interrogate[png]>=1.7.0",
     "ruff>=0.16.5",
-    "ty>=0.0.51",
+    "ty>=0.0.77",
     "repo-release-tools>=1.9.0",
 ]
 

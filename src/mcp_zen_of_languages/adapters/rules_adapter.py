@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Legacy bridge that adapts canonical zen principles into flat Violation models.
 
 The ``RulesAdapter`` implements the Adapter pattern: it translates the rich

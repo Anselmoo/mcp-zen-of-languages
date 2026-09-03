@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Rule detectors for Bash/shell code quality and robustness checks.
 
 Each detector in this module targets a specific shell scripting anti-pattern —

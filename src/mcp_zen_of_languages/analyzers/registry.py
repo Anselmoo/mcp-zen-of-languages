@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Global detector registry — the single source of truth for available detectors.
 
 Every detector in the system is represented by a [`DetectorMetadata`][DetectorMetadata]

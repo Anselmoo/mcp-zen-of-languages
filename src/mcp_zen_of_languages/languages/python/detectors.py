@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Python-specific violation detectors implementing the Strategy pattern.
 
 Each detector class encapsulates a single zen-principle check against Python

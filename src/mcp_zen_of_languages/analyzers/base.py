@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Analyzer architecture built on Template Method and Strategy patterns.
 
 This module is the architectural backbone of the zen analysis engine. It

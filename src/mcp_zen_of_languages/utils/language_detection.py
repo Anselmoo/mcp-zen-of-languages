@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Resolve source-file language before analysis so the correct analyzer is dispatched.
 
 Two strategies are available: extension-based lookup (high confidence, fast)

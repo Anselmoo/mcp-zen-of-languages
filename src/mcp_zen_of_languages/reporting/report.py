@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Report generation orchestrator that drives the full analysis-to-Markdown pipeline.
 
 ``generate_report`` is the primary entry point.  It accepts a filesystem path

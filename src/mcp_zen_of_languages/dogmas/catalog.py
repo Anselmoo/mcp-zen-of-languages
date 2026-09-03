@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Explicit universal dogma assignments for every rule id in the repository."""
 
 from __future__ import annotations

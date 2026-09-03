@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Generic pattern-matching detector for rules that rely on text-scanning heuristics.
 
 This module provides [`RulePatternDetector`][RulePatternDetector], a multi-strategy detector that

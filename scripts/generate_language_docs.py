@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Generate docs/user-guide/languages/*.md and frameworks/*.md from rules + DETECTOR_MAP.
 
 Run::

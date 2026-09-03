@@ -1,4 +1,15 @@
 ## [Unreleased]
+### Fixed
+- `ZenPrinciple.source_url`: seven per-principle documentation deep links in `languages/javascript/rules.py` were silently discarded by Pydantic because `ZenPrinciple` never declared the field, while `LanguageZenPrinciples` did. All seven now survive model construction, and every language gains the ability to cite per-principle guidance
+- `server.py` now passes `Icon` and `ToolAnnotations` their declared field names (`mime_type`, `read_only_hint`, …) instead of the camelCase wire aliases; `model_dump(by_alias=True)` output is unchanged
+
+### Changed
+- ruff findings from the 0.16 stabilised rules resolved: `ISC004` (45 sites parenthesised), `PLR0917` (13 `# noqa: PLR0913` directives extended), `CPY001` (see below)
+- `[tool.ruff.lint.flake8-copyright]` configured with `min-file-size = 16384`, requiring a copyright header on the 43 most substantial modules rather than all 446 files
+- `ty` upgraded `0.0.51` → `0.0.78`
+
+### Added
+- Regression tests for two defensive `except Exception` recovery paths in `adapters/rules_adapter.py` and `analyzers/base.py`, both asserted via their log output rather than by coverage line numbers
 
 ### Fixed
 

@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """MCP server exposing zen-of-languages analysis tools over the Model Context Protocol.
 
 This module is the public surface of the zen analysis server.  Every function
@@ -95,25 +96,25 @@ if TYPE_CHECKING:
 SERVER_ICONS = [
     Icon(
         src="https://anselmoo.github.io/mcp-zen-of-languages/assets/icons/zen-icon.svg",
-        mimeType="image/svg+xml",
+        mime_type="image/svg+xml",
     ),
 ]
 ANALYSIS_TOOL_ICONS = [
     Icon(
         src="https://anselmoo.github.io/mcp-zen-of-languages/assets/icons/tool-analysis.svg",
-        mimeType="image/svg+xml",
+        mime_type="image/svg+xml",
     ),
 ]
 PROMPT_TOOL_ICONS = [
     Icon(
         src="https://anselmoo.github.io/mcp-zen-of-languages/assets/icons/tool-prompts.svg",
-        mimeType="image/svg+xml",
+        mime_type="image/svg+xml",
     ),
 ]
 ONBOARDING_TOOL_ICONS = [
     Icon(
         src="https://anselmoo.github.io/mcp-zen-of-languages/assets/icons/tool-onboarding.svg",
-        mimeType="image/svg+xml",
+        mime_type="image/svg+xml",
     ),
 ]
 
@@ -131,13 +132,13 @@ def main() -> None:
 RESOURCE_ICONS = [
     Icon(
         src="https://anselmoo.github.io/mcp-zen-of-languages/assets/icons/resource.svg",
-        mimeType="image/svg+xml",
+        mime_type="image/svg+xml",
     ),
 ]
 PROMPT_RESOURCE_ICONS = [
     Icon(
         src="https://anselmoo.github.io/mcp-zen-of-languages/assets/icons/prompt.svg",
-        mimeType="image/svg+xml",
+        mime_type="image/svg+xml",
     ),
 ]
 _CACHE_BACKEND = create_cache_backend()
@@ -179,14 +180,14 @@ async def _await_if_needed(result: object) -> None:
 
 
 READONLY_ANNOTATIONS = ToolAnnotations(
-    readOnlyHint=True,
-    idempotentHint=True,
-    destructiveHint=False,
+    read_only_hint=True,
+    idempotent_hint=True,
+    destructive_hint=False,
 )
 MUTATING_ANNOTATIONS = ToolAnnotations(
-    readOnlyHint=False,
-    idempotentHint=False,
-    destructiveHint=True,
+    read_only_hint=False,
+    idempotent_hint=False,
+    destructive_hint=True,
 )
 BACKGROUND_TASK = TaskConfig(mode="optional", poll_interval=timedelta(seconds=5))
 ANALYZE_ZEN_VIOLATIONS_VERSION = "1.0"
@@ -1745,7 +1746,7 @@ async def get_config() -> ConfigStatus:
     annotations=MUTATING_ANNOTATIONS,
     output_schema=_output_schema(ConfigStatus),
 )
-async def set_config_override(  # noqa: PLR0913
+async def set_config_override(  # noqa: PLR0913, PLR0917
     language: str,
     max_cyclomatic_complexity: int | None = None,
     max_nesting_depth: int | None = None,

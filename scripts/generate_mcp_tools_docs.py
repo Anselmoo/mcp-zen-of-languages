@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Generate docs/user-guide/mcp-tools-reference.md from the live MCP server.
 
 Run::

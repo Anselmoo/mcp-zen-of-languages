@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Canonical Pydantic models that define the shape of every zen principle.
 
 This module is the single source of truth for the ``ZenPrinciple`` /
@@ -151,6 +152,9 @@ class ZenPrinciple(BaseModel):
             the violating pattern.
         required_config: Tool or linter settings that must be active for the
             principle to be enforceable.
+        source_url: URL to the upstream guidance for this specific principle,
+            taking precedence over the language-level
+            ``LanguageZenPrinciples.source_url`` when present.
 
     See Also:
         ``LanguageZenPrinciples`` — the per-language collection that holds
@@ -194,6 +198,10 @@ class ZenPrinciple(BaseModel):
     required_config: dict[str, Any] | None = Field(
         default=None,
         description="Required configuration settings",
+    )
+    source_url: HttpUrl | None = Field(
+        default=None,
+        description="URL to the upstream guidance for this specific principle",
     )
 
     model_config = ConfigDict(use_enum_values=True)

@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Generate dogma↔language-rule reverse-mapping docs.
 
 Run::
@@ -88,10 +89,12 @@ _DOGMA_ANCHORS: dict[UniversalDogmaID, str] = {
 _DOGMA_DETAIL: dict[UniversalDogmaID, tuple[str, str, list[str]]] = {
     UniversalDogmaID.UTILIZE_ARGUMENTS: (
         "Every argument must be used or removed.",
-        "Unused parameters signal dead intent. They mislead readers about a "
-        "function's contract and accumulate as noise during refactors. In AI-assisted "
-        "workflows, an agent generating a function signature should never leave behind "
-        "vestigial parameters.",
+        (
+            "Unused parameters signal dead intent. They mislead readers about a "
+            "function's contract and accumulate as noise during refactors. In AI-assisted "
+            "workflows, an agent generating a function signature should never leave behind "
+            "vestigial parameters."
+        ),
         [
             "Accepting a parameter that is never referenced in the body.",
             "Keeping deprecated arguments for compatibility without a migration path.",
@@ -100,9 +103,11 @@ _DOGMA_DETAIL: dict[UniversalDogmaID, tuple[str, str, list[str]]] = {
     ),
     UniversalDogmaID.EXPLICIT_INTENT: (
         "Avoid magic behavior and hidden assumptions.",
-        "Implicit behavior — type coercion, default mutations, hidden global state — "
-        "creates cognitive load that compounds across a codebase. When an AI assistant "
-        "reviews code, explicit intent makes violations unambiguous and fixes mechanical.",
+        (
+            "Implicit behavior — type coercion, default mutations, hidden global state — "
+            "creates cognitive load that compounds across a codebase. When an AI assistant "
+            "reviews code, explicit intent makes violations unambiguous and fixes mechanical."
+        ),
         [
             "Relying on mutable default arguments (`def f(x=[])`).",
             "Star-imports that hide the origin of names.",
@@ -112,10 +117,12 @@ _DOGMA_DETAIL: dict[UniversalDogmaID, tuple[str, str, list[str]]] = {
     ),
     UniversalDogmaID.RETURN_EARLY: (
         "Prefer guard clauses over deep nesting.",
-        "Deeply nested code forces readers to maintain a mental stack of conditions. "
-        "Guard clauses flatten the control flow and highlight the happy path. "
-        "Detectors can measure nesting depth mechanically, making this an ideal "
-        "candidate for automated enforcement.",
+        (
+            "Deeply nested code forces readers to maintain a mental stack of conditions. "
+            "Guard clauses flatten the control flow and highlight the happy path. "
+            "Detectors can measure nesting depth mechanically, making this an ideal "
+            "candidate for automated enforcement."
+        ),
         [
             "`if`/`else` chains nested three or more levels deep.",
             "Wrapping entire function bodies in a single top-level `if`.",
@@ -124,10 +131,12 @@ _DOGMA_DETAIL: dict[UniversalDogmaID, tuple[str, str, list[str]]] = {
     ),
     UniversalDogmaID.FAIL_FAST: (
         "Never silently swallow errors.",
-        "Silent failures turn bugs into mysteries. When errors surface immediately, "
-        "root-cause analysis becomes trivial. This is especially critical in MCP "
-        "workflows where an agent may not observe side effects that a human would "
-        "notice in a debugger.",
+        (
+            "Silent failures turn bugs into mysteries. When errors surface immediately, "
+            "root-cause analysis becomes trivial. This is especially critical in MCP "
+            "workflows where an agent may not observe side effects that a human would "
+            "notice in a debugger."
+        ),
         [
             "Bare `except: pass` blocks.",
             "Catching broad exception types without logging or re-raising.",
@@ -137,9 +146,11 @@ _DOGMA_DETAIL: dict[UniversalDogmaID, tuple[str, str, list[str]]] = {
     ),
     UniversalDogmaID.RIGHT_ABSTRACTION: (
         "Avoid flag-heavy abstractions.",
-        "A boolean parameter that toggles behavior is two functions wearing one name. "
-        "Premature or incorrect abstraction is worse than duplication — it couples "
-        "unrelated concerns and makes extension fragile.",
+        (
+            "A boolean parameter that toggles behavior is two functions wearing one name. "
+            "Premature or incorrect abstraction is worse than duplication — it couples "
+            "unrelated concerns and makes extension fragile."
+        ),
         [
             "Functions with boolean `mode` flags that switch between unrelated behaviors.",
             "God Classes with dozens of methods spanning multiple responsibilities.",
@@ -149,9 +160,11 @@ _DOGMA_DETAIL: dict[UniversalDogmaID, tuple[str, str, list[str]]] = {
     ),
     UniversalDogmaID.UNAMBIGUOUS_NAME: (
         "Clarity over clever shorthand.",
-        "Names are the primary API for understanding code. Ambiguous or overly short "
-        "identifiers force readers to trace definitions. For AI assistants consuming "
-        "code via MCP, clear names reduce hallucination risk.",
+        (
+            "Names are the primary API for understanding code. Ambiguous or overly short "
+            "identifiers force readers to trace definitions. For AI assistants consuming "
+            "code via MCP, clear names reduce hallucination risk."
+        ),
         [
             "Single-letter variable names outside trivial loop counters.",
             "Abbreviations that save keystrokes but cost comprehension (`mgr`, `ctx`, `impl`).",
@@ -161,9 +174,11 @@ _DOGMA_DETAIL: dict[UniversalDogmaID, tuple[str, str, list[str]]] = {
     ),
     UniversalDogmaID.VISIBLE_STATE: (
         "Make mutation explicit and predictable.",
-        "Hidden mutation — global state changes, in-place modifications without clear "
-        "signals — is the leading cause of 'works on my machine' bugs. Visible state "
-        "makes data flow traceable and diffs reviewable.",
+        (
+            "Hidden mutation — global state changes, in-place modifications without clear "
+            "signals — is the leading cause of 'works on my machine' bugs. Visible state "
+            "makes data flow traceable and diffs reviewable."
+        ),
         [
             "Mutating function arguments in place without documenting it.",
             "Global mutable singletons accessed from multiple modules.",
@@ -173,9 +188,11 @@ _DOGMA_DETAIL: dict[UniversalDogmaID, tuple[str, str, list[str]]] = {
     ),
     UniversalDogmaID.STRICT_FENCES: (
         "Preserve encapsulation boundaries.",
-        "Module and class boundaries exist to manage complexity. Breaking "
-        "encapsulation — accessing private members, circular imports, leaking internal "
-        "types — turns architecture diagrams into lies.",
+        (
+            "Module and class boundaries exist to manage complexity. Breaking "
+            "encapsulation — accessing private members, circular imports, leaking internal "
+            "types — turns architecture diagrams into lies."
+        ),
         [
             "Accessing private/protected members from outside the owning module.",
             "Circular import dependencies between packages.",
@@ -185,9 +202,11 @@ _DOGMA_DETAIL: dict[UniversalDogmaID, tuple[str, str, list[str]]] = {
     ),
     UniversalDogmaID.RUTHLESS_DELETION: (
         "Remove dead and unreachable code.",
-        "Dead code is technical debt with zero value. It misleads readers, inflates "
-        "coverage metrics, and creates phantom dependencies. Version control preserves "
-        "history — there is no reason to keep unused code in the working tree.",
+        (
+            "Dead code is technical debt with zero value. It misleads readers, inflates "
+            "coverage metrics, and creates phantom dependencies. Version control preserves "
+            "history — there is no reason to keep unused code in the working tree."
+        ),
         [
             "Commented-out code blocks left 'just in case.'",
             "Functions or classes that are defined but never called.",
@@ -197,9 +216,11 @@ _DOGMA_DETAIL: dict[UniversalDogmaID, tuple[str, str, list[str]]] = {
     ),
     UniversalDogmaID.PROPORTIONATE_COMPLEXITY: (
         "Choose the simplest design that works.",
-        "Complexity must be justified by requirements, not by speculative generality. "
-        "High cyclomatic complexity, long functions, and over-engineered abstractions "
-        "all increase the cost of every future change.",
+        (
+            "Complexity must be justified by requirements, not by speculative generality. "
+            "High cyclomatic complexity, long functions, and over-engineered abstractions "
+            "all increase the cost of every future change."
+        ),
         [
             "Functions with cyclomatic complexity exceeding a configured threshold.",
             "Functions longer than a screen (configurable, default ~50 lines).",

@@ -43,6 +43,7 @@ from typing import cast
 import fastmcp
 
 from fastmcp.utilities.tasks import TaskConfig
+from fastmcp_tasks import TasksExtension
 from mcp.types import Icon
 from mcp.types import ToolAnnotations
 from pydantic import BaseModel
@@ -154,6 +155,10 @@ mcp = fastmcp.FastMCP(
     lifespan=zen_server_lifespan,
     list_page_size=100,
 )
+# fastmcp 4 validates at lifespan startup that every ``task=``-enabled tool has the
+# tasks extension registered; fastmcp 3 wired it implicitly. Without this the server
+# imports fine and every unit test passes, but stdio startup raises RuntimeError.
+mcp.add_extension(TasksExtension())
 mcp.zen_cache_backend = _CACHE_BACKEND
 
 CONFIG = load_config(path=os.environ.get("ZEN_CONFIG_PATH"))

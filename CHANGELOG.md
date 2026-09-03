@@ -1,4 +1,9 @@
 ## [Unreleased]
+### Fixed
+- fastmcp 4 server startup: `task=`-enabled tools now require an explicitly registered tasks extension, which fastmcp 3 wired implicitly. `mcp.add_extension(TasksExtension())` is registered on the server, fixing the `docker-image-check` failure `Task-enabled tools (...) require the tasks extension, but no extension with identifier 'io.modelcontextprotocol/tasks' is registered`
+
+### Added
+- `tests/server/test_server_lifespan_startup.py` boots the real server lifespan. Nothing in the suite previously started the server, so two consecutive fastmcp 4 breakages (the `TaskConfig` import move and the tasks-extension registration) reached `main` with a green `test` job, leaving `docker-image-check` as the only detector
 
 ## [0.9.1] - 2026-08-30
 ### Fixed

@@ -1,5 +1,25 @@
 ## [Unreleased]
 
+## [0.9.2] - 2026-09-03
+
+Completes the 0.9.1 release. 0.9.1 reached PyPI and cut a GitHub Release, but never
+registered with the MCP registry, and the run reported that failure only in its last
+job — after the wheel had already published irreversibly.
+
+### Fixed
+
+- **The Docker image was never tagged with the full version.** `metadata-action` was
+  configured with `{{major}}.{{minor}}` only, so a release pushed `:0.9` and `:latest`
+  but never `:0.9.1`, while `server.json` pins the OCI package to the full version. The
+  registry answered `400 "OCI image ... does not exist"`. Latent in every prior release —
+  ghcr held `0.1 … 0.9` and no patch tag at all — and it surfaced only on the first
+  release where `{{major}}.{{minor}}` diverged from the real version. (#212)
+- **`server.json`'s version strings were untracked by the release config**, so a bump
+  updated `pyproject.toml` and `__init__.py` and left `server.json` behind while the
+  release check still reported all-green. All three occurrences — the top-level field,
+  `packages[0]`, and the `:X.Y.Z` suffix of the OCI identifier — are now pin targets, so
+  they move with every bump.
+
 ### Fixed
 
 - **The Docker publish never produced a full-version tag**, so the MCP registry

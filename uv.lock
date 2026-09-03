@@ -1052,7 +1052,7 @@ wheels = [
 
 [[package]]
 name = "mcp-zen-of-languages"
-version = "0.9.1"
+version = "0.9.2"
 source = { editable = "." }
 dependencies = [
     { name = "fastmcp", extra = ["apps", "code-mode", "tasks"] },

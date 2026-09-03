@@ -1,6 +1,6 @@
 [project]
 name = "mcp-zen-of-languages"
-version = "0.9.1"
+version = "0.9.2"
 description = "Multi-language architectural and idiomatic code analysis via CLI and MCP server."
 readme = "README.md"
 authors = [{ name = "Anselm Hahn", email = "Anselm.Hahn@gmail.com" }]
@@ -202,6 +202,29 @@ kind = "pep621"
 [[tool.rrt.version_targets]]
 path = "src/mcp_zen_of_languages/__init__.py"
 pattern = '^(\\s*__version__\\s*=\\s*")([^\"]+)(\")'
+
+# server.json carries the version in THREE places and none of them were tracked, so
+# `rrt bump` left it behind and `rrt release check` still reported all-green.
+#
+# MEASURED 2026-09-03: bumping 0.9.1 -> 0.9.2 updated pyproject.toml and
+# __init__.py while server.json stayed at 0.9.1, and release check passed anyway.
+# The MCP registry reads these values, so a release would have published metadata
+# naming a version that does not match the wheel.
+#
+# Two entries, because they need different mechanisms:
+#   * the two `"version": "..."` fields (top level and packages[0]) need a PIN
+#     target -- replace_pin_in_file substitutes every occurrence, while two
+#     version_targets on one path would silently lose one write.
+#   * the OCI identifier carries the version as a `:0.9.2` SUFFIX, which the
+#     `"version"` pattern cannot reach. Its own pin target, anchored on the image
+#     path so it cannot drift onto the pypi identifier beside it.
+[[tool.rrt.pin_targets]]
+path = "server.json"
+pattern = '("version": ")([^"]+)(")'
+
+[[tool.rrt.pin_targets]]
+path = "server.json"
+pattern = '("identifier": "ghcr\.io/anselmoo/mcp-zen-of-languages:)([^"]+)(")'
 
 
 [tool.pytest.ini_options]

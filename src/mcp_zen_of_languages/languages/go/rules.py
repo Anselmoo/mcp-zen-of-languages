@@ -258,8 +258,10 @@ GO_ZEN = LanguageZenPrinciples(
             violations=[
                 "Unsafe pointer tricks without benchmark justification",
                 "Manual memory pooling where sync.Pool is not warranted",
-                "Replacing readable code with micro-optimizations "
-                "lacking profiling data",
+                (
+                    "Replacing readable code with micro-optimizations "
+                    "lacking profiling data"
+                ),
             ],
         ),
         ZenPrinciple(

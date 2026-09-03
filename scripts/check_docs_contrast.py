@@ -342,7 +342,7 @@ JS_AUDIT_SNIPPET = """
 """
 
 
-def run_audit(  # noqa: PLR0913
+def run_audit(  # noqa: PLR0913, PLR0917
     base_url: str,
     pages: list[str],
     schemes: list[str],

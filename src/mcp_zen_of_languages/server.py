@@ -1745,7 +1745,7 @@ async def get_config() -> ConfigStatus:
     annotations=MUTATING_ANNOTATIONS,
     output_schema=_output_schema(ConfigStatus),
 )
-async def set_config_override(  # noqa: PLR0913
+async def set_config_override(  # noqa: PLR0913, PLR0917
     language: str,
     max_cyclomatic_complexity: int | None = None,
     max_nesting_depth: int | None = None,

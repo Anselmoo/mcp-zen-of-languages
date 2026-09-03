@@ -1789,7 +1789,7 @@ def _run_export_mapping(args: ExportMappingArgs) -> int:  # noqa: C901, PLR0912
 
 
 @app.command("reports", rich_help_panel="Analysis")
-def reports(  # noqa: PLR0913
+def reports(  # noqa: PLR0913, PLR0917
     path: str = typer.Argument(..., help="File or directory to analyze"),
     language: str | None = typer.Option(None, help="Override language detection"),
     config: str | None = typer.Option(None, help="Path to zen-config.yaml"),
@@ -1862,7 +1862,7 @@ app.command("report", hidden=True, rich_help_panel="Analysis")(reports)
 
 
 @app.command("check", rich_help_panel="Analysis")
-def check(  # noqa: PLR0913
+def check(  # noqa: PLR0913, PLR0917
     path: str = typer.Argument(..., help="File or directory to analyze"),
     language: str | None = typer.Option(None, help="Override language detection"),
     config: str | None = typer.Option(None, help="Path to zen-config.yaml"),
@@ -1930,7 +1930,7 @@ def check(  # noqa: PLR0913
 
 
 @app.command("prompts", rich_help_panel="Analysis")
-def prompts(  # noqa: PLR0913
+def prompts(  # noqa: PLR0913, PLR0917
     path: str = typer.Argument(..., help="File or directory to analyze"),
     language: str | None = typer.Option(None, help="Override language detection"),
     config: str | None = typer.Option(None, help="Path to zen-config.yaml"),

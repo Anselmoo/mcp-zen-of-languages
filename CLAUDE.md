@@ -38,6 +38,13 @@ uv run ty check --error-on-warning  # strict type checking (ty, not mypy)
 uvx pre-commit run --all-files      # run all pre-commit hooks
 ```
 
+> **Ruff 0.16 formats Markdown.** `ruff format` with no path argument reformats
+> Python inside fenced code blocks in `.md` files, not just `.py` sources. The
+> pre-commit hook is deliberately gated `types_or: ["python", "pyi"]` and does
+> **not** do this, so a bare `uv run ruff format` and `pre-commit run ruff-format`
+> produce different results. Prefer the hook. If you run `ruff format` directly,
+> check `git status` for unintended `.md` changes before staging.
+
 Ruff is configured with `select = ["ALL"]` — all rules enabled, only a handful
 explicitly suppressed (see `[tool.ruff.lint.extend-ignore]` in `pyproject.toml`).
 `scripts/**` have relaxed rules (`D`, `T201`, `INP001`, `S`, `ANN` ignored).

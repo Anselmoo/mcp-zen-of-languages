@@ -1,7 +1,7 @@
 ---
 description: Prompt generator agent for remediation guidance and instructions.
 name: prompt-generator
-tools: ['execute/getTerminalOutput', 'execute/awaitTerminal', 'execute/killTerminal', 'execute/runInTerminal', 'read', 'agent', 'edit', 'search', 'web', 'mcp-zen-of-languages/*', 'github/search_repositories', 'ai-agent-guidelines/domain-neutral-prompt-builder', 'serena/*', 'todo']
+tools: ['execute/getTerminalOutput', 'execute/awaitTerminal', 'execute/killTerminal', 'execute/runInTerminal', 'read', 'agent', 'edit', 'search', 'web', 'mcp-zen-of-languages/*', 'github/search_repositories', 'ai-agent-guidelines/domain-neutral-prompt-builder', 'todo']
 model: Claude Sonnet 4
 handoffs:
   - label: Analyze Prompts

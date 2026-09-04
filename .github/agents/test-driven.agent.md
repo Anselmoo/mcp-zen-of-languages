@@ -12,7 +12,6 @@ tools:
     "ai-agent-guidelines/*",
     "context7/*",
     "sequentialthinking/*",
-    "serena/*",
     "github/search_code",
     "github/search_issues",
     "github/search_repositories",

@@ -10,7 +10,6 @@ tools:
     "web",
     "mcp-zen-of-languages/*",
     "context7/*",
-    "serena/*",
     "github/search_code",
     "github/search_repositories",
     "task_complete",

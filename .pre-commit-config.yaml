@@ -11,7 +11,7 @@ repos:
         args: ["--unsafe"]
       - id: check-added-large-files
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.16.5
+    rev: v0.16.6
     hooks:
       - id: ruff-check
         types_or: ["python", "pyi"]
@@ -43,6 +43,12 @@ repos:
         stages: [manual]
   - repo: local
     hooks:
+      - id: check-tool-version-agreement
+        name: Check multi-pinned tool versions agree
+        entry: uv run python scripts/check_tool_version_agreement.py
+        language: system
+        pass_filenames: false
+        always_run: true
       - id: check-language-structure
         name: Check language folder structure
         entry: uv run python scripts/check_language_structure.py

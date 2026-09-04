@@ -402,7 +402,7 @@ class RulesAdapter:
                         normalized_cycles.append([str(x) for x in seq])
                     else:
                         normalized_cycles.append([str(seq)])
-                except Exception as exc:  # noqa: BLE001
+                except Exception as exc:
                     logger.debug(
                         "Failed to normalize dependency cycle entry: %r",
                         c,
@@ -467,7 +467,7 @@ class RulesAdapter:
                     for node, deps in deps_map.items()
                     if len(deps) > max_allowed
                 )
-            except Exception as exc:  # noqa: BLE001
+            except Exception as exc:
                 logger.debug("Failed to evaluate max_dependencies metric", exc_info=exc)
 
         return violations
@@ -509,7 +509,7 @@ class RulesAdapter:
                             message=f"Detected anti-pattern matching: '{cre.pattern}'",
                         ),
                     )
-            except Exception as exc:  # noqa: BLE001
+            except Exception as exc:
                 logger.debug(
                     "Pattern evaluation failed for %s",
                     cre.pattern,

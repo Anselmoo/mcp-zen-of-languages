@@ -9,7 +9,7 @@ from mcp_zen_of_languages.rules.base_models import PrincipleCategory
 from mcp_zen_of_languages.rules.base_models import ZenPrinciple
 
 
-def _principle(  # noqa: PLR0913
+def _principle(  # noqa: PLR0913, PLR0917
     rule_id: str,
     principle: str,
     category: PrincipleCategory,

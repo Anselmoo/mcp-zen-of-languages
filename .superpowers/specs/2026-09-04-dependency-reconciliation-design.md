@@ -2,7 +2,46 @@
 
 **Date:** 2026-09-04
 **Branch:** `claude/dependency-update-plan-e7326c`
-**Status:** approved, pending implementation plan
+**Status:** implemented — see Outcome below
+
+## Outcome
+
+Eight commits shipped on this branch (`b116149..c745801`): the rrt hook bump and Serena
+schema migration, the `ruff` bump to `0.16.6` on both axes plus its rule-surface absorption
+(`CPY001` suppression, `ISC004` fixes, `PLR0917`/`RUF100` cleanup), the `CLAUDE.md`
+Markdown-formatting note, and the `zensical` bump to `0.0.59`. All of these landed as
+planned.
+
+**`ty` did not move.** It was held at `0.0.51`; the planned `0.0.78` bump (Commit 3 below)
+was attempted and dropped at its designed drop point (Task 6, Step 3 of the implementation
+plan). `pyproject.toml` still reads `"ty>=0.0.16"` and `uv.lock` still resolves `ty` at
+`0.0.51`.
+
+The gate command was `uv run ty check --error-on-warning` with `ty` temporarily bumped to
+`0.0.78`. It reported 9 diagnostics (exit code 1):
+
+- 7 new `warning[pydantic-discarded-extra-argument]` findings, all in
+  `src/mcp_zen_of_languages/languages/javascript/rules.py` (lines 169, 185, 203, 219, 237,
+  253, 272) — `ty` 0.0.78 gained the ability to detect that a `ZenPrinciple(...)` call's
+  `source_url=...` keyword argument is silently discarded by Pydantic, because `ZenPrinciple`
+  does not declare that field (it belongs to `LanguageZenPrinciples`). `ty` 0.0.51 did not
+  catch this.
+- 2 pre-existing `error[missing-argument]` findings in
+  `tests/registry/test_registry_bootstrap_coverage.py` (lines 13-14) — a required `type`
+  parameter that `ty` 0.0.78 now flags more strictly for a factory-defaulted call pattern.
+
+Per this spec's explicit rule (see "Commit 3" below and Task 6, Step 3 of the implementation
+plan), `[tool.ty.rules]`'s seven baseline suppressions were **deliberately not widened** to
+force the bump through — that trade was rejected as unacceptable inside a dependency PR.
+The `ty` change was reverted with `git checkout -- pyproject.toml uv.lock`, confirmed back
+to `ty 0.0.51`, and left no trace in the shipped commits.
+
+Both diagnostics categories are pre-existing code issues, unrelated to this branch's other
+changes, that only became visible because `ty` 0.0.78 checks more strictly. Neither is fixed
+here — fixing the Pydantic one is a behaviour change to shipped data needing a human call on
+whether the discarded `source_url` values should be persisted or dropped; fixing the test one
+is unrelated to dependency reconciliation. **The `ty` `0.0.51` -> `0.0.78` bump remains open
+work**, blocked on resolving both findings first.
 
 ## Problem
 
@@ -25,6 +64,25 @@ The repository pins tool versions in two unrelated places, and CI runs both:
 `.github/workflows/cicd.yml:66` runs `uvx pre-commit run --all-files` (Axis A's binary).
 Two different Ruff versions therefore lint the same 446 files / ~85k lines today. Bumping
 one axis without the other widens this gap.
+
+This branch closes the Axis A/B gap **for `ruff` only**. `repo-release-tools` (rrt) turns
+out to have the same two-axis structure, pinned in three places at three different
+versions, only one of which this plan touches:
+
+- `.pre-commit-config.yaml:23` — `rev: v1.16.0` (this branch bumps to `v1.17.1`)
+- `.github/workflows/cicd.yml:88` — `uses: Anselmoo/repo-release-tools@v1.8.1` (untouched
+  by this branch; CI's `rrt-checks` job runs `check-branch-name` / `check-commit-subject`
+  at this pinned Action version)
+- `uv.lock` / `pyproject.toml` `[dependency-groups] dev` — floor `>=1.8.1`, resolving to
+  `repo-release-tools 1.9.0` (untouched by this branch; this is what `uv run poe branch_*`
+  and `uv run poe bump_*` invoke locally)
+
+So after this branch merges, the local pre-commit hook validates branch names and commit
+subjects at rrt v1.17.1 while the CI Action that gates the same checks in `rrt-checks` still
+runs v1.8.1 — structurally the same defect this plan exists to close, just for a different
+tool. This gap is **pre-existing** (not introduced by this branch) and **knowingly out of
+scope** here: closing it means deciding whether to bump the CI Action pin, the `uv.lock`
+floor, or both, which is a separate, unmeasured change or PR.
 
 ### `.serena/project.yml` is a schema, not a dependency
 
@@ -49,7 +107,7 @@ The five configured language servers (python, toml, yaml, markdown, bash) surviv
 | A | `astral-sh/ruff-pre-commit` | `v0.15.15` | `v0.16.6` | new rule surface |
 | A | `Anselmoo/repo-release-tools` | `v1.16.0` | `v1.17.1` | no validator changes |
 | B | `ruff` | `0.15.18` | `0.16.6` | must match Axis A |
-| B | `ty` | `0.0.51` | `0.0.78` | 27 pre-1.0 releases, unmeasured |
+| B | `ty` | `0.0.51` | `0.0.78` attempted, **held at `0.0.51`** | dropped at its designed drop point — see Outcome below |
 | B | `zensical` | `0.0.46` | `0.0.59` | drives strict docs build |
 | B | `interrogate` | `1.7.0` | `1.7.0` | already current, no change |
 
@@ -134,7 +192,7 @@ Risk: none. No source-code effect.
 
 Risk: high. This is the only commit with source-code churn.
 
-### Commit 3 — `build(deps): bump ty to 0.0.78`
+### Commit 3 — `build(deps): bump ty to 0.0.78` (DROPPED — see Outcome above)
 
 - `pyproject.toml`: `ty>=0.0.16` -> `ty>=0.0.78`, then `uv lock`
 
@@ -142,6 +200,10 @@ Unmeasured: `uvx ty@0.0.78` runs outside the project venv and yields only
 import-resolution noise, so the only real probe is moving the lock. If the bump produces
 diagnostics, **drop this commit** rather than widening the seven existing baseline
 suppressions in `[tool.ty.rules]`.
+
+This is what happened: moving the lock surfaced 9 diagnostics under
+`--error-on-warning` (7 new Pydantic warnings, 2 pre-existing test errors — see Outcome
+above for detail), so this commit was dropped and never shipped. `ty` remains at `0.0.51`.
 
 ### Commit 4 — `build(deps): bump zensical to 0.0.59`
 

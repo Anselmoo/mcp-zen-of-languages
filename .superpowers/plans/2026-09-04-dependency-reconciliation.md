@@ -26,6 +26,16 @@
 
 The spec describes four commits. This plan splits its Commit 2 (the Ruff work) into four smaller commits — version bump, `ISC004`, `PLR0917`/`RUF100`, and the `CLAUDE.md` note — because a 45-site source rewrite and a 13-site `noqa` edit deserve separate reviewer gates. Net: **seven commits in four risk groups** (Task 1; Tasks 2-5; Task 6; Task 7). Nothing else changes.
 
+**Actual outcome:** eight commits shipped between `b116149` and `HEAD`, not seven. Two
+commits precede Task 1 in the series and this section did not count them: `d589041` (`docs:
+add dependency reconciliation design spec`) and `b7e56fc` (`chore: add dependency
+reconciliation plan and adopt Serena v1.7 schema` — this plan's own commit, which also
+carried the Serena schema migration that Task 1 Step 4 verifies). Of the seven commits this
+section planned for Tasks 1-7, six shipped (`fa0c54b`, `fe0d450`, `3149f05`, `2f83b6d`,
+`30f394e`, `c745801`); Task 6 (the `ty` bump) was dropped at its designed drop point and
+produced no commit — see the spec's Outcome section and this plan's Task 6 for the
+diagnostics. `2 + 6 = 8` commits total. The risk-group count of four is otherwise unchanged.
+
 ## Two traps found while preparing this plan
 
 **Trap 1 — `ruff check --select X` lies about `RUF100`.** Isolating a rule disables all others, so every `noqa` naming a now-disabled rule reports as unused. `--select RUF100` reports **132** findings; the true count under the project's full `select = ["ALL"]` config is **4**. Always enumerate with the full config and `grep` for the rule, never with `--select`.
@@ -497,9 +507,21 @@ git commit -m "docs: note that ruff format reaches Markdown code blocks in 0.16"
 
 ---
 
-### Task 6: Bump ty — droppable
+### Task 6: Bump ty — droppable — **DROPPED, did not ship**
 
 `ty` moves from `0.0.51` to `0.0.78`: 27 pre-1.0 releases against a `--error-on-warning` gate, with seven baseline suppressions already in `[tool.ty.rules]`. **This was not measurable in advance** — `uvx ty@0.0.78` runs outside the project venv and yields only import-resolution noise, so moving the lock is the only real probe.
+
+**Outcome:** this task was executed through Step 3 and dropped there, exactly as designed.
+Step 2's gate (`uv run ty check --error-on-warning`) reported 9 diagnostics against `ty
+0.0.78` — 7 new `pydantic-discarded-extra-argument` warnings in
+`src/mcp_zen_of_languages/languages/javascript/rules.py` and 2 pre-existing
+`missing-argument` errors in `tests/registry/test_registry_bootstrap_coverage.py` (full
+detail in `.superpowers/sdd/2026-09-04-dependency-reconciliation/task-5-6-7-report.md` and
+the spec's Outcome section). Step 3 fired: `pyproject.toml` and `uv.lock` were reverted with
+`git checkout -- pyproject.toml uv.lock`, `[tool.ty.rules]` was **not** widened, and Step 4
+never ran — there is no commit for this task. `ty` remains at `0.0.51` on this branch. The
+checkboxes below record the planned steps and are left unchecked because Step 4 was never
+reached; this is the intended droppable outcome, not an incomplete task.
 
 **Files:**
 - Modify: `pyproject.toml` — `[dependency-groups] dev`
@@ -669,7 +691,13 @@ Expected: `[project] version` and `__version__` are unchanged. Releases are `rrt
 git log --oneline main..HEAD
 ```
 
-Expected, oldest last: the spec commit, then Tasks 1-5, then whichever of Tasks 6-7 survived their drop points.
+Expected, oldest last: the spec commit (`d589041`), the plan commit — which also carries
+the Serena schema migration Task 1 Step 4 depends on (`b7e56fc`), then Tasks 1-5
+(`fa0c54b`, `fe0d450`, `3149f05`, `2f83b6d`, `30f394e`), then whichever of Tasks 6-7
+survived their drop points (Task 6 was dropped and produced no commit; Task 7 shipped as
+`c745801`). Actual series, oldest last: `d589041`, `b7e56fc`, `fa0c54b`, `fe0d450`,
+`3149f05`, `2f83b6d`, `30f394e`, `c745801` — eight commits, per the "Deviation from the
+spec" section above.
 
 ## Out of scope
 

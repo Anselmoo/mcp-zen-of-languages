@@ -24,9 +24,26 @@ are therefore historical rather than current:
   `source_url: HttpUrl | None` to `ZenPrinciple`, so the 7 silently-discarded values
   described below are resolved. No follow-up issue is needed.
 
-What remains uniquely this branch's contribution after the merge: the Serena v1.7 schema
-migration, the `CLAUDE.md` Markdown-formatting note, `zensical` `0.0.46` -> `0.0.59`, and
-the `ruff` patch bump `v0.16.5` -> `v0.16.6` on both axes.
+## The Serena migration was dropped from this branch
+
+This branch originally carried a Serena v1.7 schema migration for
+`.serena/project.yml` (see Task 1 of the implementation plan). **It is no longer part of
+this branch.** Serena is being removed from the repository entirely — it consumed context
+on every session without being used, and its two `.serena/memories/*.md` files were tracked
+in git, so they loaded as project context for everyone.
+
+The removal is [#219](https://github.com/Anselmoo/mcp-zen-of-languages/pull/219). Migrating
+a file that is about to be deleted served no purpose and would have forced a modify/delete
+conflict between the two PRs, so `.serena/project.yml` was restored to its `main` state
+here. This branch no longer touches it.
+
+References to the Serena migration in the Outcome section below and throughout the
+implementation plan describe what was executed at the time, and are kept as the record.
+
+What remains uniquely this branch's contribution: the tool-version-agreement guard and the
+`repo-release-tools` pin reconciliation it forced, the `CLAUDE.md` Markdown-formatting note,
+`zensical` `0.0.46` -> `0.0.59`, and the `ruff` patch bump `v0.16.5` -> `v0.16.6` on both
+axes.
 
 ## Outcome (as executed, before the merge with `main`)
 

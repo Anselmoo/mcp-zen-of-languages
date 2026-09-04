@@ -43,6 +43,18 @@ section planned for Tasks 1-7, six shipped (`fa0c54b`, `fe0d450`, `3149f05`, `2f
 produced no commit — see the spec's Outcome section and this plan's Task 6 for the
 diagnostics. `2 + 6 = 8` commits total. The risk-group count of four is otherwise unchanged.
 
+## The Serena migration was dropped
+
+Task 1 below carries a Serena v1.7 schema migration for `.serena/project.yml`. **That is no
+longer part of this branch.** Serena is being removed from the repository entirely
+([#219](https://github.com/Anselmoo/mcp-zen-of-languages/pull/219)), so migrating a file
+about to be deleted served no purpose and would have forced a modify/delete conflict
+between the two PRs. `.serena/project.yml` was restored to its `main` state; this branch no
+longer touches it.
+
+Task 1's remaining work — the `repo-release-tools` hook bump — shipped as planned. Its
+Step 4, which verifies the migrated schema, no longer applies.
+
 ## Superseded in part by #214
 
 `main` gained [#214](https://github.com/Anselmoo/mcp-zen-of-languages/pull/214) while this

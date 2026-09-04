@@ -1114,7 +1114,7 @@ dev = [
     { name = "pytest", specifier = ">=9.0.2" },
     { name = "pytest-asyncio", specifier = ">=1.3.0" },
     { name = "pytest-cov", specifier = ">=7.0.0" },
-    { name = "repo-release-tools", specifier = ">=1.9.0" },
+    { name = "repo-release-tools", specifier = ">=1.17.1" },
     { name = "ruff", specifier = ">=0.16.6" },
     { name = "ty", specifier = ">=0.0.77" },
 ]
@@ -1992,11 +1992,11 @@ wheels = [
 
 [[package]]
 name = "repo-release-tools"
-version = "1.9.0"
+version = "1.17.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/60/91/12f9c4395d65c600c962aa3c597c32b2e36282238bf94311f59ad6c78739/repo_release_tools-1.9.0.tar.gz", hash = "sha256:f576ff909f124ef1e7d1f880fa45d4b9cc9f8265e092199fd36cc01978e97b0e", size = 326421, upload-time = "2026-06-13T08:34:35.32Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/7f/3f/e5ec40cc1edecc323149d315d9bbaf2fd2aa15454545a9da5f389ce112c1/repo_release_tools-1.17.1.tar.gz", hash = "sha256:158e43c90174eef8037f158e1638fde6873e9795e5b2320fd5aa7f7c327a3e41", size = 432238, upload-time = "2026-08-30T20:53:05.837Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a5/fd/c4e81f32f836dd4fd9c6b5a61bd2e8d39c23eabf5038c3e49c074375cff7/repo_release_tools-1.9.0-py3-none-any.whl", hash = "sha256:5855a205648241c4f3be2eab2c4ff399a4f9dac0fa2e293d4ab8c3185a5ec2f9", size = 410882, upload-time = "2026-06-13T08:34:33.707Z" },
+    { url = "https://files.pythonhosted.org/packages/93/a9/e6efcf06664eca20479bae9714b35f254e47850f23f288ebdf7b897338da/repo_release_tools-1.17.1-py3-none-any.whl", hash = "sha256:13903810b34e7f107c46665422026a02ae32c42b9a7617ba61181a8c2f95ccfc", size = 540896, upload-time = "2026-08-30T20:53:04.343Z" },
 ]
 
 [[package]]

@@ -59,3 +59,21 @@ updates:
       prefix: "devcontainers"
       include: "scope"
     open-pull-requests-limit: 5
+
+  # NOTE: GitHub documents the `pre-commit` ecosystem as gated behind a feature
+  # flag. If it is not enabled for this account, Dependabot may report a config
+  # error for this file; removing this block restores the other ecosystems.
+  - package-ecosystem: "pre-commit"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "07:00"
+      timezone: "UTC"
+    labels:
+      - "dependencies"
+      - "pre-commit"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    open-pull-requests-limit: 10

@@ -72,12 +72,18 @@ def main() -> None:
     output.extend(
         (
             "\n## Notes\n",
-            "- Detector metrics must match detector config field names exactly "
-            "(strict projection).\n",
-            "- Unknown `metrics` keys in rules will raise a validation error during "
-            "pipeline construction.\n",
-            "- Language module folders are expected to include `__init__.py`, "
-            "`analyzer.py`, `detectors.py`, `mapping.py`, and `rules.py`.\n",
+            (
+                "- Detector metrics must match detector config field names exactly "
+                "(strict projection).\n"
+            ),
+            (
+                "- Unknown `metrics` keys in rules will raise a validation error during "
+                "pipeline construction.\n"
+            ),
+            (
+                "- Language module folders are expected to include `__init__.py`, "
+                "`analyzer.py`, `detectors.py`, `mapping.py`, and `rules.py`.\n"
+            ),
         ),
     )
     docs_path = Path(__file__).resolve().parents[1] / "docs" / "config.md"

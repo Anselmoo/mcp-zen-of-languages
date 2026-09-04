@@ -57,99 +57,127 @@ GENERIC_PROMPTS_BY_LANGUAGE: dict[str, list[tuple[str, str]]] = {
     "bash": [
         (
             "Harden shell safety",
-            "Add strict mode (set -euo pipefail), quote variables, and split large "
-            "scripts into small functions.",
+            (
+                "Add strict mode (set -euo pipefail), quote variables, and split large "
+                "scripts into small functions."
+            ),
         ),
     ],
     "cpp": [
         (
             "RAII and ownership",
-            "Replace raw new/delete with smart pointers, prefer RAII, and enforce "
-            "const-correct interfaces.",
+            (
+                "Replace raw new/delete with smart pointers, prefer RAII, and enforce "
+                "const-correct interfaces."
+            ),
         ),
     ],
     "csharp": [
         (
             "Async/await hygiene",
-            "Avoid blocking calls, propagate async/await, and prefer string "
-            "interpolation over concatenation.",
+            (
+                "Avoid blocking calls, propagate async/await, and prefer string "
+                "interpolation over concatenation."
+            ),
         ),
     ],
     "css": [
         (
             "Design-token stylesheet hygiene",
-            "Reduce selector nesting, replace magic literals with tokens, and "
-            "standardize breakpoints and z-index scales.",
+            (
+                "Reduce selector nesting, replace magic literals with tokens, and "
+                "standardize breakpoints and z-index scales."
+            ),
         ),
     ],
     "ansible": [
         (
             "Ansible playbook hygiene",
-            "Name plays/tasks clearly, prefer FQCN modules, avoid shell/command when "
-            "idempotent modules exist, and keep privilege/state/secret handling explicit.",
+            (
+                "Name plays/tasks clearly, prefer FQCN modules, avoid shell/command when "
+                "idempotent modules exist, and keep privilege/state/secret handling explicit."
+            ),
         ),
     ],
     "javascript": [
         (
             "Safer JavaScript",
-            "Prefer const/let, avoid implicit coercion, and reduce inheritance "
-            "depth with composition.",
+            (
+                "Prefer const/let, avoid implicit coercion, and reduce inheritance "
+                "depth with composition."
+            ),
         ),
     ],
     "powershell": [
         (
             "PowerShell hygiene",
-            "Use approved verbs, add parameter validation, and emit data with "
-            "Write-Output instead of Write-Host.",
+            (
+                "Use approved verbs, add parameter validation, and emit data with "
+                "Write-Output instead of Write-Host."
+            ),
         ),
     ],
     "python": [
         (
             "Refactor hotspots",
-            "Review high-severity Python violations and refactor complex functions "
-            "into smaller units with clear docstrings.",
+            (
+                "Review high-severity Python violations and refactor complex functions "
+                "into smaller units with clear docstrings."
+            ),
         ),
     ],
     "pydantic": [
         (
             "Complete the Pydantic v2 migration",
-            "Replace v1 APIs such as dict/json/parse_obj/validator/Config with "
-            "model_dump/model_validate/field_validator/model_config and remove mutable defaults.",
+            (
+                "Replace v1 APIs such as dict/json/parse_obj/validator/Config with "
+                "model_dump/model_validate/field_validator/model_config and remove mutable defaults."
+            ),
         ),
     ],
     "fastapi": [
         (
             "Harden FastAPI contracts",
-            "Add explicit response_model and status_code metadata, replace bare "
-            "exceptions with HTTPException, and remove blocking I/O from async routes.",
+            (
+                "Add explicit response_model and status_code metadata, replace bare "
+                "exceptions with HTTPException, and remove blocking I/O from async routes."
+            ),
         ),
     ],
     "django": [
         (
             "Harden Django settings and ORM usage",
-            "Move secrets out of settings, review DEBUG and raw SQL usage, and "
-            "replace hardcoded internal paths with reverse()/reverse_lazy().",
+            (
+                "Move secrets out of settings, review DEBUG and raw SQL usage, and "
+                "replace hardcoded internal paths with reverse()/reverse_lazy()."
+            ),
         ),
     ],
     "sqlalchemy": [
         (
             "Modernize SQLAlchemy access patterns",
-            "Parameterize text queries, scope sessions explicitly, and migrate "
-            "declarative models toward SQLAlchemy 2.x idioms such as DeclarativeBase and mapped_column.",
+            (
+                "Parameterize text queries, scope sessions explicitly, and migrate "
+                "declarative models toward SQLAlchemy 2.x idioms such as DeclarativeBase and mapped_column."
+            ),
         ),
     ],
     "ruby": [
         (
             "Simplify Ruby objects",
-            "Limit metaprogramming, keep classes focused, and favor explicit "
-            "modules or mixins.",
+            (
+                "Limit metaprogramming, keep classes focused, and favor explicit "
+                "modules or mixins."
+            ),
         ),
     ],
     "sql": [
         (
             "Harden SQL query safety",
-            "Replace SELECT * and implicit joins with explicit columns and JOIN ... ON, "
-            "then parameterize dynamic SQL and enforce transaction boundaries.",
+            (
+                "Replace SELECT * and implicit joins with explicit columns and JOIN ... ON, "
+                "then parameterize dynamic SQL and enforce transaction boundaries."
+            ),
         ),
     ],
     "typescript": [
@@ -161,29 +189,37 @@ GENERIC_PROMPTS_BY_LANGUAGE: dict[str, list[tuple[str, str]]] = {
     "react": [
         (
             "Stabilize React rendering",
-            "Replace index-based keys, extract inline JSX callbacks, and review "
-            "conditional hooks or effects that need explicit cleanup.",
+            (
+                "Replace index-based keys, extract inline JSX callbacks, and review "
+                "conditional hooks or effects that need explicit cleanup."
+            ),
         ),
     ],
     "vue": [
         (
             "Tighten Vue component contracts",
-            "Add prop types, key every v-for, separate v-if from v-for, and "
-            "eliminate direct prop mutation in component logic.",
+            (
+                "Add prop types, key every v-for, separate v-if from v-for, and "
+                "eliminate direct prop mutation in component logic."
+            ),
         ),
     ],
     "angular": [
         (
             "Harden Angular component boundaries",
-            "Adopt OnPush change detection, replace any with explicit types, and "
-            "review subscribe() calls for async-pipe or teardown strategies.",
+            (
+                "Adopt OnPush change detection, replace any with explicit types, and "
+                "review subscribe() calls for async-pipe or teardown strategies."
+            ),
         ),
     ],
     "nextjs": [
         (
             "Lean into Next.js server-first patterns",
-            "Replace raw anchors and img tags with framework components, avoid "
-            "legacy router APIs, and sanitize route-handler error responses.",
+            (
+                "Replace raw anchors and img tags with framework components, avoid "
+                "legacy router APIs, and sanitize route-handler error responses."
+            ),
         ),
     ],
     "go": [
@@ -195,92 +231,118 @@ GENERIC_PROMPTS_BY_LANGUAGE: dict[str, list[tuple[str, str]]] = {
     "rust": [
         (
             "Reduce unsafe/unwrap usage",
-            "Replace unwrap/expect and unsafe blocks with safer patterns and "
-            "document invariants.",
+            (
+                "Replace unwrap/expect and unsafe blocks with safer patterns and "
+                "document invariants."
+            ),
         ),
     ],
     "yaml": [
         (
             "YAML structure clarity",
-            "Keep key naming consistent, avoid deeply nested mappings, and use "
-            "anchors/aliases sparingly to preserve readability.",
+            (
+                "Keep key naming consistent, avoid deeply nested mappings, and use "
+                "anchors/aliases sparingly to preserve readability."
+            ),
         ),
     ],
     "toml": [
         (
             "TOML section hygiene",
-            "Group related keys into focused tables, avoid duplicate semantics, "
-            "and keep scalar values explicitly typed when possible.",
+            (
+                "Group related keys into focused tables, avoid duplicate semantics, "
+                "and keep scalar values explicitly typed when possible."
+            ),
         ),
     ],
     "xml": [
         (
             "XML schema discipline",
-            "Prefer clear element hierarchies, minimize mixed content, and "
-            "validate documents against a schema or contract.",
+            (
+                "Prefer clear element hierarchies, minimize mixed content, and "
+                "validate documents against a schema or contract."
+            ),
         ),
     ],
     "svg": [
         (
             "SVG accessibility and optimization",
-            "Add title/desc metadata, remove unused defs and editor metadata, "
-            "and keep node depth/count optimized for responsive rendering.",
+            (
+                "Add title/desc metadata, remove unused defs and editor metadata, "
+                "and keep node depth/count optimized for responsive rendering."
+            ),
         ),
     ],
     "json": [
         (
             "JSON payload consistency",
-            "Use stable field naming conventions, avoid deeply nested payloads, "
-            "and enforce schema validation for producer/consumer contracts.",
+            (
+                "Use stable field naming conventions, avoid deeply nested payloads, "
+                "and enforce schema validation for producer/consumer contracts."
+            ),
         ),
     ],
     "markdown": [
         (
             "Documentation flow and accessibility",
-            "Keep heading levels sequential, add alt text for images, avoid bare URLs, "
-            "and ensure MDX imports/exports stay clean.",
+            (
+                "Keep heading levels sequential, add alt text for images, avoid bare URLs, "
+                "and ensure MDX imports/exports stay clean."
+            ),
         ),
     ],
     "latex": [
         (
             "LaTeX document structure hygiene",
-            "Keep section hierarchy consistent, centralize package usage, and avoid "
-            "duplicated macro definitions to preserve readable, maintainable sources.",
+            (
+                "Keep section hierarchy consistent, centralize package usage, and avoid "
+                "duplicated macro definitions to preserve readable, maintainable sources."
+            ),
         ),
     ],
     "github-actions": [
         (
             "GitHub Actions hardening",
-            "Pin third-party actions to commit SHAs, scope permissions tightly, "
-            "and add timeouts/concurrency to avoid stale or risky runs.",
+            (
+                "Pin third-party actions to commit SHAs, scope permissions tightly, "
+                "and add timeouts/concurrency to avoid stale or risky runs."
+            ),
         ),
     ],
     "dockerfile": [
         (
             "Container image hardening",
-            "Pin base image versions, run as non-root, avoid ENV/ARG secrets, and "
-            "use multi-stage builds with a .dockerignore file.",
+            (
+                "Pin base image versions, run as non-root, avoid ENV/ARG secrets, and "
+                "use multi-stage builds with a .dockerignore file."
+            ),
         ),
     ],
     "docker_compose": [
         (
             "Compose service hardening",
-            "Pin service image tags, avoid root users, define healthchecks, and keep "
-            "secret-like values out of inline environment blocks.",
+            (
+                "Pin service image tags, avoid root users, define healthchecks, and keep "
+                "secret-like values out of inline environment blocks."
+            ),
         ),
     ],
     "gitlab_ci": [
         (
             "GitLab pipeline hardening",
-            "Pin images, replace only/except with rules, add needs/cache/expire_in, "
-            "and extract duplicated job setup into reusable templates.",
+            (
+                "Pin images, replace only/except with rules, add needs/cache/expire_in, "
+                "and extract duplicated job setup into reusable templates."
+            ),
         ),
     ],
     "terraform": [
         (
             "Terraform state and security hygiene",
-            "Pin providers/modules, use remote backends, avoid hardcoded IDs/secrets, "
-            "and keep variable/resource naming consistently snake_case.",
+            (
+                "Pin providers/modules, use remote backends, avoid hardcoded IDs/secrets, "
+                "and keep variable/resource naming consistently snake_case."
+            ),
         ),
     ],
 }

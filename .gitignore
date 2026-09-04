@@ -51,7 +51,6 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
-# .serena/
 
 # Translations
 *.mo
@@ -245,7 +244,7 @@ Temporary Items
 
 
 # Exclude Serena
-# .serena/
+.serena/
 tmp/
 
 .vscode/*

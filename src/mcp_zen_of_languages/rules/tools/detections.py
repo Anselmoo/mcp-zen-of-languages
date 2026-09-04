@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Heuristic detection helpers for Python and TypeScript zen principles.
 
 Each function in this module implements a lightweight, regex- or AST-based

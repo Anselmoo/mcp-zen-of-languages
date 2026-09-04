@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Rule detectors for go code quality and architecture checks."""
 
 from __future__ import annotations

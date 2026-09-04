@@ -110,7 +110,6 @@ The tool depends on:
 - **fastmcp** — MCP protocol implementation (trusted source)
 - **pydantic** — Data validation (widely used, well-audited)
 - **tree-sitter** — Parser library (memory-safe Rust core)
-- **pygments** — Syntax highlighting (mature, stable)
 - **radon** — Complexity metrics (focused, maintained)
 
 All dependencies:

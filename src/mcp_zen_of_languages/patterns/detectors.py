@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Concrete architectural pattern detectors.
 
 Each ``PatternDetector`` subclass scans raw source text for one well-known

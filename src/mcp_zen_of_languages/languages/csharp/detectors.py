@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Zen-rule detectors for C# code quality, .NET idiom, and type-safety checks.
 
 Each detector implements the Strategy pattern as a ``ViolationDetector``

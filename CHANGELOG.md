@@ -1,4 +1,51 @@
 ## [Unreleased]
+### Fixed
+- `ZenPrinciple.source_url`: seven per-principle documentation deep links in `languages/javascript/rules.py` were silently discarded by Pydantic because `ZenPrinciple` never declared the field, while `LanguageZenPrinciples` did. All seven now survive model construction, and every language gains the ability to cite per-principle guidance
+- `server.py` now passes `Icon` and `ToolAnnotations` their declared field names (`mime_type`, `read_only_hint`, …) instead of the camelCase wire aliases; `model_dump(by_alias=True)` output is unchanged
+
+### Changed
+- ruff findings from the 0.16 stabilised rules resolved: `ISC004` (45 sites parenthesised), `PLR0917` (13 `# noqa: PLR0913` directives extended), `CPY001` (see below)
+- `[tool.ruff.lint.flake8-copyright]` configured with `min-file-size = 16384`, requiring a copyright header on the 43 most substantial modules rather than all 446 files
+- `ty` upgraded `0.0.51` → `0.0.78`
+
+### Added
+- Regression tests for two defensive `except Exception` recovery paths in `adapters/rules_adapter.py` and `analyzers/base.py`, both asserted via their log output rather than by coverage line numbers
+
+## [0.9.2] - 2026-09-03
+
+Completes the 0.9.1 release. 0.9.1 reached PyPI and cut a GitHub Release, but never
+registered with the MCP registry, and the run reported that failure only in its last
+job — after the wheel had already published irreversibly.
+
+### Fixed
+
+- **The Docker image was never tagged with the full version.** `metadata-action` was
+  configured with `{{major}}.{{minor}}` only, so a release pushed `:0.9` and `:latest`
+  but never `:0.9.1`, while `server.json` pins the OCI package to the full version. The
+  registry answered `400 "OCI image ... does not exist"`. Latent in every prior release —
+  ghcr held `0.1 … 0.9` and no patch tag at all — and it surfaced only on the first
+  release where `{{major}}.{{minor}}` diverged from the real version. (#212)
+- **`server.json`'s version strings were untracked by the release config**, so a bump
+  updated `pyproject.toml` and `__init__.py` and left `server.json` behind while the
+  release check still reported all-green. All three occurrences — the top-level field,
+  `packages[0]`, and the `:X.Y.Z` suffix of the OCI identifier — are now pin targets, so
+  they move with every bump.
+
+### Fixed
+
+- **The Docker publish never produced a full-version tag**, so the MCP registry
+  publish failed with `400 "OCI image ...:0.9.1 does not exist in the registry"`
+  while the Docker job itself reported success. `docker/metadata-action` was
+  configured with `{{major}}.{{minor}}` and `latest` only, producing `:0.9` and
+  `:latest`, but `server.json` pins the OCI package to the full version. Added
+  `type=semver,pattern={{version}}`. Latent in every prior release — ghcr holds
+  `0.1` through `0.9` and no patch-level tag — and only surfaced on the first
+  release where the two differ.
+### Fixed
+- fastmcp 4 server startup: `task=`-enabled tools now require an explicitly registered tasks extension, which fastmcp 3 wired implicitly. `mcp.add_extension(TasksExtension())` is registered on the server, fixing the `docker-image-check` failure `Task-enabled tools (...) require the tasks extension, but no extension with identifier 'io.modelcontextprotocol/tasks' is registered`
+
+### Added
+- `tests/server/test_server_lifespan_startup.py` boots the real server lifespan. Nothing in the suite previously started the server, so two consecutive fastmcp 4 breakages (the `TaskConfig` import move and the tasks-extension registration) reached `main` with a green `test` job, leaving `docker-image-check` as the only detector
 
 ## [0.9.1] - 2026-08-30
 ### Fixed

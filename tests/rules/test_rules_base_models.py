@@ -96,3 +96,39 @@ def test_detector_gap_helpers():
     assert base_models.get_registry_rule_id_gaps({"x": language}) == {
         "x": {"missing": ["x-1"], "unknown": []},
     }
+
+
+def test_zen_principle_retains_per_principle_source_url():
+    """A principle may cite its own upstream guidance, not just its language's."""
+    from pydantic import HttpUrl
+
+    from mcp_zen_of_languages.rules.base_models import PrincipleCategory
+    from mcp_zen_of_languages.rules.base_models import ZenPrinciple
+
+    principle = ZenPrinciple(
+        id="js-012",
+        principle="Use destructuring for assignment",
+        category=PrincipleCategory.IDIOMS,
+        severity=5,
+        description="Prefer destructuring over manual extraction",
+        source_url=HttpUrl("https://github.com/airbnb/javascript#destructuring"),
+    )
+
+    assert principle.source_url is not None
+    assert str(principle.source_url).endswith("#destructuring")
+
+
+def test_zen_principle_source_url_defaults_to_none():
+    """Principles without their own citation fall back to the language-level URL."""
+    from mcp_zen_of_languages.rules.base_models import PrincipleCategory
+    from mcp_zen_of_languages.rules.base_models import ZenPrinciple
+
+    principle = ZenPrinciple(
+        id="python-001",
+        principle="Explicit is better than implicit",
+        category=PrincipleCategory.IDIOMS,
+        severity=5,
+        description="Say what you mean",
+    )
+
+    assert principle.source_url is None

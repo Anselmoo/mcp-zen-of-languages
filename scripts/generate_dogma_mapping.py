@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Generate dogma↔language-rule reverse-mapping docs.
 
 Run::

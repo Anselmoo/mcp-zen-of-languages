@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Tests for the analyze_batch and analyze_batch_summary MCP tools."""
 
 from __future__ import annotations

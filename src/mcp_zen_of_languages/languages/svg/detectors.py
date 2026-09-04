@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Detectors for SVG accessibility, idioms, and performance."""
 # ruff: noqa: D102
 

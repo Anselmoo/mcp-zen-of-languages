@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """Typer-based CLI for multi-language zen code analysis.
 
 Exposes ``check``, ``report``, ``prompts``, ``list-rules``, ``init``, and

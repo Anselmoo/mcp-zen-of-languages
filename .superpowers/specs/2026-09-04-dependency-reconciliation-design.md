@@ -2,9 +2,33 @@
 
 **Date:** 2026-09-04
 **Branch:** `claude/dependency-update-plan-e7326c`
-**Status:** implemented — see Outcome below
+**Status:** implemented, then partly superseded — see Outcome below
 
-## Outcome
+## Superseded in part by #214
+
+While this branch was executing, [#214](https://github.com/Anselmoo/mcp-zen-of-languages/pull/214)
+(`chore: resolve ruff 0.16 findings and upgrade ty to 0.0.78`) landed on `main` and
+independently did most of the same work. `main` was merged into this branch afterwards, and
+on every point of overlap **`main`'s resolution was kept**. Three decisions recorded below
+are therefore historical rather than current:
+
+- **`CPY001` — reversed.** This spec suppressed the rule in `extend-ignore`, reasoning that
+  the project ships a single MIT `LICENSE` at the repo root and does not use per-file
+  headers. `#214` took the opposite route and added a
+  `# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.` header to every source
+  file. That is the policy in effect; the suppression was removed during the merge.
+- **`ty` — no longer blocked.** `#214` upgraded `ty` and fixed
+  `tests/registry/test_registry_bootstrap_coverage.py`, removing the `error[missing-argument]`
+  findings that triggered this branch's drop. `ty` now carries a `>=0.0.77` floor.
+- **The `source_url` defect — fixed upstream.** `#214` added
+  `source_url: HttpUrl | None` to `ZenPrinciple`, so the 7 silently-discarded values
+  described below are resolved. No follow-up issue is needed.
+
+What remains uniquely this branch's contribution after the merge: the Serena v1.7 schema
+migration, the `CLAUDE.md` Markdown-formatting note, `zensical` `0.0.46` -> `0.0.59`, and
+the `ruff` patch bump `v0.16.5` -> `v0.16.6` on both axes.
+
+## Outcome (as executed, before the merge with `main`)
 
 Eight commits shipped on this branch (`b116149..c745801`): the rrt hook bump and Serena
 schema migration, the `ruff` bump to `0.16.6` on both axes plus its rule-surface absorption
@@ -168,7 +192,7 @@ properly is a separate `docs:` change.
 ## Implementation plan
 
 Four commits on `claude/dependency-update-plan-e7326c`, ordered so each is independently
-revertable and risk increases monotonically.
+revertible and risk increases monotonically.
 
 ### Commit 1 — `build(deps): bump rrt hook and accept serena schema migration`
 

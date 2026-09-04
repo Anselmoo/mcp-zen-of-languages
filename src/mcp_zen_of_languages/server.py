@@ -1,3 +1,4 @@
+# Copyright (C) 2026 Anselm Hahn. Licensed under the MIT License.
 """MCP server exposing zen-of-languages analysis tools over the Model Context Protocol.
 
 This module is the public surface of the zen analysis server.  Every function
@@ -42,7 +43,8 @@ from typing import cast
 
 import fastmcp
 
-from fastmcp.server.tasks import TaskConfig
+from fastmcp.utilities.tasks import TaskConfig
+from fastmcp_tasks import TasksExtension
 from mcp.types import Icon
 from mcp.types import ToolAnnotations
 from pydantic import BaseModel
@@ -94,25 +96,25 @@ if TYPE_CHECKING:
 SERVER_ICONS = [
     Icon(
         src="https://anselmoo.github.io/mcp-zen-of-languages/assets/icons/zen-icon.svg",
-        mimeType="image/svg+xml",
+        mime_type="image/svg+xml",
     ),
 ]
 ANALYSIS_TOOL_ICONS = [
     Icon(
         src="https://anselmoo.github.io/mcp-zen-of-languages/assets/icons/tool-analysis.svg",
-        mimeType="image/svg+xml",
+        mime_type="image/svg+xml",
     ),
 ]
 PROMPT_TOOL_ICONS = [
     Icon(
         src="https://anselmoo.github.io/mcp-zen-of-languages/assets/icons/tool-prompts.svg",
-        mimeType="image/svg+xml",
+        mime_type="image/svg+xml",
     ),
 ]
 ONBOARDING_TOOL_ICONS = [
     Icon(
         src="https://anselmoo.github.io/mcp-zen-of-languages/assets/icons/tool-onboarding.svg",
-        mimeType="image/svg+xml",
+        mime_type="image/svg+xml",
     ),
 ]
 
@@ -130,13 +132,13 @@ def main() -> None:
 RESOURCE_ICONS = [
     Icon(
         src="https://anselmoo.github.io/mcp-zen-of-languages/assets/icons/resource.svg",
-        mimeType="image/svg+xml",
+        mime_type="image/svg+xml",
     ),
 ]
 PROMPT_RESOURCE_ICONS = [
     Icon(
         src="https://anselmoo.github.io/mcp-zen-of-languages/assets/icons/prompt.svg",
-        mimeType="image/svg+xml",
+        mime_type="image/svg+xml",
     ),
 ]
 _CACHE_BACKEND = create_cache_backend()
@@ -154,6 +156,10 @@ mcp = fastmcp.FastMCP(
     lifespan=zen_server_lifespan,
     list_page_size=100,
 )
+# fastmcp 4 validates at lifespan startup that every ``task=``-enabled tool has the
+# tasks extension registered; fastmcp 3 wired it implicitly. Without this the server
+# imports fine and every unit test passes, but stdio startup raises RuntimeError.
+mcp.add_extension(TasksExtension())
 mcp.zen_cache_backend = _CACHE_BACKEND
 
 CONFIG = load_config(path=os.environ.get("ZEN_CONFIG_PATH"))
@@ -174,14 +180,14 @@ async def _await_if_needed(result: object) -> None:
 
 
 READONLY_ANNOTATIONS = ToolAnnotations(
-    readOnlyHint=True,
-    idempotentHint=True,
-    destructiveHint=False,
+    read_only_hint=True,
+    idempotent_hint=True,
+    destructive_hint=False,
 )
 MUTATING_ANNOTATIONS = ToolAnnotations(
-    readOnlyHint=False,
-    idempotentHint=False,
-    destructiveHint=True,
+    read_only_hint=False,
+    idempotent_hint=False,
+    destructive_hint=True,
 )
 BACKGROUND_TASK = TaskConfig(mode="optional", poll_interval=timedelta(seconds=5))
 ANALYZE_ZEN_VIOLATIONS_VERSION = "1.0"

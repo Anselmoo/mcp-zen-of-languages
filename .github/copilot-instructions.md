@@ -139,7 +139,7 @@ Existing `generate_agent_tasks` and `generate_prompts` MCP tools consume `Analys
 
 ## Integration Points
 
-- External: fastmcp, networkx, pydantic, pygments, radon, tree-sitter
+- External: fastmcp, networkx, pydantic, radon, tree-sitter
 - Config: `zen-config.yaml` with language-specific pipeline overrides
 - CLI: Wraps MCP tools for local `zen check file.py` usage
 

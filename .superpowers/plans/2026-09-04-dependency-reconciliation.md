@@ -1,6 +1,13 @@
 # Dependency Reconciliation Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **This plan has been executed** — it is kept as a record of how the change was made and
+> why, not as outstanding work. The unticked `- [ ]` checkboxes below are the plan as
+> written, not a to-do list. See the **Outcome** notes in this file and in the linked spec
+> for what actually shipped, what was dropped, and what `main` superseded.
+>
+> It was executed with the Superpowers agent skills (`subagent-driven-development`), which
+> are external tooling and are not part of this repository. Nothing here requires them to
+> read or to reproduce by hand.
 
 **Goal:** Bring `.pre-commit-config.yaml`, `.serena/project.yml`, and `uv.lock` to current versions, absorbing the Ruff 0.16 rule-surface change without altering runtime behaviour.
 
@@ -35,6 +42,14 @@ section planned for Tasks 1-7, six shipped (`fa0c54b`, `fe0d450`, `3149f05`, `2f
 `30f394e`, `c745801`); Task 6 (the `ty` bump) was dropped at its designed drop point and
 produced no commit — see the spec's Outcome section and this plan's Task 6 for the
 diagnostics. `2 + 6 = 8` commits total. The risk-group count of four is otherwise unchanged.
+
+## Superseded in part by #214
+
+`main` gained [#214](https://github.com/Anselmoo/mcp-zen-of-languages/pull/214) while this
+plan was executing, doing most of the same work independently. `main` was merged in
+afterwards and its resolution kept wherever the two overlapped. Task 2's `CPY001`
+suppression was **reversed** (`main` adds per-file copyright headers instead), and Task 6's
+`ty` blocker was removed upstream. See the spec's "Superseded in part by #214" section.
 
 ## Two traps found while preparing this plan
 

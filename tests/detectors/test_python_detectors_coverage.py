@@ -17,6 +17,7 @@ from mcp_zen_of_languages.languages.configs import MagicMethodConfig
 from mcp_zen_of_languages.languages.configs import NamespaceConfig
 from mcp_zen_of_languages.languages.configs import NestingDepthConfig
 from mcp_zen_of_languages.languages.configs import SparseCodeConfig
+from mcp_zen_of_languages.languages.configs import UnusedArgumentUtilizationConfig
 from mcp_zen_of_languages.languages.python.detectors import BareExceptDetector
 from mcp_zen_of_languages.languages.python.detectors import CircularDependencyDetector
 from mcp_zen_of_languages.languages.python.detectors import ClassSizeDetector
@@ -33,6 +34,9 @@ from mcp_zen_of_languages.languages.python.detectors import MagicMethodDetector
 from mcp_zen_of_languages.languages.python.detectors import NamespaceUsageDetector
 from mcp_zen_of_languages.languages.python.detectors import NestingDepthDetector
 from mcp_zen_of_languages.languages.python.detectors import SparseCodeDetector
+from mcp_zen_of_languages.languages.python.detectors import (
+    UnusedArgumentUtilizationDetector,
+)
 from mcp_zen_of_languages.models import CyclomaticBlock
 from mcp_zen_of_languages.models import CyclomaticSummary
 from mcp_zen_of_languages.models import DependencyAnalysis
@@ -149,3 +153,12 @@ x = 1; y = 2
     god_context = AnalysisContext(code=god_code, language="python")
     god_cfg = GodClassConfig().model_copy(update={"max_methods": 1})
     assert GodClassDetector().detect(god_context, god_cfg)
+
+    unused_arg_context = AnalysisContext(
+        code="def get_orders(user_id, status):\n    return status\n",
+        language="python",
+    )
+    assert UnusedArgumentUtilizationDetector().detect(
+        unused_arg_context,
+        UnusedArgumentUtilizationConfig(),
+    )

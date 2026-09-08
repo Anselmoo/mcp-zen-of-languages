@@ -1,6 +1,6 @@
 ---
 title: Python
-description: "21 zen principles enforced by 31 detectors: The Zen of Python (PEP 20)."
+description: "22 zen principles enforced by 32 detectors: The Zen of Python (PEP 20)."
 icon: fontawesome/brands/python
 tags:
   - Python
@@ -32,12 +32,12 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 
 ## Zen Principles
 
-21 principles across 11 categories, drawn from [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/).
+22 principles across 11 categories, drawn from [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/).
 
 <div class="grid" markdown>
 
 :material-tag-outline: **Architecture** · 1 principle
-:material-tag-outline: **Clarity** · 1 principle
+:material-tag-outline: **Clarity** · 2 principles
 :material-tag-outline: **Complexity** · 1 principle
 :material-tag-outline: **Consistency** · 1 principle
 :material-tag-outline: **Correctness** · 2 principles
@@ -73,6 +73,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 | `python-019` | Although that way may not be obvious at first unless you're Dutch | Idioms | 5 | `ZEN-RIGHT-ABSTRACTION` |
 | `python-020` | Let's do more of those | Organization | 6 | `ZEN-STRICT-FENCES`, `ZEN-UNAMBIGUOUS-NAME` |
 | `python-021` | Documentation should live in docstrings, not inline grey commits | Readability | 6 | `ZEN-UNAMBIGUOUS-NAME`, `ZEN-EXPLICIT-INTENT` |
+| `python-022` | Every argument must have a purpose | Clarity | 4 | `ZEN-UTILIZE-ARGUMENTS` |
 
 ??? info "`python-001` — Beautiful is better than ugly"
     **Code should be aesthetically pleasing and well-formatted**
@@ -363,6 +364,23 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     | `max_inline_comment_length` | `72` |
     | `detect_grey_comments` | `True` |
 
+??? info "`python-022` — Every argument must have a purpose"
+    **Requested function arguments should be integrated or removed**
+
+    **Universal Dogmas:** `ZEN-UTILIZE-ARGUMENTS`
+    **Common Violations:**
+
+    - Unused function arguments hide valuable context
+    - Ignoring method context misses observability opportunities
+    - Silencing unused parameters with '_' masks design errors
+
+    **Thresholds:**
+
+    | Parameter | Default |
+    |-----------|---------|
+    | `suggest_logging` | `True` |
+    | `exclude_abstract_methods` | `True` |
+
 
 ## Detector Catalog
 
@@ -381,6 +399,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 | **MagicMethodDetector** | Detect classes that overload too many dunder (magic) methods | `python-002` |
 | **StarImportDetector** | Detect wildcard ``from X import *`` statements that pollute the module namespace | `python-002` |
 | **MagicNumberDetector** | Detect excessive use of unexplained numeric literals (magic numbers) | `python-002` |
+| **UnusedArgumentUtilizationDetector** | Detect function parameters that are requested but never used | `python-022` |
 
 ### Complexity
 
@@ -478,6 +497,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     python_019["python-019<br/>Although that way may not..."]
     python_020["python-020<br/>Let&#x27;s do more of those"]
     python_021["python-021<br/>Documentation should live..."]
+    python_022["python-022<br/>Every argument must have ..."]
     det_BareExceptDetector["Bare Except"]
     python_009 --> det_BareExceptDetector
     det_CircularDependencyDetector["Circular Dependency"]
@@ -540,6 +560,8 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     python_006 --> det_SparseCodeDetector
     det_StarImportDetector["Star Import"]
     python_002 --> det_StarImportDetector
+    det_UnusedArgumentUtilizationDetector["Unused Argument<br/>Utilization"]
+    python_022 --> det_UnusedArgumentUtilizationDetector
     ```
 
 ??? example "Detector Class Hierarchy"
@@ -613,6 +635,8 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
         ViolationDetector <|-- det_30
         class det_31["Star Import"]
         ViolationDetector <|-- det_31
+        class det_32["Unused Argument Utilization"]
+        ViolationDetector <|-- det_32
     ```
 
 ??? example "Analysis Pipeline"
@@ -621,9 +645,9 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     flowchart TD
     Source(["Source Code"]) --> Parse["Parse & Tokenize"]
     Parse --> Metrics["Compute Metrics"]
-    Metrics --> Pipeline{"31 Detectors"}
+    Metrics --> Pipeline{"32 Detectors"}
     Pipeline --> Collect["Aggregate Violations"]
-    Collect --> Result(["AnalysisResult<br/>21 principles"])
+    Collect --> Result(["AnalysisResult<br/>22 principles"])
     ```
 
 ??? example "Analysis States"
@@ -634,7 +658,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
         Ready --> Parsing : analyze(code)
         Parsing --> Computing : AST ready
         Computing --> Detecting : metrics ready
-        Detecting --> Reporting : 31 detectors run
+        Detecting --> Reporting : 32 detectors run
         Reporting --> [*] : AnalysisResult
         Parsing --> Reporting : parse error (best-effort)
     ```
@@ -686,6 +710,9 @@ languages:
       - type: grey_comments
         max_inline_comment_length: 72
         detect_grey_comments: True
+      - type: unused_argument_utilization
+        suggest_logging: True
+        exclude_abstract_methods: True
 ```
 
 ???+ tip "Start relaxed, tighten over time"

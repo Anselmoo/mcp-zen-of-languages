@@ -58,6 +58,7 @@ from mcp_zen_of_languages.languages.configs import PythonTodoStubConfig
 from mcp_zen_of_languages.languages.configs import ShortVariableNamesConfig
 from mcp_zen_of_languages.languages.configs import SparseCodeConfig
 from mcp_zen_of_languages.languages.configs import StarImportConfig
+from mcp_zen_of_languages.languages.configs import UnusedArgumentUtilizationConfig
 from mcp_zen_of_languages.models import Location
 from mcp_zen_of_languages.models import ParserResult
 from mcp_zen_of_languages.models import Violation
@@ -2862,6 +2863,303 @@ class GreyCommitCommentDetector(
         return bool(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", text))
 
 
+class UnusedArgumentUtilizationDetector(
+    ViolationDetector[UnusedArgumentUtilizationConfig],
+    LocationHelperMixin,
+):
+    """Detect function parameters that are requested but never used.
+
+    Every parameter in a signature is a promise of context the function
+    body is expected to use. Flags parameters that are declared but never
+    read, and suggests how to put the missing context to work: logging
+    it, filtering/correlating on it, or removing it from the signature
+    entirely. ``self``/``cls`` receivers, ``*args``/``**kwargs``
+    catch-alls, and stub bodies (``...``, ``pass``, or a docstring-only
+    body, e.g. ``Protocol`` methods and ``@overload`` signatures) are
+    exempt. Underscore-prefixed names are intentionally *not* exempt —
+    silencing an unused parameter with a leading ``_`` still hides a
+    design question about why the argument exists at all.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return the detector registry identifier.
+
+        Returns:
+            str: The literal string ``"unused_argument_utilization"``.
+        """
+        return "unused_argument_utilization"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: UnusedArgumentUtilizationConfig,
+    ) -> list[Violation]:
+        """Flag ignored function arguments and suggest purposeful integration.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (UnusedArgumentUtilizationConfig): Detector configuration
+                controlling logging-oriented suggestions and abstract-method
+                exclusion.
+
+        Returns:
+            list[Violation]: Violations for parameters that are declared but
+                never read inside the function body.
+        """
+        try:
+            tree = ast.parse(context.code)
+        except (SyntaxError, ValueError):
+            return []
+
+        violations: list[Violation] = []
+
+        for node in ast.walk(tree):
+            if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                continue
+            if config.exclude_abstract_methods and self._is_abstract(node):
+                continue
+
+            is_stub = self._is_stub_body(node)
+            argument_nodes = self._argument_nodes(node)
+            used_names = {
+                name.id
+                for name in ast.walk(node)
+                if isinstance(name, ast.Name) and isinstance(name.ctx, ast.Load)
+            }
+            has_logger = self._has_logger_in_scope(node, used_names)
+
+            for arg, is_vararg, is_kwarg in argument_nodes:
+                if self._should_skip_argument(
+                    arg,
+                    is_vararg=is_vararg,
+                    is_kwarg=is_kwarg,
+                    is_stub=is_stub,
+                ):
+                    continue
+                if arg.arg in used_names:
+                    continue
+                suggestion = self._suggestion(
+                    arg.arg,
+                    has_logger=has_logger,
+                    suggest_logging=config.suggest_logging,
+                    is_override=self._is_override(node),
+                )
+                violations.append(
+                    self.build_violation(
+                        config,
+                        severity=_severity_level(config),
+                        message=(
+                            f"Argument '{arg.arg}' carries valuable context but is "
+                            "ignored. Every argument must have a purpose."
+                        ),
+                        location=Location(line=arg.lineno, column=arg.col_offset),
+                        suggestion=suggestion,
+                    ),
+                )
+
+        return violations
+
+    @staticmethod
+    def _argument_nodes(
+        node: ast.FunctionDef | ast.AsyncFunctionDef,
+    ) -> list[tuple[ast.arg, bool, bool]]:
+        """Collect every declared parameter alongside its vararg/kwarg kind.
+
+        Args:
+            node (ast.FunctionDef | ast.AsyncFunctionDef): Function definition
+                whose parameters should be enumerated.
+
+        Returns:
+            list[tuple[ast.arg, bool, bool]]: ``(arg, is_vararg, is_kwarg)``
+                triples covering positional-only, positional-or-keyword,
+                keyword-only, ``*args``, and ``**kwargs`` parameters.
+        """
+        argument_nodes: list[tuple[ast.arg, bool, bool]] = [
+            (arg, False, False)
+            for arg in (
+                *node.args.posonlyargs,
+                *node.args.args,
+                *node.args.kwonlyargs,
+            )
+        ]
+        if node.args.vararg is not None:
+            argument_nodes.append((node.args.vararg, True, False))
+        if node.args.kwarg is not None:
+            argument_nodes.append((node.args.kwarg, False, True))
+        return argument_nodes
+
+    @staticmethod
+    def _should_skip_argument(
+        arg: ast.arg,
+        *,
+        is_vararg: bool,
+        is_kwarg: bool,
+        is_stub: bool,
+    ) -> bool:
+        """Decide whether an argument is exempt from usage checks.
+
+        Exempts ``self``/``cls`` receiver parameters, ``*args``/``**kwargs``
+        catch-alls, and every argument of a stub function (a body that is
+        only ``...``, ``pass``, or a docstring, as used by ``Protocol``
+        methods and typing overloads). Underscore-prefixed names are
+        deliberately *not* exempt here.
+
+        Args:
+            arg (ast.arg): Candidate parameter node.
+            is_vararg (bool): Whether *arg* is the function's ``*args``
+                catch-all.
+            is_kwarg (bool): Whether *arg* is the function's ``**kwargs``
+                catch-all.
+            is_stub (bool): Whether the enclosing function body is a stub.
+
+        Returns:
+            bool: ``True`` when the argument should not be flagged even if
+                unused.
+        """
+        if arg.arg in {"self", "cls"}:
+            return True
+        if is_vararg or is_kwarg:
+            return True
+        return is_stub
+
+    @staticmethod
+    def _is_stub_body(node: ast.FunctionDef | ast.AsyncFunctionDef) -> bool:
+        """Check whether a function body is a stub with no real logic.
+
+        Args:
+            node (ast.FunctionDef | ast.AsyncFunctionDef): Function definition
+                to inspect.
+
+        Returns:
+            bool: ``True`` when the body consists solely of ``...``, ``pass``,
+                or a single docstring expression.
+        """
+        body = node.body
+        if len(body) != 1:
+            return False
+        (statement,) = body
+        if isinstance(statement, ast.Pass):
+            return True
+        if isinstance(statement, ast.Expr) and isinstance(
+            statement.value, ast.Constant
+        ):
+            value = statement.value.value
+            return value is Ellipsis or isinstance(value, str)
+        return False
+
+    @staticmethod
+    def _has_logger_in_scope(
+        node: ast.FunctionDef | ast.AsyncFunctionDef,
+        used_names: set[str],
+    ) -> bool:
+        """Check whether the function body already references a logger.
+
+        Args:
+            node (ast.FunctionDef | ast.AsyncFunctionDef): Function definition
+                whose body is searched.
+            used_names (set[str]): Names loaded anywhere inside *node*.
+
+        Returns:
+            bool: ``True`` when a bare ``logger`` name or a ``self.logger``
+                attribute access is present in the body.
+        """
+        return "logger" in used_names or any(
+            isinstance(attribute, ast.Attribute)
+            and isinstance(attribute.value, ast.Name)
+            and attribute.value.id == "self"
+            and attribute.attr == "logger"
+            for attribute in ast.walk(node)
+        )
+
+    @staticmethod
+    def _is_abstract(node: ast.FunctionDef | ast.AsyncFunctionDef) -> bool:
+        """Check whether a function is decorated with ``@abstractmethod``.
+
+        Args:
+            node (ast.FunctionDef | ast.AsyncFunctionDef): Function definition
+                to inspect.
+
+        Returns:
+            bool: ``True`` when an ``abstractmethod`` decorator is present,
+                regardless of the import alias used to reach it.
+        """
+        return any(
+            (isinstance(d, ast.Name) and d.id == "abstractmethod")
+            or (isinstance(d, ast.Attribute) and d.attr == "abstractmethod")
+            for d in node.decorator_list
+        )
+
+    @staticmethod
+    def _is_override(node: ast.FunctionDef | ast.AsyncFunctionDef) -> bool:
+        """Check whether a function is decorated with ``@override``.
+
+        Args:
+            node (ast.FunctionDef | ast.AsyncFunctionDef): Function definition
+                to inspect.
+
+        Returns:
+            bool: ``True`` when an ``override`` decorator is present,
+                regardless of the import alias used to reach it.
+        """
+        return any(
+            (isinstance(d, ast.Name) and d.id == "override")
+            or (isinstance(d, ast.Attribute) and d.attr == "override")
+            for d in node.decorator_list
+        )
+
+    @staticmethod
+    def _suggestion(
+        argument_name: str,
+        *,
+        has_logger: bool,
+        suggest_logging: bool,
+        is_override: bool,
+    ) -> str:
+        """Pick a remediation suggestion for one unused argument.
+
+        Args:
+            argument_name (str): Name of the unused parameter.
+            has_logger (bool): Whether a logger is already in scope in the
+                function body.
+            suggest_logging (bool): Whether logging-oriented suggestions are
+                enabled for this configuration.
+            is_override (bool): Whether the function overrides a base-class
+                signature.
+
+        Returns:
+            str: A human-readable suggestion, preferring (in order) an
+                inherited-signature note, a logging integration, a
+                filtering/correlation hint for ``_id``-suffixed names, or a
+                generic integrate-or-remove nudge.
+        """
+        if is_override:
+            return (
+                f"Signature is likely inherited; add observational usage for "
+                f"'{argument_name}' such as structured logging."
+            )
+        lower_name = argument_name.lower()
+        if suggest_logging and (
+            has_logger
+            or any(
+                token in lower_name for token in ("context", "ctx", "meta", "request")
+            )
+        ):
+            return (
+                f"Did you forget to use '{argument_name}'? Integrate it into "
+                f"logging, for example logger.debug('Using %s', {argument_name})."
+            )
+        if lower_name.endswith("_id"):
+            return (
+                f"Did you forget to use '{argument_name}' for filtering or "
+                "correlation logic (e.g., query predicates)?"
+            )
+        return (
+            f"Did you forget to use '{argument_name}'? Integrate it into logic "
+            "or remove the argument from the signature."
+        )
+
+
 __all__ = [
     "BareExceptDetector",
     "CircularDependencyDetector",
@@ -2894,4 +3192,5 @@ __all__ = [
     "ShortVariableNamesDetector",
     "SparseCodeDetector",
     "StarImportDetector",
+    "UnusedArgumentUtilizationDetector",
 ]

@@ -307,5 +307,21 @@ PYTHON_ZEN = LanguageZenPrinciples(
                 "detect_grey_comments": True,
             },
         ),
+        ZenPrinciple(
+            id="python-022",
+            principle="Every argument must have a purpose",
+            category=PrincipleCategory.CLARITY,
+            severity=4,
+            description="Requested function arguments should be integrated or removed",
+            violations=[
+                "Unused function arguments hide valuable context",
+                "Ignoring method context misses observability opportunities",
+                "Silencing unused parameters with '_' masks design errors",
+            ],
+            metrics={
+                "suggest_logging": True,
+                "exclude_abstract_methods": True,
+            },
+        ),
     ],
 )

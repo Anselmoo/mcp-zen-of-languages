@@ -6,11 +6,15 @@ from mcp_zen_of_languages.languages.configs import ExplicitnessConfig
 from mcp_zen_of_languages.languages.configs import LongFunctionConfig
 from mcp_zen_of_languages.languages.configs import NamespaceConfig
 from mcp_zen_of_languages.languages.configs import NestingDepthConfig
+from mcp_zen_of_languages.languages.configs import UnusedArgumentUtilizationConfig
 from mcp_zen_of_languages.languages.python.detectors import ConsistencyDetector
 from mcp_zen_of_languages.languages.python.detectors import ExplicitnessDetector
 from mcp_zen_of_languages.languages.python.detectors import LongFunctionDetector
 from mcp_zen_of_languages.languages.python.detectors import NamespaceUsageDetector
 from mcp_zen_of_languages.languages.python.detectors import NestingDepthDetector
+from mcp_zen_of_languages.languages.python.detectors import (
+    UnusedArgumentUtilizationDetector,
+)
 
 
 def test_consistency_detector_flags_styles():
@@ -60,3 +64,79 @@ def test_long_function_detector_flags():
     config = LongFunctionConfig().model_copy(update={"max_function_length": 1})
     violations = LongFunctionDetector().detect(context, config)
     assert violations
+
+
+def test_unused_argument_utilization_detector_override_suggests_logging():
+    code = (
+        "from typing import override\n\n"
+        "class Base:\n"
+        "    def process(self, context):\n"
+        "        raise NotImplementedError\n\n"
+        "class Child(Base):\n"
+        "    @override\n"
+        "    def process(self, context):\n"
+        "        return 1\n"
+    )
+    context = AnalysisContext(code=code, language="python")
+    violations = UnusedArgumentUtilizationDetector().detect(
+        context,
+        UnusedArgumentUtilizationConfig(),
+    )
+    assert violations
+    assert any("inherited" in (v.suggestion or "") for v in violations)
+
+
+def test_unused_argument_utilization_detector_excludes_abstract_methods():
+    code = (
+        "from abc import abstractmethod\n\n"
+        "class Base:\n"
+        "    @abstractmethod\n"
+        "    def process(self, context):\n"
+        "        ...\n"
+    )
+    context = AnalysisContext(code=code, language="python")
+    violations = UnusedArgumentUtilizationDetector().detect(
+        context,
+        UnusedArgumentUtilizationConfig(),
+    )
+    assert violations == []
+
+
+def test_unused_argument_utilization_detector_excludes_stub_bodies():
+    code = "def process(context):\n    ...\n"
+    context = AnalysisContext(code=code, language="python")
+    violations = UnusedArgumentUtilizationDetector().detect(
+        context,
+        UnusedArgumentUtilizationConfig(),
+    )
+    assert violations == []
+
+
+def test_unused_argument_utilization_detector_excludes_varargs_and_kwargs():
+    code = "def process(user_id, *args, **kwargs):\n    return user_id\n"
+    context = AnalysisContext(code=code, language="python")
+    violations = UnusedArgumentUtilizationDetector().detect(
+        context,
+        UnusedArgumentUtilizationConfig(),
+    )
+    assert violations == []
+
+
+def test_unused_argument_utilization_detector_flags_underscore_prefixed_names():
+    code = "def process(_unused):\n    return 1\n"
+    context = AnalysisContext(code=code, language="python")
+    violations = UnusedArgumentUtilizationDetector().detect(
+        context,
+        UnusedArgumentUtilizationConfig(),
+    )
+    assert any("_unused" in v.message for v in violations)
+
+
+def test_unused_argument_utilization_detector_never_flags_self():
+    code = "class Widget:\n    def render(self):\n        return 1\n"
+    context = AnalysisContext(code=code, language="python")
+    violations = UnusedArgumentUtilizationDetector().detect(
+        context,
+        UnusedArgumentUtilizationConfig(),
+    )
+    assert violations == []

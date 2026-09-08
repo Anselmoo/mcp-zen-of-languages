@@ -2534,6 +2534,21 @@ class GreyCommitConfig(DetectorConfig):
     detect_grey_comments: bool = True
 
 
+class UnusedArgumentUtilizationConfig(DetectorConfig):
+    """Unused argument utilization settings.
+
+    Attributes:
+        suggest_logging: When ``True``, prefer logging/observability-oriented
+            suggestions for context-like parameters.
+        exclude_abstract_methods: When ``True``, ignore ``@abstractmethod``
+            signatures where implementation is intentionally absent.
+    """
+
+    type: Literal["unused_argument_utilization"] = "unused_argument_utilization"
+    suggest_logging: bool = True
+    exclude_abstract_methods: bool = True
+
+
 RULE_CONFIGS: dict[str, type[DetectorConfig]] = {
     "bash-006": Bash006Config,
     "bash-011": Bash011Config,

@@ -40,6 +40,7 @@ from mcp_zen_of_languages.languages.configs import PythonTodoStubConfig
 from mcp_zen_of_languages.languages.configs import ShortVariableNamesConfig
 from mcp_zen_of_languages.languages.configs import SparseCodeConfig
 from mcp_zen_of_languages.languages.configs import StarImportConfig
+from mcp_zen_of_languages.languages.configs import UnusedArgumentUtilizationConfig
 from mcp_zen_of_languages.languages.python.detectors import BareExceptDetector
 from mcp_zen_of_languages.languages.python.detectors import CircularDependencyDetector
 from mcp_zen_of_languages.languages.python.detectors import ClassSizeDetector
@@ -79,6 +80,9 @@ from mcp_zen_of_languages.languages.python.detectors import PythonTodoStubDetect
 from mcp_zen_of_languages.languages.python.detectors import ShortVariableNamesDetector
 from mcp_zen_of_languages.languages.python.detectors import SparseCodeDetector
 from mcp_zen_of_languages.languages.python.detectors import StarImportDetector
+from mcp_zen_of_languages.languages.python.detectors import (
+    UnusedArgumentUtilizationDetector,
+)
 
 
 def _dogmas(*dogma_ids: str) -> list[str]:
@@ -493,6 +497,18 @@ DETECTOR_MAP = LanguageDetectorMap(
                 )
             ],
             default_order=250,
+        ),
+        RuleDetectorBinding(
+            detector_id="unused_argument_utilization",
+            detector_class=UnusedArgumentUtilizationDetector,
+            config_model=UnusedArgumentUtilizationConfig,
+            rules=[
+                RuleBinding(
+                    rule_id="python-022",
+                    dogma_ids=_dogmas("ZEN-UTILIZE-ARGUMENTS"),
+                )
+            ],
+            default_order=260,
         ),
     ],
 )

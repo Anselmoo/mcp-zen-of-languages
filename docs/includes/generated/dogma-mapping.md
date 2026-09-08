@@ -3,6 +3,7 @@
 | Language | Rule ID | Principle | Severity |
 |----------|---------|-----------|:--------:|
 | JavaScript | `js-017` | Prefer Array.from/spread over arguments | 6 |
+| Python | `python-022` | Every argument must have a purpose | 4 |
 
 ### Explicit Intent — `ZEN-EXPLICIT-INTENT`
 

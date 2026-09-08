@@ -22,6 +22,7 @@ from mcp_zen_of_languages.languages.configs import DuplicateImplementationConfig
 from mcp_zen_of_languages.languages.configs import ExplicitnessConfig
 from mcp_zen_of_languages.languages.configs import FeatureEnvyConfig
 from mcp_zen_of_languages.languages.configs import GodClassConfig
+from mcp_zen_of_languages.languages.configs import GreyCommitConfig
 from mcp_zen_of_languages.languages.configs import LineLengthConfig
 from mcp_zen_of_languages.languages.configs import LongFunctionConfig
 from mcp_zen_of_languages.languages.configs import MagicMethodConfig
@@ -54,6 +55,7 @@ from mcp_zen_of_languages.languages.python.detectors import (
 from mcp_zen_of_languages.languages.python.detectors import ExplicitnessDetector
 from mcp_zen_of_languages.languages.python.detectors import FeatureEnvyDetector
 from mcp_zen_of_languages.languages.python.detectors import GodClassDetector
+from mcp_zen_of_languages.languages.python.detectors import GreyCommitCommentDetector
 from mcp_zen_of_languages.languages.python.detectors import LineLengthDetector
 from mcp_zen_of_languages.languages.python.detectors import LongFunctionDetector
 from mcp_zen_of_languages.languages.python.detectors import MagicMethodDetector
@@ -479,6 +481,18 @@ DETECTOR_MAP = LanguageDetectorMap(
                 )
             ],
             default_order=240,
+        ),
+        RuleDetectorBinding(
+            detector_id="grey_comments",
+            detector_class=GreyCommitCommentDetector,
+            config_model=GreyCommitConfig,
+            rules=[
+                RuleBinding(
+                    rule_id="python-021",
+                    dogma_ids=_dogmas("ZEN-UNAMBIGUOUS-NAME", "ZEN-EXPLICIT-INTENT"),
+                )
+            ],
+            default_order=250,
         ),
     ],
 )

@@ -10,6 +10,7 @@ from mcp_zen_of_languages.languages.configs import CyclomaticComplexityConfig
 from mcp_zen_of_languages.languages.configs import DocstringConfig
 from mcp_zen_of_languages.languages.configs import ExplicitnessConfig
 from mcp_zen_of_languages.languages.configs import GodClassConfig
+from mcp_zen_of_languages.languages.configs import GreyCommitConfig
 from mcp_zen_of_languages.languages.configs import LineLengthConfig
 from mcp_zen_of_languages.languages.configs import LongFunctionConfig
 from mcp_zen_of_languages.languages.configs import MagicMethodConfig
@@ -25,6 +26,7 @@ from mcp_zen_of_languages.languages.python.detectors import CyclomaticComplexity
 from mcp_zen_of_languages.languages.python.detectors import DocstringDetector
 from mcp_zen_of_languages.languages.python.detectors import ExplicitnessDetector
 from mcp_zen_of_languages.languages.python.detectors import GodClassDetector
+from mcp_zen_of_languages.languages.python.detectors import GreyCommitCommentDetector
 from mcp_zen_of_languages.languages.python.detectors import LineLengthDetector
 from mcp_zen_of_languages.languages.python.detectors import LongFunctionDetector
 from mcp_zen_of_languages.languages.python.detectors import MagicMethodDetector
@@ -66,6 +68,18 @@ x = 1; y = 2
 
     doc_context = AnalysisContext(code="def foo():\n    pass\n", language="python")
     assert DocstringDetector().detect(doc_context, DocstringConfig())
+
+    grey_context = AnalysisContext(
+        code=(
+            "def foo():\n"
+            "    # NOTE: because this branch is flaky in CI, keep fallback path\n"
+            "    # and avoid direct import during startup\n"
+            "    if True:\n"
+            "        return 1\n"
+        ),
+        language="python",
+    )
+    assert GreyCommitCommentDetector().detect(grey_context, GreyCommitConfig())
 
     class_context = AnalysisContext(code=code, language="python")
     class_cfg = ClassSizeConfig().model_copy(update={"max_class_length": 3})

@@ -17,7 +17,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 | Language | Principles | Detectors | Parser | Philosophy Origin |
 |----------|:----------:|:---------:|--------|-------------------|
-| [Python](python.md) | 20 | 30 | AST | [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/) |
+| [Python](python.md) | 21 | 31 | AST | [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/) |
 | [Pydantic](../frameworks/pydantic.md) | 8 | 8 | Regex | [Pydantic v2 documentation](https://docs.pydantic.dev/latest/) |
 | [FastAPI](../frameworks/fastapi.md) | 6 | 6 | Regex | [FastAPI documentation](https://fastapi.tiangolo.com/) |
 | [Django](../frameworks/django.md) | 6 | 6 | Regex | [Django documentation](https://docs.djangoproject.com/) |
@@ -43,7 +43,7 @@ Every language has its own philosophy — its own sense of what "good code" mean
 | [LaTeX](latex.md) | 9 | 9 | Regex | [LaTeX Project](https://www.latex-project.org/) |
 | [Markdown / MDX](markdown.md) | 7 | 7 | Regex | [CommonMark + MDX authoring best practices](https://commonmark.org/) |
 | [Terraform](terraform.md) | 7 | 7 | Regex | [Terraform language and module best-practice documentation](https://developer.hashicorp.com/terraform/language) |
-| **Programming & markup subtotal** | **277** | **296** | | |
+| **Programming & markup subtotal** | **278** | **297** | | |
 
 ### Workflows & Automation
 
@@ -62,8 +62,8 @@ Every language has its own philosophy — its own sense of what "good code" mean
 
 ### Coverage Totals
 
-- **Principles (all categories):** 348
-- **Detectors + workflow checks:** 367
+- **Principles (all categories):** 349
+- **Detectors + workflow checks:** 368
 
 ## Maturity Tiers
 

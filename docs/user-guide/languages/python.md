@@ -1,6 +1,6 @@
 ---
 title: Python
-description: "20 zen principles enforced by 30 detectors: The Zen of Python (PEP 20)."
+description: "21 zen principles enforced by 31 detectors: The Zen of Python (PEP 20)."
 icon: fontawesome/brands/python
 tags:
   - Python
@@ -32,7 +32,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 
 ## Zen Principles
 
-20 principles across 11 categories, drawn from [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/).
+21 principles across 11 categories, drawn from [PEP 20 - The Zen of Python](https://peps.python.org/pep-0020/).
 
 <div class="grid" markdown>
 
@@ -45,7 +45,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 :material-tag-outline: **Error Handling** · 1 principle
 :material-tag-outline: **Idioms** · 2 principles
 :material-tag-outline: **Organization** · 2 principles
-:material-tag-outline: **Readability** · 5 principles
+:material-tag-outline: **Readability** · 6 principles
 :material-tag-outline: **Structure** · 2 principles
 
 </div>
@@ -72,6 +72,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 | `python-018` | If the implementation is easy to explain, it may be a good idea | Readability | 3 | `ZEN-UNAMBIGUOUS-NAME`, `ZEN-PROPORTIONATE-COMPLEXITY` |
 | `python-019` | Although that way may not be obvious at first unless you're Dutch | Idioms | 5 | `ZEN-RIGHT-ABSTRACTION` |
 | `python-020` | Let's do more of those | Organization | 6 | `ZEN-STRICT-FENCES`, `ZEN-UNAMBIGUOUS-NAME` |
+| `python-021` | Documentation should live in docstrings, not inline grey commits | Readability | 6 | `ZEN-UNAMBIGUOUS-NAME`, `ZEN-EXPLICIT-INTENT` |
 
 ??? info "`python-001` — Beautiful is better than ugly"
     **Code should be aesthetically pleasing and well-formatted**
@@ -345,6 +346,23 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     | `max_top_level_symbols` | `25` |
     | `max_exports` | `20` |
 
+??? info "`python-021` — Documentation should live in docstrings, not inline grey commits"
+    **Method-level rationale comments inside function bodies should be captured in docstrings so documentation tooling can render them**
+
+    **Universal Dogmas:** `ZEN-UNAMBIGUOUS-NAME`, `ZEN-EXPLICIT-INTENT`
+    **Common Violations:**
+
+    - Inline narrative comment blocks in function bodies
+    - Knowledge-marker comments such as NOTE/REASON/IMPORTANT in code bodies
+    - Long prose comments that belong in function docstring Note sections
+
+    **Thresholds:**
+
+    | Parameter | Default |
+    |-----------|---------|
+    | `max_inline_comment_length` | `72` |
+    | `detect_grey_comments` | `True` |
+
 
 ## Detector Catalog
 
@@ -425,6 +443,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
 | **DocstringDetector** | Detect top-level functions and classes missing a docstring | `python-007` |
 | **PythonComplexUndocumentedDetector** | Detects functions missing docstrings | `python-017` |
 | **PythonSimpleDocumentedDetector** | Detects public functions (not starting with ``_``) missing docstrings | `python-018` |
+| **GreyCommitCommentDetector** | Detect method-level inline comment narratives that belong in docstrings | `python-021` |
 
 ### Structure
 
@@ -458,6 +477,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     python_018["python-018<br/>If the implementation is ..."]
     python_019["python-019<br/>Although that way may not..."]
     python_020["python-020<br/>Let&#x27;s do more of those"]
+    python_021["python-021<br/>Documentation should live..."]
     det_BareExceptDetector["Bare Except"]
     python_009 --> det_BareExceptDetector
     det_CircularDependencyDetector["Circular Dependency"]
@@ -484,6 +504,8 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     python_011 --> det_FeatureEnvyDetector
     det_GodClassDetector["God Class"]
     python_004 --> det_GodClassDetector
+    det_GreyCommitCommentDetector["Grey Commit<br/>Comment"]
+    python_021 --> det_GreyCommitCommentDetector
     det_LineLengthDetector["Line Length"]
     python_001 --> det_LineLengthDetector
     det_LongFunctionDetector["Long Function"]
@@ -555,40 +577,42 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
         ViolationDetector <|-- det_12
         class det_13["God Class"]
         ViolationDetector <|-- det_13
-        class det_14["Line Length"]
+        class det_14["Grey Commit Comment"]
         ViolationDetector <|-- det_14
-        class det_15["Long Function"]
+        class det_15["Line Length"]
         ViolationDetector <|-- det_15
-        class det_16["Magic Method"]
+        class det_16["Long Function"]
         ViolationDetector <|-- det_16
-        class det_17["Magic Number"]
+        class det_17["Magic Method"]
         ViolationDetector <|-- det_17
-        class det_18["Name Style"]
+        class det_18["Magic Number"]
         ViolationDetector <|-- det_18
-        class det_19["Namespace Usage"]
+        class det_19["Name Style"]
         ViolationDetector <|-- det_19
-        class det_20["Nesting Depth"]
+        class det_20["Namespace Usage"]
         ViolationDetector <|-- det_20
-        class det_21["Python Complex Undocumented"]
+        class det_21["Nesting Depth"]
         ViolationDetector <|-- det_21
-        class det_22["Python Explicit Silence"]
+        class det_22["Python Complex Undocumented"]
         ViolationDetector <|-- det_22
-        class det_23["Python Idiom"]
+        class det_23["Python Explicit Silence"]
         ViolationDetector <|-- det_23
-        class det_24["Python Practicality"]
+        class det_24["Python Idiom"]
         ViolationDetector <|-- det_24
-        class det_25["Python Premature Impl"]
+        class det_25["Python Practicality"]
         ViolationDetector <|-- det_25
-        class det_26["Python Simple Documented"]
+        class det_26["Python Premature Impl"]
         ViolationDetector <|-- det_26
-        class det_27["Python Todo Stub"]
+        class det_27["Python Simple Documented"]
         ViolationDetector <|-- det_27
-        class det_28["Short Variable Names"]
+        class det_28["Python Todo Stub"]
         ViolationDetector <|-- det_28
-        class det_29["Sparse Code"]
+        class det_29["Short Variable Names"]
         ViolationDetector <|-- det_29
-        class det_30["Star Import"]
+        class det_30["Sparse Code"]
         ViolationDetector <|-- det_30
+        class det_31["Star Import"]
+        ViolationDetector <|-- det_31
     ```
 
 ??? example "Analysis Pipeline"
@@ -597,9 +621,9 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
     flowchart TD
     Source(["Source Code"]) --> Parse["Parse & Tokenize"]
     Parse --> Metrics["Compute Metrics"]
-    Metrics --> Pipeline{"30 Detectors"}
+    Metrics --> Pipeline{"31 Detectors"}
     Pipeline --> Collect["Aggregate Violations"]
-    Collect --> Result(["AnalysisResult<br/>20 principles"])
+    Collect --> Result(["AnalysisResult<br/>21 principles"])
     ```
 
 ??? example "Analysis States"
@@ -610,7 +634,7 @@ Python's zen principles come directly from [PEP 20 — The Zen of Python](https:
         Ready --> Parsing : analyze(code)
         Parsing --> Computing : AST ready
         Computing --> Detecting : metrics ready
-        Detecting --> Reporting : 30 detectors run
+        Detecting --> Reporting : 31 detectors run
         Reporting --> [*] : AnalysisResult
         Parsing --> Reporting : parse error (best-effort)
     ```
@@ -659,6 +683,9 @@ languages:
       - type: namespace_usage
         max_top_level_symbols: 25
         max_exports: 20
+      - type: grey_comments
+        max_inline_comment_length: 72
+        detect_grey_comments: True
 ```
 
 ???+ tip "Start relaxed, tighten over time"

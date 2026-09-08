@@ -18,7 +18,9 @@ from __future__ import annotations
 
 import ast
 import re
+import tokenize
 
+from io import StringIO
 from typing import TYPE_CHECKING
 
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
@@ -38,6 +40,7 @@ from mcp_zen_of_languages.languages.configs import DuplicateImplementationConfig
 from mcp_zen_of_languages.languages.configs import ExplicitnessConfig
 from mcp_zen_of_languages.languages.configs import FeatureEnvyConfig
 from mcp_zen_of_languages.languages.configs import GodClassConfig
+from mcp_zen_of_languages.languages.configs import GreyCommitConfig
 from mcp_zen_of_languages.languages.configs import LineLengthConfig
 from mcp_zen_of_languages.languages.configs import LongFunctionConfig
 from mcp_zen_of_languages.languages.configs import MagicMethodConfig
@@ -65,6 +68,32 @@ if TYPE_CHECKING:
 
 # Minimum line number for which a "previous line" lookup is valid
 MIN_LINE_FOR_PREV_LOOKUP = 2
+
+# Knowledge-marker prefixes that flag a comment as narrative rationale.
+_GREY_COMMIT_MARKERS = ("NOTE:", "TODO:", "REASON:", "IMPORTANT:", "BECAUSE:")
+# Terms that indicate a comment is explaining "why" rather than "what".
+_GREY_COMMIT_WHY_TERMS = (
+    "avoid",
+    "instead",
+    "because",
+    "should",
+    "must",
+    "we need to",
+)
+# Statement prefixes that mark proximity to a control-flow branch.
+_GREY_COMMIT_CONTROL_FLOW_PREFIXES = (
+    "try:",
+    "except",
+    "if ",
+    "elif ",
+    "else:",
+    "match ",
+    "case ",
+    "for ",
+    "while ",
+)
+# Minimum number of consecutive comment lines that count as a "block".
+_GREY_COMMENT_BLOCK_MIN_LINES = 2
 
 
 def _principle_text(config: DetectorConfig) -> str:
@@ -2569,6 +2598,270 @@ class PythonIdiomDetector(ViolationDetector[PythonIdiomConfig]):
         return violations
 
 
+class GreyCommitCommentDetector(
+    ViolationDetector[GreyCommitConfig],
+    LocationHelperMixin,
+):
+    """Detect method-level inline comment narratives that belong in docstrings.
+
+    Flags comment blocks inside function and method bodies that read like
+    rationale prose rather than short annotations: knowledge-marker
+    comments (``NOTE:``, ``REASON:``, ``IMPORTANT:``, ``BECAUSE:``,
+    ``TODO:``), multi-line comment blocks, long single-line comments, and
+    comments sitting next to control-flow statements. That kind of
+    documentation renders and stays discoverable when it lives in a
+    function's docstring instead of scattered inline comments.
+
+    Note:
+        Shebangs, ``# noqa``, ``# type: ignore`` and single-word
+        annotation comments are excluded to minimize false positives.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return the detector registry identifier.
+
+        Returns:
+            str: The literal string ``"grey_comments"``.
+        """
+        return "grey_comments"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: GreyCommitConfig,
+    ) -> list[Violation]:
+        """Parse comment tokens and flag docstring-grade inline rationale.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (GreyCommitConfig): Detector configuration with the inline
+                comment length threshold and the enable/disable switch.
+
+        Returns:
+            list[Violation]: Violations for comment blocks that should be moved
+                into function or method docstrings.
+        """
+        if not config.detect_grey_comments:
+            return []
+
+        try:
+            tree = ast.parse(context.code)
+        except SyntaxError:
+            return []
+
+        function_spans = self._function_spans(tree)
+        comments_by_span: dict[int, list[tuple[int, str]]] = {}
+        for token in tokenize.generate_tokens(StringIO(context.code).readline):
+            if token.type != tokenize.COMMENT:
+                continue
+            line_no = token.start[0]
+            span_idx = self._span_index(line_no, function_spans)
+            if span_idx is None:
+                continue
+            text = token.string[1:].strip()
+            if self._is_ignored_comment(token.string, text):
+                continue
+            comments_by_span.setdefault(span_idx, []).append((line_no, text))
+
+        violations: list[Violation] = []
+        source_lines = context.code.splitlines()
+        for span_idx, comments in comments_by_span.items():
+            span = function_spans[span_idx]
+            blocks = self._comment_blocks(comments)
+            for block in blocks:
+                severity = self._block_severity(
+                    block,
+                    source_lines,
+                    config,
+                    has_docstring=span[2],
+                )
+                if severity is None:
+                    continue
+                loc = Location(line=block[0][0], column=1)
+                violations.append(
+                    self.build_violation(
+                        config,
+                        severity=severity,
+                        location=loc,
+                        suggestion=(
+                            "Move method-level rationale to the function docstring "
+                            "using Args:, Returns:, Raises:, and Note: sections "
+                            "where applicable."
+                        ),
+                    ),
+                )
+        return violations
+
+    def _function_spans(
+        self,
+        tree: ast.AST,
+    ) -> list[tuple[int, int, bool]]:
+        """Collect the body line range and docstring presence of every function.
+
+        Args:
+            tree (ast.AST): Parsed module tree to walk for function definitions.
+
+        Returns:
+            list[tuple[int, int, bool]]: One ``(body_start, body_end,
+                has_docstring)`` tuple per function or method found.
+        """
+        spans: list[tuple[int, int, bool]] = []
+        for node in ast.walk(tree):
+            if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                continue
+            if not node.body or node.end_lineno is None:
+                continue
+            body_start = node.lineno + 1
+            spans.append(
+                (body_start, node.end_lineno, ast.get_docstring(node) is not None),
+            )
+        return spans
+
+    def _span_index(
+        self,
+        line_no: int,
+        spans: list[tuple[int, int, bool]],
+    ) -> int | None:
+        """Find the innermost function span containing a given line number.
+
+        Args:
+            line_no (int): One-based source line number to locate.
+            spans (list[tuple[int, int, bool]]): Function body spans from
+                ``_function_spans``.
+
+        Returns:
+            int | None: Index into *spans* for the smallest enclosing span, or
+                ``None`` when the line falls outside every function body.
+        """
+        best: int | None = None
+        best_size: int | None = None
+        for idx, (start, end, _) in enumerate(spans):
+            if not (start <= line_no <= end):
+                continue
+            size = end - start
+            if best is None or (best_size is not None and size < best_size):
+                best = idx
+                best_size = size
+        return best
+
+    def _comment_blocks(
+        self,
+        comments: list[tuple[int, str]],
+    ) -> list[list[tuple[int, str]]]:
+        """Group consecutive-line comments within one function into blocks.
+
+        Args:
+            comments (list[tuple[int, str]]): ``(line_no, text)`` pairs of
+                comments found inside one function span, in any order.
+
+        Returns:
+            list[list[tuple[int, str]]]: Comments grouped into runs of
+                immediately consecutive lines, ordered by line number.
+        """
+        sorted_comments = sorted(comments, key=lambda item: item[0])
+        blocks: list[list[tuple[int, str]]] = []
+        for line_no, text in sorted_comments:
+            if blocks and line_no == blocks[-1][-1][0] + 1:
+                blocks[-1].append((line_no, text))
+                continue
+            blocks.append([(line_no, text)])
+        return blocks
+
+    def _block_severity(
+        self,
+        block: list[tuple[int, str]],
+        source_lines: list[str],
+        config: GreyCommitConfig,
+        *,
+        has_docstring: bool,
+    ) -> int | None:
+        """Score a comment block's severity, or rule it out as a false positive.
+
+        Args:
+            block (list[tuple[int, str]]): Consecutive comment lines from
+                ``_comment_blocks``.
+            source_lines (list[str]): Full source split into lines, used to
+                check control-flow proximity.
+            config (GreyCommitConfig): Detector configuration carrying the
+                inline comment length threshold.
+            has_docstring (bool): Whether the enclosing function already has a
+                docstring.
+
+        Returns:
+            int | None: Severity on the 3/5/6/8 ladder, or ``None`` when the
+                block is too small and unremarkable to flag.
+        """
+        has_marker = any(
+            text.upper().startswith(_GREY_COMMIT_MARKERS) for _, text in block
+        )
+        has_long_line = any(
+            len(text) > config.max_inline_comment_length for _, text in block
+        )
+        has_rationale = any(
+            any(term in text.lower() for term in _GREY_COMMIT_WHY_TERMS)
+            for _, text in block
+        )
+        near_control_flow = any(
+            self._near_control_flow(line_no, source_lines) for line_no, _ in block
+        )
+        if len(block) < _GREY_COMMENT_BLOCK_MIN_LINES and not (
+            has_marker or has_long_line or has_rationale
+        ):
+            return None
+
+        severity = 3
+        if len(block) >= _GREY_COMMENT_BLOCK_MIN_LINES:
+            severity = 5
+        if has_marker:
+            severity = max(severity, 6)
+        if len(block) >= _GREY_COMMENT_BLOCK_MIN_LINES and not has_docstring:
+            severity = max(severity, 8)
+        if near_control_flow:
+            severity = max(severity, 5)
+        return severity
+
+    def _near_control_flow(self, line_no: int, source_lines: list[str]) -> bool:
+        """Check whether a comment line sits beside a control-flow statement.
+
+        Args:
+            line_no (int): One-based line number of the comment.
+            source_lines (list[str]): Full source split into lines.
+
+        Returns:
+            bool: ``True`` when the line before or the comment's own line
+                (after stripping) starts with a control-flow keyword.
+        """
+        for idx in (line_no - 2, line_no):
+            if not (0 <= idx < len(source_lines)):
+                continue
+            text = source_lines[idx].strip()
+            if text.startswith("#"):
+                continue
+            if text.startswith(_GREY_COMMIT_CONTROL_FLOW_PREFIXES):
+                return True
+        return False
+
+    def _is_ignored_comment(self, raw: str, text: str) -> bool:
+        """Decide whether a comment is a benign annotation to skip.
+
+        Args:
+            raw (str): Unmodified comment token text, including the ``#`` prefix.
+            text (str): Comment text with the ``#`` prefix and surrounding
+                whitespace stripped.
+
+        Returns:
+            bool: ``True`` for shebangs, ``# noqa``, ``# type: ignore``, and
+                single-word comments.
+        """
+        lowered = text.lower()
+        if raw.lstrip().startswith("#!"):
+            return True
+        if "type: ignore" in lowered or "noqa" in lowered:
+            return True
+        return bool(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", text))
+
+
 __all__ = [
     "BareExceptDetector",
     "CircularDependencyDetector",
@@ -2583,6 +2876,7 @@ __all__ = [
     "ExplicitnessDetector",
     "FeatureEnvyDetector",
     "GodClassDetector",
+    "GreyCommitCommentDetector",
     "LineLengthDetector",
     "LongFunctionDetector",
     "MagicMethodDetector",

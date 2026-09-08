@@ -87,6 +87,7 @@
 | Python | `python-009` | Errors should never pass silently | 9 |
 | Python | `python-010` | In the face of ambiguity, refuse the temptation to guess | 7 |
 | Python | `python-014` | Unless explicitly silenced | 8 |
+| Python | `python-021` | Documentation should live in docstrings, not inline grey commits | 6 |
 | react | `react-001` | List keys must be stable and not derived from array indexes | 9 |
 | react | `react-004` | Hooks must not be called conditionally | 10 |
 | Rust | `rust-002` | Use the type system to prevent bugs | 8 |
@@ -340,6 +341,7 @@
 | Python | `python-017` | If the implementation is hard to explain, it's a bad idea | 6 |
 | Python | `python-018` | If the implementation is easy to explain, it may be a good idea | 3 |
 | Python | `python-020` | Let's do more of those | 6 |
+| Python | `python-021` | Documentation should live in docstrings, not inline grey commits | 6 |
 | Ruby | `ruby-005` | Use meaningful method names with ?/! convention | 7 |
 | Ruby | `ruby-006` | Keep method chains readable | 6 |
 | Ruby | `ruby-007` | Prefer symbols over strings for keys | 5 |

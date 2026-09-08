@@ -77,11 +77,11 @@ def test_grey_commit_detects_long_single_line_comment() -> None:
     )
     violations = _run(code, GreyCommitConfig(max_inline_comment_length=72))
     assert violations
-    assert min(v.severity for v in violations) >= SEVERITY_SINGLE_LINE
+    assert violations[0].severity == SEVERITY_SINGLE_LINE
 
 
 def test_grey_commit_false_positive_guards() -> None:
-    """Shebang, noqa, type: ignore, and single-word comments are never flagged."""
+    """Noqa, type: ignore, and single-word comments are never flagged."""
     code = (
         "def parse_data(value: str) -> int:\n"
         "    # noqa: E501\n"
@@ -101,3 +101,50 @@ def test_grey_commit_short_comment_with_docstring_yields_no_violations() -> None
         "    return int(value)\n"
     )
     assert _run(code) == []
+
+
+def test_grey_commit_honors_configured_severity() -> None:
+    """A configured severity shifts the whole ladder relative to the default."""
+    code = (
+        "def parse_data(value: str) -> int:\n"
+        '    """Parse value."""\n'
+        "    # NOTE: keep this fallback because prod wheels vary at runtime\n"
+        "    return int(value)\n"
+    )
+    default_violations = _run(code)
+    high_violations = _run(code, GreyCommitConfig(severity=9))
+    low_violations = _run(code, GreyCommitConfig(severity=1))
+
+    assert default_violations
+    assert high_violations
+    assert low_violations
+    assert default_violations[0].severity == SEVERITY_MARKER
+    assert high_violations[0].severity == 9
+    assert low_violations[0].severity == 1
+    assert high_violations[0].severity != default_violations[0].severity
+    assert low_violations[0].severity != default_violations[0].severity
+    assert high_violations[0].severity != low_violations[0].severity
+
+
+def test_grey_commit_detect_grey_comments_false_disables_detector() -> None:
+    """Setting detect_grey_comments=False always yields an empty violation list."""
+    code = (
+        "def parse_data(value: str) -> int:\n"
+        "    # NOTE: keep this fallback because prod wheels vary at runtime\n"
+        "    return int(value)\n"
+    )
+    # Confirm the same code *would* be flagged with the detector enabled.
+    assert _run(code) != []
+    assert _run(code, GreyCommitConfig(detect_grey_comments=False)) == []
+
+
+def test_grey_commit_max_inline_comment_length_is_configurable() -> None:
+    """Lowering max_inline_comment_length flags a comment the default allows."""
+    code = (
+        "def parse_data(value: str) -> int:\n"
+        '    """Parse value."""\n'
+        "    # this comment documents the return value for callers here\n"
+        "    return int(value)\n"
+    )
+    assert _run(code) == []
+    assert _run(code, GreyCommitConfig(max_inline_comment_length=20)) != []

@@ -140,3 +140,119 @@ def test_unused_argument_utilization_detector_never_flags_self():
         UnusedArgumentUtilizationConfig(),
     )
     assert violations == []
+
+
+def test_unused_argument_utilization_detector_excludes_docstring_stub_bodies():
+    """A docstring followed by ``...`` (documented Protocol style) is a stub."""
+    code = (
+        "class Proto:\n"
+        "    def meth(self, value: int) -> int:\n"
+        '        """Proto method."""\n'
+        "        ...\n"
+    )
+    context = AnalysisContext(code=code, language="python")
+    violations = UnusedArgumentUtilizationDetector().detect(
+        context,
+        UnusedArgumentUtilizationConfig(),
+    )
+    assert violations == []
+
+
+def test_unused_argument_utilization_detector_infers_override_from_base_class():
+    """A subclass method without @override still gets the inherited-signature hint."""
+    code = (
+        "class Base:\n"
+        "    def process(self, value):\n"
+        "        raise NotImplementedError\n\n"
+        "class Child(Base):\n"
+        "    def process(self, value):\n"
+        "        return 1\n"
+    )
+    context = AnalysisContext(code=code, language="python")
+    violations = UnusedArgumentUtilizationDetector().detect(
+        context,
+        UnusedArgumentUtilizationConfig(),
+    )
+    child_violations = [v for v in violations if v.location.line > 4]
+    assert child_violations
+    assert all("inherited" in (v.suggestion or "") for v in child_violations)
+
+
+def test_unused_argument_utilization_detector_free_function_keeps_generic_wording():
+    """A module-level function (no enclosing class) keeps the generic wording."""
+    code = "def process(value):\n    return 1\n"
+    context = AnalysisContext(code=code, language="python")
+    violations = UnusedArgumentUtilizationDetector().detect(
+        context,
+        UnusedArgumentUtilizationConfig(),
+    )
+    assert violations
+    assert all(
+        "Integrate it into logic or remove the argument" in (v.suggestion or "")
+        for v in violations
+    )
+
+
+def test_unused_argument_utilization_detector_base_less_class_keeps_generic_wording():
+    """A method on a class with no base classes keeps the generic wording."""
+    code = "class Widget:\n    def process(self, value):\n        return 1\n"
+    context = AnalysisContext(code=code, language="python")
+    violations = UnusedArgumentUtilizationDetector().detect(
+        context,
+        UnusedArgumentUtilizationConfig(),
+    )
+    assert violations
+    assert all(
+        "Integrate it into logic or remove the argument" in (v.suggestion or "")
+        for v in violations
+    )
+
+
+def test_unused_argument_utilization_detector_exclude_abstract_methods_flag():
+    """exclude_abstract_methods only takes effect on a non-stub abstract body."""
+    code = (
+        "from abc import abstractmethod\n\n"
+        "class Base:\n"
+        "    @abstractmethod\n"
+        "    def process(self, context):\n"
+        "        return None\n"
+    )
+    context = AnalysisContext(code=code, language="python")
+
+    excluded = UnusedArgumentUtilizationDetector().detect(
+        context,
+        UnusedArgumentUtilizationConfig(exclude_abstract_methods=True),
+    )
+    assert excluded == []
+
+    included = UnusedArgumentUtilizationDetector().detect(
+        context,
+        UnusedArgumentUtilizationConfig(exclude_abstract_methods=False),
+    )
+    assert any("context" in v.message for v in included)
+
+
+def test_unused_argument_utilization_detector_suggest_logging_flag():
+    """suggest_logging toggles the logging-oriented remediation suggestion."""
+    code = (
+        "import logging\n\n"
+        "logger = logging.getLogger(__name__)\n\n"
+        "def process(value):\n"
+        "    logger.info('start')\n"
+        "    return 1\n"
+    )
+    context = AnalysisContext(code=code, language="python")
+
+    with_logging = UnusedArgumentUtilizationDetector().detect(
+        context,
+        UnusedArgumentUtilizationConfig(suggest_logging=True),
+    )
+    assert with_logging
+    assert any("logging" in (v.suggestion or "") for v in with_logging)
+
+    without_logging = UnusedArgumentUtilizationDetector().detect(
+        context,
+        UnusedArgumentUtilizationConfig(suggest_logging=False),
+    )
+    assert without_logging
+    assert not any("logging" in (v.suggestion or "") for v in without_logging)

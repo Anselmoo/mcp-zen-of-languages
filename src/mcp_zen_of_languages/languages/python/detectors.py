@@ -2614,8 +2614,8 @@ class GreyCommitCommentDetector(
     function's docstring instead of scattered inline comments.
 
     Note:
-        Shebangs, ``# noqa``, ``# type: ignore`` and single-word
-        annotation comments are excluded to minimize false positives.
+        ``# noqa``, ``# type: ignore`` and single-word annotation comments
+        are excluded to minimize false positives.
     """
 
     @property
@@ -2661,7 +2661,7 @@ class GreyCommitCommentDetector(
             if span_idx is None:
                 continue
             text = token.string[1:].strip()
-            if self._is_ignored_comment(token.string, text):
+            if self._is_ignored_comment(text):
                 continue
             comments_by_span.setdefault(span_idx, []).append((line_no, text))
 
@@ -2790,8 +2790,9 @@ class GreyCommitCommentDetector(
                 docstring.
 
         Returns:
-            int | None: Severity on the 3/5/6/8 ladder, or ``None`` when the
-                block is too small and unremarkable to flag.
+            int | None: Severity on a ladder relative to the rule's
+                configured severity (default marker rung 6), or ``None``
+                when the block is too small and unremarkable to flag.
         """
         has_marker = any(
             text.upper().startswith(_GREY_COMMIT_MARKERS) for _, text in block
@@ -2811,15 +2812,20 @@ class GreyCommitCommentDetector(
         ):
             return None
 
-        severity = 3
+        # The configured severity is the value for the "marker" rung; the
+        # other rungs are shifted relative to it so a `severity:` override
+        # in zen-config.yaml actually moves the emitted severity.
+        base = _severity_level(config, fallback=6)
+        block_rung = max(1, base - 1)
+        severity = max(1, base - 3)
         if len(block) >= _GREY_COMMENT_BLOCK_MIN_LINES:
-            severity = 5
+            severity = block_rung
         if has_marker:
-            severity = max(severity, 6)
+            severity = max(severity, base)
         if len(block) >= _GREY_COMMENT_BLOCK_MIN_LINES and not has_docstring:
-            severity = max(severity, 8)
+            severity = max(severity, min(10, base + 2))
         if near_control_flow:
-            severity = max(severity, 5)
+            severity = max(severity, block_rung)
         return severity
 
     def _near_control_flow(self, line_no: int, source_lines: list[str]) -> bool:
@@ -2830,8 +2836,10 @@ class GreyCommitCommentDetector(
             source_lines (list[str]): Full source split into lines.
 
         Returns:
-            bool: ``True`` when the line before or the comment's own line
-                (after stripping) starts with a control-flow keyword.
+            bool: ``True`` when the line immediately before the comment or
+                the line immediately after it (after stripping) starts with
+                a control-flow keyword. The comment's own line is never
+                inspected.
         """
         for idx in (line_no - 2, line_no):
             if not (0 <= idx < len(source_lines)):
@@ -2843,21 +2851,18 @@ class GreyCommitCommentDetector(
                 return True
         return False
 
-    def _is_ignored_comment(self, raw: str, text: str) -> bool:
+    def _is_ignored_comment(self, text: str) -> bool:
         """Decide whether a comment is a benign annotation to skip.
 
         Args:
-            raw (str): Unmodified comment token text, including the ``#`` prefix.
             text (str): Comment text with the ``#`` prefix and surrounding
                 whitespace stripped.
 
         Returns:
-            bool: ``True`` for shebangs, ``# noqa``, ``# type: ignore``, and
+            bool: ``True`` for ``# noqa``, ``# type: ignore``, and
                 single-word comments.
         """
         lowered = text.lower()
-        if raw.lstrip().startswith("#!"):
-            return True
         if "type: ignore" in lowered or "noqa" in lowered:
             return True
         return bool(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", text))
@@ -2913,6 +2918,7 @@ class UnusedArgumentUtilizationDetector(
             return []
 
         violations: list[Violation] = []
+        parent_by_node = self._build_parent_map(tree)
 
         for node in ast.walk(tree):
             if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
@@ -2928,6 +2934,7 @@ class UnusedArgumentUtilizationDetector(
                 if isinstance(name, ast.Name) and isinstance(name.ctx, ast.Load)
             }
             has_logger = self._has_logger_in_scope(node, used_names)
+            is_override = self._is_override(node, parent_by_node.get(node))
 
             for arg, is_vararg, is_kwarg in argument_nodes:
                 if self._should_skip_argument(
@@ -2943,7 +2950,7 @@ class UnusedArgumentUtilizationDetector(
                     arg.arg,
                     has_logger=has_logger,
                     suggest_logging=config.suggest_logging,
-                    is_override=self._is_override(node),
+                    is_override=is_override,
                 )
                 violations.append(
                     self.build_violation(
@@ -3032,13 +3039,27 @@ class UnusedArgumentUtilizationDetector(
                 to inspect.
 
         Returns:
-            bool: ``True`` when the body consists solely of ``...``, ``pass``,
-                or a single docstring expression.
+            bool: ``True`` when the body is only ``...``, ``pass``, a lone
+                docstring, or a docstring immediately followed by a single
+                ``...``/``pass`` statement (the common ``Protocol`` /
+                ``@overload`` documented-stub style).
         """
         body = node.body
-        if len(body) != 1:
+        if not body:
             return False
-        (statement,) = body
+        is_docstring = (
+            isinstance(body[0], ast.Expr)
+            and isinstance(body[0].value, ast.Constant)
+            and isinstance(body[0].value.value, str)
+        )
+        remaining = body
+        if is_docstring:
+            if len(body) == 1:
+                return True
+            remaining = body[1:]
+        if len(remaining) != 1:
+            return False
+        (statement,) = remaining
         if isinstance(statement, ast.Pass):
             return True
         if isinstance(statement, ast.Expr) and isinstance(
@@ -3091,22 +3112,56 @@ class UnusedArgumentUtilizationDetector(
         )
 
     @staticmethod
-    def _is_override(node: ast.FunctionDef | ast.AsyncFunctionDef) -> bool:
-        """Check whether a function is decorated with ``@override``.
+    def _build_parent_map(tree: ast.AST) -> dict[ast.AST, ast.AST]:
+        """Map every AST node to its immediate parent node.
+
+        Args:
+            tree (ast.AST): Parsed module tree to walk.
+
+        Returns:
+            dict[ast.AST, ast.AST]: Lookup from a node to the node that
+                directly contains it. The module root has no entry.
+        """
+        parents: dict[ast.AST, ast.AST] = {}
+        for parent in ast.walk(tree):
+            for child in ast.iter_child_nodes(parent):
+                parents[child] = parent
+        return parents
+
+    @staticmethod
+    def _is_override(
+        node: ast.FunctionDef | ast.AsyncFunctionDef,
+        parent: ast.AST | None,
+    ) -> bool:
+        """Check whether a function's signature is likely inherited.
+
+        Returns ``True`` for a literal ``@override`` decorator, and also
+        when the function is a direct method of a class that declares at
+        least one base class -- most repositories predate the ``@override``
+        idiom, so a base class in scope is the more common real-world
+        signal that a method's parameters are constrained by a contract it
+        does not itself control.
 
         Args:
             node (ast.FunctionDef | ast.AsyncFunctionDef): Function definition
                 to inspect.
+            parent (ast.AST | None): The function's immediate enclosing AST
+                node (its ``ClassDef`` for a direct method, or ``None``/some
+                other node otherwise).
 
         Returns:
-            bool: ``True`` when an ``override`` decorator is present,
-                regardless of the import alias used to reach it.
+            bool: ``True`` when an ``override`` decorator is present
+                (regardless of the import alias used to reach it), or when
+                *parent* is a ``ClassDef`` with at least one base class.
         """
-        return any(
+        has_override_decorator = any(
             (isinstance(d, ast.Name) and d.id == "override")
             or (isinstance(d, ast.Attribute) and d.attr == "override")
             for d in node.decorator_list
         )
+        if has_override_decorator:
+            return True
+        return isinstance(parent, ast.ClassDef) and bool(parent.bases)
 
     @staticmethod
     def _suggestion(

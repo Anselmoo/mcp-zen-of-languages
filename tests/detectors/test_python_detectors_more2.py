@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import ast
+
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
 from mcp_zen_of_languages.languages.configs import ConsistencyConfig
 from mcp_zen_of_languages.languages.configs import ExplicitnessConfig
@@ -256,3 +258,60 @@ def test_unused_argument_utilization_detector_suggest_logging_flag():
     )
     assert without_logging
     assert not any("logging" in (v.suggestion or "") for v in without_logging)
+
+
+def test_unused_argument_utilization_detector_reports_one_based_column():
+    """Location.column is 1-based, so a 0-based col_offset must be shifted."""
+    code = "def process(context):\n    return 1\n"
+    context = AnalysisContext(code=code, language="python")
+    violations = UnusedArgumentUtilizationDetector().detect(
+        context,
+        UnusedArgumentUtilizationConfig(),
+    )
+    assert violations
+    assert violations[0].location.line == 1
+    assert violations[0].location.column == code.index("context") + 1
+
+
+def test_unused_argument_utilization_detector_skips_unparseable_source():
+    """Source that cannot be parsed is skipped instead of raising."""
+    context = AnalysisContext(code="def process(:\n", language="python")
+    violations = UnusedArgumentUtilizationDetector().detect(
+        context,
+        UnusedArgumentUtilizationConfig(),
+    )
+    assert violations == []
+
+
+def test_unused_argument_utilization_detector_excludes_docstring_only_bodies():
+    """A body that is nothing but a docstring is a stub, like ... or pass."""
+    code = 'def process(context):\n    """Do the thing."""\n'
+    analysis_context = AnalysisContext(code=code, language="python")
+    violations = UnusedArgumentUtilizationDetector().detect(
+        analysis_context,
+        UnusedArgumentUtilizationConfig(),
+    )
+    assert violations == []
+
+
+def test_unused_argument_utilization_detector_stub_body_handles_empty_body():
+    """A function node carrying no body at all is not treated as a stub."""
+    node = ast.FunctionDef(
+        name="empty",
+        args=ast.arguments(
+            posonlyargs=[],
+            args=[],
+            kwonlyargs=[],
+            kw_defaults=[],
+            defaults=[],
+        ),
+        body=[],
+        decorator_list=[],
+        returns=None,
+        type_params=[],
+        lineno=1,
+        col_offset=0,
+        end_lineno=1,
+        end_col_offset=0,
+    )
+    assert UnusedArgumentUtilizationDetector._is_stub_body(node) is False

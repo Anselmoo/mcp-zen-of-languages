@@ -17,6 +17,7 @@ Detectors fall into two categories:
 from __future__ import annotations
 
 import ast
+import contextlib
 import re
 import tokenize
 
@@ -2642,6 +2643,14 @@ class GreyCommitCommentDetector(
         Returns:
             list[Violation]: Violations for comment blocks that should be moved
                 into function or method docstrings.
+
+        Note:
+            ``tokenize.generate_tokens`` is lazy, so a malformed token stream
+            raises ``tokenize.TokenError`` part-way through iteration. The scan
+            degrades best-effort -- keeping the comments collected before the
+            failure -- rather than propagating the error up through the
+            analysis pipeline, matching how ``_mask_comments`` handles the same
+            failure elsewhere in the codebase.
         """
         if not config.detect_grey_comments:
             return []
@@ -2653,17 +2662,18 @@ class GreyCommitCommentDetector(
 
         function_spans = self._function_spans(tree)
         comments_by_span: dict[int, list[tuple[int, str]]] = {}
-        for token in tokenize.generate_tokens(StringIO(context.code).readline):
-            if token.type != tokenize.COMMENT:
-                continue
-            line_no = token.start[0]
-            span_idx = self._span_index(line_no, function_spans)
-            if span_idx is None:
-                continue
-            text = token.string[1:].strip()
-            if self._is_ignored_comment(text):
-                continue
-            comments_by_span.setdefault(span_idx, []).append((line_no, text))
+        with contextlib.suppress(tokenize.TokenError):
+            for token in tokenize.generate_tokens(StringIO(context.code).readline):
+                if token.type != tokenize.COMMENT:
+                    continue
+                line_no = token.start[0]
+                span_idx = self._span_index(line_no, function_spans)
+                if span_idx is None:
+                    continue
+                text = token.string[1:].strip()
+                if self._is_ignored_comment(text):
+                    continue
+                comments_by_span.setdefault(span_idx, []).append((line_no, text))
 
         violations: list[Violation] = []
         source_lines = context.code.splitlines()
@@ -2960,7 +2970,10 @@ class UnusedArgumentUtilizationDetector(
                             f"Argument '{arg.arg}' carries valuable context but is "
                             "ignored. Every argument must have a purpose."
                         ),
-                        location=Location(line=arg.lineno, column=arg.col_offset),
+                        location=Location(
+                            line=arg.lineno,
+                            column=arg.col_offset + 1,
+                        ),
                         suggestion=suggestion,
                     ),
                 )

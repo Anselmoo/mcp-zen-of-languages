@@ -18,7 +18,9 @@ from __future__ import annotations
 
 import ast
 import re
+import tokenize
 
+from io import StringIO
 from typing import TYPE_CHECKING
 
 from mcp_zen_of_languages.analyzers.base import AnalysisContext
@@ -38,6 +40,7 @@ from mcp_zen_of_languages.languages.configs import DuplicateImplementationConfig
 from mcp_zen_of_languages.languages.configs import ExplicitnessConfig
 from mcp_zen_of_languages.languages.configs import FeatureEnvyConfig
 from mcp_zen_of_languages.languages.configs import GodClassConfig
+from mcp_zen_of_languages.languages.configs import GreyCommitConfig
 from mcp_zen_of_languages.languages.configs import LineLengthConfig
 from mcp_zen_of_languages.languages.configs import LongFunctionConfig
 from mcp_zen_of_languages.languages.configs import MagicMethodConfig
@@ -55,6 +58,7 @@ from mcp_zen_of_languages.languages.configs import PythonTodoStubConfig
 from mcp_zen_of_languages.languages.configs import ShortVariableNamesConfig
 from mcp_zen_of_languages.languages.configs import SparseCodeConfig
 from mcp_zen_of_languages.languages.configs import StarImportConfig
+from mcp_zen_of_languages.languages.configs import UnusedArgumentUtilizationConfig
 from mcp_zen_of_languages.models import Location
 from mcp_zen_of_languages.models import ParserResult
 from mcp_zen_of_languages.models import Violation
@@ -65,6 +69,32 @@ if TYPE_CHECKING:
 
 # Minimum line number for which a "previous line" lookup is valid
 MIN_LINE_FOR_PREV_LOOKUP = 2
+
+# Knowledge-marker prefixes that flag a comment as narrative rationale.
+_GREY_COMMIT_MARKERS = ("NOTE:", "TODO:", "REASON:", "IMPORTANT:", "BECAUSE:")
+# Terms that indicate a comment is explaining "why" rather than "what".
+_GREY_COMMIT_WHY_TERMS = (
+    "avoid",
+    "instead",
+    "because",
+    "should",
+    "must",
+    "we need to",
+)
+# Statement prefixes that mark proximity to a control-flow branch.
+_GREY_COMMIT_CONTROL_FLOW_PREFIXES = (
+    "try:",
+    "except",
+    "if ",
+    "elif ",
+    "else:",
+    "match ",
+    "case ",
+    "for ",
+    "while ",
+)
+# Minimum number of consecutive comment lines that count as a "block".
+_GREY_COMMENT_BLOCK_MIN_LINES = 2
 
 
 def _principle_text(config: DetectorConfig) -> str:
@@ -2569,6 +2599,622 @@ class PythonIdiomDetector(ViolationDetector[PythonIdiomConfig]):
         return violations
 
 
+class GreyCommitCommentDetector(
+    ViolationDetector[GreyCommitConfig],
+    LocationHelperMixin,
+):
+    """Detect method-level inline comment narratives that belong in docstrings.
+
+    Flags comment blocks inside function and method bodies that read like
+    rationale prose rather than short annotations: knowledge-marker
+    comments (``NOTE:``, ``REASON:``, ``IMPORTANT:``, ``BECAUSE:``,
+    ``TODO:``), multi-line comment blocks, long single-line comments, and
+    comments sitting next to control-flow statements. That kind of
+    documentation renders and stays discoverable when it lives in a
+    function's docstring instead of scattered inline comments.
+
+    Note:
+        ``# noqa``, ``# type: ignore`` and single-word annotation comments
+        are excluded to minimize false positives.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return the detector registry identifier.
+
+        Returns:
+            str: The literal string ``"grey_comments"``.
+        """
+        return "grey_comments"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: GreyCommitConfig,
+    ) -> list[Violation]:
+        """Parse comment tokens and flag docstring-grade inline rationale.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (GreyCommitConfig): Detector configuration with the inline
+                comment length threshold and the enable/disable switch.
+
+        Returns:
+            list[Violation]: Violations for comment blocks that should be moved
+                into function or method docstrings.
+        """
+        if not config.detect_grey_comments:
+            return []
+
+        try:
+            tree = ast.parse(context.code)
+        except SyntaxError:
+            return []
+
+        function_spans = self._function_spans(tree)
+        comments_by_span: dict[int, list[tuple[int, str]]] = {}
+        for token in tokenize.generate_tokens(StringIO(context.code).readline):
+            if token.type != tokenize.COMMENT:
+                continue
+            line_no = token.start[0]
+            span_idx = self._span_index(line_no, function_spans)
+            if span_idx is None:
+                continue
+            text = token.string[1:].strip()
+            if self._is_ignored_comment(text):
+                continue
+            comments_by_span.setdefault(span_idx, []).append((line_no, text))
+
+        violations: list[Violation] = []
+        source_lines = context.code.splitlines()
+        for span_idx, comments in comments_by_span.items():
+            span = function_spans[span_idx]
+            blocks = self._comment_blocks(comments)
+            for block in blocks:
+                severity = self._block_severity(
+                    block,
+                    source_lines,
+                    config,
+                    has_docstring=span[2],
+                )
+                if severity is None:
+                    continue
+                loc = Location(line=block[0][0], column=1)
+                violations.append(
+                    self.build_violation(
+                        config,
+                        severity=severity,
+                        location=loc,
+                        suggestion=(
+                            "Move method-level rationale to the function docstring "
+                            "using Args:, Returns:, Raises:, and Note: sections "
+                            "where applicable."
+                        ),
+                    ),
+                )
+        return violations
+
+    def _function_spans(
+        self,
+        tree: ast.AST,
+    ) -> list[tuple[int, int, bool]]:
+        """Collect the body line range and docstring presence of every function.
+
+        Args:
+            tree (ast.AST): Parsed module tree to walk for function definitions.
+
+        Returns:
+            list[tuple[int, int, bool]]: One ``(body_start, body_end,
+                has_docstring)`` tuple per function or method found.
+        """
+        spans: list[tuple[int, int, bool]] = []
+        for node in ast.walk(tree):
+            if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                continue
+            if not node.body or node.end_lineno is None:
+                continue
+            body_start = node.lineno + 1
+            spans.append(
+                (body_start, node.end_lineno, ast.get_docstring(node) is not None),
+            )
+        return spans
+
+    def _span_index(
+        self,
+        line_no: int,
+        spans: list[tuple[int, int, bool]],
+    ) -> int | None:
+        """Find the innermost function span containing a given line number.
+
+        Args:
+            line_no (int): One-based source line number to locate.
+            spans (list[tuple[int, int, bool]]): Function body spans from
+                ``_function_spans``.
+
+        Returns:
+            int | None: Index into *spans* for the smallest enclosing span, or
+                ``None`` when the line falls outside every function body.
+        """
+        best: int | None = None
+        best_size: int | None = None
+        for idx, (start, end, _) in enumerate(spans):
+            if not (start <= line_no <= end):
+                continue
+            size = end - start
+            if best is None or (best_size is not None and size < best_size):
+                best = idx
+                best_size = size
+        return best
+
+    def _comment_blocks(
+        self,
+        comments: list[tuple[int, str]],
+    ) -> list[list[tuple[int, str]]]:
+        """Group consecutive-line comments within one function into blocks.
+
+        Args:
+            comments (list[tuple[int, str]]): ``(line_no, text)`` pairs of
+                comments found inside one function span, in any order.
+
+        Returns:
+            list[list[tuple[int, str]]]: Comments grouped into runs of
+                immediately consecutive lines, ordered by line number.
+        """
+        sorted_comments = sorted(comments, key=lambda item: item[0])
+        blocks: list[list[tuple[int, str]]] = []
+        for line_no, text in sorted_comments:
+            if blocks and line_no == blocks[-1][-1][0] + 1:
+                blocks[-1].append((line_no, text))
+                continue
+            blocks.append([(line_no, text)])
+        return blocks
+
+    def _block_severity(
+        self,
+        block: list[tuple[int, str]],
+        source_lines: list[str],
+        config: GreyCommitConfig,
+        *,
+        has_docstring: bool,
+    ) -> int | None:
+        """Score a comment block's severity, or rule it out as a false positive.
+
+        Args:
+            block (list[tuple[int, str]]): Consecutive comment lines from
+                ``_comment_blocks``.
+            source_lines (list[str]): Full source split into lines, used to
+                check control-flow proximity.
+            config (GreyCommitConfig): Detector configuration carrying the
+                inline comment length threshold.
+            has_docstring (bool): Whether the enclosing function already has a
+                docstring.
+
+        Returns:
+            int | None: Severity on a ladder relative to the rule's
+                configured severity (default marker rung 6), or ``None``
+                when the block is too small and unremarkable to flag.
+        """
+        has_marker = any(
+            text.upper().startswith(_GREY_COMMIT_MARKERS) for _, text in block
+        )
+        has_long_line = any(
+            len(text) > config.max_inline_comment_length for _, text in block
+        )
+        has_rationale = any(
+            any(term in text.lower() for term in _GREY_COMMIT_WHY_TERMS)
+            for _, text in block
+        )
+        near_control_flow = any(
+            self._near_control_flow(line_no, source_lines) for line_no, _ in block
+        )
+        if len(block) < _GREY_COMMENT_BLOCK_MIN_LINES and not (
+            has_marker or has_long_line or has_rationale
+        ):
+            return None
+
+        # The configured severity is the value for the "marker" rung; the
+        # other rungs are shifted relative to it so a `severity:` override
+        # in zen-config.yaml actually moves the emitted severity.
+        base = _severity_level(config, fallback=6)
+        block_rung = max(1, base - 1)
+        severity = max(1, base - 3)
+        if len(block) >= _GREY_COMMENT_BLOCK_MIN_LINES:
+            severity = block_rung
+        if has_marker:
+            severity = max(severity, base)
+        if len(block) >= _GREY_COMMENT_BLOCK_MIN_LINES and not has_docstring:
+            severity = max(severity, min(10, base + 2))
+        if near_control_flow:
+            severity = max(severity, block_rung)
+        return severity
+
+    def _near_control_flow(self, line_no: int, source_lines: list[str]) -> bool:
+        """Check whether a comment line sits beside a control-flow statement.
+
+        Args:
+            line_no (int): One-based line number of the comment.
+            source_lines (list[str]): Full source split into lines.
+
+        Returns:
+            bool: ``True`` when the line immediately before the comment or
+                the line immediately after it (after stripping) starts with
+                a control-flow keyword. The comment's own line is never
+                inspected.
+        """
+        for idx in (line_no - 2, line_no):
+            if not (0 <= idx < len(source_lines)):
+                continue
+            text = source_lines[idx].strip()
+            if text.startswith("#"):
+                continue
+            if text.startswith(_GREY_COMMIT_CONTROL_FLOW_PREFIXES):
+                return True
+        return False
+
+    def _is_ignored_comment(self, text: str) -> bool:
+        """Decide whether a comment is a benign annotation to skip.
+
+        Args:
+            text (str): Comment text with the ``#`` prefix and surrounding
+                whitespace stripped.
+
+        Returns:
+            bool: ``True`` for ``# noqa``, ``# type: ignore``, and
+                single-word comments.
+        """
+        lowered = text.lower()
+        if "type: ignore" in lowered or "noqa" in lowered:
+            return True
+        return bool(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", text))
+
+
+class UnusedArgumentUtilizationDetector(
+    ViolationDetector[UnusedArgumentUtilizationConfig],
+    LocationHelperMixin,
+):
+    """Detect function parameters that are requested but never used.
+
+    Every parameter in a signature is a promise of context the function
+    body is expected to use. Flags parameters that are declared but never
+    read, and suggests how to put the missing context to work: logging
+    it, filtering/correlating on it, or removing it from the signature
+    entirely. ``self``/``cls`` receivers, ``*args``/``**kwargs``
+    catch-alls, and stub bodies (``...``, ``pass``, or a docstring-only
+    body, e.g. ``Protocol`` methods and ``@overload`` signatures) are
+    exempt. Underscore-prefixed names are intentionally *not* exempt —
+    silencing an unused parameter with a leading ``_`` still hides a
+    design question about why the argument exists at all.
+    """
+
+    @property
+    def name(self) -> str:
+        """Return the detector registry identifier.
+
+        Returns:
+            str: The literal string ``"unused_argument_utilization"``.
+        """
+        return "unused_argument_utilization"
+
+    def detect(
+        self,
+        context: AnalysisContext,
+        config: UnusedArgumentUtilizationConfig,
+    ) -> list[Violation]:
+        """Flag ignored function arguments and suggest purposeful integration.
+
+        Args:
+            context (AnalysisContext): Analysis context with source code.
+            config (UnusedArgumentUtilizationConfig): Detector configuration
+                controlling logging-oriented suggestions and abstract-method
+                exclusion.
+
+        Returns:
+            list[Violation]: Violations for parameters that are declared but
+                never read inside the function body.
+        """
+        try:
+            tree = ast.parse(context.code)
+        except (SyntaxError, ValueError):
+            return []
+
+        violations: list[Violation] = []
+        parent_by_node = self._build_parent_map(tree)
+
+        for node in ast.walk(tree):
+            if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                continue
+            if config.exclude_abstract_methods and self._is_abstract(node):
+                continue
+
+            is_stub = self._is_stub_body(node)
+            argument_nodes = self._argument_nodes(node)
+            used_names = {
+                name.id
+                for name in ast.walk(node)
+                if isinstance(name, ast.Name) and isinstance(name.ctx, ast.Load)
+            }
+            has_logger = self._has_logger_in_scope(node, used_names)
+            is_override = self._is_override(node, parent_by_node.get(node))
+
+            for arg, is_vararg, is_kwarg in argument_nodes:
+                if self._should_skip_argument(
+                    arg,
+                    is_vararg=is_vararg,
+                    is_kwarg=is_kwarg,
+                    is_stub=is_stub,
+                ):
+                    continue
+                if arg.arg in used_names:
+                    continue
+                suggestion = self._suggestion(
+                    arg.arg,
+                    has_logger=has_logger,
+                    suggest_logging=config.suggest_logging,
+                    is_override=is_override,
+                )
+                violations.append(
+                    self.build_violation(
+                        config,
+                        severity=_severity_level(config),
+                        message=(
+                            f"Argument '{arg.arg}' carries valuable context but is "
+                            "ignored. Every argument must have a purpose."
+                        ),
+                        location=Location(line=arg.lineno, column=arg.col_offset),
+                        suggestion=suggestion,
+                    ),
+                )
+
+        return violations
+
+    @staticmethod
+    def _argument_nodes(
+        node: ast.FunctionDef | ast.AsyncFunctionDef,
+    ) -> list[tuple[ast.arg, bool, bool]]:
+        """Collect every declared parameter alongside its vararg/kwarg kind.
+
+        Args:
+            node (ast.FunctionDef | ast.AsyncFunctionDef): Function definition
+                whose parameters should be enumerated.
+
+        Returns:
+            list[tuple[ast.arg, bool, bool]]: ``(arg, is_vararg, is_kwarg)``
+                triples covering positional-only, positional-or-keyword,
+                keyword-only, ``*args``, and ``**kwargs`` parameters.
+        """
+        argument_nodes: list[tuple[ast.arg, bool, bool]] = [
+            (arg, False, False)
+            for arg in (
+                *node.args.posonlyargs,
+                *node.args.args,
+                *node.args.kwonlyargs,
+            )
+        ]
+        if node.args.vararg is not None:
+            argument_nodes.append((node.args.vararg, True, False))
+        if node.args.kwarg is not None:
+            argument_nodes.append((node.args.kwarg, False, True))
+        return argument_nodes
+
+    @staticmethod
+    def _should_skip_argument(
+        arg: ast.arg,
+        *,
+        is_vararg: bool,
+        is_kwarg: bool,
+        is_stub: bool,
+    ) -> bool:
+        """Decide whether an argument is exempt from usage checks.
+
+        Exempts ``self``/``cls`` receiver parameters, ``*args``/``**kwargs``
+        catch-alls, and every argument of a stub function (a body that is
+        only ``...``, ``pass``, or a docstring, as used by ``Protocol``
+        methods and typing overloads). Underscore-prefixed names are
+        deliberately *not* exempt here.
+
+        Args:
+            arg (ast.arg): Candidate parameter node.
+            is_vararg (bool): Whether *arg* is the function's ``*args``
+                catch-all.
+            is_kwarg (bool): Whether *arg* is the function's ``**kwargs``
+                catch-all.
+            is_stub (bool): Whether the enclosing function body is a stub.
+
+        Returns:
+            bool: ``True`` when the argument should not be flagged even if
+                unused.
+        """
+        if arg.arg in {"self", "cls"}:
+            return True
+        if is_vararg or is_kwarg:
+            return True
+        return is_stub
+
+    @staticmethod
+    def _is_stub_body(node: ast.FunctionDef | ast.AsyncFunctionDef) -> bool:
+        """Check whether a function body is a stub with no real logic.
+
+        Args:
+            node (ast.FunctionDef | ast.AsyncFunctionDef): Function definition
+                to inspect.
+
+        Returns:
+            bool: ``True`` when the body is only ``...``, ``pass``, a lone
+                docstring, or a docstring immediately followed by a single
+                ``...``/``pass`` statement (the common ``Protocol`` /
+                ``@overload`` documented-stub style).
+        """
+        body = node.body
+        if not body:
+            return False
+        is_docstring = (
+            isinstance(body[0], ast.Expr)
+            and isinstance(body[0].value, ast.Constant)
+            and isinstance(body[0].value.value, str)
+        )
+        remaining = body
+        if is_docstring:
+            if len(body) == 1:
+                return True
+            remaining = body[1:]
+        if len(remaining) != 1:
+            return False
+        (statement,) = remaining
+        if isinstance(statement, ast.Pass):
+            return True
+        if isinstance(statement, ast.Expr) and isinstance(
+            statement.value, ast.Constant
+        ):
+            value = statement.value.value
+            return value is Ellipsis or isinstance(value, str)
+        return False
+
+    @staticmethod
+    def _has_logger_in_scope(
+        node: ast.FunctionDef | ast.AsyncFunctionDef,
+        used_names: set[str],
+    ) -> bool:
+        """Check whether the function body already references a logger.
+
+        Args:
+            node (ast.FunctionDef | ast.AsyncFunctionDef): Function definition
+                whose body is searched.
+            used_names (set[str]): Names loaded anywhere inside *node*.
+
+        Returns:
+            bool: ``True`` when a bare ``logger`` name or a ``self.logger``
+                attribute access is present in the body.
+        """
+        return "logger" in used_names or any(
+            isinstance(attribute, ast.Attribute)
+            and isinstance(attribute.value, ast.Name)
+            and attribute.value.id == "self"
+            and attribute.attr == "logger"
+            for attribute in ast.walk(node)
+        )
+
+    @staticmethod
+    def _is_abstract(node: ast.FunctionDef | ast.AsyncFunctionDef) -> bool:
+        """Check whether a function is decorated with ``@abstractmethod``.
+
+        Args:
+            node (ast.FunctionDef | ast.AsyncFunctionDef): Function definition
+                to inspect.
+
+        Returns:
+            bool: ``True`` when an ``abstractmethod`` decorator is present,
+                regardless of the import alias used to reach it.
+        """
+        return any(
+            (isinstance(d, ast.Name) and d.id == "abstractmethod")
+            or (isinstance(d, ast.Attribute) and d.attr == "abstractmethod")
+            for d in node.decorator_list
+        )
+
+    @staticmethod
+    def _build_parent_map(tree: ast.AST) -> dict[ast.AST, ast.AST]:
+        """Map every AST node to its immediate parent node.
+
+        Args:
+            tree (ast.AST): Parsed module tree to walk.
+
+        Returns:
+            dict[ast.AST, ast.AST]: Lookup from a node to the node that
+                directly contains it. The module root has no entry.
+        """
+        parents: dict[ast.AST, ast.AST] = {}
+        for parent in ast.walk(tree):
+            for child in ast.iter_child_nodes(parent):
+                parents[child] = parent
+        return parents
+
+    @staticmethod
+    def _is_override(
+        node: ast.FunctionDef | ast.AsyncFunctionDef,
+        parent: ast.AST | None,
+    ) -> bool:
+        """Check whether a function's signature is likely inherited.
+
+        Returns ``True`` for a literal ``@override`` decorator, and also
+        when the function is a direct method of a class that declares at
+        least one base class -- most repositories predate the ``@override``
+        idiom, so a base class in scope is the more common real-world
+        signal that a method's parameters are constrained by a contract it
+        does not itself control.
+
+        Args:
+            node (ast.FunctionDef | ast.AsyncFunctionDef): Function definition
+                to inspect.
+            parent (ast.AST | None): The function's immediate enclosing AST
+                node (its ``ClassDef`` for a direct method, or ``None``/some
+                other node otherwise).
+
+        Returns:
+            bool: ``True`` when an ``override`` decorator is present
+                (regardless of the import alias used to reach it), or when
+                *parent* is a ``ClassDef`` with at least one base class.
+        """
+        has_override_decorator = any(
+            (isinstance(d, ast.Name) and d.id == "override")
+            or (isinstance(d, ast.Attribute) and d.attr == "override")
+            for d in node.decorator_list
+        )
+        if has_override_decorator:
+            return True
+        return isinstance(parent, ast.ClassDef) and bool(parent.bases)
+
+    @staticmethod
+    def _suggestion(
+        argument_name: str,
+        *,
+        has_logger: bool,
+        suggest_logging: bool,
+        is_override: bool,
+    ) -> str:
+        """Pick a remediation suggestion for one unused argument.
+
+        Args:
+            argument_name (str): Name of the unused parameter.
+            has_logger (bool): Whether a logger is already in scope in the
+                function body.
+            suggest_logging (bool): Whether logging-oriented suggestions are
+                enabled for this configuration.
+            is_override (bool): Whether the function overrides a base-class
+                signature.
+
+        Returns:
+            str: A human-readable suggestion, preferring (in order) an
+                inherited-signature note, a logging integration, a
+                filtering/correlation hint for ``_id``-suffixed names, or a
+                generic integrate-or-remove nudge.
+        """
+        if is_override:
+            return (
+                f"Signature is likely inherited; add observational usage for "
+                f"'{argument_name}' such as structured logging."
+            )
+        lower_name = argument_name.lower()
+        if suggest_logging and (
+            has_logger
+            or any(
+                token in lower_name for token in ("context", "ctx", "meta", "request")
+            )
+        ):
+            return (
+                f"Did you forget to use '{argument_name}'? Integrate it into "
+                f"logging, for example logger.debug('Using %s', {argument_name})."
+            )
+        if lower_name.endswith("_id"):
+            return (
+                f"Did you forget to use '{argument_name}' for filtering or "
+                "correlation logic (e.g., query predicates)?"
+            )
+        return (
+            f"Did you forget to use '{argument_name}'? Integrate it into logic "
+            "or remove the argument from the signature."
+        )
+
+
 __all__ = [
     "BareExceptDetector",
     "CircularDependencyDetector",
@@ -2583,6 +3229,7 @@ __all__ = [
     "ExplicitnessDetector",
     "FeatureEnvyDetector",
     "GodClassDetector",
+    "GreyCommitCommentDetector",
     "LineLengthDetector",
     "LongFunctionDetector",
     "MagicMethodDetector",
@@ -2600,4 +3247,5 @@ __all__ = [
     "ShortVariableNamesDetector",
     "SparseCodeDetector",
     "StarImportDetector",
+    "UnusedArgumentUtilizationDetector",
 ]

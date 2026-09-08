@@ -12,6 +12,9 @@ from mcp_zen_of_languages.languages.python.detectors import NamespaceUsageDetect
 from mcp_zen_of_languages.languages.python.detectors import ShortVariableNamesDetector
 from mcp_zen_of_languages.languages.python.detectors import SparseCodeDetector
 from mcp_zen_of_languages.languages.python.detectors import StarImportDetector
+from mcp_zen_of_languages.languages.python.detectors import (
+    UnusedArgumentUtilizationDetector,
+)
 from mcp_zen_of_languages.languages.python.rules import PYTHON_ZEN
 
 
@@ -206,6 +209,14 @@ def test_namespace_usage_detector():
         or "Too many items in __all__" in v.message
         for v in violations
     )
+
+
+def test_unused_argument_utilization_detector():
+    code = "def get_orders(user_id, status):\n    return status\n"
+    detector = UnusedArgumentUtilizationDetector()
+    violations = run_detector(detector, code, config_for("unused_argument_utilization"))
+    assert any("valuable context but is ignored" in v.message for v in violations)
+    assert any("Did you forget to use 'user_id'" in v.suggestion for v in violations)
 
 
 def test_js_detectors_smoke():

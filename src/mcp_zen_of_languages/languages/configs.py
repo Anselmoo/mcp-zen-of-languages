@@ -2520,6 +2520,35 @@ class PythonTodoStubConfig(DetectorConfig):
     type: Literal["python_todo_stub"] = "python_todo_stub"
 
 
+class GreyCommitConfig(DetectorConfig):
+    """Inline grey-commit comment detection settings.
+
+    Attributes:
+        max_inline_comment_length: Maximum inline comment length before it is
+            treated as prose that belongs in a docstring.
+        detect_grey_comments: Enable/disable grey commit inline comment checks.
+    """
+
+    type: Literal["grey_comments"] = "grey_comments"
+    max_inline_comment_length: int = 72
+    detect_grey_comments: bool = True
+
+
+class UnusedArgumentUtilizationConfig(DetectorConfig):
+    """Unused argument utilization settings.
+
+    Attributes:
+        suggest_logging: When ``True``, prefer logging/observability-oriented
+            suggestions for context-like parameters.
+        exclude_abstract_methods: When ``True``, ignore ``@abstractmethod``
+            signatures where implementation is intentionally absent.
+    """
+
+    type: Literal["unused_argument_utilization"] = "unused_argument_utilization"
+    suggest_logging: bool = True
+    exclude_abstract_methods: bool = True
+
+
 RULE_CONFIGS: dict[str, type[DetectorConfig]] = {
     "bash-006": Bash006Config,
     "bash-011": Bash011Config,

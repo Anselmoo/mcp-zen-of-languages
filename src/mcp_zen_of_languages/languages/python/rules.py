@@ -288,5 +288,40 @@ PYTHON_ZEN = LanguageZenPrinciples(
                 "max_exports": 20,
             },
         ),
+        ZenPrinciple(
+            id="python-021",
+            principle="Documentation should live in docstrings, not inline grey commits",
+            category=PrincipleCategory.READABILITY,
+            severity=6,
+            description=(
+                "Method-level rationale comments inside function bodies should be "
+                "captured in docstrings so documentation tooling can render them"
+            ),
+            violations=[
+                "Inline narrative comment blocks in function bodies",
+                "Knowledge-marker comments such as NOTE/REASON/IMPORTANT in code bodies",
+                "Long prose comments that belong in function docstring Note sections",
+            ],
+            metrics={
+                "max_inline_comment_length": 72,
+                "detect_grey_comments": True,
+            },
+        ),
+        ZenPrinciple(
+            id="python-022",
+            principle="Every argument must have a purpose",
+            category=PrincipleCategory.CLARITY,
+            severity=4,
+            description="Requested function arguments should be integrated or removed",
+            violations=[
+                "Unused function arguments hide valuable context",
+                "Ignoring method context misses observability opportunities",
+                "Silencing unused parameters with '_' masks design errors",
+            ],
+            metrics={
+                "suggest_logging": True,
+                "exclude_abstract_methods": True,
+            },
+        ),
     ],
 )

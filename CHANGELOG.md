@@ -2,6 +2,8 @@
 ### Fixed
 - `ZenPrinciple.source_url`: seven per-principle documentation deep links in `languages/javascript/rules.py` were silently discarded by Pydantic because `ZenPrinciple` never declared the field, while `LanguageZenPrinciples` did. All seven now survive model construction, and every language gains the ability to cite per-principle guidance
 - `server.py` now passes `Icon` and `ToolAnnotations` their declared field names (`mime_type`, `read_only_hint`, …) instead of the camelCase wire aliases; `model_dump(by_alias=True)` output is unchanged
+- `GreyCommitCommentDetector` let a `tokenize.TokenError` escape and abort the analysis. `generate_tokens` is a lazy generator, so the guard now wraps the loop rather than the call and the scan degrades best-effort like `_mask_comments`
+- `UnusedArgumentUtilizationDetector` reported the 0-based `ast.arg.col_offset` as the 1-based `Location.column`, under-reporting every unused-argument column by one — the only AST-derived column in the codebase omitting the `+ 1`
 
 ### Changed
 - ruff findings from the 0.16 stabilised rules resolved: `ISC004` (45 sites parenthesised), `PLR0917` (13 `# noqa: PLR0913` directives extended), `CPY001` (see below)
@@ -10,6 +12,7 @@
 
 ### Added
 - Regression tests for two defensive `except Exception` recovery paths in `adapters/rules_adapter.py` and `analyzers/base.py`, both asserted via their log output rather than by coverage line numbers
+- Regression tests closing the ten unreached branches of the `python-021` and `python-022` detectors, taking the patch coverage of the code they added from 95.02% to 100%
 
 ## [0.9.2] - 2026-09-03
 

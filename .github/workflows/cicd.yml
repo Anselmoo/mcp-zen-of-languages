@@ -51,7 +51,7 @@ jobs:
           enable-cache: true
 
       - name: Sync dependencies
-        run: uv sync --all-groups --all-extras
+        run: uv sync --group dev --all-extras
 
       - name: Install Playwright browser
         run: uv run python -m playwright install chromium
@@ -120,7 +120,7 @@ jobs:
           enable-cache: true
 
       - name: Sync dependencies
-        run: uv sync --all-groups --all-extras
+        run: uv sync --group dev --all-extras
 
       - name: Run tests
         run: uv run pytest -xvs
@@ -179,7 +179,7 @@ jobs:
           enable-cache: true
 
       - name: Sync dependencies
-        run: uv sync --all-groups --all-extras
+        run: uv sync --group dev --all-extras
 
       - name: Set up Node.js
         if: ${{ matrix.language == 'javascript' || matrix.language == 'typescript' }}
@@ -259,7 +259,7 @@ jobs:
           enable-cache: true
 
       - name: Sync dependencies
-        run: uv sync --all-groups --all-extras
+        run: uv sync --group dev --all-extras
 
       - name: Run visual regression tests
         run: uv run pytest tests/e2e/test_visual_regression.py -q --no-cov

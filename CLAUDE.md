@@ -12,8 +12,8 @@ will always return `401 Bad credentials`.
 This project uses **uv** exclusively. Never use `pip` or `pip install` directly.
 
 ```bash
-uv sync --all-groups --all-extras   # install all deps (dev + docs)
-uv sync --group dev                 # dev deps only
+uv sync --group dev --all-extras    # default setup: tests, lint, type checks
+uv sync --group docs                # add only for docs work (zensical, see below)
 uv run <command>                    # run any tool in the project venv
 uvx <tool>                          # run a one-off tool without installing
 ```

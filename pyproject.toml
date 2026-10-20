@@ -61,7 +61,7 @@ build-backend = "uv_build"
 
 [dependency-groups]
 docs = [
-    "zensical>=0.0.59",
+    "zensical>=0.0.71",
     "mkdocstrings[python]>=1.0.4",
     "mkdocs-minify-plugin>=0.8.0",
     "mkdocs-git-revision-date-localized-plugin>=1.5.3",

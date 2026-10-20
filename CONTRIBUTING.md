@@ -4,8 +4,11 @@
 ## Setup
 
 ```bash
-uv sync --all-groups --all-extras
+uv sync --group dev --all-extras
 ```
+
+This is enough for tests, linting and type checking. The `docs` group is only
+needed for documentation work (see [Docs work](#docs-work)).
 
 ## Run Checks
 
@@ -13,9 +16,23 @@ uv sync --all-groups --all-extras
 uv run pytest -xvs
 uv run ty check
 uv run ruff check
+```
+
+## Docs work
+
+```bash
+uv sync --group dev --group docs
 uv run zensical build -f mkdocs.yml
 uv run python scripts/check_docs_contrast.py --build --mode check
 ```
+
+`zensical` is a Rust-built package. It ships prebuilt wheels for macOS
+(x86_64, arm64), Linux (manylinux x86_64, aarch64, armv7l; musllinux x86_64,
+aarch64) and Windows (amd64, arm64). On other platforms (32-bit Linux, musl
+armv7, 32-bit Windows) `--group docs` falls back to building from source, which
+needs a Rust toolchain. If you do not need to touch the docs, skip the group and
+let CI run the docs build; the `docs-build-strict` pre-push hook can be skipped
+with `SKIP=docs-build-strict git push`.
 
 ## Pre-commit
 

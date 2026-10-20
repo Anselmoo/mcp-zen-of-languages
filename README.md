@@ -210,7 +210,7 @@ From source:
 ```bash
 git clone https://github.com/Anselmoo/mcp-zen-of-languages.git
 cd mcp-zen-of-languages
-uv sync --all-groups --all-extras
+uv sync --group dev --all-extras
 
 # Start the MCP server
 mcp-zen-of-languages-server

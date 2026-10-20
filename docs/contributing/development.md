@@ -15,6 +15,13 @@ tags:
 uv sync --group dev --group docs
 ```
 
+The `docs` group (Zensical) is only needed for documentation work; `uv sync --group dev`
+is enough for tests, linting and type checking. Zensical is Rust-built and ships
+prebuilt wheels for macOS, Linux (manylinux and musllinux on x86_64/aarch64, manylinux
+armv7l) and Windows (amd64, arm64). On other platforms, such as 32-bit Linux or musl
+armv7, `--group docs` builds from source and needs a Rust toolchain; skip the group there
+and let CI run the docs build (`SKIP=docs-build-strict git push` skips the pre-push hook).
+
 ## Project structure
 
 - `src/mcp_zen_of_languages/` core package
